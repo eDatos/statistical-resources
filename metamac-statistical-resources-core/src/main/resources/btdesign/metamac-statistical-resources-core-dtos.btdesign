@@ -1,0 +1,13 @@
+
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-enums.btdesign"
+
+Application StatisticalResourcesDto {
+    basePackage=org.siemac.metamac.statistical.resources
+
+    Module dtos {
+        basePackage=org.siemac.metamac.statistical.resources.core.dto
+
+    }
+
+}

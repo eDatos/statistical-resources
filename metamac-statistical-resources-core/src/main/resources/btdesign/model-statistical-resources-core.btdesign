@@ -1,0 +1,29 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-enums.btdesign"
+import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+
+
+Application StatisticalResources {
+    basePackage=org.siemac.metamac.statistical.resources
+
+    Module core {
+		basePackage=org.siemac.metamac.statistical.resources.core
+		
+		
+		// ----------------------------------------------------------------
+		// 							FACADE SERVICES
+		// ----------------------------------------------------------------  
+		
+		
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------  
+
+		
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+	}	
+}
