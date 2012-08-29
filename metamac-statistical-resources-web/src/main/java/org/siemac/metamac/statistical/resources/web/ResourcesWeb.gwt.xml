@@ -35,7 +35,7 @@
     <!-- METAMAC inherits modules -->
     <inherits name="org.siemac.metamac.web.common.MetamacWebCommon" />
     <inherits name="org.siemac.metamac.SsoClient" />
-<!--     <inherits name="org.siemac.metamac.statistical.resources.ResourcesCore" /> -->
+    <inherits name="org.siemac.metamac.statistical.resources.ResourcesCore" />
 
     <!-- Specify the app entry point class. -->
     <entry-point class='org.siemac.metamac.statistical.resources.web.client.ResourcesWeb' />
@@ -57,6 +57,6 @@
 
     <!-- Configure GIN -->
     <define-configuration-property name="gin.ginjector" is-multi-valued="false" />
-    <set-configuration-property name="gin.ginjector" value="org.siemac.metamac.statistical.operations.web.client.gin.OperationsWebGinjector" />
+    <set-configuration-property name="gin.ginjector" value="org.siemac.metamac.statistical.resources.web.client.gin.ResourcesWebGinjector" />
 
 </module>
