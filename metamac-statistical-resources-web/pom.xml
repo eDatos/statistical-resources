@@ -13,4 +13,262 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>METAMAC :: STATISTICAL :: RESOURCES :: WEB</name>
     
+    <properties>
+        <!-- Convenience property to set the GWT version -->
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+            <artifactId>metamac-statistical-resources-core</artifactId>
+            <version>${project.version}</version>
+            <classifier>client</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-web-common</artifactId>
+            <version>${metamac-web-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.smartgwt</groupId>
+            <artifactId>smartgwt</artifactId>
+            <version>${smartgwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartgwt</groupId>
+            <artifactId>smartgwt-skins</artifactId>
+            <version>${smartgwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${icu4j.version}</version>
+        </dependency>
+        <!-- GWTP -->
+        <dependency>
+            <groupId>com.gwtplatform</groupId>
+            <artifactId>gwtp-all</artifactId>
+            <version>${gwtp.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.sourceforge.htmlunit</groupId>
+                    <artifactId>htmlunit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- GIN -->
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.inject</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.inject.extensions</groupId>
+                    <artifactId>guice-assistedinject</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
+        <!-- CAS -->
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+            <version>${cas-client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+            <version>${opensaml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xml-security</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>${xmlsec.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+            <version>${xerces.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xerces.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <!-- Generate compiled stuff in the folder used for developing mode -->
+        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+
+        <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <compilerArgument>-proc:none</compilerArgument>
+                </configuration>
+            </plugin>
+
+            <!--
+                | WORKAROUND:
+                | El plugin de maven-compiler-plugin tiene un problema a la hora de crear clases usando anotaciones.
+                | Por ello se pasa en el compilar el argumento "-proc:none" y se añade el plugin: maven-processor-plugin:
+                | Véase:
+                | http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-annotation-processor.html#d0e3740
+                | http://jira.codehaus.org/browse/MCOMPILER-157
+                + -->
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <version>2.0.5</version>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <defaultOutputDirectory>${project.build.directory}/generated-sources/gwt</defaultOutputDirectory>
+                    <processors>
+                        <processor>com.gwtplatform.dispatch.annotation.processor.GenDispatchProcessor</processor>
+                    </processors>
+                </configuration>
+            </plugin>
+
+
+            <!-- GWT Maven Plugin -->
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <servicePattern>**/client/service/**/*Service.java</servicePattern>
+                            <i18nConstantsBundle>org.siemac.metamac.statistical.resources.web.client.ResourcesWebConstants</i18nConstantsBundle>
+                            <i18nMessagesBundle>org.siemac.metamac.statistical.resources.web.client.ResourcesWebMessages</i18nMessagesBundle>
+                            <i18nConstantsWithLookupBundle>org.siemac.metamac.statistical.resources.web.client.ResourcesWebCoreMessages</i18nConstantsWithLookupBundle>
+                        </configuration>
+                        <goals>
+                            <goal>resources</goal>
+                            <goal>compile</goal>
+                            <goal>test</goal>
+                            <goal>generateAsync</goal>
+                            <goal>i18n</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
+                <configuration>
+                    <runTarget>StatisticalResourcesWeb.html</runTarget>
+                    <hostedWebapp>${webappDirectory}</hostedWebapp>
+                    <noServer>true</noServer>
+                    <runTarget>http://localhost:8080/metamac-statistical-resources-web/StatisticalResourcesWeb.html</runTarget>
+                    <debugPort>9997</debugPort>
+                    <compileSourcesArtifacts>
+                        <artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
+                        <artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
+                        <artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
+                        <artifact>org.siemac.metamac.metamac-statistical-resources:metamac-statistical-resources-core:jar:client</artifact>
+                    </compileSourcesArtifacts>
+                    <!-- In inplace mode, the warSourceDirectory is used to match the same use case of the war:inplace http://maven.apache.org/plugins/maven-war-plugin/inplace-mojo.html goal. -->
+                    <inplace>true</inplace>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/src/main/webapp/MetamacInternalWeb</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>

@@ -1,0 +1,130 @@
+/*
+ * Sections
+ */
+.title {
+	font-size: 28px;
+	color: #008BD0; /* Blue */
+}
+
+.sectionTitle {
+	font-size: 20px;
+	color: #008BD0; /* Blue */
+}
+
+.subsectionTitle {
+	font-size: 16px;
+	color: #008BD0; /* Blue */
+}
+
+/*
+ * Forms
+ */
+.form {
+	padding-bottom: 8px;
+	padding-top: 6px ;
+}
+
+.formLabel {
+	color: #003168;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	text-align: right;
+	width: 45px;
+}
+
+.requiredFormLabel {
+	color: #003168;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	text-align: right;
+	width: 45px;
+	font-weight: bold;
+}
+
+.staticFormTitle {
+	font-weight: 700;
+	color: #003168;
+	font-family: Arial,Verdana,sans-serif;
+	font-size: 11px;
+}
+
+.staticFormItemTitle {
+    font-weight: 700;
+    color: #003168;
+    font-family: Arial, Verdana, sans-serif;
+    font-size: 11px;
+    vertical-align: top;
+}
+
+/*
+ * BreadCrumbs
+ */
+ 
+.clickable {
+	color: blue;
+	font-size: 11px;
+	font-family: Arial, Verdana, sans-serif;
+	text-decoration: underline;
+	cursor: pointer;
+	font-style: italic;
+}
+
+/*
+ * Overridden styles
+ */
+
+.formTitle {
+/* 	font-weight: bold; */
+}
+
+.groupLabel {
+    background-clip: border-box;
+    background-color: #F3F3F6;
+    color: #003168;
+    font-size: 14px;
+    font-weight: bolder;
+}
+
+
+/*
+ * Messages
+ */
+ 
+.errorMessage {
+	font-weight: bold;
+	color: black;
+    font-family: Arial,Verdana,sans-serif;
+    font-size: 11px;
+}
+
+.successMessage {
+	font-weight: bold;
+	color: black;
+    font-family: Arial,Verdana,sans-serif;
+    font-size: 11px;
+}
+
+/**
+ * BreadCrumbs
+ */
+
+.breadCrumbPanel {
+	margin-left: 5px;
+}
+
+a:HOVER {
+	color: #A68A20;
+}
+
+/**
+* Buttons
+*/
+
+.publishButton, .publishButtonOver, .publishButtonDown {
+	font-family: Arial,Verdana,sans-serif;
+	font-size: 11px;
+}
+
+.orderListStyle {
+    margin-bottom: 10px;
+}
