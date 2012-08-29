@@ -15,9 +15,6 @@
     <packaging>pom</packaging>
     <name>METAMAC :: STATISTICAL :: RESOURCES :: PARENT</name>
     <description>METAMAC :: STATISTICAL :: RESOURCES :: PARENT</description>
-    <modules>
-    	<module>metamac-statistical-resources-core</module>
-    </modules>
     
     
 </project>
