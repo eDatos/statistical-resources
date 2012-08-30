@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
+import org.siemac.metamac.statistical.resources.web.server.handlers.GetOperationPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.operation.GetOperationPaginatedListAction;
 import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetEditionLanguagesActionHandlers;
 import org.siemac.metamac.web.common.server.handlers.GetLoginPageUrlActionHandler;
@@ -28,6 +30,10 @@ public class ServerModule extends HandlerModule {
     protected void configureHandlers() {
 
 
+        bindHandler(GetOperationPaginatedListAction.class, GetOperationPaginatedListActionHandler.class);
+        
+        
+        
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);

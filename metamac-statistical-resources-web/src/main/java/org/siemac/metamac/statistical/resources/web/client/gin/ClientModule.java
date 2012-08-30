@@ -6,6 +6,8 @@ import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.ResourcesPlaceManager;
 import org.siemac.metamac.statistical.resources.web.client.ResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.ResourcesWebMessages;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.operation.view.OperationListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.presenter.ErrorPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.UnauthorizedPagePresenter;
@@ -32,14 +34,17 @@ public class ClientModule extends AbstractPresenterModule {
         install(new DefaultModule(ResourcesPlaceManager.class));
 
         // Constants
-        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.datasetsListPage); //TODO: default place
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.operationsListPage); //TODO: default place
 
         // Gate keeper
         bind(LoggedInGatekeeper.class).in(Singleton.class);
 
         // Presenters
         bindPresenter(MainPagePresenter.class, MainPagePresenter.MainPageView.class, MainPageViewImpl.class, MainPagePresenter.MainPageProxy.class);
+        
+        bindPresenter(OperationListPresenter.class, OperationListPresenter.OperationListView.class, OperationListViewImpl.class, OperationListPresenter.OperationListProxy.class);
 
+        
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);
         bindPresenter(UnauthorizedPagePresenter.class, UnauthorizedPagePresenter.UnauthorizedPageView.class, UnauthorizedPageViewImpl.class, UnauthorizedPagePresenter.UnauthorizedPageProxy.class);
