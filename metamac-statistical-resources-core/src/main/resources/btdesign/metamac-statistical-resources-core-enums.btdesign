@@ -6,7 +6,7 @@ Application StatisticalResourcesEnums {
 		basePackage=org.siemac.metamac.statistical.resources.core.enume
     	
     	"ProcStatus Enum is used to specify the valid states of the entities"
-    	enum ProcStatusEnum {
+    	enum StatisticalResourceProcStatusEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
@@ -18,13 +18,33 @@ Application StatisticalResourcesEnums {
     		ARCHIVED
     	}
     	
+    	"Type Enum is used to specify statistical resources type"
+    	enum StatisticalResourceTypeEnum {
+    		DATASET,
+    		COLLECTION,
+    		QUERY
+    	}
+    	
+    	"Format Enum is used to specify statistical resources forma"
+    	enum StatisticalResourceVersionRationaleTypeEnum {
+    		PDF,
+    		XLS,
+    		DOC
+    	}
+    	
+    	"Format Enum is used to specify statistical resources format"
+    	enum StatisticalResourceFormatEnum {
+    		PDF,
+    		XLS,
+    		DOC
+    	}
+    	
     	enum StatisticalResourcesRoleEnum {
     		TECNICO_APOYO_PRODUCCION,
     		TECNICO_PRODUCCION,
     		TECNICO_APOYO_DIFUSION,
     		TECNICO_DIFUSION,
-    		TECNICO_APOYO_PLANIFICACION,
-    		TECNICO_PLANIFICACION,
+    		JEFE_PRODUCCION,
     		ADMINISTRADOR,
     		ANY_ROLE_ALLOWED
     	}
