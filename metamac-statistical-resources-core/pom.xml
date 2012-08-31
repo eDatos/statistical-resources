@@ -136,12 +136,6 @@
                 <!-- </exclusion> -->
             </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>org.fornax.cartridges</groupId>
-            <artifactId>fornax-cartridges-sculptor-framework</artifactId>
-            <version>${sculptor.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.fornax.cartridges</groupId>
             <artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
