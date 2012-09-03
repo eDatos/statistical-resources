@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.ResourcesWebGinjector;
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
@@ -29,21 +30,21 @@ import com.gwtplatform.mvp.client.DelayedBindRegistry;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ResourcesWeb extends MetamacEntryPoint {
+public class StatisticalResourcesWeb extends MetamacEntryPoint {
 
-    private static Logger                      logger    = Logger.getLogger(ResourcesWeb.class.getName());
+    private static Logger                      logger    = Logger.getLogger(StatisticalResourcesWeb.class.getName());
 
     private static MetamacPrincipal            principal;
-    private static ResourcesWebConstants       constants;
-    private static ResourcesWebCoreMessages    coreMessages;
-    private static ResourcesWebMessages        messages;
+    private static StatisticalResourcesWebConstants       constants;
+    private static StatisticalResourcesWebCoreMessages    coreMessages;
+    private static StatisticalResourcesWebMessages        messages;
 
     public static final ResourcesWebGinjector ginjector = GWT.create(ResourcesWebGinjector.class);
 
     interface GlobalResources extends ClientBundle {
 
         @NotStrict
-        @Source("ResourcesWebStyles.css")
+        @Source("StatisticalResourcesWebStyles.css")
         CssResource css();
     }
 
@@ -68,7 +69,7 @@ public class ResourcesWeb extends MetamacEntryPoint {
     // TODO This method should be removed to use CAS authentication
     // Application id should be the same than the one defined in org.siemac.metamac.statistical.operations.core.constants.StatisticalResourcesConstants.SECURITY_APPLICATION_ID
     private void loadNonSecuredApplication() {
-        ginjector.getDispatcher().execute(new MockCASUserAction("GESTOR_RECURSOS"), new WaitingAsyncCallback<MockCASUserResult>() {
+        ginjector.getDispatcher().execute(new MockCASUserAction(StatisticalResourcesConstants.SECURITY_APPLICATION_ID), new WaitingAsyncCallback<MockCASUserResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -76,7 +77,7 @@ public class ResourcesWeb extends MetamacEntryPoint {
             }
             @Override
             public void onWaitSuccess(MockCASUserResult result) {
-                ResourcesWeb.principal = result.getMetamacPrincipal();
+                StatisticalResourcesWeb.principal = result.getMetamacPrincipal();
 
                 // Load edition languages
                 ginjector.getDispatcher().execute(new GetEditionLanguagesAction(), new WaitingAsyncCallback<GetEditionLanguagesResult>() {
@@ -157,7 +158,7 @@ public class ResourcesWeb extends MetamacEntryPoint {
     // }
 
     private void loadApplication() {
-        LoginAuthenticatedEvent.fire(ginjector.getEventBus(), ResourcesWeb.principal);
+        LoginAuthenticatedEvent.fire(ginjector.getEventBus(), StatisticalResourcesWeb.principal);
         // This is required for GWT-Platform proxy's generator.
         DelayedBindRegistry.bind(ginjector);
         ginjector.getPlaceManager().revealCurrentPlace();
@@ -181,26 +182,26 @@ public class ResourcesWeb extends MetamacEntryPoint {
     }
 
     public static MetamacPrincipal getCurrentUser() {
-        return ResourcesWeb.principal;
+        return StatisticalResourcesWeb.principal;
     }
 
-    public static ResourcesWebConstants getConstants() {
+    public static StatisticalResourcesWebConstants getConstants() {
         if (constants == null) {
-            constants = (ResourcesWebConstants) GWT.create(ResourcesWebConstants.class);
+            constants = (StatisticalResourcesWebConstants) GWT.create(StatisticalResourcesWebConstants.class);
         }
         return constants;
     }
 
-    public static ResourcesWebCoreMessages getCoreMessages() {
+    public static StatisticalResourcesWebCoreMessages getCoreMessages() {
         if (coreMessages == null) {
-            coreMessages = (ResourcesWebCoreMessages) GWT.create(ResourcesWebCoreMessages.class);
+            coreMessages = (StatisticalResourcesWebCoreMessages) GWT.create(StatisticalResourcesWebCoreMessages.class);
         }
         return coreMessages;
     }
 
-    public static ResourcesWebMessages getMessages() {
+    public static StatisticalResourcesWebMessages getMessages() {
         if (messages == null) {
-            messages = (ResourcesWebMessages) GWT.create(ResourcesWebMessages.class);
+            messages = (StatisticalResourcesWebMessages) GWT.create(StatisticalResourcesWebMessages.class);
         }
         return messages;
     }

@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.view;
 import java.util.List;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
-import org.siemac.metamac.statistical.resources.web.client.ResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.BreadCrumbsPanel;
@@ -84,7 +84,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         footerLayout.setBorder("1px solid #A7ABB4");
         footerLayout.addMember(this.successMessagePanel);
         footerLayout.addMember(this.errorMessagePanel);
-        footerLayout.addMember(new VersionFooter(ResourcesWeb.getConstants().appVersion()));
+        footerLayout.addMember(new VersionFooter(StatisticalResourcesWeb.getConstants().appVersion()));
 
         // Set user name
         masterHead.getUserNameLabel().setContents(getUserName());
@@ -195,7 +195,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     }
 
     private String getUserName() {
-        MetamacPrincipal metamacPrincipal = ResourcesWeb.getCurrentUser();
+        MetamacPrincipal metamacPrincipal = StatisticalResourcesWeb.getCurrentUser();
         if (metamacPrincipal != null) {
             return metamacPrincipal.getUserId();
         }

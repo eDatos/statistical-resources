@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.view;
 
-import org.siemac.metamac.statistical.resources.web.client.ResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.presenter.UnauthorizedPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.UnauthorizedPageUiHandlers;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
@@ -29,7 +29,7 @@ public class UnauthorizedPageViewImpl extends ViewWithUiHandlers<UnauthorizedPag
         htmlFlow.setMargin(40);
         htmlFlow.setStyleName("exampleTextBlock");
         StringBuffer contents = new StringBuffer();
-        contents.append("<hr>").append(MetamacWebCommon.getMessages().applicationAccessDenied(ResourcesWeb.getCurrentUser().getUserId())).append("<hr>");
+        contents.append("<hr>").append(MetamacWebCommon.getMessages().applicationAccessDenied(StatisticalResourcesWeb.getCurrentUser().getUserId())).append("<hr>");
         htmlFlow.setContents(contents.toString());
         htmlFlow.draw();
 

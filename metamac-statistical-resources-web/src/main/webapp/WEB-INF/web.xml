@@ -54,7 +54,7 @@
     <!-- Remote logging -->
     <servlet-mapping>
         <servlet-name>remoteLogging</servlet-name>
-        <url-pattern>/ResourcesWeb/remote_logging</url-pattern>
+        <url-pattern>/StatisticalResourcesWeb/remote_logging</url-pattern>
     </servlet-mapping>
     
     <!-- ******************* Default page to serve ******************** -->

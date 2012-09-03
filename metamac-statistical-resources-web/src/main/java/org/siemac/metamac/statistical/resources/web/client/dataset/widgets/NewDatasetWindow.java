@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import java.util.List;
 
 import org.jasig.cas.client.util.CommonUtils;

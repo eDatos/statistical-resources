@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.ResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 
 public class DatasetClientSecurityUtils {
 
@@ -15,32 +15,32 @@ public class DatasetClientSecurityUtils {
     // Schemes
 
     public static boolean canCreateDataset() {
-        return SharedDatasetsSecurityUtils.canCreateDataset(ResourcesWeb.getCurrentUser());
+        return SharedDatasetsSecurityUtils.canCreateDataset(StatisticalResourcesWeb.getCurrentUser());
     }
 
     public static boolean canUpdateDataset() {
-        return SharedDatasetsSecurityUtils.canUpdateDataset(ResourcesWeb.getCurrentUser(), procStatus, type, operationCode);
+        return SharedDatasetsSecurityUtils.canUpdateDataset(StatisticalResourcesWeb.getCurrentUser(), procStatus, type, operationCode);
     }
 
     public static boolean canDeleteDataset() {
-        return SharedDatasetsSecurityUtils.canDeleteDataset(ResourcesWeb.getCurrentUser(), type, operationCode);
+        return SharedDatasetsSecurityUtils.canDeleteDataset(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
     }
 
     public static boolean canSendDatasetToProductionValidation() {
-        return SharedDatasetsSecurityUtils.canSendDatasetToProductionValidation(ResourcesWeb.getCurrentUser(), type, operationCode);
+        return SharedDatasetsSecurityUtils.canSendDatasetToProductionValidation(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
     }
 
     public static boolean canSendDatasetToDiffusionValidation() {
-        return SharedDatasetsSecurityUtils.canSendDatasetToDiffusionValidation(ResourcesWeb.getCurrentUser(), type, operationCode);
+        return SharedDatasetsSecurityUtils.canSendDatasetToDiffusionValidation(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
     }
 
     public static boolean canRejectDatasetValidation() {
-        return SharedDatasetsSecurityUtils.canRejectDatasetValidation(ResourcesWeb.getCurrentUser(), procStatus, type, operationCode);
+        return SharedDatasetsSecurityUtils.canRejectDatasetValidation(StatisticalResourcesWeb.getCurrentUser(), procStatus, type, operationCode);
     }
 
 
     public static boolean canVersioningDataset() {
-        return SharedDatasetsSecurityUtils.canVersioningDataset(ResourcesWeb.getCurrentUser(), type, operationCode);
+        return SharedDatasetsSecurityUtils.canVersioningDataset(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
     }
 
 }

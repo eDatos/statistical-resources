@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.presenter;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.List;
 import java.util.logging.Level;

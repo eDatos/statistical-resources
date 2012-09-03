@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.List;
 

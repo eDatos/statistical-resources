@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getCoreMessages;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
 
 import java.util.LinkedHashMap;
 

@@ -8,12 +8,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.siemac.metamac.statistical.resources.web.client.ResourcesPlaceManager;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesPlaceManager;
 
 import com.google.inject.BindingAnnotation;
 
 /**
- * This annotation is used in {@link ResourcesPlaceManager} and is bind
+ * This annotation is used in {@link StatisticalResourcesPlaceManager} and is bind
  * in {@link ClientModule}. It's purpose is to bind the default place to a
  * default presenter.
  */

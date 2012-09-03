@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.operation.view;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.model.ds.Op
 import org.siemac.metamac.statistical.resources.web.client.operation.model.record.OperationRecord;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationListUiHandlers;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetOperationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.PaginatedListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -77,7 +77,7 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
     }
 
     @Override
-    public void setOperationPaginatedList(GetOperationPaginatedListResult operationsPaginatedList) {
+    public void setOperationPaginatedList(GetStatisticalOperationsPaginatedListResult operationsPaginatedList) {
         setOperationList(operationsPaginatedList.getOperationsList());
         operationsList.refreshPaginationInfo(operationsPaginatedList.getPageNumber(), operationsPaginatedList.getOperationsList().size(), operationsPaginatedList.getTotalResults());
     }

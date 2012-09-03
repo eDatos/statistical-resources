@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='ResourcesWeb'>
+<module rename-to='StatisticalResourcesWeb'>
 
     <!-- Inherit the core Web Toolkit stuff. -->
     <inherits name='com.google.gwt.user.User' />
@@ -35,10 +35,10 @@
     <!-- METAMAC inherits modules -->
     <inherits name="org.siemac.metamac.web.common.MetamacWebCommon" />
     <inherits name="org.siemac.metamac.SsoClient" />
-    <inherits name="org.siemac.metamac.statistical.resources.ResourcesCore" />
+    <inherits name="org.siemac.metamac.statistical.resources.StatisticalResourcesCore" />
 
     <!-- Specify the app entry point class. -->
-    <entry-point class='org.siemac.metamac.statistical.resources.web.client.ResourcesWeb' />
+    <entry-point class='org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb' />
 
     <!-- Specify the paths for translatable code -->
     <source path='client' />

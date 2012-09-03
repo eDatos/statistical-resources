@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;

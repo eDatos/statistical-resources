@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.operation.presenter;
 
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.ResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
@@ -10,8 +10,8 @@ import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetOperationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetOperationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -51,7 +51,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     
     public interface OperationListView extends View, HasUiHandlers<OperationListUiHandlers> {
 
-        void setOperationPaginatedList(GetOperationPaginatedListResult datasetsPaginatedList);
+        void setOperationPaginatedList(GetStatisticalOperationsPaginatedListResult datasetsPaginatedList);
     }
     
     
@@ -84,7 +84,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
 
     @Override
     public void retrieveOperations(int firstResult, int maxResults, final String operation) {
-        dispatcher.execute(new GetOperationPaginatedListAction(firstResult, maxResults, operation), new WaitingAsyncCallback<GetOperationPaginatedListResult>() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, operation), new WaitingAsyncCallback<GetStatisticalOperationsPaginatedListResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -92,7 +92,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
             }
 
             @Override
-            public void onWaitSuccess(GetOperationPaginatedListResult result) {
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setOperationPaginatedList(result);
             }
         });

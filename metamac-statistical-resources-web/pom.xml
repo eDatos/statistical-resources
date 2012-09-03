@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
         <artifactId>metamac-statistical-resources-parent</artifactId>
@@ -13,18 +13,23 @@
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>METAMAC :: STATISTICAL :: RESOURCES :: WEB</name>
-    
+
     <properties>
         <!-- Convenience property to set the GWT version -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
             <artifactId>metamac-statistical-resources-core</artifactId>
             <version>${project.version}</version>
             <classifier>client</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
+            <artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
+            <version>${metamac-statistical-operations.version}</version>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -170,7 +175,7 @@
             </exclusions>
         </dependency>
     </dependencies>
-    
+
     <build>
         <!-- Generate compiled stuff in the folder used for developing mode -->
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
@@ -227,9 +232,9 @@
                     <execution>
                         <configuration>
                             <servicePattern>**/client/service/**/*Service.java</servicePattern>
-                            <i18nConstantsBundle>org.siemac.metamac.statistical.resources.web.client.ResourcesWebConstants</i18nConstantsBundle>
-                            <i18nMessagesBundle>org.siemac.metamac.statistical.resources.web.client.ResourcesWebMessages</i18nMessagesBundle>
-                            <i18nConstantsWithLookupBundle>org.siemac.metamac.statistical.resources.web.client.ResourcesWebCoreMessages</i18nConstantsWithLookupBundle>
+                            <i18nConstantsBundle>org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants</i18nConstantsBundle>
+                            <i18nMessagesBundle>org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages</i18nMessagesBundle>
+                            <i18nConstantsWithLookupBundle>org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebCoreMessages</i18nConstantsWithLookupBundle>
                         </configuration>
                         <goals>
                             <goal>resources</goal>
@@ -245,7 +250,7 @@
                     <runTarget>StatisticalResourcesWeb.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <noServer>true</noServer>
-                    <runTarget>http://localhost:8080/metamac-statistical-resources-web/StatisticalResourcesWeb.html</runTarget>
+                    <runTarget>http://localhost:8090/metamac-statistical-resources-web/StatisticalResourcesWeb.html</runTarget>
                     <debugPort>9997</debugPort>
                     <compileSourcesArtifacts>
                         <artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
@@ -264,7 +269,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${basedir}/src/main/webapp/MetamacInternalWeb</directory>
+                            <directory>${basedir}/src/main/webapp/StatisticalResourcesWeb</directory>
                         </fileset>
                     </filesets>
                 </configuration>

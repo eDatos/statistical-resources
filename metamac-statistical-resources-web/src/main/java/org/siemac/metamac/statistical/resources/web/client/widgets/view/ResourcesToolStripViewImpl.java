@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.view;
 
-import org.siemac.metamac.statistical.resources.web.client.ResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.ToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.ResourcesToolStripPresenterWidget;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
@@ -26,13 +26,13 @@ public class ResourcesToolStripViewImpl implements ResourcesToolStripPresenterWi
         toolStrip.setWidth100();
         toolStrip.setAlign(Alignment.LEFT);
 
-        datasetsButton = new CustomToolStripButton(ResourcesWeb.getConstants().statisticalDatasets());
+        datasetsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().statisticalDatasets());
         datasetsButton.setID(ToolStripButtonEnum.DATASETS.getValue());
 
-        collectionsButton = new CustomToolStripButton(ResourcesWeb.getConstants().statisticalCollections());
+        collectionsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().statisticalCollections());
         collectionsButton.setID(ToolStripButtonEnum.COLLECTIONS.getValue());
         
-        queriesButton = new CustomToolStripButton(ResourcesWeb.getConstants().statisticalQueries());
+        queriesButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().statisticalQueries());
         queriesButton.setID(ToolStripButtonEnum.COLLECTIONS.getValue());
 
         toolStrip.addButton(datasetsButton);

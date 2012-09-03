@@ -3,9 +3,9 @@ package org.siemac.metamac.statistical.resources.web.client.gin;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.ResourcesPlaceManager;
-import org.siemac.metamac.statistical.resources.web.client.ResourcesWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.ResourcesWebMessages;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesPlaceManager;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.OperationListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.presenter.ErrorPagePresenter;
@@ -31,7 +31,7 @@ public class ClientModule extends AbstractPresenterModule {
         // |_ bind(RootPresenter.class).asEagerSingleton();
         // |_ bind(PlaceManager.class).to(MyPlaceManager.class).in(Singleton.class);
         // |_ bind(GoogleAnalytics.class).to(GoogleAnalyticsImpl.class).in(Singleton.class);
-        install(new DefaultModule(ResourcesPlaceManager.class));
+        install(new DefaultModule(StatisticalResourcesPlaceManager.class));
 
         // Constants
         bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.operationsListPage); //TODO: default place
@@ -53,8 +53,8 @@ public class ClientModule extends AbstractPresenterModule {
         bindSingletonPresenterWidget(ResourcesToolStripPresenterWidget.class, ResourcesToolStripPresenterWidget.ResourcesToolStripView.class, ResourcesToolStripViewImpl.class);
 
         // Interfaces
-        bind(ResourcesWebConstants.class).in(Singleton.class);
-        bind(ResourcesWebMessages.class).in(Singleton.class);
+        bind(StatisticalResourcesWebConstants.class).in(Singleton.class);
+        bind(StatisticalResourcesWebMessages.class).in(Singleton.class);
     }
 
 }

@@ -8,12 +8,12 @@ import com.gwtplatform.mvp.client.proxy.PlaceManagerImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.TokenFormatter;
 
-public class ResourcesPlaceManager extends PlaceManagerImpl {
+public class StatisticalResourcesPlaceManager extends PlaceManagerImpl {
 
     private final PlaceRequest defaultPlaceRequest;
 
     @Inject
-    public ResourcesPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultNameToken) {
+    public StatisticalResourcesPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultNameToken) {
         super(eventBus, tokenFormatter);
         this.defaultPlaceRequest = new PlaceRequest(defaultNameToken);
     }

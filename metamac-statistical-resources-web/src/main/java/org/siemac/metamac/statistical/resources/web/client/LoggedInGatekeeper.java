@@ -31,7 +31,7 @@ public class LoggedInGatekeeper implements Gatekeeper {
 
     @Override
     public boolean canReveal() {
-        return hasAnyAllowedRole(ResourcesWeb.getCurrentUser());
+        return hasAnyAllowedRole(StatisticalResourcesWeb.getCurrentUser());
     }
 
     private boolean hasAnyAllowedRole(MetamacPrincipal metamacPrincipal) {
