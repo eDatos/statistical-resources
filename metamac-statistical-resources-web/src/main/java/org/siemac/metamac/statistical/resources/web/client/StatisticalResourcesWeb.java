@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.web.client.gin.ResourcesWebGinjector;
+import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
@@ -39,7 +39,7 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
     private static StatisticalResourcesWebCoreMessages    coreMessages;
     private static StatisticalResourcesWebMessages        messages;
 
-    public static final ResourcesWebGinjector ginjector = GWT.create(ResourcesWebGinjector.class);
+    public static final StatisticalResourcesWebGinjector ginjector = GWT.create(StatisticalResourcesWebGinjector.class);
 
     interface GlobalResources extends ClientBundle {
 
@@ -206,7 +206,7 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
         return messages;
     }
 
-    public static ResourcesWebGinjector getResourcesWebGinjector() {
+    public static StatisticalResourcesWebGinjector getResourcesWebGinjector() {
         return ginjector;
     }
 

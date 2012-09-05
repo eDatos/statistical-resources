@@ -101,8 +101,9 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     @Override
     public void goToOperation(String urn) {
         if (!StringUtils.isBlank(urn)) {
+            //placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage));
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage).with(PlaceRequestParams.operationParam, UrnUtils.removePrefix(urn)));
         }
-        placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage).with(PlaceRequestParams.operationParam, UrnUtils.removePrefix(urn)));
     }
 
 }

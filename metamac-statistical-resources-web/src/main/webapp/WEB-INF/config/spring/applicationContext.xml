@@ -59,6 +59,6 @@
     </bean>
 
     <!-- Core -->
-<!--     <import resource="classpath:/spring/statistical-resources/applicationContext.xml" /> -->
+    <import resource="classpath:/spring/statistical-resources/applicationContext.xml" />
 </beans>
 

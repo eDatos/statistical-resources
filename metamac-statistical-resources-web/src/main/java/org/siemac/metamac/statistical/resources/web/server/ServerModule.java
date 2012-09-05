@@ -1,7 +1,11 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetEditionLanguagesActionHandlers;
@@ -30,6 +34,8 @@ public class ServerModule extends HandlerModule {
     protected void configureHandlers() {
 
 
+        bindHandler(GetDatasetsByStatisticalOperationPaginatedListAction.class, GetDatasetsByStatisticalOperationPaginatedListActionHandler.class);
+        bindHandler(GetStatisticalOperationAction.class, GetStatisticalOperationActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
         
         

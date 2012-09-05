@@ -68,10 +68,8 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
-                if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
-                    String urn = ((OperationRecord) event.getRecord()).getAttribute(DatasetDS.URN);
-                    uiHandlers.goToOperation(urn);
-                }
+                String urn = ((OperationRecord) event.getRecord()).getAttribute(OperationDS.URN);
+                uiHandlers.goToOperation(urn);
             }
         });
     }

@@ -9,19 +9,20 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetDatasetPaginatedList {
+public class GetDatasetsByStatisticalOperationPaginatedList {
 
     @In(1)
-    int              firstResult;
-
+    String operationUrn;
+    
     @In(2)
-    int              maxResults;
-
+    int firstResult;
+    
     @In(3)
-    String           dataset;
-
+    int maxResults;
+    
+    
     @Out(1)
-    List<DatasetDto> datasetList;
+    List<DatasetDto> datasetsList;
 
     @Out(2)
     Integer          pageNumber;

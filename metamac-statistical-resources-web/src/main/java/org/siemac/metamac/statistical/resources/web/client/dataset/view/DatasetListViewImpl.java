@@ -6,6 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
@@ -14,11 +15,10 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.utils.Dataset
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetRecordUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
-import org.siemac.metamac.statistical.resources.web.client.enums.ToolStripButtonEnum;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -30,8 +30,6 @@ import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -50,12 +48,12 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
     private ToolStripButton          newDatasetButton;
     private ToolStripButton          deleteDatasetButton;
 
-    private SearchSectionStack       searchSectionStack;
-
     private PaginatedCheckListGrid   datasetsList;
 
     private NewDatasetWindow         newDatasetWindow;
     private DeleteConfirmationWindow deleteConfirmationWindow;
+    
+    private String operationUrn;
 
     @Inject
     public DatasetListViewImpl() {
@@ -101,24 +99,11 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         toolStrip.addButton(newDatasetButton);
         toolStrip.addButton(deleteDatasetButton);
 
-        // Search
-
-        searchSectionStack = new SearchSectionStack();
-        searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
-
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                uiHandlers.retrieveDatasets(DatasetListPresenter.DATASET_LIST_FIRST_RESULT, DatasetListPresenter.DATASET_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
-            }
-        });
-
-        // Concepts scheme list
-
         datasetsList = new PaginatedCheckListGrid(DatasetListPresenter.DATASET_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveDatasets(firstResult, maxResults, null);
+                uiHandlers.retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
             }
         });
         datasetsList.getListGrid().setAutoFitMaxRecords(DatasetListPresenter.DATASET_LIST_MAX_RESULTS);
@@ -157,7 +142,6 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
         panel = new VLayout();
         panel.addMember(toolStrip);
-        panel.addMember(searchSectionStack);
         panel.addMember(datasetsList);
 
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());
@@ -173,9 +157,10 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
     }
 
     @Override
-    public void setDatasetPaginatedList(GetDatasetPaginatedListResult datasetsPaginatedList) {
-        setDatasetList(datasetsPaginatedList.getDatasetList());
-        datasetsList.refreshPaginationInfo(datasetsPaginatedList.getPageNumber(), datasetsPaginatedList.getDatasetList().size(), datasetsPaginatedList.getTotalResults());
+    public void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationPaginatedListResult datasetsPaginatedList) {
+        setOperationUrn(operationUrn);
+        setDatasetList(datasetsPaginatedList.getDatasetsList());
+        datasetsList.refreshPaginationInfo(datasetsPaginatedList.getPageNumber(), datasetsPaginatedList.getDatasetsList().size(), datasetsPaginatedList.getTotalResults());
     }
 
     @Override
@@ -190,6 +175,11 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
             records[index++] = DatasetRecordUtils.getDatasetRecord(datasetDto);
         }
         datasetsList.getListGrid().setData(records);
+    }
+    
+    
+    public void setOperationUrn(String operationUrn) {
+        this.operationUrn = operationUrn;
     }
 
     public List<Long> getIdsFromSelected() {
@@ -208,12 +198,12 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
     @Override
     public void setInSlot(Object slot, Widget content) {
-        if (slot == DatasetListPresenter.TYPE_SetContextAreaContentDatasetListToolBar) {
+        if (slot == DatasetListPresenter.TYPE_SetContextAreaContentOperationResourcesToolBar) {
             if (content != null) {
                 Canvas[] canvas = ((ToolStrip) content).getMembers();
                 for (int i = 0; i < canvas.length; i++) {
                     if (canvas[i] instanceof ToolStripButton) {
-                        if (ToolStripButtonEnum.DATASETS.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
+                        if (StatisticalResourcesToolStripButtonEnum.DATASETS.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
                             ((ToolStripButton) canvas[i]).select();
                         }
                     }
@@ -230,11 +220,6 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
     @Override
     public void setUiHandlers(DatasetListUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
-    }
-
-    @Override
-    public void clearSearchSection() {
-        searchSectionStack.reset();
     }
 
     private void showListGridDeleteButton() {

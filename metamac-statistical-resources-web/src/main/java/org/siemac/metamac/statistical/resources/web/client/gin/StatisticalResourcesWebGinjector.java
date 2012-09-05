@@ -1,7 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.client.gin;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.ErrorPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.UnauthorizedPagePresenter;
@@ -16,7 +19,7 @@ import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 @GinModules({DispatchAsyncModule.class, ClientModule.class})
-public interface ResourcesWebGinjector extends Ginjector {
+public interface StatisticalResourcesWebGinjector extends Ginjector {
 
     PlaceManager getPlaceManager();
     EventBus getEventBus();
@@ -27,6 +30,9 @@ public interface ResourcesWebGinjector extends Ginjector {
     Provider<MainPagePresenter> getMainPagePresenter();
     
     AsyncProvider<OperationListPresenter> getOperationListPresenter();
+    AsyncProvider<OperationResourcesPresenter> getOperationResourcesPresenter();
+    AsyncProvider<OperationPresenter> getOperationPresenter();
+    AsyncProvider<DatasetListPresenter> getDatasetListPresenter();
 
 
     AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();

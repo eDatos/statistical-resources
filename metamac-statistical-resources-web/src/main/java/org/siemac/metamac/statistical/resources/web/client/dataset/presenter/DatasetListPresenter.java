@@ -5,19 +5,23 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.constants.shared.UrnConstants;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.ResourcesToolStripPresenterWidget;
+import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.StatisticalResourcesToolStripPresenterWidget;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -47,18 +51,18 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class DatasetListPresenter extends Presenter<DatasetListPresenter.DatasetListView, DatasetListPresenter.DatasetListProxy> implements DatasetListUiHandlers {
 
-    public final static int                           DATASET_LIST_FIRST_RESULT                           = 0;
-    public final static int                           DATASET_LIST_MAX_RESULTS                            = 30;
+    public final static int                              DATASET_LIST_FIRST_RESULT                           = 0;
+    public final static int                              DATASET_LIST_MAX_RESULTS                            = 30;
 
-    private final DispatchAsync                       dispatcher;
-    private final PlaceManager                        placeManager;
+    private final DispatchAsync                          dispatcher;
+    private final PlaceManager                           placeManager;
 
-    private ResourcesToolStripPresenterWidget                  toolStripPresenterWidget;
+    private ExternalItemDto                              operationDto;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetStructuralResourcesToolBar                 = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>>    TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
 
-    public static final Object                        TYPE_SetContextAreaContentDatasetListToolBar = new Object();
+    public static final Object                           TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
 
     @ProxyCodeSplit
     @NameToken(NameTokens.datasetsListPage)
@@ -73,24 +77,32 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     public interface DatasetListView extends View, HasUiHandlers<DatasetListUiHandlers> {
 
-        void setDatasetPaginatedList(GetDatasetPaginatedListResult datasetsPaginatedList);
+        void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationPaginatedListResult datasetsPaginatedList);
         void goToDatasetListLastPageAfterCreate();
-        void clearSearchSection();
     }
 
     @Inject
-    public DatasetListPresenter(EventBus eventBus, DatasetListView datasetListView, DatasetListProxy datasetListProxy, DispatchAsync dispatcher,
-            PlaceManager placeManager, ResourcesToolStripPresenterWidget toolStripPresenterWidget) {
+    public DatasetListPresenter(EventBus eventBus, DatasetListView datasetListView, DatasetListProxy datasetListProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
         super(eventBus, datasetListView, datasetListProxy);
         this.placeManager = placeManager;
-        this.toolStripPresenterWidget = toolStripPresenterWidget;
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
     }
 
     @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+
+        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode)) {
+            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+            retrieveDatasetsByStatisticalOperation(operationUrn, DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+        }
+    }
+
+    @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, MainPagePresenter.TYPE_SetContextAreaContent, this);
+        RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
     }
 
     @Override
@@ -98,34 +110,26 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
         super.onReset();
         SetTitleEvent.fire(this, getConstants().statisticalDatasets());
 
-        retrieveDatasets(DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS, null);
     }
 
-    @Override
-    protected void onReveal() {
-        super.onReveal();
-        setInSlot(TYPE_SetContextAreaContentDatasetListToolBar, toolStripPresenterWidget);
-    }
 
     @Override
-    public void retrieveDatasets(int firstResult, int maxResults, final String dataset) {
-        dispatcher.execute(new GetDatasetPaginatedListAction(firstResult, maxResults, dataset), new WaitingAsyncCallback<GetDatasetPaginatedListResult>() {
-
+    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
+        final String statisticalOperationUrn = operationUrn;
+        dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(operationUrn, firstResult, maxResults), new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
 
             @Override
-            public void onWaitSuccess(GetDatasetPaginatedListResult result) {
-                getView().setDatasetPaginatedList(result);
-                if (StringUtils.isBlank(dataset)) {
-                    getView().clearSearchSection();
-                }
+            public void onWaitSuccess(GetDatasetsByStatisticalOperationPaginatedListResult result) {
+                getView().setDatasetPaginatedList(statisticalOperationUrn, result);
             }
         });
+        
     }
-
+   
     @Override
     public void createDataset(DatasetDto datasetDto) {
         dispatcher.execute(new SaveDatasetAction(datasetDto), new WaitingAsyncCallback<SaveDatasetResult>() {
@@ -138,7 +142,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
                 ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getMessageList(getMessages().datasetSaved()), MessageTypeEnum.SUCCESS);
-                retrieveDatasets(DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS, null);
+                retrieveDatasetsByStatisticalOperation(operationDto.getUrn(),DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
                 getView().goToDatasetListLastPageAfterCreate();
             }
         });
@@ -156,7 +160,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
             @Override
             public void onWaitSuccess(DeleteDatasetListResult result) {
                 ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getMessageList(getMessages().datasetDeleted()), MessageTypeEnum.SUCCESS);
-                retrieveDatasets(DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS, null);
+                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operationDto.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
             }
         });
     }

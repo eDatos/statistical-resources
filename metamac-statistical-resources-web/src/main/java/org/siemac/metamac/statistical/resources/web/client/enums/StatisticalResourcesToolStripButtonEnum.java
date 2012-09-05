@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.enums;
 
 import com.smartgwt.client.types.ValueEnum;
 
-public enum ToolStripButtonEnum implements ValueEnum {
+public enum StatisticalResourcesToolStripButtonEnum implements ValueEnum {
 
     DATASETS("datasets_button"), 
     COLLECTIONS("collections_button"), 
@@ -10,7 +10,7 @@ public enum ToolStripButtonEnum implements ValueEnum {
 
     private String value;
 
-    ToolStripButtonEnum(String value) {
+    StatisticalResourcesToolStripButtonEnum(String value) {
         this.value = value;
     }
 

@@ -155,15 +155,15 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     }
 
     @Override
-    public void clearBreadcrumbs(int size, PlaceManager placeManager) {
-        breadCrumbsPanel.clearBreadCrumbs(size, placeManager);
+    public void prepareBreadcrumbs(int size) {
+        breadCrumbsPanel.clearBreadCrumbs(size);
     }
 
     @Override
-    public void setBreadcrumbs(int index, String title) {
-        breadCrumbsPanel.setBreadCrumbs(index, title);
+    public void addBreadcrumbs(String title, int index) {
+        breadCrumbsPanel.addBreadCrumbs(title, index);
     }
-
+    
     @Override
     public void showMessage(List<String> messages, MessageTypeEnum type) {
         // Hide messages before showing the new ones

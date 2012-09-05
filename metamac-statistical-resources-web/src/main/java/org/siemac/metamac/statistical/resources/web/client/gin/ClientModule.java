@@ -6,16 +6,22 @@ import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesPlaceManager;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.OperationListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.operation.view.OperationResourcesViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.operation.view.OperationViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.presenter.ErrorPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.UnauthorizedPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.view.ErrorPageViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.MainPageViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.UnauthorizedPageViewImpl;
-import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.ResourcesToolStripPresenterWidget;
-import org.siemac.metamac.statistical.resources.web.client.widgets.view.ResourcesToolStripViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.StatisticalResourcesToolStripPresenterWidget;
+import org.siemac.metamac.statistical.resources.web.client.widgets.view.StatisticalResourcesToolStripViewImpl;
 
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
@@ -42,7 +48,10 @@ public class ClientModule extends AbstractPresenterModule {
         // Presenters
         bindPresenter(MainPagePresenter.class, MainPagePresenter.MainPageView.class, MainPageViewImpl.class, MainPagePresenter.MainPageProxy.class);
         
+        bindPresenter(OperationResourcesPresenter.class, OperationResourcesPresenter.OperationResourcesView.class, OperationResourcesViewImpl.class, OperationResourcesPresenter.OperationResourcesProxy.class);
+        bindPresenter(OperationPresenter.class, OperationPresenter.OperationView.class, OperationViewImpl.class, OperationPresenter.OperationProxy.class);
         bindPresenter(OperationListPresenter.class, OperationListPresenter.OperationListView.class, OperationListViewImpl.class, OperationListPresenter.OperationListProxy.class);
+        bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
 
         
         // Error pages
@@ -50,7 +59,7 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(UnauthorizedPagePresenter.class, UnauthorizedPagePresenter.UnauthorizedPageView.class, UnauthorizedPageViewImpl.class, UnauthorizedPagePresenter.UnauthorizedPageProxy.class);
 
         // Presenter widgets
-        bindSingletonPresenterWidget(ResourcesToolStripPresenterWidget.class, ResourcesToolStripPresenterWidget.ResourcesToolStripView.class, ResourcesToolStripViewImpl.class);
+        bindSingletonPresenterWidget(StatisticalResourcesToolStripPresenterWidget.class, StatisticalResourcesToolStripPresenterWidget.StatisticalResourcesToolStripView.class, StatisticalResourcesToolStripViewImpl.class);
 
         // Interfaces
         bind(StatisticalResourcesWebConstants.class).in(Singleton.class);

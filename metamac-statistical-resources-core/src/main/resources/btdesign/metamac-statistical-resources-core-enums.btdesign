@@ -25,18 +25,14 @@ Application StatisticalResourcesEnums {
     		QUERY
     	}
     	
-    	"Format Enum is used to specify statistical resources forma"
+    	"Version Rationale Type Enum is used to specify all types of version rationale"
     	enum StatisticalResourceVersionRationaleTypeEnum {
-    		PDF,
-    		XLS,
-    		DOC
+    		CHANGE
     	}
     	
     	"Format Enum is used to specify statistical resources format"
     	enum StatisticalResourceFormatEnum {
-    		PDF,
-    		XLS,
-    		DOC
+    		DS
     	}
     	
     	enum StatisticalResourcesRoleEnum {

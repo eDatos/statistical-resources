@@ -49,9 +49,4 @@ public class GetStatisticalOperationsPaginatedListActionHandler extends Security
         return new GetStatisticalOperationsPaginatedListResult(externalItemDtos, firstResult, totalResults);
     }
     
-    @Override
-    public void undo(GetStatisticalOperationsPaginatedListAction action, GetStatisticalOperationsPaginatedListResult result, ExecutionContext context) throws ActionException {
-        // TODO Auto-generated method stub
-        
-    }
 }

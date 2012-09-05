@@ -63,8 +63,8 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         MasterHead getMasterHead();
 
         BreadCrumbsPanel getBreadCrumbsPanel();
-        void clearBreadcrumbs(int size, PlaceManager placeManager);
-        void setBreadcrumbs(int index, String title);
+        void prepareBreadcrumbs(int size);
+        void addBreadcrumbs(String title, int index);
 
         void showMessage(List<String> messages, MessageTypeEnum type);
         void hideMessages();
@@ -107,14 +107,14 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         super.onReset();
         hideMessages();
         int size = placeManager.getHierarchyDepth();
-        getView().clearBreadcrumbs(size, placeManager);
+        getView().prepareBreadcrumbs(size);
         for (int i = 0; i < size; ++i) {
             final int index = i;
             placeManager.getTitle(i, new SetPlaceTitleHandler() {
 
                 @Override
                 public void onSetPlaceTitle(String title) {
-                    getView().setBreadcrumbs(index, title);
+                    getView().addBreadcrumbs(title,index);
                 }
             });
         }

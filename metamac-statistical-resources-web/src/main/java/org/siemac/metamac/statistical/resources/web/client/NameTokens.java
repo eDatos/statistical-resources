@@ -5,6 +5,7 @@ public class NameTokens {
     public static final String mainPage               = "main";
     public static final String operationsListPage     = "operations";
     public static final String operationPage          = "operation";
+    public static final String operationResourcesPage = "operationResources";
     public static final String datasetsListPage       = "datasets";
     public static final String datasetPage            = "dataset";
     public static final String collectionsListPage    = "collections";
