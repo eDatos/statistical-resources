@@ -7,7 +7,9 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesP
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
@@ -51,6 +53,7 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(OperationPresenter.class, OperationPresenter.OperationView.class, OperationViewImpl.class, OperationPresenter.OperationProxy.class);
         bindPresenter(OperationListPresenter.class, OperationListPresenter.OperationListView.class, OperationListViewImpl.class, OperationListPresenter.OperationListProxy.class);
         bindPresenter(OperationResourcesPresenter.class, OperationResourcesPresenter.OperationResourcesView.class, OperationResourcesViewImpl.class, OperationResourcesPresenter.OperationResourcesProxy.class);
+        bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
         bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
 
         

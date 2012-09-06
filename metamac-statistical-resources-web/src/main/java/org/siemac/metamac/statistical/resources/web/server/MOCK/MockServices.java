@@ -101,6 +101,15 @@ public class MockServices {
         return datasetDto;
     }
     
+    public static DatasetDto retrieveDataset(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        DatasetDto dataset = getDatasets().get(datasetUrn);
+        if (dataset != null) {
+            return dataset;
+        } else {
+            throw new MetamacException(ServiceExceptionType.DATASET_NOT_FOUND,datasetUrn);
+        }
+    }
+    
     public static DatasetDto saveDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
         if (datasetDto.getUuid() == null || datasetDto.getIdentifiersMetadata() == null || getDatasets().containsKey(datasetDto.getIdentifiersMetadata().getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);

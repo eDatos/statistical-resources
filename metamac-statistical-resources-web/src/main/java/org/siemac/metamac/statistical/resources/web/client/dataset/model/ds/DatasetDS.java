@@ -13,11 +13,18 @@ public class DatasetDS extends DataSource {
     public static final String IDENTIFIER_VIEW            = "ds-identifier-view"; // NOT MAPPED
     public static final String URI                        = "ds-uri";
     public static final String URN                        = "ds-urn";
+    public static final String TITLE                      = "ds-title";
+
+    // VERSIONS
     public static final String VERSION_LOGIC              = "ds-version";
-    public static final String TITLE                       = "ds-title";
+    public static final String NEXT_VERSION               = "ds-next-version";
+    public static final String DATE_VERSION               = "ds-date-version";
+    public static final String RATIONALE                  = "ds-rationale";
+    public static final String RATIONALE_TYPE             = "ds-rationale-type";
+
     // CONTENT DESCRIPTORS
     public static final String DESCRIPTION                = "ds-desc";
-    // CLASS DESCRIPTORS
+
     // PRODUCTION DESCRIPTORS
     public static final String PROC_STATUS                = "ds-status";
     public static final String PRODUCTION_VALIDATION_DATE = "ds-prod-date";
