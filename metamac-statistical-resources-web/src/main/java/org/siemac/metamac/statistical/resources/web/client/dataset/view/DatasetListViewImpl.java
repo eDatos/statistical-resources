@@ -52,8 +52,8 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
     private NewDatasetWindow         newDatasetWindow;
     private DeleteConfirmationWindow deleteConfirmationWindow;
-    
-    private String operationUrn;
+
+    private ExternalItemDto          operationDto;
 
     @Inject
     public DatasetListViewImpl() {
@@ -76,7 +76,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newDatasetWindow.validateForm()) {
-                            uiHandlers.createDataset(newDatasetWindow.getNewDatasetDto());
+                            uiHandlers.createDataset(newDatasetWindow.getNewDatasetDto(operationDto));
                             newDatasetWindow.destroy();
                         }
                     }
@@ -95,7 +95,6 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
             }
         });
 
-
         toolStrip.addButton(newDatasetButton);
         toolStrip.addButton(deleteDatasetButton);
 
@@ -103,7 +102,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
+                uiHandlers.retrieveDatasetsByStatisticalOperation(operationDto.getUrn(), firstResult, maxResults);
             }
         });
         datasetsList.getListGrid().setAutoFitMaxRecords(DatasetListPresenter.DATASET_LIST_MAX_RESULTS);
@@ -158,7 +157,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
     @Override
     public void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationPaginatedListResult datasetsPaginatedList) {
-        setOperationUrn(operationUrn);
+        setOperation(datasetsPaginatedList.getOperationDto());
         setDatasetList(datasetsPaginatedList.getDatasetsList());
         datasetsList.refreshPaginationInfo(datasetsPaginatedList.getPageNumber(), datasetsPaginatedList.getDatasetsList().size(), datasetsPaginatedList.getTotalResults());
     }
@@ -176,10 +175,9 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         }
         datasetsList.getListGrid().setData(records);
     }
-    
-    
-    public void setOperationUrn(String operationUrn) {
-        this.operationUrn = operationUrn;
+
+    public void setOperation(ExternalItemDto operationDto) {
+        this.operationDto = operationDto;
     }
 
     public List<Long> getIdsFromSelected() {

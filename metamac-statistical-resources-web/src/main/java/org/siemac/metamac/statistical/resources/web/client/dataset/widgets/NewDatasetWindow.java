@@ -62,7 +62,7 @@ public class NewDatasetWindow extends CustomWindow {
     }
 
 
-    public DatasetDto getNewDatasetDto() {
+    public DatasetDto getNewDatasetDto(ExternalItemDto operationDto) {
         DatasetDto datasetDto = new DatasetDto();
         
         IdentifiersMetadataDto identifiers = new IdentifiersMetadataDto();
@@ -70,6 +70,7 @@ public class NewDatasetWindow extends CustomWindow {
         identifiers.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         
         datasetDto.setIdentifiersMetadata(identifiers);
+        datasetDto.setRelatedOperation(operationDto);
         return datasetDto;
     }
 

@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationProxy;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationView;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
@@ -131,5 +132,35 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
         super.onReveal();
         setInSlot(TYPE_SetContextAreaContentOperationResourcesToolBar, toolStripPresenterWidget);
     }
+    
+    @Override
+    protected void onReset() {
+        // TODO Auto-generated method stub
+        super.onReset();
+        selectToolStripButtonsBasedOnUrl();
+    }
+
+    private boolean isNameTokenInPlaceHierarchy(String nameToken) {
+        for (PlaceRequest placeReq : placeManager.getCurrentPlaceHierarchy()) {
+            if (nameToken.equals(placeReq.getNameToken())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void selectToolStripButtonsBasedOnUrl() {
+        if (isNameTokenInPlaceHierarchy(NameTokens.datasetsListPage)) {
+            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.DATASETS.name());
+        } else if (isNameTokenInPlaceHierarchy(NameTokens.collectionsListPage)) {
+            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.COLLECTIONS.name());
+        } else if (isNameTokenInPlaceHierarchy(NameTokens.queriesListPage)) {
+            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.QUERIES.name());
+        } else {
+            toolStripPresenterWidget.deselectButtons();
+        }
+    }
+    
+    
     
 }

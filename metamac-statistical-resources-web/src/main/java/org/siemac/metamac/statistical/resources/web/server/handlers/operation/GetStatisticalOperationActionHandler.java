@@ -27,11 +27,7 @@ public class GetStatisticalOperationActionHandler extends SecurityActionHandler<
     @Override
     public GetStatisticalOperationResult executeSecurityAction(GetStatisticalOperationAction action) throws ActionException {
         String code = UrnUtils.removePrefix(action.getUrn());
-        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(code);
-        
-        ExternalItemDto externalItemDto = new ExternalItemDto(operation.getId(), operation.getSelfLink(), operation.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
-                DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));
-        
+        ExternalItemDto externalItemDto = statisticalOperationsRestInternalFacade.retrieveOperation(code);
         return new GetStatisticalOperationResult(externalItemDto);
     }
 
