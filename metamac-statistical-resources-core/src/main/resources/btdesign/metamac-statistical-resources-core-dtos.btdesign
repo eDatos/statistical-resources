@@ -78,7 +78,9 @@ Application StatisticalResourcesDto {
        
 		DataTransferObject StatisticalResourceDto extends @IdentityDto {
 			- @IdentifiersMetadataDto identifiersMetadata;			
-			- @AuditMetadataDto auditMetadata;			
+			- @AuditMetadataDto auditMetadata;
+			
+			String operationUrn;
 		}
 		
 		
@@ -86,8 +88,6 @@ Application StatisticalResourcesDto {
 			- @ContentMetadataDto contentMetadata;
 			- @VersionMetadataDto versionMetadata;
 			- @LifeCycleMetadataDto lifeCycleMetadata;
-			
-			- @ExternalItemDto relatedOperation;
 		}
 		
 		DataTransferObject CollectionDto extends @StatisticalResourceDto  {

@@ -22,11 +22,11 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canUpdateDataset(MetamacPrincipal metamacPrincipal, StatisticalResourceProcStatusEnum procStatus, StatisticalResourceTypeEnum type, String operationCode) {
+    public static boolean canUpdateDataset(MetamacPrincipal metamacPrincipal, StatisticalResourceProcStatusEnum procStatus, StatisticalResourceTypeEnum type) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canDeleteDataset(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type, String operationCode) {
+    public static boolean canDeleteDataset(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
@@ -34,19 +34,19 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canSendDatasetToProductionValidation(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type, String operationCode) {
+    public static boolean canSendDatasetToProductionValidation(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canSendDatasetToDiffusionValidation(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type, String operationCode) {
+    public static boolean canSendDatasetToDiffusionValidation(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canRejectDatasetValidation(MetamacPrincipal metamacPrincipal, StatisticalResourceProcStatusEnum procStatus, StatisticalResourceTypeEnum type, String operationCode) {
+    public static boolean canRejectDatasetValidation(MetamacPrincipal metamacPrincipal, StatisticalResourceProcStatusEnum procStatus, StatisticalResourceTypeEnum type) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canVersioningDataset(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type, String operationCode) {
+    public static boolean canVersioningDataset(MetamacPrincipal metamacPrincipal, StatisticalResourceTypeEnum type) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
