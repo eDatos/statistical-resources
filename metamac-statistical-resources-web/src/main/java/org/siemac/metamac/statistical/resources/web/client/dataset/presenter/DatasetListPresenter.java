@@ -55,7 +55,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
 
-    private String                           operationUrn;
+    private String                                    operationUrn;
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();

@@ -30,7 +30,4 @@ public class GetDatasetsByStatisticalOperationPaginatedList {
     @Out(3)
     Integer          totalResults;
 
-    @Out(4)
-    ExternalItemDto  operationDto;
-
 }

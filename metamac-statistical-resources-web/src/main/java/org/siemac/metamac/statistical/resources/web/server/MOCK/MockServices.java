@@ -107,7 +107,7 @@ public class MockServices {
         }
         DatasetDto oldDataset = getDatasets().get(datasetDto.getIdentifiersMetadata().getUrn());
         
-        if (!oldDataset.getRelatedOperation().equals(datasetDto.getRelatedOperation())) {
+        if (!oldDataset.getOperationUrn().equals(datasetDto.getOperationUrn())) {
             throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE,ServiceExceptionParameters.DATASET_OPERATION);
         }
         
@@ -126,7 +126,7 @@ public class MockServices {
         
         List<DatasetDto> datasetsList = new ArrayList<DatasetDto>();
         for (DatasetDto dataset : getDatasets().values()) {
-            if (operationUrn.equals(dataset.getRelatedOperation().getUrn())) {
+            if (operationUrn.equals(dataset.getOperationUrn())) {
                 datasetsList.add(dataset);
             }
         }
@@ -169,7 +169,7 @@ public class MockServices {
         datasetDto.setId(Long.valueOf(datasets.size()+1));
         datasetDto.setUuid(UUID.randomUUID().toString());
         datasetDto.setVersion(1L);
-        datasetDto.setRelatedOperation(operation);
+        datasetDto.setOperationUrn(operation.getUrn());
         
         AuditMetadataDto auditMetadata = new AuditMetadataDto();
         auditMetadata.setCreator("ISTAC_ADMIN");

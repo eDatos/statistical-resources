@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 
+//TODO: Add real rules not only "true"
 public class DatasetClientSecurityUtils {
 
     // TODO Remove these attributes!!!
@@ -12,35 +13,34 @@ public class DatasetClientSecurityUtils {
     private static StatisticalResourceTypeEnum       type       = StatisticalResourceTypeEnum.DATASET;
     private static String                            operationCode;
 
-    // Schemes
 
     public static boolean canCreateDataset() {
-        return SharedDatasetsSecurityUtils.canCreateDataset(StatisticalResourcesWeb.getCurrentUser());
+        return true;
     }
 
     public static boolean canUpdateDataset() {
-        return SharedDatasetsSecurityUtils.canUpdateDataset(StatisticalResourcesWeb.getCurrentUser(), procStatus, type, operationCode);
+        return true;
     }
 
     public static boolean canDeleteDataset() {
-        return SharedDatasetsSecurityUtils.canDeleteDataset(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
+        return true;
     }
 
     public static boolean canSendDatasetToProductionValidation() {
-        return SharedDatasetsSecurityUtils.canSendDatasetToProductionValidation(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
+        return true;
     }
 
     public static boolean canSendDatasetToDiffusionValidation() {
-        return SharedDatasetsSecurityUtils.canSendDatasetToDiffusionValidation(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
+        return true;
     }
 
     public static boolean canRejectDatasetValidation() {
-        return SharedDatasetsSecurityUtils.canRejectDatasetValidation(StatisticalResourcesWeb.getCurrentUser(), procStatus, type, operationCode);
+        return true;
     }
 
 
     public static boolean canVersioningDataset() {
-        return SharedDatasetsSecurityUtils.canVersioningDataset(StatisticalResourcesWeb.getCurrentUser(), type, operationCode);
+        return true;
     }
 
 }

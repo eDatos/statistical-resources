@@ -53,7 +53,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
     private NewDatasetWindow         newDatasetWindow;
     private DeleteConfirmationWindow deleteConfirmationWindow;
 
-    private ExternalItemDto          operationDto;
+    private String                   operationUrn;
 
     @Inject
     public DatasetListViewImpl() {
@@ -76,7 +76,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newDatasetWindow.validateForm()) {
-                            uiHandlers.createDataset(newDatasetWindow.getNewDatasetDto(operationDto));
+                            uiHandlers.createDataset(newDatasetWindow.getNewDatasetDto(operationUrn));
                             newDatasetWindow.destroy();
                         }
                     }
@@ -102,7 +102,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveDatasetsByStatisticalOperation(operationDto.getUrn(), firstResult, maxResults);
+                uiHandlers.retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
             }
         });
         datasetsList.getListGrid().setAutoFitMaxRecords(DatasetListPresenter.DATASET_LIST_MAX_RESULTS);
@@ -157,7 +157,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
     @Override
     public void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationPaginatedListResult datasetsPaginatedList) {
-        setOperation(datasetsPaginatedList.getOperationDto());
+        setOperation(operationUrn);
         setDatasetList(datasetsPaginatedList.getDatasetsList());
         datasetsList.refreshPaginationInfo(datasetsPaginatedList.getPageNumber(), datasetsPaginatedList.getDatasetsList().size(), datasetsPaginatedList.getTotalResults());
     }
@@ -176,8 +176,8 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         datasetsList.getListGrid().setData(records);
     }
 
-    public void setOperation(ExternalItemDto operationDto) {
-        this.operationDto = operationDto;
+    public void setOperation(String operationUrn) {
+        this.operationUrn = operationUrn;
     }
 
     public List<Long> getIdsFromSelected() {
