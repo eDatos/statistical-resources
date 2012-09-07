@@ -4,8 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.dto.IdentifiersMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.VersionMetadataDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
@@ -117,22 +115,19 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     }
 
     public void setDatasetViewMode(DatasetDto datasetDto) {
-
-        IdentifiersMetadataDto identifiersMetadata = datasetDto.getIdentifiersMetadata();
         // Identifiers
-        identifiersForm.setValue(DatasetDS.IDENTIFIER, identifiersMetadata.getIdentifier());
-        identifiersForm.setValue(DatasetDS.URI, identifiersMetadata.getUri());
-        identifiersForm.setValue(DatasetDS.URN, identifiersMetadata.getUrn());
-        identifiersForm.setValue(DatasetDS.TITLE, RecordUtils.getInternationalStringRecord(identifiersMetadata.getTitle()));
+        identifiersForm.setValue(DatasetDS.IDENTIFIER, datasetDto.getIdentifier());
+        identifiersForm.setValue(DatasetDS.URI, datasetDto.getUri());
+        identifiersForm.setValue(DatasetDS.URN, datasetDto.getUrn());
+        identifiersForm.setValue(DatasetDS.TITLE, RecordUtils.getInternationalStringRecord(datasetDto.getTitle()));
 
-        VersionMetadataDto versionMetadata = datasetDto.getVersionMetadata();
-        versioningForm.setValue(DatasetDS.VERSION_LOGIC, versionMetadata.getVersion());
-        versioningForm.setValue(DatasetDS.DATE_VERSION, versionMetadata.getDateVersion() != null ? DateUtils.getFormattedDate(versionMetadata.getDateVersion()) : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.VERSION_LOGIC, datasetDto.getVersion());
+        versioningForm.setValue(DatasetDS.DATE_VERSION, datasetDto.getDateVersion() != null ? DateUtils.getFormattedDate(datasetDto.getDateVersion()) : StringUtils.EMPTY);
         // TODO change based on values taken from gpe
-        versioningForm.setValue(DatasetDS.RATIONALE_TYPE, versionMetadata.getRationaleType() != null ? versionMetadata.getRationaleType().name() : StringUtils.EMPTY);
-        versioningForm.setValue(DatasetDS.RATIONALE, versionMetadata.getRationale() != null ? versionMetadata.getRationale() : StringUtils.EMPTY);
-        versioningForm.setValue(DatasetDS.DATE_VERSION, versionMetadata.getDateVersion() != null ? DateUtils.getFormattedDate(versionMetadata.getDateVersion()) : StringUtils.EMPTY);
-        versioningForm.setValue(DatasetDS.NEXT_VERSION, versionMetadata.getNextVersion() != null ? DateUtils.getFormattedDate(versionMetadata.getNextVersion()) : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.RATIONALE_TYPE, datasetDto.getRationaleType() != null ? datasetDto.getRationaleType().name() : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.RATIONALE, datasetDto.getRationale() != null ? datasetDto.getRationale() : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.DATE_VERSION, datasetDto.getDateVersion() != null ? DateUtils.getFormattedDate(datasetDto.getDateVersion()) : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.NEXT_VERSION, datasetDto.getNextVersion() != null ? DateUtils.getFormattedDate(datasetDto.getNextVersion()) : StringUtils.EMPTY);
     }
 
     @Override

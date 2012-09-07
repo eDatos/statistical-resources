@@ -10,7 +10,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 public class CommonUtils {
 
     public static String getDatasetProcStatus(DatasetDto datasetDto) {
-        return getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + datasetDto.getLifeCycleMetadata().getProcStatus().getName());
+        return getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + datasetDto.getProcStatus().getName());
     }
 
     public static LinkedHashMap<String, String> getDatasetTypeHashMap() {

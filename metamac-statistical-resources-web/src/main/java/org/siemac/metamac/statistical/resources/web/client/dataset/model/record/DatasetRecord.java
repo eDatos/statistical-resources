@@ -64,7 +64,7 @@ public class DatasetRecord extends ListGridRecord {
     }
 
     public StatisticalResourceProcStatusEnum getProcStatus() {
-        return ((DatasetDto) getAttributeAsObject(DatasetDS.DTO)).getLifeCycleMetadata().getProcStatus();
+        return ((DatasetDto) getAttributeAsObject(DatasetDS.DTO)).getProcStatus();
     }
 
     public String getDescription() {
