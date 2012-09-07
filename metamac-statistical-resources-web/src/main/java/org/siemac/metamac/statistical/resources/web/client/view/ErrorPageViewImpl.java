@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.view;
 
-import org.siemac.metamac.statistical.resources.web.client.view.handlers.ErrorPageUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.presenter.ErrorPagePresenter;
+import org.siemac.metamac.statistical.resources.web.client.view.handlers.ErrorPageUiHandlers;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 
 import com.google.gwt.user.client.ui.Widget;

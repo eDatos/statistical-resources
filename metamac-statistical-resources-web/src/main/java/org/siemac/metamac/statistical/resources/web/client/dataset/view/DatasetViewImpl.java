@@ -8,7 +8,6 @@ import org.siemac.metamac.statistical.resources.core.dto.IdentifiersMetadataDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionMetadataDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
-import org.siemac.metamac.statistical.resources.web.client.dataset.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
 import org.siemac.metamac.web.common.client.utils.DateUtils;

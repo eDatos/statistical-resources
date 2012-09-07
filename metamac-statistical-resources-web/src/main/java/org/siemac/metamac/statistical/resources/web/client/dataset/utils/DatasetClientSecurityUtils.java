@@ -2,8 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 
 // TODO: Add real rules not only "true"
 public class DatasetClientSecurityUtils {

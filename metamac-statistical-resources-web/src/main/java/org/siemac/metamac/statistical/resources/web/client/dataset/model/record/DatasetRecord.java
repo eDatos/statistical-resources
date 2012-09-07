@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.record;
 
-import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
-
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
