@@ -18,12 +18,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.dto.AuditMetadataDto;
 import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.dto.IdentifiersMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.LifeCycleMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.VersionMetadataDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
@@ -58,13 +54,25 @@ public class MockServices {
         datasetDto.setUuid(UUID.randomUUID().toString());
         datasetDto.setVersion(1L);
 
-        AuditMetadataDto auditMetadata = new AuditMetadataDto();
-        auditMetadata.setCreator(ctx.getUserId());
-        auditMetadata.setDateCreated(now);
-        auditMetadata.setDateLastUpdate(now);
-        auditMetadata.setLastUpdateUser(ctx.getUserId());
-        datasetDto.setAuditMetadata(auditMetadata);
+        // Audit
+        datasetDto.setCreator(ctx.getUserId());
+        datasetDto.setDateCreated(now);
+        datasetDto.setDateLastUpdate(now);
+        datasetDto.setLastUpdateUser(ctx.getUserId());
 
+        // Identifiers
+        datasetDto.setUri(DATASET_URI_PREFIX + datasetDto.getIdentifier());
+        datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetDto.getIdentifier()));
+
+        // Version
+        datasetDto.setDateVersion(now);
+        datasetDto.setVersionLogic("01.000");
+
+        // Life cycle
+        datasetDto.setCreator(ctx.getUserId());
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+
+        // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
         contentMetadata.setCoverageSpatial(new ArrayList<String>());
         contentMetadata.setCoverageSpatialCodes(new ArrayList<String>());
@@ -72,21 +80,6 @@ public class MockServices {
         contentMetadata.setCoverageTemporalCodes(new ArrayList<String>());
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         datasetDto.setContentMetadata(contentMetadata);
-
-        IdentifiersMetadataDto identifiersMetadata = datasetDto.getIdentifiersMetadata();
-        identifiersMetadata.setUri(DATASET_URI_PREFIX + identifiersMetadata.getIdentifier());
-        identifiersMetadata.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, identifiersMetadata.getIdentifier()));
-        datasetDto.setIdentifiersMetadata(identifiersMetadata);
-
-        LifeCycleMetadataDto lifeCycleMetadata = new LifeCycleMetadataDto();
-        lifeCycleMetadata.setCreator(ctx.getUserId());
-        lifeCycleMetadata.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        datasetDto.setLifeCycleMetadata(lifeCycleMetadata);
-
-        VersionMetadataDto versionMetadata = new VersionMetadataDto();
-        versionMetadata.setDateVersion(now);
-        versionMetadata.setVersion("01.000");
-        datasetDto.setVersionMetadata(versionMetadata);
 
         getDatasets().put(datasetDto.getIdentifiersMetadata().getUrn(), datasetDto);
         return datasetDto;
@@ -107,7 +100,7 @@ public class MockServices {
         }
         DatasetDto oldDataset = getDatasets().get(datasetDto.getIdentifiersMetadata().getUrn());
 
-        if (!oldDataset.getOperationUrn().equals(datasetDto.getOperationUrn())) {
+        if (!oldDataset.getOperation().getUrn().equals(datasetDto.getOperation().getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_OPERATION);
         }
 
@@ -126,7 +119,7 @@ public class MockServices {
 
         List<DatasetDto> datasetsList = new ArrayList<DatasetDto>();
         for (DatasetDto dataset : getDatasets().values()) {
-            if (operationUrn.equals(dataset.getOperationUrn())) {
+            if (operationUrn.equals(dataset.getOperation().getUrn())) {
                 datasetsList.add(dataset);
             }
         }
@@ -166,15 +159,29 @@ public class MockServices {
         datasetDto.setId(Long.valueOf(datasets.size() + 1));
         datasetDto.setUuid(UUID.randomUUID().toString());
         datasetDto.setVersion(1L);
-        datasetDto.setOperationUrn(operation.getUrn());
+        datasetDto.setOperation(operation);
 
-        AuditMetadataDto auditMetadata = new AuditMetadataDto();
-        auditMetadata.setCreator("ISTAC_ADMIN");
-        auditMetadata.setDateCreated(now);
-        auditMetadata.setDateLastUpdate(now);
-        auditMetadata.setLastUpdateUser("ISTAC_ADMIN");
-        datasetDto.setAuditMetadata(auditMetadata);
+        // Audit
+        datasetDto.setCreator("ISTAC_ADMIN");
+        datasetDto.setDateCreated(now);
+        datasetDto.setDateLastUpdate(now);
+        datasetDto.setLastUpdateUser("ISTAC_ADMIN");
 
+        // Identifiers
+        datasetDto.setIdentifier(code);
+        datasetDto.setTitle(createIntString(title_es, title_en));
+        datasetDto.setUri(DATASET_URI_PREFIX + code);
+        datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
+
+        // Version
+        datasetDto.setDateVersion(now);
+        datasetDto.setVersionLogic("01.000");
+
+        // Life cycle
+        datasetDto.setCreator("ISTAC_ADMIN");
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+
+        // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
         contentMetadata.setCoverageSpatial(new ArrayList<String>());
         contentMetadata.setCoverageSpatialCodes(new ArrayList<String>());
@@ -182,23 +189,6 @@ public class MockServices {
         contentMetadata.setCoverageTemporalCodes(new ArrayList<String>());
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         datasetDto.setContentMetadata(contentMetadata);
-
-        IdentifiersMetadataDto identifiersMetadata = new IdentifiersMetadataDto();
-        identifiersMetadata.setIdentifier(code);
-        identifiersMetadata.setTitle(createIntString(title_es, title_en));
-        identifiersMetadata.setUri(DATASET_URI_PREFIX + code);
-        identifiersMetadata.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
-        datasetDto.setIdentifiersMetadata(identifiersMetadata);
-
-        LifeCycleMetadataDto lifeCycleMetadata = new LifeCycleMetadataDto();
-        lifeCycleMetadata.setCreator("ISTAC_ADMIN");
-        lifeCycleMetadata.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        datasetDto.setLifeCycleMetadata(lifeCycleMetadata);
-
-        VersionMetadataDto versionMetadata = new VersionMetadataDto();
-        versionMetadata.setDateVersion(now);
-        versionMetadata.setVersion("01.000");
-        datasetDto.setVersionMetadata(versionMetadata);
 
         datasets.put(datasetDto.getIdentifiersMetadata().getUrn(), datasetDto);
     }
