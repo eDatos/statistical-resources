@@ -1,104 +1,97 @@
-
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-enums.btdesign"
 
 Application StatisticalResourcesDto {
-    basePackage=org.siemac.metamac.statistical.resources
+	basePackage=org.siemac.metamac.statistical.resources
 
-    Module dtos {
-        basePackage=org.siemac.metamac.statistical.resources.core.dto
-        
-        
-		DataTransferObject LifeCycleMetadataDto {
+	Module dtos {
+		basePackage=org.siemac.metamac.statistical.resources.core.dto 
+		
+		DataTransferObject StatisticalResourceDto extends @IdentityDto {
+			- @IdentifiableStatisticalResourceDto identifiersMetadata;
+			- @AuditableStatisticalResourceDto auditMetadata;
+
+			- @ExternalItemDto operation;
+		}
+
+		DataTransferObject AuditableStatisticalResourceDto extends @StatisticalResourceDto {
+			String creator;
+			JAVADATE dateCreated;
+			String lastUpdateUser;
+			JAVADATE dateLastUpdate;
+		}
+
+		DataTransferObject IdentifiableStatisticalResourceDto extends @AuditableStatisticalResourceDto {
+			String identifier;
+			String uri;
+			String urn;
+			- @InternationalStringDto title;
+		}
+
+		DataTransferObject VersionableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
+			String versionLogic;
+			JAVADATE dateVersion;
+			JAVADATE nextVersion;
+			- @StatisticalResourceVersionRationaleTypeEnum rationaleType;
+			String rationale;
+		}
+
+		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
 			- @StatisticalResourceProcStatusEnum procStatus;
 			String responsabilityContributor;
 			String responsabilitySubmitted;
 			String responsabilityAccepted;
 			String responsabilityIssued;
 			String responsabilityOutOfPrint;
-			
+
 			//organizations level
 			String creator;
 			String contributor;
 			String publisher;
 			String mediator;
-			
+
 			//dates
 			JAVADATE dateSubmitted;
 			JAVADATE dateAccepted;
 			JAVADATE dateIssued;
 		}
-		
-		DataTransferObject IdentifiersMetadataDto {
-			String identifier;
-			String uri;
-			String urn;
-			- @InternationalStringDto title;
+
+		DataTransferObject DatasetDto extends @LifeCycleStatisticalResourceDto {
+			- @ContentMetadataDto contentMetadata;
 		}
-		
-		DataTransferObject VersionMetadataDto {
-			String version;
-			JAVADATE dateVersion;
-			JAVADATE nextVersion;
-			- @StatisticalResourceVersionRationaleTypeEnum rationaleType;
-			String rationale;
+
+		DataTransferObject CollectionDto extends @LifeCycleStatisticalResourceDto {
+			- @ContentMetadataDto contentMetadata;
 		}
-		
-		DataTransferObject AuditMetadataDto {
-			String creator;
-			JAVADATE dateCreated;
-			String lastUpdateUser;
-			JAVADATE dateLastUpdate;
+
+		DataTransferObject QueryDto extends @IdentifiableStatisticalResourceDto {
+
 		}
-		
+
 		DataTransferObject ContentMetadataDto {
 			String language;
 			List<String> languages;
-			
+
 			- @InternationalStringDto description;
 			List<String> keywords;
-			
+
 			List<String> coverageSpatial;
 			List<String> coverageSpatialCodes;
 			List<String> coverageTemporal;
 			List<String> coverageTemporalCodes;
-			
+
 			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type;
 			- @StatisticalResourceFormatEnum format;
-			
+
 			JAVADATE nextUpdate;
 			String updateFrequency;
-			
+
 			String rightsHolder;
 			JAVADATE dateCopyrighted;
 			String license;
 		}
-        
-       
-		DataTransferObject StatisticalResourceDto extends @IdentityDto {
-			- @IdentifiersMetadataDto identifiersMetadata;			
-			- @AuditMetadataDto auditMetadata;
-			
-			String operationUrn;
-		}
-		
-		
-		DataTransferObject DatasetDto extends @StatisticalResourceDto  {
-			- @ContentMetadataDto contentMetadata;
-			- @VersionMetadataDto versionMetadata;
-			- @LifeCycleMetadataDto lifeCycleMetadata;
-		}
-		
-		DataTransferObject CollectionDto extends @StatisticalResourceDto  {
-			- @ContentMetadataDto contentMetadata;
-			- @VersionMetadataDto versionMetadata;
-			- @LifeCycleMetadataDto lifeCycleMetadata;
-		}
-		
-		DataTransferObject QueryDto extends @StatisticalResourceDto  {
-			
-		}
-    }
+
+	}
 
 }
