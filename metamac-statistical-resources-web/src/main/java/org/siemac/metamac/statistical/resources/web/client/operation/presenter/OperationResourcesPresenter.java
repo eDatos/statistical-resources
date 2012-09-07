@@ -24,31 +24,30 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-
 public class OperationResourcesPresenter extends Presenter<OperationResourcesView, OperationResourcesProxy> implements OperationResourcesUiHandlers {
-    
+
     private final PlaceManager placeManager;
-    
+
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
     }
-    
+
     @ProxyCodeSplit
     @NameToken(NameTokens.operationResourcesPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface OperationResourcesProxy extends Proxy<OperationResourcesPresenter>, Place {
     }
-    
+
     @Inject
     public OperationResourcesPresenter(EventBus eventBus, OperationResourcesView view, OperationResourcesProxy proxy, PlaceManager placeManager) {
-        super(eventBus,view,proxy);
+        super(eventBus, view, proxy);
         this.placeManager = placeManager;
     }
-    
+
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
     }
-    
+
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
@@ -58,8 +57,8 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             retrieveResourcesByStatisticalOperation(urn);
         }
     }
-    
+
     private void retrieveResourcesByStatisticalOperation(String urn) {
-        //TODO: retrieve every type of resource
+        // TODO: retrieve every type of resource
     }
 }

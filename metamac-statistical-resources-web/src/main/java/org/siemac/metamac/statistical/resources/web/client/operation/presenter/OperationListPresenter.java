@@ -34,27 +34,25 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+public class OperationListPresenter extends Presenter<OperationListPresenter.OperationListView, OperationListPresenter.OperationListProxy> implements OperationListUiHandlers {
 
-public class OperationListPresenter extends Presenter<OperationListPresenter.OperationListView,OperationListPresenter.OperationListProxy> implements OperationListUiHandlers {
-    
-    public final static int                           OPERATION_LIST_FIRST_RESULT                           = 0;
-    public final static int                           OPERATION_LIST_MAX_RESULTS                            = 30;
-    
-    private final DispatchAsync                       dispatcher;
-    private final PlaceManager                        placeManager;
-    
+    public final static int     OPERATION_LIST_FIRST_RESULT = 0;
+    public final static int     OPERATION_LIST_MAX_RESULTS  = 30;
+
+    private final DispatchAsync dispatcher;
+    private final PlaceManager  placeManager;
+
     @ProxyCodeSplit
     @NameToken(NameTokens.operationsListPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface OperationListProxy extends Proxy<OperationListPresenter>, Place {
     }
-    
+
     public interface OperationListView extends View, HasUiHandlers<OperationListUiHandlers> {
 
         void setOperationPaginatedList(GetStatisticalOperationsPaginatedListResult datasetsPaginatedList);
     }
-    
-    
+
     @Inject
     public OperationListPresenter(EventBus eventBus, OperationListView operationListView, OperationListProxy operationListProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
         super(eventBus, operationListView, operationListProxy);
@@ -62,17 +60,17 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
     }
-    
+
     @TitleFunction
     public static String getTranslatedTitle() {
         return getConstants().breadcrumbOperations();
     }
-    
+
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, MainPagePresenter.TYPE_SetContextAreaContent, this);
     }
-    
+
     @Override
     protected void onReset() {
         super.onReset();
@@ -80,7 +78,6 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
 
         retrieveOperations(OPERATION_LIST_FIRST_RESULT, OPERATION_LIST_MAX_RESULTS, null);
     }
-    
 
     @Override
     public void retrieveOperations(int firstResult, int maxResults, final String operation) {
@@ -97,11 +94,11 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
             }
         });
     }
-    
+
     @Override
     public void goToOperation(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            //placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage));
+            // placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage));
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage).with(PlaceRequestParams.operationParam, UrnUtils.removePrefix(urn)));
         }
     }

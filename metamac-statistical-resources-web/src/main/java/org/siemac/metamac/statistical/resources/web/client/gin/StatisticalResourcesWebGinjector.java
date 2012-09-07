@@ -29,13 +29,12 @@ public interface StatisticalResourcesWebGinjector extends Ginjector {
     LoggedInGatekeeper getLoggedInGatekeeper();
 
     Provider<MainPagePresenter> getMainPagePresenter();
-    
+
     AsyncProvider<OperationListPresenter> getOperationListPresenter();
     AsyncProvider<OperationResourcesPresenter> getOperationResourcesPresenter();
     AsyncProvider<OperationPresenter> getOperationPresenter();
     AsyncProvider<DatasetPresenter> getDatasetPresenter();
     AsyncProvider<DatasetListPresenter> getDatasetListPresenter();
-
 
     AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();
     AsyncProvider<UnauthorizedPagePresenter> getUnauthorizedPagePresenter();

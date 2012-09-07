@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetDatasetActionHandler extends SecurityActionHandler<GetDatasetAction,GetDatasetResult> {
+public class GetDatasetActionHandler extends SecurityActionHandler<GetDatasetAction, GetDatasetResult> {
 
     public GetDatasetActionHandler() {
         super(GetDatasetAction.class);
     }
-    
+
     @Override
     public GetDatasetResult executeSecurityAction(GetDatasetAction action) throws ActionException {
         try {
             return new GetDatasetResult(MockServices.retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetUrn()));
-        } catch(MetamacException e) {
+        } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }

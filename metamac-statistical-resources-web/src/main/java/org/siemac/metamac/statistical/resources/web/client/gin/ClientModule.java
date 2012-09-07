@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.gin;
 
-
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesPlaceManager;
@@ -42,27 +41,28 @@ public class ClientModule extends AbstractPresenterModule {
         install(new DefaultModule(StatisticalResourcesPlaceManager.class));
 
         // Constants
-        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.operationsListPage); //TODO: default place
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.operationsListPage); // TODO: default place
 
         // Gate keeper
         bind(LoggedInGatekeeper.class).in(Singleton.class);
 
         // Presenters
         bindPresenter(MainPagePresenter.class, MainPagePresenter.MainPageView.class, MainPageViewImpl.class, MainPagePresenter.MainPageProxy.class);
-        
+
         bindPresenter(OperationPresenter.class, OperationPresenter.OperationView.class, OperationViewImpl.class, OperationPresenter.OperationProxy.class);
         bindPresenter(OperationListPresenter.class, OperationListPresenter.OperationListView.class, OperationListViewImpl.class, OperationListPresenter.OperationListProxy.class);
-        bindPresenter(OperationResourcesPresenter.class, OperationResourcesPresenter.OperationResourcesView.class, OperationResourcesViewImpl.class, OperationResourcesPresenter.OperationResourcesProxy.class);
+        bindPresenter(OperationResourcesPresenter.class, OperationResourcesPresenter.OperationResourcesView.class, OperationResourcesViewImpl.class,
+                OperationResourcesPresenter.OperationResourcesProxy.class);
         bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
         bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
 
-        
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);
         bindPresenter(UnauthorizedPagePresenter.class, UnauthorizedPagePresenter.UnauthorizedPageView.class, UnauthorizedPageViewImpl.class, UnauthorizedPagePresenter.UnauthorizedPageProxy.class);
 
         // Presenter widgets
-        bindSingletonPresenterWidget(StatisticalResourcesToolStripPresenterWidget.class, StatisticalResourcesToolStripPresenterWidget.StatisticalResourcesToolStripView.class, StatisticalResourcesToolStripViewImpl.class);
+        bindSingletonPresenterWidget(StatisticalResourcesToolStripPresenterWidget.class, StatisticalResourcesToolStripPresenterWidget.StatisticalResourcesToolStripView.class,
+                StatisticalResourcesToolStripViewImpl.class);
 
         // Interfaces
         bind(StatisticalResourcesWebConstants.class).in(Singleton.class);

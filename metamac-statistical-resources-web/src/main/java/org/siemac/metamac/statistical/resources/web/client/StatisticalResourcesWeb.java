@@ -32,12 +32,12 @@ import com.gwtplatform.mvp.client.DelayedBindRegistry;
  */
 public class StatisticalResourcesWeb extends MetamacEntryPoint {
 
-    private static Logger                      logger    = Logger.getLogger(StatisticalResourcesWeb.class.getName());
+    private static Logger                                logger    = Logger.getLogger(StatisticalResourcesWeb.class.getName());
 
-    private static MetamacPrincipal            principal;
-    private static StatisticalResourcesWebConstants       constants;
-    private static StatisticalResourcesWebCoreMessages    coreMessages;
-    private static StatisticalResourcesWebMessages        messages;
+    private static MetamacPrincipal                      principal;
+    private static StatisticalResourcesWebConstants      constants;
+    private static StatisticalResourcesWebCoreMessages   coreMessages;
+    private static StatisticalResourcesWebMessages       messages;
 
     public static final StatisticalResourcesWebGinjector ginjector = GWT.create(StatisticalResourcesWebGinjector.class);
 

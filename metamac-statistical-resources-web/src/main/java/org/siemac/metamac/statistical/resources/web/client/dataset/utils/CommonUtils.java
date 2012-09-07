@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 
-
 public class CommonUtils {
 
     public static String getDatasetProcStatus(DatasetDto datasetDto) {

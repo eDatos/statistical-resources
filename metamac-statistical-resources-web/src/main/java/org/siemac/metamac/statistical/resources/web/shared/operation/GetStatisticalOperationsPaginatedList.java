@@ -8,25 +8,24 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetStatisticalOperationsPaginatedList {
 
     @In(1)
-    int firstResult;
-    
+    int                   firstResult;
+
     @In(2)
-    int maxResults;
-    
+    int                   maxResults;
+
     @In(3)
-    String operation;
-    
+    String                operation;
+
     @Out(1)
     List<ExternalItemDto> operationsList;
 
     @Out(2)
-    Integer          pageNumber;
+    Integer               pageNumber;
 
     @Out(3)
-    Integer          totalResults;
+    Integer               totalResults;
 }

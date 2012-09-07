@@ -9,8 +9,8 @@ public class DatasetRecordUtils {
 
     public static DatasetRecord getDatasetRecord(DatasetDto datasetDto) {
         DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getIdentifiersMetadata().getIdentifier(), getLocalisedString(datasetDto.getIdentifiersMetadata().getTitle()),
-                getLocalisedString(datasetDto.getContentMetadata().getDescription()), CommonUtils.getDatasetProcStatus(datasetDto), datasetDto.getVersionMetadata().getVersion(), datasetDto.getIdentifiersMetadata().getUrn(),
-                datasetDto);
+                getLocalisedString(datasetDto.getContentMetadata().getDescription()), CommonUtils.getDatasetProcStatus(datasetDto), datasetDto.getVersionMetadata().getVersion(), datasetDto
+                        .getIdentifiersMetadata().getUrn(), datasetDto);
         return record;
     }
 

@@ -114,7 +114,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
 
                 @Override
                 public void onSetPlaceTitle(String title) {
-                    getView().addBreadcrumbs(title,index);
+                    getView().addBreadcrumbs(title, index);
                 }
             });
         }

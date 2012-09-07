@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.operation.view.handl
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-
-public interface OperationResourcesUiHandlers extends UiHandlers { 
+public interface OperationResourcesUiHandlers extends UiHandlers {
 
 }

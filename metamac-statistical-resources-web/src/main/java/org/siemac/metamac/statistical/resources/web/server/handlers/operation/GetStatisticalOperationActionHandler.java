@@ -16,14 +16,14 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class GetStatisticalOperationActionHandler extends SecurityActionHandler<GetStatisticalOperationAction, GetStatisticalOperationResult> {
-    
+
     @Autowired
     StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
-    
+
     public GetStatisticalOperationActionHandler() {
         super(GetStatisticalOperationAction.class);
     }
-    
+
     @Override
     public GetStatisticalOperationResult executeSecurityAction(GetStatisticalOperationAction action) throws ActionException {
         String code = UrnUtils.removePrefix(action.getUrn());

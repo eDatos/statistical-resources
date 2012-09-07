@@ -21,8 +21,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class GetStatisticalOperationsPaginatedListActionHandler extends SecurityActionHandler<GetStatisticalOperationsPaginatedListAction, GetStatisticalOperationsPaginatedListResult> {
-    
-    
+
     @Autowired
     StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 
@@ -37,5 +36,5 @@ public class GetStatisticalOperationsPaginatedListActionHandler extends Security
         List<ExternalItemDto> externalItemDtos = statisticalOperationsRestInternalFacade.findOperations(action.getFirstResult(), action.getMaxResults(), action.getOperation());
         return new GetStatisticalOperationsPaginatedListResult(externalItemDtos, firstResult, totalResults);
     }
-    
+
 }

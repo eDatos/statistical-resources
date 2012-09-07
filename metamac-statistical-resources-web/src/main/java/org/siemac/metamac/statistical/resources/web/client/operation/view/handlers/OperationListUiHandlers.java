@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.operation.view.handl
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-
 public interface OperationListUiHandlers extends UiHandlers {
 
     public void retrieveOperations(int firstResult, int maxResults, final String operation);

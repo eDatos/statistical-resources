@@ -53,7 +53,6 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             // Pagination
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
-            
 
             Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset);
             List<ExternalItemDto> externalItemDtos = new ArrayList<ExternalItemDto>();
@@ -61,7 +60,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
                 ExternalItemDto externalItemDto = buildExternalItemDtoFromResource(resource);
                 externalItemDtos.add(externalItemDto);
             }
-            
+
             return externalItemDtos;
         } catch (ServerWebApplicationException e) {
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
@@ -71,12 +70,12 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, StatisticalResourcesWeb.getCoreMessages().exception_common_unknown());
         }
     }
-    
+
     private ExternalItemDto buildExternalItemDtoFromResource(Resource resource) {
         return new ExternalItemDto(resource.getId(), resource.getSelfLink(), resource.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
                 DtoUtils.getInternationalStringDtoFromInternationalString(resource.getTitle()));
     }
-    
+
     private ExternalItemDto buildExternalItemDtoFromOperation(Operation operation) {
         return new ExternalItemDto(operation.getId(), operation.getSelfLink(), operation.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
                 DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));

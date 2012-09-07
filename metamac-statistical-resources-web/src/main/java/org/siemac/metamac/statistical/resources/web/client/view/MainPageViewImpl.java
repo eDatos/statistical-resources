@@ -163,7 +163,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     public void addBreadcrumbs(String title, int index) {
         breadCrumbsPanel.addBreadCrumbs(title, index);
     }
-    
+
     @Override
     public void showMessage(List<String> messages, MessageTypeEnum type) {
         // Hide messages before showing the new ones

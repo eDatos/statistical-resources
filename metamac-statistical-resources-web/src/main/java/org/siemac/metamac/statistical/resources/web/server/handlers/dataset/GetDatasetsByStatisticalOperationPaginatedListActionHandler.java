@@ -14,20 +14,22 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetDatasetsByStatisticalOperationPaginatedListActionHandler extends SecurityActionHandler<GetDatasetsByStatisticalOperationPaginatedListAction, GetDatasetsByStatisticalOperationPaginatedListResult> {
-    
+public class GetDatasetsByStatisticalOperationPaginatedListActionHandler
+        extends
+            SecurityActionHandler<GetDatasetsByStatisticalOperationPaginatedListAction, GetDatasetsByStatisticalOperationPaginatedListResult> {
+
     public GetDatasetsByStatisticalOperationPaginatedListActionHandler() {
         super(GetDatasetsByStatisticalOperationPaginatedListAction.class);
     }
-    
+
     @Override
     public GetDatasetsByStatisticalOperationPaginatedListResult executeSecurityAction(GetDatasetsByStatisticalOperationPaginatedListAction action) throws ActionException {
         try {
             int firstResult = 0;
             int totalResults = 0;
-            List<DatasetDto> datasetsDtos = MockServices.findDatasets(action.getOperationUrn(),action.getFirstResult(), action.getMaxResults());
+            List<DatasetDto> datasetsDtos = MockServices.findDatasets(action.getOperationUrn(), action.getFirstResult(), action.getMaxResults());
             return new GetDatasetsByStatisticalOperationPaginatedListResult(datasetsDtos, firstResult, totalResults);
-        } catch(MetamacException e) {
+        } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }

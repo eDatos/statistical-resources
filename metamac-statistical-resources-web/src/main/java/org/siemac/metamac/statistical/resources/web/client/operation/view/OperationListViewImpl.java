@@ -41,7 +41,7 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
         super();
 
         operationsList = new PaginatedListGrid(OperationListPresenter.OPERATION_LIST_MAX_RESULTS, new PaginatedAction() {
-            
+
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 uiHandlers.retrieveOperations(firstResult, maxResults, null);
@@ -51,18 +51,18 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
         operationsList.getListGrid().setAutoFitData(Autofit.VERTICAL);
         operationsList.getListGrid().setDataSource(new OperationDS());
         operationsList.getListGrid().setUseAllDataSourceFields(false);
-        
+
         ListGridField fieldIdentifier = new ListGridField(OperationDS.IDENTIFIER, getConstants().datasetIdentifier());
         fieldIdentifier.setAlign(Alignment.LEFT);
         ListGridField fieldTitle = new ListGridField(OperationDS.TITLE, getConstants().datasetTitle());
         operationsList.getListGrid().setFields(fieldIdentifier, fieldTitle);
-        
+
         panel = new VLayout();
         panel.addMember(operationsList);
-        
+
         bindEvents();
     }
-    
+
     private void bindEvents() {
         operationsList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
@@ -84,7 +84,8 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
         OperationRecord[] records = new OperationRecord[operationsExternalDtos.size()];
         int index = 0;
         for (ExternalItemDto operationDto : operationsExternalDtos) {
-            records[index++] = new OperationRecord(operationDto.getCode(), InternationalStringUtils.getLocalisedString(operationDto.getTitle()), operationDto.getUri(), operationDto.getUrn(), operationDto);
+            records[index++] = new OperationRecord(operationDto.getCode(), InternationalStringUtils.getLocalisedString(operationDto.getTitle()), operationDto.getUri(), operationDto.getUrn(),
+                    operationDto);
         }
         operationsList.getListGrid().setData(records);
     }

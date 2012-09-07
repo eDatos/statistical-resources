@@ -11,12 +11,13 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 public class BreadCrumbsPanel extends FlowPanel {
+
     private PlaceManager placeManager;
-    
+
     private List<Widget> breadCrumbs;
-    private int totalBreadCrumbs;
-    private int processedBreadCrumbs;
-    
+    private int          totalBreadCrumbs;
+    private int          processedBreadCrumbs;
+
     @Inject
     public BreadCrumbsPanel(PlaceManager placeManager) {
         super();
@@ -34,16 +35,16 @@ public class BreadCrumbsPanel extends FlowPanel {
             breadCrumbs.add(null);
         }
     }
-    
+
     public void addBreadCrumbs(String title, int currentIndex) {
         if (title != null) {
             InlineHyperlink link = new InlineHyperlink(title, placeManager.buildRelativeHistoryToken(currentIndex + 1));
-            breadCrumbs.set(currentIndex,link);
+            breadCrumbs.set(currentIndex, link);
         }
         processedBreadCrumbs++;
         buildBreadCrumbsIfReady();
     }
-    
+
     private void buildBreadCrumbsIfReady() {
         if (processedBreadCrumbs == totalBreadCrumbs) {
             for (Widget widget : breadCrumbs) {

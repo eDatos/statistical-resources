@@ -15,16 +15,15 @@ import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-
 public class OperationResourcesViewImpl extends ViewImpl implements OperationResourcesPresenter.OperationResourcesView {
-    
+
     private OperationResourcesUiHandlers uiHandlers;
-    
-    private DatasetListGrid datasetsListGrid;
-    
-    private VLayout panel;
-    private SectionStack sections;
-    
+
+    private DatasetListGrid              datasetsListGrid;
+
+    private VLayout                      panel;
+    private SectionStack                 sections;
+
     @Inject
     public OperationResourcesViewImpl() {
         sections = new SectionStack();
@@ -32,25 +31,24 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
         sections.setVisibilityMode(VisibilityMode.MULTIPLE);
         sections.setAnimateSections(true);
         sections.setOverflow(Overflow.HIDDEN);
-        
 
         datasetsListGrid = new DatasetListGrid();
-        
+
         SectionStackSection lastDatasetsModifiedSection = new SectionStackSection();
         lastDatasetsModifiedSection.setTitle(getConstants().datasetsLastModified());
         lastDatasetsModifiedSection.setExpanded(false);
         lastDatasetsModifiedSection.setItems(datasetsListGrid);
         sections.addSection(lastDatasetsModifiedSection);
-        
+
         panel = new VLayout();
         panel.addMember(sections);
     }
-    
+
     @Override
     public Widget asWidget() {
         return panel;
     }
-    
+
     @Override
     public void setUiHandlers(OperationResourcesUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;

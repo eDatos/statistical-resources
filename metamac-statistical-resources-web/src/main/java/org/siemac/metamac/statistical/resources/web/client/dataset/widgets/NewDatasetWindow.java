@@ -30,8 +30,8 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
 public class NewDatasetWindow extends CustomWindow {
 
-    private static final int      FORM_ITEM_CUSTOM_WIDTH      = 300;
-    private static final String   FIELD_SAVE                  = "save-sch";
+    private static final int      FORM_ITEM_CUSTOM_WIDTH = 300;
+    private static final String   FIELD_SAVE             = "save-sch";
 
     private CustomDynamicForm     form;
 
@@ -61,14 +61,13 @@ public class NewDatasetWindow extends CustomWindow {
         return form.getItem(FIELD_SAVE);
     }
 
-
     public DatasetDto getNewDatasetDto(String operationUrn) {
         DatasetDto datasetDto = new DatasetDto();
-        
+
         IdentifiersMetadataDto identifiers = new IdentifiersMetadataDto();
         identifiers.setIdentifier(form.getValueAsString(DatasetDS.IDENTIFIER));
         identifiers.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
-        
+
         datasetDto.setIdentifiersMetadata(identifiers);
         datasetDto.setOperationUrn(operationUrn);
         return datasetDto;

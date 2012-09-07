@@ -36,13 +36,13 @@ public class ServerModule extends HandlerModule {
     }
 
     protected void configureHandlers() {
-        
+
         bindHandler(GetDatasetAction.class, GetDatasetActionHandler.class);
         bindHandler(SaveDatasetAction.class, SaveDatasetActionHandler.class);
         bindHandler(GetDatasetsByStatisticalOperationPaginatedListAction.class, GetDatasetsByStatisticalOperationPaginatedListActionHandler.class);
         bindHandler(GetStatisticalOperationAction.class, GetStatisticalOperationActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
-        
+
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);

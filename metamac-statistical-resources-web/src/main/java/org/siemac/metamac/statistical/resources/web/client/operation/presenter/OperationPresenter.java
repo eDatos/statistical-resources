@@ -43,48 +43,48 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-
 public class OperationPresenter extends Presenter<OperationView, OperationProxy> {
-    
-    private final DispatchAsync                       dispatcher;
-    private final PlaceManager                        placeManager;
-    
-    private StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget;
-    
-    private ExternalItemDto operationDto;
-    
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                 = new Type<RevealContentHandler<?>>();
 
-    public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
-    
+    private final DispatchAsync                          dispatcher;
+    private final PlaceManager                           placeManager;
+
+    private StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget;
+
+    private ExternalItemDto                              operationDto;
+
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaContent = new Type<RevealContentHandler<?>>();
-    
-    
+    public static final Type<RevealContentHandler<?>>    TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
+
+    public static final Object                           TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
+
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaContent                          = new Type<RevealContentHandler<?>>();
+
     @ProxyCodeSplit
     @NameToken(NameTokens.operationPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface OperationProxy extends Proxy<OperationPresenter>, Place {
     }
-    
+
     public interface OperationView extends View {
+
         void setOperation(ExternalItemDto operation);
     }
-    
+
     @Inject
-    public OperationPresenter(EventBus eventBus, OperationView view, OperationProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager, StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget) {
+    public OperationPresenter(EventBus eventBus, OperationView view, OperationProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager,
+            StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget) {
         super(eventBus, view, proxy);
         this.placeManager = placeManager;
         this.dispatcher = dispatcher;
         this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
-    
+
     @TitleFunction
     public static String getTranslatedTitle() {
         return getConstants().breadcrumbOperationResources();
     }
-    
+
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
@@ -92,47 +92,47 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
         if (!StringUtils.isBlank(operationParam)) {
             String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationParam);
             retrieveOperation(urn);
-            
+
             goToOperationResources();
         }
     }
-    
+
     private void retrieveOperation(String urn) {
         dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
-           @Override
+
+            @Override
             public void onWaitFailure(Throwable caught) {
-               ShowMessageEvent.fire(OperationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);                
+                ShowMessageEvent.fire(OperationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
             }
-           
-           @Override
+
+            @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
                 setOperation(result.getOperation());
             }
         });
-        
+
     }
-    
-    
+
     private void goToOperationResources() {
         placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationResourcesPage));
     }
-    
+
     void setOperation(ExternalItemDto operation) {
         this.operationDto = operation;
         getView().setOperation(operation);
     }
-    
+
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, MainPagePresenter.TYPE_SetContextAreaContent, this);
     }
-    
+
     @Override
     protected void onReveal() {
         super.onReveal();
         setInSlot(TYPE_SetContextAreaContentOperationResourcesToolBar, toolStripPresenterWidget);
     }
-    
+
     @Override
     protected void onReset() {
         // TODO Auto-generated method stub
@@ -148,7 +148,7 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
         }
         return false;
     }
-    
+
     private void selectToolStripButtonsBasedOnUrl() {
         if (isNameTokenInPlaceHierarchy(NameTokens.datasetsListPage)) {
             toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.DATASETS.name());
@@ -160,7 +160,5 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
             toolStripPresenterWidget.deselectButtons();
         }
     }
-    
-    
-    
+
 }

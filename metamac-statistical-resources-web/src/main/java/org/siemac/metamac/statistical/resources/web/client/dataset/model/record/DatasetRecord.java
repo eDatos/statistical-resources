@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.record;
 
-
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
@@ -21,7 +20,7 @@ public class DatasetRecord extends ListGridRecord {
         setUrn(urn);
         setDatasetDto(datasetDto);
     }
-   
+
     public void setId(Long id) {
         setAttribute(DatasetDS.ID, id);
     }

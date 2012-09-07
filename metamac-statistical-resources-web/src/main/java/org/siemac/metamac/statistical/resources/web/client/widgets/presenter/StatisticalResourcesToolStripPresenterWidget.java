@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStripPresenterWidget<StatisticalResourcesToolStripPresenterWidget.StatisticalResourcesToolStripView> {
 
     public interface StatisticalResourcesToolStripView extends MetamacToolStripPresenterWidget.MetamacToolStripView {
+
         HasClickHandlers getGoDatasetsList();
         HasClickHandlers getGoCollectionsList();
         HasClickHandlers getGoQueriesList();
@@ -23,7 +24,7 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
 
     @Inject
     public StatisticalResourcesToolStripPresenterWidget(EventBus eventBus, StatisticalResourcesToolStripView operationsToolStripView, PlaceManager placeManager) {
-        super(eventBus, operationsToolStripView,placeManager);
+        super(eventBus, operationsToolStripView, placeManager);
     }
 
     @Override
@@ -49,9 +50,9 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
                 getPlaceManager().revealPlaceHierarchy(operationHierarchy);
             }
         }));
-        
+
         registerHandler(getView().getGoQueriesList().addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);

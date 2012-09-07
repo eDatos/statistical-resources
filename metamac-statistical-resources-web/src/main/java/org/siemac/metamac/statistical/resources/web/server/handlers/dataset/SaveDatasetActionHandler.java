@@ -13,11 +13,11 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetAction, SaveDatasetResult> {
-    
+
     public SaveDatasetActionHandler() {
         super(SaveDatasetAction.class);
     }
-    
+
     @Override
     public SaveDatasetResult executeSecurityAction(SaveDatasetAction action) throws ActionException {
         try {

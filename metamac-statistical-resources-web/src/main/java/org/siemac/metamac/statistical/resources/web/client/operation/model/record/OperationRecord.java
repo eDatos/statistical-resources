@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.operation.model.record;
 
-
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.operation.model.ds.OperationDS;
 
@@ -15,7 +14,7 @@ public class OperationRecord extends ListGridRecord {
         setUrn(urn);
         setOperationExternalItemDto(operationExternalItemDto);
     }
-   
+
     public void setIdentifier(String identifier) {
         setAttribute(OperationDS.IDENTIFIER, identifier);
     }
@@ -27,7 +26,7 @@ public class OperationRecord extends ListGridRecord {
     public void setUrn(String value) {
         setAttribute(OperationDS.URN, value);
     }
-    
+
     public void setUri(String value) {
         setAttribute(OperationDS.URI, value);
     }
@@ -36,7 +35,6 @@ public class OperationRecord extends ListGridRecord {
         setAttribute(OperationDS.DTO, operationExternalItemDto);
     }
 
-    
     public String getIdentifier() {
         return getAttribute(OperationDS.IDENTIFIER);
     }
@@ -48,7 +46,7 @@ public class OperationRecord extends ListGridRecord {
     public String getUrn() {
         return getAttributeAsString(OperationDS.URN);
     }
-    
+
     public String getUri() {
         return getAttributeAsString(OperationDS.URI);
     }

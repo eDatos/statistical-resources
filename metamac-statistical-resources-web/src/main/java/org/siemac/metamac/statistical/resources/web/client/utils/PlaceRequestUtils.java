@@ -16,7 +16,7 @@ public class PlaceRequestUtils {
         }
         return null;
     }
-    
+
     public static String getDatasetParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.datasetPage.equals(request.getNameToken())) {

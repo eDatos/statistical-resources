@@ -6,12 +6,12 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class SaveDataset {
 
     @In(1)
     DatasetDto dataset;
-    
+
     @Out(1)
     DatasetDto savedDataset;
 }
