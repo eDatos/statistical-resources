@@ -8,7 +8,10 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
+import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent.SetOperationHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationProxy;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationView;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
@@ -31,6 +34,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
@@ -40,14 +44,14 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class OperationPresenter extends Presenter<OperationView, OperationProxy> {
+public class OperationPresenter extends Presenter<OperationView, OperationProxy> implements SetOperationHandler {
 
     private final DispatchAsync                          dispatcher;
     private final PlaceManager                           placeManager;
 
     private StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget;
 
-    private ExternalItemDto                              operationDto;
+    private ExternalItemDto                              operation;
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>>    TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
@@ -89,34 +93,27 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
         if (!StringUtils.isBlank(operationParam)) {
             String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationParam);
             retrieveOperation(urn);
-
             goToOperationResources();
+        } else {
+            StatisticalResourcesWeb.showErrorPage();
         }
     }
 
     private void retrieveOperation(String urn) {
-        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(OperationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
-
-            @Override
-            public void onWaitSuccess(GetStatisticalOperationResult result) {
-                setOperation(result.getOperation());
-            }
-        });
-
-    }
-
-    private void goToOperationResources() {
-        placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationResourcesPage));
-    }
-
-    void setOperation(ExternalItemDto operation) {
-        this.operationDto = operation;
-        getView().setOperation(operation);
+                @Override
+                public void onWaitFailure(Throwable caught) {
+                    ShowMessageEvent.fire(OperationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onWaitSuccess(GetStatisticalOperationResult result) {
+                    SetOperationEvent.fire(OperationPresenter.this, result.getOperation());
+                    setOperation(result.getOperation());
+                }
+            });
+        }
     }
 
     @Override
@@ -132,30 +129,35 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
 
     @Override
     protected void onReset() {
-        // TODO Auto-generated method stub
         super.onReset();
         selectToolStripButtonsBasedOnUrl();
     }
 
-    private boolean isNameTokenInPlaceHierarchy(String nameToken) {
-        for (PlaceRequest placeReq : placeManager.getCurrentPlaceHierarchy()) {
-            if (nameToken.equals(placeReq.getNameToken())) {
-                return true;
-            }
-        }
-        return false;
+    @ProxyEvent
+    @Override
+    public void onSetOperation(SetOperationEvent event) {
+        setOperation(event.getOperation());
     }
 
     private void selectToolStripButtonsBasedOnUrl() {
-        if (isNameTokenInPlaceHierarchy(NameTokens.datasetsListPage)) {
+        if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.datasetsListPage)) {
             toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.DATASETS.name());
-        } else if (isNameTokenInPlaceHierarchy(NameTokens.collectionsListPage)) {
+        } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.collectionsListPage)) {
             toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.COLLECTIONS.name());
-        } else if (isNameTokenInPlaceHierarchy(NameTokens.queriesListPage)) {
+        } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.queriesListPage)) {
             toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.QUERIES.name());
         } else {
             toolStripPresenterWidget.deselectButtons();
         }
+    }
+
+    private void goToOperationResources() {
+        placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationResourcesPage));
+    }
+
+    private void setOperation(ExternalItemDto operation) {
+        this.operation = operation;
+        getView().setOperation(operation);
     }
 
 }

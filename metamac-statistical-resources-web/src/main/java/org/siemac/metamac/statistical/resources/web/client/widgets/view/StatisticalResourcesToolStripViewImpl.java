@@ -19,13 +19,13 @@ public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewI
     public StatisticalResourcesToolStripViewImpl() {
         super();
 
-        datasetsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().statisticalDatasets());
+        datasetsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().datasets());
         datasetsButton.setID(StatisticalResourcesToolStripButtonEnum.DATASETS.getValue());
 
-        collectionsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().statisticalCollections());
+        collectionsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().collections());
         collectionsButton.setID(StatisticalResourcesToolStripButtonEnum.COLLECTIONS.getValue());
 
-        queriesButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().statisticalQueries());
+        queriesButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().queries());
         queriesButton.setID(StatisticalResourcesToolStripButtonEnum.QUERIES.getValue());
 
         toolStrip.addButton(datasetsButton);
