@@ -4,13 +4,13 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.LinkedHashMap;
 
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 
 public class CommonUtils {
 
-    public static String getDatasetProcStatus(DatasetDto datasetDto) {
-        return getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + datasetDto.getProcStatus().getName());
+    public static String getProcStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
+        return getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName());
     }
 
     public static LinkedHashMap<String, String> getDatasetTypeHashMap() {
