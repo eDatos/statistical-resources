@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.server.MOCK;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -276,7 +275,7 @@ public class MockServices {
 
     public static List<CollectionDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
         List<CollectionDto> collectionList = new ArrayList<CollectionDto>();
-        Collection<CollectionDto> collectionDtos = getCollections().values();
+        List<CollectionDto> collectionDtos = new ArrayList<CollectionDto>(getCollections().values());
         for (CollectionDto collection : collectionDtos) {
             if (operationUrn.equals(collection.getOperation().getUrn())) {
                 CollectionDto c = collection;

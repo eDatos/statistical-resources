@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.CollectionListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
@@ -171,8 +172,9 @@ public class CollectionListPresenter extends Presenter<CollectionListPresenter.C
 
     @Override
     public void goToCollection(String urn) {
-        // TODO Auto-generated method stub
-
+        if (!StringUtils.isBlank(urn)) {
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.collectionPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
+        }
     }
 
 }

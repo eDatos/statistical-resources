@@ -103,7 +103,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    OperationResourcesPresenter.this.operation = operation;
+                    OperationResourcesPresenter.this.operation = result.getOperation();
                     SetOperationEvent.fire(OperationResourcesPresenter.this, operation);
                 }
             });

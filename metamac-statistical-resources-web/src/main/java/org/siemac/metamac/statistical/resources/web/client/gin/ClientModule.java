@@ -6,7 +6,9 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesP
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionPresenter;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
@@ -58,6 +60,7 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
         bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
         bindPresenter(CollectionListPresenter.class, CollectionListPresenter.CollectionListView.class, CollectionListViewImpl.class, CollectionListPresenter.CollectionListProxy.class);
+        bindPresenter(CollectionPresenter.class, CollectionPresenter.CollectionView.class, CollectionViewImpl.class, CollectionPresenter.CollectionProxy.class);
 
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);
