@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
@@ -28,7 +28,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
 
     private DatasetMainFormLayout mainFormLayout;
 
-    private DatasetDto            datasetDto;
+    private DataSetDto            datasetDto;
 
     private GroupDynamicForm      identifiersForm;
     private GroupDynamicForm      auditForm;
@@ -114,7 +114,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
          */
     }
 
-    public void setDatasetViewMode(DatasetDto datasetDto) {
+    public void setDatasetViewMode(DataSetDto datasetDto) {
         // Identifiers
         identifiersForm.setValue(DatasetDS.IDENTIFIER, datasetDto.getIdentifier());
         identifiersForm.setValue(DatasetDS.URI, datasetDto.getUri());
@@ -131,10 +131,10 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     }
 
     @Override
-    public void setDataset(DatasetDto datasetDto) {
+    public void setDataset(DataSetDto datasetDto) {
         this.datasetDto = datasetDto;
 
-        String defaultLocalized = InternationalStringUtils.getLocalisedString(datasetDto.getIdentifiersMetadata().getTitle());
+        String defaultLocalized = InternationalStringUtils.getLocalisedString(datasetDto.getTitle());
         String title = defaultLocalized != null ? defaultLocalized : StringUtils.EMPTY;
         mainFormLayout.setTitleLabelContents(title);
 

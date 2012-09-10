@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
@@ -39,7 +39,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     public interface DatasetView extends View {
 
-        void setDataset(DatasetDto datasetDto);
+        void setDataset(DataSetDto datasetDto);
     }
 
     @ProxyCodeSplit
@@ -70,7 +70,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         }
     }
 
-    private void setDataset(DatasetDto datasetDto) {
+    private void setDataset(DataSetDto datasetDto) {
         getView().setDataset(datasetDto);
     }
 

@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.RecordUtils;
@@ -46,7 +46,7 @@ public class DatasetListGrid extends BaseCustomListGrid {
         this.setFields(identifierDatasetField, titleDatasetField);
     }
 
-    public void setDatasets(List<DatasetDto> datasets) {
+    public void setDatasets(List<DataSetDto> datasets) {
         removeAllData();
         if (datasets != null) {
             DatasetRecord[] datasetRecords = new DatasetRecord[datasets.size()];

@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
@@ -48,8 +48,8 @@ public class NewDatasetWindow extends CustomWindow {
         return form.getItem(FIELD_SAVE);
     }
 
-    public DatasetDto getNewDatasetDto(String operationUrn) {
-        DatasetDto datasetDto = new DatasetDto();
+    public DataSetDto getNewDataSetDto(String operationUrn) {
+        DataSetDto datasetDto = new DataSetDto();
         datasetDto.setIdentifier(form.getValueAsString(DatasetDS.IDENTIFIER));
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         // datasetDto.setOperationUrn(operationUrn);
