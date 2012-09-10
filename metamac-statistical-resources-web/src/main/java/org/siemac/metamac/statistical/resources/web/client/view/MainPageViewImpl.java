@@ -193,6 +193,11 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         this.uiHandlers = uiHandlers;
     }
 
+    @Override
+    public void setTitle(String title) {
+        masterHead.setTitleLabel(title);
+    }
+
     private String getUserName() {
         MetamacPrincipal metamacPrincipal = StatisticalResourcesWeb.getCurrentUser();
         if (metamacPrincipal != null) {

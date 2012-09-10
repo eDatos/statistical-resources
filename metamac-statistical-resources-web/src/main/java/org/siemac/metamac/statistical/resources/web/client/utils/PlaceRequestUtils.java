@@ -26,4 +26,13 @@ public class PlaceRequestUtils {
         return null;
     }
 
+    public static boolean isNameTokenInPlaceHierarchy(PlaceManager placeManager, String nameToken) {
+        for (PlaceRequest placeReq : placeManager.getCurrentPlaceHierarchy()) {
+            if (nameToken.equals(placeReq.getNameToken())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

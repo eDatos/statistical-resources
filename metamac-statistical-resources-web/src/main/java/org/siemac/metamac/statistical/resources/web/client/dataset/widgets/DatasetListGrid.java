@@ -7,7 +7,7 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
-import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetRecordUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 
 import com.smartgwt.client.widgets.grid.HoverCustomizer;
@@ -51,7 +51,7 @@ public class DatasetListGrid extends BaseCustomListGrid {
         if (datasets != null) {
             DatasetRecord[] datasetRecords = new DatasetRecord[datasets.size()];
             for (int i = 0; i < datasets.size(); i++) {
-                datasetRecords[i] = DatasetRecordUtils.getDatasetRecord(datasets.get(i));
+                datasetRecords[i] = RecordUtils.getDatasetRecord(datasets.get(i));
             }
             setData(datasetRecords);
         }

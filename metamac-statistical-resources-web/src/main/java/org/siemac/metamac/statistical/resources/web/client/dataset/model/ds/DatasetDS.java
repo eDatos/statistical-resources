@@ -38,7 +38,7 @@ public class DatasetDS extends DataSource {
     public static String       DTO                        = "ds-dto";
 
     public DatasetDS() {
-        DataSourceIntegerField code = new DataSourceIntegerField(IDENTIFIER, StatisticalResourcesWeb.getConstants().datasetIdentifier());
+        DataSourceIntegerField code = new DataSourceIntegerField(ID, StatisticalResourcesWeb.getConstants().datasetIdentifier());
         code.setPrimaryKey(true);
         addField(code);
     }

@@ -11,10 +11,10 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.Data
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetRecordUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.utils.RecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
@@ -170,7 +170,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         DatasetRecord[] records = new DatasetRecord[datasetsDtos.size()];
         int index = 0;
         for (DatasetDto datasetDto : datasetsDtos) {
-            records[index++] = DatasetRecordUtils.getDatasetRecord(datasetDto);
+            records[index++] = RecordUtils.getDatasetRecord(datasetDto);
         }
         datasetsList.getListGrid().setData(records);
     }
