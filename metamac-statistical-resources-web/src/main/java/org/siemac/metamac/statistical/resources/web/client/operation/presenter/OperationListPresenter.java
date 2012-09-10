@@ -74,8 +74,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     @Override
     protected void onReset() {
         super.onReset();
-        SetTitleEvent.fire(this, getConstants().statisticalDatasets());
-
+        SetTitleEvent.fire(this, getConstants().statisticalOperations());
         retrieveOperations(OPERATION_LIST_FIRST_RESULT, OPERATION_LIST_MAX_RESULTS, null);
     }
 
