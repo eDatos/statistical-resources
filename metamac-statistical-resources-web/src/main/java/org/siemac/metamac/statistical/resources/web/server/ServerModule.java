@@ -1,11 +1,13 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetCollectionPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
@@ -37,11 +39,17 @@ public class ServerModule extends HandlerModule {
 
     protected void configureHandlers() {
 
+        // STATISTICAL OPERATIONS
+        bindHandler(GetStatisticalOperationAction.class, GetStatisticalOperationActionHandler.class);
+        bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
+
+        // DATASETS
         bindHandler(GetDatasetAction.class, GetDatasetActionHandler.class);
         bindHandler(SaveDatasetAction.class, SaveDatasetActionHandler.class);
         bindHandler(GetDatasetsByStatisticalOperationPaginatedListAction.class, GetDatasetsByStatisticalOperationPaginatedListActionHandler.class);
-        bindHandler(GetStatisticalOperationAction.class, GetStatisticalOperationActionHandler.class);
-        bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
+
+        // COLLECTIONS
+        bindHandler(GetCollectionPaginatedListAction.class, GetCollectionPaginatedListActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

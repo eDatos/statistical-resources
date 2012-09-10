@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -21,7 +21,7 @@ public class GetDatasetsByStatisticalOperationPaginatedList {
     int              maxResults;
 
     @Out(1)
-    List<DatasetDto> datasetsList;
+    List<DataSetDto> datasetsList;
 
     @Out(2)
     Integer          pageNumber;

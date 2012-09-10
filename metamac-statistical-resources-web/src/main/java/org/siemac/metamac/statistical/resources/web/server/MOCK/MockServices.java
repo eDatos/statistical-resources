@@ -18,8 +18,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
 import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
@@ -30,22 +31,24 @@ import org.slf4j.LoggerFactory;
 
 public class MockServices {
 
-    private static final String                            DATASET_URI_PREFIX = "http://siemac.metamac/datasets/";
+    private static final String                            DATASET_URI_PREFIX    = "http://siemac.metamac/datasets/";
+    private static final String                            COLLECTION_URI_PREFIX = "http://siemac.metamac/collections/";
 
-    private static Map<String, DatasetDto>                 datasets;
+    private static Map<String, DataSetDto>                 datasets;
+    private static Map<String, CollectionDto>              collections;
     private static StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 
-    private static Logger                                  logger             = LoggerFactory.getLogger(MockServices.class);
+    private static Logger                                  logger                = LoggerFactory.getLogger(MockServices.class);
 
-    public static DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
-        if (datasetDto.getIdentifiersMetadata() != null) {
-            String identifier = datasetDto.getIdentifiersMetadata().getIdentifier();
-            String datasetUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, identifier);
-            if (getDatasets().containsKey(datasetUrn)) {
-                throw new MetamacException(ServiceExceptionType.DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
-            }
-        } else {
-            throw new MetamacException(CommonServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.IDENTIFIER);
+    //
+    // DATASETS
+    //
+
+    public static DataSetDto createDataset(ServiceContext ctx, DataSetDto datasetDto) throws MetamacException {
+        String identifier = datasetDto.getIdentifier();
+        String datasetUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, identifier);
+        if (getDatasets().containsKey(datasetUrn)) {
+            throw new MetamacException(ServiceExceptionType.DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
         }
 
         Date now = new Date();
@@ -74,19 +77,19 @@ public class MockServices {
 
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        contentMetadata.setCoverageSpatial(new ArrayList<String>());
-        contentMetadata.setCoverageSpatialCodes(new ArrayList<String>());
-        contentMetadata.setCoverageTemporal(new ArrayList<String>());
-        contentMetadata.setCoverageTemporalCodes(new ArrayList<String>());
+        contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         datasetDto.setContentMetadata(contentMetadata);
 
-        getDatasets().put(datasetDto.getIdentifiersMetadata().getUrn(), datasetDto);
+        getDatasets().put(datasetDto.getUrn(), datasetDto);
         return datasetDto;
     }
 
-    public static DatasetDto retrieveDataset(ServiceContext ctx, String datasetUrn) throws MetamacException {
-        DatasetDto dataset = getDatasets().get(datasetUrn);
+    public static DataSetDto retrieveDataset(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        DataSetDto dataset = getDatasets().get(datasetUrn);
         if (dataset != null) {
             return dataset;
         } else {
@@ -94,31 +97,30 @@ public class MockServices {
         }
     }
 
-    public static DatasetDto saveDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
-        if (datasetDto.getUuid() == null || datasetDto.getIdentifiersMetadata() == null || getDatasets().containsKey(datasetDto.getIdentifiersMetadata().getUrn())) {
+    public static DataSetDto saveDataset(ServiceContext ctx, DataSetDto datasetDto) throws MetamacException {
+        if (datasetDto.getUuid() == null || getDatasets().containsKey(datasetDto.getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
-        DatasetDto oldDataset = getDatasets().get(datasetDto.getIdentifiersMetadata().getUrn());
+        DataSetDto oldDataset = getDatasets().get(datasetDto.getUrn());
 
         if (!oldDataset.getOperation().getUrn().equals(datasetDto.getOperation().getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_OPERATION);
         }
 
         Date now = new Date();
-        datasetDto.getAuditMetadata().setDateLastUpdate(now);
-        datasetDto.getAuditMetadata().setLastUpdateUser(ctx.getUserId());
+        datasetDto.setDateLastUpdate(now);
+        datasetDto.setLastUpdateUser(ctx.getUserId());
 
         datasetDto.setVersion(datasetDto.getVersion() + 1);
 
-        getDatasets().put(datasetDto.getIdentifiersMetadata().getUrn(), datasetDto);
+        getDatasets().put(datasetDto.getUrn(), datasetDto);
 
         return datasetDto;
     }
 
-    public static List<DatasetDto> findDatasets(String operationUrn, int firstResult, int maxResults) throws MetamacException {
-
-        List<DatasetDto> datasetsList = new ArrayList<DatasetDto>();
-        for (DatasetDto dataset : getDatasets().values()) {
+    public static List<DataSetDto> findDatasets(String operationUrn, int firstResult, int maxResults) throws MetamacException {
+        List<DataSetDto> datasetsList = new ArrayList<DataSetDto>();
+        for (DataSetDto dataset : getDatasets().values()) {
             if (operationUrn.equals(dataset.getOperation().getUrn())) {
                 datasetsList.add(dataset);
             }
@@ -128,12 +130,12 @@ public class MockServices {
         if (endIndex - firstResult > maxResults) {
             endIndex = firstResult + maxResults;
         }
-        return new ArrayList<DatasetDto>(datasetsList.subList(firstResult, endIndex));
+        return new ArrayList<DataSetDto>(datasetsList.subList(firstResult, endIndex));
     }
 
-    private static Map<String, DatasetDto> getDatasets() {
+    private static Map<String, DataSetDto> getDatasets() {
         if (datasets == null) {
-            datasets = new HashMap<String, DatasetDto>();
+            datasets = new HashMap<String, DataSetDto>();
             try {
                 List<ExternalItemDto> operations = getOperationsList();
                 if (operations.size() > 0) {
@@ -154,7 +156,7 @@ public class MockServices {
 
     private static void createDataset(String code, String title_es, String title_en, ExternalItemDto operation) {
         Date now = new Date();
-        DatasetDto datasetDto = new DatasetDto();
+        DataSetDto datasetDto = new DataSetDto();
 
         datasetDto.setId(Long.valueOf(datasets.size() + 1));
         datasetDto.setUuid(UUID.randomUUID().toString());
@@ -183,14 +185,180 @@ public class MockServices {
 
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        contentMetadata.setCoverageSpatial(new ArrayList<String>());
-        contentMetadata.setCoverageSpatialCodes(new ArrayList<String>());
-        contentMetadata.setCoverageTemporal(new ArrayList<String>());
-        contentMetadata.setCoverageTemporalCodes(new ArrayList<String>());
+        contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         datasetDto.setContentMetadata(contentMetadata);
 
-        datasets.put(datasetDto.getIdentifiersMetadata().getUrn(), datasetDto);
+        datasets.put(datasetDto.getUrn(), datasetDto);
+    }
+
+    //
+    // COLLECTIONS
+    //
+
+    public static CollectionDto createCollection(ServiceContext ctx, CollectionDto collectionDto) throws MetamacException {
+        String identifier = collectionDto.getIdentifier();
+        String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, identifier);
+        if (getCollections().containsKey(collectionUrn)) {
+            throw new MetamacException(ServiceExceptionType.COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
+        }
+
+        Date now = new Date();
+
+        collectionDto.setId(Long.valueOf(getCollections().size() + 1));
+        collectionDto.setUuid(UUID.randomUUID().toString());
+        collectionDto.setVersion(1L);
+
+        // Audit
+        collectionDto.setCreator(ctx.getUserId());
+        collectionDto.setDateCreated(now);
+        collectionDto.setDateLastUpdate(now);
+        collectionDto.setLastUpdateUser(ctx.getUserId());
+
+        // Identifiers
+        collectionDto.setUri(COLLECTION_URI_PREFIX + collectionDto.getIdentifier());
+        collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionDto.getIdentifier()));
+
+        // Version
+        collectionDto.setDateVersion(now);
+        collectionDto.setVersionLogic("01.000");
+
+        // Life cycle
+        collectionDto.setCreator(ctx.getUserId());
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+
+        // Content
+        ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        collectionDto.setContentMetadata(contentMetadata);
+
+        getCollections().put(collectionDto.getUrn(), collectionDto);
+        return collectionDto;
+    }
+
+    public static CollectionDto retrieveCollection(ServiceContext ctx, String collectionUrn) throws MetamacException {
+        CollectionDto collection = getCollections().get(collectionUrn);
+        if (collection != null) {
+            return collection;
+        } else {
+            throw new MetamacException(ServiceExceptionType.COLLECTION_NOT_FOUND, collectionUrn);
+        }
+    }
+
+    public static CollectionDto saveCollection(ServiceContext ctx, CollectionDto collectionDto) throws MetamacException {
+        if (collectionDto.getUuid() == null || getCollections().containsKey(collectionDto.getUrn())) {
+            throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
+        }
+        CollectionDto oldCollection = getCollections().get(collectionDto.getUrn());
+
+        if (!oldCollection.getOperation().getUrn().equals(collectionDto.getOperation().getUrn())) {
+            throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.COLLECTION_OPERATION);
+        }
+
+        Date now = new Date();
+        collectionDto.setDateLastUpdate(now);
+        collectionDto.setLastUpdateUser(ctx.getUserId());
+
+        collectionDto.setVersion(collectionDto.getVersion() + 1);
+
+        getCollections().put(collectionDto.getUrn(), collectionDto);
+
+        return collectionDto;
+    }
+
+    public static List<CollectionDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
+        List<CollectionDto> collectionList = new ArrayList<CollectionDto>();
+        for (CollectionDto collection : getCollections().values()) {
+            if (operationUrn.equals(collection.getOperation().getUrn())) {
+                collectionList.add(collection);
+            }
+        }
+
+        int endIndex = collectionList.size();
+        if (endIndex - firstResult > maxResults) {
+            endIndex = firstResult + maxResults;
+        }
+        return new ArrayList<CollectionDto>(collectionList.subList(firstResult, endIndex));
+    }
+
+    private static Map<String, CollectionDto> getCollections() {
+        if (collections == null) {
+            collections = new HashMap<String, CollectionDto>();
+            try {
+                List<ExternalItemDto> operations = getOperationsList();
+                if (operations.size() > 0) {
+                    Random randGen = new Random();
+                    createCollection("col-0001", "Collection 1", "Collection 1", operations.get(randGen.nextInt(operations.size())));
+                    createCollection("col-0002", "Collection 2", "Collection 2", operations.get(randGen.nextInt(operations.size())));
+                    createCollection("col-0003", "Collection 3", "Collection 3", operations.get(randGen.nextInt(operations.size())));
+                    createCollection("col-0004", "Collection 4", "Collection 4", operations.get(randGen.nextInt(operations.size())));
+                    createCollection("col-0005", "Collection 5", "Collection 5", operations.get(randGen.nextInt(operations.size())));
+                    createCollection("col-0006", "Collection 6", "Collection 6", operations.get(randGen.nextInt(operations.size())));
+                }
+            } catch (MetamacWebException e) {
+                logger.error("Error en collections ", e);
+            }
+        }
+        return collections;
+    }
+
+    private static void createCollection(String code, String title_es, String title_en, ExternalItemDto operation) {
+        Date now = new Date();
+        CollectionDto collectionDto = new CollectionDto();
+
+        collectionDto.setId(Long.valueOf(collections.size() + 1));
+        collectionDto.setUuid(UUID.randomUUID().toString());
+        collectionDto.setVersion(1L);
+        collectionDto.setOperation(operation);
+
+        // Audit
+        collectionDto.setCreator("ISTAC_ADMIN");
+        collectionDto.setDateCreated(now);
+        collectionDto.setDateLastUpdate(now);
+        collectionDto.setLastUpdateUser("ISTAC_ADMIN");
+
+        // Identifiers
+        collectionDto.setIdentifier(code);
+        collectionDto.setTitle(createIntString(title_es, title_en));
+        collectionDto.setUri(COLLECTION_URI_PREFIX + code);
+        collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
+
+        // Version
+        collectionDto.setDateVersion(now);
+        collectionDto.setVersionLogic("01.000");
+
+        // Life cycle
+        collectionDto.setCreator("ISTAC_ADMIN");
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+
+        // Content
+        ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        collectionDto.setContentMetadata(contentMetadata);
+
+        collections.put(collectionDto.getUrn(), collectionDto);
+    }
+
+    //
+    // OTHERS METHODS
+    //
+
+    public static StatisticalOperationsRestInternalFacade getStatisticalOperationsRestInternalFacade() {
+        if (statisticalOperationsRestInternalFacade == null) {
+            statisticalOperationsRestInternalFacade = ApplicationContextProvider.getApplicationContext().getBean(StatisticalOperationsRestInternalFacade.class);
+        }
+        return statisticalOperationsRestInternalFacade;
     }
 
     private static InternationalStringDto createIntString(String text_es, String text_en) {
@@ -208,13 +376,6 @@ public class MockServices {
             intString.addText(loc);
         }
         return intString;
-    }
-
-    public static StatisticalOperationsRestInternalFacade getStatisticalOperationsRestInternalFacade() {
-        if (statisticalOperationsRestInternalFacade == null) {
-            statisticalOperationsRestInternalFacade = ApplicationContextProvider.getApplicationContext().getBean(StatisticalOperationsRestInternalFacade.class);
-        }
-        return statisticalOperationsRestInternalFacade;
     }
 
     private static List<ExternalItemDto> getOperationsList() throws MetamacWebException {
