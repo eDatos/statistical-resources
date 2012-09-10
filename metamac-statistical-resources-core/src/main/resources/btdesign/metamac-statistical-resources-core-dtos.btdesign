@@ -8,9 +8,6 @@ Application StatisticalResourcesDto {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto 
 		
 		DataTransferObject StatisticalResourceDto extends @IdentityDto {
-			- @IdentifiableStatisticalResourceDto identifiersMetadata;
-			- @AuditableStatisticalResourceDto auditMetadata;
-
 			- @ExternalItemDto operation;
 		}
 
@@ -56,7 +53,7 @@ Application StatisticalResourcesDto {
 			JAVADATE dateIssued;
 		}
 
-		DataTransferObject DatasetDto extends @LifeCycleStatisticalResourceDto {
+		DataTransferObject DataSetDto extends @LifeCycleStatisticalResourceDto {
 			- @ContentMetadataDto contentMetadata;
 		}
 
@@ -75,10 +72,10 @@ Application StatisticalResourcesDto {
 			- @InternationalStringDto description;
 			List<String> keywords;
 
-			List<String> coverageSpatial;
-			List<String> coverageSpatialCodes;
-			List<String> coverageTemporal;
-			List<String> coverageTemporalCodes;
+			List<String> spatialCoverage;
+			List<String> spatialCoverageCodes;
+			List<String> temporalCoverage;
+			List<String> temporalCoverageCodes;
 
 			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type;

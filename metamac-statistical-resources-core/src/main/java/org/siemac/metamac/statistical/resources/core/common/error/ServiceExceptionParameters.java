@@ -4,13 +4,17 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 
 public class ServiceExceptionParameters {
 
-    public static final String DATASET                            = "dataset";
-
     public static final String IDENTIFIER                         = "identifier";
 
     // DATASET
+    public static final String DATASET                            = "dataset";
     public static final String DATASET_TITLE                      = DATASET + ".title";
     public static final String DATASET_OPERATION                  = DATASET + ".operation";
+
+    // COLLECTIONS
+    public static final String COLLECTION                         = "collection";
+    public static final String COLLECTION_TITLE                   = COLLECTION + ".title";
+    public static final String COLLECTION_OPERATION               = COLLECTION + ".operation";
 
     // LIFECYCLE
     public static final String PROC_STATUS_DRAFT                  = StatisticalResourceProcStatusEnum.DRAFT.name();
