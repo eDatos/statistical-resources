@@ -52,19 +52,7 @@ Application StatisticalResourcesDto {
 			JAVADATE acceptedDate;
 			JAVADATE issuedDate;
 		}
-
-		DataTransferObject DataSetDto extends @LifeCycleStatisticalResourceDto {
-			- @ContentMetadataDto contentMetadata;
-		}
-
-		DataTransferObject CollectionDto extends @LifeCycleStatisticalResourceDto {
-			- @ContentMetadataDto contentMetadata;
-		}
-
-		DataTransferObject QueryDto extends @IdentifiableStatisticalResourceDto {
-
-		}
-
+		
 		DataTransferObject ContentMetadataDto {
 			String language;
 			List<String> languages;
@@ -88,7 +76,34 @@ Application StatisticalResourcesDto {
 			JAVADATE copyrightedDate;
 			String license;
 		}
+		
+		// DATASET
 
+		DataTransferObject DataSetDto extends @LifeCycleStatisticalResourceDto {
+			- @ContentMetadataDto contentMetadata;
+		}
+
+		// COLLECTION
+
+		DataTransferObject CollectionDto extends @LifeCycleStatisticalResourceDto {
+			- @ContentMetadataDto contentMetadata;
+			- @CollectionStructureHierarchyDto structure;
+		}
+		
+		DataTransferObject CollectionStructureHierarchyDto {
+			- @CollectionStructureHierarchyTypeEnum type;
+			- @InternationalStringDto label;
+			String url;
+			String urn;
+			- List<@CollectionStructureHierarchyDto> children;
+		}
+
+		// QUERY
+
+		DataTransferObject QueryDto extends @IdentifiableStatisticalResourceDto {
+
+		}
+		
 	}
 
 }

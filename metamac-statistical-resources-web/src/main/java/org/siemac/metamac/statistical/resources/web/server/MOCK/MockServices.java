@@ -19,8 +19,10 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
+import org.siemac.metamac.statistical.resources.core.dto.CollectionStructureHierarchyDto;
 import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
 import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
@@ -171,7 +173,7 @@ public class MockServices {
 
         // Identifiers
         datasetDto.setIdentifier(code);
-        datasetDto.setTitle(createIntString(title_es, title_en));
+        datasetDto.setTitle(createInternationalString(title_es, title_en));
         datasetDto.setUri(DATASET_URI_PREFIX + code);
         datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
 
@@ -328,7 +330,7 @@ public class MockServices {
 
         // Identifiers
         collectionDto.setIdentifier(code);
-        collectionDto.setTitle(createIntString(title_es, title_en));
+        collectionDto.setTitle(createInternationalString(title_es, title_en));
         collectionDto.setUri(COLLECTION_URI_PREFIX + code);
         collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
 
@@ -349,6 +351,36 @@ public class MockServices {
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         collectionDto.setContentMetadata(contentMetadata);
 
+        // Structure
+        CollectionStructureHierarchyDto title = new CollectionStructureHierarchyDto();
+        title.setType(CollectionStructureHierarchyTypeEnum.TITLE);
+        title.setLabel(createInternationalString("Título", "Title"));
+
+        CollectionStructureHierarchyDto chapter1 = new CollectionStructureHierarchyDto();
+        chapter1.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
+        chapter1.setLabel(createInternationalString("Capítulo 1", "Chapter 1"));
+
+        CollectionStructureHierarchyDto chapter2 = new CollectionStructureHierarchyDto();
+        chapter2.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
+        chapter2.setLabel(createInternationalString("Capítulo 2", "Chapter 2"));
+
+        CollectionStructureHierarchyDto subchapter1 = new CollectionStructureHierarchyDto();
+        subchapter1.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER1);
+        subchapter1.setLabel(createInternationalString("Subcapítulo 1", "Subchapter 1"));
+
+        CollectionStructureHierarchyDto subchapter11 = new CollectionStructureHierarchyDto();
+        subchapter11.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER2);
+        subchapter11.setLabel(createInternationalString("Subcapítulo 11", "Subchapter 11"));
+
+        title.getChildren().add(chapter1);
+        title.getChildren().add(chapter2);
+
+        chapter1.getChildren().add(subchapter1);
+
+        subchapter1.getChildren().add(subchapter11);
+
+        collectionDto.setStructure(title);
+
         collections.put(collectionDto.getUrn(), collectionDto);
     }
 
@@ -363,7 +395,7 @@ public class MockServices {
         return statisticalOperationsRestInternalFacade;
     }
 
-    private static InternationalStringDto createIntString(String text_es, String text_en) {
+    private static InternationalStringDto createInternationalString(String text_es, String text_en) {
         InternationalStringDto intString = new InternationalStringDto();
         {
             LocalisedStringDto loc = new LocalisedStringDto();

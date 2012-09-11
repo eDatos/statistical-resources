@@ -44,6 +44,17 @@ Application StatisticalResourcesEnums {
     		ADMINISTRADOR,
     		ANY_ROLE_ALLOWED
     	}
+    	
+    	enum CollectionStructureHierarchyTypeEnum {
+    		TITLE,
+    		CHAPTER,
+    		SUBCHAPTER1,
+    		SUBCHAPTER2,
+    		TEXT,
+    		URL,
+    		DATASET,
+    		QUERY;
+    	}
 
     }
 
