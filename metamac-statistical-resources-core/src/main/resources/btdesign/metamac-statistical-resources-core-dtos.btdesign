@@ -41,13 +41,13 @@ Application StatisticalResourcesDto {
 			String responsabilityIssued;
 			String responsabilityOutOfPrint;
 
-			//organizations level
+			// Orrganizations level
 			String creator;
 			String contributor;
 			String publisher;
 			String mediator;
 
-			//dates
+			// Dates
 			JAVADATE submittedDate;
 			JAVADATE acceptedDate;
 			JAVADATE issuedDate;
@@ -77,11 +77,11 @@ Application StatisticalResourcesDto {
 			List<String> temporalCoverage;
 			List<String> temporalCoverageCodes;
 
-			//CLASS DESCRIPTORS
+			// Class descriptors
 			- @StatisticalResourceTypeEnum type;
 			- @StatisticalResourceFormatEnum format;
 
-			JAVADATE nextUpdate;
+			JAVADATE nextUpdateDate;
 			String updateFrequency;
 
 			String rightsHolder;
