@@ -27,8 +27,8 @@ Application StatisticalResourcesDto {
 
 		DataTransferObject VersionableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
 			String versionLogic;
-			JAVADATE dateVersion;
-			JAVADATE nextVersion;
+			JAVADATE versionDate;
+			JAVADATE nextVersionDate;
 			- @StatisticalResourceVersionRationaleTypeEnum rationaleType;
 			String rationale;
 		}
@@ -48,9 +48,9 @@ Application StatisticalResourcesDto {
 			String mediator;
 
 			//dates
-			JAVADATE dateSubmitted;
-			JAVADATE dateAccepted;
-			JAVADATE dateIssued;
+			JAVADATE submittedDate;
+			JAVADATE acceptedDate;
+			JAVADATE issuedDate;
 		}
 
 		DataTransferObject DataSetDto extends @LifeCycleStatisticalResourceDto {
@@ -85,7 +85,7 @@ Application StatisticalResourcesDto {
 			String updateFrequency;
 
 			String rightsHolder;
-			JAVADATE dateCopyrighted;
+			JAVADATE copyrightedDate;
 			String license;
 		}
 
