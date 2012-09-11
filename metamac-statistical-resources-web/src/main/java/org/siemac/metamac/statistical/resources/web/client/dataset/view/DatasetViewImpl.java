@@ -78,7 +78,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
         // version
         versioningForm = new GroupDynamicForm(getConstants().datasetVersioning());
         ViewTextItem version = new ViewTextItem(DatasetDS.VERSION_LOGIC, getConstants().datasetVersion());
-        ViewTextItem dateVersion = new ViewTextItem(DatasetDS.DATE_VERSION, getConstants().datasetDateVersion());
+        ViewTextItem dateVersion = new ViewTextItem(DatasetDS.DATE_VERSION, getConstants().datasetVersionDate());
         ViewTextItem nextVersion = new ViewTextItem(DatasetDS.NEXT_VERSION, getConstants().datasetNextVersion());
         ViewTextItem rationale = new ViewTextItem(DatasetDS.RATIONALE, getConstants().datasetRationale());
         ViewTextItem rationaleType = new ViewTextItem(DatasetDS.RATIONALE_TYPE, getConstants().datasetRationaleType());
@@ -122,12 +122,12 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
         identifiersForm.setValue(DatasetDS.TITLE, RecordUtils.getInternationalStringRecord(datasetDto.getTitle()));
 
         versioningForm.setValue(DatasetDS.VERSION_LOGIC, datasetDto.getVersion());
-        versioningForm.setValue(DatasetDS.DATE_VERSION, datasetDto.getDateVersion() != null ? DateUtils.getFormattedDate(datasetDto.getDateVersion()) : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.DATE_VERSION, datasetDto.getVersionDate() != null ? DateUtils.getFormattedDate(datasetDto.getVersionDate()) : StringUtils.EMPTY);
         // TODO change based on values taken from gpe
         versioningForm.setValue(DatasetDS.RATIONALE_TYPE, datasetDto.getRationaleType() != null ? datasetDto.getRationaleType().name() : StringUtils.EMPTY);
         versioningForm.setValue(DatasetDS.RATIONALE, datasetDto.getRationale() != null ? datasetDto.getRationale() : StringUtils.EMPTY);
-        versioningForm.setValue(DatasetDS.DATE_VERSION, datasetDto.getDateVersion() != null ? DateUtils.getFormattedDate(datasetDto.getDateVersion()) : StringUtils.EMPTY);
-        versioningForm.setValue(DatasetDS.NEXT_VERSION, datasetDto.getNextVersion() != null ? DateUtils.getFormattedDate(datasetDto.getNextVersion()) : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.DATE_VERSION, datasetDto.getVersionDate() != null ? DateUtils.getFormattedDate(datasetDto.getVersionDate()) : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.NEXT_VERSION, datasetDto.getNextVersionDate() != null ? DateUtils.getFormattedDate(datasetDto.getNextVersionDate()) : StringUtils.EMPTY);
     }
 
     @Override

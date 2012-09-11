@@ -68,7 +68,7 @@ public class MockServices {
         datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetDto.getIdentifier()));
 
         // Version
-        datasetDto.setDateVersion(now);
+        datasetDto.setVersionDate(now);
         datasetDto.setVersionLogic("01.000");
 
         // Life cycle
@@ -97,7 +97,7 @@ public class MockServices {
         }
     }
 
-    public static DataSetDto saveDataset(ServiceContext ctx, DataSetDto datasetDto) throws MetamacException {
+    public static DataSetDto updateDataset(ServiceContext ctx, DataSetDto datasetDto) throws MetamacException {
         if (datasetDto.getUuid() == null || getDatasets().containsKey(datasetDto.getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
@@ -176,7 +176,7 @@ public class MockServices {
         datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
 
         // Version
-        datasetDto.setDateVersion(now);
+        datasetDto.setVersionDate(now);
         datasetDto.setVersionLogic("01.000");
 
         // Life cycle
@@ -223,7 +223,7 @@ public class MockServices {
         collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionDto.getIdentifier()));
 
         // Version
-        collectionDto.setDateVersion(now);
+        collectionDto.setVersionDate(now);
         collectionDto.setVersionLogic("01.000");
 
         // Life cycle
@@ -252,8 +252,8 @@ public class MockServices {
         }
     }
 
-    public static CollectionDto saveCollection(ServiceContext ctx, CollectionDto collectionDto) throws MetamacException {
-        if (collectionDto.getUuid() == null || getCollections().containsKey(collectionDto.getUrn())) {
+    public static CollectionDto updateCollection(ServiceContext ctx, CollectionDto collectionDto) throws MetamacException {
+        if (collectionDto.getId() == null) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
         CollectionDto oldCollection = getCollections().get(collectionDto.getUrn());
@@ -333,7 +333,7 @@ public class MockServices {
         collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
 
         // Version
-        collectionDto.setDateVersion(now);
+        collectionDto.setVersionDate(now);
         collectionDto.setVersionLogic("01.000");
 
         // Life cycle

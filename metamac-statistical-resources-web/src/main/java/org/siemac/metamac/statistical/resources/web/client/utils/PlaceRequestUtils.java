@@ -26,6 +26,15 @@ public class PlaceRequestUtils {
         return null;
     }
 
+    public static String getCollectionParamFromUrl(PlaceManager placeManager) {
+        for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
+            if (NameTokens.collectionPage.equals(request.getNameToken())) {
+                return request.getParameter(PlaceRequestParams.collectionParam, null);
+            }
+        }
+        return null;
+    }
+
     public static boolean isNameTokenInPlaceHierarchy(PlaceManager placeManager, String nameToken) {
         for (PlaceRequest placeReq : placeManager.getCurrentPlaceHierarchy()) {
             if (nameToken.equals(placeReq.getNameToken())) {

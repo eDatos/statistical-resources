@@ -21,8 +21,8 @@ public class LifeCycleStatisticalResourceDS extends DataSource {
     public static final String TITLE                       = "lc-title";
     // VERSIONABLE
     public static final String VERSION_LOGIC               = "lc-version";
-    public static final String DATE_VERSION                = "lc-date-version";
-    public static final String NEXT_VERSION                = "lc-next-version";
+    public static final String VERSION_DATE                = "lc-date-version";
+    public static final String NEXT_VERSION_DATE           = "lc-next-version";
     public static final String RATIONALE                   = "lc-rationale";
     public static final String RATIONALE_TYPE              = "lc-rationale-type";
     // LIFE CYCLE
@@ -35,9 +35,9 @@ public class LifeCycleStatisticalResourceDS extends DataSource {
     public static final String CONTRIBUTOR                 = "lc-contr";
     public static final String PUBLISHER                   = "lc-pub";
     public static final String MEDIATOR                    = "lc-media";
-    public static final String DATE_SUBMITTED              = "lc-date-subm";
-    public static final String DATE_ACCEPTED               = "lc-date-acc";
-    public static final String DATE_ISSUED                 = "lc-date-issued";
+    public static final String SUBMITTED_DATE              = "lc-date-subm";
+    public static final String ACCEPTED_DATE               = "lc-date-acc";
+    public static final String ISSUED_DATE                 = "lc-date-issued";
     public static final String PROC_STATUS                 = "lc-proc-status";
 
     public LifeCycleStatisticalResourceDS() {

@@ -24,7 +24,7 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
             if (action.getDataset().getUuid() == null) {
                 return new SaveDatasetResult(MockServices.createDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset()));
             } else {
-                return new SaveDatasetResult(MockServices.saveDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset()));
+                return new SaveDatasetResult(MockServices.updateDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset()));
             }
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

@@ -15,10 +15,10 @@ public class CollectionDS extends LifeCycleStatisticalResourceDS {
     public static final String SPATIAL_COVERAGE_CODES  = "cm-cov-spa-codes";
     public static final String TEMPORAL_COVERAGE       = "cm-cov-temp";
     public static final String TEMPORAL_COVERAGE_CODES = "cm-cov-temp-codes";
-    public static final String NEXT_UPDATE             = "cm-next-up";
+    public static final String NEXT_UPDATE_DATE        = "cm-next-up";
     public static final String UPDATE_FREQUENCY        = "cm-up-freq";
     public static final String RIGHTS_HOLDER           = "cm-rights-holder";
-    public static final String DATE_COPYRIGHTED        = "cm-date-copy";
+    public static final String COPYRIGHTED_DATE        = "cm-date-copy";
     public static final String LICENSE                 = "cm-lic";
     public static final String DESCRIPTION             = "cm-desc";
     public static final String TYPE                    = "cm-type";
