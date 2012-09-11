@@ -3,11 +3,15 @@ package org.siemac.metamac.statistical.resources.web.client.operation.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent.SetOperationHandler;
@@ -16,6 +20,8 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -42,12 +48,17 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 public class OperationResourcesPresenter extends Presenter<OperationResourcesView, OperationResourcesProxy> implements OperationResourcesUiHandlers, SetOperationHandler {
 
+    public final static int     RESOURCE_LIST_FIRST_RESULT = 0;
+    public final static int     RESOURCE_LIST_MAX_RESULTS  = 10;
+
     private final PlaceManager  placeManager;
     private final DispatchAsync dispatcher;
 
     private ExternalItemDto     operation;
 
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
+
+        void setCollections(List<CollectionDto> collectionDtos);
     }
 
     @ProxyCodeSplit
@@ -61,6 +72,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         super(eventBus, view, proxy);
         this.placeManager = placeManager;
         this.dispatcher = dispatcher;
+        getView().setUiHandlers(this);
     }
 
     @Override
@@ -111,7 +123,34 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     }
 
     private void retrieveResourcesByStatisticalOperation(String urn) {
-        // TODO: retrieve every type of resource
+        // DataSets
+        // TODO
+
+        // Collections
+        dispatcher.execute(new GetCollectionPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetCollectionPaginatedListResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetCollectionPaginatedListResult result) {
+                getView().setCollections(result.getCollectionList());
+            }
+        });
+    }
+
+    @Override
+    public void goToDataSet(String urn) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void goToCollection(String urn) {
+        if (!StringUtils.isBlank(urn)) {
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.collectionPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
+        }
     }
 
 }
