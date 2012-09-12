@@ -383,26 +383,23 @@ public class MockServices {
         contentMetadata.setCopyrightedDate(new Date());
         collectionDto.setContentMetadata(contentMetadata);
 
-        // Structure
-        CollectionStructureHierarchyDto title = new CollectionStructureHierarchyDto();
-        title.setType(CollectionStructureHierarchyTypeEnum.TITLE);
-        title.setLabel(createInternationalString("Título", "Title"));
+        // STRUCTURE
 
-        CollectionStructureHierarchyDto chapter1 = new CollectionStructureHierarchyDto();
-        chapter1.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
-        chapter1.setLabel(createInternationalString("Capítulo 1", "Chapter 1"));
+        CollectionStructureHierarchyDto structure = createCollectionStructure();
 
-        CollectionStructureHierarchyDto chapter2 = new CollectionStructureHierarchyDto();
-        chapter2.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
-        chapter2.setLabel(createInternationalString("Capítulo 2", "Chapter 2"));
+        collectionDto.setStructure(structure);
 
-        CollectionStructureHierarchyDto subchapter1 = new CollectionStructureHierarchyDto();
-        subchapter1.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER1);
-        subchapter1.setLabel(createInternationalString("Subcapítulo 1", "Subchapter 1"));
+        collections.put(collectionDto.getUrn(), collectionDto);
+    }
 
-        CollectionStructureHierarchyDto subchapter11 = new CollectionStructureHierarchyDto();
-        subchapter11.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER2);
-        subchapter11.setLabel(createInternationalString("Subcapítulo 11", "Subchapter 11"));
+    private static CollectionStructureHierarchyDto createCollectionStructure() {
+        CollectionStructureHierarchyDto title = createTitleNode("Título", "Title");
+        CollectionStructureHierarchyDto chapter1 = createChapterNode("Capítulo 1", "Chapter 1");
+        CollectionStructureHierarchyDto chapter2 = createChapterNode("Capítulo 2", "Chapter 2");
+        CollectionStructureHierarchyDto subchapter1 = createSubChapter1Node("Subcapítulo 1", "Subchapter 1");
+        CollectionStructureHierarchyDto subchapter11 = createSubChapter2Node("Subcapítulo 11", "Subchapter 11");
+        CollectionStructureHierarchyDto text = createTextNode("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+                "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.");
 
         title.getChildren().add(chapter1);
         title.getChildren().add(chapter2);
@@ -411,9 +408,68 @@ public class MockServices {
 
         subchapter1.getChildren().add(subchapter11);
 
-        collectionDto.setStructure(title);
+        subchapter11.getChildren().add(text);
 
-        collections.put(collectionDto.getUrn(), collectionDto);
+        return title;
+    }
+
+    private static CollectionStructureHierarchyDto createTitleNode(String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.TITLE);
+        node.setLabel(createInternationalString(text_es, text_en));
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createChapterNode(String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
+        node.setLabel(createInternationalString(text_es, text_en));
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createSubChapter1Node(String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER1);
+        node.setLabel(createInternationalString(text_es, text_en));
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createSubChapter2Node(String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER2);
+        node.setLabel(createInternationalString(text_es, text_en));
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createTextNode(String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.TEXT);
+        node.setLabel(createInternationalString(text_es, text_en));
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createUrlNode(String url, String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.URL);
+        node.setLabel(createInternationalString(text_es, text_en));
+        node.setUrl(url);
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createDataSetNode(String urn, String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.DATASET);
+        node.setLabel(createInternationalString(text_es, text_en));
+        node.setUrn(urn);
+        return node;
+    }
+
+    private static CollectionStructureHierarchyDto createQueryNode(String urn, String text_es, String text_en) {
+        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setType(CollectionStructureHierarchyTypeEnum.QUERY);
+        node.setLabel(createInternationalString(text_es, text_en));
+        node.setUrn(urn);
+        return node;
     }
 
     //

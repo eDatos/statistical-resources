@@ -48,10 +48,10 @@ public class NewCollectionWindow extends CustomWindow {
     }
 
     public CollectionDto getNewCollectionDto() {
-        CollectionDto conceptDto = new CollectionDto();
-        conceptDto.setIdentifier(form.getValueAsString(CollectionDS.IDENTIFIER));
-        conceptDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(CollectionDS.TITLE)));
-        return conceptDto;
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setIdentifier(form.getValueAsString(CollectionDS.IDENTIFIER));
+        collectionDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(CollectionDS.TITLE)));
+        return collectionDto;
     }
 
     public boolean validateForm() {

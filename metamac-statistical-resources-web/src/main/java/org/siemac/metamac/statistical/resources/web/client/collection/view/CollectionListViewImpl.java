@@ -123,7 +123,7 @@ public class CollectionListViewImpl extends ViewImpl implements CollectionListPr
             }
         });
 
-        // Concepts scheme list
+        // Collection list
 
         collectionListGrid = new PaginatedCheckListGrid(CollectionListPresenter.COLLECTION_LIST_MAX_RESULTS, new PaginatedAction() {
 

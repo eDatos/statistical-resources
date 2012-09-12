@@ -10,12 +10,14 @@ import org.siemac.metamac.statistical.resources.web.client.collection.presenter.
 import org.siemac.metamac.statistical.resources.web.client.collection.utils.CollectionClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.CollectionUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionStructurePanel;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
+import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
@@ -52,6 +54,8 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
     private GroupDynamicForm         lifeCycleEditionForm;
     private GroupDynamicForm         contentMetadataEditionForm;
 
+    private CollectionStructurePanel structurePanel;
+
     private CollectionDto            collectionDto;
 
     @Inject
@@ -66,7 +70,17 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         createViewForm();
         createEditionForm();
 
+        // STRUCTURE
+
+        structurePanel = new CollectionStructurePanel();
+
+        VLayout collectionStructureLayout = new VLayout();
+        collectionStructureLayout.setMargin(15);
+        collectionStructureLayout.addMember(new TitleLabel(getConstants().collectionStructure()));
+        collectionStructureLayout.addMember(structurePanel);
+
         panel.addMember(mainFormLayout);
+        panel.addMember(collectionStructureLayout);
     }
 
     @Override
@@ -109,6 +123,9 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
 
         setCollectionViewMode(collectionDto);
         setCollectionEditionMode(collectionDto);
+
+        // Structure
+        structurePanel.setCollectionStructure(collectionDto.getStructure());
     }
 
     private void bindMainFormLayoutEvents() {
