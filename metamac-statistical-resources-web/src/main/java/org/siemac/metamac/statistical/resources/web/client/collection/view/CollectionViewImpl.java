@@ -183,7 +183,7 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         contentMetadataForm = new GroupDynamicForm(getConstants().collectionContentMetadata());
         ViewTextItem language = new ViewTextItem(CollectionDS.LANGUAGE, getConstants().contentMetadataLanguage());
         ViewTextItem languages = new ViewTextItem(CollectionDS.LANGUAGES, getConstants().contentMetadataLanguages());
-        ViewTextItem description = new ViewTextItem(CollectionDS.DESCRIPTION, getConstants().contentMetadataDescription());
+        ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(CollectionDS.DESCRIPTION, getConstants().contentMetadataDescription());
         ViewTextItem keywords = new ViewTextItem(CollectionDS.KEYWORDS, getConstants().contentMetadataKeywords());
         ViewTextItem spatialCoverage = new ViewTextItem(CollectionDS.SPATIAL_COVERAGE, getConstants().contentMetadataSpatialCoverage());
         ViewTextItem spatialCoverageCodes = new ViewTextItem(CollectionDS.SPATIAL_COVERAGE_CODES, getConstants().contentMetadataSpatialCoverageCodes());

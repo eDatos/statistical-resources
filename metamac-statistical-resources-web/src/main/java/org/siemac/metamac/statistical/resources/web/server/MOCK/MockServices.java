@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.web.common.client.utils.UrnUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -344,11 +345,42 @@ public class MockServices {
 
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        contentMetadata.setLanguage("es");
+        contentMetadata.setDescription(createInternationalString(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
+                        + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
+                        + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
+
+        contentMetadata.setKeywords(new ArrayList<String>());
+        contentMetadata.getKeywords().add("statistic");
+        contentMetadata.getKeywords().add("data");
+        contentMetadata.getKeywords().add("collection");
+
         contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        contentMetadata.getSpatialCoverage().add("CANARIAS");
+        contentMetadata.getSpatialCoverage().add("LANZAROTE");
+        contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
+        contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
+
         contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        contentMetadata.getSpatialCoverageCodes().add("ES70");
+        contentMetadata.getSpatialCoverageCodes().add("ES708");
+        contentMetadata.getSpatialCoverageCodes().add("ES708A01");
+        contentMetadata.getSpatialCoverageCodes().add("ES708A02");
+
         contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
+        contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
+        contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
+
         contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        contentMetadata.getTemporalCoverageCodes().add("2002Q1");
+        contentMetadata.getTemporalCoverageCodes().add("2002Q2");
+        contentMetadata.getTemporalCoverageCodes().add("2002Q3");
+
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        contentMetadata.setType(StatisticalResourceTypeEnum.COLLECTION);
+        contentMetadata.setCopyrightedDate(new Date());
         collectionDto.setContentMetadata(contentMetadata);
 
         // Structure
