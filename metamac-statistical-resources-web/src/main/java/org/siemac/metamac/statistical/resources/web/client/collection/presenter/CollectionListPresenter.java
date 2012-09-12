@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -143,7 +145,18 @@ public class CollectionListPresenter extends Presenter<CollectionListPresenter.C
 
     @Override
     public void createCollection(CollectionDto collectionDto) {
-        // TODO Auto-generated method stub
+        collectionDto.setOperation(operation);
+        dispatcher.execute(new SaveCollectionAction(collectionDto), new WaitingAsyncCallback<SaveCollectionResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(CollectionListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorCreate()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(SaveCollectionResult result) {
+                retrieveCollections(COLLECTION_LIST_FIRST_RESULT, COLLECTION_LIST_MAX_RESULTS, null);
+            }
+        });
 
     }
 

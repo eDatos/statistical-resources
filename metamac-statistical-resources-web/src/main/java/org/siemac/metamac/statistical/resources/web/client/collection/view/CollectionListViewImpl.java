@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.web.client.collection.model.reco
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.collection.utils.CollectionClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.CollectionListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.collection.widgets.NewCollectionWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -54,7 +55,6 @@ public class CollectionListViewImpl extends ViewImpl implements CollectionListPr
     private ToolStripButton          newCollectionButton;
     private ToolStripButton          deleteCollectionButton;
 
-    // private NewCollectionWindow newCollectionWindow;
     private DeleteConfirmationWindow deleteConfirmationWindow;
 
     @Inject
@@ -73,18 +73,17 @@ public class CollectionListViewImpl extends ViewImpl implements CollectionListPr
 
             @Override
             public void onClick(ClickEvent event) {
-                // newCollectionWindow = new NewCollectionWindow(getConstants().collectionCreate());
-                // newCollectionWindow.setUiHandlers(uiHandlers);
-                // newCollectionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-                //
-                // @Override
-                // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                // if (newCollectionWindow.validateForm()) {
-                // uiHandlers.createCollection(newCollectionWindow.getNewCollectionDto());
-                // newCollectionWindow.destroy();
-                // }
-                // }
-                // });
+                final NewCollectionWindow newCollectionWindow = new NewCollectionWindow(getConstants().collectionCreate());
+                newCollectionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (newCollectionWindow.validateForm()) {
+                            uiHandlers.createCollection(newCollectionWindow.getNewCollectionDto());
+                            newCollectionWindow.destroy();
+                        }
+                    }
+                });
             }
         });
         newCollectionButton.setVisibility(CollectionClientSecurityUtils.canCreateCollection() ? Visibility.VISIBLE : Visibility.HIDDEN);

@@ -39,7 +39,7 @@ public class GetCollectionPaginatedListActionHandler extends SecurityActionHandl
         // criteria.getPaginator().setFirstResult(action.getFirstResult());
         // criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
         // criteria.getPaginator().setCountTotalResults(true);
-        
+
         try {
             int firstResult = 0;
             int totalResults = 0;
