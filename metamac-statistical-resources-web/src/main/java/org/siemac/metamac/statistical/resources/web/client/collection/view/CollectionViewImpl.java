@@ -34,6 +34,8 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -65,6 +67,8 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         panel.setHeight100();
         panel.setOverflow(Overflow.SCROLL);
 
+        // COLLECTION METADATA
+
         mainFormLayout = new CollectionMainFormLayout(CollectionClientSecurityUtils.canUpdateCollection());
         bindMainFormLayoutEvents();
         createViewForm();
@@ -79,8 +83,20 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         collectionStructureLayout.addMember(new TitleLabel(getConstants().collectionStructure()));
         collectionStructureLayout.addMember(structurePanel);
 
-        panel.addMember(mainFormLayout);
-        panel.addMember(collectionStructureLayout);
+        // TABS
+
+        TabSet tabSet = new TabSet();
+        tabSet.setMargin(10);
+
+        Tab collectionMetadataTab = new Tab(getConstants().collectionMetadata());
+        collectionMetadataTab.setPane(mainFormLayout);
+
+        Tab collectionStructureTab = new Tab(getConstants().collectionStructure());
+        collectionStructureTab.setPane(structurePanel);
+
+        tabSet.setTabs(collectionMetadataTab, collectionStructureTab);
+
+        panel.addMember(tabSet);
     }
 
     @Override
