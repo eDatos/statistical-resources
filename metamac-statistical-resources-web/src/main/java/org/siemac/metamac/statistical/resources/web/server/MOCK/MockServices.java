@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -415,59 +416,67 @@ public class MockServices {
 
     private static CollectionStructureHierarchyDto createTitleNode(String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.TITLE);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
     private static CollectionStructureHierarchyDto createChapterNode(String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
     private static CollectionStructureHierarchyDto createSubChapter1Node(String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER1);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
     private static CollectionStructureHierarchyDto createSubChapter2Node(String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER2);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
     private static CollectionStructureHierarchyDto createTextNode(String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.TEXT);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
     private static CollectionStructureHierarchyDto createUrlNode(String url, String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.URL);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         node.setUrl(url);
         return node;
     }
 
     private static CollectionStructureHierarchyDto createDataSetNode(String urn, String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.DATASET);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         node.setUrn(urn);
         return node;
     }
 
     private static CollectionStructureHierarchyDto createQueryNode(String urn, String text_es, String text_en) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+        node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.QUERY);
-        node.setLabel(createInternationalString(text_es, text_en));
+        node.setText(createInternationalString(text_es, text_en));
         node.setUrn(urn);
         return node;
     }

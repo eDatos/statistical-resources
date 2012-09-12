@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.statistical.resources.core.dto.CollectionStructureHierarchyDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.CollectionDS;
+import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.CollectionStructureDS;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
@@ -21,9 +21,7 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
-public class CollectionTreeGrid extends TreeGrid {
-
-    // private static final String SCHEME_NODE_NAME = "scheme-node";
+public class CollectionStructureTreeGrid extends TreeGrid {
 
     private DeleteConfirmationWindow deleteConfirmationWindow;
 
@@ -32,7 +30,7 @@ public class CollectionTreeGrid extends TreeGrid {
     private MenuItem                 createElementMenuItem;
     private MenuItem                 deleteElementMenuItem;
 
-    public CollectionTreeGrid() {
+    public CollectionStructureTreeGrid() {
 
         setAutoFitMaxRecords(10);
         setAutoFitData(Autofit.VERTICAL);
@@ -52,9 +50,9 @@ public class CollectionTreeGrid extends TreeGrid {
 
         setShowHeader(false);
 
-        TreeGridField codeField = new TreeGridField(CollectionDS.TITLE, "identifier");
+        TreeGridField nameField = new TreeGridField(CollectionStructureDS.TEXT, getConstants().collectionStructureElementText());
 
-        setFields(codeField);
+        setFields(nameField);
 
         // Menu
 
@@ -94,8 +92,8 @@ public class CollectionTreeGrid extends TreeGrid {
 
     private TreeNode createCollectionTreeNode(CollectionStructureHierarchyDto structureHierarchyDto) {
         TreeNode node = new TreeNode();
-        node.setAttribute(CollectionDS.TITLE, InternationalStringUtils.getLocalisedString(structureHierarchyDto.getLabel()));
-        node.setAttribute(CollectionDS.TYPE, structureHierarchyDto.getType().name());
+        node.setAttribute(CollectionStructureDS.TEXT, InternationalStringUtils.getLocalisedString(structureHierarchyDto.getText()));
+        node.setAttribute(CollectionStructureDS.DTO, structureHierarchyDto);
 
         TreeNode[] children = new TreeNode[structureHierarchyDto.getChildren().size()];
         for (int i = 0; i < structureHierarchyDto.getChildren().size(); i++) {
