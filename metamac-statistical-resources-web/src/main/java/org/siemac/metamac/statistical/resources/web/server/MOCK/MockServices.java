@@ -397,19 +397,37 @@ public class MockServices {
         CollectionStructureHierarchyDto title = createTitleNode("Título", "Title");
         CollectionStructureHierarchyDto chapter1 = createChapterNode("Capítulo 1", "Chapter 1");
         CollectionStructureHierarchyDto chapter2 = createChapterNode("Capítulo 2", "Chapter 2");
+        CollectionStructureHierarchyDto chapter3 = createChapterNode("Capítulo 3", "Chapter 3");
         CollectionStructureHierarchyDto subchapter1 = createSubChapter1Node("Subcapítulo 1", "Subchapter 1");
         CollectionStructureHierarchyDto subchapter11 = createSubChapter2Node("Subcapítulo 11", "Subchapter 11");
-        CollectionStructureHierarchyDto text = createTextNode("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+        CollectionStructureHierarchyDto text11 = createTextNode("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
                 "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.");
+        CollectionStructureHierarchyDto dataSet11 = createDataSetNode("urn:dataset", "Dataset 1", "Dataset 1");
+        CollectionStructureHierarchyDto query11 = createQueryNode("urn:query", "Consulta 1", "Query 1");
+        CollectionStructureHierarchyDto text2 = createTextNode("Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. "
+                + "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. ", "English");
+        CollectionStructureHierarchyDto dataSet2 = createDataSetNode("urn:dataset", "Dataset 2", "Dataset 2");
+        CollectionStructureHierarchyDto query2 = createQueryNode("urn:query", "Consulta 2", "Query 2");
+        CollectionStructureHierarchyDto url2 = createUrlNode("http://www.gobiernodecanarias.org/istac/", "URL del ISTAC", "ISTAC URL");
 
         title.getChildren().add(chapter1);
-        title.getChildren().add(chapter2);
 
         chapter1.getChildren().add(subchapter1);
 
         subchapter1.getChildren().add(subchapter11);
 
-        subchapter11.getChildren().add(text);
+        subchapter11.getChildren().add(text11);
+        subchapter11.getChildren().add(dataSet11);
+        subchapter11.getChildren().add(query11);
+
+        title.getChildren().add(chapter2);
+
+        chapter2.getChildren().add(text2);
+        chapter2.getChildren().add(url2);
+        chapter2.getChildren().add(dataSet2);
+        chapter2.getChildren().add(query2);
+
+        title.getChildren().add(chapter3);
 
         return title;
     }

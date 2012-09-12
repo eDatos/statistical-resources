@@ -92,14 +92,19 @@ public class CollectionStructureTreeGrid extends TreeGrid {
 
     private TreeNode createCollectionTreeNode(CollectionStructureHierarchyDto structureHierarchyDto) {
         TreeNode node = new TreeNode();
-        node.setAttribute(CollectionStructureDS.TEXT, InternationalStringUtils.getLocalisedString(structureHierarchyDto.getText()));
+        // If node type is URL, show the URL in the tree, not the text
+        if (CollectionStructureHierarchyTypeEnum.URL.equals(structureHierarchyDto.getType())) {
+            node.setAttribute(CollectionStructureDS.TEXT, structureHierarchyDto.getUrl());
+        } else {
+            node.setAttribute(CollectionStructureDS.TEXT, InternationalStringUtils.getLocalisedString(structureHierarchyDto.getText()));
+        }
         node.setAttribute(CollectionStructureDS.DTO, structureHierarchyDto);
 
         TreeNode[] children = new TreeNode[structureHierarchyDto.getChildren().size()];
         for (int i = 0; i < structureHierarchyDto.getChildren().size(); i++) {
             children[i] = createCollectionTreeNode(structureHierarchyDto.getChildren().get(i));
         }
-        // To show a file icon in text, URL, dataSet and query nodes
+        // To show a file icon in TEXT, URL, DATASET and QUERY nodes
         if (!CollectionStructureHierarchyTypeEnum.TEXT.equals(structureHierarchyDto.getType()) && !CollectionStructureHierarchyTypeEnum.URL.equals(structureHierarchyDto.getType())
                 && !CollectionStructureHierarchyTypeEnum.DATASET.equals(structureHierarchyDto.getType()) && !CollectionStructureHierarchyTypeEnum.QUERY.equals(structureHierarchyDto.getType())) {
             node.setChildren(children);
@@ -116,9 +121,17 @@ public class CollectionStructureTreeGrid extends TreeGrid {
         return deleteElementMenuItem;
     }
 
-    public void showContextMenu() {
+    public void showContextMenu(CollectionStructureHierarchyTypeEnum type) {
         contextMenu.markForRedraw();
         contextMenu.showContextMenu();
+        updateNodeMenuItems(type);
+    }
+
+    private void updateNodeMenuItems(CollectionStructureHierarchyTypeEnum type) {
+        boolean isFinalNode = CollectionStructureHierarchyTypeEnum.TEXT.equals(type) || CollectionStructureHierarchyTypeEnum.URL.equals(type)
+                || CollectionStructureHierarchyTypeEnum.DATASET.equals(type) || CollectionStructureHierarchyTypeEnum.QUERY.equals(type);
+        createElementMenuItem.setEnabled(!isFinalNode);
+        deleteElementMenuItem.setEnabled(!CollectionStructureHierarchyTypeEnum.TITLE.equals(type));
     }
 
 }

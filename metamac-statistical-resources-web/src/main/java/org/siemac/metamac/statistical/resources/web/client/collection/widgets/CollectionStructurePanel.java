@@ -13,6 +13,7 @@ import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -68,7 +69,7 @@ public class CollectionStructurePanel extends HLayout {
             @Override
             public void onFolderContextClick(final FolderContextClickEvent event) {
                 selectedNode = (CollectionStructureHierarchyDto) event.getFolder().getAttributeAsObject(CollectionStructureDS.DTO);
-                collectionStructureTreeGrid.showContextMenu();
+                collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
             }
         });
 
@@ -77,7 +78,7 @@ public class CollectionStructurePanel extends HLayout {
             @Override
             public void onLeafContextClick(LeafContextClickEvent event) {
                 selectedNode = (CollectionStructureHierarchyDto) event.getLeaf().getAttributeAsObject(CollectionStructureDS.DTO);
-                collectionStructureTreeGrid.showContextMenu();
+                collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
 
             }
         });
@@ -86,6 +87,7 @@ public class CollectionStructurePanel extends HLayout {
 
             @Override
             public void onFolderClick(FolderClickEvent event) {
+                selectedNode = (CollectionStructureHierarchyDto) event.getFolder().getAttributeAsObject(CollectionStructureDS.DTO);
                 CollectionStructureHierarchyDto collectionStructureHierarchyDto = (CollectionStructureHierarchyDto) event.getFolder().getAttributeAsObject(CollectionStructureDS.DTO);
                 setElementInForm(collectionStructureHierarchyDto);
             }
@@ -95,6 +97,7 @@ public class CollectionStructurePanel extends HLayout {
 
             @Override
             public void onLeafClick(LeafClickEvent event) {
+                selectedNode = (CollectionStructureHierarchyDto) event.getLeaf().getAttributeAsObject(CollectionStructureDS.DTO);
                 CollectionStructureHierarchyDto collectionStructureHierarchyDto = (CollectionStructureHierarchyDto) event.getLeaf().getAttributeAsObject(CollectionStructureDS.DTO);
                 setElementInForm(collectionStructureHierarchyDto);
             }
@@ -123,6 +126,7 @@ public class CollectionStructurePanel extends HLayout {
     // TREE GRID
 
     public void setCollectionStructure(CollectionStructureHierarchyDto structureHierarchyDto) {
+        mainFormLayout.hide();
         collectionStructureTreeGrid.setCollectionStructure(structureHierarchyDto);
     }
 
@@ -159,8 +163,8 @@ public class CollectionStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(CollectionStructureDS.TYPE))
-                        || CollectionStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(CollectionStructureDS.TYPE));
+                return CollectionStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(CollectionStructureDS.TYPE_VIEW))
+                        || CollectionStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(CollectionStructureDS.TYPE_VIEW));
             }
         });
 
@@ -174,10 +178,31 @@ public class CollectionStructurePanel extends HLayout {
 
         RequiredSelectItem type = new RequiredSelectItem(CollectionStructureDS.TYPE, getConstants().collectionStructureElementType());
         type.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+        ViewTextItem typeView = new ViewTextItem(CollectionStructureDS.TYPE_VIEW, getConstants().collectionStructureElementType());
+        typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
+        ViewTextItem typeViewName = new ViewTextItem(CollectionStructureDS.TYPE_VIEW_NAME, getConstants().collectionStructureElementType());
 
         MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(CollectionStructureDS.TEXT, getConstants().collectionStructureElementText());
         text.setRequired(true);
         text.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+        text.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !CollectionStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(CollectionStructureDS.TYPE_VIEW));
+            }
+        });
+
+        MultilanguageRichTextEditorItem textHtml = new MultilanguageRichTextEditorItem(CollectionStructureDS.TEXT_HTML, getConstants().collectionStructureElementText());
+        textHtml.setRequired(true);
+        textHtml.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+        textHtml.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return CollectionStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(CollectionStructureDS.TYPE_VIEW));
+            }
+        });
 
         RequiredTextItem url = new RequiredTextItem(CollectionStructureDS.URL, getConstants().collectionStructureElementURL());
         url.setShowIfCondition(new FormItemIfFunction() {
@@ -194,13 +219,13 @@ public class CollectionStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(CollectionStructureDS.TYPE))
-                        || CollectionStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(CollectionStructureDS.TYPE));
+                return CollectionStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(CollectionStructureDS.TYPE_VIEW))
+                        || CollectionStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(CollectionStructureDS.TYPE_VIEW));
             }
         });
         urn.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
-        editionForm.setFields(type, text, url, urn);
+        editionForm.setFields(type, typeView, typeViewName, text, textHtml, url, urn);
 
         mainFormLayout.addEditionCanvas(editionForm);
     }
@@ -215,7 +240,7 @@ public class CollectionStructurePanel extends HLayout {
                 CollectionStructureDS.TYPE,
                 collectionStructureHierarchyDto.getType() != null ? getCoreMessages().getString(
                         getCoreMessages().collectionStructureHierarchyTypeEnum() + collectionStructureHierarchyDto.getType().name()) : StringUtils.EMPTY);
-        form.setValue(CollectionStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType().name());
+        form.setValue(CollectionStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
         form.setValue(CollectionStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
         form.setValue(CollectionStructureDS.URL, collectionStructureHierarchyDto.getUrl());
         form.setValue(CollectionStructureDS.URN, collectionStructureHierarchyDto.getUrn());
@@ -224,10 +249,13 @@ public class CollectionStructurePanel extends HLayout {
     }
 
     private void setElementEditionMode(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
-        editionForm.setValue(
-                CollectionStructureDS.TYPE,
-                collectionStructureHierarchyDto.getType() != null ? getCoreMessages().getString(
-                        getCoreMessages().collectionStructureHierarchyTypeEnum() + collectionStructureHierarchyDto.getType().name()) : StringUtils.EMPTY);
+        editionForm.setValue(CollectionStructureDS.TYPE, collectionStructureHierarchyDto.getType() != null
+                ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType())
+                : StringUtils.EMPTY);
+        editionForm.setValue(CollectionStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
+        editionForm.setValue(CollectionStructureDS.TYPE_VIEW_NAME,
+                collectionStructureHierarchyDto.getType() != null ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType()) : StringUtils.EMPTY);
+        updateFormTypeItemVisibility(collectionStructureHierarchyDto);
         editionForm.setValue(CollectionStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
         editionForm.setValue(CollectionStructureDS.URL, collectionStructureHierarchyDto.getUrl());
         editionForm.setValue(CollectionStructureDS.URN, collectionStructureHierarchyDto.getUrn());
@@ -246,6 +274,16 @@ public class CollectionStructurePanel extends HLayout {
             editionForm.getItem(CollectionStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter2ValidTypesHashMap());
         } else {
             editionForm.getItem(CollectionStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTypeHashMap());
+        }
+    }
+
+    private void updateFormTypeItemVisibility(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
+        if (collectionStructureHierarchyDto.getId() == null) {
+            editionForm.getItem(CollectionStructureDS.TYPE).show();
+            editionForm.getItem(CollectionStructureDS.TYPE_VIEW_NAME).hide();
+        } else {
+            editionForm.getItem(CollectionStructureDS.TYPE).hide();
+            editionForm.getItem(CollectionStructureDS.TYPE_VIEW_NAME).show();
         }
     }
 
