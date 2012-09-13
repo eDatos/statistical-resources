@@ -135,6 +135,7 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         this.collectionDto = collectionDto;
 
         mainFormLayout.setTitleLabelContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
+        mainFormLayout.updatePublishSection(collectionDto.getProcStatus());
         mainFormLayout.setViewMode();
 
         setCollectionViewMode(collectionDto);
@@ -165,6 +166,7 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         });
 
         // Save
+
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
 
             @Override
@@ -172,6 +174,72 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
                 if (identifiersEditionForm.validate(false) && versionEditionForm.validate(false) && lifeCycleEditionForm.validate(false) && contentMetadataEditionForm.validate(false)) {
                     uiHandlers.saveCollection(getCollectionDto());
                 }
+            }
+        });
+
+        // Life cycle
+        mainFormLayout.getProductionValidationButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToProductionValidation(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToDiffusionValidation(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.rejectValidation(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getPendingPublicationButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToPendingPublication(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.programPublication(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.cancelProgrammedPublication(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.publish(collectionDto.getUrn(), collectionDto.getProcStatus());
+            }
+        });
+        mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        mainFormLayout.getArchiveButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.archive(collectionDto.getUrn(), collectionDto.getProcStatus());
             }
         });
     }

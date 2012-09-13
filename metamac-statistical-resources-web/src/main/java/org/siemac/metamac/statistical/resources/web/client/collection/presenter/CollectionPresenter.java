@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -18,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollect
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionResult;
 import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionResult;
+import org.siemac.metamac.statistical.resources.web.shared.collection.UpdateCollectionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.UpdateCollectionProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -110,7 +113,142 @@ public class CollectionPresenter extends Presenter<CollectionPresenter.Collectio
             }
             @Override
             public void onWaitSuccess(SaveCollectionResult result) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().collectionSaved()), MessageTypeEnum.SUCCESS);
                 getView().setCollection(result.getSavedCollection());
+            }
+        });
+    }
+
+    @Override
+    public void sendToProductionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus),
+                new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                        getView().setCollection(result.getCollectionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void sendToDiffusionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus),
+                new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                        getView().setCollection(result.getCollectionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void rejectValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.VALIDATION_REJECTED, currentProcStatus),
+                new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorRejectValidation()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceRejectValidation()), MessageTypeEnum.SUCCESS);
+                        getView().setCollection(result.getCollectionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void sendToPendingPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PENDING, currentProcStatus),
+                new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToPendingPublication()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToPendingPublication()), MessageTypeEnum.SUCCESS);
+                        getView().setCollection(result.getCollectionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void programPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED, currentProcStatus),
+                new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorProgramPublication()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceProgramPublication()), MessageTypeEnum.SUCCESS);
+                        getView().setCollection(result.getCollectionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_FAILED, currentProcStatus),
+                new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorCancelProgrammedPublication()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                        ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceCancelProgrammedPublication()), MessageTypeEnum.SUCCESS);
+                        getView().setCollection(result.getCollectionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorPublish()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourcePublish()), MessageTypeEnum.SUCCESS);
+                getView().setCollection(result.getCollectionDto());
+            }
+        });
+    }
+
+    @Override
+    public void archive(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.ARCHIVED, currentProcStatus), new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorArchive()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceArchive()), MessageTypeEnum.SUCCESS);
+                getView().setCollection(result.getCollectionDto());
             }
         });
     }
