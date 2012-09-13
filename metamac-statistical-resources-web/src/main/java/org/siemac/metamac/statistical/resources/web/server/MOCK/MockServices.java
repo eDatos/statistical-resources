@@ -333,6 +333,12 @@ public class MockServices {
         return collectionDto;
     }
 
+    public static CollectionDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_FAILED);
+        return collectionDto;
+    }
+
     public static CollectionDto publishCollection(String urn) throws MetamacException {
         CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
         collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
@@ -347,11 +353,10 @@ public class MockServices {
 
     public static CollectionDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
         CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        CollectionDto versionedCollection = createCollection(ServiceContextHolder.getCurrentServiceContext(), collectionDto);
-        String newVersion = VersionUtil.createNextVersionTag(collectionDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType));
-        versionedCollection.setVersionLogic(newVersion);
-        versionedCollection = updateCollection(ServiceContextHolder.getCurrentServiceContext(), versionedCollection);
-        return versionedCollection;
+        collectionDto.setId(Long.valueOf(collections.size() + 1));
+        collectionDto.setVersionLogic(VersionUtil.createNextVersionTag(collectionDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
+        getCollections().put(collectionDto.getUrn(), collectionDto);
+        return collectionDto;
     }
 
     private static Map<String, CollectionDto> getCollections() {

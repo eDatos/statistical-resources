@@ -40,6 +40,8 @@ public class UpdateCollectionProcStatusActionHandler extends SecurityActionHandl
                 collectionDto = MockServices.sendCollectionToPendingPublication(urn);
             } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
                 collectionDto = MockServices.programCollectionPublication(urn);
+            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
+                collectionDto = MockServices.cancelProgrammedCollectionPublication(urn);
             } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
                 collectionDto = MockServices.publishCollection(urn);
             } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(procStatus)) {

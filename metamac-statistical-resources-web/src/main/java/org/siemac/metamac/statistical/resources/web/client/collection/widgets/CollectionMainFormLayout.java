@@ -49,8 +49,8 @@ public class CollectionMainFormLayout extends InternationalMainFormLayout {
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
-        toolStrip.addButton(rejectValidation);
         toolStrip.addButton(pendingPublication);
+        toolStrip.addButton(rejectValidation);
         toolStrip.addButton(programPublication);
         toolStrip.addButton(cancelProgrammedPublication);
         toolStrip.addButton(publish);

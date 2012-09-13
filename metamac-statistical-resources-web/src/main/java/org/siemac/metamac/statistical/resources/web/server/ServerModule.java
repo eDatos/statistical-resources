@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.collection.G
 import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetCollectionPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.collection.SaveCollectionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.collection.UpdateCollectionProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.VersionCollectionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetActionHandler;
@@ -14,6 +15,7 @@ import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollect
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.UpdateCollectionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.VersionCollectionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
@@ -59,6 +61,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetCollectionAction.class, GetCollectionActionHandler.class);
         bindHandler(SaveCollectionAction.class, SaveCollectionActionHandler.class);
         bindHandler(UpdateCollectionProcStatusAction.class, UpdateCollectionProcStatusActionHandler.class);
+        bindHandler(VersionCollectionAction.class, VersionCollectionActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

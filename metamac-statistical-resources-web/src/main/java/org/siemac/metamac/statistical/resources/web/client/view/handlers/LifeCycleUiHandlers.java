@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.view.handlers;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
@@ -14,5 +15,6 @@ public interface LifeCycleUiHandlers extends UiHandlers {
     void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     void archive(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void version(String urn, VersionTypeEnum versionType);
 
 }

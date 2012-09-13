@@ -14,7 +14,7 @@ public class VersionCollection {
     String          urn;
 
     @In(2)
-    VersionTypeEnum type;
+    VersionTypeEnum versionType;
 
     @Out(1)
     CollectionDto   collectionDto;

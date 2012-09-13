@@ -13,6 +13,8 @@ import org.siemac.metamac.statistical.resources.web.client.collection.widgets.Co
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionStructurePanel;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -210,7 +212,18 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.programPublication(collectionDto.getUrn(), collectionDto.getProcStatus());
+                final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (window.validateForm()) {
+                            // TODO Send to date and hour selected to service
+                            uiHandlers.programPublication(collectionDto.getUrn(), collectionDto.getProcStatus());
+                            window.destroy();
+                        }
+                    }
+                });
             }
         });
         mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
@@ -231,8 +244,17 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
+                final VersionWindow versionWindow = new VersionWindow(getConstants().lifeCycleVersioning());
+                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (versionWindow.validateForm()) {
+                            uiHandlers.version(collectionDto.getUrn(), versionWindow.getSelectedVersion());
+                            versionWindow.destroy();
+                        }
+                    }
+                });
             }
         });
         mainFormLayout.getArchiveButton().addClickHandler(new ClickHandler() {

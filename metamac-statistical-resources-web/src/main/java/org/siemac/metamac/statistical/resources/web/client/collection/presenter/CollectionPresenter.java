@@ -7,6 +7,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -21,6 +22,8 @@ import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollec
 import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionResult;
 import org.siemac.metamac.statistical.resources.web.shared.collection.UpdateCollectionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.UpdateCollectionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.collection.VersionCollectionAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.VersionCollectionResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -248,6 +251,22 @@ public class CollectionPresenter extends Presenter<CollectionPresenter.Collectio
             @Override
             public void onWaitSuccess(UpdateCollectionProcStatusResult result) {
                 ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceArchive()), MessageTypeEnum.SUCCESS);
+                getView().setCollection(result.getCollectionDto());
+            }
+        });
+    }
+
+    @Override
+    public void version(String urn, VersionTypeEnum versionType) {
+        dispatcher.execute(new VersionCollectionAction(urn, versionType), new WaitingAsyncCallback<VersionCollectionResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorVersion()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(VersionCollectionResult result) {
+                ShowMessageEvent.fire(CollectionPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceVersion()), MessageTypeEnum.SUCCESS);
                 getView().setCollection(result.getCollectionDto());
             }
         });
