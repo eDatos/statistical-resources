@@ -75,12 +75,8 @@ public interface GlobalResources extends ClientBundleWithLookup {
     ImageResource validateDiffusion();
 
     @ImageOptions(repeatStyle = RepeatStyle.Both)
-    @Source("images/publish_internally.png")
-    ImageResource internalPublish();
-
-    @ImageOptions(repeatStyle = RepeatStyle.Both)
-    @Source("images/publish_externally.png")
-    ImageResource externalPublish();
+    @Source("images/publish.png")
+    ImageResource publish();
 
     @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/reject.png")
@@ -89,4 +85,17 @@ public interface GlobalResources extends ClientBundleWithLookup {
     @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/version.png")
     ImageResource version();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/archive.png")
+    ImageResource archive();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/pending_publication.png")
+    ImageResource pendingPublication();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/program_publication.png")
+    ImageResource programPublication();
+
 }
