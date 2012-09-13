@@ -8,12 +8,14 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 
 public class CommonUtils {
 
     private static LinkedHashMap<String, String> statisticalResourceTypeHashMap                 = null;
     private static LinkedHashMap<String, String> statisticalResourceVersionRationaleTypeHashMap = null;
     private static LinkedHashMap<String, String> statisticalResourceFormatHashMap               = null;
+    private static LinkedHashMap<String, String> versionTypeHashMap                             = null;
 
     public static String getProcStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         return lifeCycleStatisticalResourceDto != null
@@ -65,6 +67,21 @@ public class CommonUtils {
 
     public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
         return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
+    }
+
+    public static LinkedHashMap<String, String> getVersionTypeHashMap() {
+        if (versionTypeHashMap == null) {
+            versionTypeHashMap = new LinkedHashMap<String, String>();
+            versionTypeHashMap.put(new String(), new String());
+            for (VersionTypeEnum v : VersionTypeEnum.values()) {
+                versionTypeHashMap.put(v.toString(), getVersionTypeName(v));
+            }
+        }
+        return versionTypeHashMap;
+    }
+
+    public static String getVersionTypeName(VersionTypeEnum versionTypeEnum) {
+        return versionTypeEnum != null ? getCoreMessages().getString(getCoreMessages().versionTypeEnum() + versionTypeEnum.name()) : null;
     }
 
 }
