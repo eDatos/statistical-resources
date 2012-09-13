@@ -2,22 +2,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>metamac-statistical-resources-parent</artifactId>
         <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+        <artifactId>metamac-statistical-resources-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>metamac-statistical-resources-parent/pom.xml</relativePath>
     </parent>
+
+    <artifactId>metamac-statistical-resources</artifactId>
+    <packaging>pom</packaging>
+    <name>METAMAC :: STATISTICAL :: RESOURCES</name>
 
     <scm>
         <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-statistical-resources/trunk/</connection>
         <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-statistical-resources/trunk/</developerConnection>
         <url>http://svn.arte-consultores.com/viewvc/arte/istac/metamac/metamac-statistical-resources/trunk/</url>
     </scm>
-
-    <artifactId>metamac-statistical-resources</artifactId>
-    <packaging>pom</packaging>
-    <name>METAMAC :: STATISTICAL :: RESOURCES</name>
-    <description>METAMAC :: STATISTICAL :: RESOURCES</description>
 
     <modules>
         <module>metamac-statistical-resources-parent</module>
