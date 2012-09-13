@@ -17,6 +17,7 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
@@ -27,8 +28,10 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStru
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.web.common.client.utils.UrnUtils;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -292,6 +295,63 @@ public class MockServices {
             endIndex = firstResult + maxResults;
         }
         return new ArrayList<CollectionDto>(collectionList.subList(firstResult, endIndex));
+    }
+
+    public static CollectionDto sendCollectionToProductionValidation(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        return collectionDto;
+    }
+
+    public static CollectionDto sendCollectionToDiffusionValidation(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        return collectionDto;
+    }
+
+    public static CollectionDto rejectCollectionProductionValidation(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        return collectionDto;
+    }
+
+    public static CollectionDto rejectCollectionDiffusionValidation(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        return collectionDto;
+    }
+
+    public static CollectionDto sendCollectionToPendingPublication(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+        return collectionDto;
+    }
+
+    public static CollectionDto programCollectionPublication(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
+        return collectionDto;
+    }
+
+    public static CollectionDto publishCollection(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        return collectionDto;
+    }
+
+    public static CollectionDto archiveCollection(String urn) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
+        return collectionDto;
+    }
+
+    public static CollectionDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
+        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        CollectionDto versionedCollection = createCollection(ServiceContextHolder.getCurrentServiceContext(), collectionDto);
+        String newVersion = VersionUtil.createNextVersionTag(collectionDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType));
+        versionedCollection.setVersionLogic(newVersion);
+        versionedCollection = updateCollection(ServiceContextHolder.getCurrentServiceContext(), versionedCollection);
+        return versionedCollection;
     }
 
     private static Map<String, CollectionDto> getCollections() {
