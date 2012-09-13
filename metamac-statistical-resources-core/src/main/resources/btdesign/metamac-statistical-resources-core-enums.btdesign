@@ -55,6 +55,12 @@ Application StatisticalResourcesEnums {
     		DATASET,
     		QUERY;
     	}
+    	
+    	"This enum is defined in statistic-v2_1-domain project. Remove this enum from this project if SDMX DTOs are used in this project"
+    	enum VersionTypeEnum {
+    		MAJOR,
+    		MINOR
+    	}
 
     }
 

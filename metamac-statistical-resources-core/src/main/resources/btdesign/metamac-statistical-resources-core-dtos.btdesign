@@ -90,9 +90,9 @@ Application StatisticalResourcesDto {
 			- @CollectionStructureHierarchyDto structure;
 		}
 		
-		DataTransferObject CollectionStructureHierarchyDto {
+		DataTransferObject CollectionStructureHierarchyDto extends @IdentityDto {
 			- @CollectionStructureHierarchyTypeEnum type;
-			- @InternationalStringDto label;
+			- @InternationalStringDto text;
 			String url;
 			String urn;
 			- List<@CollectionStructureHierarchyDto> children;
