@@ -27,7 +27,15 @@ Application StatisticalResourcesEnums {
     	
     	"Version Rationale Type Enum is used to specify all types of version rationale"
     	enum StatisticalResourceVersionRationaleTypeEnum {
-    		CHANGE
+    		MAJOR_ESTIMATORS,
+    		MAJOR_CATEGORIES,
+    		MAJOR_VARIABLES,
+    		MAJOR_OTHER,
+    		MINOR_ERRATA,
+    		MINOR_METADATA,
+    		MINOR_DATA_UPDATE,
+    		MINOR_SERIES_UPDATE,
+    		MINOR_OTHER
     	}
     	
     	"Format Enum is used to specify statistical resources format"
