@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.web.common.client.widgets.AnnounceToolStripButton;
+import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 
@@ -9,14 +11,17 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 public class DatasetMainFormLayout extends InternationalMainFormLayout {
 
-    private MainFormLayoutButton    productionValidation;
-    private MainFormLayoutButton    diffusionValidation;
-    private MainFormLayoutButton    rejectValidation;
-    private MainFormLayoutButton    publishInternally;
-    private MainFormLayoutButton    publishExternally;
-    private MainFormLayoutButton    versioning;
-    private MainFormLayoutButton    cancelValidity;
-    private AnnounceToolStripButton announce;
+    private MainFormLayoutButton              productionValidation;
+    private MainFormLayoutButton              diffusionValidation;
+    private MainFormLayoutButton              rejectValidation;
+    private MainFormLayoutButton              pendingPublication;
+    private MainFormLayoutButton              programPublication;
+    private MainFormLayoutButton              cancelProgrammedPublication;
+    private MainFormLayoutButton              publish;
+    private MainFormLayoutButton              versioning;
+    private MainFormLayoutButton              archive;
+
+    private StatisticalResourceProcStatusEnum status;
 
     public DatasetMainFormLayout() {
         super();
@@ -30,54 +35,27 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
 
     private void common() {
         // Remove handler from edit button
-        editHandlerRegistration.removeHandler();
+        //editHandlerRegistration.removeHandler();
 
-        /*
-         * productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
-         * diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
-         * publishInternally = new MainFormLayoutButton(getConstants().lifeCyclePublishInternally(), GlobalResources.RESOURCE.internalPublish().getURL());
-         * publishExternally = new MainFormLayoutButton(getConstants().lifeCyclePublishExternally(), GlobalResources.RESOURCE.externalPublish().getURL());
-         * rejectValidation = new MainFormLayoutButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
-         * versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
-         * cancelValidity = new MainFormLayoutButton(getConstants().lifeCycleCancelValidity(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.disable().getURL());
-         * announce = new AnnounceToolStripButton(MetamacWebCommon.getConstants().announce(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.announce().getURL());
-         * announce.setVisibility(DatasetClientSecurityUtils.canAnnounceConceptScheme() ? Visibility.VISIBLE : Visibility.HIDDEN);
-         * toolStrip.addButton(productionValidation);
-         * toolStrip.addButton(diffusionValidation);
-         * toolStrip.addButton(publishInternally);
-         * toolStrip.addButton(publishExternally);
-         * toolStrip.addButton(rejectValidation);
-         * toolStrip.addButton(versioning);
-         * toolStrip.addButton(cancelValidity);
-         * toolStrip.addButton(announce);
-         */
-    }
+        productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
+        diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
+        rejectValidation = new MainFormLayoutButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
+        pendingPublication = new MainFormLayoutButton(getConstants().lifeCycleSendToPendingPublication(), GlobalResources.RESOURCE.pendingPublication().getURL());
+        programPublication = new MainFormLayoutButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
+        cancelProgrammedPublication = new MainFormLayoutButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
+        publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
+        versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
+        archive = new MainFormLayoutButton(getConstants().lifeCycleArchive(), GlobalResources.RESOURCE.archive().getURL());
 
-    public void updatePublishSection(StatisticalResourceProcStatusEnum status) {
-        /* this.status = status; */
-    }
-
-    private void updateVisibility() {
-        // // Hide all buttons
-        // hideAllPublishButtons();
-        // // Show buttons depending on the status
-        // if (StatisticalResourceProcStatusEnum.DRAFT.equals(status)) {
-        // showSendToProductionValidation();
-        // } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
-        // showSendToProductionValidation();
-        // } else if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
-        // showSendToDiffusionValidation();
-        // showRejectValidationButton();
-        // } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-        // showPublishInternallyButton();
-        // showRejectValidationButton();
-        // } else if (StatisticalResourceProcStatusEnum.INTERNALLY_PUBLISHED.equals(status)) {
-        // showPublishExternallyButton();
-        // showVersioningButton();
-        // } else if (StatisticalResourceProcStatusEnum.EXTERNALLY_PUBLISHED.equals(status)) {
-        // showVersioningButton();
-        // showCancelValidityButton();
-        // }
+        toolStrip.addButton(productionValidation);
+        toolStrip.addButton(diffusionValidation);
+        toolStrip.addButton(pendingPublication);
+        toolStrip.addButton(rejectValidation);
+        toolStrip.addButton(programPublication);
+        toolStrip.addButton(cancelProgrammedPublication);
+        toolStrip.addButton(publish);
+        toolStrip.addButton(versioning);
+        toolStrip.addButton(archive);
     }
 
     @Override
@@ -89,91 +67,126 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
     @Override
     public void setEditionMode() {
         super.setEditionMode();
-        hideAllPublishButtons();
+        hideAllLifeCycleButtons();
+    }
+    
+    public void updatePublishSection(StatisticalResourceProcStatusEnum status) {
+        this.status = status;
+    }
+    
+    private void updateVisibility() {
+        // Hide all buttons
+        hideAllLifeCycleButtons();
+        // Show buttons depending on the status
+        if (StatisticalResourceProcStatusEnum.DRAFT.equals(status)) {
+            showProductionValidationButton();
+        } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
+            showProductionValidationButton();
+        } else if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+            showDiffusionValidationButton();
+            showRejectValidationButton();
+        } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
+            showPendingPublicationButton();
+            showRejectValidationButton();
+        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
+            showProgramPublicationButton();
+            showPublishButton();
+        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
+            showCancelProgrammedPublication();
+            // showPublishButton();
+        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_FAILED.equals(status)) {
+            showProgramPublicationButton();
+            showPublishButton();
+        } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(status)) {
+            showVersioningButton();
+            showArchiveButton();
+        } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(status)) {
+            showVersioningButton();
+        }
     }
 
-    public HasClickHandlers getSendToProductionValidation() {
-        return productionValidation;
-    }
-
-    public HasClickHandlers getSendToDiffusionValidation() {
-        return diffusionValidation;
-    }
-
-    public HasClickHandlers getRejectValidation() {
-        return rejectValidation;
-    }
-
-    public HasClickHandlers getPublishInternally() {
-        return publishInternally;
-    }
-
-    public HasClickHandlers getPublishExternally() {
-        return publishExternally;
-    }
-
-    public HasClickHandlers getVersioning() {
-        return versioning;
-    }
-
-    public HasClickHandlers getCancelValidity() {
-        return cancelValidity;
-    }
-
-    public HasClickHandlers getAnnounce() {
-        return announce;
-    }
-
-    private void hideAllPublishButtons() {
+    private void hideAllLifeCycleButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();
-        publishInternally.hide();
-        publishExternally.hide();
+        pendingPublication.hide();
+        programPublication.hide();
+        cancelProgrammedPublication.hide();
+        publish.hide();
         versioning.hide();
-        cancelValidity.hide();
+        archive.hide();
     }
-    //
-    // private void showSendToProductionValidation() {
-    // if (DatasetClientSecurityUtils.canSendDatasetToProductionValidation()) {
-    // productionValidation.show();
-    // }
-    // }
-    //
-    // private void showSendToDiffusionValidation() {
-    // if (DatasetClientSecurityUtils.canSendConceptSchemeToDiffusionValidation()) {
-    // diffusionValidation.show();
-    // }
-    // }
-    //
-    // private void showRejectValidationButton() {
-    // if (DatasetClientSecurityUtils.canRejectConceptSchemeValidation()) {
-    // rejectValidation.show();
-    // }
-    // }
-    //
-    // private void showPublishInternallyButton() {
-    // if (DatasetClientSecurityUtils.canPublishConceptSchemeInternally()) {
-    // publishInternally.show();
-    // }
-    // }
-    //
-    // private void showPublishExternallyButton() {
-    // if (DatasetClientSecurityUtils.canPublishConceptSchemeExternally()) {
-    // publishExternally.show();
-    // }
-    // }
-    //
-    // private void showVersioningButton() {
-    // if (DatasetClientSecurityUtils.canVersioningConceptScheme()) {
-    // versioning.show();
-    // }
-    // }
-    //
-    // private void showCancelValidityButton() {
-    // if (DatasetClientSecurityUtils.canCancelConceptSchemeValidity()) {
-    // cancelValidity.show();
-    // }
-    // }
+    
+    private void showProductionValidationButton() {
+        productionValidation.show();
+    }
+
+    private void showDiffusionValidationButton() {
+        diffusionValidation.show();
+    }
+
+    private void showRejectValidationButton() {
+        rejectValidation.show();
+    }
+
+    private void showPendingPublicationButton() {
+        pendingPublication.show();
+    }
+
+    private void showProgramPublicationButton() {
+        programPublication.show();
+    }
+
+    private void showCancelProgrammedPublication() {
+        cancelProgrammedPublication.show();
+    }
+
+    private void showPublishButton() {
+        publish.show();
+    }
+
+    private void showVersioningButton() {
+        versioning.show();
+    }
+
+    private void showArchiveButton() {
+        archive.show();
+    }
+
+    public HasClickHandlers getProductionValidationButton() {
+        return productionValidation;
+    }
+
+    public HasClickHandlers getDiffusionValidationButton() {
+        return diffusionValidation;
+    }
+
+    public HasClickHandlers getRejectValidationButton() {
+        return rejectValidation;
+    }
+
+    public HasClickHandlers getPendingPublicationButton() {
+        return pendingPublication;
+    }
+
+    public HasClickHandlers getProgramPublicationButton() {
+        return programPublication;
+    }
+
+    public HasClickHandlers getCancelProgrammedPublication() {
+        return cancelProgrammedPublication;
+    }
+
+    public HasClickHandlers getPublishButton() {
+        return publish;
+    }
+
+    public HasClickHandlers getVersioningButton() {
+        return versioning;
+    }
+
+    public HasClickHandlers getArchiveButton() {
+        return archive;
+    }
 
 }

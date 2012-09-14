@@ -209,7 +209,7 @@ public class CollectionPresenter extends Presenter<CollectionPresenter.Collectio
 
     @Override
     public void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_FAILED, currentProcStatus),
+        dispatcher.execute(new UpdateCollectionProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PENDING, currentProcStatus),
                 new WaitingAsyncCallback<UpdateCollectionProcStatusResult>() {
 
                     @Override

@@ -19,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.collection.DeleteCollectionListAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.DeleteCollectionListResult;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionAction;
@@ -162,8 +164,17 @@ public class CollectionListPresenter extends Presenter<CollectionListPresenter.C
 
     @Override
     public void deleteCollection(List<String> urns) {
-        // TODO Auto-generated method stub
-
+        dispatcher.execute(new DeleteCollectionListAction(urns), new WaitingAsyncCallback<DeleteCollectionListResult>() {
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(CollectionListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorDelete()), MessageTypeEnum.ERROR);
+            }
+            
+            public void onWaitSuccess(DeleteCollectionListResult result) {
+                ShowMessageEvent.fire(CollectionListPresenter.this, ErrorUtils.getMessageList(getMessages().collectionDeleted()), MessageTypeEnum.SUCCESS);
+                retrieveCollections(CollectionListPresenter.this.operation.getUrn(), COLLECTION_LIST_FIRST_RESULT, COLLECTION_LIST_MAX_RESULTS,null);                
+            };
+        });
     }
 
     private void retrieveOperation(String urn) {

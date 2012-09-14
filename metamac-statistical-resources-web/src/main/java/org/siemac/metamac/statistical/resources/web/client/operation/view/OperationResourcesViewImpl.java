@@ -5,8 +5,10 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.record.CollectionRecord;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionListGrid;
+import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
@@ -41,6 +43,14 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
         sections.setOverflow(Overflow.HIDDEN);
 
         datasetsListGrid = new DatasetListGrid();
+        datasetsListGrid.addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                DatasetRecord record = (DatasetRecord) event.getRecord();
+                uiHandlers.goToDataset(record.getUrn());
+            }
+        });
 
         SectionStackSection lastModifiedDatasetsSection = new SectionStackSection();
         lastModifiedDatasetsSection.setTitle(getConstants().datasetsLastModified());
@@ -87,6 +97,11 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     @Override
     public void setCollections(List<CollectionDto> collectionDtos) {
         collectionsListGrid.setCollections(collectionDtos);
+    }
+    
+    @Override
+    public void setDatasets(List<DataSetDto> datasetsDtos) {
+        datasetsListGrid.setDatasets(datasetsDtos);
     }
 
 }

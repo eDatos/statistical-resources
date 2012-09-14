@@ -1,39 +1,29 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.ds;
 
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleStatisticalResourceDS;
 
-import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 
-public class DatasetDS extends DataSource {
+public class DatasetDS extends LifeCycleStatisticalResourceDS {
 
-    // IDENTIFIERS
-    public static final String ID                         = "ds-id";
-    public static final String IDENTIFIER                 = "ds-identifier";
-    public static final String IDENTIFIER_VIEW            = "ds-identifier-view"; // NOT MAPPED
-    public static final String URI                        = "ds-uri";
-    public static final String URN                        = "ds-urn";
-    public static final String TITLE                      = "ds-title";
+    //CONTENT-METADATA
+    public static final String LANGUAGE                = "cm-lang";
+    public static final String LANGUAGES               = "cm-langs";
+    public static final String KEYWORDS                = "cm-keywords";
+    public static final String SPATIAL_COVERAGE        = "cm-cov-spa";
+    public static final String SPATIAL_COVERAGE_CODES  = "cm-cov-spa-codes";
+    public static final String TEMPORAL_COVERAGE       = "cm-cov-temp";
+    public static final String TEMPORAL_COVERAGE_CODES = "cm-cov-temp-codes";
+    public static final String NEXT_UPDATE_DATE        = "cm-next-up";
+    public static final String UPDATE_FREQUENCY        = "cm-up-freq";
+    public static final String RIGHTS_HOLDER           = "cm-rights-holder";
+    public static final String COPYRIGHTED_DATE        = "cm-date-copy";
+    public static final String LICENSE                 = "cm-lic";
+    public static final String DESCRIPTION             = "cm-desc";
+    public static final String TYPE                    = "cm-type";
+    public static final String FORMAT                  = "cm-format";
 
-    // VERSIONS
-    public static final String VERSION_LOGIC              = "ds-version";
-    public static final String NEXT_VERSION               = "ds-next-version";
-    public static final String DATE_VERSION               = "ds-date-version";
-    public static final String RATIONALE                  = "ds-rationale";
-    public static final String RATIONALE_TYPE             = "ds-rationale-type";
-
-    // CONTENT DESCRIPTORS
-    public static final String DESCRIPTION                = "ds-desc";
-
-    // PRODUCTION DESCRIPTORS
-    public static final String PROC_STATUS                = "ds-status";
-    public static final String PRODUCTION_VALIDATION_DATE = "ds-prod-date";
-    public static final String PRODUCTION_VALIDATION_USER = "ds-prod-user";
-    // DIFFUSION DESCRIPTORS
-    public static final String VALID_FROM                 = "ds-valid-from";
-    public static final String VALID_TO                   = "ds-valid-to";
-    public static final String DIFFUSION_VALIDATION_DATE  = "ds-dif-date";
-    public static final String DIFFUSION_VALIDATION_USER  = "ds-dif-user";
 
     public static String       DTO                        = "ds-dto";
 

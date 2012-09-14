@@ -35,7 +35,7 @@ public class CollectionMainFormLayout extends InternationalMainFormLayout {
 
     private void common() {
         // Remove handler from edit button
-        editHandlerRegistration.removeHandler();
+        //editHandlerRegistration.removeHandler();
 
         productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());

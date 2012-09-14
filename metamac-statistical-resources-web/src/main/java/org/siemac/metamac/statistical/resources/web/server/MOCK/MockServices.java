@@ -105,7 +105,7 @@ public class MockServices {
     }
 
     public static DataSetDto updateDataset(ServiceContext ctx, DataSetDto datasetDto) throws MetamacException {
-        if (datasetDto.getUuid() == null || getDatasets().containsKey(datasetDto.getUrn())) {
+        if (datasetDto.getUuid() == null || !getDatasets().containsKey(datasetDto.getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
         DataSetDto oldDataset = getDatasets().get(datasetDto.getUrn());
@@ -123,6 +123,13 @@ public class MockServices {
         getDatasets().put(datasetDto.getUrn(), datasetDto);
 
         return datasetDto;
+    }
+    
+    public static void deleteDataset(ServiceContext ctx, String urn) throws MetamacException {
+        if (urn == null || !getDatasets().containsKey(urn)) {
+            throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
+        }
+        getDatasets().remove(urn);
     }
 
     public static List<DataSetDto> findDatasets(String operationUrn, int firstResult, int maxResults) throws MetamacException {
@@ -168,21 +175,16 @@ public class MockServices {
         datasetDto.setId(Long.valueOf(datasets.size() + 1));
         datasetDto.setUuid(UUID.randomUUID().toString());
         datasetDto.setVersion(1L);
+        //Base
         datasetDto.setOperation(operation);
-
-        // Audit
         datasetDto.setCreator("ISTAC_ADMIN");
         datasetDto.setDateCreated(now);
         datasetDto.setDateLastUpdate(now);
         datasetDto.setLastUpdateUser("ISTAC_ADMIN");
-
-        // Identifiers
         datasetDto.setIdentifier(code);
         datasetDto.setTitle(createInternationalString(title_es, title_en));
         datasetDto.setUri(DATASET_URI_PREFIX + code);
         datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
-
-        // Version
         datasetDto.setVersionDate(now);
         datasetDto.setVersionLogic("01.000");
 
@@ -192,14 +194,108 @@ public class MockServices {
 
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        contentMetadata.setLanguage("es");
+        contentMetadata.setDescription(createInternationalString(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
+                        + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
+                        + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
+
+        contentMetadata.setKeywords(new ArrayList<String>());
+        contentMetadata.getKeywords().add("statistic");
+        contentMetadata.getKeywords().add("data");
+        contentMetadata.getKeywords().add("dataset");
+
         contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        contentMetadata.getSpatialCoverage().add("CANARIAS");
+        contentMetadata.getSpatialCoverage().add("LANZAROTE");
+        contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
+        contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
+
         contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        contentMetadata.getSpatialCoverageCodes().add("ES70");
+        contentMetadata.getSpatialCoverageCodes().add("ES708");
+        contentMetadata.getSpatialCoverageCodes().add("ES708A01");
+        contentMetadata.getSpatialCoverageCodes().add("ES708A02");
+
         contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
+        contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
+        contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
+
         contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        contentMetadata.getTemporalCoverageCodes().add("2002Q1");
+        contentMetadata.getTemporalCoverageCodes().add("2002Q2");
+        contentMetadata.getTemporalCoverageCodes().add("2002Q3");
+
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        contentMetadata.setType(StatisticalResourceTypeEnum.DATASET);
+        contentMetadata.setCopyrightedDate(new Date());
         datasetDto.setContentMetadata(contentMetadata);
 
         datasets.put(datasetDto.getUrn(), datasetDto);
+    }
+    
+    public static DataSetDto sendDatasetToProductionValidation(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        return datasetDto;
+    }
+
+    public static DataSetDto sendDatasetToDiffusionValidation(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        return datasetDto;
+    }
+
+    public static DataSetDto rejectDatasetProductionValidation(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        return datasetDto;
+    }
+
+    public static DataSetDto rejectDatasetDiffusionValidation(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        return datasetDto;
+    }
+
+    public static DataSetDto sendDatasetToPendingPublication(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+        return datasetDto;
+    }
+
+    public static DataSetDto programDatasetPublication(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
+        return datasetDto;
+    }
+
+    public static DataSetDto cancelProgrammedDatasetPublication(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+        return datasetDto;
+    }
+
+    public static DataSetDto publishDataset(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        return datasetDto;
+    }
+
+    public static DataSetDto archiveDataset(String urn) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
+        return datasetDto;
+    }
+
+    public static DataSetDto versionDataset(String urn, VersionTypeEnum versionType) throws MetamacException {
+        DataSetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+        datasetDto.setId(Long.valueOf(collections.size() + 1));
+        datasetDto.setVersionLogic(VersionUtil.createNextVersionTag(datasetDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
+        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        getDatasets().put(datasetDto.getUrn(), datasetDto);
+        return datasetDto;
     }
 
     //
@@ -279,6 +375,13 @@ public class MockServices {
 
         return collectionDto;
     }
+    
+    public static void deleteCollection(ServiceContext ctx, String urn) throws MetamacException {
+        if (urn == null || !getCollections().containsKey(urn)) {
+            throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
+        }
+        getCollections().remove(urn);
+    }
 
     public static List<CollectionDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
         List<CollectionDto> collectionList = new ArrayList<CollectionDto>();
@@ -335,7 +438,7 @@ public class MockServices {
 
     public static CollectionDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
         CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_FAILED);
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
         return collectionDto;
     }
 
@@ -355,6 +458,7 @@ public class MockServices {
         CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
         collectionDto.setId(Long.valueOf(collections.size() + 1));
         collectionDto.setVersionLogic(VersionUtil.createNextVersionTag(collectionDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
+        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         getCollections().put(collectionDto.getUrn(), collectionDto);
         return collectionDto;
     }

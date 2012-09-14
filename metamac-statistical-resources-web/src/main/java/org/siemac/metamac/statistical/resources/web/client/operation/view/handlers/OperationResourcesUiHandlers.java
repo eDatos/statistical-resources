@@ -4,7 +4,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface OperationResourcesUiHandlers extends UiHandlers {
 
-    void goToDataSet(String urn);
+    void goToDataset(String urn);
     void goToCollection(String urn);
 
 }

@@ -148,8 +148,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.deleteDataSets(getIdsFromSelected());
-                deleteConfirmationWindow.hide();
+                uiHandlers.deleteDataSets(getUrnsFromSelected());
             }
         });
     }
@@ -179,11 +178,11 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         this.operationUrn = operationUrn;
     }
 
-    public List<Long> getIdsFromSelected() {
-        List<Long> codes = new ArrayList<Long>();
+    public List<String> getUrnsFromSelected() {
+        List<String> codes = new ArrayList<String>();
         for (ListGridRecord record : datasetsList.getListGrid().getSelectedRecords()) {
             DatasetRecord schemeRecord = (DatasetRecord) record;
-            codes.add(schemeRecord.getId());
+            codes.add(schemeRecord.getUrn());
         }
         return codes;
     }

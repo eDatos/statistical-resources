@@ -10,7 +10,7 @@ public interface DatasetListUiHandlers extends UiHandlers {
 
     void goToDataSet(String code);
     void createDataSet(DataSetDto datasetDto);
-    void deleteDataSets(List<Long> idsFromSelected);
+    void deleteDataSets(List<String> urnsFromSelected);
     void retrieveDataSetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults);
 
 }

@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
+import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -22,6 +23,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -58,6 +61,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
 
+        void setDatasets(List<DataSetDto> datasetDtos);
         void setCollections(List<CollectionDto> collectionDtos);
     }
 
@@ -124,7 +128,17 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
     private void retrieveResourcesByStatisticalOperation(String urn) {
         // DataSets
-        // TODO
+        dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS), new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetDatasetsByStatisticalOperationPaginatedListResult result) {
+                getView().setDatasets(result.getDatasetsList());
+            }
+        });
 
         // Collections
         dispatcher.execute(new GetCollectionPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetCollectionPaginatedListResult>() {
@@ -141,9 +155,10 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     }
 
     @Override
-    public void goToDataSet(String urn) {
-        // TODO Auto-generated method stub
-
+    public void goToDataset(String urn) {
+        if (!StringUtils.isBlank(urn)) {
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn)));
+        }        
     }
 
     @Override
