@@ -6,8 +6,12 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesP
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionStructureTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionMetadataTabViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionStructureTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
@@ -61,6 +65,8 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
         bindPresenter(CollectionListPresenter.class, CollectionListPresenter.CollectionListView.class, CollectionListViewImpl.class, CollectionListPresenter.CollectionListProxy.class);
         bindPresenter(CollectionPresenter.class, CollectionPresenter.CollectionView.class, CollectionViewImpl.class, CollectionPresenter.CollectionProxy.class);
+        bindPresenter(CollectionMetadataTabPresenter.class, CollectionMetadataTabPresenter.CollectionMetadataTabView.class, CollectionMetadataTabViewImpl.class, CollectionMetadataTabPresenter.CollectionMetadataTabProxy.class);
+        bindPresenter(CollectionStructureTabPresenter.class, CollectionStructureTabPresenter.CollectionStructureTabView.class, CollectionStructureTabViewImpl.class, CollectionStructureTabPresenter.CollectionStructureTabProxy.class);
 
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);

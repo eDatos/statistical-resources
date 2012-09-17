@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.client.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 
@@ -42,6 +45,21 @@ public class PlaceRequestUtils {
             }
         }
         return false;
+    }
+    
+    public static List<PlaceRequest> getHierarchyUntilNameToken(PlaceManager placeManager, String nameToken) {
+        List<PlaceRequest> filteredHierarchy = new ArrayList<PlaceRequest>();
+        List<PlaceRequest> hierarchy = placeManager.getCurrentPlaceHierarchy();
+        boolean found = false;
+        for (int i = 0; i < hierarchy.size() && !found; i++) {
+            PlaceRequest placeReq = hierarchy.get(i);
+            if (placeReq.matchesNameToken(nameToken)) {
+                found = true;
+            }
+            filteredHierarchy.add(placeReq);
+        }
+
+        return filteredHierarchy;
     }
 
 }

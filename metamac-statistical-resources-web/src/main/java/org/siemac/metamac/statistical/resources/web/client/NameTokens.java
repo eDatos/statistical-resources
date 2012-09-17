@@ -10,6 +10,8 @@ public class NameTokens {
     public static final String datasetPage            = "dataset";
     public static final String collectionsListPage    = "collections";
     public static final String collectionPage         = "collection";
+    public static final String collectionMetadataPage         = "collectionMetadata";
+    public static final String collectionStructurePage         = "collectionStructure";
     public static final String queriesListPage        = "queries";
     public static final String queryPage              = "query";
 

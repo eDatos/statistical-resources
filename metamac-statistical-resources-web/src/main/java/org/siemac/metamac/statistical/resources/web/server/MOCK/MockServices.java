@@ -341,6 +341,10 @@ public class MockServices {
         contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         collectionDto.setContentMetadata(contentMetadata);
+        
+        CollectionStructureHierarchyDto structure = createCollectionStructureBase(collectionDto.getTitle());
+
+        collectionDto.setStructure(structure);
 
         getCollections().put(collectionDto.getUrn(), collectionDto);
         return collectionDto;
@@ -562,8 +566,12 @@ public class MockServices {
         collections.put(collectionDto.getUrn(), collectionDto);
     }
 
+    private static CollectionStructureHierarchyDto createCollectionStructureBase(InternationalStringDto title) {
+        CollectionStructureHierarchyDto titleNode = createTitleNode(title);
+        return titleNode;
+    }
     private static CollectionStructureHierarchyDto createCollectionStructure() {
-        CollectionStructureHierarchyDto title = createTitleNode("Título", "Title");
+        CollectionStructureHierarchyDto title = createTitleNode(createInternationalString("Título", "Title"));
         CollectionStructureHierarchyDto chapter1 = createChapterNode("Capítulo 1", "Chapter 1");
         CollectionStructureHierarchyDto chapter2 = createChapterNode("Capítulo 2", "Chapter 2");
         CollectionStructureHierarchyDto chapter3 = createChapterNode("Capítulo 3", "Chapter 3");
@@ -601,11 +609,11 @@ public class MockServices {
         return title;
     }
 
-    private static CollectionStructureHierarchyDto createTitleNode(String text_es, String text_en) {
+    private static CollectionStructureHierarchyDto createTitleNode(InternationalStringDto text) {
         CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
         node.setType(CollectionStructureHierarchyTypeEnum.TITLE);
-        node.setText(createInternationalString(text_es, text_en));
+        node.setText(text);
         return node;
     }
 

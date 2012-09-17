@@ -81,13 +81,15 @@ public class CollectionStructureTreeGrid extends TreeGrid {
     }
 
     public void setCollectionStructure(CollectionStructureHierarchyDto structureHierarchyDto) {
-        TreeNode collectionTreeNode = createCollectionTreeNode(structureHierarchyDto);
-
-        Tree tree = new Tree();
-        tree.setModelType(TreeModelType.CHILDREN);
-        tree.setData(new TreeNode[]{collectionTreeNode});
-        setData(tree);
-        getData().openAll();
+        if (structureHierarchyDto != null) {
+            TreeNode collectionTreeNode = createCollectionTreeNode(structureHierarchyDto);
+            
+            Tree tree = new Tree();
+            tree.setModelType(TreeModelType.CHILDREN);
+            tree.setData(new TreeNode[]{collectionTreeNode});
+            setData(tree);
+            getData().openAll();
+        }
     }
 
     private TreeNode createCollectionTreeNode(CollectionStructureHierarchyDto structureHierarchyDto) {
