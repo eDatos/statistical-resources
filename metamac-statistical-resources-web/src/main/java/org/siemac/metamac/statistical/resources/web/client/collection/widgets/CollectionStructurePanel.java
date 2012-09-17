@@ -182,9 +182,8 @@ public class CollectionStructurePanel extends HLayout {
         typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
         ViewTextItem typeViewName = new ViewTextItem(CollectionStructureDS.TYPE_VIEW_NAME, getConstants().collectionStructureElementType());
 
-        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(CollectionStructureDS.TEXT, getConstants().collectionStructureElementText());
+        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(CollectionStructureDS.TEXT, getConstants().collectionStructureElementText(), FORM_ITEM_CUSTOM_WIDTH);
         text.setRequired(true);
-        text.setWidth(FORM_ITEM_CUSTOM_WIDTH);
         text.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
