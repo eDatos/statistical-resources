@@ -5,7 +5,9 @@ import org.siemac.metamac.statistical.resources.web.client.collection.presenter.
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionPresenter;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionStructureTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -37,8 +39,10 @@ public interface StatisticalResourcesWebGinjector extends Ginjector {
     AsyncProvider<OperationListPresenter> getOperationListPresenter();
     AsyncProvider<OperationResourcesPresenter> getOperationResourcesPresenter();
     AsyncProvider<OperationPresenter> getOperationPresenter();
-    AsyncProvider<DatasetPresenter> getDatasetPresenter();
     AsyncProvider<DatasetListPresenter> getDatasetListPresenter();
+    AsyncProvider<DatasetPresenter> getDatasetPresenter();
+    AsyncProvider<DatasetMetadataTabPresenter> getDatasetMetadataTabPresenter();
+    AsyncProvider<DatasetDatasourcesTabPresenter> getDatasetDatasourcesTabPresenter();
     AsyncProvider<CollectionListPresenter> getCollectionListPresenter();
     AsyncProvider<CollectionPresenter> getCollectionPresenter();
     AsyncProvider<CollectionMetadataTabPresenter> getCollectionMetadataTabPresenter();

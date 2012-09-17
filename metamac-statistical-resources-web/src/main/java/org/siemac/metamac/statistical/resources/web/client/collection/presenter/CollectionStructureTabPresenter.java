@@ -14,7 +14,6 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.BreadCrumbsPanel;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;

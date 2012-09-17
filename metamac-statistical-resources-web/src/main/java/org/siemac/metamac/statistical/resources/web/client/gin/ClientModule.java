@@ -13,9 +13,13 @@ import org.siemac.metamac.statistical.resources.web.client.collection.view.Colle
 import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionMetadataTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionStructureTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.CollectionViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetDatasourcesTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetMetadataTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -61,8 +65,12 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(OperationListPresenter.class, OperationListPresenter.OperationListView.class, OperationListViewImpl.class, OperationListPresenter.OperationListProxy.class);
         bindPresenter(OperationResourcesPresenter.class, OperationResourcesPresenter.OperationResourcesView.class, OperationResourcesViewImpl.class,
                 OperationResourcesPresenter.OperationResourcesProxy.class);
-        bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
+        
         bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
+        bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
+        bindPresenter(DatasetMetadataTabPresenter.class, DatasetMetadataTabPresenter.DatasetMetadataTabView.class, DatasetMetadataTabViewImpl.class, DatasetMetadataTabPresenter.DatasetMetadataTabProxy.class);
+        bindPresenter(DatasetDatasourcesTabPresenter.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView.class, DatasetDatasourcesTabViewImpl.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy.class);
+        
         bindPresenter(CollectionListPresenter.class, CollectionListPresenter.CollectionListView.class, CollectionListViewImpl.class, CollectionListPresenter.CollectionListProxy.class);
         bindPresenter(CollectionPresenter.class, CollectionPresenter.CollectionView.class, CollectionViewImpl.class, CollectionPresenter.CollectionProxy.class);
         bindPresenter(CollectionMetadataTabPresenter.class, CollectionMetadataTabPresenter.CollectionMetadataTabView.class, CollectionMetadataTabViewImpl.class, CollectionMetadataTabPresenter.CollectionMetadataTabProxy.class);

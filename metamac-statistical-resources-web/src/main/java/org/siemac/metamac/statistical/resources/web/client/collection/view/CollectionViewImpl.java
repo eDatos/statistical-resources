@@ -27,7 +27,7 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
     private CollectionUiHandlers uiHandlers;
     
     private VLayout                  panel;
-    private TitleLabel               label;
+    private TitleLabel               titleLabel;
 
     private TabSet tabSet; 
     private Tab collectionMetadataTab;
@@ -40,12 +40,11 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         panel.setHeight100();
         panel.setOverflow(Overflow.SCROLL);
         
-        label = new TitleLabel(new String());
-        label.setStyleName("sectionTitleLeftMargin");
-        label.setVisibility(Visibility.HIDDEN);
+        titleLabel = new TitleLabel(new String());
+        titleLabel.setStyleName("sectionTitleLeftMargin");
+        titleLabel.setVisibility(Visibility.HIDDEN);
 
         // TABS
-
         tabSet = new TabSet();
         tabSet.setMargin(10);
 
@@ -54,7 +53,7 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
 
         tabSet.setTabs(collectionMetadataTab, collectionStructureTab);
 
-        panel.addMember(label);
+        panel.addMember(titleLabel);
         panel.addMember(tabSet);
         bindEvents();
     }
@@ -77,7 +76,8 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
 
     @Override
     public void setCollection(CollectionDto collectionDto) {
-        setTitleLabelContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
+        titleLabel.setContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
+        titleLabel.show();
     }
     
     @Override
@@ -95,11 +95,6 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
         } else {
             super.setInSlot(slot, content);
         }
-    }
-    
-    private void setTitleLabelContents(String contents) {
-        label.setContents(contents);
-        label.show();
     }
     
     @Override
