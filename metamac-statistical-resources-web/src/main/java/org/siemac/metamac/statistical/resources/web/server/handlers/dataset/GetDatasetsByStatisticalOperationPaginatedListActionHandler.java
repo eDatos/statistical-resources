@@ -1,9 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
-import java.util.List;
-
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
@@ -25,10 +24,8 @@ public class GetDatasetsByStatisticalOperationPaginatedListActionHandler
     @Override
     public GetDatasetsByStatisticalOperationPaginatedListResult executeSecurityAction(GetDatasetsByStatisticalOperationPaginatedListAction action) throws ActionException {
         try {
-            int firstResult = 0;
-            int totalResults = 0;
-            List<DataSetDto> datasetsDtos = MockServices.findDatasets(action.getOperationUrn(), action.getFirstResult(), action.getMaxResults());
-            return new GetDatasetsByStatisticalOperationPaginatedListResult(datasetsDtos, firstResult, totalResults);
+            MetamacCriteriaResult<DatasetDto> criteriaResult = MockServices.findDatasets(action.getOperationUrn(), action.getFirstResult(), action.getMaxResults());
+            return new GetDatasetsByStatisticalOperationPaginatedListResult(criteriaResult.getResults(), criteriaResult.getPaginatorResult().getFirstResult(), criteriaResult.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

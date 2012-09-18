@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -43,6 +43,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
         // TABS
         tabSet = new TabSet();
         tabSet.setMargin(10);
+        tabSet.setWidth100();
 
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());
@@ -72,7 +73,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     }
     
     @Override
-    public void setDataset(DataSetDto datasetDto) {
+    public void setDataset(DatasetDto datasetDto) {
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(datasetDto.getTitle()));
         titleLabel.show();
     }

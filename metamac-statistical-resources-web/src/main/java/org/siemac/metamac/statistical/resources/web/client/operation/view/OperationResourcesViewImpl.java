@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.record.CollectionRecord;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionListGrid;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
@@ -100,7 +100,7 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     }
     
     @Override
-    public void setDatasets(List<DataSetDto> datasetsDtos) {
+    public void setDatasets(List<DatasetDto> datasetsDtos) {
         datasetsListGrid.setDatasets(datasetsDtos);
     }
 

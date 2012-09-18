@@ -79,8 +79,13 @@ Application StatisticalResourcesDto {
 		
 		// DATASET
 
-		DataTransferObject DataSetDto extends @LifeCycleStatisticalResourceDto {
+		DataTransferObject DatasetDto extends @LifeCycleStatisticalResourceDto {
 			- @ContentMetadataDto contentMetadata;
+		}
+		
+		// DATASOURCE
+		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {
+			- @DatasetDto dataset;
 		}
 
 		// COLLECTION
@@ -101,7 +106,7 @@ Application StatisticalResourcesDto {
 		// QUERY
 
 		DataTransferObject QueryDto extends @IdentifiableStatisticalResourceDto {
-
+			- @DatasetDto dataset;
 		}
 		
 	}

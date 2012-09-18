@@ -1,17 +1,17 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
@@ -39,6 +39,7 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -56,7 +57,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     private ExternalItemDto operation;
     
     public interface DatasetMetadataTabView extends View, HasUiHandlers<DatasetMetadataTabUiHandlers> {
-        void setDataset(DataSetDto datasetDto);
+        void setDataset(DatasetDto datasetDto);
     }
     
     @ProxyCodeSplit
@@ -71,6 +72,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
         getView().setUiHandlers(this);
+    }
+    
+    @TitleFunction
+    public String title() {
+        return getConstants().breadcrumbDatasources();
     }
     
     @Override
@@ -123,7 +129,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     }
     
     @Override
-    public void saveDataset(DataSetDto datasetDto) {
+    public void saveDataset(DatasetDto datasetDto) {
         dispatcher.execute(new SaveDatasetAction(datasetDto), new WaitingAsyncCallback<SaveDatasetResult>() {
             @Override
             public void onWaitFailure(Throwable caught) {

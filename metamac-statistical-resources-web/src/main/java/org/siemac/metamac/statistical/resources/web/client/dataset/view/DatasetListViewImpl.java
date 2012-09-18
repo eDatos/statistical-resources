@@ -6,7 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
@@ -75,7 +75,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newDatasetWindow.validateForm()) {
-                            uiHandlers.createDataSet(newDatasetWindow.getNewDataSetDto(operationUrn));
+                            uiHandlers.createDataset(newDatasetWindow.getNewDatasetDto(operationUrn));
                             newDatasetWindow.destroy();
                         }
                     }
@@ -101,7 +101,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveDataSetsByStatisticalOperation(operationUrn, firstResult, maxResults);
+                uiHandlers.retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
             }
         });
         datasetsList.getListGrid().setAutoFitMaxRecords(DatasetListPresenter.DATASET_LIST_MAX_RESULTS);
@@ -127,7 +127,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
             public void onRecordClick(RecordClickEvent event) {
                 if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
                     String urn = ((DatasetRecord) event.getRecord()).getAttribute(DatasetDS.URN);
-                    uiHandlers.goToDataSet(urn);
+                    uiHandlers.goToDataset(urn);
                 }
             }
         });
@@ -148,7 +148,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.deleteDataSets(getUrnsFromSelected());
+                uiHandlers.deleteDatasets(getUrnsFromSelected());
             }
         });
     }
@@ -165,10 +165,10 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         datasetsList.goToLastPageAfterCreate();
     }
 
-    private void setDatasetList(List<DataSetDto> datasetsDtos) {
+    private void setDatasetList(List<DatasetDto> datasetsDtos) {
         DatasetRecord[] records = new DatasetRecord[datasetsDtos.size()];
         int index = 0;
-        for (DataSetDto datasetDto : datasetsDtos) {
+        for (DatasetDto datasetDto : datasetsDtos) {
             records[index++] = RecordUtils.getDatasetRecord(datasetDto);
         }
         datasetsList.getListGrid().setData(records);

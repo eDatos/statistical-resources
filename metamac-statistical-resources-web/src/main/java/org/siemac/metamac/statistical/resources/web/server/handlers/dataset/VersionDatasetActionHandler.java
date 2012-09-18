@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetResult;
@@ -21,7 +21,7 @@ public class VersionDatasetActionHandler extends SecurityActionHandler<VersionDa
     @Override
     public VersionDatasetResult executeSecurityAction(VersionDatasetAction action) throws ActionException {
         try {
-            DataSetDto datasetDto = MockServices.versionDataset(action.getUrn(), action.getVersionType());
+            DatasetDto datasetDto = MockServices.versionDataset(action.getUrn(), action.getVersionType());
             return new VersionDatasetResult(datasetDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

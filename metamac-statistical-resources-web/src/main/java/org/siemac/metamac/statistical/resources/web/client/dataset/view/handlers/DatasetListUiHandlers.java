@@ -2,15 +2,15 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view.handler
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface DatasetListUiHandlers extends UiHandlers {
 
-    void goToDataSet(String code);
-    void createDataSet(DataSetDto datasetDto);
-    void deleteDataSets(List<String> urnsFromSelected);
-    void retrieveDataSetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults);
+    void goToDataset(String code);
+    void createDataset(DatasetDto datasetDto);
+    void deleteDatasets(List<String> urnsFromSelected);
+    void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults);
 
 }

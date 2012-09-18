@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
@@ -24,7 +24,7 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
         String urn = action.getUrn();
         StatisticalResourceProcStatusEnum procStatus = action.getNextProcStatus();
         try {
-            DataSetDto datasetDto = null;
+            DatasetDto datasetDto = null;
             if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
                 datasetDto = MockServices.sendDatasetToProductionValidation(urn);
             } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {

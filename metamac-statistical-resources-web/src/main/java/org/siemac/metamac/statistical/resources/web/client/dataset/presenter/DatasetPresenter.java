@@ -8,7 +8,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -59,7 +59,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaDatasources = new Type<RevealContentHandler<?>>();
 
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
-        void setDataset(DataSetDto datasetDto);
+        void setDataset(DatasetDto datasetDto);
         void showMetadata();
     }
 

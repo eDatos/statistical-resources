@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.collection.V
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetActionHandler;
@@ -24,6 +25,7 @@ import org.siemac.metamac.statistical.resources.web.shared.collection.VersionCol
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
@@ -66,6 +68,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDatasetsByStatisticalOperationPaginatedListAction.class, GetDatasetsByStatisticalOperationPaginatedListActionHandler.class);
         bindHandler(UpdateDatasetProcStatusAction.class, UpdateDatasetProcStatusActionHandler.class);
         bindHandler(VersionDatasetAction.class, VersionDatasetActionHandler.class);
+        bindHandler(GetDatasourcesByDatasetPaginatedListAction.class, GetDatasourcesByDatasetPaginatedListActionHandler.class);
 
         // COLLECTIONS
         bindHandler(GetCollectionPaginatedListAction.class, GetCollectionPaginatedListActionHandler.class);

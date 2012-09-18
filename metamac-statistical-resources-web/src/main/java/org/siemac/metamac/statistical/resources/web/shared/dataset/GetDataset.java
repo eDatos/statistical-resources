@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -13,5 +13,5 @@ public class GetDataset {
     String     datasetUrn;
 
     @Out(1)
-    DataSetDto datasetDto;
+    DatasetDto datasetDto;
 }

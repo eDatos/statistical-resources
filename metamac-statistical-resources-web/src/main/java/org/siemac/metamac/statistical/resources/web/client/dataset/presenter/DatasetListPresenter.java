@@ -8,7 +8,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -98,7 +98,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrieveDataSetsByStatisticalOperation(operationUrn, DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+            retrieveDatasetsByStatisticalOperation(operationUrn, DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
         }
     }
 
@@ -131,7 +131,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     }
 
     @Override
-    public void retrieveDataSetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
+    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
         final String statisticalOperationUrn = operationUrn;
         dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(operationUrn, firstResult, maxResults),
                 new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
@@ -150,7 +150,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     }
 
     @Override
-    public void createDataSet(DataSetDto datasetDto) {
+    public void createDataset(DatasetDto datasetDto) {
         datasetDto.setOperation(operation);
         dispatcher.execute(new SaveDatasetAction(datasetDto), new WaitingAsyncCallback<SaveDatasetResult>() {
 
@@ -162,14 +162,14 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
                 ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getMessageList(getMessages().datasetSaved()), MessageTypeEnum.SUCCESS);
-                retrieveDataSetsByStatisticalOperation(operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
                 getView().goToDatasetListLastPageAfterCreate();
             }
         });
     }
 
     @Override
-    public void deleteDataSets(List<String> urnsFromSelected) {
+    public void deleteDatasets(List<String> urnsFromSelected) {
         dispatcher.execute(new DeleteDatasetListAction(urnsFromSelected), new WaitingAsyncCallback<DeleteDatasetListResult>() {
 
             @Override
@@ -180,13 +180,13 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
             @Override
             public void onWaitSuccess(DeleteDatasetListResult result) {
                 ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getMessageList(getMessages().datasetDeleted()), MessageTypeEnum.SUCCESS);
-                retrieveDataSetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
             }
         });
     }
 
     @Override
-    public void goToDataSet(String urn) {
+    public void goToDataset(String urn) {
         if (!StringUtils.isBlank(urn)) {
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn)));
         }

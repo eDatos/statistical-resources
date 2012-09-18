@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
@@ -55,7 +55,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     private GroupDynamicForm      versioningEditionForm;
     private GroupDynamicForm      lifeCycleEditionForm;
 
-    private DataSetDto            datasetDto;
+    private DatasetDto            datasetDto;
     
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
@@ -308,7 +308,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     }
 
     @Override
-    public void setDataset(DataSetDto datasetDto) {
+    public void setDataset(DatasetDto datasetDto) {
         this.datasetDto = datasetDto;
 
         mainFormLayout.updatePublishSection(datasetDto.getProcStatus());
@@ -319,7 +319,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         setDatasetEditionMode(datasetDto);
     }
 
-    private void setDatasetViewMode(DataSetDto datasetDto) {
+    private void setDatasetViewMode(DatasetDto datasetDto) {
         // Identifiers
         identifiersForm.setValue(DatasetDS.IDENTIFIER, datasetDto.getIdentifier());
         identifiersForm.setValue(DatasetDS.URI, datasetDto.getUri());
@@ -371,7 +371,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         contentMetadataForm.setValue(DatasetDS.LICENSE, contentMetadataDto.getLicense());
     }
     
-    private void setDatasetEditionMode(DataSetDto datasetDto) {
+    private void setDatasetEditionMode(DatasetDto datasetDto) {
         // Identifiers form
         identifiersEditionForm.setValue(DatasetDS.IDENTIFIER, datasetDto.getIdentifier());
         identifiersEditionForm.setValue(DatasetDS.TITLE, RecordUtils.getInternationalStringRecord(datasetDto.getTitle()));
@@ -424,7 +424,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     }
 
     
-    public DataSetDto getDatasetDto() {
+    public DatasetDto getDatasetDto() {
      // Identifiers form
         datasetDto.setIdentifier(identifiersEditionForm.getValueAsString(DatasetDS.IDENTIFIER));
         datasetDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasetDS.TITLE));

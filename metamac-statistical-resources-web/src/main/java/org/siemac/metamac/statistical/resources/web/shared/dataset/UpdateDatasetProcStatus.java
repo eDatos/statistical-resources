@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
-import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -20,6 +20,6 @@ public class UpdateDatasetProcStatus {
     StatisticalResourceProcStatusEnum currentProcStatus;
 
     @Out(1)
-    DataSetDto                     datasetDto;
+    DatasetDto                     datasetDto;
 
 }
