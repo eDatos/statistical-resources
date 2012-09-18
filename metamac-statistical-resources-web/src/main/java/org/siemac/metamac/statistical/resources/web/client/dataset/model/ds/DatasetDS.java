@@ -1,9 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.ds;
 
-import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleStatisticalResourceDS;
-
-import com.smartgwt.client.data.fields.DataSourceIntegerField;
 
 public class DatasetDS extends LifeCycleStatisticalResourceDS {
 
@@ -28,9 +25,7 @@ public class DatasetDS extends LifeCycleStatisticalResourceDS {
     public static String       DTO                        = "ds-dto";
 
     public DatasetDS() {
-        DataSourceIntegerField code = new DataSourceIntegerField(ID, StatisticalResourcesWeb.getConstants().datasetIdentifier());
-        code.setPrimaryKey(true);
-        addField(code);
+        super();
     }
 
 }

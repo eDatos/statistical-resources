@@ -1,11 +1,16 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
+
+import java.util.Date;
+import java.util.LinkedHashMap;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
 import org.siemac.metamac.statistical.resources.core.dto.DataSetDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
@@ -16,9 +21,10 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublic
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -28,7 +34,6 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -55,7 +60,6 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
         panel.setHeight100();
-        panel.setOverflow(Overflow.SCROLL);
 
         mainFormLayout = new DatasetMainFormLayout(DatasetClientSecurityUtils.canUpdateDataset());
 
@@ -253,8 +257,9 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         versioningEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
         ViewTextItem version = new ViewTextItem(DatasetDS.VERSION_LOGIC, getConstants().versionableVersion());
         ViewTextItem versionDate = new ViewTextItem(DatasetDS.VERSION_DATE, getConstants().versionableVersionDate());
-        ViewTextItem nextVerstionDate = new ViewTextItem(DatasetDS.NEXT_VERSION_DATE, getConstants().versionableNextVersionDate()); // TODO what formItem should be used?
-        ViewTextItem rationaleType = new ViewTextItem(DatasetDS.RATIONALE_TYPE, getConstants().versionableRationaleType());
+        CustomDateItem nextVerstionDate = new CustomDateItem(DatasetDS.NEXT_VERSION_DATE, getConstants().versionableNextVersionDate()); // TODO what formItem should be used?
+        CustomSelectItem rationaleType = new CustomSelectItem(DatasetDS.RATIONALE_TYPE, getConstants().versionableRationaleType());
+        rationaleType.setValueMap(CommonUtils.getStatisticalResourceVersionRationaleTypeHashMap());
         CustomTextItem rationale = new CustomTextItem(DatasetDS.RATIONALE, getConstants().versionableRationale());
         versioningEditionForm.setFields(version, versionDate, nextVerstionDate, rationaleType, rationale);
 
@@ -288,7 +293,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         ViewTextItem temporalCoverageCodes = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE_CODES, getConstants().contentMetadataTemporalCoverageCodes()); // TODO what formItem should be used?
         ViewTextItem type = new ViewTextItem(DatasetDS.TYPE, getConstants().contentMetadataType());// TODO what formItem should be used?
         ViewTextItem format = new ViewTextItem(DatasetDS.FORMAT, getConstants().contentMetadataFormat());// TODO what formItem should be used?
-        ViewTextItem nextUpdate = new ViewTextItem(DatasetDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());// TODO what formItem should be used?
+        CustomDateItem nextUpdate = new CustomDateItem(DatasetDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());// TODO what formItem should be used?
         ViewTextItem updateFrequency = new ViewTextItem(DatasetDS.UPDATE_FREQUENCY, getConstants().contentMetadataUpdateFrequency());// TODO what formItem should be used?
         ViewTextItem rightsHolder = new ViewTextItem(DatasetDS.RIGHTS_HOLDER, getConstants().contentMetadataRightsHolder());// TODO what formItem should be used?
         ViewTextItem copyrightedDate = new ViewTextItem(DatasetDS.COPYRIGHTED_DATE, getConstants().contentMetadataCopyrightedDate());// TODO what formItem should be used?
@@ -301,7 +306,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
         mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
     }
-    
+
     @Override
     public void setDataset(DataSetDto datasetDto) {
         this.datasetDto = datasetDto;
@@ -324,10 +329,9 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         versioningForm.setValue(DatasetDS.VERSION_LOGIC, datasetDto.getVersionLogic());
         versioningForm.setValue(DatasetDS.VERSION_DATE, DateUtils.getFormattedDate(datasetDto.getVersionDate()));
         // TODO change based on values taken from gpe
-        versioningForm.setValue(DatasetDS.RATIONALE_TYPE, datasetDto.getRationaleType() != null ? datasetDto.getRationaleType().name() : StringUtils.EMPTY);
+        versioningForm.setValue(DatasetDS.RATIONALE_TYPE, CommonUtils.getStatisticalResourceVersionRationaleTypeName(datasetDto.getRationaleType()));
         versioningForm.setValue(DatasetDS.RATIONALE, datasetDto.getRationale() != null ? datasetDto.getRationale() : StringUtils.EMPTY);
-        versioningForm.setValue(DatasetDS.VERSION_DATE, DateUtils.getFormattedDate(datasetDto.getVersionDate()));
-        versioningForm.setValue(DatasetDS.NEXT_VERSION_DATE, DateUtils.getFormattedDate(datasetDto.getNextVersionDate()));
+        versioningForm.setValue(DatasetDS.NEXT_VERSION_DATE, datasetDto.getNextVersionDate());
         
         lifeCycleForm.setValue(DatasetDS.PROC_STATUS, CommonUtils.getProcStatusName(datasetDto));
         lifeCycleForm.setValue(DatasetDS.RESPONSABILITY_CONTRIBUTOR, datasetDto.getResponsabilityContributor());
@@ -360,7 +364,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
                 contentMetadataDto.getTemporalCoverageCodes() != null ? CommonWebUtils.getStringListToString(contentMetadataDto.getTemporalCoverageCodes()) : null);
         contentMetadataForm.setValue(DatasetDS.TYPE, CommonUtils.getStatisticalResourceTypeName(contentMetadataDto.getType()));
         contentMetadataForm.setValue(DatasetDS.FORMAT, CommonUtils.getStatisticalResourceFormatName(contentMetadataDto.getFormat()));
-        contentMetadataForm.setValue(DatasetDS.NEXT_UPDATE_DATE, DateUtils.getFormattedDate(contentMetadataDto.getNextUpdateDate()));
+        contentMetadataForm.setValue(DatasetDS.NEXT_UPDATE_DATE, contentMetadataDto.getNextUpdateDate());
         contentMetadataForm.setValue(DatasetDS.UPDATE_FREQUENCY, contentMetadataDto.getUpdateFrequency());
         contentMetadataForm.setValue(DatasetDS.RIGHTS_HOLDER, contentMetadataDto.getRightsHolder());
         contentMetadataForm.setValue(DatasetDS.COPYRIGHTED_DATE, DateUtils.getFormattedDate(contentMetadataDto.getCopyrightedDate()));
@@ -377,8 +381,8 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         // Version form
         versioningEditionForm.setValue(DatasetDS.VERSION_LOGIC, datasetDto.getVersionLogic());
         versioningEditionForm.setValue(DatasetDS.VERSION_DATE, DateUtils.getFormattedDate(datasetDto.getVersionDate()));
-        versioningEditionForm.setValue(DatasetDS.NEXT_VERSION_DATE, DateUtils.getFormattedDate(datasetDto.getNextVersionDate()));
-        versioningEditionForm.setValue(DatasetDS.RATIONALE_TYPE, CommonUtils.getStatisticalResourceVersionRationaleTypeName(datasetDto.getRationaleType()));
+        versioningEditionForm.setValue(DatasetDS.NEXT_VERSION_DATE, datasetDto.getNextVersionDate());
+        versioningEditionForm.setValue(DatasetDS.RATIONALE_TYPE, datasetDto.getRationaleType() != null ? datasetDto.getRationaleType().name(): StringUtils.EMPTY);
         versioningEditionForm.setValue(DatasetDS.RATIONALE, datasetDto.getRationale());
 
         // Life cycle form
@@ -426,8 +430,10 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         datasetDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasetDS.TITLE));
 
         // Version form
+        datasetDto.setRationaleType(StatisticalResourceVersionRationaleTypeEnum.valueOf(versioningEditionForm.getValueAsString(DatasetDS.RATIONALE_TYPE)));
         datasetDto.setRationale(versioningEditionForm.getValueAsString(DatasetDS.RATIONALE));
-
+        datasetDto.setNextVersionDate((Date)versioningEditionForm.getValue(DatasetDS.NEXT_VERSION_DATE));
+        
         // Life cycle form
 
         // Content metadata form
@@ -435,6 +441,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
             datasetDto.setContentMetadata(new ContentMetadataDto());
         }
         datasetDto.getContentMetadata().setDescription((InternationalStringDto) contentMetadataEditionForm.getValue(DatasetDS.DESCRIPTION));
+        datasetDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(DatasetDS.NEXT_UPDATE_DATE));
 
         return datasetDto;
     }

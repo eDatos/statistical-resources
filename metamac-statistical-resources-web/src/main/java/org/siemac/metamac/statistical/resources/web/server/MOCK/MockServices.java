@@ -195,6 +195,9 @@ public class MockServices {
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
         contentMetadata.setLanguage("es");
+        contentMetadata.setLanguages(new ArrayList<String>());
+        contentMetadata.getLanguages().add("es");
+        contentMetadata.getLanguages().add("en");
         contentMetadata.setDescription(createInternationalString(
                 "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
                         + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "

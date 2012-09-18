@@ -2,14 +2,19 @@ package org.siemac.metamac.statistical.resources.web.client.collection.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.Date;
+
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
 import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.CollectionDS;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionMetadataTabPresenter.CollectionMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.collection.utils.CollectionClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.CollectionMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
@@ -17,6 +22,8 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -261,8 +268,9 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         versionEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
         ViewTextItem version = new ViewTextItem(CollectionDS.VERSION_LOGIC, getConstants().versionableVersion());
         ViewTextItem versionDate = new ViewTextItem(CollectionDS.VERSION_DATE, getConstants().versionableVersionDate());
-        ViewTextItem nextVerstionDate = new ViewTextItem(CollectionDS.NEXT_VERSION_DATE, getConstants().versionableNextVersionDate()); // TODO what formItem should be used?
-        ViewTextItem rationaleType = new ViewTextItem(CollectionDS.RATIONALE_TYPE, getConstants().versionableRationaleType());
+        CustomDateItem nextVerstionDate = new CustomDateItem(CollectionDS.NEXT_VERSION_DATE, getConstants().versionableNextVersionDate());
+        CustomSelectItem rationaleType = new CustomSelectItem(CollectionDS.RATIONALE_TYPE, getConstants().versionableRationaleType());
+        rationaleType.setValueMap(CommonUtils.getStatisticalResourceVersionRationaleTypeHashMap());
         CustomTextItem rationale = new CustomTextItem(CollectionDS.RATIONALE, getConstants().versionableRationale());
         versionEditionForm.setFields(version, versionDate, nextVerstionDate, rationaleType, rationale);
 
@@ -296,7 +304,7 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         ViewTextItem temporalCoverageCodes = new ViewTextItem(CollectionDS.TEMPORAL_COVERAGE_CODES, getConstants().contentMetadataTemporalCoverageCodes()); // TODO what formItem should be used?
         ViewTextItem type = new ViewTextItem(CollectionDS.TYPE, getConstants().contentMetadataType());// TODO what formItem should be used?
         ViewTextItem format = new ViewTextItem(CollectionDS.FORMAT, getConstants().contentMetadataFormat());// TODO what formItem should be used?
-        ViewTextItem nextUpdate = new ViewTextItem(CollectionDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());// TODO what formItem should be used?
+        CustomDateItem nextUpdate = new CustomDateItem(CollectionDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());
         ViewTextItem updateFrequency = new ViewTextItem(CollectionDS.UPDATE_FREQUENCY, getConstants().contentMetadataUpdateFrequency());// TODO what formItem should be used?
         ViewTextItem rightsHolder = new ViewTextItem(CollectionDS.RIGHTS_HOLDER, getConstants().contentMetadataRightsHolder());// TODO what formItem should be used?
         ViewTextItem copyrightedDate = new ViewTextItem(CollectionDS.COPYRIGHTED_DATE, getConstants().contentMetadataCopyrightedDate());// TODO what formItem should be used?
@@ -375,7 +383,7 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         versionEditionForm.setValue(CollectionDS.VERSION_LOGIC, collectionDto.getVersionLogic());
         versionEditionForm.setValue(CollectionDS.VERSION_DATE, DateUtils.getFormattedDate(collectionDto.getVersionDate()));
         versionEditionForm.setValue(CollectionDS.NEXT_VERSION_DATE, DateUtils.getFormattedDate(collectionDto.getNextVersionDate()));
-        versionEditionForm.setValue(CollectionDS.RATIONALE_TYPE, CommonUtils.getStatisticalResourceVersionRationaleTypeName(collectionDto.getRationaleType()));
+        versionEditionForm.setValue(CollectionDS.RATIONALE_TYPE, collectionDto.getRationaleType() != null ? collectionDto.getRationaleType().name(): StringUtils.EMPTY);
         versionEditionForm.setValue(CollectionDS.RATIONALE, collectionDto.getRationale());
 
         // Life cycle form
@@ -434,6 +442,8 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
 
         // Version form
         collectionDto.setRationale(versionEditionForm.getValueAsString(CollectionDS.RATIONALE));
+        collectionDto.setRationaleType(StatisticalResourceVersionRationaleTypeEnum.valueOf(versionEditionForm.getValueAsString(CollectionDS.RATIONALE_TYPE)));
+        collectionDto.setNextVersionDate((Date)versionEditionForm.getValue(CollectionDS.NEXT_VERSION_DATE));
 
         // Life cycle form
 
@@ -442,7 +452,8 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
             collectionDto.setContentMetadata(new ContentMetadataDto());
         }
         collectionDto.getContentMetadata().setDescription((InternationalStringDto) contentMetadataEditionForm.getValue(CollectionDS.DESCRIPTION));
-
+        collectionDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(CollectionDS.NEXT_UPDATE_DATE));
+        
         return collectionDto;
     }
     

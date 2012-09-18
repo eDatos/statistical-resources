@@ -22,7 +22,7 @@ public class CommonUtils {
                 ? getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName())
                 : null;
     }
-
+    
     public static LinkedHashMap<String, String> getStatisticalResourceTypeHashMap() {
         if (statisticalResourceTypeHashMap == null) {
             statisticalResourceTypeHashMap = new LinkedHashMap<String, String>();

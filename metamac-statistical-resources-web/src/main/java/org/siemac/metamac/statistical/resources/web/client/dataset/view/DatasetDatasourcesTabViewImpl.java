@@ -15,7 +15,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
         panel.setHeight100();
-        panel.setOverflow(Overflow.SCROLL);
     }
     
     @Override
