@@ -15,7 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.collection.utils.Coll
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.CollectionListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.NewCollectionWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
-import org.siemac.metamac.statistical.resources.web.client.utils.RecordUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
@@ -61,8 +61,6 @@ public class CollectionListViewImpl extends ViewImpl implements CollectionListPr
     public CollectionListViewImpl() {
         super();
         panel = new VLayout();
-        panel.setHeight100();
-        panel.setOverflow(Overflow.SCROLL);
 
         // ToolStrip
 
@@ -176,7 +174,7 @@ public class CollectionListViewImpl extends ViewImpl implements CollectionListPr
         CollectionRecord[] records = new CollectionRecord[collectionDtos.size()];
         int index = 0;
         for (CollectionDto scheme : collectionDtos) {
-            records[index++] = RecordUtils.getCollectionRecord(scheme);
+            records[index++] = StatisticalResourcesRecordUtils.getCollectionRecord(scheme);
         }
         collectionListGrid.getListGrid().setData(records);
     }

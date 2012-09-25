@@ -7,7 +7,7 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.CollectionDS;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.record.CollectionRecord;
-import org.siemac.metamac.statistical.resources.web.client.utils.RecordUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 
 import com.smartgwt.client.widgets.grid.HoverCustomizer;
@@ -51,7 +51,7 @@ public class CollectionListGrid extends BaseCustomListGrid {
         if (collections != null) {
             CollectionRecord[] records = new CollectionRecord[collections.size()];
             for (int i = 0; i < collections.size(); i++) {
-                records[i] = RecordUtils.getCollectionRecord(collections.get(i));
+                records[i] = StatisticalResourcesRecordUtils.getCollectionRecord(collections.get(i));
             }
             setData(records);
         }

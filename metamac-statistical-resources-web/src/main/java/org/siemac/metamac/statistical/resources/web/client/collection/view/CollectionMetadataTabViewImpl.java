@@ -2,8 +2,11 @@ package org.siemac.metamac.statistical.resources.web.client.collection.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
@@ -18,9 +21,15 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.Data
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
+import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
+import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
+import org.siemac.metamac.web.common.client.widgets.SearchExternalItemWindow;
+import org.siemac.metamac.web.common.client.widgets.SearchMultipleExternalItemWindow;
+import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
+import org.siemac.metamac.web.common.client.widgets.actions.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
@@ -28,6 +37,8 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalListItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -37,6 +48,8 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 
@@ -56,6 +69,9 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
     private GroupDynamicForm                versionEditionForm;
     private GroupDynamicForm                lifeCycleEditionForm;
     private GroupDynamicForm                contentMetadataEditionForm;
+    
+    private SearchExternalItemWindow         searchAgencyWindow;
+    private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
     private CollectionDto                   collectionDto;
     
@@ -213,19 +229,20 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         // Life cycle form
         lifeCycleForm = new GroupDynamicForm(getConstants().collectionLifeCycle());
         ViewTextItem procStatus = new ViewTextItem(CollectionDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
+        ViewTextItem responsabilityCreator = new ViewTextItem(CollectionDS.RESPONSABILITY_CREATOR, getConstants().lifeCycleResponsabilityCreator());
         ViewTextItem responsabilityContributor = new ViewTextItem(CollectionDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityContributor());
         ViewTextItem responsabilitySubmitted = new ViewTextItem(CollectionDS.RESPONSABILITY_SUBMITTED, getConstants().lifeCycleResponsabilitySubmitted());
         ViewTextItem responsabilityAccepted = new ViewTextItem(CollectionDS.RESPONSABILITY_ACCEPTED, getConstants().lifeCycleResponsabilityAccepted());
         ViewTextItem responsabilityIssued = new ViewTextItem(CollectionDS.RESPONSABILITY_ISSUED, getConstants().lifeCycleResponsabilityIssued());
         ViewTextItem responsabilityOutOfPrint = new ViewTextItem(CollectionDS.RESPONSABILITY_OUT_OF_PRINT, getConstants().lifeCycleResponsabilityOutOfPrint());
         ViewTextItem creator = new ViewTextItem(CollectionDS.CREATOR, getConstants().lifeCycleCreator());
-        ViewTextItem contributor = new ViewTextItem(CollectionDS.CONTRIBUTOR, getConstants().lifeCycleContributor());
-        ViewTextItem publisher = new ViewTextItem(CollectionDS.PUBLISHER, getConstants().lifeCyclePublisher());
-        ViewTextItem mediator = new ViewTextItem(CollectionDS.MEDIATOR, getConstants().lifeCycleMediator());
+        SearchExternalListItem contributor = createRelatedMultiAgencyItem(CollectionDS.CONTRIBUTOR, getConstants().lifeCycleContributor(),AgencyField.AGENCY_CONTRIBUTOR,false);
+        SearchExternalListItem publisher = createRelatedMultiAgencyItem(CollectionDS.PUBLISHER, getConstants().lifeCyclePublisher(),AgencyField.AGENCY_PUBLISHER,false);
+        SearchExternalListItem mediator = createRelatedMultiAgencyItem(CollectionDS.MEDIATOR, getConstants().lifeCycleMediator(),AgencyField.AGENCY_MEDIATOR,false);
         ViewTextItem submittedDate = new ViewTextItem(CollectionDS.SUBMITTED_DATE, getConstants().lifeCycleSubmittedDate());
         ViewTextItem acceptedDate = new ViewTextItem(CollectionDS.ACCEPTED_DATE, getConstants().lifeCycleAcceptedDate());
         ViewTextItem issuedDate = new ViewTextItem(CollectionDS.ISSUED_DATE, getConstants().lifeCycleIssuedDate());
-        lifeCycleForm.setFields(procStatus, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint, creator, contributor,
+        lifeCycleForm.setFields(procStatus, responsabilityCreator, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint, creator, contributor,
                 publisher, mediator, submittedDate, acceptedDate, issuedDate);
 
         // Content metadata form
@@ -277,19 +294,20 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         // Life cycle form
         lifeCycleEditionForm = new GroupDynamicForm(getConstants().collectionLifeCycle());
         ViewTextItem procStatus = new ViewTextItem(CollectionDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
+        ViewTextItem responsabilityCreator = new ViewTextItem(CollectionDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityCreator());
         ViewTextItem responsabilityContributor = new ViewTextItem(CollectionDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityContributor());
         ViewTextItem responsabilitySubmitted = new ViewTextItem(CollectionDS.RESPONSABILITY_SUBMITTED, getConstants().lifeCycleResponsabilitySubmitted());
         ViewTextItem responsabilityAccepted = new ViewTextItem(CollectionDS.RESPONSABILITY_ACCEPTED, getConstants().lifeCycleResponsabilityAccepted());
         ViewTextItem responsabilityIssued = new ViewTextItem(CollectionDS.RESPONSABILITY_ISSUED, getConstants().lifeCycleResponsabilityIssued());
         ViewTextItem responsabilityOutOfPrint = new ViewTextItem(CollectionDS.RESPONSABILITY_OUT_OF_PRINT, getConstants().lifeCycleResponsabilityOutOfPrint());
-        ViewTextItem creator = new ViewTextItem(CollectionDS.CREATOR, getConstants().lifeCycleCreator());
-        ViewTextItem contributor = new ViewTextItem(CollectionDS.CONTRIBUTOR, getConstants().lifeCycleContributor());
-        ViewTextItem publisher = new ViewTextItem(CollectionDS.PUBLISHER, getConstants().lifeCyclePublisher());
-        ViewTextItem mediator = new ViewTextItem(CollectionDS.MEDIATOR, getConstants().lifeCycleMediator());
+        SearchExternalViewTextItem creator = createRelatedAgencyItem(CollectionDS.CREATOR, getConstants().lifeCycleCreator(), AgencyField.AGENCY_CREATOR);
+        SearchExternalListItem contributor = createRelatedMultiAgencyItem(CollectionDS.CONTRIBUTOR, getConstants().lifeCycleContributor(),AgencyField.AGENCY_CONTRIBUTOR,true);
+        SearchExternalListItem publisher = createRelatedMultiAgencyItem(CollectionDS.PUBLISHER, getConstants().lifeCyclePublisher(),AgencyField.AGENCY_PUBLISHER,true);
+        SearchExternalListItem mediator = createRelatedMultiAgencyItem(CollectionDS.MEDIATOR, getConstants().lifeCycleMediator(),AgencyField.AGENCY_MEDIATOR, true);
         ViewTextItem submittedDate = new ViewTextItem(CollectionDS.SUBMITTED_DATE, getConstants().lifeCycleSubmittedDate());
         ViewTextItem acceptedDate = new ViewTextItem(CollectionDS.ACCEPTED_DATE, getConstants().lifeCycleAcceptedDate());
         ViewTextItem issuedDate = new ViewTextItem(CollectionDS.ISSUED_DATE, getConstants().lifeCycleIssuedDate());
-        lifeCycleEditionForm.setFields(procStatus, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint, creator, contributor,
+        lifeCycleEditionForm.setFields(procStatus, responsabilityCreator, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint, creator, contributor,
                 publisher, mediator, submittedDate, acceptedDate, issuedDate);
 
         // Content metadata form
@@ -318,6 +336,22 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
     }
     
+    private SearchExternalViewTextItem createRelatedAgencyItem(String name, String title, AgencyField agencyField) {
+        SearchExternalViewTextItem agencyItem = new SearchExternalViewTextItem(name, title);
+        agencyItem.setRequired(true);
+        agencyItem.getSearchIcon().addFormItemClickHandler(new SearchAgencyFormItemClickHandler(agencyField));
+        return agencyItem;
+    }
+    
+    private SearchExternalListItem createRelatedMultiAgencyItem(String name, String title, AgencyField agencyField, boolean editionMode) {
+        SearchExternalListItem agencyItem = new SearchExternalListItem(name, title,editionMode);
+        if (editionMode) {
+            agencyItem.setRequired(false);
+            agencyItem.getSearchIcon().addFormItemClickHandler(new SearchMultiAgencyFormItemClickHandler(agencyField));
+        }
+        return agencyItem;
+    }
+    
     private void setCollectionViewMode(CollectionDto collectionDto) {
         // Identifiers form
         identifiersForm.setValue(CollectionDS.IDENTIFIER, collectionDto.getIdentifier());
@@ -334,15 +368,18 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
 
         // Life cycle form
         lifeCycleForm.setValue(CollectionDS.PROC_STATUS, CommonUtils.getProcStatusName(collectionDto));
+        lifeCycleForm.setValue(CollectionDS.RESPONSABILITY_CREATOR, collectionDto.getResponsabilityCreator());
         lifeCycleForm.setValue(CollectionDS.RESPONSABILITY_CONTRIBUTOR, collectionDto.getResponsabilityContributor());
         lifeCycleForm.setValue(CollectionDS.RESPONSABILITY_SUBMITTED, collectionDto.getResponsabilitySubmitted());
         lifeCycleForm.setValue(CollectionDS.RESPONSABILITY_ACCEPTED, collectionDto.getResponsabilityAccepted());
         lifeCycleForm.setValue(CollectionDS.RESPONSABILITY_ISSUED, collectionDto.getResponsabilityIssued());
         lifeCycleForm.setValue(CollectionDS.RESPONSABILITY_OUT_OF_PRINT, collectionDto.getResponsabilityOutOfPrint());
-        lifeCycleForm.setValue(CollectionDS.CREATOR, collectionDto.getCreator());
-        lifeCycleForm.setValue(CollectionDS.CONTRIBUTOR, collectionDto.getContributor());
-        lifeCycleForm.setValue(CollectionDS.PUBLISHER, collectionDto.getPublisher());
-        lifeCycleForm.setValue(CollectionDS.MEDIATOR, collectionDto.getMediator());
+        lifeCycleForm.setValue(CollectionDS.CREATOR, collectionDto.getCreator() != null ? ExternalItemUtils.getExternalItemName(collectionDto.getCreator()) : null);
+        
+        ((SearchExternalListItem)lifeCycleForm.getField(CollectionDS.CONTRIBUTOR)).setExternalItems(collectionDto.getContributor());
+        ((SearchExternalListItem)lifeCycleForm.getField(CollectionDS.PUBLISHER)).setExternalItems(collectionDto.getPublisher());
+        ((SearchExternalListItem)lifeCycleForm.getField(CollectionDS.MEDIATOR)).setExternalItems(collectionDto.getMediator());
+        
         lifeCycleForm.setValue(CollectionDS.SUBMITTED_DATE, DateUtils.getFormattedDate(collectionDto.getSubmittedDate()));
         lifeCycleForm.setValue(CollectionDS.ACCEPTED_DATE, DateUtils.getFormattedDate(collectionDto.getAcceptedDate()));
         lifeCycleForm.setValue(CollectionDS.ISSUED_DATE, DateUtils.getFormattedDate(collectionDto.getIssuedDate()));
@@ -393,10 +430,12 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         lifeCycleEditionForm.setValue(CollectionDS.RESPONSABILITY_ACCEPTED, collectionDto.getResponsabilityAccepted());
         lifeCycleEditionForm.setValue(CollectionDS.RESPONSABILITY_ISSUED, collectionDto.getResponsabilityIssued());
         lifeCycleEditionForm.setValue(CollectionDS.RESPONSABILITY_OUT_OF_PRINT, collectionDto.getResponsabilityOutOfPrint());
-        lifeCycleEditionForm.setValue(CollectionDS.CREATOR, collectionDto.getCreator());
-        lifeCycleEditionForm.setValue(CollectionDS.CONTRIBUTOR, collectionDto.getContributor());
-        lifeCycleEditionForm.setValue(CollectionDS.PUBLISHER, collectionDto.getPublisher());
-        lifeCycleEditionForm.setValue(CollectionDS.MEDIATOR, collectionDto.getMediator());
+        
+        ((SearchExternalViewTextItem)lifeCycleEditionForm.getField(CollectionDS.CREATOR)).setExternalItem(collectionDto.getCreator());
+        ((SearchExternalListItem)lifeCycleEditionForm.getField(CollectionDS.CONTRIBUTOR)).setExternalItems(new ArrayList<ExternalItemDto>(collectionDto.getContributor()));
+        ((SearchExternalListItem)lifeCycleEditionForm.getField(CollectionDS.PUBLISHER)).setExternalItems(new ArrayList<ExternalItemDto>(collectionDto.getPublisher()));
+        ((SearchExternalListItem)lifeCycleEditionForm.getField(CollectionDS.MEDIATOR)).setExternalItems(new ArrayList<ExternalItemDto>(collectionDto.getMediator()));
+        
         lifeCycleEditionForm.setValue(CollectionDS.SUBMITTED_DATE, DateUtils.getFormattedDate(collectionDto.getSubmittedDate()));
         lifeCycleEditionForm.setValue(CollectionDS.ACCEPTED_DATE, DateUtils.getFormattedDate(collectionDto.getAcceptedDate()));
         lifeCycleEditionForm.setValue(CollectionDS.ISSUED_DATE, DateUtils.getFormattedDate(collectionDto.getIssuedDate()));
@@ -434,6 +473,16 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         setCollectionViewMode(collectionDto);
         setCollectionEditionMode(collectionDto);
     }
+    
+    @Override
+    public void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result) {
+        if (searchAgencyWindow != null) {
+            searchAgencyWindow.setExternalItems(result.getAgenciesList());
+        }
+        if (searchMultiAgencyWindow != null)  {
+            searchMultiAgencyWindow.setSourceExternalItems(result.getAgenciesList());
+        }
+    }
 
     private CollectionDto getCollectionDto() {
         // Identifiers form
@@ -442,7 +491,11 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
 
         // Version form
         collectionDto.setRationale(versionEditionForm.getValueAsString(CollectionDS.RATIONALE));
-        collectionDto.setRationaleType(StatisticalResourceVersionRationaleTypeEnum.valueOf(versionEditionForm.getValueAsString(CollectionDS.RATIONALE_TYPE)));
+        String rationaleType = versionEditionForm.getValueAsString(CollectionDS.RATIONALE_TYPE);
+        if (!StringUtils.isEmpty(rationaleType)) {
+            collectionDto.setRationaleType(StatisticalResourceVersionRationaleTypeEnum.valueOf(rationaleType));
+        }
+        
         collectionDto.setNextVersionDate((Date)versionEditionForm.getValue(CollectionDS.NEXT_VERSION_DATE));
 
         // Life cycle form
@@ -451,6 +504,29 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
         if (collectionDto.getContentMetadata() == null) {
             collectionDto.setContentMetadata(new ContentMetadataDto());
         }
+        
+        ExternalItemDto creatorAgency = ((SearchExternalViewTextItem)lifeCycleEditionForm.getField(CollectionDS.CREATOR)).getExternalItem();
+        collectionDto.setCreator(creatorAgency);
+        
+     // Life cycle form
+        List<ExternalItemDto> contributorAgencies = ((SearchExternalListItem)lifeCycleEditionForm.getField(CollectionDS.CONTRIBUTOR)).getSelectedExternalItems();
+        if (contributorAgencies != null) {
+            collectionDto.getContributor().clear();
+            collectionDto.getContributor().addAll(contributorAgencies);
+        }
+        List<ExternalItemDto> publisherAgencies = ((SearchExternalListItem)lifeCycleEditionForm.getField(CollectionDS.PUBLISHER)).getSelectedExternalItems();
+        if (publisherAgencies != null) {
+            collectionDto.getPublisher().clear();
+            collectionDto.getPublisher().addAll(publisherAgencies);
+        }
+        
+        List<ExternalItemDto> mediatorAgencies = ((SearchExternalListItem)lifeCycleEditionForm.getField(CollectionDS.MEDIATOR)).getSelectedExternalItems();
+        if (mediatorAgencies != null) {
+            collectionDto.getMediator().clear();
+            collectionDto.getMediator().addAll(mediatorAgencies);
+        }
+
+        
         collectionDto.getContentMetadata().setDescription((InternationalStringDto) contentMetadataEditionForm.getValue(CollectionDS.DESCRIPTION));
         collectionDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(CollectionDS.NEXT_UPDATE_DATE));
         
@@ -466,5 +542,97 @@ public class CollectionMetadataTabViewImpl extends ViewImpl implements Collectio
     public Widget asWidget() {
         return panel;
     }
+    
+    private enum AgencyField {
+        AGENCY_CREATOR(CollectionDS.CREATOR),
+        AGENCY_CONTRIBUTOR(CollectionDS.CONTRIBUTOR),
+        AGENCY_PUBLISHER(CollectionDS.PUBLISHER),
+        AGENCY_MEDIATOR(CollectionDS.MEDIATOR);
+        
+        private String formFieldId;
+        private AgencyField(String formFieldId) {
+            this.formFieldId = formFieldId;
+        }
+        
+        public String getFormFieldId() {
+            return formFieldId;
+        }
+    }
 
+    private class SearchAgencyFormItemClickHandler implements FormItemClickHandler {
+        private AgencyField agencyField;
+        
+        public SearchAgencyFormItemClickHandler(AgencyField agencyField) {
+            this.agencyField = agencyField;
+        }
+        
+        @Override
+        public void onFormItemClick(FormItemIconClickEvent event) {
+            final int AGENCY_FIRST_RESULT = 0;
+            final int AGENCY_MAX_RESULTS = 16;
+            
+            searchAgencyWindow = new SearchExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
+                @Override
+                public void retrieveResultSet(int firstResult, int maxResults) {
+                    uiHandlers.retrieveAgencies(firstResult, maxResults, null);
+                }
+            });
+            uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
+            searchAgencyWindow.setSearchAction(new SearchPaginatedAction() {
+                @Override
+                public void retrieveResultSet(int firstResult, int maxResults, String code) {
+                    uiHandlers.retrieveAgencies(firstResult, maxResults, code);
+                }
+            });
+            searchAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                @Override
+                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                    ExternalItemDto selectedAgency = searchAgencyWindow.getSelectedExternalItem();
+                    
+                    ((SearchExternalViewTextItem)lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItem(selectedAgency);
+                    searchAgencyWindow.destroy();
+                }
+            });
+        }
+    }
+    private class SearchMultiAgencyFormItemClickHandler implements FormItemClickHandler {
+        private AgencyField agencyField;
+        
+        public SearchMultiAgencyFormItemClickHandler(AgencyField agencyField) {
+            this.agencyField = agencyField;
+        }
+        
+        @Override
+        public void onFormItemClick(FormItemIconClickEvent event) {
+            final int AGENCY_FIRST_RESULT = 0;
+            final int AGENCY_MAX_RESULTS = 16;
+            
+            searchMultiAgencyWindow = new SearchMultipleExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
+                @Override
+                public void retrieveResultSet(int firstResult, int maxResults) {
+                    uiHandlers.retrieveAgencies(firstResult, maxResults, null);
+                }
+            });
+            
+            List<ExternalItemDto> selectedAgencies =((SearchExternalListItem)lifeCycleEditionForm.getField(agencyField.getFormFieldId())).getSelectedExternalItems();
+            searchMultiAgencyWindow.setSelectedExternalItems(selectedAgencies);
+            
+            uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
+            searchMultiAgencyWindow.setSearchAction(new SearchPaginatedAction() {
+                @Override
+                public void retrieveResultSet(int firstResult, int maxResults, String code) {
+                    uiHandlers.retrieveAgencies(firstResult, maxResults, code);
+                }
+            });
+            searchMultiAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                @Override
+                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                    List<ExternalItemDto> selectedAgencies = searchMultiAgencyWindow.getSelectedExternalItems();
+                    ((SearchExternalListItem)lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItems(selectedAgencies);
+                    searchMultiAgencyWindow.hide();
+                    searchMultiAgencyWindow.destroy();
+                }
+            });
+        }
+    }
 }

@@ -37,8 +37,6 @@ public class CollectionViewImpl extends ViewImpl implements CollectionPresenter.
     public CollectionViewImpl(CollectionMetadataTabView metadataView, CollectionStructureTabView structureView) {
         super();
         panel = new VLayout();
-        panel.setHeight100();
-        panel.setOverflow(Overflow.SCROLL);
         
         titleLabel = new TitleLabel(new String());
         titleLabel.setStyleName("sectionTitleLeftMargin");

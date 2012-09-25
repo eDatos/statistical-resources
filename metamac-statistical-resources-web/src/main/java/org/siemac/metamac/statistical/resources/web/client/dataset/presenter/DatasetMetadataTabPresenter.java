@@ -16,6 +16,8 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
@@ -58,6 +60,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     
     public interface DatasetMetadataTabView extends View, HasUiHandlers<DatasetMetadataTabUiHandlers> {
         void setDataset(DatasetDto datasetDto);
+        void setAgenciesPaginatedList(GetAgenciesPaginatedListResult datasetsPaginatedList);
     }
     
     @ProxyCodeSplit
@@ -76,7 +79,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     
     @TitleFunction
     public String title() {
-        return getConstants().breadcrumbDatasources();
+        return getConstants().breadcrumbMetadata();
     }
     
     @Override
@@ -109,6 +112,21 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
                 }
             });
         }
+    }
+    
+    @Override
+    public void retrieveAgencies(int firstResult, int maxResults, String queryText) {
+        dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult,maxResults,queryText), new WaitingAsyncCallback<GetAgenciesPaginatedListResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().agencyErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetAgenciesPaginatedListResult result) {
+                getView().setAgenciesPaginatedList(result);
+            }
+        });
     }
     
     @Override

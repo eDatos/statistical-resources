@@ -16,6 +16,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -42,6 +43,8 @@ import org.slf4j.LoggerFactory;
 
 public class MockServices {
 
+    private static final String                            DATASOURCE_URI_PREFIX    = "/datasources/";
+    private static final String                            AGENCY_URI_PREFIX    = "http://siemac.metamac/agency/";
     private static final String                            DATASET_URI_PREFIX    = "http://siemac.metamac/datasets/";
     private static final String                            COLLECTION_URI_PREFIX = "http://siemac.metamac/collections/";
     private static final String                            QUERY_URI_PREFIX      = "http://siemac.metamac/queries/";
@@ -49,9 +52,58 @@ public class MockServices {
     private static Map<String, DatasetDto>                 datasets;
     private static Map<String, DatasourceDto>              datasources;
     private static Map<String, CollectionDto>              collections;
+    private static Map<String, ExternalItemDto>            agencies;
     private static StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
+    
+    private static ExternalItemDto  istacAgency;
 
     private static Logger                                  logger          = LoggerFactory.getLogger(MockServices.class);
+    
+    static {
+        getAgencies();
+    }
+    
+    //
+    // ORGANIZATIONS
+    //
+
+    public static MetamacCriteriaResult<ExternalItemDto> findAgencies(int firstResult, int maxResults) throws MetamacException {
+        List<ExternalItemDto> agenciesList = new ArrayList<ExternalItemDto>(getAgencies().values());
+
+        int endIndex = agenciesList.size();
+        if (endIndex - firstResult > maxResults) {
+            endIndex = firstResult + maxResults;
+        }
+        MetamacCriteriaResult<ExternalItemDto> result = new MetamacCriteriaResult<ExternalItemDto>();
+        MetamacCriteriaPaginatorResult paginatorResult = new MetamacCriteriaPaginatorResult();
+        paginatorResult.setFirstResult(firstResult);
+        paginatorResult.setMaximumResultSize(maxResults);
+        paginatorResult.setTotalResults(agenciesList.size());
+        result.setPaginatorResult(paginatorResult);
+        result.setResults(new ArrayList<ExternalItemDto>(agenciesList.subList(firstResult, endIndex)));
+        return result;
+    }
+
+    private static Map<String, ExternalItemDto> getAgencies() {
+        if (agencies == null) {
+            agencies = new HashMap<String, ExternalItemDto>();
+            istacAgency = createAgency("ds-0001", "ISTAC", "ISTAC");
+            createAgency("age-0002", "Agencia 2", "Agency 2");
+            createAgency("age-0003", "Agencia 3", "Agency 3");
+            createAgency("age-0004", "Agencia 4", "Agency 4");
+            createAgency("age-0005", "Agencia 5", "Agency 5");
+            createAgency("age-0006", "Agencia 6", "Agency 6");
+        }
+        return agencies;
+    }
+
+    private static ExternalItemDto createAgency(String code, String title_es, String title_en) {
+        String uri = AGENCY_URI_PREFIX+code;
+        String urn = UrnUtils.generateUrn(UrnConstants.URN_SDMX_CLASS_AGENCY_PREFIX, code);
+        ExternalItemDto agency = new ExternalItemDto(code,uri, urn, TypeExternalArtefactsEnum.AGENCY,createInternationalString(title_es, title_en));
+        agencies.put(agency.getUrn(), agency);
+        return agency;
+    }
 
     //
     // DATASETS
@@ -71,7 +123,7 @@ public class MockServices {
         datasetDto.setVersion(1L);
 
         // Audit
-        datasetDto.setCreator(ctx.getUserId());
+        datasetDto.setResponsabilityCreator(ctx.getUserId());
         datasetDto.setDateCreated(now);
         datasetDto.setDateLastUpdate(now);
         datasetDto.setLastUpdateUser(ctx.getUserId());
@@ -85,7 +137,7 @@ public class MockServices {
         datasetDto.setVersionLogic("01.000");
 
         // Life cycle
-        datasetDto.setCreator(ctx.getUserId());
+        datasetDto.setCreator(istacAgency);
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
@@ -190,7 +242,7 @@ public class MockServices {
         datasetDto.setVersion(1L);
         //Base
         datasetDto.setOperation(operation);
-        datasetDto.setCreator("ISTAC_ADMIN");
+        datasetDto.setResponsabilityCreator("ISTAC_ADMIN");
         datasetDto.setDateCreated(now);
         datasetDto.setDateLastUpdate(now);
         datasetDto.setLastUpdateUser("ISTAC_ADMIN");
@@ -202,7 +254,7 @@ public class MockServices {
         datasetDto.setVersionLogic("01.000");
 
         // Life cycle
-        datasetDto.setCreator("ISTAC_ADMIN");
+        datasetDto.setCreator(istacAgency);
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
@@ -330,9 +382,10 @@ public class MockServices {
         datasourceDto.setId(Long.valueOf(getDatasets().size() + 1));
         datasourceDto.setUuid(UUID.randomUUID().toString());
         datasourceDto.setVersion(1L);
+        datasourceDto.setOperation(datasourceDto.getOperation());
 
         // Audit
-        datasourceDto.setCreator(ctx.getUserId());
+        datasourceDto.setResponsabilityCreator(ctx.getUserId());
         datasourceDto.setDateCreated(now);
         datasourceDto.setDateLastUpdate(now);
         datasourceDto.setLastUpdateUser(ctx.getUserId());
@@ -358,10 +411,10 @@ public class MockServices {
         if (datasourceDto.getUuid() == null || !getDatasources().containsKey(datasourceDto.getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
-        DatasetDto oldDataset = getDatasets().get(datasourceDto.getUrn());
+        DatasourceDto oldDatasource = getDatasources().get(datasourceDto.getUrn());
 
-        if (!oldDataset.getOperation().getUrn().equals(datasourceDto.getOperation().getUrn())) {
-            throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_OPERATION);
+        if (!oldDatasource.getDataset().getUrn().equals(datasourceDto.getDataset().getUrn())) {
+            throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASOURCE_DATASET);
         }
 
         Date now = new Date();
@@ -431,13 +484,13 @@ public class MockServices {
         //Base
         datasourceDto.setOperation(dataset.getOperation());
         datasourceDto.setDataset(dataset);
-        datasourceDto.setCreator("ISTAC_ADMIN");
+        datasourceDto.setResponsabilityCreator("ISTAC_ADMIN");
         datasourceDto.setDateCreated(now);
         datasourceDto.setDateLastUpdate(now);
         datasourceDto.setLastUpdateUser("ISTAC_ADMIN");
         datasourceDto.setIdentifier(code);
         datasourceDto.setTitle(createInternationalString(title_es, title_en));
-        datasourceDto.setUri(DATASET_URI_PREFIX + code);
+        datasourceDto.setUri(dataset.getUri() + DATASOURCE_URI_PREFIX + code);
         datasourceDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
 
         datasources.put(datasourceDto.getUrn(), datasourceDto);
@@ -462,7 +515,7 @@ public class MockServices {
         collectionDto.setVersion(1L);
 
         // Audit
-        collectionDto.setCreator(ctx.getUserId());
+        collectionDto.setResponsabilityCreator(ctx.getUserId());
         collectionDto.setDateCreated(now);
         collectionDto.setDateLastUpdate(now);
         collectionDto.setLastUpdateUser(ctx.getUserId());
@@ -476,7 +529,7 @@ public class MockServices {
         collectionDto.setVersionLogic("01.000");
 
         // Life cycle
-        collectionDto.setCreator(ctx.getUserId());
+        collectionDto.setCreator(istacAgency);
         collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
@@ -644,7 +697,7 @@ public class MockServices {
         collectionDto.setOperation(operation);
 
         // Audit
-        collectionDto.setCreator("ISTAC_ADMIN");
+        collectionDto.setResponsabilityCreator("ISTAC_ADMIN");
         collectionDto.setDateCreated(now);
         collectionDto.setDateLastUpdate(now);
         collectionDto.setLastUpdateUser("ISTAC_ADMIN");
@@ -660,7 +713,7 @@ public class MockServices {
         collectionDto.setVersionLogic("01.000");
 
         // Life cycle
-        collectionDto.setCreator("ISTAC_ADMIN");
+        collectionDto.setCreator(istacAgency);
         collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content

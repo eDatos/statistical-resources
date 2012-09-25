@@ -6,5 +6,7 @@ import org.siemac.metamac.statistical.resources.web.client.view.handlers.LifeCyc
 
 public interface CollectionMetadataTabUiHandlers extends LifeCycleUiHandlers {
     
+    void retrieveAgencies(int firstResult, int maxResults, String queryText);
+    
     void saveCollection(CollectionDto collectionDto);
 }

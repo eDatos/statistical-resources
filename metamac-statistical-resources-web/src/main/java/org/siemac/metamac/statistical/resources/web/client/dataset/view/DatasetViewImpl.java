@@ -34,7 +34,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     public DatasetViewImpl() {
         panel = new VLayout();
         panel.setHeight100();
-        panel.setOverflow(Overflow.SCROLL);
+        panel.setOverflow(Overflow.AUTO);
 
         titleLabel = new TitleLabel(new String());
         titleLabel.setStyleName("sectionTitleLeftMargin");
@@ -43,7 +43,6 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
         // TABS
         tabSet = new TabSet();
         tabSet.setMargin(10);
-        tabSet.setWidth100();
 
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());

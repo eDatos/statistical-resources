@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.collection.model.reco
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 
-public class RecordUtils {
+public class StatisticalResourcesRecordUtils {
 
     public static DatasetRecord getDatasetRecord(DatasetDto datasetDto) {
         DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getIdentifier(), getLocalisedString(datasetDto.getTitle()), getLocalisedString(datasetDto.getContentMetadata()

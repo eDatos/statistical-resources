@@ -7,6 +7,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -18,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAct
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -57,6 +60,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
         void setDatasourcesPaginatedList(String datasetUrn, GetDatasourcesByDatasetPaginatedListResult datasourcesPaginatedList);
+        void setDatasource(DatasourceDto datasourceDto);
     }
     
     @ProxyCodeSplit
@@ -70,6 +74,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
+        getView().setUiHandlers(this);
     }
     
     @TitleFunction
@@ -140,6 +145,23 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             @Override
             public void onWaitSuccess(GetDatasourcesByDatasetPaginatedListResult result) {
                 getView().setDatasourcesPaginatedList(datasetUrn, result);
+            }
+        });
+    }
+    
+    @Override
+    public void saveDatasource(DatasourceDto datasourceDto) {
+        datasourceDto.setDataset(dataset);
+        dispatcher.execute(new SaveDatasourceAction(datasourceDto), new WaitingAsyncCallback<SaveDatasourceResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasourceErrorSave()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(SaveDatasourceResult result) {
+                getView().setDatasource(result.getDatasourceSaved());
+                retrieveDatasourcesByDataset(dataset.getUrn(), DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
             }
         });
     }

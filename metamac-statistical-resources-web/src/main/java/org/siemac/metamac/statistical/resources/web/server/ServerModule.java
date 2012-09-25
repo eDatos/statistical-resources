@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.agency.GetAgenciesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.collection.DeleteCollectionListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetCollectionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetCollectionPaginatedListActionHandler;
@@ -12,10 +13,12 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.DeleteCollectionListAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
@@ -27,6 +30,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAct
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
@@ -60,6 +64,9 @@ public class ServerModule extends HandlerModule {
         // STATISTICAL OPERATIONS
         bindHandler(GetStatisticalOperationAction.class, GetStatisticalOperationActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
+        
+        // AGENCIES
+        bindHandler(GetAgenciesPaginatedListAction.class, GetAgenciesPaginatedListActionHandler.class);
 
         // DATASETS
         bindHandler(GetDatasetAction.class, GetDatasetActionHandler.class);
@@ -69,6 +76,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(UpdateDatasetProcStatusAction.class, UpdateDatasetProcStatusActionHandler.class);
         bindHandler(VersionDatasetAction.class, VersionDatasetActionHandler.class);
         bindHandler(GetDatasourcesByDatasetPaginatedListAction.class, GetDatasourcesByDatasetPaginatedListActionHandler.class);
+        bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
 
         // COLLECTIONS
         bindHandler(GetCollectionPaginatedListAction.class, GetCollectionPaginatedListActionHandler.class);

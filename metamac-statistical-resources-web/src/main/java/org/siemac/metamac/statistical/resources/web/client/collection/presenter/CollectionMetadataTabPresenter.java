@@ -13,9 +13,12 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.CollectionMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionAction;
 import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionResult;
 import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionAction;
@@ -55,6 +58,7 @@ public class CollectionMetadataTabPresenter extends Presenter<CollectionMetadata
     private ExternalItemDto operation;;
     
     public interface CollectionMetadataTabView extends View,HasUiHandlers<CollectionMetadataTabUiHandlers> {
+        void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result);
         void setCollection(CollectionDto collectionDto);
     }
 
@@ -126,6 +130,22 @@ public class CollectionMetadataTabPresenter extends Presenter<CollectionMetadata
                 getView().setCollection(result.getCollectionDto());
             }
         });
+    }
+    
+    @Override
+    public void retrieveAgencies(int firstResult, int maxResults, String queryText) {
+        dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult,maxResults,queryText), new WaitingAsyncCallback<GetAgenciesPaginatedListResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(CollectionMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().agencyErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetAgenciesPaginatedListResult result) {
+                getView().setAgenciesPaginatedList(result);
+            }
+        });
+        
     }
     
     @Override

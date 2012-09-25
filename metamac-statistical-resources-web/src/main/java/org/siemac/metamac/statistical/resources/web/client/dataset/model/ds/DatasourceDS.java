@@ -7,6 +7,7 @@ public class DatasourceDS extends DataSource {
     public static final String ID                          = "dsource-id";
     // STATISTICAL RESOURCE
     public static final String IDENTIFIER                  = "dsource-identifier";
+    public static final String IDENTIFIER_VIEW                  = "dsource-identifier-view";
     public static final String URI                         = "dsource-uri";
     public static final String URN                         = "dsource-urn";
     public static final String TITLE                       = "dsource-title";
