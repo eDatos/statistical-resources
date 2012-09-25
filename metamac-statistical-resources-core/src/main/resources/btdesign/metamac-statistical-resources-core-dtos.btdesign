@@ -12,7 +12,7 @@ Application StatisticalResourcesDto {
 		}
 
 		DataTransferObject AuditableStatisticalResourceDto extends @StatisticalResourceDto {
-			String creator;
+			String responsabilityCreator;
 			JAVADATE dateCreated;
 			String lastUpdateUser;
 			JAVADATE dateLastUpdate;
@@ -42,10 +42,10 @@ Application StatisticalResourcesDto {
 			String responsabilityOutOfPrint;
 
 			// Orrganizations level
-			String creator;
-			String contributor;
-			String publisher;
-			String mediator;
+			- @ExternalItemDto creator;
+			- Set<@ExternalItemDto> contributor;
+			- Set<@ExternalItemDto> publisher;
+			- Set<@ExternalItemDto> mediator;
 
 			// Dates
 			JAVADATE submittedDate;

@@ -8,6 +8,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType DATASET_NOT_FOUND                              = create("exception.resources.dataset.not_found");
     public static final CommonServiceExceptionType DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED    = create("exception.resources.dataset.already_exist.identifier_duplicated");
+    public static final CommonServiceExceptionType DATASOURCE_ALREADY_EXIST_IDENTIFIER_DUPLICATED = create("exception.resources.datasource.already_exist.identifier_duplicated");
+    
+    public static final CommonServiceExceptionType AGENCY_NOT_FOUND                               = create("exception.resources.agency.not_found");
 
     public static final CommonServiceExceptionType COLLECTION_NOT_FOUND                           = create("exception.resources.collection.not_found");
     public static final CommonServiceExceptionType COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED = create("exception.resources.collection.already_exist.identifier_duplicated");

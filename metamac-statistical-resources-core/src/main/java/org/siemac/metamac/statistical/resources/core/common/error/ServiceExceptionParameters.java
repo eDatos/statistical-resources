@@ -11,6 +11,10 @@ public class ServiceExceptionParameters {
     public static final String DATASET_TITLE                      = DATASET + ".title";
     public static final String DATASET_OPERATION                  = DATASET + ".operation";
 
+    // DATASOURCE
+    public static final String DATASOURCE                         = "datasource";
+    public static final String DATASOURCE_DATASET                 = DATASOURCE + ".dataset";
+
     // COLLECTIONS
     public static final String COLLECTION                         = "collection";
     public static final String COLLECTION_TITLE                   = COLLECTION + ".title";
