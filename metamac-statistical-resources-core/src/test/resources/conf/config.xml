@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- NOTE: System properties must be configured in: SetupApplicationListener -->
+<!-- <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="commons-configuration.xsd">  -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <override>
+	<system />
+	
+	<!-- STATIC configurations -->
+  	<properties fileName="${environment.metamac.data}/statistical-resources/conf/static/resources.xml" config-optional="false" />
+    <properties fileName="${environment.metamac.data}/statistical-resources/conf/static/datasource.xml" config-optional="false" />
+
+  </override>
+</configuration>
