@@ -13,4 +13,16 @@ public class InternationalString extends InternationalStringBase {
 
     public InternationalString() {
     }
+
+    public String getLocalisedLabel(String locale) {
+        if (locale == null) {
+            return null;
+        }
+        for (LocalisedString localstr : getTexts()) {
+            if (locale.equalsIgnoreCase(localstr.getLocale())) {
+                return localstr.getLabel();
+            }
+        }
+        return null;
+    }
 }

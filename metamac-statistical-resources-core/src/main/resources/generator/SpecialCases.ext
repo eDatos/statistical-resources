@@ -1,3 +1,9 @@
 import sculptormetamodel;
 
 extension extensions::properties;
+
+around extensions::dbhelper::isJodaTemporal(Attribute attribute) :
+  if (attribute.type == "Duration") then
+   true
+  else
+    ctx.proceed();

@@ -1,29 +1,203 @@
-import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
-import "classpath:/btdesign/metamac-statistical-resources-core-dtos.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-enums.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
-
 Application StatisticalResources {
-    basePackage=org.siemac.metamac.statistical.resources
+	basePackage=org.siemac.metamac.statistical.resources
 
-    Module core {
+	Module core {
 		basePackage=org.siemac.metamac.statistical.resources.core
-		
-		
+
 		// ----------------------------------------------------------------
 		// 							FACADE SERVICES
 		// ----------------------------------------------------------------  
-		
-		
+
+
 		// ----------------------------------------------------------------
 		// 							SERVICES
-		// ----------------------------------------------------------------  
-
+		// ----------------------------------------------------------------
 		
+		Service StatisticalResourceService {
+			> @StatisticalResourceRepository
+			> @QueryRepository
+			> @DatasourceRepository
+			> @DatasetRepository
+			> @DatasetVersionRepository
+			> @PublicationRepository
+			> @PublicationVersionRepository
+			
+			"Retrieve query by urn"
+    		@Query retrieveQueryByUrn(String urn) throws MetamacException;
+		}  
+
+
 		// ----------------------------------------------------------------
 		// 							ENTITIES
 		// ---------------------------------------------------------------- 
+		"Statistical Resource"
+		abstract Entity StatisticalResource {
+			databaseTable="TB_STATISTICAL_RESOURCES"
+			hint="idSequence=STATISTICAL_RESOURCES"
+			inheritanceType=SINGLE_TABLE
+			discriminatorType=STRING
+			discriminatorColumn="STATISTICAL_RESOURCE_TYPE"
+
+			- @ExternalItem operation nullable cascade="all" databaseColumn="OPERATION_FK";
+
+			Repository StatisticalResourceRepository {
+				save;
+				delete;
+			}
+
+		}
+
+		abstract Entity IdentifiableStatisticalResource extends @StatisticalResource {
+			databaseTable="TB_STATISITCAL_RESOURCES"
+			
+			String code nullable;
+			String uri nullable;
+			String urn nullable;
+		}
+
+		abstract Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
+			databaseTable="TB_STATISITCAL_RESOURCES"
+			
+			- @InternationalString title nullable cascade="all" databaseColumn="TITLE_FK";
+			- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
+		}
+
+		abstract Entity VersionableStatisticalResource extends @NameableStatisticalResource {
+			databaseTable="TB_STATISITCAL_RESOURCES"
+			
+			String versionLogic nullable;
+			DateTimeTZ versionDate nullable;
+			DateTimeTZ nextVersionDate nullable;
+			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType nullable;
+			- @InternationalString versionRationale nullable cascade="all" databaseColumn="VERSION_RATIONALE_FK";
+			
+			"True if this version is the last"
+			Boolean isLastVersion nullable;
+			"Version number that replaces the current one"
+			String replacedBy nullable;
+			"Version number who replaces the current one"
+			String replaceTo nullable;
+		}
+
+		abstract Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
+			databaseTable="TB_STATISITCAL_RESOURCES"
+			
+			- @StatisticalResourceProcStatusEnum procStatus nullable;
+
+			String versionResponsibilityCreator nullable databaseColumn="VR_CREATOR";
+			String versionResponsibilityContributor nullable databaseColumn="VR_CONTRIBUTOR";
+			String versionResponsibilitySubmitted nullable databaseColumn="VR_SUBMITTED";
+			String versionResponsibilityAccepted nullable databaseColumn="VR_ACCEPTED";
+			String versionResponsibilityIssued nullable databaseColumn="VR_ISSUED";
+			String versionResponsibilityOutOfPrint nullable databaseColumn="VR_OUT_OF_PRINT";
+
+			- @ExternalItem creator nullable cascade="all" databaseColumn="CREATOR_FK";
+			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_CONTRIBUTORS";
+			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_PUBLISHERS";
+			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_MEDIATORS";
+		}
+
+		abstract Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
+			- @StatisticalResourceTypeEnum type nullable;
+			- @StatisticalResourceFormatEnum format nullable;
+		}
+
+
+		Entity Datasource {
+			databaseTable="TB_DATASOURCES"
+			hint="idSequence=DATASOURCES"
+
+			- @StatisticalResource statisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			Repository DatasourceRepository {
+				findAll;
+				@Datasource findByUrn(String urn);
+			}
+		}
+
+		Entity Query {
+			databaseTable="TB_QUERIES"
+			hint="idSequence=QUERIES"
+
+			- @IdentifiableStatisticalResource identificableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			Repository QueryRepository {
+				findAll;
+				@Query findByUrn(String urn);
+			}
+		}
+
+
+		Entity Publication {
+			databaseTable="TB_PUBLICATIONS"
+			hint="idSequence=PUBLICATIONS"
+			!auditable
+
+			"All versions"
+			- Bag<@PublicationVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> publication orderby="id asc";
+			
+			Repository PublicationRepository {
+				save;
+				delete;
+			}
+		}
+
+		Entity PublicationVersion {
+			databaseTable="TB_PUBLICATIONS_VERSIONS"
+			hint="idSequence=PUBLICATIONS_VERSIONS"
+
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+
+			"Parent"
+			- @Publication publication not nullable cascade="none" databaseColumn="PUBLICATION_FK" <-> versions;
+			
+			Repository PublicationVersionRepository {
+//				save;
+//				delete;
+				findByCondition(PagingParameter pagingParameter);
+				@PublicationVersion findByUrn(String urn);
+				@PublicationVersion retrieveLastVersion(Long itemSchemeId);
+				@PublicationVersion findByVersion(Long itemSchemeId, String versionLogic);
+			}
+		}
+
+		Entity Dataset {
+			databaseTable="TB_DATASETS"
+			hint="idSequence=DATASETS"
+			!auditable
+			
+			"All versions"
+			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
+			
+			Repository DatasetRepository {
+				save;
+				delete;
+			}
+		}
 		
-	}	
+		Entity DatasetVersion {
+			databaseTable="TB_DATASETS_VERSIONS"
+			hint="idSequence=DATASETS_VERSIONS"
+
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+
+			"Parent"
+			- @Dataset dataset not nullable cascade="none" databaseColumn="DATASET_FK" <-> versions;
+			
+			Repository DatasetVersionRepository {
+//				save;
+//				delete;
+				findByCondition(PagingParameter pagingParameter);
+				@DatasetVersion findByUrn(String urn); 
+				@DatasetVersion retrieveLastVersion(Long itemSchemeId);
+				@DatasetVersion findByVersion(Long itemSchemeId, String versionLogic);
+			}
+		}
+
+	}
+
 }
