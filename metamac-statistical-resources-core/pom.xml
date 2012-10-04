@@ -1,4 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -17,10 +18,10 @@
     <dependencies>
         <!-- METAMAC -->
         <dependency>
-			<groupId>org.siemac.metamac.metamac-sso</groupId>
-			<artifactId>metamac-sso-client</artifactId>
-			<version>${metamac-sso.version}</version>
-		</dependency>
+            <groupId>org.siemac.metamac.metamac-sso</groupId>
+            <artifactId>metamac-sso-client</artifactId>
+            <version>${metamac-sso.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-core-common</artifactId>
@@ -33,10 +34,23 @@
             <version>${metamac-common-test.version}</version>
             <scope>test</scope>
         </dependency>
-         <!-- Add dependency to JMS when consumers are used, deployment.type=ear <dependency> <groupId>javax.jms</groupId> <artifactId>jms</artifactId> 
-            <version>1.1</version> <scope>provided</scope> </dependency> -->
-        <!-- Add dependency to EJB when deployment.type=ear <dependency> <groupId>javax.ejb</groupId> <artifactId>ejb-api</artifactId> <version>3.0</version> 
-            <scope>provided</scope> </dependency> -->
+
+        <!-- Add dependency to JMS when consumers are used, deployment.type=ear -->
+        <!-- <dependency> -->
+        <!-- <groupId>javax.jms</groupId> -->
+        <!-- <artifactId>jms</artifactId> -->
+        <!-- <version>1.1</version> -->
+        <!-- <scope>provided</scope> -->
+        <!-- </dependency> -->
+
+        <!-- Add dependency to EJB when deployment.type=ear -->
+        <!-- <dependency> -->
+        <!-- <groupId>javax.ejb</groupId> -->
+        <!-- <artifactId>ejb-api</artifactId> -->
+        <!-- <version>3.0</version> -->
+        <!-- <scope>provided</scope> -->
+        <!-- </dependency> -->
+
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
@@ -61,7 +75,7 @@
                     <groupId>javax.transaction</groupId>
                     <artifactId>jta</artifactId>
                 </exclusion>
-                 <exclusion>
+                <exclusion>
                     <groupId>xml-apis</groupId>
                     <artifactId>xml-apis</artifactId>
                 </exclusion>
@@ -127,7 +141,7 @@
             <version>${sculptor.version}</version>
             <scope>provided</scope>
             <exclusions>
-                <!-- La inclusion de esta libreria provoca un BUG en el plugin de eclipse de GWT cuando usamos GIN en un proyecto GWT, es demasiado antigua 
+                <!-- La inclusion de esta libreria provoca un BUG en el plugin de eclipse de GWT cuando usamos GIN en un proyecto GWT, es demasiado antigua
                     esta version. No importa que el scope sea PROVIDED, el plugin de GWT no es capaz de tragarselo. -->
                 <!-- POR TANTO CUANDO SE EJECUTE EL PLUGIN DE GWT DE ECLIPSE ES NECESARIO DESCOMENTAR ESTAS LINEAS -->
                 <!-- <exclusion> -->
@@ -182,7 +196,7 @@
             <groupId>org.jadira.usertype</groupId>
             <artifactId>usertype.jodatime</artifactId>
             <version>${usertype.jodatime.version}</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
@@ -196,7 +210,7 @@
             <version>${oracle.version}</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>    
+    </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
