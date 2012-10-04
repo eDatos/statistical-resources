@@ -53,20 +53,19 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
     @Override
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
-        // TODO: Revisar que están todas las tablas y el orden de borrado es correcto
-        tables.add("TB_LOCALISED_STRINGS");
-        tables.add("TB_QUERIES");
-        tables.add("TB_PUBLICATIONS_VERSIONS");
-        tables.add("TB_PUBLICATIONS");
-        tables.add("TB_DATASOURCES");
-        tables.add("TB_DATASETS_VERSIONS");
-        tables.add("TB_STATISTICAL_RESOURCES");
-        tables.add("TB_EXTERNAL_ITEMS");
-        tables.add("TB_INTERNATIONAL_STRINGS");
-        tables.add("TB_DATASETS");
         tables.add("TB_EI_CONTRIBUTORS");
         tables.add("TB_EI_PUBLISHERS");
         tables.add("TB_EI_MEDIATORS");
+        tables.add("TB_QUERIES");
+        tables.add("TB_DATASOURCES");
+        tables.add("TB_DATASETS_VERSIONS");
+        tables.add("TB_PUBLICATIONS_VERSIONS");
+        tables.add("TB_PUBLICATIONS");
+        tables.add("TB_DATASETS");
+        tables.add("TB_STATISTICAL_RESOURCES");
+        tables.add("TB_EXTERNAL_ITEMS");
+        tables.add("TB_LOCALISED_STRINGS");
+        tables.add("TB_INTERNATIONAL_STRINGS");
         
         return tables;
     }
@@ -74,7 +73,6 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
     @Override
     protected List<String> getSequencesToRestart() {
         List<String> sequences = new ArrayList<String>();
-        // TODO: Revisar que están todas las secuencias y el orden de borrado es correcto
         sequences.add("SEQ_L10NSTRS");
         sequences.add("SEQ_I18NSTRS");
         sequences.add("SEQ_LOCALISED_STRINGS");
