@@ -15,4 +15,10 @@ public class LocalisedString extends LocalisedStringBase {
 
     public LocalisedString() {
     }
+
+    public LocalisedString(String locale, String text) {
+        super();
+        this.setLocale(locale);
+        this.setLabel(text);
+    }
 }

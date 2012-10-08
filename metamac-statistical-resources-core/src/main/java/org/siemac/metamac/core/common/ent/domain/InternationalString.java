@@ -14,14 +14,33 @@ public class InternationalString extends InternationalStringBase {
     public InternationalString() {
     }
 
-    public String getLocalisedLabel(String locale) {
+    public InternationalString(String[] locales, String[] texts) {
+        super();
+        for (int i = 0; i < locales.length; i++) {
+            this.addText(new LocalisedString(locales[i], texts[i]));
+        }
+    }
+    
+    public InternationalString(String locale, String text) {
+        new InternationalString(new String[]{locale}, new String[]{text});
+    }
+    
+    public LocalisedString getLocalisedLabelEntity(String locale) {
         if (locale == null) {
             return null;
         }
         for (LocalisedString localstr : getTexts()) {
             if (locale.equalsIgnoreCase(localstr.getLocale())) {
-                return localstr.getLabel();
+                return localstr;
             }
+        }
+        return null;
+    }
+
+    public String getLocalisedLabel(String locale) {
+        LocalisedString localisedString = getLocalisedLabelEntity(locale);
+        if (localisedString != null) {
+            return localisedString.getLabel();
         }
         return null;
     }

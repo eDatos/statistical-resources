@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.common.test.MetamacBaseTests;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
@@ -15,6 +16,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 
 public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
 
+    protected static String EMPTY = StringUtils.EMPTY;
+    
     protected static Long   ID_NOT_EXISTS  = Long.valueOf(-1);
     protected static String URN_NOT_EXISTS = "not_exists";
 

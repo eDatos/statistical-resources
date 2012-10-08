@@ -7,10 +7,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.domain.Query;
 import org.siemac.metamac.statistical.resources.core.domain.QueryRepository;
+import org.siemac.metamac.statistical.resources.core.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.serviceapi.utils.StatisticalResourcesAsserts;
 import org.siemac.metamac.statistical.resources.core.serviceapi.utils.StatisticalResourcesDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,32 +27,30 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
-public class StatisticalResourceServiceTest extends StatisticalResourcesBaseTest implements StatisticalResourceServiceTestBase {
+public class QueryRepositoryTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    protected StatisticalResourceService statisticalResourceService;
-    
+    protected QueryRepository               queryRepository;
+
     @Autowired
-    protected QueryRepository queryRepository;
-    
+    protected StatisticalResourceRepository statisticalResourceRepository;
 
     @Test
-    public void testRetrieveQueryByUrn() throws MetamacException {
+    public void tetsFindByUrn() throws MetamacException {
         Query expected = queryRepository.save(StatisticalResourcesDoMocks.mockQuery());
-        Query actual = statisticalResourceService.retrieveQueryByUrn(getServiceContextAdministrador(), expected.getNameableStatisticalResource().getUrn());
+        Query actual = queryRepository.findByUrn(expected.getNameableStatisticalResource().getUrn());
         StatisticalResourcesAsserts.assertEqualsQuery(expected, actual);
     }
-    
+
     @Test
-    public void testRetrieveQueryByUrnParameterRequired() throws MetamacException {
+    public void tetsFindByUrnNotFound() {
         try {
-            statisticalResourceService.retrieveQueryByUrn(getServiceContextAdministrador(), EMPTY);
-            fail("parameter required");
+            queryRepository.findByUrn(URN_NOT_EXISTS);
+            fail("not found");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.URN}, e.getExceptionItems().get(0));
+            MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.QUERY_NOT_FOUND, 1, new String[]{URN_NOT_EXISTS}, e.getExceptionItems().get(0));
         }
     }
-    
-    
+
 }

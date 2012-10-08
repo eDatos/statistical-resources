@@ -14,5 +14,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType COLLECTION_NOT_FOUND                           = create("exception.resources.collection.not_found");
     public static final CommonServiceExceptionType COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED = create("exception.resources.collection.already_exist.identifier_duplicated");
+    
+    public static final CommonServiceExceptionType QUERY_NOT_FOUND                              = create("exception.resources.query.not_found");
 
 }

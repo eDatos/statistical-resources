@@ -51,7 +51,7 @@ Application StatisticalResources {
 
 		}
 
-		abstract Entity IdentifiableStatisticalResource extends @StatisticalResource {
+		Entity IdentifiableStatisticalResource extends @StatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			
 			String code nullable;
@@ -59,14 +59,14 @@ Application StatisticalResources {
 			String urn nullable;
 		}
 
-		abstract Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
+		Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			
 			- @InternationalString title nullable cascade="all" databaseColumn="TITLE_FK";
 			- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
 		}
 
-		abstract Entity VersionableStatisticalResource extends @NameableStatisticalResource {
+		Entity VersionableStatisticalResource extends @NameableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			
 			String versionLogic nullable;
@@ -83,7 +83,7 @@ Application StatisticalResources {
 			String replaceTo nullable;
 		}
 
-		abstract Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
+		Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			
 			- @StatisticalResourceProcStatusEnum procStatus nullable;
@@ -101,7 +101,7 @@ Application StatisticalResources {
 			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_MEDIATORS";
 		}
 
-		abstract Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
+		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
 			- @StatisticalResourceTypeEnum type nullable;
 			- @StatisticalResourceFormatEnum format nullable;
 		}
@@ -110,11 +110,15 @@ Application StatisticalResources {
 		Entity Datasource {
 			databaseTable="TB_DATASOURCES"
 			hint="idSequence=DATASOURCES"
+			!auditable
 
-			- @StatisticalResource statisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
 			Repository DatasourceRepository {
 				findAll;
+				findById;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@Datasource findByUrn(String urn);
 			}
 		}
@@ -122,12 +126,18 @@ Application StatisticalResources {
 		Entity Query {
 			databaseTable="TB_QUERIES"
 			hint="idSequence=QUERIES"
+			!auditable
 
-			- @IdentifiableStatisticalResource identificableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
 			Repository QueryRepository {
+				save;
 				findAll;
-				@Query findByUrn(String urn);
+				findById;
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				@Query findByUrn(String urn) throws MetamacException;
 			}
 		}
 
@@ -158,7 +168,9 @@ Application StatisticalResources {
 			Repository PublicationVersionRepository {
 //				save;
 //				delete;
+				findById;
 				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@PublicationVersion findByUrn(String urn);
 				@PublicationVersion retrieveLastVersion(Long itemSchemeId);
 				@PublicationVersion findByVersion(Long itemSchemeId, String versionLogic);

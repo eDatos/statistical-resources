@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 public class ServiceExceptionParameters {
 
     public static final String IDENTIFIER                         = "identifier";
+    public static final String URN                                = "urn";
 
     // DATASET
     public static final String DATASET                            = "dataset";
@@ -30,4 +31,8 @@ public class ServiceExceptionParameters {
     public static final String PROC_STATUS_PUBLISHED              = StatisticalResourceProcStatusEnum.PUBLISHED.name();
     public static final String PROC_STATUS_PUBLICATION_FAILED     = StatisticalResourceProcStatusEnum.PUBLICATION_FAILED.name();
     public static final String PROC_STATUS_ARCHIVED               = StatisticalResourceProcStatusEnum.ARCHIVED.name();
+
+    // QUERY
+    public static final String QUERY                              = "query";
+
 }
