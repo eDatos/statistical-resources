@@ -14,8 +14,11 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 
 public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
-    
-    protected static Long                      NOT_EXISTS     = Long.valueOf(-1);
+
+    protected static Long   ID_NOT_EXISTS  = Long.valueOf(-1);
+    protected static String URN_NOT_EXISTS = "not_exists";
+
+    protected static String QUERY_1        = "urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1";
 
     // --------------------------------------------------------------------------------------------------------------
     // SERVICE CONTEXT
@@ -51,22 +54,23 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
     }
 
     @Override
-    protected List<String> getTablesToRemoveContent() {
+    protected List<String> getTableNamesOrderedByFKDependency() {
         List<String> tables = new ArrayList<String>();
-        tables.add("TB_EI_CONTRIBUTORS");
-        tables.add("TB_EI_PUBLISHERS");
-        tables.add("TB_EI_MEDIATORS");
-        tables.add("TB_QUERIES");
-        tables.add("TB_DATASOURCES");
-        tables.add("TB_DATASETS_VERSIONS");
-        tables.add("TB_PUBLICATIONS_VERSIONS");
-        tables.add("TB_PUBLICATIONS");
-        tables.add("TB_DATASETS");
-        tables.add("TB_STATISTICAL_RESOURCES");
-        tables.add("TB_EXTERNAL_ITEMS");
-        tables.add("TB_LOCALISED_STRINGS");
-        tables.add("TB_INTERNATIONAL_STRINGS");
         
+        tables.add("TB_INTERNATIONAL_STRINGS");
+        tables.add("TB_LOCALISED_STRINGS");
+        tables.add("TB_EXTERNAL_ITEMS");
+        tables.add("TB_STATISTICAL_RESOURCES");
+        tables.add("TB_DATASETS");
+        tables.add("TB_PUBLICATIONS");
+        tables.add("TB_PUBLICATIONS_VERSIONS");
+        tables.add("TB_DATASETS_VERSIONS");
+        tables.add("TB_DATASOURCES");
+        tables.add("TB_QUERIES");
+        tables.add("TB_EI_MEDIATORS");
+        tables.add("TB_EI_PUBLISHERS");
+        tables.add("TB_EI_CONTRIBUTORS");
+
         return tables;
     }
 
@@ -87,7 +91,7 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_INTERNATIONAL_STRINGS");
         return sequences;
     }
-    
+
     @Override
     protected Map<String, String> getTablePrimaryKeys() {
         Map<String, String> tablePrimaryKeys = new HashMap<String, String>();
