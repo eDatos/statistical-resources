@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.serviceapi.utils;
+package org.siemac.metamac.statistical.resources.core.utils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,9 +12,15 @@ import org.siemac.metamac.statistical.resources.core.domain.IdentifiableStatisti
 import org.siemac.metamac.statistical.resources.core.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.domain.Query;
 import org.siemac.metamac.statistical.resources.core.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 
 public class StatisticalResourcesAsserts {
 
+    public static final String  URI_MOCK                      = "lorem/ipsum/dolor/sit/amet";
+    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
@@ -22,6 +28,11 @@ public class StatisticalResourcesAsserts {
     public static void assertEqualsQuery(Query expected, Query actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
     }
+    
+    public static void assertEqualsQuery(Query entity, QueryDto dto) {
+        assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto);
+    }
+
 
     // -----------------------------------------------------------------
     // MAIN HERITANCE
@@ -31,7 +42,6 @@ public class StatisticalResourcesAsserts {
         StatisticalResourcesAsserts.assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         StatisticalResourcesAsserts.assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
         
-        // Inheritance
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
 
@@ -40,13 +50,36 @@ public class StatisticalResourcesAsserts {
         assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());
 
-        // Inheritance
         assertEqualsStatisticalResource(expected, actual);
     }
 
     private static void assertEqualsStatisticalResource(StatisticalResource expected, StatisticalResource actual) {
         assertEqualsExternalItem(expected.getOperation(), actual.getOperation());
         
+    }
+    
+    private static void assertEqualsNameableStatisticalResource(NameableStatisticalResource entity, NameableStatisticalResourceDto dto) {
+        assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
+        assertEqualsInternationalString(entity.getDescription(), dto.getDescription());
+        
+        assertEqualsIdentifiableResource(entity, dto);
+    }
+    
+    private static void assertEqualsIdentifiableResource(IdentifiableStatisticalResource entity, IdentifiableStatisticalResourceDto dto) {
+        assertEquals(entity.getCode(), dto.getCode());
+        assertEquals(entity.getUri(), dto.getUri());
+        assertEquals(entity.getUrn(), dto.getUrn());
+        
+        assertEqualsStatisticalResouce(entity, dto);
+    }
+    
+    private static void assertEqualsStatisticalResouce(StatisticalResource entity, StatisticalResourceDto dto) {
+        assertEqualsExternalItem(entity.getOperation(), dto.getOperation());
+        
+        assertEquals(entity.getCreatedBy(), dto.getCreatedBy());
+        MetamacAsserts.assertEqualsDate(entity.getCreatedDate(), dto.getCreatedDate());
+        assertEquals(entity.getLastUpdatedBy(), dto.getLastUpdatedBy());
+        MetamacAsserts.assertEqualsDate(entity.getLastUpdated(), dto.getLastUpdated());
     }
 
     // -----------------------------------------------------------------
@@ -123,10 +156,5 @@ public class StatisticalResourcesAsserts {
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
         assertEquals(entity.getManagementAppUrl(), dto.getManagementAppUrl());
     }
-
-    // -----------------------------------------------------------------
-    // OTHER
-    // -----------------------------------------------------------------
-
 
 }

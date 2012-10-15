@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
  * Implementation of StatisticalResourceService.
  */
 @Service("statisticalResourceService")
-public class StatisticalResourceServiceImpl extends StatisticalResourceServiceImplBase {
+public class StatisticalResourcesServiceImpl extends StatisticalResourcesServiceImplBase {
     
-    public StatisticalResourceServiceImpl() {
+    public StatisticalResourcesServiceImpl() {
     }
 
     public Query retrieveQueryByUrn(ServiceContext ctx, String urn) throws MetamacException {

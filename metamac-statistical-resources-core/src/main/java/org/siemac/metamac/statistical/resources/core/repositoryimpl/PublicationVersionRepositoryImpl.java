@@ -10,8 +10,8 @@ import java.util.List;
  * Repository implementation for PublicationVersion
  */
 @Repository("publicationVersionRepository")
-public class PublicationVersionRepositoryImpl
-    extends PublicationVersionRepositoryBase {
+public class PublicationVersionRepositoryImpl extends PublicationVersionRepositoryBase {
+
     public PublicationVersionRepositoryImpl() {
     }
 
@@ -25,30 +25,25 @@ public class PublicationVersionRepositoryImpl
     public PublicationVersion retrieveLastVersion(Long itemSchemeId) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveLastVersion not implemented");
+        throw new UnsupportedOperationException("retrieveLastVersion not implemented");
 
     }
 
     public PublicationVersion findItemSchemeVersionNoFinal(Long itemSchemeId) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "findItemSchemeVersionNoFinal not implemented");
+        throw new UnsupportedOperationException("findItemSchemeVersionNoFinal not implemented");
 
     }
 
-    public List<PublicationVersion> findItemSchemeVersionsFinal(
-        Long itemSchemeId) {
+    public List<PublicationVersion> findItemSchemeVersionsFinal(Long itemSchemeId) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "findItemSchemeVersionsFinal not implemented");
+        throw new UnsupportedOperationException("findItemSchemeVersionsFinal not implemented");
 
     }
 
-    public PublicationVersion findByVersion(Long itemSchemeId,
-        String versionLogic) {
+    public PublicationVersion findByVersion(Long itemSchemeId, String versionLogic) {
 
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("findByVersion not implemented");

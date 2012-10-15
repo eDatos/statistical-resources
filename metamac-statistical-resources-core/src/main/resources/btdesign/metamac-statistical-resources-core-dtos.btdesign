@@ -7,45 +7,45 @@ Application StatisticalResourcesDto {
 	Module dtos {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto 
 		
-		DataTransferObject StatisticalResourceDto extends @IdentityDto {
+		DataTransferObject StatisticalResourceDto extends @AuditableDto {
 			- @ExternalItemDto operation;
 		}
 
-		DataTransferObject AuditableStatisticalResourceDto extends @StatisticalResourceDto {
-			String responsabilityCreator;
-			JAVADATE dateCreated;
-			String lastUpdateUser;
-			JAVADATE dateLastUpdate;
-		}
-
-		DataTransferObject IdentifiableStatisticalResourceDto extends @AuditableStatisticalResourceDto {
-			String identifier;
+		DataTransferObject IdentifiableStatisticalResourceDto extends @StatisticalResourceDto {
+			String code;
 			String uri;
 			String urn;
-			- @InternationalStringDto title;
 		}
+		
+		DataTransferObject NameableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
+			- @InternationalStringDto title;
+			- @InternationalStringDto description;
+		}
+		
 
 		DataTransferObject VersionableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
 			String versionLogic;
 			JAVADATE versionDate;
 			JAVADATE nextVersionDate;
-			- @StatisticalResourceVersionRationaleTypeEnum rationaleType;
-			String rationale;
+			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType;
+			- @InternationalStringDto versionRationale;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
 			- @StatisticalResourceProcStatusEnum procStatus;
-			String responsabilityContributor;
-			String responsabilitySubmitted;
-			String responsabilityAccepted;
-			String responsabilityIssued;
-			String responsabilityOutOfPrint;
+			
+			String versionResponsabilityCreator;
+			String versionResponsabilityContributor;
+			String versionResponsabilitySubmitted;
+			String versionResponsabilityAccepted;
+			String versionResponsabilityIssued;
+			String versionResponsabilityOutOfPrint;
 
 			// Orrganizations level
 			- @ExternalItemDto creator;
-			- Set<@ExternalItemDto> contributor;
-			- Set<@ExternalItemDto> publisher;
-			- Set<@ExternalItemDto> mediator;
+			- Bag<@ExternalItemDto> contributor;
+			- Bag<@ExternalItemDto> publisher;
+			- Bag<@ExternalItemDto> mediator;
 
 			// Dates
 			JAVADATE submittedDate;
@@ -53,7 +53,7 @@ Application StatisticalResourcesDto {
 			JAVADATE issuedDate;
 		}
 		
-		DataTransferObject ContentMetadataDto {
+		DataTransferObject SiemacMetadataStatisticalResourceDto extends @LifeCycleStatisticalResourceDto {
 			String language;
 			List<String> languages;
 
@@ -78,9 +78,7 @@ Application StatisticalResourcesDto {
 		}
 		
 		// DATASET
-
-		DataTransferObject DatasetDto extends @LifeCycleStatisticalResourceDto {
-			- @ContentMetadataDto contentMetadata;
+		DataTransferObject DatasetDto extends @SiemacMetadataStatisticalResourceDto {
 		}
 		
 		// DATASOURCE
@@ -89,9 +87,7 @@ Application StatisticalResourcesDto {
 		}
 
 		// COLLECTION
-
-		DataTransferObject CollectionDto extends @LifeCycleStatisticalResourceDto {
-			- @ContentMetadataDto contentMetadata;
+		DataTransferObject CollectionDto extends @SiemacMetadataStatisticalResourceDto {
 			- @CollectionStructureHierarchyDto structure;
 		}
 		
@@ -104,8 +100,7 @@ Application StatisticalResourcesDto {
 		}
 
 		// QUERY
-
-		DataTransferObject QueryDto extends @IdentifiableStatisticalResourceDto {
+		DataTransferObject QueryDto extends @NameableStatisticalResourceDto {
 			- @DatasetDto dataset;
 		}
 		

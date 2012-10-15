@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.serviceapi;
+package org.siemac.metamac.statistical.resources.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;

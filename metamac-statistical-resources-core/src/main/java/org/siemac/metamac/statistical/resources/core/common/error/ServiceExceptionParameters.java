@@ -1,11 +1,18 @@
 package org.siemac.metamac.statistical.resources.core.common.error;
 
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 
-public class ServiceExceptionParameters {
+public class ServiceExceptionParameters extends CommonServiceExceptionParameters {
 
-    public static final String IDENTIFIER                         = "identifier";
-    public static final String URN                                = "urn";
+    // STATISTICAL_RESOURCE
+    public static final String STATISTICAL_RESOURCE               = "statisticalResource";
+    public static final String STATISTICAL_RESOURCE_OPERATION     = STATISTICAL_RESOURCE + ".operation";
+
+    // NAMEABLE_RESOURCE
+    public static final String NAMEABLE_RESOURCE                  = "nameableStatisticalResource";
+    public static final String NAMEABLE_RESOURCE_TITLE            = NAMEABLE_RESOURCE + ".title";
+    public static final String NAMEABLE_RESOURCE_DESCRIPTION      = NAMEABLE_RESOURCE + ".description";
 
     // DATASET
     public static final String DATASET                            = "dataset";

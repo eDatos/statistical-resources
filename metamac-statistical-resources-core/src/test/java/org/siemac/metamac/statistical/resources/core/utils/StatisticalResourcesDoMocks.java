@@ -1,5 +1,6 @@
-package org.siemac.metamac.statistical.resources.core.serviceapi.utils;
+package org.siemac.metamac.statistical.resources.core.utils;
 
+import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -7,8 +8,10 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.statistical.resources.core.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.domain.Query;
+import org.siemac.metamac.statistical.resources.core.domain.StatisticalResource;
 
 public class StatisticalResourcesDoMocks {
 
@@ -19,33 +22,45 @@ public class StatisticalResourcesDoMocks {
     private static final String CONCEPT_MOCK               = "ConceptMock";
     private static final String CODELIST_MOCK              = "CodelistMock";
 
-    public static final String  URI_MOCK                   = "lorem/ipsum/dolor/sit/amet";
+    private static final String  URI_MOCK                   = "lorem/ipsum/dolor/sit/amet";
+    private static final String  URN_MOCK                   = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + MetamacMocks.mockString(10);
 
-    
-    
     public static Query mockQuery() {
         Query query = new Query();
 
-        NameableStatisticalResource nameableResource = new NameableStatisticalResource();
-        nameableResource.setOperation(new ExternalItem("OPERATION01", "http://apis.istac.org/statisticalOperations/operations/OPERATION01", "urn:siemac.org.siemac.infomodel.statisticalOperation.Operation=OPERATION01", TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
-        nameableResource.setCode("QUERY01");
-        nameableResource.setUri("http://api.istac.org/statisticalResources/queries/urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1");
-        nameableResource.setUrn("urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1");
-        nameableResource.setTitle(new InternationalString("es", "Consulta 01"));
-        nameableResource.setDescription(new InternationalString("es", "Descripción de consulta 01"));
-        
-        nameableResource.setCreatedBy("user1");
-        nameableResource.setCreatedDate(MetamacMocks.mockDateTime());
-        nameableResource.setLastUpdatedBy("user2");
-        nameableResource.setLastUpdated(MetamacMocks.mockDateTime());
-        nameableResource.setVersion(Long.valueOf(0));
-        
-        query.setNameableStatisticalResource(nameableResource);
-        
+        query.setNameableStatisticalResource(mockNameableStatisticalResorce());
         return query;
     }
-    
-    
+
+    private static NameableStatisticalResource mockNameableStatisticalResorce() {
+        NameableStatisticalResource nameableResource = new NameableStatisticalResource();
+
+        nameableResource.setTitle(mockInternationalString());
+        nameableResource.setDescription(mockInternationalString());
+
+        mockIdentifiableStatisticalResource(nameableResource);
+
+        return nameableResource;
+    }
+
+    private static void mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
+        resource.setCode("resource-" + MetamacMocks.mockString(10));
+        resource.setUri(URI_MOCK);
+        resource.setUrn(URN_MOCK);
+
+        mockStatisticalResource(resource);
+    }
+
+    private static void mockStatisticalResource(StatisticalResource resource) {
+        resource.setOperation(mockStatisticalOperationItem());
+
+        resource.setCreatedBy("user1");
+        resource.setCreatedDate(new DateTime());
+        resource.setLastUpdatedBy("user2");
+        resource.setLastUpdated(new DateTime());
+        resource.setVersion(Long.valueOf(0));
+    }
+
     // -----------------------------------------------------------------
     // INTERNATIONAL STRING
     // -----------------------------------------------------------------
@@ -68,7 +83,7 @@ public class StatisticalResourcesDoMocks {
     // -----------------------------------------------------------------
 
     public static ExternalItem mockStatisticalOperationItem() {
-        return new ExternalItem(STATISTICAL_OPERATION_MOCK, URI_MOCK, mockAgencyUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        return new ExternalItem(STATISTICAL_OPERATION_MOCK, URI_MOCK, mockStatisticalOperationUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
     }
 
     public static ExternalItem mockAgencyExternalItem() {
@@ -87,6 +102,10 @@ public class StatisticalResourcesDoMocks {
         return new ExternalItem(CODELIST_MOCK, URI_MOCK, mockCodeListExternalItem(), TypeExternalArtefactsEnum.CODELIST);
     }
 
+    public static String mockStatisticalOperationUrn() {
+        return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(STATISTICAL_OPERATION_MOCK);
+    }
+    
     public static String mockAgencyUrn() {
         return GeneratorUrnUtils.generateSdmxAgencyUrn(AGENCY_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.VERSION_INITIAL_VERSION, AGENCY_MOCK);
     }

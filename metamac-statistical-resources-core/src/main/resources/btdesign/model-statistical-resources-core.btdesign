@@ -1,4 +1,4 @@
-
+import "classpath:/btdesign/metamac-statistical-resources-core-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-enums.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
@@ -11,13 +11,20 @@ Application StatisticalResources {
 		// ----------------------------------------------------------------
 		// 							FACADE SERVICES
 		// ----------------------------------------------------------------  
-
+		
+		Service StatisticalResourcesServiceFacade {
+			> @StatisticalResourcesService
+			
+			// QUERIES
+			"Retrieves a concept scheme by URN"
+            @QueryDto retrieveQueryByUrn(String urn) throws MetamacException;
+		}
 
 		// ----------------------------------------------------------------
 		// 							SERVICES
 		// ----------------------------------------------------------------
 		
-		Service StatisticalResourceService {
+		Service StatisticalResourcesService {
 			> @StatisticalResourceRepository
 			> @QueryRepository
 			> @DatasourceRepository
@@ -102,6 +109,8 @@ Application StatisticalResources {
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
+			databaseTable="TB_STATISITCAL_RESOURCES"
+			
 			- @StatisticalResourceTypeEnum type nullable;
 			- @StatisticalResourceFormatEnum format nullable;
 		}
@@ -159,6 +168,7 @@ Application StatisticalResources {
 		Entity PublicationVersion {
 			databaseTable="TB_PUBLICATIONS_VERSIONS"
 			hint="idSequence=PUBLICATIONS_VERSIONS"
+			!auditable
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 
@@ -194,6 +204,7 @@ Application StatisticalResources {
 		Entity DatasetVersion {
 			databaseTable="TB_DATASETS_VERSIONS"
 			hint="idSequence=DATASETS_VERSIONS"
+			!auditable
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 
