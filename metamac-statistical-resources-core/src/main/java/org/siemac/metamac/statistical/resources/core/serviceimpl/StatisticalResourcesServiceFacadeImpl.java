@@ -1,5 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.serviceimpl;
 
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.domain.Query;
@@ -50,5 +55,29 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueryDto queryDto = getDo2DtoMapper().queryDoToDto(query);
         
         return queryDto;
+    }
+
+    @Override
+    public List<QueryDto> retrieveQueries(ServiceContext ctx) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public QueryDto createQuery(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public QueryDto updateQuery(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public PagedResult<QueryDto> findQueriesByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

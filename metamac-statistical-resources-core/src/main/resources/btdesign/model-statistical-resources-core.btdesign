@@ -16,8 +16,16 @@ Application StatisticalResources {
 			> @StatisticalResourcesService
 			
 			// QUERIES
-			"Retrieves a concept scheme by URN"
+			"Retrieves a query scheme by URN"
             @QueryDto retrieveQueryByUrn(String urn) throws MetamacException;
+            "Retrieve queries"
+            List<@QueryDto> retrieveQueries() throws MetamacException;
+            "Create a query"
+            @QueryDto createQuery(QueryDto queryDto) throws MetamacException;
+            "Update a query"
+            @QueryDto updateQuery(QueryDto queryDto) throws MetamacException;
+            "Find queries by criteria"
+    		PagedResult<@QueryDto> findQueriesByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 		}
 
 		// ----------------------------------------------------------------
@@ -35,6 +43,14 @@ Application StatisticalResources {
 			
 			"Retrieve query by urn"
     		@Query retrieveQueryByUrn(String urn) throws MetamacException;
+    		"Retrieve all queries"
+    		List<@Query> retrieveQueries() throws MetamacException;
+    		"Find queries by criteria"
+    		PagedResult<@Query> findQueriesByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+    		"Create query"
+            @Query createQuery(Query query) throws MetamacException;
+            "Update query"
+            @Query updateQuery(Query query) throws MetamacException;
 		}  
 
 

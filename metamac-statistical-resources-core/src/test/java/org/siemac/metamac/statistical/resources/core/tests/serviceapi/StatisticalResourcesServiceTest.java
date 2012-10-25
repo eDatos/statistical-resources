@@ -3,6 +3,12 @@ package org.siemac.metamac.statistical.resources.core.tests.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
@@ -11,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.domain.Query;
+import org.siemac.metamac.statistical.resources.core.domain.QueryProperties;
 import org.siemac.metamac.statistical.resources.core.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.serviceapi.StatisticalResourcesService;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
@@ -31,12 +38,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StatisticalResourcesServiceTest extends StatisticalResourcesBaseTest {
 
+    private static final String           QUERY_1_CODE = "query01";
+    private static final String           QUERY_1_URN  = "urn:mock:query01";
+    private static final String           QUERY_2_CODE = "query02";
+    private static final String           QUERY_2_URN  = "urn:mock:query02";
+    private static final String           QUERY_3_CODE = "query03";
+    private static final String           QUERY_3_URN  = "urn:mock:query03";
+
     @Autowired
     protected StatisticalResourcesService statisticalResourcesService;
-    
+
     @Autowired
-    protected QueryRepository queryRepository;
-    
+    protected QueryRepository             queryRepository;
 
     @Test
     public void testRetrieveQueryByUrn() throws MetamacException {
@@ -44,7 +57,7 @@ public class StatisticalResourcesServiceTest extends StatisticalResourcesBaseTes
         Query actual = statisticalResourcesService.retrieveQueryByUrn(getServiceContextWithoutPrincipal(), expected.getNameableStatisticalResource().getUrn());
         StatisticalResourcesAsserts.assertEqualsQuery(expected, actual);
     }
-    
+
     @Test
     public void testRetrieveQueryByUrnParameterRequired() throws MetamacException {
         try {
@@ -55,6 +68,81 @@ public class StatisticalResourcesServiceTest extends StatisticalResourcesBaseTes
             MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.URN}, e.getExceptionItems().get(0));
         }
     }
-    
-    
+
+    @Test
+    public void testFindQueryByCondition() throws Exception {
+        Query query01 = StatisticalResourcesDoMocks.mockQuery();
+        query01.getNameableStatisticalResource().setCode(QUERY_1_CODE);
+        query01.getNameableStatisticalResource().setUrn(QUERY_1_URN);
+        queryRepository.save(query01);
+
+        Query query02 = StatisticalResourcesDoMocks.mockQuery();
+        query02.getNameableStatisticalResource().setCode(QUERY_2_CODE);
+        query02.getNameableStatisticalResource().setUrn(QUERY_2_URN);
+        queryRepository.save(query02);
+
+        Query query03 = StatisticalResourcesDoMocks.mockQuery();
+        query03.getNameableStatisticalResource().setCode(QUERY_3_CODE);
+        query03.getNameableStatisticalResource().setUrn(QUERY_3_URN);
+        queryRepository.save(query03);
+
+        // Find all
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).orderBy(QueryProperties.nameableStatisticalResource().code())
+                    .orderBy(QueryProperties.nameableStatisticalResource().urn()).build();
+            PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+            PagedResult<Query> queriesPagedResult = statisticalResourcesService.findQueriesByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
+            
+            // Validate
+            assertEquals(3, queriesPagedResult.getTotalRows());
+            int i = 0;
+            assertEquals(QUERY_1_URN, queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+            assertEquals(QUERY_2_URN, queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+            assertEquals(QUERY_3_URN, queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+        }
+
+        // Find title
+        {
+            // TODO
+        }
+
+        // Find code
+        {
+            // TODO
+        }
+
+        // Find URN
+        {
+            // TODO
+        }
+    }
+
+    @Test
+    public void testCreateQuery() throws Exception {
+        Query query = StatisticalResourcesDoMocks.mockQuery();
+        Query queryPersisted = statisticalResourcesService.createQuery(getServiceContextWithoutPrincipal(), query);
+        StatisticalResourcesAsserts.assertEqualsQuery(query, queryPersisted);
+    }
+
+    @Test
+    public void testCreateQueryErrorNameableResourceRequired() throws Exception {
+        Query query = StatisticalResourcesDoMocks.mockQuery();
+        query.setNameableStatisticalResource(null);
+        try {
+            statisticalResourcesService.createQuery(getServiceContextWithoutPrincipal(), query);
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.NAMEABLE_RESOURCE}, e.getExceptionItems().get(0));
+        }
+    }
+
+    @Test
+    public void testUpdateQuery() throws Exception {
+        Query query = StatisticalResourcesDoMocks.mockQuery();
+        query = statisticalResourcesService.createQuery(getServiceContextWithoutPrincipal(), query);
+
+        query.getNameableStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+        Query updatedQuery = statisticalResourcesService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        StatisticalResourcesAsserts.assertEqualsQuery(query, updatedQuery);
+    }
 }
