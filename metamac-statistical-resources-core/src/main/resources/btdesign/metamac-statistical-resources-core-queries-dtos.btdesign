@@ -1,0 +1,16 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btdesign"
+
+Application QueriesStatisticalResourcesDto {
+	basePackage=unused
+
+	Module dtos_queries {
+		basePackage=org.siemac.metamac.statistical.resources.core.dto.query 
+
+		// QUERY
+		DataTransferObject QueryDto extends @NameableStatisticalResourceDto {
+			- @DatasetDto dataset;
+		}
+	}
+}

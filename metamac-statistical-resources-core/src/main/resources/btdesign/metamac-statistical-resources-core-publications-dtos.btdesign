@@ -1,0 +1,24 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+
+Application PublicationsStatisticalResourcesDto {
+	basePackage=unused
+
+	Module dtos_publications {
+		basePackage=org.siemac.metamac.statistical.resources.core.dto.publication 
+		
+		// COLLECTION
+		DataTransferObject CollectionDto extends @SiemacMetadataStatisticalResourceDto {
+			- @CollectionStructureHierarchyDto structure;
+		}
+		
+		DataTransferObject CollectionStructureHierarchyDto extends @IdentityDto {
+			- @CollectionStructureHierarchyTypeEnum type;
+			- @InternationalStringDto text;
+			String url;
+			String urn;
+			- List<@CollectionStructureHierarchyDto> children;
+		}
+	}
+}

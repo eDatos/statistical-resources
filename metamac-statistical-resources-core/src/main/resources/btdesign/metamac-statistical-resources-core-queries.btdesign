@@ -1,0 +1,52 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+
+Application QueriesStatisticalResources {
+	basePackage=unused
+
+	Module domain_queries {
+		basePackage=org.siemac.metamac.statistical.resources.core.query
+
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------
+		
+		Service QueryService {
+			> @QueryRepository
+			
+			"Retrieve query by urn"
+    		@Query retrieveQueryByUrn(String urn) throws MetamacException;
+    		"Retrieve all queries"
+    		List<@Query> retrieveQueries() throws MetamacException;
+    		"Find queries by criteria"
+    		PagedResult<@Query> findQueriesByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+    		"Create query"
+            @Query createQuery(Query query) throws MetamacException;
+            "Update query"
+            @Query updateQuery(Query query) throws MetamacException;
+		}  
+
+
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+
+		Entity Query {
+			databaseTable="TB_QUERIES"
+			hint="idSequence=QUERIES"
+			!auditable
+
+			- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			Repository QueryRepository {
+				save;
+				findAll;
+				findById;
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				@Query findByUrn(String urn) throws MetamacException;
+			}
+		}
+	}
+}

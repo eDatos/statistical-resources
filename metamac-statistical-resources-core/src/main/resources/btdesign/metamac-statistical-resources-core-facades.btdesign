@@ -1,0 +1,33 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-queries-dtos.btdesign"
+
+Application FacadeStatisticalResources {
+	basePackage=unused
+
+	Module core_facades {
+		basePackage=org.siemac.metamac.statistical.resources.core.facade
+
+		// ----------------------------------------------------------------
+		// 							FACADE SERVICES
+		// ----------------------------------------------------------------  
+		
+		Service StatisticalResourcesServiceFacade {
+			> @QueryService
+			> @DatasetService
+			> @PublicationService
+			
+			// QUERIES
+			"Retrieves a query scheme by URN"
+            @QueryDto retrieveQueryByUrn(String urn) throws MetamacException;
+            "Retrieve queries"
+            List<@QueryDto> retrieveQueries() throws MetamacException;
+            "Create a query"
+            @QueryDto createQuery(QueryDto queryDto) throws MetamacException;
+            "Update a query"
+            @QueryDto updateQuery(QueryDto queryDto) throws MetamacException;
+            "Find queries by criteria"
+    		PagedResult<@QueryDto> findQueriesByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+		}  
+	}
+}

@@ -331,8 +331,8 @@
                                 <delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
                                 
                                 <!-- Delete generated /src/test/java/.../*Test.java -->
-                                <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceFacadeTest.java" />
-                                <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceTest.java" />
+<!--                                 <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceFacadeTest.java" /> -->
+<!--                                 <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceTest.java" /> -->
                             </target>
                         </configuration>
                     </execution>

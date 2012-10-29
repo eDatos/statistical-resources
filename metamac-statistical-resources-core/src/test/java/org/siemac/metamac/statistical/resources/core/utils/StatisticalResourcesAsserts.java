@@ -8,14 +8,14 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.siemac.metamac.statistical.resources.core.domain.IdentifiableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.NameableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.Query;
-import org.siemac.metamac.statistical.resources.core.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.QueryDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
 public class StatisticalResourcesAsserts {
 

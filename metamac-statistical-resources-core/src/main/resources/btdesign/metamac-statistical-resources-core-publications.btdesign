@@ -1,0 +1,61 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+
+Application PublicationsStatisticalResources {
+	basePackage=unused
+
+	Module domain_publications {
+		basePackage=org.siemac.metamac.statistical.resources.core.publication
+
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------
+		
+		Service PublicationService {
+			> @PublicationRepository
+			> @PublicationVersionRepository
+			
+		}  
+
+
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+
+		Entity Publication {
+			databaseTable="TB_PUBLICATIONS"
+			hint="idSequence=PUBLICATIONS"
+			!auditable
+
+			"All versions"
+			- Bag<@PublicationVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> publication orderby="id asc";
+			
+			Repository PublicationRepository {
+				save;
+				delete;
+			}
+		}
+
+		Entity PublicationVersion {
+			databaseTable="TB_PUBLICATIONS_VERSIONS"
+			hint="idSequence=PUBLICATIONS_VERSIONS"
+			!auditable
+
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+
+			"Parent"
+			- @Publication publication not nullable cascade="none" databaseColumn="PUBLICATION_FK" <-> versions;
+			
+			Repository PublicationVersionRepository {
+//				save;
+//				delete;
+				findById;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				@PublicationVersion findByUrn(String urn);
+				@PublicationVersion retrieveLastVersion(Long itemSchemeId);
+				@PublicationVersion findByVersion(Long itemSchemeId, String versionLogic);
+			}
+		}
+	}
+}

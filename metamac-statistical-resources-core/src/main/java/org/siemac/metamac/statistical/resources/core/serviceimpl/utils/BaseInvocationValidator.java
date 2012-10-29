@@ -3,13 +3,13 @@ package org.siemac.metamac.statistical.resources.core.serviceimpl.utils;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.domain.IdentifiableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.LifeCycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.NameableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.SiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.StatisticalResource;
-import org.siemac.metamac.statistical.resources.core.domain.VersionableStatisticalResource;
 
 public class BaseInvocationValidator {
 

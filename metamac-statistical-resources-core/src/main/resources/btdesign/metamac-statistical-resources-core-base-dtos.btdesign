@@ -1,0 +1,80 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+
+Application StatisticalResourcesDto {
+	basePackage=org.siemac.metamac.statistical.resources
+
+	Module dtos {
+		basePackage=org.siemac.metamac.statistical.resources.core.dto 
+		
+		DataTransferObject StatisticalResourceDto extends @AuditableDto {
+			- @ExternalItemDto operation;
+		}
+
+		DataTransferObject IdentifiableStatisticalResourceDto extends @StatisticalResourceDto {
+			String code;
+			String uri;
+			String urn;
+		}
+		
+		DataTransferObject NameableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
+			- @InternationalStringDto title;
+			- @InternationalStringDto description;
+		}
+		
+
+		DataTransferObject VersionableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
+			String versionLogic;
+			JAVADATE versionDate;
+			JAVADATE nextVersionDate;
+			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType;
+			- @InternationalStringDto versionRationale;
+		}
+
+		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
+			- @StatisticalResourceProcStatusEnum procStatus;
+			
+			String versionResponsabilityCreator;
+			String versionResponsabilityContributor;
+			String versionResponsabilitySubmitted;
+			String versionResponsabilityAccepted;
+			String versionResponsabilityIssued;
+			String versionResponsabilityOutOfPrint;
+
+			// Orrganizations level
+			- @ExternalItemDto creator;
+			- Bag<@ExternalItemDto> contributor;
+			- Bag<@ExternalItemDto> publisher;
+			- Bag<@ExternalItemDto> mediator;
+
+			// Dates
+			JAVADATE submittedDate;
+			JAVADATE acceptedDate;
+			JAVADATE issuedDate;
+		}
+		
+		DataTransferObject SiemacMetadataStatisticalResourceDto extends @LifeCycleStatisticalResourceDto {
+			String language;
+			List<String> languages;
+
+			- @InternationalStringDto description;
+			List<String> keywords;
+
+			List<String> spatialCoverage;
+			List<String> spatialCoverageCodes;
+			List<String> temporalCoverage;
+			List<String> temporalCoverageCodes;
+
+			// Class descriptors
+			- @StatisticalResourceTypeEnum type;
+			- @StatisticalResourceFormatEnum format;
+
+			JAVADATE nextUpdateDate;
+			String updateFrequency;
+
+			String rightsHolder;
+			JAVADATE copyrightedDate;
+			String license;
+		}
+	}
+}

@@ -1,0 +1,76 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+
+Application DatasetsStatisticalResources {
+	basePackage=unused
+
+	Module domain_datasets {
+		basePackage=org.siemac.metamac.statistical.resources.core.dataset
+
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------
+		
+		Service DatasetService {
+			> @DatasourceRepository
+			> @DatasetRepository
+			> @DatasetVersionRepository
+
+		}  
+
+
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+
+		Entity Datasource {
+			databaseTable="TB_DATASOURCES"
+			hint="idSequence=DATASOURCES"
+			!auditable
+
+			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			Repository DatasourceRepository {
+				findAll;
+				findById;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				@Datasource findByUrn(String urn);
+			}
+		}
+		
+		Entity Dataset {
+			databaseTable="TB_DATASETS"
+			hint="idSequence=DATASETS"
+			!auditable
+			
+			"All versions"
+			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
+			
+			Repository DatasetRepository {
+				save;
+				delete;
+			}
+		}
+		
+		Entity DatasetVersion {
+			databaseTable="TB_DATASETS_VERSIONS"
+			hint="idSequence=DATASETS_VERSIONS"
+			!auditable
+
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+
+			"Parent"
+			- @Dataset dataset not nullable cascade="none" databaseColumn="DATASET_FK" <-> versions;
+			
+			Repository DatasetVersionRepository {
+//				save;
+//				delete;
+				findByCondition(PagingParameter pagingParameter);
+				@DatasetVersion findByUrn(String urn); 
+				@DatasetVersion retrieveLastVersion(Long itemSchemeId);
+				@DatasetVersion findByVersion(Long itemSchemeId, String versionLogic);
+			}
+		}
+	}
+}

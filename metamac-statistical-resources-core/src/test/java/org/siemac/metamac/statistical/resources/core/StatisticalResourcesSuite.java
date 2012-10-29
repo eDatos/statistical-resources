@@ -2,17 +2,24 @@ package org.siemac.metamac.statistical.resources.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.siemac.metamac.statistical.resources.core.tests.mapper.StatisticalResourceDo2DtoMapperTest;
-import org.siemac.metamac.statistical.resources.core.tests.mapper.StatisticalResourceDto2DoMapperTest;
-import org.siemac.metamac.statistical.resources.core.tests.repository.QueryRepositoryTest;
-import org.siemac.metamac.statistical.resources.core.tests.serviceapi.StatisticalResourcesServiceFacadeTest;
-import org.siemac.metamac.statistical.resources.core.tests.serviceapi.StatisticalResourcesServiceTest;
+import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
+import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
+import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
+import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapperTest;
+import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapperTest;
+import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({QueryRepositoryTest.class, StatisticalResourcesServiceTest.class, StatisticalResourceDo2DtoMapperTest.class, StatisticalResourceDto2DoMapperTest.class, StatisticalResourcesServiceFacadeTest.class})
+@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class, QueryRepositoryTest.class, QueryServiceTest.class, QueryDo2DtoMapperTest.class, QueryDto2DoMapperTest.class,
+        PublicationServiceTest.class, DatasetServiceTest.class, DatasetVersionRepositoryTest.class, DatasourceRepositoryTest.class, DatasetServiceTest.class, PublicationVersionRepositoryTest.class,
+        PublicationServiceTest.class})
 public class StatisticalResourcesSuite {
 }
