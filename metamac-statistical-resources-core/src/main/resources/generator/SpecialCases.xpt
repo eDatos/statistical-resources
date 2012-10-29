@@ -72,3 +72,25 @@ NOT NULL«ENDIF»,
 «REM»HibernateSeuence is not needed in this project «ENDREM»
 «AROUND templates::db::OracleDDL::createSequence FOR Application»
 «ENDAROUND»
+
+
+«REM»Generete tests for non generated repository methods «ENDREM»
+«AROUND templates::repository::Repository::repository FOR Repository»
+	«targetDef.proceed() -»
+	«IF gapClass»
+		«IF isTestToBeGenerated()»
+		    «EXPAND generatorcommon::RepositoryTest::repositoryJUnitBase»
+		    «IF applicationServer() == "appengine"»
+				«EXPAND generatorcommon::RepositoryTest::repositoryJUnitSubclassAppEngine»
+			«ELSE»
+		    	«EXPAND generatorcommon::RepositoryTest::repositoryJUnitSubclassWithAnnotations»
+			«ENDIF»
+			«IF isDbUnitTestDataToBeGenerated()»
+				«EXPAND generatorcommon::RepositoryTest::dbunitTestData»
+			«ENDIF»
+		    «IF !otherDependencies.isEmpty»
+		        «EXPAND generatorcommon::RepositoryTest::repositoryDependencyInjectionJUnit»
+		    «ENDIF»
+		«ENDIF»
+	«ENDIF»
+«ENDAROUND»
