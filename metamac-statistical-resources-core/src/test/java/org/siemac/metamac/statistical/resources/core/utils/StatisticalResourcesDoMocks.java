@@ -13,7 +13,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
-public class StatisticalResourcesDoMocks {
+public class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private static final String[] MAINTAINER_MOCK            = new String[]{"MaintainerMock"};
     private static final String   STATISTICAL_OPERATION_MOCK = "StatisticalOperationMock";
@@ -23,8 +23,8 @@ public class StatisticalResourcesDoMocks {
     private static final String   CONCEPT_MOCK               = "ConceptMock";
     private static final String   CODELIST_MOCK              = "CodelistMock";
 
-    private static final String   URI_MOCK                   = "lorem/ipsum/dolor/sit/amet";
-    private static final String   URN_MOCK                   = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + MetamacMocks.mockString(10);
+    private static final String   URI_MOCK                   = "lorem/ipsum/dolor/sit/amet/" + mockString(5);
+    private static final String   URN_MOCK                   = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + mockString(10);
 
     public static Query mockQuery() {
         Query query = new Query();
@@ -45,7 +45,7 @@ public class StatisticalResourcesDoMocks {
     }
 
     private static void mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
-        resource.setCode("resource-" + MetamacMocks.mockString(10));
+        resource.setCode("resource-" + mockString(10));
         resource.setUri(URI_MOCK);
         resource.setUrn(URN_MOCK);
 
@@ -69,10 +69,10 @@ public class StatisticalResourcesDoMocks {
     public static InternationalString mockInternationalString() {
         InternationalString internationalString = new InternationalString();
         LocalisedString es = new LocalisedString();
-        es.setLabel(MetamacMocks.mockString(10) + " en Español");
+        es.setLabel(mockString(10) + " en Español");
         es.setLocale("es");
         LocalisedString en = new LocalisedString();
-        en.setLabel(MetamacMocks.mockString(10) + " in English");
+        en.setLabel(mockString(10) + " in English");
         en.setLocale("en");
         internationalString.addText(es);
         internationalString.addText(en);

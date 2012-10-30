@@ -17,10 +17,8 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
-public class StatisticalResourcesAsserts {
+public class StatisticalResourcesAsserts extends MetamacAsserts {
 
-    public static final String  URI_MOCK                      = "lorem/ipsum/dolor/sit/amet";
-    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
@@ -39,8 +37,8 @@ public class StatisticalResourcesAsserts {
     // -----------------------------------------------------------------
 
     private static void assertEqualsNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
-        StatisticalResourcesAsserts.assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
-        StatisticalResourcesAsserts.assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
         
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
@@ -77,9 +75,9 @@ public class StatisticalResourcesAsserts {
         assertEqualsExternalItem(entity.getOperation(), dto.getOperation());
         
         assertEquals(entity.getCreatedBy(), dto.getCreatedBy());
-        MetamacAsserts.assertEqualsDate(entity.getCreatedDate(), dto.getCreatedDate());
+        assertEqualsDate(entity.getCreatedDate(), dto.getCreatedDate());
         assertEquals(entity.getLastUpdatedBy(), dto.getLastUpdatedBy());
-        MetamacAsserts.assertEqualsDate(entity.getLastUpdated(), dto.getLastUpdated());
+        assertEqualsDate(entity.getLastUpdated(), dto.getLastUpdated());
     }
 
     // -----------------------------------------------------------------
@@ -87,7 +85,7 @@ public class StatisticalResourcesAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsInternationalString(InternationalString expected, InternationalString actual) {
-        MetamacAsserts.assertEqualsNullability(expected, actual);
+        assertEqualsNullability(expected, actual);
         if (expected == null) {
             return;
         }
@@ -99,7 +97,7 @@ public class StatisticalResourcesAsserts {
     }
 
     public static void assertEqualsInternationalString(InternationalString entity, InternationalStringDto dto) {
-        MetamacAsserts.assertEqualsNullability(entity, dto);
+        assertEqualsNullability(entity, dto);
         if (entity == null) {
             return;
         }
@@ -129,7 +127,7 @@ public class StatisticalResourcesAsserts {
 
     public static void assertEqualsExternalItem(ExternalItem expected, ExternalItem actual) {
 
-        MetamacAsserts.assertEqualsNullability(expected, actual);
+        assertEqualsNullability(expected, actual);
         if (expected == null) {
             return;
         }
@@ -144,7 +142,7 @@ public class StatisticalResourcesAsserts {
 
     public static void assertEqualsExternalItem(ExternalItem entity, ExternalItemDto dto) {
 
-        MetamacAsserts.assertEqualsNullability(entity, dto);
+        assertEqualsNullability(entity, dto);
         if (entity == null) {
             return;
         }
