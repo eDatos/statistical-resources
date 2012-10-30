@@ -13,6 +13,7 @@ import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
+import org.springframework.beans.factory.annotation.Value;
 
 public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
 
@@ -23,6 +24,9 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
 
     protected static String QUERY_1        = "urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1";
 
+    @Value("${metamac.srm.db.provider}")
+    private String databaseProvider;
+    
     // --------------------------------------------------------------------------------------------------------------
     // SERVICE CONTEXT
     // --------------------------------------------------------------------------------------------------------------
@@ -99,5 +103,10 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
     protected Map<String, String> getTablePrimaryKeys() {
         Map<String, String> tablePrimaryKeys = new HashMap<String, String>();
         return tablePrimaryKeys;
+    }
+    
+    @Override
+    protected DataBaseProvider getDatabaseProvider() {
+        return DataBaseProvider.valueOf(databaseProvider);
     }
 }
