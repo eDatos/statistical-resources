@@ -18,8 +18,17 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
  */
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class, QueryRepositoryTest.class, QueryServiceTest.class, QueryDo2DtoMapperTest.class, QueryDto2DoMapperTest.class,
-        PublicationServiceTest.class, DatasetServiceTest.class, DatasetVersionRepositoryTest.class, DatasourceRepositoryTest.class, DatasetServiceTest.class, PublicationVersionRepositoryTest.class,
-        PublicationServiceTest.class})
+@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class, 
+                     QueryRepositoryTest.class, 
+                     QueryServiceTest.class, 
+                     QueryDo2DtoMapperTest.class, 
+                     QueryDto2DoMapperTest.class,
+                     PublicationServiceTest.class, 
+                     DatasetServiceTest.class, 
+                     DatasetVersionRepositoryTest.class, 
+                     DatasourceRepositoryTest.class, 
+                     DatasetServiceTest.class, 
+                     PublicationVersionRepositoryTest.class,
+                     PublicationServiceTest.class})
 public class StatisticalResourcesSuite {
 }

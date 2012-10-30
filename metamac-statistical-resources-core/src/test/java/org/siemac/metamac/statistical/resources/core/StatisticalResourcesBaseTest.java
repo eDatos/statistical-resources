@@ -24,7 +24,7 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
 
     protected static String QUERY_1        = "urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1";
 
-    @Value("${metamac.srm.db.provider}")
+    @Value("${metamac.statistical_resources.db.provider}")
     private String databaseProvider;
     
     // --------------------------------------------------------------------------------------------------------------
@@ -100,8 +100,8 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTests {
     }
 
     @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        Map<String, String> tablePrimaryKeys = new HashMap<String, String>();
+    protected Map<String, List<String>> getTablePrimaryKeys() {
+        Map<String, List<String>> tablePrimaryKeys = new HashMap<String, List<String>>();
         return tablePrimaryKeys;
     }
     
