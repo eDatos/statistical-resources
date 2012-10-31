@@ -25,7 +25,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     protected DatasetVersionRepository datasetVersionRepository;
 
     @Test
-    public void testFindByUrn() throws Exception {
+    public void testRetrieveByUrn() throws Exception {
         // TODO Auto-generated method stub
         fail("testFindByUrn not implemented");
     }
@@ -37,7 +37,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     }
 
     @Test
-    public void testFindByVersion() throws Exception {
+    public void testRetrieveByVersion() throws Exception {
         // TODO Auto-generated method stub
         fail("testFindByVersion not implemented");
     }

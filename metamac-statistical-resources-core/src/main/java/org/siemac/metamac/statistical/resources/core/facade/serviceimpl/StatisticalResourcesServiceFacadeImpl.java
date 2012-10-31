@@ -2,11 +2,14 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.criteria.mapper.MetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.criteria.mapper.SculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
@@ -24,62 +27,100 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     @Qualifier("queryDo2DtoMapper")
-    private QueryDo2DtoMapper queryDo2DtoMapper;
+    private QueryDo2DtoMapper                      queryDo2DtoMapper;
 
     @Autowired
     @Qualifier("queryDto2DoMapper")
-    private QueryDto2DoMapper queryDto2DoMapper;
+    private QueryDto2DoMapper                      queryDto2DoMapper;
 
-    
-    protected QueryDo2DtoMapper getQueryDo2DtoMapper() {
-        return queryDo2DtoMapper;
-    }
+    @Autowired
+    private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
 
-    protected QueryDto2DoMapper getQueryDto2DoMapper() {
-        return queryDto2DoMapper;
-    }
-    
+    @Autowired
+    private SculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
+
     public StatisticalResourcesServiceFacadeImpl() {
     }
 
+    // ------------------------------------------------------------------------
+    // QUERIES
+    // ------------------------------------------------------------------------
     
-    /**************************************************************************
-     * QUERIES
-     **************************************************************************/
     public QueryDto retrieveQueryByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Security
         QueriesSecurityUtils.canRetrieveQueryByUrn(ctx);
-        
+
         // Retrieve
         Query query = getQueryService().retrieveQueryByUrn(ctx, urn);
-        
+
         // Transform
-        QueryDto queryDto = getQueryDo2DtoMapper().queryDoToDto(query);
-        
+        QueryDto queryDto = queryDo2DtoMapper.queryDoToDto(query);
+
         return queryDto;
     }
 
     @Override
     public List<QueryDto> retrieveQueries(ServiceContext ctx) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        QueriesSecurityUtils.canRetrieveQueries(ctx);
+
+        // Retrieve
+        List<Query> queries = getQueryService().retrieveQueries(ctx);
+
+        // Transform
+        List<QueryDto> queriesDto = queryDo2DtoMapper.queryDoListToDtoList(queries);
+
+        return queriesDto;
     }
 
     @Override
     public QueryDto createQuery(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        QueriesSecurityUtils.canCreateQuery(ctx);
+
+        // Transform
+        Query query = queryDto2DoMapper.queryDtoToDo(queryDto);
+
+        // Create
+        query = getQueryService().createQuery(ctx, query);
+
+        // Transform to DTO
+        queryDto = queryDo2DtoMapper.queryDoToDto(query);
+
+        return queryDto;
     }
 
     @Override
     public QueryDto updateQuery(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        QueriesSecurityUtils.canUpdateQuery(ctx);
+
+        // Transform
+        Query query = queryDto2DoMapper.queryDtoToDo(queryDto);
+
+        // Update
+        query = getQueryService().updateQuery(ctx, query);
+
+        // Transform to Dto
+        queryDto = queryDo2DtoMapper.queryDoToDto(query);
+
+        return queryDto;
     }
 
     @Override
-    public PagedResult<QueryDto> findQueriesByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+    public MetamacCriteriaResult<QueryDto> findQueriesByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canFindQueriesByCondition(ctx);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Find
+        PagedResult<Query> result = getQueryService().findQueriesByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<QueryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
+
+        return metamacCriteriaResult;
     }
 }

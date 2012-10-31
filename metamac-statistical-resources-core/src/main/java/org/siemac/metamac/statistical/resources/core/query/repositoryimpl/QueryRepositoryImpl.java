@@ -8,7 +8,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -20,9 +20,9 @@ public class QueryRepositoryImpl extends QueryRepositoryBase {
     public QueryRepositoryImpl() {
     }
 
-    public Query findByUrn(String urn) throws MetamacException {
+    public Query retrieveByUrn(String urn) throws MetamacException {
         
-        List<ConditionalCriteria> condition = criteriaFor(Query.class).withProperty(org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
+        List<ConditionalCriteria> condition = criteriaFor(Query.class).withProperty(QueryProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
         
         List<Query> result = findByCondition(condition);
         

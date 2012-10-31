@@ -4,7 +4,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,9 +23,34 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Autowired
     protected DatasetService datasetService;
     
+
     @Test
-    public void testEmpty() throws MetamacException {
-        fail("not class implemented");
+    public void testCreateDatasource() throws Exception {
+        fail("not implemented");
+        
+    }
+
+    @Test
+    public void testUpdateDatasource() throws Exception {
+        fail("not implemented");
+        
+    }
+
+    @Test
+    public void testRetrieveDatasourceByUrn() throws Exception {
+        fail("not implemented");
+        
+    }
+
+    @Test
+    public void testDeleteDatasource() throws Exception {
+        fail("not implemented");
+        
+    }
+
+    @Test
+    public void testRetrieveDatasourcesByDataset() throws Exception {
+        fail("not implemented");        
     }
     
 }

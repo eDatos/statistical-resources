@@ -35,16 +35,16 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
     protected StatisticalResourceRepository statisticalResourceRepository;
 
     @Test
-    public void testFindByUrn() throws MetamacException {
+    public void testRetrieveByUrn() throws MetamacException {
         Query expected = queryRepository.save(StatisticalResourcesDoMocks.mockQuery());
-        Query actual = queryRepository.findByUrn(expected.getNameableStatisticalResource().getUrn());
+        Query actual = queryRepository.retrieveByUrn(expected.getNameableStatisticalResource().getUrn());
         StatisticalResourcesAsserts.assertEqualsQuery(expected, actual);
     }
 
     @Test
-    public void tetsFindByUrnNotFound() {
+    public void testRetrieveByUrnNotFound() {
         try {
-            queryRepository.findByUrn(URN_NOT_EXISTS);
+            queryRepository.retrieveByUrn(URN_NOT_EXISTS);
             fail("not found");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

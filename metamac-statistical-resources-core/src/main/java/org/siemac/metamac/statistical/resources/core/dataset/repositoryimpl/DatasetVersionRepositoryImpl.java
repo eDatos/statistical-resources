@@ -1,7 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,28 +17,67 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("datasetVersionRepository")
 public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
+
     public DatasetVersionRepositoryImpl() {
     }
 
-    public DatasetVersion findByUrn(String urn) {
+    @Override
+    public DatasetVersion retrieveByUrn(String urn) throws MetamacException {
+        // Prepare criteria
+        List<ConditionalCriteria> condition = criteriaFor(DatasetVersion.class)
+                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn).distinctRoot().build();
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("findByUrn not implemented");
+        // Find
+        List<DatasetVersion> result = findByCondition(condition);
 
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.DATASET_NOT_FOUND, urn);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset with urn " + urn);
+        }
+
+        return result.get(0);
     }
 
-    public DatasetVersion retrieveLastVersion(Long itemSchemeId) {
+    @Override
+    public DatasetVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException {
+        // Prepare criteria
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().id()).eq(statisticalResourceId)
+                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().isLastVersion()).eq(Boolean.TRUE).distinctRoot().build();
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveLastVersion not implemented");
+        // Find
+        List<DatasetVersion> result = findByCondition(conditions);
 
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.DATASET_LAST_VERSION_NOT_FOUND, statisticalResourceId);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one last version found for dataset with id " + statisticalResourceId);
+        }
+
+        return result.get(0);
     }
 
-    public DatasetVersion findByVersion(Long itemSchemeId, String versionLogic) {
+    @Override
+    public DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException {
+        // Prepare criteria
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().id()).eq(statisticalResourceId)
+                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic()).eq(versionLogic).distinctRoot().build();
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("findByVersion not implemented");
+        // Find
+        List<DatasetVersion> result = findByCondition(conditions);
 
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, statisticalResourceId, versionLogic);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset with id " + statisticalResourceId + " and versionLogic " + versionLogic + " found");
+        }
+        return result.get(0);
     }
+
 }

@@ -1,5 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -27,6 +32,20 @@ public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         Query entity = StatisticalResourcesDoMocks.mockQuery();
         QueryDto dto = queryDo2DtoMapper.queryDoToDto(entity);
         StatisticalResourcesAsserts.assertEqualsQuery(entity, dto);
+    }
+
+    @Test
+    public void testQueryDoListToDtoList() {
+        List<Query> queries = new ArrayList<Query>();
+        queries.add(StatisticalResourcesDoMocks.mockQuery());
+        queries.add(StatisticalResourcesDoMocks.mockQuery());
+        
+        List<QueryDto> queriesDto = queryDo2DtoMapper.queryDoListToDtoList(queries);
+        
+        assertEquals(queries.size(), queriesDto.size());
+        for (int i = 0; i < queries.size(); i++) {
+            StatisticalResourcesAsserts.assertEqualsQuery(queries.get(i), queriesDto.get(i));
+        }
     }
 
 }

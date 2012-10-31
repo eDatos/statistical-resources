@@ -25,7 +25,7 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
     protected DatasourceRepository datasourceRepository;
 
     @Test
-    public void testFindByUrn() throws Exception {
+    public void testRetrieveByUrn() throws Exception {
         // TODO Auto-generated method stub
         fail("testFindByUrn not implemented");
     }

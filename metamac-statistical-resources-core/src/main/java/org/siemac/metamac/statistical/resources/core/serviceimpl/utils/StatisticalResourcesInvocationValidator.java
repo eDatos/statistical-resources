@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
 public class StatisticalResourcesInvocationValidator {
@@ -58,7 +59,30 @@ public class StatisticalResourcesInvocationValidator {
         checkQuery(query, exceptions);
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkCreateDatasource(String datasetUrn, Datasource datasource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        ValidationUtils.checkParameterRequired(datasetUrn, ServiceExceptionParameters.DATASET_URN, exceptions);
+        checkDatasource(datasource, exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+        
+    }
 
+    private static void checkDatasource(Datasource datasource, List<MetamacExceptionItem> exceptions) {
+        ValidationUtils.checkParameterRequired(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
+        
+        if (datasource == null) {
+            return;
+        }
+        
+        ValidationUtils.checkMetadataRequired(datasource.getDatasetVersion(), ServiceExceptionParameters.DATASOURCE_DATASET_VERSION, exceptions);
+        
+        BaseInvocationValidator.checkIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), exceptions);
+    }
 
     private static void checkQuery(Query query, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(query, ServiceExceptionParameters.QUERY, exceptions);
@@ -68,4 +92,5 @@ public class StatisticalResourcesInvocationValidator {
         // Common metadata of query
         BaseInvocationValidator.checkNameableStatisticalResource(query.getNameableStatisticalResource(), exceptions);
     }
+
 }

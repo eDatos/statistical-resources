@@ -50,11 +50,12 @@ Application PublicationsStatisticalResources {
 //				save;
 //				delete;
 				findById;
+				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
-				@PublicationVersion findByUrn(String urn);
-				@PublicationVersion retrieveLastVersion(Long itemSchemeId);
-				@PublicationVersion findByVersion(Long itemSchemeId, String versionLogic);
+				@PublicationVersion retrieveByUrn(String urn) throws MetamacException;
+				@PublicationVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
+				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 			}
 		}
 	}

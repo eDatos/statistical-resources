@@ -25,9 +25,9 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     protected PublicationVersionRepository publicationVersionRepository;
 
     @Test
-    public void testFindByUrn() throws Exception {
+    public void testRetrieveByUrn() throws Exception {
         // TODO Auto-generated method stub
-        fail("testFindByUrn not implemented");
+        fail("testRetrieveLastVersion not implemented");
     }
 
     @Test
@@ -37,7 +37,7 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     }
 
     @Test
-    public void testFindByVersion() throws Exception {
+    public void testRetrieveByVersion() throws Exception {
         // TODO Auto-generated method stub
         fail("testFindByVersion not implemented");
     }

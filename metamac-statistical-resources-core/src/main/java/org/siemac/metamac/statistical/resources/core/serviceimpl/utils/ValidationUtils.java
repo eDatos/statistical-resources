@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.serviceimpl.utils;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -24,20 +25,6 @@ public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.
     }
 
     /**
-     * Check InternationalString is valid
-     */
-    public static void checkMetadataOptionalIsValid(InternationalString parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
-        if (parameter == null) {
-            return;
-        }
-        
-        // if it is not null, it must be complete
-        if (isEmpty(parameter)) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
-        }
-    }
-    
-    /**
      * Check for a required metadata and add an exception for a failed validation
      * 
      * @param parameter
@@ -49,21 +36,63 @@ public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         }
     }
-    
+
     /**
      * Check InternationalString is valid
      */
-    public static void checkMetadataOptionalIsValid(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+    public static void checkMetadataOptionalIsValid(InternationalString parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (parameter == null) {
             return;
         }
-        
+
         // if it is not null, it must be complete
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
         }
     }
-    
+
+    /**
+     * Check ExternalItem is valid
+     */
+    public static void checkMetadataOptionalIsValid(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (parameter == null) {
+            return;
+        }
+
+        // if it is not null, it must be complete
+        if (isEmpty(parameter)) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
+        }
+    }
+
+    /**
+     * Check if a collection metadata is valid
+     */
+
+    @SuppressWarnings("rawtypes")
+    public static void checkListMetadataOptionalIsValid(Collection parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+
+        if (parameter == null) {
+            return;
+        }
+
+        int exceptionSize = exceptions.size();
+
+        for (Object item : parameter) {
+            if (InternationalString.class.isInstance(parameter)) {
+                checkMetadataOptionalIsValid((InternationalString) item, parameterName, exceptions);
+            } else if (ExternalItem.class.isInstance(parameter)) {
+                checkMetadataOptionalIsValid((ExternalItem) item, parameterName, exceptions);
+            } else {
+                checkMetadataOptionalIsValid(item, parameterName, exceptions);
+            }
+
+            // With one incorrect item is enough
+            if (exceptions.size() > exceptionSize) {
+                return;
+            }
+        }
+    }
 
     /**
      * Check if an InternationalString is empty

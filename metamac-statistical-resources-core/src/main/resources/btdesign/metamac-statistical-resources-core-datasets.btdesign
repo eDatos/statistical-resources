@@ -16,6 +16,12 @@ Application DatasetsStatisticalResources {
 			> @DatasetRepository
 			> @DatasetVersionRepository
 
+			// Datasources
+			@Datasource createDatasource(String datasetUrn, @Datasource datasource) throws MetamacException;
+	    	@Datasource updateDatasource(@Datasource datasource) throws MetamacException;
+	    	@Datasource retrieveDatasourceByUrn(String urn) throws MetamacException;
+	    	deleteDatasource(String urn) throws MetamacException;
+	    	List<@Datasource> retrieveDatasourcesByDataset(String datasetUrn, String datasetVersionNumber) throws MetamacException;
 		}  
 
 
@@ -30,12 +36,19 @@ Application DatasetsStatisticalResources {
 
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
+			// Relations
+            "Dataset version"
+			- @DatasetVersion datasetVersion cascade="none" fetch="lazy" nullable databaseColumn="DATASET_VERSION_FK" <-> datasources;
+			
 			Repository DatasourceRepository {
+				save;
+				delete;
 				findAll;
 				findById;
+				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
-				@Datasource findByUrn(String urn);
+				@Datasource retrieveByUrn(String urn) throws MetamacException ;
 			}
 		}
 		
@@ -60,16 +73,20 @@ Application DatasetsStatisticalResources {
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 
+			// Relations
 			"Parent"
 			- @Dataset dataset not nullable cascade="none" databaseColumn="DATASET_FK" <-> versions;
+			"Data sources"
+			- Bag<@Datasource> datasources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 			
 			Repository DatasetVersionRepository {
-//				save;
-//				delete;
+				save;
+				delete;
+				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
-				@DatasetVersion findByUrn(String urn); 
-				@DatasetVersion retrieveLastVersion(Long itemSchemeId);
-				@DatasetVersion findByVersion(Long itemSchemeId, String versionLogic);
+				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  
+				@DatasetVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
+				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 			}
 		}
 	}

@@ -27,7 +27,7 @@ Application FacadeStatisticalResources {
             "Update a query"
             @QueryDto updateQuery(QueryDto queryDto) throws MetamacException;
             "Find queries by criteria"
-    		PagedResult<@QueryDto> findQueriesByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+    		 MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
 		}  
 	}
 }

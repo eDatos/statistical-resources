@@ -11,6 +11,7 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
 
     // IDENTIFIABLE_STATISTICAL_RESOURCE
     public static final String IDENTIFIABLE_RESOURCE                       = "identifiableStatisticalResource";
+    public static final String IDENTIFIABLE_RESOURCE_URN                   = IDENTIFIABLE_RESOURCE + ".urn";
     public static final String IDENTIFIABLE_RESOURCE_CODE                  = IDENTIFIABLE_RESOURCE + ".code";
 
     // NAMEABLE_STATISTICAL_RESOURCE
@@ -23,22 +24,29 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     public static final String VERSIONABLE_RESOURCE_VERSION_LOGIC          = VERSIONABLE_RESOURCE + ".versionLogic";
     public static final String VERSIONABLE_RESOURCE_VERSION_DATE           = VERSIONABLE_RESOURCE + ".versionDate";
     public static final String VERSIONABLE_RESOURCE_VERSION_RATIONALE_TYPE = VERSIONABLE_RESOURCE + ".versionRationaleType";
+    public static final String VERSIONABLE_RESOURCE_VERSION_RATIONALE      = VERSIONABLE_RESOURCE + ".versionRationale";
 
     // LIFE_CYCLE_STATISTICAL_RESOURCE
     public static final String LIFE_CYCLE_RESOURCE                         = "lifeCycleStatisticalResource";
     public static final String LIFE_CYCLE_RESOURCE_PROC_STATUS             = LIFE_CYCLE_RESOURCE + ".procStatus";
+    public static final String LIFE_CYCLE_RESOURCE_CREATOR                 = LIFE_CYCLE_RESOURCE + ".creator";
+    public static final String LIFE_CYCLE_RESOURCE_CONTRIBUTOR             = LIFE_CYCLE_RESOURCE + ".contributor";
+    public static final String LIFE_CYCLE_RESOURCE_PUBLISHER               = LIFE_CYCLE_RESOURCE + ".publisher";
+    public static final String LIFE_CYCLE_RESOURCE_MEDIATOR                = LIFE_CYCLE_RESOURCE + ".mediator";
 
     // SIEMAC_MEADATA_STATISTICAL_RESOURCE
     public static final String SIEMAC_METADATA_RESOURCE                    = "siemacMetadataStatisticalResource";
 
     // DATASET
     public static final String DATASET                                     = "dataset";
+    public static final String DATASET_URN                                 = DATASET + ".urn";
     public static final String DATASET_TITLE                               = DATASET + ".title";
     public static final String DATASET_OPERATION                           = DATASET + ".operation";
 
     // DATASOURCE
     public static final String DATASOURCE                                  = "datasource";
     public static final String DATASOURCE_DATASET                          = DATASOURCE + ".dataset";
+    public static final String DATASOURCE_DATASET_VERSION                  = DATASOURCE + ".datasetVersion";
 
     // COLLECTIONS
     public static final String COLLECTION                                  = "collection";

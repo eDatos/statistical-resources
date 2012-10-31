@@ -34,6 +34,7 @@ public class BaseInvocationValidator {
         }
 
         ValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
+        ValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getUrn(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_URN, exceptions);
 
         checkStatisticalResource(identifiableStatisticalResource, exceptions);
     }
@@ -49,6 +50,7 @@ public class BaseInvocationValidator {
         }
         
         ValidationUtils.checkMetadataRequired(nameableStatisticalResource.getTitle(),ServiceExceptionParameters.NAMEABLE_RESOURCE_TITLE, exceptions);
+        ValidationUtils.checkMetadataOptionalIsValid(nameableStatisticalResource.getDescription(),ServiceExceptionParameters.NAMEABLE_RESOURCE_DESCRIPTION, exceptions);
         
         checkIdentifiableStatisticalResource(nameableStatisticalResource, exceptions);
     }
@@ -72,6 +74,9 @@ public class BaseInvocationValidator {
 //            ValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getValidFrom(), ServiceExceptionParameters.MAINTAINABLE_ARTEFACT_VALID_FROM, exceptions);
 //            ValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getValidTo(), ServiceExceptionParameters.MAINTAINABLE_ARTEFACT_VALID_TO, exceptions);
         }
+        
+        ValidationUtils.checkMetadataOptionalIsValid(versionableStatisticalResource.getVersionRationale(),ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_RATIONALE, exceptions);
+        
         checkNameableStatisticalResource(versionableStatisticalResource, exceptions);
     }
 
@@ -85,6 +90,10 @@ public class BaseInvocationValidator {
         }
         // TODO: Comprobar si añadir algo mas
         ValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
+        ValidationUtils.checkMetadataOptionalIsValid(lifeCycleStatisticalResource.getCreator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CREATOR, exceptions);
+        ValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getContributor(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CONTRIBUTOR, exceptions);
+        ValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getPublisher(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PUBLISHER, exceptions);
+        ValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getMediator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_MEDIATOR, exceptions);
         
         checkVersionableStatisticalResource(lifeCycleStatisticalResource, exceptions);
     }

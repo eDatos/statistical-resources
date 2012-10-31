@@ -28,7 +28,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         StatisticalResourcesInvocationValidator.checkRetrieveQueryByUrn(urn, null);
 
         // Retrieve
-        Query query = getQueryRepository().findByUrn(urn);
+        Query query = getQueryRepository().retrieveByUrn(urn);
         return query;
     }
 
