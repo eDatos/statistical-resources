@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
@@ -30,15 +32,14 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   CONCEPT_MOCK               = "ConceptMock";
     private static final String   CODELIST_MOCK              = "CodelistMock";
 
-    private static final String   URI_MOCK_PREFIX                   = "lorem/ipsum/dolor/sit/amet/";
-    private static final String   URN_MOCK_PREFIX                   = "urn:lorem.ipsum.dolor.infomodel.package.Resource=";
+    private static final String   URI_MOCK_PREFIX            = "lorem/ipsum/dolor/sit/amet/";
+    private static final String   URN_MOCK_PREFIX            = "urn:lorem.ipsum.dolor.infomodel.package.Resource=";
 
-    
     // DATASET
     public static Dataset mockDataset() {
         return mockDataset(true);
     }
-    
+
     private static Dataset mockDataset(boolean withVersion) {
         Dataset ds = new Dataset();
         ds.getUuid();
@@ -48,19 +49,19 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         }
         return ds;
     }
-    
-    //DATASET VERSION
+
+    // DATASET VERSION
     public static DatasetVersion mockDatasetVersion() {
         return mockDatasetVersion(null);
     }
-    
+
     public static DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = new DatasetVersion();
-        
+
         datasetVersion.getUuid();
         datasetVersion.setVersion(Long.valueOf(0));
-        
-        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET,StatisticalResourceFormatEnum.DS));
+
+        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET, StatisticalResourceFormatEnum.DS));
         if (dataset != null) {
             datasetVersion.setDataset(dataset);
         } else {
@@ -68,13 +69,11 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
             datasetVersion.setDataset(ds);
             ds.addVersion(datasetVersion);
         }
-        
+
         return datasetVersion;
     }
-    
 
-
-    // QUERY 
+    // QUERY
     public static Query mockQuery() {
         Query query = new Query();
         query.getUuid();
@@ -82,17 +81,16 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         query.setNameableStatisticalResource(mockNameableStatisticalResorce());
         return query;
     }
-    
-    
+
     private static SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum type, StatisticalResourceFormatEnum format) {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
-        
+
         resource.setType(type);
         resource.setFormat(format);
         mockLifeCycleStatisticalResource(resource);
         return resource;
     }
-    
+
     private static void mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
         mockVersionableStatisticalResource(resource);
         resource.setCreator(mockAgencyExternalItem());
@@ -100,10 +98,10 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.addMediator(mockAgencyExternalItem());
         resource.addPublisher(mockAgencyExternalItem());
     }
-    
+
     private static void mockVersionableStatisticalResource(VersionableStatisticalResource resource) {
         mockNameableStatisticalResorce(resource);
-        
+
         resource.setVersionDate(new DateTime());
         resource.setVersionLogic("01.000");
     }
@@ -113,7 +111,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         mockNameableStatisticalResorce(nameableResource);
         return nameableResource;
     }
-    
+
     private static void mockNameableStatisticalResorce(NameableStatisticalResource nameableResource) {
         nameableResource.setTitle(mockInternationalString());
         nameableResource.setDescription(mockInternationalString());
@@ -156,6 +154,35 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         internationalString.addText(en);
         internationalString.setVersion(Long.valueOf(0));
         return internationalString;
+    }
+    
+    /**
+     * Mock an InternationalString with one locale
+     */
+    public static InternationalString mockInternationalString(String locale, String label) {
+        InternationalString target = new InternationalString();
+        LocalisedString localisedString = new LocalisedString();
+        localisedString.setLocale(locale);
+        localisedString.setLabel(label);
+        target.addText(localisedString);
+        return target;
+    }
+
+    /**
+     * Mock an InternationalString with two locales
+     */
+    public static InternationalString mockInternationalString(String locale01, String label01, String locale02, String label02) {
+        InternationalString target = new InternationalString();
+        LocalisedString localisedString01 = new LocalisedString();
+        localisedString01.setLocale(locale01);
+        localisedString01.setLabel(label01);
+        target.addText(localisedString01);
+
+        LocalisedString localisedString02 = new LocalisedString();
+        localisedString02.setLocale(locale02);
+        localisedString02.setLabel(label02);
+        target.addText(localisedString02);
+        return target;
     }
 
     // -----------------------------------------------------------------
@@ -218,7 +245,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     private static String getUriMock() {
         return URI_MOCK_PREFIX + mockString(5);
     }
-    
+
     private static String getUrnMock() {
         return URN_MOCK_PREFIX + mockString(10);
     }
