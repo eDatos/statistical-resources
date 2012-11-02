@@ -1,38 +1,15 @@
 <dataset>
-<!--     <TB_STATISTICAL_RESOURCES ID="1" -->
-<!--         UUID="uuid01" -->
-<!--         CREATED_DATE_TZ="Europe/London" -->
-<!--         CREATED_DATE="2011-01-01 01:02:03:00" -->
-<!--         CREATED_BY="user1" -->
-<!--         LAST_UPDATED_TZ="Europe/London" -->
-<!--         LAST_UPDATED="2011-01-22 01:02:03:00" -->
-<!--         LAST_UPDATED_BY="user2" -->
-<!--         VERSION="0" -->
-<!--         OPERATION_FK="[null]" -->
-<!--         STATISTICAL_RESOURCE_TYPE="NAMEABLE_STATISTICAL_RESOURCE" -->
-<!--         CODE="QUERY01" -->
-<!--         URI="http://api.istac.org/statisticalResources/queries/urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1" -->
-<!--         URN="urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1" -->
-<!--         TITLE_FK="[null]" -->
-<!--         DESCRIPTION_FK="[null]" -->
-<!--         VERSION_LOGIC="[null]" -->
-<!--         VERSION_DATE_TZ="[null]" -->
-<!--         NEXT_VERSION_DATE="[null]" -->
-<!--         IS_LAST_VERSION="[null]" -->
-<!--         REPLACED_BY="[null]" -->
-<!--         REPLACE_TO="[null]" -->
-<!--         VERSION_RATIONALE_FK="[null]" -->
-<!--         VERSION_RATIONALE_TYPE="[null]" -->
-<!--         VR_CREATOR="[null]" -->
-<!--         VR_CONTRIBUTOR="[null]" -->
-<!--         VR_SUBMITTED="[null]" -->
-<!--         VR_ACCEPTED="[null]" -->
-<!--         VR_ISSUED="[null]" -->
-<!--         VR_OUT_OF_PRINT="[null]" -->
-<!--         CREATOR_FK="[null]" -->
-<!--         PROC_STATUS="[null]" -->
-<!--         TYPE="[null]" -->
-<!--         FORMAT="[null]" -->
-<!--         /> -->
-
+    <TB_STATISTICAL_RESOURCES ID="1"
+        UUID="uuid01"
+        URN="urn01"
+        VERSION="5"
+        STATISTICAL_RESOURCE_TYPE="NameableStatisticalResource"
+        />
+        
+    <TB_QUERIES
+        ID="2"
+        UUID="UUID2"
+        VERSION="5"
+        STATISTICAL_RESOURCE_FK="1"
+    />
 </dataset>

@@ -5,7 +5,13 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,11 +29,16 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
 
     @Autowired
     protected DatasetVersionRepository datasetVersionRepository;
+    
+    @Autowired
+    protected DatasetVersionMockFactory datasetVersionMockFactory;
 
     @Test
+    @MetamacMock(DatasetVersionMockFactory.DatasetVersionBasic01)
     public void testRetrieveByUrn() throws Exception {
-        // TODO Auto-generated method stub
-        fail("testFindByUrn not implemented");
+        DatasetVersion expected = datasetVersionMockFactory.getMock(DatasetVersionMockFactory.DatasetVersionBasic01);
+        DatasetVersion actual = datasetVersionRepository.retrieveByUrn(expected.getSiemacMetadataStatisticalResource().getUrn());
+        StatisticalResourcesAsserts.assertEqualsDatasetVersion(expected, actual);
     }
 
     @Test

@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
@@ -31,6 +33,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Autowired
     protected QueryRepository queryRepository;
+    
+    @Autowired
+    protected QueryMockFactory queryMockFactory;
 
     @Test
     public void testRetrieveQueryByUrn() throws Exception {

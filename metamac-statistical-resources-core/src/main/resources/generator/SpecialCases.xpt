@@ -73,7 +73,6 @@ NOT NULL«ENDIF»,
 «AROUND templates::db::OracleDDL::createSequence FOR Application»
 «ENDAROUND»
 
-
 «REM»Generete tests for non generated repository methods «ENDREM»
 «AROUND templates::repository::Repository::repository FOR Repository»
 	«targetDef.proceed() -»
@@ -93,4 +92,14 @@ NOT NULL«ENDIF»,
 		    «ENDIF»
 		«ENDIF»
 	«ENDIF»
+«ENDAROUND»
+ 
+
+
+«AROUND templates::domain::DomainObject::domainObjectHook FOR DomainObject»
+	«EXPAND generatorcommon::DbUnitMocksCases::generateXmlSerialize»
+«ENDAROUND»
+
+«AROUND templates::db::DbUnit::dbunitTestDataContent FOR Application»
+	«EXPAND generatorcommon::DbUnitMocksCases::dbunitTestDataContent»
 «ENDAROUND»
