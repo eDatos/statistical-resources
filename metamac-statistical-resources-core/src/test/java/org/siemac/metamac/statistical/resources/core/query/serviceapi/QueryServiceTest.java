@@ -156,11 +156,13 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
+    @MetamacMock({QueryMockFactory.QueryBasicOrdered01, QueryMockFactory.QueryBasicOrdered02, QueryMockFactory.QueryBasicOrdered03})
     public void testRetrieveQueries() throws Exception {
-       
+        List<Query> expected = queryMockFactory.getMocks(QueryMockFactory.QueryBasicOrdered01, QueryMockFactory.QueryBasicOrdered02, QueryMockFactory.QueryBasicOrdered03);
         
-
-        fail("not implemented");
+        List<Query> actual = queryService.retrieveQueries(getServiceContextWithoutPrincipal());
+        
+        StatisticalResourcesAsserts.assertEqualsQueryCollection(expected, actual);
     }
     
 

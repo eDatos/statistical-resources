@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -35,6 +36,20 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
     
     public static void assertEqualsQuery(Query expected, Query actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+    }
+    
+    public static void assertEqualsQueryCollection(Collection<Query> expected, Collection<Query> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(),actual.size());
+            for (Query q : expected) {
+                if (!actual.contains(q)) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
     }
     
     public static void assertEqualsQuery(Query entity, QueryDto dto) {
