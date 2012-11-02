@@ -49,8 +49,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Test
-    public void testRetrieveDatasourcesByDataset() throws Exception {
-        fail("not implemented");        
+    public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
+        fail("not implemented");     
+        
     }
     
 }

@@ -17,24 +17,24 @@ public class BaseInvocationValidator {
     // STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
     public static void checkStatisticalResource(StatisticalResource statisticalResource, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
         if (statisticalResource == null) {
             return;
         }
-        ValidationUtils.checkMetadataRequired(statisticalResource.getOperation(), ServiceExceptionParameters.STATISTICAL_RESOURCE_OPERATION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getOperation(), ServiceExceptionParameters.STATISTICAL_RESOURCE_OPERATION, exceptions);
     }
 
     // ------------------------------------------------------------------------------------
     // IDENTIFIABLE STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
     public static void checkIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
         if (identifiableStatisticalResource == null) {
             return;
         }
 
-        ValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
-        ValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getUrn(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getUrn(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_URN, exceptions);
 
         checkStatisticalResource(identifiableStatisticalResource, exceptions);
     }
@@ -44,13 +44,13 @@ public class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     public static void checkNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
         if (nameableStatisticalResource == null) {
             return;
         }
         
-        ValidationUtils.checkMetadataRequired(nameableStatisticalResource.getTitle(),ServiceExceptionParameters.NAMEABLE_RESOURCE_TITLE, exceptions);
-        ValidationUtils.checkMetadataOptionalIsValid(nameableStatisticalResource.getDescription(),ServiceExceptionParameters.NAMEABLE_RESOURCE_DESCRIPTION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource.getTitle(),ServiceExceptionParameters.NAMEABLE_RESOURCE_TITLE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(nameableStatisticalResource.getDescription(),ServiceExceptionParameters.NAMEABLE_RESOURCE_DESCRIPTION, exceptions);
         
         checkIdentifiableStatisticalResource(nameableStatisticalResource, exceptions);
     }
@@ -60,22 +60,22 @@ public class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
     
     public static void checkVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
         if (versionableStatisticalResource == null) {
             return;
         }
         if (versionableStatisticalResource.getId() != null) {
-            ValidationUtils.checkMetadataRequired(versionableStatisticalResource.getVersionLogic(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_LOGIC, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource.getVersionLogic(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_LOGIC, exceptions);
          // TODO: hay que añadir algo mas?
         } else {
             // metadata must be empty when the entity is created
-            ValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getVersionLogic(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_LOGIC, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getVersionLogic(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_LOGIC, exceptions);
          // TODO: hay que añadir algo mas?
-//            ValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getValidFrom(), ServiceExceptionParameters.MAINTAINABLE_ARTEFACT_VALID_FROM, exceptions);
-//            ValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getValidTo(), ServiceExceptionParameters.MAINTAINABLE_ARTEFACT_VALID_TO, exceptions);
+//            StatisticalResourcesValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getValidFrom(), ServiceExceptionParameters.MAINTAINABLE_ARTEFACT_VALID_FROM, exceptions);
+//            StatisticalResourcesValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getValidTo(), ServiceExceptionParameters.MAINTAINABLE_ARTEFACT_VALID_TO, exceptions);
         }
         
-        ValidationUtils.checkMetadataOptionalIsValid(versionableStatisticalResource.getVersionRationale(),ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_RATIONALE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(versionableStatisticalResource.getVersionRationale(),ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_RATIONALE, exceptions);
         
         checkNameableStatisticalResource(versionableStatisticalResource, exceptions);
     }
@@ -84,16 +84,16 @@ public class BaseInvocationValidator {
     // LIFE CYCLE STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
     public static void checkLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
         if (lifeCycleStatisticalResource == null) {
             return;
         }
         // TODO: Comprobar si añadir algo mas
-        ValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
-        ValidationUtils.checkMetadataOptionalIsValid(lifeCycleStatisticalResource.getCreator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CREATOR, exceptions);
-        ValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getContributor(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CONTRIBUTOR, exceptions);
-        ValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getPublisher(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PUBLISHER, exceptions);
-        ValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getMediator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_MEDIATOR, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(lifeCycleStatisticalResource.getCreator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CREATOR, exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getContributor(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CONTRIBUTOR, exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getPublisher(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PUBLISHER, exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getMediator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_MEDIATOR, exceptions);
         
         checkVersionableStatisticalResource(lifeCycleStatisticalResource, exceptions);
     }
@@ -102,7 +102,7 @@ public class BaseInvocationValidator {
     // SIEMAC METADATA STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
     public static void checkSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
         if (siemacMetadataStatisticalResource == null) {
             return;
         }

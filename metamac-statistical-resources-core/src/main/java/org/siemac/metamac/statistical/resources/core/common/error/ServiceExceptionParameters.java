@@ -40,11 +40,14 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     // DATASET
     public static final String DATASET                                     = "dataset";
     public static final String DATASET_URN                                 = DATASET + ".urn";
+    public static final String DATASET_VERSION_NUMBER                      = DATASET + ".versionNumber";
     public static final String DATASET_TITLE                               = DATASET + ".title";
     public static final String DATASET_OPERATION                           = DATASET + ".operation";
 
     // DATASOURCE
     public static final String DATASOURCE                                  = "datasource";
+    public static final String DATASOURCE_ID                               = DATASOURCE + ".id";
+    public static final String DATASOURCE_URN                              = DATASOURCE + ".urn";
     public static final String DATASOURCE_DATASET                          = DATASOURCE + ".dataset";
     public static final String DATASOURCE_DATASET_VERSION                  = DATASOURCE + ".datasetVersion";
 
@@ -53,7 +56,7 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     public static final String COLLECTION_TITLE                            = COLLECTION + ".title";
     public static final String COLLECTION_OPERATION                        = COLLECTION + ".operation";
 
-    // LIFECYCLE
+    // PROC STATUS
     public static final String PROC_STATUS_DRAFT                           = StatisticalResourceProcStatusEnum.DRAFT.name();
     public static final String PROC_STATUS_PRODUCTION_VALIDATION           = StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.name();
     public static final String PROC_STATUS_DIFFUSION_VALIDATION            = StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.name();
@@ -66,5 +69,4 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
 
     // QUERY
     public static final String QUERY                                       = "query";
-
 }

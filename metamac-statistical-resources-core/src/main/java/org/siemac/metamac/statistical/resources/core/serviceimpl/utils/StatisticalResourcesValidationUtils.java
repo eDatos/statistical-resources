@@ -8,11 +8,12 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
-public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils {
+public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
-     * Check for a required metadata and add an exception for a failed validation
+     * Check for a required metadata and add an exception for a failed validation.
      * 
      * @param parameter
      * @param parameterName
@@ -25,7 +26,7 @@ public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.
     }
 
     /**
-     * Check for a required metadata and add an exception for a failed validation
+     * Check for a required metadata and add an exception for a failed validation.
      * 
      * @param parameter
      * @param parameterName
@@ -66,7 +67,10 @@ public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.
     }
 
     /**
-     * Check if a collection metadata is valid
+     * Check if a collection metadata is valid.
+     * @param parameter
+     * @param parameterName
+     * @param exceptions
      */
 
     @SuppressWarnings("rawtypes")
@@ -95,7 +99,7 @@ public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.
     }
 
     /**
-     * Check if an InternationalString is empty
+     * Check if an InternationalString is empty.
      */
     private static Boolean isEmpty(InternationalString parameter) {
         if (parameter == null) {
@@ -113,7 +117,9 @@ public class ValidationUtils extends org.siemac.metamac.core.common.serviceimpl.
     }
 
     /**
-     * Check if an ExternalItem is empty
+     * Check if an ExternalItem is empty.
+     * @param parameter
+     * @return
      */
     private static Boolean isEmpty(ExternalItem parameter) {
         if (parameter == null) {
