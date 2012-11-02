@@ -14,6 +14,7 @@ Application BaseStatisticalResources {
 			inheritanceType=SINGLE_TABLE
 			discriminatorType=STRING
 			discriminatorColumn="STATISTICAL_RESOURCE_TYPE"
+			discriminatorLength="255"
 
 			- @ExternalItem operation nullable cascade="all" databaseColumn="OPERATION_FK";
 
@@ -26,6 +27,7 @@ Application BaseStatisticalResources {
 
 		Entity IdentifiableStatisticalResource extends @StatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
+			discriminatorValue="IDENTIFIABLE_RESOURCE"
 			
 			String code nullable;
 			String uri nullable;
@@ -34,6 +36,7 @@ Application BaseStatisticalResources {
 
 		Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
+			discriminatorValue="NAMEABLE_RESOURCE"
 			
 			- @InternationalString title nullable cascade="all" databaseColumn="TITLE_FK";
 			- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
@@ -41,6 +44,7 @@ Application BaseStatisticalResources {
 
 		Entity VersionableStatisticalResource extends @NameableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
+			discriminatorValue="VERSIONABLE_RESOURCE"
 			
 			String versionLogic nullable;
 			DateTimeTZ versionDate nullable;
@@ -58,6 +62,7 @@ Application BaseStatisticalResources {
 
 		Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
+			discriminatorValue="LIFE_CYCLE_RESOURCE"
 			
 			- @StatisticalResourceProcStatusEnum procStatus nullable;
 
@@ -76,6 +81,7 @@ Application BaseStatisticalResources {
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
+			discriminatorValue="SIEMAC_RESOURCE"
 			
 			- @StatisticalResourceTypeEnum type nullable;
 			- @StatisticalResourceFormatEnum format nullable;
