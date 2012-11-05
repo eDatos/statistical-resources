@@ -9,23 +9,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetMockFactory extends MockFactory<Dataset> {
-    
-    public static final String DatasetBasic01                = "DatasetBasic01";
 
-    
-    private static Map<String,Dataset> mocks;
-    
+    public static final String          DATASET_BASIC_01_NAME = "DATASET_BASIC_01";
+    public static final Dataset         DATASET_BASIC_01      = StatisticalResourcesDoMocks.mockDataset();
+
+    private static Map<String, Dataset> mocks;
+
     static {
         mocks = new HashMap<String, Dataset>();
-        mocks.put(DatasetBasic01, StatisticalResourcesDoMocks.mockDataset());
-        
+        registerMocks(DatasetMockFactory.class, Dataset.class, mocks);
     }
 
     @Override
     public Dataset getMock(String id) {
         return mocks.get(id);
     }
-    
 
 }
-

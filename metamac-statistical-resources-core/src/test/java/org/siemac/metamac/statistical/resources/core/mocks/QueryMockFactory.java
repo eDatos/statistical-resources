@@ -1,8 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -11,34 +9,24 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class QueryMockFactory extends MockFactory<Query> {
-    
-    public static final String QueryBasic01                = "QueryBasic01";
-    
-    public static final String QueryBasicOrdered01                = "QueryBasicOrdered01"; 
-    public static final String QueryBasicOrdered02                = "QueryBasicOrdered02"; 
-    public static final String QueryBasicOrdered03                = "QueryBasicOrdered03"; 
-    
-    private static Map<String,Query> mocks;
-    
+
+    public static final String        QUERY_BASIC_01_NAME         = "QUERY_BASIC_01";
+    public static final Query         QUERY_BASIC_01              = StatisticalResourcesDoMocks.mockQuery();
+
+    public static final String        QUERY_BASIC_ORDERED_01_NAME = "QUERY_BASIC_ORDERED_01";
+    public static final Query         QUERY_BASIC_ORDERED_01      = mockWithCode("a");
+
+    public static final String        QUERY_BASIC_ORDERED_02_NAME = "QUERY_BASIC_ORDERED_02";
+    public static final Query         QUERY_BASIC_ORDERED_02      = mockWithCode("b");
+
+    public static final String        QUERY_BASIC_ORDERED_03_NAME = "QUERY_BASIC_ORDERED_03";
+    public static final Query         QUERY_BASIC_ORDERED_03      = mockWithCode("c");
+
+    private static Map<String, Query> mocks;
+
     static {
         mocks = new HashMap<String, Query>();
-        mocks.put(QueryBasic01, StatisticalResourcesDoMocks.mockQuery());
-        
-        
-        {
-            Query q = StatisticalResourcesDoMocks.mockQuery();
-            q.getNameableStatisticalResource().setCode("a"+q.getNameableStatisticalResource().getCode());
-            mocks.put(QueryBasicOrdered01, q);
-            
-            q = StatisticalResourcesDoMocks.mockQuery();
-            q.getNameableStatisticalResource().setCode("b"+q.getNameableStatisticalResource().getCode());
-            mocks.put(QueryBasicOrdered02, q);
-            
-            q = StatisticalResourcesDoMocks.mockQuery();
-            q.getNameableStatisticalResource().setCode("c"+q.getNameableStatisticalResource().getCode());
-            mocks.put(QueryBasicOrdered03, q);
-        }
-        
+        registerMocks(QueryMockFactory.class, Query.class, mocks);
     }
 
     @Override
@@ -51,7 +39,11 @@ public class QueryMockFactory extends MockFactory<Query> {
         query.setNameableStatisticalResource(null);
         return query;
     }
-    
+
+    private static Query mockWithCode(String code) {
+        Query q = StatisticalResourcesDoMocks.mockQuery();
+        q.getNameableStatisticalResource().setCode(code);
+        return q;
+    }
 
 }
-

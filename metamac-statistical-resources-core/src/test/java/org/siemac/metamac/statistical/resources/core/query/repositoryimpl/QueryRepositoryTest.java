@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.*;
+import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +12,6 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
@@ -25,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements QueryRepositoryTestBase {
 
@@ -39,11 +40,12 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
     protected QueryMockFactory queryMockFactory;
     
     @Test
-    @MetamacMock(QueryMockFactory.QueryBasic01)
+    @MetamacMock(QUERY_BASIC_01_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query expected = queryMockFactory.getMock(QueryMockFactory.QueryBasic01);
-        Query actual = queryRepository.retrieveByUrn(expected.getNameableStatisticalResource().getUrn());
-        StatisticalResourcesAsserts.assertEqualsQuery(expected, actual);
+        Query actual = queryRepository.retrieveByUrn(QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
+        StatisticalResourcesAsserts.assertEqualsQuery(QUERY_BASIC_01, actual);
+        ;
+        queryRepository.save(queryMockFactory.getMock(QueryMockFactory.QUERY_BASIC_ORDERED_02_NAME));
     }
 
     @Test

@@ -32,9 +32,9 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     protected DatasetVersionMockFactory datasetVersionMockFactory;
 
     @Test
-    @MetamacMock(DatasetVersionMockFactory.DatasetVersionBasic01)
+    @MetamacMock(DatasetVersionMockFactory.DATASET_VERSION_BASIC_01_NAME)
     public void testRetrieveByUrn() throws Exception {
-        DatasetVersion expected = datasetVersionMockFactory.getMock(DatasetVersionMockFactory.DatasetVersionBasic01);
+        DatasetVersion expected = datasetVersionMockFactory.getMock(DatasetVersionMockFactory.DATASET_VERSION_BASIC_01_NAME);
         DatasetVersion actual = datasetVersionRepository.retrieveByUrn(expected.getSiemacMetadataStatisticalResource().getUrn());
         StatisticalResourcesAsserts.assertEqualsDatasetVersion(expected, actual);
     }
