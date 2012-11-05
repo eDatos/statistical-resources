@@ -1,11 +1,18 @@
 package org.siemac.metamac.statistical.resources.core.dbunit;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.configuration.Configuration;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;
@@ -14,6 +21,7 @@ import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -22,6 +30,8 @@ public class DBUnitOracleFacade implements DBUnitFacade {
     
     @Autowired
     DataSource dataSource;
+    
+    private List<String> sequences;
 
     public void setUpDatabase(File xmlDataFile) throws Exception {
         // Setup database tester
@@ -41,18 +51,11 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             dataSetReplacement.addReplacementObject("[NULL]", null);
             dataSetReplacement.addReplacementObject("[null]", null);
             dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
-
-            // DbUnit inserts and updates rows in the order they are found in your dataset. You must therefore order your tables and rows appropriately in your datasets to prevent foreign keys
-            // constraint violation.
-            // Since version 2.0, the DatabaseSequenceFilter can now be used to automatically determine the tables order using foreign/exported keys information.
-            // NOTE: the test performance is considerably affected when using the DatabaseSequenceFilter strategy
-            /*ITableFilter filter = new SequenceTableFilter(getTableNames().toArray(new String[getTableNames().size()]));
-            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);*/
             
             IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
 
             // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
-            //initializeDatabase(dbUnitConnection);
+            initializeDatabase(dbUnitConnection);
 
             databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
             databaseTester.setTearDownOperation(DatabaseOperation.NONE);
@@ -79,9 +82,6 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             // Create dataset
             IDataSet dataset = (new FlatXmlDataSetBuilder()).build(xmlDataFile);
 
-            // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
-            //initializeDatabase(dbUnitConnection);
-
             databaseTester.setSetUpOperation(DatabaseOperation.DELETE_ALL);
             databaseTester.setTearDownOperation(DatabaseOperation.NONE);
             databaseTester.setDataSet(dataset);
@@ -91,17 +91,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         }
     }
     
-    /*private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
-        // Remove tables content
-        List<String> tablesNamesToRemoveContent = new ArrayList<String>();
-        tablesNamesToRemoveContent.addAll(getTableNames());
-        Collections.reverse(tablesNamesToRemoveContent);
-        if (tablesNamesToRemoveContent != null) {
-            for (String tableNameToRemove : tablesNamesToRemoveContent) {
-                dbUnitConnection.getConnection().prepareStatement("DELETE FROM " + tableNameToRemove).execute();
-            }
-        }
-
+    private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
         // Restart sequences
         List<String> sequences = getSequencesToRestart();
         if (sequences != null) {
@@ -109,7 +99,47 @@ public class DBUnitOracleFacade implements DBUnitFacade {
                 restartSequence(dbUnitConnection, sequence);
             }
         }
-    }*/
+    }
+    
+    /**
+     * Start the id sequence from a high value to avoid conflicts with test
+     * data. You can define the sequence name with {@link #getSequenceName}.
+     */
+    public static void restartSequence(IDatabaseConnection connection, String sequenceName) throws SQLException {
+        if (sequenceName == null) {
+            return;
+        }
+        Connection conn = null;
+        java.sql.Statement stmt = null;
+        try {
+            conn = connection.getConnection();
+            stmt = conn.createStatement();
+            stmt.execute("DROP SEQUENCE " + sequenceName);
+            stmt.execute("CREATE SEQUENCE " + sequenceName + " START WITH 10000000");
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ignore) {
+                }
+            }
+        }
+    }
+    
+    protected List<String> getSequencesToRestart() {
+        if (sequences == null) {
+            try {
+                URL url = this.getClass().getResource("/dbunit/oracle.properties");
+                Properties prop = new Properties();
+                prop.load(new FileInputStream(url.getFile()));
+                String sequencesStr = prop.getProperty("sequences");
+                sequences = Arrays.asList(sequencesStr.split(","));
+            } catch (Exception e) {
+                throw new IllegalStateException("Error loading properties which all sequences are specified",e);
+            }
+        }
+        return sequences;
+    }
     
     /**
      * DatasourceTester with support for Oracle data types.

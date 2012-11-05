@@ -67,10 +67,16 @@ NOT NULL«ENDIF»,
 
 «REM»HibernateSeuence is not needed in this project «ENDREM»
 «AROUND templates::db::OracleDDL::dropSequence FOR Application»
+ 	«FOREACH getDomainObjectsInCreateOrder(true).select(d | !isInheritanceTypeSingleTable(getRootExtends(d.extends)) && d.getHint('idSequence') != null) AS domainObject»
+drop sequence SEQ_«domainObject.getHint('idSequence')»;
+ 	«ENDFOREACH»
 «ENDAROUND»
 
 «REM»HibernateSeuence is not needed in this project «ENDREM»
 «AROUND templates::db::OracleDDL::createSequence FOR Application»
+ 	«FOREACH getDomainObjectsInCreateOrder(true).select(d | !isInheritanceTypeSingleTable(getRootExtends(d.extends)) && d.getHint('idSequence') != null) AS domainObject»
+CREATE sequence SEQ_«domainObject.getHint('idSequence')»;
+ 	«ENDFOREACH»
 «ENDAROUND»
 
 «REM»Generete tests for non generated repository methods «ENDREM»
@@ -94,12 +100,15 @@ NOT NULL«ENDIF»,
 	«ENDIF»
 «ENDAROUND»
  
-
-
 «AROUND templates::domain::DomainObject::domainObjectHook FOR DomainObject»
 	«EXPAND generatorcommon::DbUnitMocksCases::generateXmlSerialize»
 «ENDAROUND»
 
 «AROUND templates::db::DbUnit::dbunitTestDataContent FOR Application»
 	«EXPAND generatorcommon::DbUnitMocksCases::dbunitTestDataContent»
+«ENDAROUND»
+
+«AROUND templates::Root::Root FOR Application»
+	«targetDef.proceed() -»
+	«EXPAND generatorcommon::DbUnitMocksCases::dbUnitFacade»
 «ENDAROUND»
