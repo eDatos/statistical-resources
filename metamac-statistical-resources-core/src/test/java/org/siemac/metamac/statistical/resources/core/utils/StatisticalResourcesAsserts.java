@@ -52,6 +52,30 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
         }
     }
     
+    public static void assertEqualsQueryDoAndDtoCollection(Collection<Query> expected, Collection<QueryDto> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(),actual.size());
+            for (Query expectedItem : expected) {
+                boolean match = false;
+                for (QueryDto actualItem : actual) {
+                    try {
+                        assertEqualsQuery(expectedItem, actualItem);
+                        match = true;
+                    } catch (AssertionError e) {
+                        continue;
+                    }
+                }
+                
+                if (!match) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
+    }
+    
     public static void assertEqualsQuery(Query entity, QueryDto dto) {
         assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto);
     }

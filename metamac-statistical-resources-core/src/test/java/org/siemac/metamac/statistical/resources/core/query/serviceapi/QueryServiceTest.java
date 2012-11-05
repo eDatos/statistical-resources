@@ -68,7 +68,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Test
     @MetamacMock({QUERY_BASIC_ORDERED_01_NAME, QUERY_BASIC_ORDERED_02_NAME, QUERY_BASIC_ORDERED_03_NAME})
-    public void testFindQueryByCondition() throws Exception {
+    public void testFindQueriesByCondition() throws Exception {
         // Find all
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).orderBy(QueryProperties.nameableStatisticalResource().code()).build();
@@ -158,11 +158,5 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         List<Query> actual = queryService.retrieveQueries(getServiceContextWithoutPrincipal());
         
         StatisticalResourcesAsserts.assertEqualsQueryCollection(expected, actual);
-    }
-    
-
-    @Test
-    public void testFindQueriesByCondition() throws Exception {
-        fail("not implemented");
     }
 }

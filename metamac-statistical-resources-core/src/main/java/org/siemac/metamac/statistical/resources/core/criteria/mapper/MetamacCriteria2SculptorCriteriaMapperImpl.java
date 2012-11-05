@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCr
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.criteria.enums.QueryCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
@@ -23,7 +24,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
      **************************************************************************/
 
     public MetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<Query>(Query.class, null, QueryCriteriaPropertyEnum.class, new QueryCriteriaCallback());
+        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<Query>(Query.class, QueryCriteriaOrderEnum.class, QueryCriteriaPropertyEnum.class, new QueryCriteriaCallback());
     }
 
     /**************************************************************************
@@ -65,7 +66,17 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
 
         @Override
         public Property<Query> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            return null; // put default order
+            QueryCriteriaOrderEnum propertyOrderEnum = QueryCriteriaOrderEnum.fromValue(order.getPropertyName());
+            switch (propertyOrderEnum) {
+                case CODE:
+                    return QueryProperties.nameableStatisticalResource().code();
+                case URN:
+                    return QueryProperties.nameableStatisticalResource().urn();
+                case TITLE:
+                    return QueryProperties.nameableStatisticalResource().title().texts().label();
+                default:
+                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
+            }
         }
 
         @Override
