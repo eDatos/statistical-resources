@@ -2,8 +2,6 @@ package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
