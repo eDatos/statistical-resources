@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.junit.Assert.fail;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,11 +33,10 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     protected DatasetVersionMockFactory datasetVersionMockFactory;
 
     @Test
-    @MetamacMock(DatasetVersionMockFactory.DATASET_VERSION_BASIC_01_NAME)
+    @MetamacMock(DATASET_VERSION_BASIC_01_NAME)
     public void testRetrieveByUrn() throws Exception {
-        DatasetVersion expected = datasetVersionMockFactory.getMock(DatasetVersionMockFactory.DATASET_VERSION_BASIC_01_NAME);
-        DatasetVersion actual = datasetVersionRepository.retrieveByUrn(expected.getSiemacMetadataStatisticalResource().getUrn());
-        StatisticalResourcesAsserts.assertEqualsDatasetVersion(expected, actual);
+        DatasetVersion actual = datasetVersionRepository.retrieveByUrn(DATASET_VERSION_BASIC_01.getSiemacMetadataStatisticalResource().getUrn());
+        StatisticalResourcesAsserts.assertEqualsDatasetVersion(DATASET_VERSION_BASIC_01, actual);
     }
 
     @Test
