@@ -49,7 +49,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
     private Query queryDtoToDo(QueryDto source, Query target) throws MetamacException {
         if (target == null) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.NAMEABLE_RESOURCE).build();
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.QUERY).build();
         }
 
         // Hierarchy
