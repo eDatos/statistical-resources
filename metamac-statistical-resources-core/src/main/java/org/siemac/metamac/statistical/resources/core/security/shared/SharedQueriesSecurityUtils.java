@@ -32,13 +32,4 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
-    
-    // ------------------------------------------------------------------------
-    // DATASOURCES
-    // ------------------------------------------------------------------------
-
-    public static boolean canCreateDatasource(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyResourcesRole(metamacPrincipal);
-    }
 }
