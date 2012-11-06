@@ -26,11 +26,11 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.criteria.enums.QueryCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
+import org.siemac.metamac.statistical.resources.core.query.criteria.QueryCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.query.criteria.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
