@@ -270,7 +270,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    public void testRetrieveDatasource() throws Exception {
+    public void testRetrieveDatasourceByUrn() throws Exception {
         fail("not implemented");
     }
 

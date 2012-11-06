@@ -13,4 +13,24 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
+    public static boolean canUpdateDatasource(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveDatasourceByUrn(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canDeleteDatasource(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveDatasourcesByDatasetVersion(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
 }

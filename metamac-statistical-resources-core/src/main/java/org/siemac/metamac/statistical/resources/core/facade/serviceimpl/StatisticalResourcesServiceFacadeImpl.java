@@ -32,19 +32,19 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     @Qualifier("queryDo2DtoMapper")
-    private QueryDo2DtoMapper                      queryDo2DtoMapper;
+    private QueryDo2DtoMapper                           queryDo2DtoMapper;
 
     @Autowired
     @Qualifier("queryDto2DoMapper")
-    private QueryDto2DoMapper                      queryDto2DoMapper;
-    
+    private QueryDto2DoMapper                           queryDto2DoMapper;
+
     @Autowired
     @Qualifier("datasetDo2DtoMapper")
-    private DatasetDo2DtoMapper                      datasetDo2DtoMapper;
+    private DatasetDo2DtoMapper                         datasetDo2DtoMapper;
 
     @Autowired
     @Qualifier("datasetDto2DoMapper")
-    private DatasetDto2DoMapper                      datasetDto2DoMapper;
+    private DatasetDto2DoMapper                         datasetDto2DoMapper;
 
     @Autowired
     private QueryMetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
@@ -161,25 +161,55 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasourceDto updateDatasource(ServiceContext ctx, DatasourceDto datasourceDto) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        DatasetsSecurityUtils.canUpdateDatasource(ctx);
+
+        // Transform
+        Datasource datasource = datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
+
+        // Update
+        datasource = getDatasetService().updateDatasource(ctx, datasource);
+
+        // Transform to Dtos
+        datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
+
+        return datasourceDto;
     }
 
     @Override
-    public DatasourceDto retrieveDatasource(ServiceContext ctx, String urn) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+    public DatasourceDto retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canRetrieveDatasourceByUrn(ctx);
+
+        // Retrieve
+        Datasource datasource = getDatasetService().retrieveDatasourceByUrn(ctx, urn);
+
+        // Transform
+        DatasourceDto datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
+
+        return datasourceDto;
     }
 
     @Override
     public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
-        // TODO Auto-generated method stub
+        // Security
+        DatasetsSecurityUtils.canDeleteDatasource(ctx);
 
+        // Delete
+        getDatasetService().deleteDatasource(ctx, urn);
     }
 
     @Override
     public List<DatasourceDto> retrieveDatasourcesByDatasetVersion(ServiceContext ctx, String urnDatasetVersion) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        DatasetsSecurityUtils.canRetrieveDatasourcesByDatasetVersion(ctx);
+
+        // Retrieve
+        List<Datasource> datasources = getDatasetService().retrieveDatasourcesByDatasetVersion(ctx, urnDatasetVersion);
+
+        // Transform
+        List<DatasourceDto> datasourcesDto = datasetDo2DtoMapper.datasourceDoListToDtoList(datasources);
+
+        return datasourcesDto;
     }
 }

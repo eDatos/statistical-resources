@@ -38,7 +38,7 @@ Application FacadeStatisticalResources {
 	    	"Updates metadata of datasource"
 	    	@DatasourceDto updateDatasource(@DatasourceDto datasourceDto) throws MetamacException;
 	    	"Retrieves datasource"
-	    	@DatasourceDto retrieveDatasource(String urn) throws MetamacException;
+	    	@DatasourceDto retrieveDatasourceByUrn(String urn) throws MetamacException;
 	    	"Deletes datasource"
 	    	deleteDatasource(String urn) throws MetamacException;
 	    	"Retrieves all datasources of a dataset version"
