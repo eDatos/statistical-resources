@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.criteria.mapper;
+package org.siemac.metamac.statistical.resources.core.query.criteria.mapper;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCriteria2MetamacCriteriaMapper {
+public class QuerySculptorCriteria2MetamacCriteriaMapperImpl implements QuerySculptorCriteria2MetamacCriteriaMapper {
 
     @Autowired
     private QueryDo2DtoMapper              do2DtoMapper;

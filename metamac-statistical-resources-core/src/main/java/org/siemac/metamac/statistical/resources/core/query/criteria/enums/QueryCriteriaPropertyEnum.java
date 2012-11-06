@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.query.criteria;
+package org.siemac.metamac.statistical.resources.core.query.criteria.enums;
 
 public enum QueryCriteriaPropertyEnum {
 

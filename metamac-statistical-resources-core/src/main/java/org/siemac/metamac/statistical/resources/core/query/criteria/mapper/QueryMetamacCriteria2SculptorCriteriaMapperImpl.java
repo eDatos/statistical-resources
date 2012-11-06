@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.criteria.mapper;
+package org.siemac.metamac.statistical.resources.core.query.criteria.mapper;
 
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
@@ -8,14 +8,14 @@ import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCr
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.query.criteria.QueryCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.query.criteria.QueryCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriteria2SculptorCriteriaMapper {
+public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMetamacCriteria2SculptorCriteriaMapper {
 
     private MetamacCriteria2SculptorCriteria<Query> queryCriteriaMapper = null;
 
@@ -23,7 +23,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
      * Constructor
      **************************************************************************/
 
-    public MetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
+    public QueryMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
         queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<Query>(Query.class, QueryCriteriaOrderEnum.class, QueryCriteriaPropertyEnum.class, new QueryCriteriaCallback());
     }
 
