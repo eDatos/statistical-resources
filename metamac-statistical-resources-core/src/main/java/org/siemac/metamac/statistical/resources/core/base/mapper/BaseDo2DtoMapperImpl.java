@@ -11,8 +11,12 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 
 @org.springframework.stereotype.Component("baseDo2DtoMapper")
 public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
@@ -33,7 +37,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
     }
 
     @Override
-    public void identifiableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) {
+    public void identifiableStatisticalResourceDoToDto(IdentifiableStatisticalResource source, IdentifiableStatisticalResourceDto target) {
         if (source == null) {
             return;
         }
@@ -45,7 +49,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
     }
 
     @Override
-    public void statisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) {
+    public void statisticalResourceDoToDto(StatisticalResource source, StatisticalResourceDto target) {
         if (source == null) {
             return;
         }
