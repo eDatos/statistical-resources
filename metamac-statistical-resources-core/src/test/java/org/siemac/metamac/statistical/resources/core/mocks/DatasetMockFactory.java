@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatasetMockFactory extends MockFactory<Dataset> {
 
-    public static final String          DATASET_BASIC_01_NAME = "DATASET_BASIC_01";
-    public static final Dataset         DATASET_BASIC_01      = StatisticalResourcesDoMocks.mockDataset();
+    public static final String          DATASET_BASIC_01_NAME    = "DATASET_BASIC_01";
+    public static final Dataset         DATASET_BASIC_01         = StatisticalResourcesDoMocks.mockDataset();
 
     private static Map<String, Dataset> mocks;
 

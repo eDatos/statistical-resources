@@ -110,5 +110,5 @@ CREATE sequence SEQ_«domainObject.getHint('idSequence')»;
 
 «AROUND templates::Root::Root FOR Application»
 	«targetDef.proceed() -»
-	«EXPAND generatorcommon::DbUnitMocksCases::dbUnitFacade»
+	«EXPAND generatorcommon::DbUnitMocksCases::dbUnitProperties»
 «ENDAROUND»

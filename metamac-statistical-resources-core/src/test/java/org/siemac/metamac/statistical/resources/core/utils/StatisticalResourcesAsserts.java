@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalReso
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
@@ -33,15 +34,14 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
     // QUERY
     // -----------------------------------------------------------------
 
-    
     public static void assertEqualsQuery(Query expected, Query actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
     }
-    
+
     public static void assertEqualsQueryCollection(Collection<Query> expected, Collection<Query> actual) {
         if (expected != null) {
             assertNotNull(actual);
-            assertEquals(expected.size(),actual.size());
+            assertEquals(expected.size(), actual.size());
             for (Query q : expected) {
                 if (!actual.contains(q)) {
                     fail("Found elements in expected collection, which are not contained in actual collection");
@@ -51,11 +51,11 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
             assertNull(actual);
         }
     }
-    
+
     public static void assertEqualsQueryDoAndDtoCollection(Collection<Query> expected, Collection<QueryDto> actual) {
         if (expected != null) {
             assertNotNull(actual);
-            assertEquals(expected.size(),actual.size());
+            assertEquals(expected.size(), actual.size());
             for (Query expectedItem : expected) {
                 boolean match = false;
                 for (QueryDto actualItem : actual) {
@@ -66,7 +66,7 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
                         continue;
                     }
                 }
-                
+
                 if (!match) {
                     fail("Found elements in expected collection, which are not contained in actual collection");
                 }
@@ -75,46 +75,53 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
             assertNull(actual);
         }
     }
-    
+
     public static void assertEqualsQuery(Query entity, QueryDto dto) {
         assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto);
     }
-    
+
     // -----------------------------------------------------------------
     // DATASET
     // -----------------------------------------------------------------
-    
+
     public static void assertEqualsDataset(Dataset expected, Dataset actual) {
         assertEquals(expected.getUuid(), actual.getUuid());
-        
+
         if (expected.getVersions() != null) {
             assertNotNull(actual.getVersions());
             assertEquals(expected.getVersions().size(), actual.getVersions().size());
             for (int i = 0; i < expected.getVersions().size(); i++) {
-                assertEqualsDatasetVersion(expected.getVersions().get(i),actual.getVersions().get(i),true);
+                assertEqualsDatasetVersion(expected.getVersions().get(i), actual.getVersions().get(i), true);
             }
         } else {
-            assertEquals(null,actual);
+            assertEquals(null, actual);
         }
     }
 
-    
     // -----------------------------------------------------------------
     // DATASET VERSION
     // -----------------------------------------------------------------
-    
+
     public static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual) {
         assertEqualsDatasetVersion(expected, actual, false);
     }
-    
+
     private static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual, boolean datasetChecked) {
         assertEquals(expected.getUuid(), actual.getUuid());
-        
+
         assertEqualsSiemacMetadataStatisticalResource(expected.getSiemacMetadataStatisticalResource(), actual.getSiemacMetadataStatisticalResource());
-        
+
         if (!datasetChecked) {
             assertEqualsDataset(expected.getDataset(), actual.getDataset());
         }
+    }
+
+    // -----------------------------------------------------------------
+    // DATASOURCE
+    // -----------------------------------------------------------------
+    public static void assertEqualsDatasource(Datasource expected, Datasource actual) {
+        assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
+        assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
     }
 
     // -----------------------------------------------------------------
@@ -124,10 +131,10 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
     private static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource expected, SiemacMetadataStatisticalResource actual) {
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getFormat(), actual.getFormat());
-        
-        assertEqualsLifeCycleStatisticalResource(expected,actual);
+
+        assertEqualsLifeCycleStatisticalResource(expected, actual);
     }
-    
+
     private static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource expected, LifeCycleStatisticalResource actual) {
         assertEquals(expected.getVersionResponsibilityCreator(), actual.getVersionResponsibilityCreator());
         assertEquals(expected.getVersionResponsibilityContributor(), actual.getVersionResponsibilityContributor());
@@ -136,33 +143,33 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
         assertEquals(expected.getVersionResponsibilityIssued(), actual.getVersionResponsibilityIssued());
         assertEquals(expected.getVersionResponsibilityOutOfPrint(), actual.getVersionResponsibilityOutOfPrint());
         assertEquals(expected.getProcStatus(), actual.getProcStatus());
-        
+
         assertEqualsExternalItem(expected.getCreator(), actual.getCreator());
-        
+
         assertCollectionStructure(expected.getContributor(), actual.getContributor());
         if (expected.getContributor() != null) {
             for (int i = 0; i < expected.getContributor().size(); i++) {
                 assertEqualsExternalItem(expected.getContributor().get(i), actual.getContributor().get(i));
             }
         }
-        
+
         assertCollectionStructure(expected.getPublisher(), actual.getPublisher());
         if (expected.getPublisher() != null) {
             for (int i = 0; i < expected.getPublisher().size(); i++) {
                 assertEqualsExternalItem(expected.getPublisher().get(i), actual.getPublisher().get(i));
             }
         }
-        
+
         assertCollectionStructure(expected.getMediator(), actual.getMediator());
         if (expected.getMediator() != null) {
             for (int i = 0; i < expected.getMediator().size(); i++) {
                 assertEqualsExternalItem(expected.getMediator().get(i), actual.getMediator().get(i));
             }
         }
-        
-        assertEqualsVersionableStatisticalResource(expected,actual);
+
+        assertEqualsVersionableStatisticalResource(expected, actual);
     }
-    
+
     private static void assertEqualsVersionableStatisticalResource(VersionableStatisticalResource expected, VersionableStatisticalResource actual) {
         assertEquals(expected.getVersionLogic(), actual.getVersionLogic());
         assertEquals(expected.getNextVersionDate(), actual.getNextVersionDate());
@@ -170,17 +177,16 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
         assertEquals(expected.getReplacedBy(), actual.getReplacedBy());
         assertEquals(expected.getReplaceTo(), actual.getReplaceTo());
         assertEquals(expected.getVersionRationaleType(), actual.getVersionRationaleType());
-        
+
         assertEqualsInternationalString(expected.getVersionRationale(), actual.getVersionRationale());
-        
+
         assertEqualsNameableStatisticalResource(expected, actual);
     }
-    
 
     private static void assertEqualsNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
-        
+
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
 
@@ -194,27 +200,27 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
 
     private static void assertEqualsStatisticalResource(StatisticalResource expected, StatisticalResource actual) {
         assertEqualsExternalItem(expected.getOperation(), actual.getOperation());
-        
+
     }
-    
+
     private static void assertEqualsNameableStatisticalResource(NameableStatisticalResource entity, NameableStatisticalResourceDto dto) {
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
         assertEqualsInternationalString(entity.getDescription(), dto.getDescription());
-        
+
         assertEqualsIdentifiableResource(entity, dto);
     }
-    
+
     private static void assertEqualsIdentifiableResource(IdentifiableStatisticalResource entity, IdentifiableStatisticalResourceDto dto) {
         assertEquals(entity.getCode(), dto.getCode());
         assertEquals(entity.getUri(), dto.getUri());
         assertEquals(entity.getUrn(), dto.getUrn());
-        
+
         assertEqualsStatisticalResouce(entity, dto);
     }
-    
+
     private static void assertEqualsStatisticalResouce(StatisticalResource entity, StatisticalResourceDto dto) {
         assertEqualsExternalItem(entity.getOperation(), dto.getOperation());
-        
+
         assertEquals(entity.getCreatedBy(), dto.getCreatedBy());
         assertEqualsDate(entity.getCreatedDate(), dto.getCreatedDate());
         assertEquals(entity.getLastUpdatedBy(), dto.getLastUpdatedBy());
@@ -295,8 +301,7 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
         assertEquals(entity.getManagementAppUrl(), dto.getManagementAppUrl());
     }
-    
-    
+
     // -----------------------------------------------------------------
     // EXTERNAL ITEMS
     // -----------------------------------------------------------------
@@ -308,5 +313,4 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
             assertNull(actual);
         }
     }
-
 }

@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalReso
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -33,7 +34,23 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   URI_MOCK_PREFIX            = "lorem/ipsum/dolor/sit/amet/";
     private static final String   URN_MOCK_PREFIX            = "urn:lorem.ipsum.dolor.infomodel.package.Resource=";
 
+    // -----------------------------------------------------------------
+    // DATASOURCE
+    // -----------------------------------------------------------------
+    public static Datasource mockDatasource() {
+        Datasource datasource = new Datasource();
+        datasource.getUuid();
+        datasource.setVersion(Long.valueOf(0));
+        
+        datasource.setDatasetVersion(mockDatasetVersion());
+        datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
+        
+        return datasource;
+    }
+
+    // -----------------------------------------------------------------
     // DATASET
+    // -----------------------------------------------------------------
     public static Dataset mockDataset() {
         return mockDataset(true);
     }
@@ -48,7 +65,9 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         return ds;
     }
 
+    // -----------------------------------------------------------------
     // DATASET VERSION
+    // -----------------------------------------------------------------
     public static DatasetVersion mockDatasetVersion() {
         return mockDatasetVersion(null);
     }
@@ -71,7 +90,9 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         return datasetVersion;
     }
 
+    // -----------------------------------------------------------------
     // QUERY
+    // -----------------------------------------------------------------
     public static Query mockQuery() {
         Query query = new Query();
         query.getUuid();
@@ -80,28 +101,34 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         return query;
     }
 
+    // -----------------------------------------------------------------
+    // BASE HIERARCHY
+    // -----------------------------------------------------------------
     private static SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum type, StatisticalResourceFormatEnum format) {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
+        mockLifeCycleStatisticalResource(resource);
 
         resource.setType(type);
         resource.setFormat(format);
-        mockLifeCycleStatisticalResource(resource);
         return resource;
     }
 
-    private static void mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
+    private static LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
         mockVersionableStatisticalResource(resource);
+        
         resource.setCreator(mockAgencyExternalItem());
         resource.addContributor(mockAgencyExternalItem());
         resource.addMediator(mockAgencyExternalItem());
         resource.addPublisher(mockAgencyExternalItem());
+        return resource;
     }
 
-    private static void mockVersionableStatisticalResource(VersionableStatisticalResource resource) {
+    private static VersionableStatisticalResource mockVersionableStatisticalResource(VersionableStatisticalResource resource) {
         mockNameableStatisticalResorce(resource);
 
         resource.setVersionDate(new DateTime());
         resource.setVersionLogic("01.000");
+        return resource;
     }
 
     private static NameableStatisticalResource mockNameableStatisticalResorce() {
@@ -110,21 +137,24 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         return nameableResource;
     }
 
-    private static void mockNameableStatisticalResorce(NameableStatisticalResource nameableResource) {
+    private static NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource nameableResource) {
+        mockIdentifiableStatisticalResource(nameableResource);
+        
         nameableResource.setTitle(mockInternationalString());
         nameableResource.setDescription(mockInternationalString());
-        mockIdentifiableStatisticalResource(nameableResource);
+        return nameableResource;
     }
 
-    private static void mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
+    private static IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
         resource.setCode("resource-" + mockString(10));
         resource.setUri(getUriMock());
         resource.setUrn(getUrnMock());
 
         mockStatisticalResource(resource);
+        return resource;
     }
 
-    private static void mockStatisticalResource(StatisticalResource resource) {
+    private static StatisticalResource mockStatisticalResource(StatisticalResource resource) {
         resource.setOperation(mockStatisticalOperationItem());
         resource.getUuid();
         resource.setCreatedBy("user1");
@@ -132,6 +162,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setLastUpdatedBy("user2");
         resource.setLastUpdated(new DateTime());
         resource.setVersion(Long.valueOf(0));
+        return resource;
     }
 
     // -----------------------------------------------------------------
@@ -153,7 +184,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         internationalString.setVersion(Long.valueOf(0));
         return internationalString;
     }
-    
+
     /**
      * Mock an InternationalString with one locale
      */
@@ -247,4 +278,5 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     private static String getUrnMock() {
         return URN_MOCK_PREFIX + mockString(10);
     }
+
 }

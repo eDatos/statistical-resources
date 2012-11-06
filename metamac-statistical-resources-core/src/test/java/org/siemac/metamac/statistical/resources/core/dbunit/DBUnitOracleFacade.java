@@ -47,7 +47,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
-            ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder()).build(xmlDataFile));
+            ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder().setColumnSensing(true)).build(xmlDataFile));
             dataSetReplacement.addReplacementObject("[NULL]", null);
             dataSetReplacement.addReplacementObject("[null]", null);
             dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
