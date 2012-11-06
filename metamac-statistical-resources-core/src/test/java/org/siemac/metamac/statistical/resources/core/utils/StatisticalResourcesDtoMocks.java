@@ -5,10 +5,13 @@ import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
+    private static final String URN_RELATED_RESOURCE_MOCK = "urn:mock";
+    
     private static final String URI_MOCK = "lorem/ipsum/dolor/sit/amet/" + mockString(5);
     private static final String URN_MOCK = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + mockString(10);
 
@@ -22,6 +25,19 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         mockNameableStatisticalResorceDto(queryDto);
 
         return queryDto;
+    }
+
+    // -----------------------------------------------------------------
+    // DATASOURCES
+    // -----------------------------------------------------------------
+
+    public static DatasourceDto mockDatasourceDto() {
+        DatasourceDto datasourceDto = new DatasourceDto();
+        
+        datasourceDto.setDatasetVersionUrn(URN_RELATED_RESOURCE_MOCK);
+        mockIdentifiableStatisticalResourceDto(datasourceDto);
+        
+        return datasourceDto;
     }
 
     // -----------------------------------------------------------------
@@ -46,5 +62,4 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     private static void mockStatisticalResourceDto(StatisticalResourceDto resource) {
         resource.setOperation(mockExternalItemDto(URN_MOCK, TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
     }
-
 }

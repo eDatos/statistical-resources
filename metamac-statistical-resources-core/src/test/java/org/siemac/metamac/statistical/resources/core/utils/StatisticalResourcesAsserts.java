@@ -1,11 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -25,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
@@ -36,6 +38,10 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
 
     public static void assertEqualsQuery(Query expected, Query actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+    }
+    
+    public static void assertEqualsQuery(Query entity, QueryDto dto) {
+        assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto);
     }
 
     public static void assertEqualsQueryCollection(Collection<Query> expected, Collection<Query> actual) {
@@ -74,10 +80,6 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
         } else {
             assertNull(actual);
         }
-    }
-
-    public static void assertEqualsQuery(Query entity, QueryDto dto) {
-        assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto);
     }
 
     // -----------------------------------------------------------------
@@ -122,6 +124,50 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
     public static void assertEqualsDatasource(Datasource expected, Datasource actual) {
         assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
         assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
+    }
+    
+    public static void assertEqualsDatasource(Datasource entity, DatasourceDto dto) {
+        assertEqualsIdentifiableStatisticalResource(entity.getIdentifiableStatisticalResource(), dto);
+        assertEquals(entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dto.getDatasetVersionUrn());
+    }
+    
+    
+    public static void assertEqualsDatasourceCollection(Collection<Datasource> expected, Collection<Datasource> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (Datasource expectedItem : expected) {
+                if (!actual.contains(expectedItem)) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
+    }
+    
+    public static void assertEqualsDatasourceDoAndDtoCollection(List<Datasource> expected, List<DatasourceDto> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (Datasource expectedItem : expected) {
+                boolean match = false;
+                for (DatasourceDto actualItem : actual) {
+                    try {
+                        assertEqualsDatasource(expectedItem, actualItem);
+                        match = true;
+                    } catch (AssertionError e) {
+                        continue;
+                    }
+                }
+
+                if (!match) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
     }
 
     // -----------------------------------------------------------------
@@ -207,10 +253,10 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
         assertEqualsInternationalString(entity.getDescription(), dto.getDescription());
 
-        assertEqualsIdentifiableResource(entity, dto);
+        assertEqualsIdentifiableStatisticalResource(entity, dto);
     }
 
-    private static void assertEqualsIdentifiableResource(IdentifiableStatisticalResource entity, IdentifiableStatisticalResourceDto dto) {
+    private static void assertEqualsIdentifiableStatisticalResource(IdentifiableStatisticalResource entity, IdentifiableStatisticalResourceDto dto) {
         assertEquals(entity.getCode(), dto.getCode());
         assertEquals(entity.getUri(), dto.getUri());
         assertEquals(entity.getUrn(), dto.getUrn());
@@ -303,7 +349,7 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
     }
 
     // -----------------------------------------------------------------
-    // EXTERNAL ITEMS
+    // OTHER
     // -----------------------------------------------------------------
     public static void assertCollectionStructure(Collection expected, Collection actual) {
         if (expected != null) {
@@ -313,4 +359,5 @@ public class StatisticalResourcesAsserts extends MetamacAsserts {
             assertNull(actual);
         }
     }
+
 }

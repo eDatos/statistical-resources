@@ -43,9 +43,7 @@ public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         List<QueryDto> queriesDto = queryDo2DtoMapper.queryDoListToDtoList(queries);
         
         assertEquals(queries.size(), queriesDto.size());
-        for (int i = 0; i < queries.size(); i++) {
-            StatisticalResourcesAsserts.assertEqualsQuery(queries.get(i), queriesDto.get(i));
-        }
+        StatisticalResourcesAsserts.assertEqualsQueryDoAndDtoCollection(queries, queriesDto);
     }
 
 }
