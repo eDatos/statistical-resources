@@ -15,9 +15,13 @@ import javax.sql.DataSource;
 import org.apache.commons.configuration.Configuration;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.filter.ITableFilter;
+import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
@@ -31,7 +35,8 @@ public class DBUnitOracleFacade implements DBUnitFacade {
     @Autowired
     DataSource dataSource;
     
-    private List<String> sequences;
+    private static List<String> sequences;
+    private static List<String> tableNames;
 
     public void setUpDatabase(File xmlDataFile) throws Exception {
         // Setup database tester
@@ -47,12 +52,17 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
-            ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder().setColumnSensing(true)).build(xmlDataFile));
+            FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+            builder.setColumnSensing(false);
+            ReplacementDataSet dataSetReplacement = new ReplacementDataSet(builder.build(xmlDataFile));
             dataSetReplacement.addReplacementObject("[NULL]", null);
             dataSetReplacement.addReplacementObject("[null]", null);
             dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
             
+            /*ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));*/
             IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
+            
 
             // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
             initializeDatabase(dbUnitConnection);
@@ -65,6 +75,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             dbUnitConnection.close();
         }
     }
+
     
     @Override
     public void cleanDatabase(File xmlDataFile) throws Exception {
@@ -126,6 +137,20 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         }
     }
     
+    protected String[] getTableNamesInsertOrder() {
+        if (tableNames == null) {
+            try {
+                URL url = this.getClass().getResource("/dbunit/oracle.properties");
+                Properties prop = new Properties();
+                prop.load(new FileInputStream(url.getFile()));
+                String sequencesStr = prop.getProperty("tables");
+                tableNames = Arrays.asList(sequencesStr.split(","));
+            } catch (Exception e) {
+                throw new IllegalStateException("Error loading properties which all tablenames are specified",e);
+            }
+        }
+        return (String[])tableNames.toArray();
+    }
     protected List<String> getSequencesToRestart() {
         if (sequences == null) {
             try {

@@ -27,6 +27,14 @@ public class EntityMetadata {
         isSingleTable = false;
     }
     
+    public String getTableName() {
+        return tableName;
+    }
+    
+    public Set<String> getAllAttributesAndRelations() {
+        return properties.keySet();
+    }
+    
     public Set<String> getJoinTableReferencesNames() {
         return joinTables.keySet();
     }
@@ -111,10 +119,10 @@ public class EntityMetadata {
         return inverseRelations.get(objName);
     }
     
-    public String getXmlRepresentation() {
+    public String getXmlRepresentation(Set<String> attributes) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<").append(tableName.toUpperCase()).append("\n");
-        for (String propName : properties.keySet()) {
+        for (String propName : attributes) {
             String value = properties.get(propName);
             buffer.append(propName).append("=");
             if (value != null) {
