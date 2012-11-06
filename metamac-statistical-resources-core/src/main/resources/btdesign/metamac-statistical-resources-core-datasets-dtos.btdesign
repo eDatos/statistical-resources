@@ -13,7 +13,8 @@ Application DatasetsStatisticalResourcesDto {
 		
 		// DATASOURCE
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {
-			- @DatasetDto dataset;
+			"Parent"
+			String datasetVersionUrn;
 		}		
 	}
 

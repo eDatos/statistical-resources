@@ -10,10 +10,15 @@ import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.criteria.mapper.MetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.criteria.mapper.SculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
+import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +37,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Autowired
     @Qualifier("queryDto2DoMapper")
     private QueryDto2DoMapper                      queryDto2DoMapper;
+    
+    @Autowired
+    @Qualifier("datasetDo2DtoMapper")
+    private DatasetDo2DtoMapper                      datasetDo2DtoMapper;
+
+    @Autowired
+    @Qualifier("datasetDto2DoMapper")
+    private DatasetDto2DoMapper                      datasetDto2DoMapper;
 
     @Autowired
     private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
@@ -45,7 +58,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     // ------------------------------------------------------------------------
     // QUERIES
     // ------------------------------------------------------------------------
-    
+
+    @Override
     public QueryDto retrieveQueryByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Security
         QueriesSecurityUtils.canRetrieveQueryByUrn(ctx);
@@ -122,5 +136,50 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         MetamacCriteriaResult<QueryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASOURCES
+    // ------------------------------------------------------------------------
+
+    @Override
+    public DatasourceDto createDatasource(ServiceContext ctx, String urnDatasetVersion, DatasourceDto datasourceDto) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canCreateDatasource(ctx);
+
+        // Transform
+        Datasource datasource = datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
+
+        // Create
+        datasource = getDatasetService().createDatasource(ctx, urnDatasetVersion, datasource);
+
+        // Transform to DTO
+        datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
+
+        return datasourceDto;
+    }
+
+    @Override
+    public DatasourceDto updateDatasource(ServiceContext ctx, DatasourceDto datasourceDto) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public DatasourceDto retrieveDatasource(ServiceContext ctx, String urn) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public List<DatasourceDto> retrieveDatasourcesByDatasetVersion(ServiceContext ctx, String urnDatasetVersion) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

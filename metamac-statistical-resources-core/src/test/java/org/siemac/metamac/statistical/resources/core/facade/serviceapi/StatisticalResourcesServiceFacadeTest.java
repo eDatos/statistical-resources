@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_01;
@@ -59,6 +60,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Autowired
     protected QueryMockFactory                  queryMockFactory;
+
+    // ------------------------------------------------------------------------
+    // QUERIES
+    // ------------------------------------------------------------------------
 
     @Test
     @MetamacMock(QUERY_BASIC_01_NAME)
@@ -248,5 +253,34 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             int i = 0;
             assertEquals(QUERY_BASIC_ORDERED_01.getNameableStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASOURCES
+    // ------------------------------------------------------------------------
+
+    @Test
+    public void testCreateDatasource() throws Exception {
+        fail("not implemented");
+    }
+
+    @Test
+    public void testUpdateDatasource() throws Exception {
+        fail("not implemented");
+    }
+
+    @Test
+    public void testRetrieveDatasource() throws Exception {
+        fail("not implemented");
+    }
+
+    @Test
+    public void testDeleteDatasource() throws Exception {
+        fail("not implemented");
+    }
+
+    @Test
+    public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
+        fail("not implemented");
     }
 }

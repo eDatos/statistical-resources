@@ -1,6 +1,8 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btdesign"
 
 Application FacadeStatisticalResources {
 	basePackage=unused
@@ -28,6 +30,19 @@ Application FacadeStatisticalResources {
             @QueryDto updateQuery(QueryDto queryDto) throws MetamacException;
             "Find queries by criteria"
     		 MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
+    		 
+    		 			
+			// DATASOURCES
+			"Creates a datasource"
+	    	@DatasourceDto createDatasource(String urnDatasetVersion, @DatasourceDto datasourceDto) throws MetamacException;
+	    	"Updates metadata of datasource"
+	    	@DatasourceDto updateDatasource(@DatasourceDto datasourceDto) throws MetamacException;
+	    	"Retrieves datasource"
+	    	@DatasourceDto retrieveDatasource(String urn) throws MetamacException;
+	    	"Deletes datasource"
+	    	deleteDatasource(String urn) throws MetamacException;
+	    	"Retrieves all datasources of a dataset version"
+	    	List<@DatasourceDto> retrieveDatasourcesByDatasetVersion(String urnDatasetVersion) throws MetamacException;
 		}  
 	}
 }
