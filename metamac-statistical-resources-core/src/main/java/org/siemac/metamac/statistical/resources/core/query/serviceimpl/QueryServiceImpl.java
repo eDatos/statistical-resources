@@ -8,7 +8,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.serviceimpl.utils.StatisticalResourcesInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesInvocationValidator;
 
 import org.springframework.stereotype.Service;
 

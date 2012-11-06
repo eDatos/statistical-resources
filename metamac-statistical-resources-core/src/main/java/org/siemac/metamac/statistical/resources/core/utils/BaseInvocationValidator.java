@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.serviceimpl.utils;
+package org.siemac.metamac.statistical.resources.core.utils;
 
 import java.util.List;
 

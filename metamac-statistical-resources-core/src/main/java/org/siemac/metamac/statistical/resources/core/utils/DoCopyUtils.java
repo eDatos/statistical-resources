@@ -1,3 +1,4 @@
+package org.siemac.metamac.statistical.resources.core.utils;
 //package org.siemac.metamac.statistical.resources.core.serviceimpl.utils;
 //
 //import static com.arte.statistic.sdmx.srm.core.common.service.utils.DoCopyUtils.copy;
