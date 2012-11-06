@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.common.error;
+package org.siemac.metamac.statistical.resources.core.error;
 
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
