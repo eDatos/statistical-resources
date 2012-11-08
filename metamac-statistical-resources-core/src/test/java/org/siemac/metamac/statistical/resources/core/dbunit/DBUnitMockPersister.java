@@ -116,12 +116,13 @@ public class DBUnitMockPersister extends MockPersisterBase {
 
     private EntityMetadata resolveDependencies(MapIdenticalKey metadataMatching, Object mock) throws Exception {
         
-        fillIdentiyAndAuditMetadata(mock);
         
         if (metadataMatching.hasMock(mock)) {
             return metadataMatching.getEntityMetadataForMock(mock);
         } else {
+            fillIdentiyAndAuditMetadata(mock);
             List<EntityMetadata> metadatas = getEntityMetadataFromObject(mock);
+            
             Long idMock = getNextId();
 
             trySetIdOnMockObject(mock, idMock);
