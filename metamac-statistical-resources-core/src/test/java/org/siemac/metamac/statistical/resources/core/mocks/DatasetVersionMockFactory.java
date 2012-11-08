@@ -39,6 +39,7 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> {
 
     private static DatasetVersion createDatasetVersion04AssociatedWithDataset03AndLastVersion() {
         DatasetVersion datasetVersion = StatisticalResourcesDoMocks.mockDatasetVersion(DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("02.000");
         datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
         return datasetVersion;
     }
