@@ -41,7 +41,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     }
 
     @Test
-    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03_NAME, DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION_NAME})
+    @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLastVersion() throws Exception {
         DatasetVersion actual = datasetVersionRepository.retrieveLastVersion(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS.getId());
         assertEqualsDatasetVersion(DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION, actual);
