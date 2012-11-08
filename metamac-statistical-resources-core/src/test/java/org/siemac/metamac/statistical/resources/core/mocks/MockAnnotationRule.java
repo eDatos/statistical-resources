@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 
 public class MockAnnotationRule implements TestRule {
-    
+
     private static MockPersister mockPersister;
 
     @Override
@@ -28,35 +28,35 @@ public class MockAnnotationRule implements TestRule {
             }
         };
     }
-    
+
     private void loadNeededMocks(MetamacMock annotation) throws Exception {
         getMockPersister().persistMocks(annotation.value());
-//        MockPersisterBase.mockObjects(annotation.value());
-//        //mockQuery();
-//        DBUnitOracleFacade mockGenerator = ApplicationContextProvider.getApplicationContext().getBean(DBUnitOracleFacade.class);
-//        mockGenerator.setUpDatabase(new File(MockAnnotationRule.class.getResource("/dbunit/StatisticalResourcesServiceTest.xml").getFile()));
-   }
-    
+        // MockPersisterBase.mockObjects(annotation.value());
+        // //mockQuery();
+        // DBUnitOracleFacade mockGenerator = ApplicationContextProvider.getApplicationContext().getBean(DBUnitOracleFacade.class);
+        // mockGenerator.setUpDatabase(new File(MockAnnotationRule.class.getResource("/dbunit/StatisticalResourcesServiceTest.xml").getFile()));
+    }
+
     private void mockQuery() {
         NameableStatisticalResource resource = new NameableStatisticalResource();
         System.out.println(resource.getClass().getFields());
         for (Field field : getAllFields(new ArrayList<Field>(), resource.getClass())) {
             if (AbstractDomainObject.class.isAssignableFrom(field.getType())) {
-                System.out.println("Campo "+field.getName()+ " debe serializarse");
+                System.out.println("Campo " + field.getName() + " debe serializarse");
             }
-            
+
         }
     }
-    
+
     private MockPersister getMockPersister() {
         if (mockPersister == null) {
             mockPersister = ApplicationContextProvider.getApplicationContext().getBean(MockPersister.class);
         }
         return mockPersister;
     }
-    
+
     private List<Field> getAllFields(List<Field> fields, Class<?> type) {
-        for (Field field: type.getDeclaredFields()) {
+        for (Field field : type.getDeclaredFields()) {
             fields.add(field);
         }
 
@@ -66,9 +66,9 @@ public class MockAnnotationRule implements TestRule {
 
         return fields;
     }
-    
+
     private QueryMockFactory getQueryMockFactory() {
         return ApplicationContextProvider.getApplicationContext().getBean(QueryMockFactory.class);
     }
-    
+
 }

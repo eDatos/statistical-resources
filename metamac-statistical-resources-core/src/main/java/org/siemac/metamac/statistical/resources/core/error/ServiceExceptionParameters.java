@@ -8,11 +8,19 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     // STATISTICAL_RESOURCE
     public static final String STATISTICAL_RESOURCE                        = "statisticalResource";
     public static final String STATISTICAL_RESOURCE_OPERATION              = STATISTICAL_RESOURCE + ".operation";
+    public static final String STATISTICAL_RESOURCE_ID                     = STATISTICAL_RESOURCE + ".id";
+    public static final String STATISTICAL_RESOURCE_UUID                   = STATISTICAL_RESOURCE + ".uuid";
+    public static final String STATISTICAL_RESOURCE_VERSION                = STATISTICAL_RESOURCE + ".version";
+    public static final String STATISTICAL_RESOURCE_CREATED_DATE           = STATISTICAL_RESOURCE + ".createdDate";
+    public static final String STATISTICAL_RESOURCE_CREATED_BY             = STATISTICAL_RESOURCE + ".createdBy";
+    public static final String STATISTICAL_RESOURCE_LAST_UPDATED           = STATISTICAL_RESOURCE + ".lastUpdated";
+    public static final String STATISTICAL_RESOURCE_LAST_UPDATED_BY        = STATISTICAL_RESOURCE + ".lastUpdatedBy";
 
     // IDENTIFIABLE_STATISTICAL_RESOURCE
     public static final String IDENTIFIABLE_RESOURCE                       = "identifiableStatisticalResource";
     public static final String IDENTIFIABLE_RESOURCE_URN                   = IDENTIFIABLE_RESOURCE + ".urn";
     public static final String IDENTIFIABLE_RESOURCE_CODE                  = IDENTIFIABLE_RESOURCE + ".code";
+    public static final String IDENTIFIABLE_RESOURCE_URI                   = IDENTIFIABLE_RESOURCE + ".uri";
 
     // NAMEABLE_STATISTICAL_RESOURCE
     public static final String NAMEABLE_RESOURCE                           = "nameableStatisticalResource";
@@ -47,6 +55,8 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     // DATASOURCE
     public static final String DATASOURCE                                  = "datasource";
     public static final String DATASOURCE_ID                               = DATASOURCE + ".id";
+    public static final String DATASOURCE_UUID                             = DATASOURCE + ".uuid";
+    public static final String DATASOURCE_VERSION                          = DATASOURCE + ".version";
     public static final String DATASOURCE_URN                              = DATASOURCE + ".urn";
     public static final String DATASOURCE_DATASET                          = DATASOURCE + ".dataset";
     public static final String DATASOURCE_DATASET_VERSION                  = DATASOURCE + ".datasetVersion";
@@ -69,4 +79,7 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
 
     // QUERY
     public static final String QUERY                                       = "query";
+    public static final String QUERY_ID                                    = QUERY + ".id";
+    public static final String QUERY_VERSION                               = QUERY + ".version";
+    public static final String QUERY_UUID                                  = QUERY + ".uuid";
 }

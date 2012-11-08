@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,6 +12,9 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> {
 
     public static final String                 DATASET_VERSION_BASIC_01_NAME = "DATASET_VERSION_BASIC_01";
     public static final DatasetVersion         DATASET_VERSION_BASIC_01      = StatisticalResourcesDoMocks.mockDatasetVersion();
+
+    public static final String                 DATASET_VERSION_BASIC_02_NAME = "DATASET_VERSION_BASIC_02";
+    public static final DatasetVersion         DATASET_VERSION_BASIC_02      = StatisticalResourcesDoMocks.mockDatasetVersion();
 
     private static Map<String, DatasetVersion> mocks;
 

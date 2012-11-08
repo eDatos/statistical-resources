@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryDoAndDtoCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,7 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,21 +30,21 @@ public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     
     @Test
     public void testQueryDo2Dto() {
-        Query entity = StatisticalResourcesDoMocks.mockQuery();
-        QueryDto dto = queryDo2DtoMapper.queryDoToDto(entity);
-        StatisticalResourcesAsserts.assertEqualsQuery(entity, dto);
+        Query expected = StatisticalResourcesDoMocks.mockQuery();
+        QueryDto actual = queryDo2DtoMapper.queryDoToDto(expected);
+        assertEqualsQuery(expected, actual);
     }
 
     @Test
     public void testQueryDoListToDtoList() {
-        List<Query> queries = new ArrayList<Query>();
-        queries.add(StatisticalResourcesDoMocks.mockQuery());
-        queries.add(StatisticalResourcesDoMocks.mockQuery());
+        List<Query> expected = new ArrayList<Query>();
+        expected.add(StatisticalResourcesDoMocks.mockQuery());
+        expected.add(StatisticalResourcesDoMocks.mockQuery());
         
-        List<QueryDto> queriesDto = queryDo2DtoMapper.queryDoListToDtoList(queries);
+        List<QueryDto> actual = queryDo2DtoMapper.queryDoListToDtoList(expected);
         
-        assertEquals(queries.size(), queriesDto.size());
-        StatisticalResourcesAsserts.assertEqualsQueryDoAndDtoCollection(queries, queriesDto);
+        assertEquals(expected.size(), actual.size());
+        assertEqualsQueryDoAndDtoCollection(expected, actual);
     }
 
 }

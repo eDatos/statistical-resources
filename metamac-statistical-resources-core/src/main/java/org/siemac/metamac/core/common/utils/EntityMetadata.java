@@ -90,7 +90,7 @@ public class EntityMetadata {
     public void setId(Long id) {
         setColumnValue("ID", id);
     }
-
+    
     public void setSingleTable(boolean singleTable) {
         isSingleTable = singleTable;
     }

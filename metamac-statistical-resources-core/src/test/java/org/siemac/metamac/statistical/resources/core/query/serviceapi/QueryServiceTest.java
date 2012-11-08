@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.*;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -52,7 +53,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @MetamacMock(QUERY_BASIC_01_NAME)
     public void testRetrieveQueryByUrn() throws MetamacException {
         Query actual = queryService.retrieveQueryByUrn(getServiceContextWithoutPrincipal(), QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
-        StatisticalResourcesAsserts.assertEqualsQuery(QUERY_BASIC_01, actual);
+        assertEqualsQuery(QUERY_BASIC_01, actual);
     }
 
     @Test
@@ -62,7 +63,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            StatisticalResourcesAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.URN}, e.getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.URN}, e.getExceptionItems().get(0));
         }
     }
 
@@ -125,18 +126,19 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Test
     public void testCreateQuery() throws Exception {
-        Query queryPersisted = queryService.createQuery(getServiceContextWithoutPrincipal(), QUERY_BASIC_01);
-        StatisticalResourcesAsserts.assertEqualsQuery(QUERY_BASIC_01, queryPersisted);
+        Query expected = StatisticalResourcesDoMocks.mockQuery();
+        Query actual = queryService.createQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsQuery(expected, actual);
     }
 
     @Test
     public void testCreateQueryErrorNameableResourceRequired() throws Exception {
-        Query query = QueryMockFactory.createQueryWithNameableNull();
+        Query query = StatisticalResourcesDoMocks.mockQueryWithNameableNull();
         try {
             queryService.createQuery(getServiceContextWithoutPrincipal(), query);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            StatisticalResourcesAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.NAMEABLE_RESOURCE}, e.getExceptionItems().get(0));
+            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.NAMEABLE_RESOURCE}, e.getExceptionItems().get(0));
         }
     }
 
@@ -147,7 +149,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         query.getNameableStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
         
         Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
-        StatisticalResourcesAsserts.assertEqualsQuery(query, updatedQuery);
+        assertEqualsQuery(query, updatedQuery);
     }
 
     @Test
@@ -157,6 +159,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         
         List<Query> actual = queryService.retrieveQueries(getServiceContextWithoutPrincipal());
         
-        StatisticalResourcesAsserts.assertEqualsQueryCollection(expected, actual);
+        assertEqualsQueryCollection(expected, actual);
     }
 }

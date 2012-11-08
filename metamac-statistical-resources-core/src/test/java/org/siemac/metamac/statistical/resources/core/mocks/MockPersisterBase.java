@@ -5,22 +5,20 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 
-
 public abstract class MockPersisterBase implements MockPersister {
 
     public final void persistMocks(String... ids) throws Exception {
         List<Object> mocks = locateMocks(ids);
-        
+
         List<Object> orderedMocks = sortMocksBasedOnDependencies(mocks);
 
         persistMocks(orderedMocks);
     }
-    
+
     protected abstract List<Object> sortMocksBasedOnDependencies(List<Object> mocks);
-    
+
     protected abstract void persistMocks(List<Object> mocks) throws Exception;
-    
-    
+
     private List<Object> locateMocks(String... ids) {
         List<Object> mocks = new ArrayList<Object>();
         for (String id : ids) {
@@ -28,12 +26,13 @@ public abstract class MockPersisterBase implements MockPersister {
             if (obj != null) {
                 mocks.add(obj);
             } else {
-                throw new IllegalArgumentException("Mock with id "+id+" was not found");
+                throw new IllegalArgumentException("Mock with id " + id + " was not found");
             }
         }
         return mocks;
     }
-    
+
+    @SuppressWarnings("rawtypes")
     private Object lookupMock(String id) {
         List<MockFactory> factories = getAllFactories();
         Object found = null;
@@ -44,7 +43,8 @@ public abstract class MockPersisterBase implements MockPersister {
         }
         return found;
     }
-    
+
+    @SuppressWarnings("rawtypes")
     private List<MockFactory> getAllFactories() {
         String[] mockFactories = ApplicationContextProvider.getApplicationContext().getBeanNamesForType(MockFactory.class);
         List<MockFactory> beans = new ArrayList<MockFactory>();
@@ -53,6 +53,5 @@ public abstract class MockPersisterBase implements MockPersister {
         }
         return beans;
     }
-    
-}
 
+}

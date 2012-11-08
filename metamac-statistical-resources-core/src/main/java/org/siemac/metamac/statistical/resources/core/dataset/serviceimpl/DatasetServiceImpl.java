@@ -6,7 +6,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.dataset.validators.DatasetServiceInvocationValidator;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,7 +21,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public Datasource createDatasource(ServiceContext ctx, String datasetUrn, Datasource datasource) throws MetamacException {
 
         // Validations
-        StatisticalResourcesInvocationValidator.checkCreateDatasource(datasetUrn, datasource, null);
+        DatasetServiceInvocationValidator.checkCreateDatasource(datasetUrn, datasource, null);
 
         // TODO: Obtener el datasetVerison cuando el servicio correspondiente esté hecho. Eliminar el new.
         DatasetVersion datasetVersion = new DatasetVersion();
@@ -45,7 +45,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public Datasource updateDatasource(ServiceContext ctx, Datasource datasource) throws MetamacException {
 
         // Validation of parameters
-        StatisticalResourcesInvocationValidator.checkUpdateDatasource(datasource, null);
+        DatasetServiceInvocationValidator.checkUpdateDatasource(datasource, null);
 
         // TODO: Comprobar que el estado del dataset asociado es el correcto y otras condiciones necesarias
 
@@ -59,7 +59,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public Datasource retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
 
         // Validation
-        StatisticalResourcesInvocationValidator.checkRetrieveDatasourceByUrn(urn, null);
+        DatasetServiceInvocationValidator.checkRetrieveDatasourceByUrn(urn, null);
 
         // Retrieve
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
@@ -70,7 +70,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
 
         // Validation
-        StatisticalResourcesInvocationValidator.checkDeleteDatasource(urn, null);
+        DatasetServiceInvocationValidator.checkDeleteDatasource(urn, null);
 
         // Retrieve
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
@@ -83,7 +83,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public List<Datasource> retrieveDatasourcesByDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
 
         // Validation
-        StatisticalResourcesInvocationValidator.checkRetrieveDatasourcesByDataset(datasetVersionUrn, null);
+        DatasetServiceInvocationValidator.checkRetrieveDatasourcesByDataset(datasetVersionUrn, null);
 
         // Retrieve
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);

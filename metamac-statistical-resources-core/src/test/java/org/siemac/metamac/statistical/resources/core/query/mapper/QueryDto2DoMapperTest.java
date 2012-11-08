@@ -6,8 +6,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDtoMocks;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.*;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,9 +25,9 @@ public class QueryDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testQueryDtoToDo() throws MetamacException {
-        QueryDto dto = StatisticalResourcesDtoMocks.mockQueryDto();
-        Query entity = queryDto2DoMapper.queryDtoToDo(dto);
-        StatisticalResourcesAsserts.assertEqualsQuery(entity, dto);
+        QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDto();
+        Query actual = queryDto2DoMapper.queryDtoToDo(expected);
+        assertEqualsQuery(expected, actual);
     }
     
 }

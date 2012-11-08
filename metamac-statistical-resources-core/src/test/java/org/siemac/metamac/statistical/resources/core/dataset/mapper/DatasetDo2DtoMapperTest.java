@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,7 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,21 +30,20 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     
     @Test
     public void testDatasourceDo2Dto() {
-        Datasource entity = StatisticalResourcesDoMocks.mockDatasource();
-        DatasourceDto dto = datasetDo2DtoMapper.datasourceDoToDto(entity);
-        StatisticalResourcesAsserts.assertEqualsDatasource(entity, dto);
+        Datasource expected = StatisticalResourcesDoMocks.mockDatasource();
+        DatasourceDto actual = datasetDo2DtoMapper.datasourceDoToDto(expected);
+        assertEqualsDatasource(expected, actual);
     }
 
     @Test
     public void testDatasourceDoListToDtoList() {
-        List<Datasource> datasources = new ArrayList<Datasource>();
-        datasources.add(StatisticalResourcesDoMocks.mockDatasource());
-        datasources.add(StatisticalResourcesDoMocks.mockDatasource());
+        List<Datasource> expected = new ArrayList<Datasource>();
+        expected.add(StatisticalResourcesDoMocks.mockDatasource());
+        expected.add(StatisticalResourcesDoMocks.mockDatasource());
         
-        List<DatasourceDto> datasourcesDto = datasetDo2DtoMapper.datasourceDoListToDtoList(datasources);
+        List<DatasourceDto> actual = datasetDo2DtoMapper.datasourceDoListToDtoList(expected);
         
-        assertEquals(datasources.size(), datasourcesDto.size());
-        StatisticalResourcesAsserts.assertEqualsDatasourceDoAndDtoCollection(datasources, datasourcesDto);
+        assertEquals(expected.size(), actual.size());
+        assertEqualsDatasourceDoAndDtoCollection(expected, actual);
     }
-
 }

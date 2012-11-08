@@ -4,23 +4,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QueryMockFactory extends MockFactory<Query> {
 
     public static final String        QUERY_BASIC_01_NAME         = "QUERY_BASIC_01";
-    public static final Query         QUERY_BASIC_01              = StatisticalResourcesDoMocks.mockQuery();
+    public static final Query         QUERY_BASIC_01              = StatisticalResourcesDoMocks.mockQuery();;
 
     public static final String        QUERY_BASIC_ORDERED_01_NAME = "QUERY_BASIC_ORDERED_01";
-    public static final Query         QUERY_BASIC_ORDERED_01      = mockWithCode("a");
+    public static final Query         QUERY_BASIC_ORDERED_01      = mockPersistedQueryWithCode("a");
 
     public static final String        QUERY_BASIC_ORDERED_02_NAME = "QUERY_BASIC_ORDERED_02";
-    public static final Query         QUERY_BASIC_ORDERED_02      = mockWithCode("b");
+    public static final Query         QUERY_BASIC_ORDERED_02      = mockPersistedQueryWithCode("b");
 
     public static final String        QUERY_BASIC_ORDERED_03_NAME = "QUERY_BASIC_ORDERED_03";
-    public static final Query         QUERY_BASIC_ORDERED_03      = mockWithCode("c");
+    public static final Query         QUERY_BASIC_ORDERED_03      = mockPersistedQueryWithCode("c");
 
     private static Map<String, Query> mocks;
 
@@ -34,16 +34,9 @@ public class QueryMockFactory extends MockFactory<Query> {
         return mocks.get(id);
     }
 
-    public static Query createQueryWithNameableNull() {
+    private static Query mockPersistedQueryWithCode(String code) {
         Query query = StatisticalResourcesDoMocks.mockQuery();
-        query.setNameableStatisticalResource(null);
+        query.getNameableStatisticalResource().setCode(code);
         return query;
     }
-
-    private static Query mockWithCode(String code) {
-        Query q = StatisticalResourcesDoMocks.mockQuery();
-        q.getNameableStatisticalResource().setCode(code);
-        return q;
-    }
-
 }

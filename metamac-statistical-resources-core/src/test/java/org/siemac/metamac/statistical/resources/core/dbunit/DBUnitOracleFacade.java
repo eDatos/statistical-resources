@@ -12,29 +12,23 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.configuration.Configuration;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
-import org.dbunit.dataset.filter.ITableFilter;
-import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 public class DBUnitOracleFacade implements DBUnitFacade {
-    DataSourceDatabaseTester databaseTester = null;
-    
+
+    DataSourceDatabaseTester    databaseTester = null;
+
     @Autowired
-    DataSource dataSource;
-    
+    DataSource                  dataSource;
+
     private static List<String> sequences;
     private static List<String> tableNames;
 
@@ -48,7 +42,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
                 connection.close();
             }
         }
-     // Setup dbUnit connection
+        // Setup dbUnit connection
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
@@ -58,11 +52,12 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             dataSetReplacement.addReplacementObject("[NULL]", null);
             dataSetReplacement.addReplacementObject("[null]", null);
             dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
-            
-            /*ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));*/
+
+            /*
+             * ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+             * IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
+             */
             IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
-            
 
             // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
             initializeDatabase(dbUnitConnection);
@@ -76,7 +71,6 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         }
     }
 
-    
     @Override
     public void cleanDatabase(File xmlDataFile) throws Exception {
         if (databaseTester == null) {
@@ -101,7 +95,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             dbUnitConnection.close();
         }
     }
-    
+
     private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
         // Restart sequences
         List<String> sequences = getSequencesToRestart();
@@ -111,7 +105,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             }
         }
     }
-    
+
     /**
      * Start the id sequence from a high value to avoid conflicts with test
      * data. You can define the sequence name with {@link #getSequenceName}.
@@ -136,7 +130,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             }
         }
     }
-    
+
     protected String[] getTableNamesInsertOrder() {
         if (tableNames == null) {
             try {
@@ -146,11 +140,12 @@ public class DBUnitOracleFacade implements DBUnitFacade {
                 String sequencesStr = prop.getProperty("tables");
                 tableNames = Arrays.asList(sequencesStr.split(","));
             } catch (Exception e) {
-                throw new IllegalStateException("Error loading properties which all tablenames are specified",e);
+                throw new IllegalStateException("Error loading properties which all tablenames are specified", e);
             }
         }
-        return (String[])tableNames.toArray();
+        return (String[]) tableNames.toArray();
     }
+
     protected List<String> getSequencesToRestart() {
         if (sequences == null) {
             try {
@@ -160,12 +155,12 @@ public class DBUnitOracleFacade implements DBUnitFacade {
                 String sequencesStr = prop.getProperty("sequences");
                 sequences = Arrays.asList(sequencesStr.split(","));
             } catch (Exception e) {
-                throw new IllegalStateException("Error loading properties which all sequences are specified",e);
+                throw new IllegalStateException("Error loading properties which all sequences are specified", e);
             }
         }
         return sequences;
     }
-    
+
     /**
      * DatasourceTester with support for Oracle data types.
      */
@@ -181,19 +176,19 @@ public class DBUnitOracleFacade implements DBUnitFacade {
 
             connection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new OracleDataTypeFactory());
 
-            /*connection.getConfig().setProperty(DatabaseConfig.PROPERTY_PRIMARY_KEY_FILTER, new IColumnFilter() {
-
-                Map<String, String> tablePrimaryKeyMap = getTablePrimaryKeys();
-
-                @Override
-                public boolean accept(String tableName, Column column) {
-                    if (tablePrimaryKeyMap != null && tablePrimaryKeyMap.containsKey(tableName)) {
-                        return column.getColumnName().equals(tablePrimaryKeyMap.get(tableName));
-                    } else {
-                        return column.getColumnName().equalsIgnoreCase("id");
-                    }
-                }
-            });*/
+            /*
+             * connection.getConfig().setProperty(DatabaseConfig.PROPERTY_PRIMARY_KEY_FILTER, new IColumnFilter() {
+             * Map<String, String> tablePrimaryKeyMap = getTablePrimaryKeys();
+             * @Override
+             * public boolean accept(String tableName, Column column) {
+             * if (tablePrimaryKeyMap != null && tablePrimaryKeyMap.containsKey(tableName)) {
+             * return column.getColumnName().equals(tablePrimaryKeyMap.get(tableName));
+             * } else {
+             * return column.getColumnName().equalsIgnoreCase("id");
+             * }
+             * }
+             * });
+             */
             return connection;
         }
     }

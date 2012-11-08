@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_BASIC_01;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_BASIC_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_BASIC_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_01;
@@ -12,6 +16,8 @@ import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFacto
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_03;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryDoAndDtoCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +32,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
@@ -33,9 +40,8 @@ import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryC
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDoMocks;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesDtoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -69,7 +75,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock(QUERY_BASIC_01_NAME)
     public void testRetrieveQueryByUrn() throws Exception {
         QueryDto actual = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
-        StatisticalResourcesAsserts.assertEqualsQuery(QUERY_BASIC_01, actual);
+        assertEqualsQuery(QUERY_BASIC_01, actual);
     }
 
     @Test
@@ -79,7 +85,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         List<QueryDto> actual = statisticalResourcesServiceFacade.retrieveQueries(getServiceContextAdministrador());
 
-        StatisticalResourcesAsserts.assertEqualsQueryDoAndDtoCollection(expected, actual);
+        assertEqualsQueryDoAndDtoCollection(expected, actual);
     }
 
     @Test(expected = AssertionError.class)
@@ -89,7 +95,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         List<QueryDto> actual = statisticalResourcesServiceFacade.retrieveQueries(getServiceContextAdministrador());
 
-        StatisticalResourcesAsserts.assertEqualsQueryDoAndDtoCollection(expected, actual);
+        assertEqualsQueryDoAndDtoCollection(expected, actual);
     }
 
     @Test
@@ -107,7 +113,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         QueryDto actualQuery = statisticalResourcesServiceFacade.updateQuery(getServiceContextWithoutPrincipal(), expectedQuery);
         assertNotNull(actualQuery);
-        StatisticalResourcesAsserts.assertEqualsInternationalStringDto(expectedQuery.getTitle(), actualQuery.getTitle());
+        assertEqualsInternationalStringDto(expectedQuery.getTitle(), actualQuery.getTitle());
     }
 
     @Test
@@ -260,13 +266,23 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // ------------------------------------------------------------------------
 
     @Test
+    @MetamacMock({DATASET_VERSION_BASIC_01_NAME, DATASET_VERSION_BASIC_02_NAME})
     public void testCreateDatasource() throws Exception {
-        fail("not implemented");
+        DatasourceDto persistedDatasource = statisticalResourcesServiceFacade.createDatasource(getServiceContextAdministrador(), DATASET_VERSION_BASIC_01.getSiemacMetadataStatisticalResource().getUrn(), StatisticalResourcesDtoMocks.mockDatasourceDto());
+        assertNotNull(persistedDatasource);
+        assertNotNull(persistedDatasource.getUrn());
     }
 
     @Test
     public void testUpdateDatasource() throws Exception {
         fail("not implemented");
+        
+//        DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), DATASOURCE_BASIC_01.getNameableStatisticalResource().getUrn());
+//        expectedDatasource.setCode(StatisticalResourcesDtoMocks.mockString(5));
+//
+//        DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextWithoutPrincipal(), expectedDatasource);
+//        assertNotNull(actualDatasource);
+//        assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
     }
 
     @Test

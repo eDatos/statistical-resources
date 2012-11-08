@@ -2,8 +2,8 @@ package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.*;
-import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +12,10 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesAsserts;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -43,7 +44,7 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
     @MetamacMock(QUERY_BASIC_01_NAME)
     public void testRetrieveByUrn() throws MetamacException {
         Query actual = queryRepository.retrieveByUrn(QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
-        StatisticalResourcesAsserts.assertEqualsQuery(QUERY_BASIC_01, actual);
+        assertEqualsQuery(QUERY_BASIC_01, actual);
     }
 
     @Test
@@ -53,7 +54,7 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
             fail("not found");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            StatisticalResourcesAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.QUERY_NOT_FOUND, 1, new String[]{URN_NOT_EXISTS}, e.getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.QUERY_NOT_FOUND, 1, new String[]{URN_NOT_EXISTS}, e.getExceptionItems().get(0));
         }
     }
 }

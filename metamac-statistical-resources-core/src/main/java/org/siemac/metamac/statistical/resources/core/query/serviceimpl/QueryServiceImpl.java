@@ -1,18 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import java.util.List;
+
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesInvocationValidator;
-
+import org.siemac.metamac.statistical.resources.core.query.validators.QueryServiceInvocationValidator;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Implementation of QueryService.
@@ -25,7 +23,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     public Query retrieveQueryByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Validations
-        StatisticalResourcesInvocationValidator.checkRetrieveQueryByUrn(urn, null);
+        QueryServiceInvocationValidator.checkRetrieveQueryByUrn(urn, null);
 
         // Retrieve
         Query query = getQueryRepository().retrieveByUrn(urn);
@@ -35,7 +33,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     @Override
     public List<Query> retrieveQueries(ServiceContext ctx) throws MetamacException {
         // Validations
-        StatisticalResourcesInvocationValidator.checkRetrieveQueries(null);
+        QueryServiceInvocationValidator.checkRetrieveQueries(null);
         
         // Retrieve
         List<Query> queries = getQueryRepository().findAll(); 
@@ -45,7 +43,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     @Override
     public PagedResult<Query> findQueriesByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         // Validations
-        StatisticalResourcesInvocationValidator.checkFindQueriesByCondition(conditions, pagingParameter, null);
+        QueryServiceInvocationValidator.checkFindQueriesByCondition(conditions, pagingParameter, null);
         
         // Find
         if (conditions == null) {
@@ -59,7 +57,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     @Override
     public Query createQuery(ServiceContext ctx, Query query) throws MetamacException {
         // Validations
-        StatisticalResourcesInvocationValidator.checkCreateQuery(query, null);
+        QueryServiceInvocationValidator.checkCreateQuery(query, null);
         
         // Fill metadata
         fillMetadataForCreateQuery(query);
@@ -74,7 +72,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     @Override
     public Query updateQuery(ServiceContext ctx, Query query) throws MetamacException {
         // Validations
-        StatisticalResourcesInvocationValidator.checkUpdateQuery(query, null);
+        QueryServiceInvocationValidator.checkUpdateQuery(query, null);
         
         // Check that could be update
         // TODO
