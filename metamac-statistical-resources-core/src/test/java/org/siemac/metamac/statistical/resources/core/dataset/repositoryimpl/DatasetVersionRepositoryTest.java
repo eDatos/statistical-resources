@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.*;
 
 import org.junit.Test;
@@ -33,16 +34,17 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     protected DatasetVersionMockFactory datasetVersionMockFactory;
 
     @Test
-    @MetamacMock(DATASET_VERSION_BASIC_01_NAME)
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
-        DatasetVersion actual = datasetVersionRepository.retrieveByUrn(DATASET_VERSION_BASIC_01.getSiemacMetadataStatisticalResource().getUrn());
-        assertEqualsDatasetVersion(DATASET_VERSION_BASIC_01, actual);
+        DatasetVersion actual = datasetVersionRepository.retrieveByUrn(DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn());
+        assertEqualsDatasetVersion(DATASET_VERSION_01_BASIC, actual);
     }
 
     @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03_NAME, DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION_NAME})
     public void testRetrieveLastVersion() throws Exception {
-        // TODO Auto-generated method stub
-        fail("testRetrieveLastVersion not implemented");
+        DatasetVersion actual = datasetVersionRepository.retrieveLastVersion(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS.getId());
+        assertEqualsDatasetVersion(DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION, actual);
     }
 
     @Test

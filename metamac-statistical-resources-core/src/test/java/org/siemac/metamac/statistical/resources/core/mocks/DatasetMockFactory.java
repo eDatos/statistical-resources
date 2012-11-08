@@ -10,11 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatasetMockFactory extends MockFactory<Dataset> {
 
-    public static final String          DATASET_BASIC_01_NAME    = "DATASET_BASIC_01";
-    public static final Dataset         DATASET_BASIC_01         = mockPersistedBasicDataset();
-    
-    public static final String          DATASET_BASIC_02_NAME    = "DATASET_BASIC_02";
-    public static final Dataset         DATASET_BASIC_02         = mockPersistedBasicDataset();
+    public static final String          DATASET_01_BASIC_NAME                         = "DATASET_01_BASIC";
+    public static final Dataset         DATASET_01_BASIC                              = StatisticalResourcesDoMocks.mockDataset();
+
+    public static final String          DATASET_02_BASIC_NAME                         = "DATASET_02_BASIC";
+    public static final Dataset         DATASET_02_BASIC                              = StatisticalResourcesDoMocks.mockDataset();
+
+    public static final String          DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME = "DATASET_03_BASIC_WITH_2_DATASET_VERSIONS";
+    public static final Dataset         DATASET_03_BASIC_WITH_2_DATASET_VERSIONS      = StatisticalResourcesDoMocks.mockDataset();
 
     private static Map<String, Dataset> mocks;
 
@@ -26,15 +29,5 @@ public class DatasetMockFactory extends MockFactory<Dataset> {
     @Override
     public Dataset getMock(String id) {
         return mocks.get(id);
-    }
-    
-    private static Dataset mockPersistedBasicDataset() {
-        Dataset dataset = StatisticalResourcesDoMocks.mockDataset();
-        
-        // Identity
-        dataset.getUuid();
-        dataset.setVersion(Long.valueOf(0));
-        
-        return dataset;
     }
 }

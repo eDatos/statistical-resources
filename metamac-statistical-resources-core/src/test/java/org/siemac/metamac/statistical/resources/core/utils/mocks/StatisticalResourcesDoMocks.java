@@ -32,7 +32,6 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   CODELIST_MOCK              = "CodelistMock";
 
     private static final String   URI_MOCK_PREFIX            = "lorem/ipsum/dolor/sit/amet/";
-    private static final String   URN_MOCK_PREFIX            = "urn:lorem.ipsum.dolor.infomodel.package.Resource=";
 
     // -----------------------------------------------------------------
     // DATASOURCE
@@ -50,9 +49,13 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     // DATASET
     // -----------------------------------------------------------------
     public static Dataset mockDataset() {
+        return mockDataset(false);
+    }
+    
+    public static Dataset mockDatasetWithGeneratedDatasetVersions() {
         return mockDataset(true);
     }
-
+    
     private static Dataset mockDataset(boolean withVersion) {
         Dataset ds = new Dataset();
         if (withVersion) {
@@ -262,10 +265,6 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     private static String getUriMock() {
         return URI_MOCK_PREFIX + mockString(5);
-    }
-
-    private static String getUrnMock() {
-        return URN_MOCK_PREFIX + mockString(10);
     }
 
 }
