@@ -1,4 +1,5 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
 Application DatasetsStatisticalResources {
@@ -22,6 +23,22 @@ Application DatasetsStatisticalResources {
 	    	@Datasource retrieveDatasourceByUrn(String urn) throws MetamacException;
 	    	deleteDatasource(String urn) throws MetamacException;
 	    	List<@Datasource> retrieveDatasourcesByDatasetVersion(String datasetVersionUrn) throws MetamacException;
+	    	
+	    	// Datasets
+	    	"Creates dataset version"
+			@DatasetVersion createDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
+			"Updates dataset version"
+			@DatasetVersion updateDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
+			"Retrieves dataset version by urn"
+			@DatasetVersion retrieveDatasetVersionByUrn(String datasetVersionUrn) throws MetamacException;
+			"Retrieves all datasets versions of one dataset"
+			List<@DatasetVersion> retrieveDatasetVersions(String datasetUrn) throws MetamacException;
+			"Finds datasets by criteria"
+    		PagedResult<@DatasetVersion> findDatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+			"Deletes dataset version. This must be last version and no published"
+    		deleteDatasetVersion(String datasetVersionUrn) throws MetamacException;
+    		"Creates a new version of a dataset, copying metadata from version with provided urn"
+    		@DatasetVersion versioningDatasetVersion(String datasetVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
 		}  
 
 

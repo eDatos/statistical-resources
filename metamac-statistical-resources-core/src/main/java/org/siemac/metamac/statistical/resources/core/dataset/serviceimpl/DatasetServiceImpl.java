@@ -2,11 +2,15 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.validators.DatasetServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,6 +21,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     public DatasetServiceImpl() {
     }
+
+    // ------------------------------------------------------------------------
+    // DATASOURCES
+    // ------------------------------------------------------------------------
 
     public Datasource createDatasource(ServiceContext ctx, String datasetVersionUrn, Datasource datasource) throws MetamacException {
 
@@ -91,6 +99,58 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasources;
     }
+    
+
+    // ------------------------------------------------------------------------
+    // DATASETS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public DatasetVersion createDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public DatasetVersion updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public DatasetVersion retrieveDatasetVersionByUrn(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<DatasetVersion> retrieveDatasetVersions(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public PagedResult<DatasetVersion> findDatasetVersionsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public DatasetVersion versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    
+    // ------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------------------
 
     private void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         datasource.setDatasetVersion(datasetVersion);

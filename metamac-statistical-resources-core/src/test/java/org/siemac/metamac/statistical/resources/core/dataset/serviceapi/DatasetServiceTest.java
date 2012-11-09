@@ -38,6 +38,10 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Autowired
     protected DatasetService datasetService;
 
+    // ------------------------------------------------------------------------
+    // DATASOURCES
+    // ------------------------------------------------------------------------
+
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
@@ -163,6 +167,52 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             assertEquals(expected.size(), actual.size());
             assertEqualsDatasourceCollection(expected, actual);
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASETS
+    // ------------------------------------------------------------------------
+
+    @Test
+    public void testCreateDatasetVersion() throws Exception {
+        fail("not implemented");
+
+    }
+
+    @Test
+    public void testUpdateDatasetVersion() throws Exception {
+        fail("not implemented");
+
+    }
+
+    @Test
+    public void testRetrieveDatasetVersionByUrn() throws Exception {
+        fail("not implemented");
+
+    }
+
+    @Test
+    public void testRetrieveDatasetVersions() throws Exception {
+        fail("not implemented");
+
+    }
+
+    @Test
+    public void testFindDatasetVersionsByCondition() throws Exception {
+        fail("not implemented");
+
+    }
+
+    @Test
+    public void testDeleteDatasetVersion() throws Exception {
+        fail("not implemented");
+
+    }
+
+    @Test
+    public void testVersioningDatasetVersion() throws Exception {
+        fail("not implemented");
+
     }
 
 }
