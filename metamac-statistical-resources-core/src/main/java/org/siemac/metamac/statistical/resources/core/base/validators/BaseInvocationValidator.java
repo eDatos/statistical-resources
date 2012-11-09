@@ -19,7 +19,7 @@ public abstract class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     protected static void checkNewStatisticalResource(StatisticalResource statisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
         if (statisticalResource == null) {
             return;
         }
@@ -36,7 +36,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkExistingStatisticalResource(StatisticalResource statisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
         if (statisticalResource == null) {
             return;
         }
@@ -62,7 +62,7 @@ public abstract class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     protected static void checkNewIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
         if (identifiableStatisticalResource == null) {
             return;
         }
@@ -76,7 +76,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkExistingIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
         if (identifiableStatisticalResource == null) {
             return;
         }
@@ -97,7 +97,7 @@ public abstract class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     protected static void checkNewNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
         if (nameableStatisticalResource == null) {
             return;
         }
@@ -107,7 +107,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkExistingNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
         if (nameableStatisticalResource == null) {
             return;
         }
@@ -126,7 +126,7 @@ public abstract class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     protected static void checkNewVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
         if (versionableStatisticalResource == null) {
             return;
         }
@@ -139,7 +139,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkExistingVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
         if (versionableStatisticalResource == null) {
             return;
         }
@@ -161,7 +161,7 @@ public abstract class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     protected static void checkNewLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
         if (lifeCycleStatisticalResource == null) {
             return;
         }
@@ -171,7 +171,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkExistingLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
         if (lifeCycleStatisticalResource == null) {
             return;
         }
@@ -194,7 +194,7 @@ public abstract class BaseInvocationValidator {
     // ------------------------------------------------------------------------------------
 
     protected static void checkNewSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
         if (siemacMetadataStatisticalResource == null) {
             return;
         }
@@ -204,7 +204,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkExistingSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
         if (siemacMetadataStatisticalResource == null) {
             return;
         }

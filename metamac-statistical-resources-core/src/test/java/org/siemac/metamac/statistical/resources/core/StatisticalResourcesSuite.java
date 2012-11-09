@@ -23,10 +23,10 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      QueryServiceTest.class, 
                      QueryDo2DtoMapperTest.class, 
                      QueryDto2DoMapperTest.class,
-                     PublicationServiceTest.class, 
-                     DatasetServiceTest.class, 
                      DatasetVersionRepositoryTest.class, 
-                     DatasourceRepositoryTest.class, 
+                     DatasourceRepositoryTest.class,
+//                     DatasetDo2DtoMapperTest.class,
+//                     DatasetDto2DoMapperTest.class,
                      DatasetServiceTest.class, 
                      PublicationVersionRepositoryTest.class,
                      PublicationServiceTest.class})

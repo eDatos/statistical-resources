@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,14 +19,11 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> {
     public static final DatasetVersion         DATASET_VERSION_02_BASIC                                            = StatisticalResourcesDoMocks.mockDatasetVersion();
 
     public static final String                 DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03_NAME                  = "DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03";
-    public static final DatasetVersion         DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03                       = StatisticalResourcesDoMocks
-                                                                                                                           .mockDatasetVersion(DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+    public static final DatasetVersion         DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03                       = createDatasetVersion03();
 
     public static final String                 DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION_NAME = "DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION";
-    public static final DatasetVersion         DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION      = createDatasetVersion04AssociatedWithDataset03AndLastVersion(); 
+    public static final DatasetVersion         DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION      = createDatasetVersion04();
 
-    
-    
     private static Map<String, DatasetVersion> mocks;
 
     static {
@@ -37,10 +36,30 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> {
         return mocks.get(id);
     }
 
-    private static DatasetVersion createDatasetVersion04AssociatedWithDataset03AndLastVersion() {
-        DatasetVersion datasetVersion = StatisticalResourcesDoMocks.mockDatasetVersion(DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+    private static DatasetVersion createDatasetVersion03() {
+        // Relation with dataset
+        DatasetVersion datasetVersion = StatisticalResourcesDoMocks.mockDatasetVersion(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+        
+        // Have two datasources
+        datasetVersion.addDatasource(DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03);
+        datasetVersion.addDatasource(DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03);
+        
+        return datasetVersion;
+    }
+
+    private static DatasetVersion createDatasetVersion04() {
+        // Relation with dataset
+        DatasetVersion datasetVersion = StatisticalResourcesDoMocks.mockDatasetVersion(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+        
+        // Version 02.000 
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("02.000");
+        
+        // Is last version
         datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+        
+        // Have one datasource
+        datasetVersion.addDatasource(DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04);
+        
         return datasetVersion;
     }
 

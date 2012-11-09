@@ -18,10 +18,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public DatasetServiceImpl() {
     }
 
-    public Datasource createDatasource(ServiceContext ctx, String datasetUrn, Datasource datasource) throws MetamacException {
+    public Datasource createDatasource(ServiceContext ctx, String datasetVersionUrn, Datasource datasource) throws MetamacException {
 
         // Validations
-        DatasetServiceInvocationValidator.checkCreateDatasource(datasetUrn, datasource, null);
+        DatasetServiceInvocationValidator.checkCreateDatasource(datasetVersionUrn, datasource, null);
 
         // TODO: Obtener el datasetVerison cuando el servicio correspondiente esté hecho. Eliminar el new.
         DatasetVersion datasetVersion = new DatasetVersion();

@@ -38,10 +38,39 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     public static Datasource mockDatasource() {
         Datasource datasource = new Datasource();
-        
+
         datasource.setDatasetVersion(mockDatasetVersion());
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
-        
+
+        return datasource;
+    }
+    
+    public static Datasource mockDatasource(DatasetVersion datasetVersion) {
+        Datasource datasource = mockDatasource();
+        datasource.setDatasetVersion(datasetVersion);
+
+        return datasource;
+    }
+
+    public static Datasource mockDatasourceWithIdentifiableNull() {
+        Datasource datasource = mockDatasource();
+        datasource.setIdentifiableStatisticalResource(null);
+
+        return datasource;
+    }
+    
+    public static Datasource mockDatasourceWithIdentifiableAndDatasetVersionNull() {
+        Datasource datasource = mockDatasource();
+        datasource.setIdentifiableStatisticalResource(null);
+        datasource.setDatasetVersion(null);
+
+        return datasource;
+    }
+    
+    public static Datasource mockDatasourceWithDatasetVersionNull() {
+        Datasource datasource = mockDatasource();
+        datasource.setDatasetVersion(null);
+
         return datasource;
     }
 
@@ -51,11 +80,11 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
     public static Dataset mockDataset() {
         return mockDataset(false);
     }
-    
+
     public static Dataset mockDatasetWithGeneratedDatasetVersions() {
         return mockDataset(true);
     }
-    
+
     private static Dataset mockDataset(boolean withVersion) {
         Dataset ds = new Dataset();
         if (withVersion) {
@@ -94,7 +123,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         query.setNameableStatisticalResource(mockNameableStatisticalResorce());
         return query;
     }
-    
+
     public static Query mockQueryWithNameableNull() {
         Query query = mockQuery();
         query.setNameableStatisticalResource(null);
@@ -115,7 +144,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private static LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
         mockVersionableStatisticalResource(resource);
-        
+
         resource.setCreator(mockAgencyExternalItem());
         resource.addContributor(mockAgencyExternalItem());
         resource.addMediator(mockAgencyExternalItem());
@@ -139,7 +168,7 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private static NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource nameableResource) {
         mockIdentifiableStatisticalResource(nameableResource);
-        
+
         nameableResource.setTitle(mockInternationalString());
         nameableResource.setDescription(mockInternationalString());
         return nameableResource;

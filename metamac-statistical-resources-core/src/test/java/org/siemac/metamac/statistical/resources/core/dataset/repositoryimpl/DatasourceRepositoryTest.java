@@ -2,9 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_BASIC_01;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_BASIC_01_NAME;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_BASIC_02_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.*;
 
 import org.junit.Test;
@@ -34,15 +32,15 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
     protected DatasourceRepository datasourceRepository;
 
     @Test
-    @MetamacMock({DATASOURCE_BASIC_01_NAME, DATASOURCE_BASIC_02_NAME})
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrn() throws MetamacException {
-        Datasource expected = DATASOURCE_BASIC_01;
-        Datasource actual = datasourceRepository.retrieveByUrn(DATASOURCE_BASIC_01.getIdentifiableStatisticalResource().getUrn());
+        Datasource expected = DATASOURCE_01_BASIC;
+        Datasource actual = datasourceRepository.retrieveByUrn(DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
         assertEqualsDatasource(expected, actual);
     }
     
     @Test
-    @MetamacMock({DATASOURCE_BASIC_01_NAME, DATASOURCE_BASIC_02_NAME})
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrnNotFound() {
         try {
             datasourceRepository.retrieveByUrn(URN_NOT_EXISTS);

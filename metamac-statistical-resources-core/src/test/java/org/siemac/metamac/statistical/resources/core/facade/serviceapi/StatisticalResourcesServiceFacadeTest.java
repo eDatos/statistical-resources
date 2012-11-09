@@ -266,7 +266,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
-        DatasourceDto persistedDatasource = statisticalResourcesServiceFacade.createDatasource(getServiceContextAdministrador(), DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn(), StatisticalResourcesDtoMocks.mockDatasourceDto());
+        // TODO NOTA MENTAL: Es normal que falle este test hasta que los servicios de dataset estén implementados
+        DatasourceDto persistedDatasource = statisticalResourcesServiceFacade.createDatasource(getServiceContextAdministrador(), DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource()
+                .getUrn(), StatisticalResourcesDtoMocks.mockDatasourceDto());
         assertNotNull(persistedDatasource);
         assertNotNull(persistedDatasource.getUrn());
     }
@@ -274,13 +276,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     public void testUpdateDatasource() throws Exception {
         fail("not implemented");
-        
-//        DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), DATASOURCE_BASIC_01.getNameableStatisticalResource().getUrn());
-//        expectedDatasource.setCode(StatisticalResourcesDtoMocks.mockString(5));
-//
-//        DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextWithoutPrincipal(), expectedDatasource);
-//        assertNotNull(actualDatasource);
-//        assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
+
+        // DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(),
+        // DATASOURCE_BASIC_01.getNameableStatisticalResource().getUrn());
+        // expectedDatasource.setCode(StatisticalResourcesDtoMocks.mockString(5));
+        //
+        // DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextWithoutPrincipal(), expectedDatasource);
+        // assertNotNull(actualDatasource);
+        // assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
     }
 
     @Test
