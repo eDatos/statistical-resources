@@ -146,8 +146,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
         // Version DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03
         {
-            String datasetVersionUrn = DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03.getSiemacMetadataStatisticalResource().getUrn();
-            List<Datasource> expected = DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03.getDatasources();
+            String datasetVersionUrn = DATASET_VERSION_03_FOR_DATASET_03.getSiemacMetadataStatisticalResource().getUrn();
+            List<Datasource> expected = DATASET_VERSION_03_FOR_DATASET_03.getDatasources();
 
             List<Datasource> actual = datasetService.retrieveDatasourcesByDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn);
             assertEquals(expected.size(), actual.size());
@@ -156,8 +156,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         // Version DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03
         {
-            String datasetVersionUrn = DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION.getSiemacMetadataStatisticalResource().getUrn();
-            List<Datasource> expected = DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION.getDatasources();
+            String datasetVersionUrn = DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION.getSiemacMetadataStatisticalResource().getUrn();
+            List<Datasource> expected = DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION.getDatasources();
 
             List<Datasource> actual = datasetService.retrieveDatasourcesByDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn);
             assertEquals(expected.size(), actual.size());

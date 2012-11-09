@@ -34,8 +34,8 @@ public class DatasetMockFactory extends MockFactory<Dataset> {
 
     private static Dataset createDataset03With2DatasetVersions() {
         Dataset dataset = StatisticalResourcesDoMocks.mockDataset();
-        dataset.addVersion(DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03);
-        dataset.addVersion(DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION);
+        dataset.addVersion(DATASET_VERSION_03_FOR_DATASET_03);
+        dataset.addVersion(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION);
         return dataset;
     }
 

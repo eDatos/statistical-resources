@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class QueryMockFactory extends MockFactory<Query> {
 
-    public static final String        QUERY_BASIC_01_NAME         = "QUERY_BASIC_01";
-    public static final Query         QUERY_BASIC_01              = StatisticalResourcesDoMocks.mockQuery();;
+    public static final String        QUERY_01_BASIC_NAME            = "QUERY_01_BASIC";
+    public static final Query         QUERY_01_BASIC                 = StatisticalResourcesDoMocks.mockQuery(); ;
 
-    public static final String        QUERY_BASIC_ORDERED_01_NAME = "QUERY_BASIC_ORDERED_01";
-    public static final Query         QUERY_BASIC_ORDERED_01      = mockPersistedQueryWithCode("a");
+    public static final String        QUERY_02_BASIC_ORDERED_01_NAME = "QUERY_02_BASIC_ORDERED_01";
+    public static final Query         QUERY_02_BASIC_ORDERED_01      = mockPersistedQueryWithCode("a");
 
-    public static final String        QUERY_BASIC_ORDERED_02_NAME = "QUERY_BASIC_ORDERED_02";
-    public static final Query         QUERY_BASIC_ORDERED_02      = mockPersistedQueryWithCode("b");
+    public static final String        QUERY_03_BASIC_ORDERED_02_NAME = "QUERY_03_BASIC_ORDERED_02";
+    public static final Query         QUERY_03_BASIC_ORDERED_02      = mockPersistedQueryWithCode("b");
 
-    public static final String        QUERY_BASIC_ORDERED_03_NAME = "QUERY_BASIC_ORDERED_03";
-    public static final Query         QUERY_BASIC_ORDERED_03      = mockPersistedQueryWithCode("c");
+    public static final String        QUERY_04_BASIC_ORDERED_03_NAME = "QUERY_04_BASIC_ORDERED_03";
+    public static final Query         QUERY_04_BASIC_ORDERED_03      = mockPersistedQueryWithCode("c");
 
     private static Map<String, Query> mocks;
 

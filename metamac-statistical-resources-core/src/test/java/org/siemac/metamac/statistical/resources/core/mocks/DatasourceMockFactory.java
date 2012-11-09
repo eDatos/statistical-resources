@@ -18,13 +18,13 @@ public class DatasourceMockFactory extends MockFactory<Datasource> {
     public static final Datasource         DATASOURCE_02_BASIC                             = StatisticalResourcesDoMocks.mockDatasource();
 
     public static final String             DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03_NAME = "DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03";
-    public static final Datasource         DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03      = StatisticalResourcesDoMocks.mockDatasource(DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03);
+    public static final Datasource         DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03      = StatisticalResourcesDoMocks.mockDatasource(DATASET_VERSION_03_FOR_DATASET_03);
 
     public static final String             DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03_NAME = "DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03";
-    public static final Datasource         DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03      = StatisticalResourcesDoMocks.mockDatasource(DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03);
+    public static final Datasource         DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03      = StatisticalResourcesDoMocks.mockDatasource(DATASET_VERSION_03_FOR_DATASET_03);
 
     public static final String             DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04_NAME = "DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04";
-    public static final Datasource         DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04      = StatisticalResourcesDoMocks.mockDatasource(DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION);
+    public static final Datasource         DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04      = StatisticalResourcesDoMocks.mockDatasource(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION);
 
     private static Map<String, Datasource> mocks;
 

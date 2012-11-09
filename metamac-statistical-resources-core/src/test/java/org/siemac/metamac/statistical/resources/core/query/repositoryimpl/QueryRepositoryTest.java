@@ -2,8 +2,8 @@ package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,10 +38,10 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
     protected StatisticalResourceRepository statisticalResourceRepository;
 
     @Test
-    @MetamacMock(QUERY_BASIC_01_NAME)
+    @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query actual = queryRepository.retrieveByUrn(QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
-        assertEqualsQuery(QUERY_BASIC_01, actual);
+        Query actual = queryRepository.retrieveByUrn(QUERY_01_BASIC.getNameableStatisticalResource().getUrn());
+        assertEqualsQuery(QUERY_01_BASIC, actual);
     }
 
     @Test
