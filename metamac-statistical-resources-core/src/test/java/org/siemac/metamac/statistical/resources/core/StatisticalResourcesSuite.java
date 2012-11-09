@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
@@ -25,8 +27,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      QueryDto2DoMapperTest.class,
                      DatasetVersionRepositoryTest.class, 
                      DatasourceRepositoryTest.class,
-//                     DatasetDo2DtoMapperTest.class,
-//                     DatasetDto2DoMapperTest.class,
+                     DatasetDo2DtoMapperTest.class,
+                     DatasetDto2DoMapperTest.class,
                      DatasetServiceTest.class, 
                      PublicationVersionRepositoryTest.class,
                      PublicationServiceTest.class})
