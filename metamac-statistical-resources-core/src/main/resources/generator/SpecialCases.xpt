@@ -112,8 +112,8 @@ CREATE sequence SEQ_«domainObject.getHint('idSequence')»;
 	«targetDef.proceed() -»
 	«EXPAND generatorcommon::DbUnitMocksCases::dbUnitProperties»
 «ENDAROUND»
-«REM»
+
+
 «AROUND templates::db::OracleDDL::ddl FOR Application»
 	«EXPAND generatorcommon::MetamacOracleDDL::generateDdl»
 «ENDAROUND»
-«ENDREM»

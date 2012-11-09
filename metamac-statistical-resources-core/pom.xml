@@ -313,6 +313,9 @@
                         <configuration>
                             <target>
                                 <!-- Delete spring configuration files -->
+                                <copy toDir="${metamac-statistical-resources.etcDir}/db/01-create">
+                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create"/>
+                                </copy>
                                 <delete file="${basedir}/src/main/resources/spring.properties" />
                                 <delete file="${basedir}/src/main/resources/more.xml" />
 
