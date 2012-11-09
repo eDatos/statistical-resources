@@ -37,9 +37,6 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
     @Autowired
     protected StatisticalResourceRepository statisticalResourceRepository;
 
-    @Autowired
-    protected QueryMockFactory queryMockFactory;
-    
     @Test
     @MetamacMock(QUERY_BASIC_01_NAME)
     public void testRetrieveByUrn() throws MetamacException {
