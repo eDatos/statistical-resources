@@ -19,6 +19,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
 public class StatisticalResourcesDoMocks extends MetamacMocks {
@@ -115,6 +117,49 @@ public class StatisticalResourcesDoMocks extends MetamacMocks {
         return datasetVersion;
     }
 
+    
+    // -----------------------------------------------------------------
+    // PUBLICATION
+    // -----------------------------------------------------------------
+    public static Publication mockPublication() {
+        return mockPublication(false);
+    }
+
+    public static Publication mockPublicationWithGeneratedPublicationVersions() {
+        return mockPublication(true);
+    }
+
+    private static Publication mockPublication(boolean withVersion) {
+        Publication ds = new Publication();
+        if (withVersion) {
+            ds.addVersion(mockPublicationVersion(ds));
+        }
+        return ds;
+    }
+
+    // -----------------------------------------------------------------
+    // PUBLICATION VERSION
+    // -----------------------------------------------------------------
+    public static PublicationVersion mockPublicationVersion() {
+        return mockPublicationVersion(null);
+    }
+
+    public static PublicationVersion mockPublicationVersion(Publication publication) {
+        PublicationVersion publicationVersion = new PublicationVersion();
+
+        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET, StatisticalResourceFormatEnum.DS));
+        if (publication != null) {
+            publicationVersion.setPublication(publication);
+        } else {
+            Publication ds = mockPublication(false);
+            publicationVersion.setPublication(ds);
+            ds.addVersion(publicationVersion);
+        }
+
+        return publicationVersion;
+    }
+    
+    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------

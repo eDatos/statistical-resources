@@ -5,7 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
+import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_01;
@@ -14,6 +17,7 @@ import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFacto
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_03;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_BASIC_ORDERED_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.*;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryDoAndDtoCollection;
 
@@ -29,9 +33,12 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
@@ -70,7 +77,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // ------------------------------------------------------------------------
 
     @Test
-    @MetamacMock(QUERY_BASIC_01_NAME)
+    @MetamacMock({QUERY_BASIC_01_NAME, QUERY_BASIC_ORDERED_01_NAME})
     public void testRetrieveQueryByUrn() throws Exception {
         QueryDto actual = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
         assertEqualsQuery(QUERY_BASIC_01, actual);
@@ -88,7 +95,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Test(expected = AssertionError.class)
     @MetamacMock({QUERY_BASIC_ORDERED_01_NAME, QUERY_BASIC_ORDERED_02_NAME, QUERY_BASIC_ORDERED_03_NAME})
-    public void testRetrieveQueriesFail() throws Exception {
+    public void testRetrieveQueriesErrorDifferentResponse() throws Exception {
         List<Query> expected = queryMockFactory.getMocks(QUERY_BASIC_ORDERED_01_NAME, QUERY_BASIC_ORDERED_02_NAME);
 
         List<QueryDto> actual = statisticalResourcesServiceFacade.retrieveQueries(getServiceContextAdministrador());
@@ -109,7 +116,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         QueryDto expectedQuery = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), QUERY_BASIC_01.getNameableStatisticalResource().getUrn());
         expectedQuery.setTitle(StatisticalResourcesDoMocks.mockInternationalStringDto());
 
-        QueryDto actualQuery = statisticalResourcesServiceFacade.updateQuery(getServiceContextWithoutPrincipal(), expectedQuery);
+        QueryDto actualQuery = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), expectedQuery);
         assertNotNull(actualQuery);
         assertEqualsInternationalStringDto(expectedQuery.getTitle(), actualQuery.getTitle());
     }
@@ -274,30 +281,70 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
-        fail("not implemented");
+        DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), DATASOURCE_01_BASIC.getIdentifiableStatisticalResource()
+                .getUrn());
+        expectedDatasource.setCode(StatisticalResourcesDtoMocks.mockString(5));
 
-        // DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(),
-        // DATASOURCE_BASIC_01.getNameableStatisticalResource().getUrn());
-        // expectedDatasource.setCode(StatisticalResourcesDtoMocks.mockString(5));
-        //
-        // DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextWithoutPrincipal(), expectedDatasource);
-        // assertNotNull(actualDatasource);
-        // assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
+        DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextAdministrador(), expectedDatasource);
+        assertNotNull(actualDatasource);
+        assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
     }
 
     @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testRetrieveDatasourceByUrn() throws Exception {
-        fail("not implemented");
+        DatasourceDto actual = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
+        assertEqualsDatasource(DATASOURCE_01_BASIC, actual);
     }
 
     @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
-        fail("not implemented");
+        String datasourceUrn = DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn();
+        statisticalResourcesServiceFacade.deleteDatasource(getServiceContextAdministrador(), datasourceUrn);
+
+        try {
+            statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceUrn);
+            fail("datasource deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.DATASOURCE_NOT_FOUND, 1, new String[]{datasourceUrn}, e.getExceptionItems().get(0));
+        }
     }
 
     @Test
+    @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
-        fail("not implemented");
+        // Version DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03
+        {
+            String datasetVersionUrn = DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03.getSiemacMetadataStatisticalResource().getUrn();
+            List<Datasource> expected = DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03.getDatasources();
+
+            List<DatasourceDto> actual = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn);
+            assertEqualsDatasourceDoAndDtoCollection(expected, actual);
+        }
+
+        // Version DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03
+        {
+            String datasetVersionUrn = DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION.getSiemacMetadataStatisticalResource().getUrn();
+            List<Datasource> expected = DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION.getDatasources();
+
+            List<DatasourceDto> actual = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn);
+            assertEqualsDatasourceDoAndDtoCollection(expected, actual);
+        }
+    }
+    
+    
+    @Test(expected = AssertionError.class)
+    @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testRetrieveDatasourcesByDatasetVersionErrorDifferentResponse() throws Exception {
+        String datasetVersionUrn = DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03.getSiemacMetadataStatisticalResource().getUrn();
+        List<Datasource> expected = DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03.getDatasources();
+        expected.remove(0);
+
+        List<DatasourceDto> actual = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn);
+        assertEqualsDatasourceDoAndDtoCollection(expected, actual);
     }
 }

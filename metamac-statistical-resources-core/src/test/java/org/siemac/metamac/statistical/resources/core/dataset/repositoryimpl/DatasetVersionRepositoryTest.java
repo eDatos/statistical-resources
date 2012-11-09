@@ -1,9 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
-import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.*;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.*;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.*;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_04_ASSOCIATED_WITH_DATASET_03_AND_LAST_VERSION;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
