@@ -90,7 +90,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
 
-    protected static void assertEqualsIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
+    public static void assertEqualsIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());

@@ -1,3 +1,4 @@
+
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
@@ -6,13 +7,16 @@ Application BaseStatisticalResources {
 
 	Module core_base {
 		basePackage=org.siemac.metamac.statistical.resources.core.base
- 
+
 		"Statistical Resource"
 		abstract Entity StatisticalResource {
 			databaseTable="TB_STATISTICAL_RESOURCES"
+
 			hint="idSequence=STATISTICAL_RESOURCES"
 			inheritanceType=SINGLE_TABLE
+
 			discriminatorType=STRING
+
 			discriminatorColumn="STATISTICAL_RESOURCE_TYPE"
 			discriminatorLength="255"
 
@@ -28,16 +32,22 @@ Application BaseStatisticalResources {
 		Entity IdentifiableStatisticalResource extends @StatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			discriminatorValue="IDENTIFIABLE_RESOURCE"
-			
+
 			String code nullable;
 			String uri nullable;
 			String urn nullable;
+
+			Repository IdentifiableStatisticalResourceRepository {
+				findByCondition;
+				@IdentifiableStatisticalResource retrieveByUrn(String urn) throws MetamacException;
+			}
+
 		}
 
 		Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			discriminatorValue="NAMEABLE_RESOURCE"
-			
+
 			- @InternationalString title nullable cascade="all" databaseColumn="TITLE_FK";
 			- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
 		}
@@ -45,13 +55,13 @@ Application BaseStatisticalResources {
 		Entity VersionableStatisticalResource extends @NameableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			discriminatorValue="VERSIONABLE_RESOURCE"
-			
+
 			String versionLogic nullable;
 			DateTimeTZ versionDate nullable;
 			DateTimeTZ nextVersionDate nullable;
 			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType nullable;
 			- @InternationalString versionRationale nullable cascade="all" databaseColumn="VERSION_RATIONALE_FK";
-			
+
 			"True if this version is the last"
 			Boolean isLastVersion nullable;
 			"Version number that replaces the current one"
@@ -63,7 +73,7 @@ Application BaseStatisticalResources {
 		Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			discriminatorValue="LIFE_CYCLE_RESOURCE"
-			
+
 			- @StatisticalResourceProcStatusEnum procStatus nullable;
 
 			String versionResponsibilityCreator nullable databaseColumn="VR_CREATOR";
@@ -74,18 +84,22 @@ Application BaseStatisticalResources {
 			String versionResponsibilityOutOfPrint nullable databaseColumn="VR_OUT_OF_PRINT";
 
 			- @ExternalItem creator nullable cascade="all" databaseColumn="CREATOR_FK";
-			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_CONTRIBUTORS";
-			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_PUBLISHERS";
-			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_MEDIATORS";
+			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK"
+			databaseJoinTable="TB_EI_CONTRIBUTORS";
+			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK"
+			databaseJoinTable="TB_EI_PUBLISHERS";
+			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK"
+			databaseJoinTable="TB_EI_MEDIATORS";
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
 			databaseTable="TB_STATISITCAL_RESOURCES"
 			discriminatorValue="SIEMAC_RESOURCE"
-			
+
 			- @StatisticalResourceTypeEnum type nullable;
 			- @StatisticalResourceFormatEnum format nullable;
 		}
-		
+
 	}
+
 }
