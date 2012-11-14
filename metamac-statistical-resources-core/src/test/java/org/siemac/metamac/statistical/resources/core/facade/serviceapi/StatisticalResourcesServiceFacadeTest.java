@@ -285,7 +285,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testUpdateDatasource() throws Exception {
         DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), DATASOURCE_01_BASIC.getIdentifiableStatisticalResource()
                 .getUrn());
-        expectedDatasource.setCode(StatisticalResourcesDtoMocks.mockString(5));
+        expectedDatasource.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
 
         DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextAdministrador(), expectedDatasource);
         assertNotNull(actualDatasource);

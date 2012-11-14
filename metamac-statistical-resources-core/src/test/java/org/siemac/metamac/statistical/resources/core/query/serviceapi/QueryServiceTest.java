@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryPropertie
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -126,14 +127,14 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Test
     public void testCreateQuery() throws Exception {
-        Query expected = StatisticalResourcesDoMocks.mockQuery();
+        Query expected = StatisticalResourcesNotPersistedDoMocks.mockQuery();
         Query actual = queryService.createQuery(getServiceContextWithoutPrincipal(), expected);
         assertEqualsQuery(expected, actual);
     }
 
     @Test
     public void testCreateQueryErrorNameableResourceRequired() throws Exception {
-        Query query = StatisticalResourcesDoMocks.mockQueryWithNameableNull();
+        Query query = StatisticalResourcesNotPersistedDoMocks.mockQueryWithNameableNull();
         try {
             queryService.createQuery(getServiceContextWithoutPrincipal(), query);
         } catch (MetamacException e) {

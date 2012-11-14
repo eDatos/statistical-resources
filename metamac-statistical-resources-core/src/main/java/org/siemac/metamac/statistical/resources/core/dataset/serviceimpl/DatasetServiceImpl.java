@@ -7,10 +7,14 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.validators.DatasetServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +22,9 @@ import org.springframework.stereotype.Service;
  */
 @Service("datasetService")
 public class DatasetServiceImpl extends DatasetServiceImplBase {
+
+    @Autowired
+    IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
 
     public DatasetServiceImpl() {
     }
@@ -99,7 +106,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasources;
     }
-    
 
     // ------------------------------------------------------------------------
     // DATASETS
@@ -107,8 +113,28 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Override
     public DatasetVersion createDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Validations
+        DatasetServiceInvocationValidator.checkCreateDatasetVersion(datasetVersion, null);
+
+        // Create dataset
+        Dataset dataset = new Dataset();
+        dataset = getDatasetRepository().save(dataset);
+
+        // Fill metadata
+        fillMetadataForCreateDatasetVersion(datasetVersion, dataset);
+
+        // Checks
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
+
+        // Save version
+        datasetVersion.setDataset(dataset);
+
+        // Add version to dataset
+        dataset.addVersion(datasetVersion);
+        getDatasetRepository().save(dataset);
+        datasetVersion = getDatasetVersionRepository().save(datasetVersion);
+
+        return datasetVersion;
     }
 
     @Override
@@ -138,7 +164,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     @Override
     public void deleteDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -146,8 +172,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // TODO Auto-generated method stub
         return null;
     }
-    
-    
+
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
@@ -169,4 +194,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         parent.removeDatasource(datasource);
         getDatasetVersionRepository().save(parent);
     }
+
+    private void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
+        datasetVersion.setDataset(dataset);
+        // TODO: Cuando se sepa como se construye la URN llamar al método correspondiente en el GeneratorUrnUtils
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn("TODO:mock");
+        datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
+        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
+    }
+
 }

@@ -65,7 +65,7 @@ Application DatasetsStatisticalResources {
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
-				@Datasource retrieveByUrn(String urn) throws MetamacException ;
+				@Datasource retrieveByUrn(String urn) throws MetamacException;
 			}
 		}
 		

@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
-import org.siemac.metamac.common.test.utils.MetamacAsserts.MapperEnum;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 

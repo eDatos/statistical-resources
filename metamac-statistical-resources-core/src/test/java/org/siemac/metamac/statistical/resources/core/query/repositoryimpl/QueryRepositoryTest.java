@@ -2,8 +2,10 @@ package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +14,8 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

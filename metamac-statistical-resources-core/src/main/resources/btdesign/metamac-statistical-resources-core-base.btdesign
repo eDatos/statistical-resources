@@ -40,6 +40,7 @@ Application BaseStatisticalResources {
 			Repository IdentifiableStatisticalResourceRepository {
 				findByCondition;
 				@IdentifiableStatisticalResource retrieveByUrn(String urn) throws MetamacException;
+				checkDuplicatedUrn(@IdentifiableStatisticalResource identifiableStatisticalResource) throws MetamacException;
 			}
 
 		}

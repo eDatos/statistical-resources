@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceProperties;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -20,6 +21,7 @@ public class IdentifiableStatisticalResourceRepositoryImpl extends IdentifiableS
     public IdentifiableStatisticalResourceRepositoryImpl() {
     }
 
+    @Override
     public IdentifiableStatisticalResource retrieveByUrn(String urn) throws MetamacException {
 
         List<ConditionalCriteria> condition = criteriaFor(IdentifiableStatisticalResource.class).withProperty(IdentifiableStatisticalResourceProperties.urn()).eq(urn).distinctRoot().build();
@@ -34,6 +36,16 @@ public class IdentifiableStatisticalResourceRepositoryImpl extends IdentifiableS
         }
 
         return result.get(0);
+    }
 
+    @Override
+    public void checkDuplicatedUrn(IdentifiableStatisticalResource identifiableStatisticalResource) throws MetamacException {
+        List<ConditionalCriteria> condition = criteriaFor(IdentifiableStatisticalResource.class).withProperty(IdentifiableStatisticalResourceProperties.urn()).eq(identifiableStatisticalResource.getUrn()).distinctRoot().build();
+        List<IdentifiableStatisticalResource> result = findByCondition(condition);
+
+        if (!result.isEmpty() && (identifiableStatisticalResource.getId() == null || !result.get(0).getId().equals(identifiableStatisticalResource.getId()))) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED).withMessageParameters(identifiableStatisticalResource.getUrn())
+                    .build();
+        }
     }
 }

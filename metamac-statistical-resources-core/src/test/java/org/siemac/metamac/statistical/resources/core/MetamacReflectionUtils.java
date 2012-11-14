@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class MetamacReflectionUtils {
     
+    @SuppressWarnings("rawtypes")
     public static Set<Field> getDeclaredFieldsWithType(Class clazz, Class typeClass) {
         Set<Field> fields = new HashSet<Field>();
         for (Field field : clazz.getDeclaredFields()) {
@@ -18,6 +19,7 @@ public class MetamacReflectionUtils {
     }
     
     
+    @SuppressWarnings("rawtypes")
     public static Object getDeclaredStaticFieldValue(Class clazz, String name) throws Exception {
         Field field = clazz.getDeclaredField(name);
         if (field.isAccessible()) {

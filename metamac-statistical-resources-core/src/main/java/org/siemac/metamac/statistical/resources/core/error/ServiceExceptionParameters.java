@@ -52,6 +52,13 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     public static final String DATASET_TITLE                               = DATASET + ".title";
     public static final String DATASET_OPERATION                           = DATASET + ".operation";
 
+    // DATASET VERSION
+    public static final String DATASET_VERSION                             = "datasetVersion";
+    public static final String DATASET_VERSION_ID                          = DATASET_VERSION + ".id";
+    public static final String DATASET_VERSION_UUID                        = DATASET_VERSION + ".uuid";
+    public static final String DATASET_VERSION_VERSION                     = DATASET_VERSION + ".version";
+    public static final String DATASET_VERSION_DATASET                     = DATASET_VERSION + ".dataset";
+
     // DATASOURCE
     public static final String DATASOURCE                                  = "datasource";
     public static final String DATASOURCE_ID                               = DATASOURCE + ".id";

@@ -1,17 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QueryMockFactory extends MockFactory<Query> {
 
     public static final String        QUERY_01_BASIC_NAME            = "QUERY_01_BASIC";
-    public static final Query         QUERY_01_BASIC                 = StatisticalResourcesDoMocks.mockQuery(); ;
+    public static final Query         QUERY_01_BASIC                 = mockPersistedQuery(); ;
 
     public static final String        QUERY_02_BASIC_ORDERED_01_NAME = "QUERY_02_BASIC_ORDERED_01";
     public static final Query         QUERY_02_BASIC_ORDERED_01      = mockPersistedQueryWithCode("a");
@@ -35,7 +35,7 @@ public class QueryMockFactory extends MockFactory<Query> {
     }
 
     private static Query mockPersistedQueryWithCode(String code) {
-        Query query = StatisticalResourcesDoMocks.mockQuery();
+        Query query = mockPersistedQuery();
         query.getNameableStatisticalResource().setCode(code);
         return query;
     }

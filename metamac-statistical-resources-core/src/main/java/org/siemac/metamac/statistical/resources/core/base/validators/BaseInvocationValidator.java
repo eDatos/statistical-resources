@@ -90,6 +90,7 @@ public abstract class BaseInvocationValidator {
 
     private static void checkIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
+        StatisticalResourcesValidationUtils.checkSemanticIdentifier(identifiableStatisticalResource.getCode(), exceptions);
     }
 
     // ------------------------------------------------------------------------------------
@@ -168,6 +169,9 @@ public abstract class BaseInvocationValidator {
 
         checkNewVersionableStatisticalResource(lifeCycleStatisticalResource, exceptions);
         checkLifeCycleStatisticalResource(lifeCycleStatisticalResource, exceptions);
+
+        // Metadata that must be empty for new entities
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
     }
 
     protected static void checkExistingLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
@@ -178,11 +182,12 @@ public abstract class BaseInvocationValidator {
 
         checkExistingVersionableStatisticalResource(lifeCycleStatisticalResource, exceptions);
         checkLifeCycleStatisticalResource(lifeCycleStatisticalResource, exceptions);
+
+        // Metadata that must be filled for existing entities
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
     }
 
     private static void checkLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
-
         StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(lifeCycleStatisticalResource.getCreator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CREATOR, exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getContributor(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CONTRIBUTOR, exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getPublisher(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PUBLISHER, exceptions);
