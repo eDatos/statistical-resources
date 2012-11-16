@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 
@@ -14,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +36,15 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
 
     @Autowired
     protected StatisticalResourceRepository statisticalResourceRepository;
+    
+    @Autowired
+    protected QueryMockFactory queryMockFactory;
 
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query actual = queryRepository.retrieveByUrn(QUERY_01_BASIC.getNameableStatisticalResource().getUrn());
-        assertEqualsQuery(QUERY_01_BASIC, actual);
+        Query actual = queryRepository.retrieveByUrn(queryMockFactory.QUERY_01_BASIC.getNameableStatisticalResource().getUrn());
+        assertEqualsQuery(queryMockFactory.QUERY_01_BASIC, actual);
     }
 
     @Test

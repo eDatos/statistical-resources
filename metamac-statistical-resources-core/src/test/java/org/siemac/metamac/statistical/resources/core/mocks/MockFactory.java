@@ -23,18 +23,19 @@ public abstract class MockFactory<Model> {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void registerMocks(Class factoryClass, Class modelClass, Map mocks) {
+    public static void registerMocks(Object mockFactoryObj, Class modelClass, Map mocks) {
+        Class factoryClass = mockFactoryObj.getClass();
         Set<Field> queryFields = MetamacReflectionUtils.getDeclaredFieldsWithType(factoryClass, modelClass);
         for (Field field : queryFields) {
             String nameFieldValue = null;
             Object mockFieldValue = null;
             try {
-                nameFieldValue = (String) MetamacReflectionUtils.getDeclaredStaticFieldValue(factoryClass, field.getName() + NAME_FIELD_SUFFIX);
+                nameFieldValue = (String) MetamacReflectionUtils.getDeclaredFieldValue(mockFactoryObj, field.getName() + NAME_FIELD_SUFFIX);
             } catch (Exception e) {
                 throw new IllegalStateException("An error ocurred loading value of name field for mock " + field.getName());
             }
             try {
-                mockFieldValue = modelClass.cast(MetamacReflectionUtils.getDeclaredStaticFieldValue(factoryClass, field.getName()));
+                mockFieldValue = modelClass.cast(MetamacReflectionUtils.getDeclaredFieldValue(mockFactoryObj, field.getName()));
             } catch (Exception e) {
                 throw new IllegalStateException("An error ocurred loading value of mock field for mock " + field.getName());
             }

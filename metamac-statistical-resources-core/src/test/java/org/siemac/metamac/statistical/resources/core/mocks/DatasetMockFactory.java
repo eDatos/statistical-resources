@@ -1,33 +1,42 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks.mockPersistedDataset;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks.mockPersistedDatasetWithGeneratedDatasetVersions;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatasetMockFactory extends MockFactory<Dataset> {
+public class DatasetMockFactory extends MockFactory<Dataset> implements InitializingBean {
 
-    public static final String          DATASET_01_BASIC_NAME                         = "DATASET_01_BASIC";
-    public static final Dataset         DATASET_01_BASIC                              = mockPersistedDataset();
+    @Autowired
+    StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
 
-    public static final String          DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME  = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
-    public static final Dataset         DATASET_02_BASIC_WITH_GENERATED_VERSION       = mockPersistedDatasetWithGeneratedDatasetVersions();
+    @Autowired
+    DatasetVersionMockFactory            datasetVersionMockFactory;
 
-    public static final String          DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME = "DATASET_03_BASIC_WITH_2_DATASET_VERSIONS";
-    public static final Dataset         DATASET_03_BASIC_WITH_2_DATASET_VERSIONS      = createDataset03With2DatasetVersions();
+    public static final String           DATASET_01_BASIC_NAME                         = "DATASET_01_BASIC";
+    public Dataset                       DATASET_01_BASIC;
 
-    private static Map<String, Dataset> mocks;
+    public static final String           DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME  = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
+    public Dataset                       DATASET_02_BASIC_WITH_GENERATED_VERSION;
 
-    static {
+    public static final String           DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME = "DATASET_03_BASIC_WITH_2_DATASET_VERSIONS";
+    public Dataset                       DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
+
+    private static Map<String, Dataset>  mocks;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        DATASET_01_BASIC = createDataset();
+        DATASET_02_BASIC_WITH_GENERATED_VERSION = createDataset();
+        DATASET_03_BASIC_WITH_2_DATASET_VERSIONS = createDataset03With2DatasetVersions();
+
         mocks = new HashMap<String, Dataset>();
-        registerMocks(DatasetMockFactory.class, Dataset.class, mocks);
+        registerMocks(this, Dataset.class, mocks);
     }
 
     @Override
@@ -35,11 +44,15 @@ public class DatasetMockFactory extends MockFactory<Dataset> {
         return mocks.get(id);
     }
 
-    private static Dataset createDataset03With2DatasetVersions() {
-        Dataset dataset = mockPersistedDataset();
-        dataset.addVersion(DATASET_VERSION_03_FOR_DATASET_03);
-        dataset.addVersion(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION);
+    private Dataset createDataset03With2DatasetVersions() {
+        Dataset dataset = createDataset();
+        dataset.addVersion(datasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03);
+        dataset.addVersion(datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION);
         return dataset;
+    }
+
+    private Dataset createDataset() {
+        return statisticalResourcesPersistedDoMocks.mockDatasetWithoutGeneratedDatasetVersions();
     }
 
 }

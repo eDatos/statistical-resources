@@ -32,5 +32,18 @@ public class MetamacReflectionUtils {
         }
     }
     
+    @SuppressWarnings("rawtypes")
+    public static Object getDeclaredFieldValue(Object obj, String name) throws Exception {
+        Field field = obj.getClass().getDeclaredField(name);
+        if (field.isAccessible()) {
+            return field.get(obj);
+        } else {
+            field.setAccessible(true);
+            Object value = field.get(obj);
+            field.setAccessible(false);
+            return value;
+        }
+    }
+    
     
 }

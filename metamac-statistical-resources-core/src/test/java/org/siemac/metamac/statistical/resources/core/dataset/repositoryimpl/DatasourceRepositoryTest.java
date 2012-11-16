@@ -2,8 +2,10 @@ package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.*;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.*;
+import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasourceRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,16 +32,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest implements DatasourceRepositoryTestBase {
 
     @Autowired
-    protected DatasourceRepository datasourceRepository;
+    protected DatasourceRepository  datasourceRepository;
+
+    @Autowired
+    protected DatasourceMockFactory datasourceMockFactory;
 
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrn() throws MetamacException {
-        Datasource expected = DATASOURCE_01_BASIC;
-        Datasource actual = datasourceRepository.retrieveByUrn(DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
+        Datasource expected = datasourceMockFactory.DATASOURCE_01_BASIC;
+        Datasource actual = datasourceRepository.retrieveByUrn(datasourceMockFactory.DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
         assertEqualsDatasource(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrnNotFound() {
