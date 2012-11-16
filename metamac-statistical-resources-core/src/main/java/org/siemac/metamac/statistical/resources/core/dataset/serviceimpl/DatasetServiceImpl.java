@@ -11,7 +11,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dataset.validators.DatasetServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
+    
+    @Autowired
+    DatasetServiceInvocationValidator datasetServiceInvocationValidator;
+    
 
     public DatasetServiceImpl() {
     }
@@ -36,7 +40,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public Datasource createDatasource(ServiceContext ctx, String datasetVersionUrn, Datasource datasource) throws MetamacException {
 
         // Validations
-        DatasetServiceInvocationValidator.checkCreateDatasource(datasetVersionUrn, datasource, null);
+        datasetServiceInvocationValidator.checkCreateDatasource(ctx, datasetVersionUrn, datasource);
 
         // TODO: Obtener el datasetVerison cuando el servicio correspondiente esté hecho. Eliminar el new.
         DatasetVersion datasetVersion = new DatasetVersion();
@@ -60,7 +64,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public Datasource updateDatasource(ServiceContext ctx, Datasource datasource) throws MetamacException {
 
         // Validation of parameters
-        DatasetServiceInvocationValidator.checkUpdateDatasource(datasource, null);
+        datasetServiceInvocationValidator.checkUpdateDatasource(ctx, datasource);
 
         // TODO: Comprobar que el estado del dataset asociado es el correcto y otras condiciones necesarias
 
@@ -74,7 +78,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public Datasource retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
 
         // Validation
-        DatasetServiceInvocationValidator.checkRetrieveDatasourceByUrn(urn, null);
+        datasetServiceInvocationValidator.checkRetrieveDatasourceByUrn(ctx, urn);
 
         // Retrieve
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
@@ -85,7 +89,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
 
         // Validation
-        DatasetServiceInvocationValidator.checkDeleteDatasource(urn, null);
+        datasetServiceInvocationValidator.checkDeleteDatasource(ctx, urn);
 
         // Retrieve
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
@@ -98,7 +102,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public List<Datasource> retrieveDatasourcesByDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
 
         // Validation
-        DatasetServiceInvocationValidator.checkRetrieveDatasourcesByDataset(datasetVersionUrn, null);
+        datasetServiceInvocationValidator.checkRetrieveDatasourcesByDatasetVersion(ctx, datasetVersionUrn);
 
         // Retrieve
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
@@ -114,7 +118,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     @Override
     public DatasetVersion createDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
         // Validations
-        DatasetServiceInvocationValidator.checkCreateDatasetVersion(datasetVersion, null);
+        datasetServiceInvocationValidator.checkCreateDatasetVersion(ctx, datasetVersion);
 
         // Create dataset
         Dataset dataset = new Dataset();

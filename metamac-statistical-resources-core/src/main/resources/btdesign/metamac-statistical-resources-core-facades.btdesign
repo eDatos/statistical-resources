@@ -25,9 +25,9 @@ Application FacadeStatisticalResources {
             "Retrieve queries"
             List<@QueryDto> retrieveQueries() throws MetamacException;
             "Create a query"
-            @QueryDto createQuery(QueryDto queryDto) throws MetamacException;
+            @QueryDto createQuery(@QueryDto queryDto) throws MetamacException;
             "Update a query"
-            @QueryDto updateQuery(QueryDto queryDto) throws MetamacException;
+            @QueryDto updateQuery(@QueryDto queryDto) throws MetamacException;
             "Find queries by criteria"
     		 MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
     		 

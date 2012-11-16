@@ -2,7 +2,7 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
-Application DatasetsStatisticalResources {
+Application DatasetsStatisticalResources { 
 	basePackage=unused
 
 	Module domain_datasets {

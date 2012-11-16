@@ -21,9 +21,9 @@ Application QueriesStatisticalResources {
     		"Find queries by criteria"
     		PagedResult<@Query> findQueriesByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
     		"Create query"
-            @Query createQuery(Query query) throws MetamacException;
+            @Query createQuery(@Query query) throws MetamacException;
             "Update query"
-            @Query updateQuery(Query query) throws MetamacException;
+            @Query updateQuery(@Query query) throws MetamacException;
 		}  
 
 
