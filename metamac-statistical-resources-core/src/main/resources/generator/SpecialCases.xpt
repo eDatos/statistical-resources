@@ -99,6 +99,12 @@ CREATE sequence SEQ_«domainObject.getHint('idSequence')»;
 		«ENDIF»
 	«ENDIF»
 «ENDAROUND»
+
+«REM»Generete invocation validator for services «ENDREM»
+«AROUND templates::service::Service::service FOR Service»
+	«targetDef.proceed() -»
+	«EXPAND generatorcommon::InvocationValidator::invocationValidator»
+«ENDAROUND»
  
 «AROUND templates::domain::DomainObject::domainObjectHook FOR DomainObject»
 	«EXPAND generatorcommon::DbUnitMocksCases::generateXmlSerialize»
