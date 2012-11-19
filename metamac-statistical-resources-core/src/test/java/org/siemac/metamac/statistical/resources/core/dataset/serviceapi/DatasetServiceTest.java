@@ -65,9 +65,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
-        // TODO NOTA MENTAL: Es normal que falle este test hasta que los servicios de dataset estén implementados
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasource(datasetVersionMockFactory.DATASET_VERSION_01_BASIC);
+        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
         Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn(), expected);
+        expected.setDatasetVersion(datasetVersionMockFactory.DATASET_VERSION_01_BASIC);
         assertEqualsDatasource(expected, actual);
     }
 
@@ -201,6 +201,27 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         
         assertEqualsDatasetVersion(expected, actual);
+    }
+    
+    @Test
+    public void testCreateDatasetVersionErrorParameterDatasetRequired() throws Exception {
+        try {
+            datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), null);
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.DATASET_VERSION}, e.getExceptionItems().get(0));
+        }
+    }
+    
+    @Test
+    public void testCreateDatasetVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
+        try {
+            DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersionWithNullableSiemacStatisticalResource();
+            datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected);
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE}, e.getExceptionItems().get(0));
+        }
     }
 
     @Test

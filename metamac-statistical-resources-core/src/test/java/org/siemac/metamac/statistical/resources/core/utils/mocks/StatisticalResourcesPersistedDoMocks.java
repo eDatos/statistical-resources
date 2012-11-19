@@ -19,7 +19,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
-    public Datasource mockDatasource() {
+    public Datasource mockDatasourceWithGeneratedDatasetVersion() {
         return mockDatasource(mockDatasetVersion());
     }
     

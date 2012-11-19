@@ -54,7 +54,7 @@ public class DatasourceMockFactory extends MockFactory<Datasource> implements In
     }
 
     private Datasource createDatasource() {
-        return statisticalResourcesPersistedDoMocks.mockDatasource();
+        return statisticalResourcesPersistedDoMocks.mockDatasourceWithGeneratedDatasetVersion();
     }
 
     private Datasource createDatasource(DatasetVersion datasetVersion) {

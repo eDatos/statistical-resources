@@ -5,6 +5,11 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 
 public class ServiceExceptionParameters extends CommonServiceExceptionParameters {
 
+    // PARAMETERS
+    public static final String DATASET_VERSION_URN                         = "datasetVersionUrn";
+    public static final String DATASET_VERSION_URN_TO_COPY                 = "datasetVersionUrnToCopy";
+    public static final String VERSION_TYPE                                = "versionType";
+
     // STATISTICAL_RESOURCE
     public static final String STATISTICAL_RESOURCE                        = "statisticalResource";
     public static final String STATISTICAL_RESOURCE_OPERATION              = STATISTICAL_RESOURCE + ".operation";
@@ -47,7 +52,6 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
 
     // DATASET
     public static final String DATASET                                     = "dataset";
-    public static final String DATASET_URN                                 = DATASET + ".urn";
     public static final String DATASET_VERSION_NUMBER                      = DATASET + ".versionNumber";
     public static final String DATASET_TITLE                               = DATASET + ".title";
     public static final String DATASET_OPERATION                           = DATASET + ".operation";
@@ -89,4 +93,5 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     public static final String QUERY_ID                                    = QUERY + ".id";
     public static final String QUERY_VERSION                               = QUERY + ".version";
     public static final String QUERY_UUID                                  = QUERY + ".uuid";
+
 }

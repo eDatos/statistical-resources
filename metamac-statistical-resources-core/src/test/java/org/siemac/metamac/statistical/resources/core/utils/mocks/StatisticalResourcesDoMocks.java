@@ -48,10 +48,15 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // DATASOURCE
     // -----------------------------------------------------------------
     public Datasource mockDatasource(DatasetVersion datasetVersion) {
-        Datasource datasource = new Datasource();
-
-        datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
+        Datasource datasource = mockDatasource();
         datasource.setDatasetVersion(datasetVersion);
+
+        return datasource;
+    }
+    
+    protected Datasource mockDatasource() {
+        Datasource datasource = new Datasource();
+        datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
 
         return datasource;
     }

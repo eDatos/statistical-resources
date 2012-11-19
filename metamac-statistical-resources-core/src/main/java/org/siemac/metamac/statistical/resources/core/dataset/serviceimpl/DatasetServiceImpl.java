@@ -3,17 +3,21 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +29,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
-    
-    @Autowired
-    DatasetServiceInvocationValidator datasetServiceInvocationValidator;
-    
 
+    @Autowired
+    DatasetServiceInvocationValidator         datasetServiceInvocationValidator;
+
+    
+    private static final String PATTERN_X_Y_INITIAL_VERSION    = "1.0";
+    private static final String PATTERN_XX_YYY_INITIAL_VERSION = "01.000";
+    
     public DatasetServiceImpl() {
     }
 
@@ -42,8 +49,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Validations
         datasetServiceInvocationValidator.checkCreateDatasource(ctx, datasetVersionUrn, datasource);
 
-        // TODO: Obtener el datasetVerison cuando el servicio correspondiente esté hecho. Eliminar el new.
-        DatasetVersion datasetVersion = new DatasetVersion();
+        DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Validate dataset PROC_STATUS
         // TODO: Comprobar que se puede asociar el datasource al dataset
@@ -143,32 +149,87 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Override
     public DatasetVersion updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Validations
+        datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
+
+        // Check status
+        checkStatisticalResourceCouldBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
+
+        // TODO: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
+        // TODO: Si el codigo ha cambiado debemos actualizar la URN
+
+        // TODO: ACtualizar la fecha del optimistic locking
+
+        datasetVersion = getDatasetVersionRepository().save(datasetVersion);
+        return datasetVersion;
     }
 
     @Override
     public DatasetVersion retrieveDatasetVersionByUrn(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Validations
+        datasetServiceInvocationValidator.checkRetrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        // Retrieve
+        DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
+        return datasetVersion;
     }
 
     @Override
-    public List<DatasetVersion> retrieveDatasetVersions(ServiceContext ctx, String datasetUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+    public List<DatasetVersion> retrieveDatasetVersions(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // Validations
+        datasetServiceInvocationValidator.checkRetrieveDatasetVersions(ctx, datasetVersionUrn);
+        
+        // Retrieve
+        List<DatasetVersion> datasetVersions = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn).getDataset().getVersions();
+        
+        return datasetVersions;
     }
 
     @Override
     public PagedResult<DatasetVersion> findDatasetVersionsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Validations
+        datasetServiceInvocationValidator.checkFindDatasetVersionsByCondition(ctx, conditions, pagingParameter);
+        
+        // Find
+        if (conditions == null) {
+            conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().build();
+        }
+        
+        PagedResult<DatasetVersion> datasetVersionPagedResult = getDatasetVersionRepository().findByCondition(conditions, pagingParameter);
+        return datasetVersionPagedResult;
     }
 
     @Override
     public void deleteDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-
+        // Validations
+        datasetServiceInvocationValidator.checkDeleteDatasetVersion(ctx, datasetVersionUrn);
+        
+        // Retrieve version to delete
+        DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        
+        // Check can be deleted
+        // TODO: Determinar cuales son los estados en los que se puede borrar
+        checkStatisticalResourceCouldBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
+        
+        // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
+        
+        // TODO: Comprobar si hay que eliminar relaciones a otros recursos
+        
+        if (isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
+            Dataset dataset = datasetVersion.getDataset();
+            getDatasetRepository().delete(dataset);
+        } else {
+            // Delete version
+            Dataset dataset = datasetVersion.getDataset();
+            dataset.getVersions().remove(datasetVersion);
+            getDatasetVersionRepository().delete(datasetVersion);
+            
+            // Update previous version
+            DatasetVersion previousDatasetVersion = getDatasetVersionRepository().retrieveByVersion(dataset.getId(), datasetVersion.getSiemacMetadataStatisticalResource().getReplaceTo());
+            previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+            previousDatasetVersion.getSiemacMetadataStatisticalResource().setReplacedBy(null);
+            getDatasetVersionRepository().save(previousDatasetVersion);
+        }
     }
 
     @Override
@@ -181,7 +242,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-    private void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
+    private static void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         datasource.setDatasetVersion(datasetVersion);
         datasource.getIdentifiableStatisticalResource().setUri(null);
         // TODO: Cuando se sepa como se construye la URN llamar al método correspondiente en el GeneratorUrnUtils
@@ -199,7 +260,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         getDatasetVersionRepository().save(parent);
     }
 
-    private void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
+    private static void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
         datasetVersion.setDataset(dataset);
         // TODO: Cuando se sepa como se construye la URN llamar al método correspondiente en el GeneratorUrnUtils
         datasetVersion.getSiemacMetadataStatisticalResource().setUrn("TODO:mock");
@@ -208,4 +269,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
     }
 
+    private static void checkStatisticalResourceCouldBeEdited(LifeCycleStatisticalResource resource) throws MetamacException {
+        if (!StatisticalResourceProcStatusEnum.DRAFT.equals(resource) && !StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(resource)
+                && !StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(resource) && !StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(resource)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE).withMessageParameters(resource.getUrn()).build();
+        }
+    }
+    
+    private static Boolean isInitialVersion(String version) {
+        return PATTERN_X_Y_INITIAL_VERSION.equals(version) || PATTERN_XX_YYY_INITIAL_VERSION.equals(version);
+    }
 }

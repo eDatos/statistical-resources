@@ -32,7 +32,7 @@ Application DatasetsStatisticalResources {
 			"Retrieves dataset version by urn"
 			@DatasetVersion retrieveDatasetVersionByUrn(String datasetVersionUrn) throws MetamacException;
 			"Retrieves all datasets versions of one dataset"
-			List<@DatasetVersion> retrieveDatasetVersions(String datasetUrn) throws MetamacException;
+			List<@DatasetVersion> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
 			"Finds datasets by criteria"
     		PagedResult<@DatasetVersion> findDatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 			"Deletes dataset version. This must be last version and no published"

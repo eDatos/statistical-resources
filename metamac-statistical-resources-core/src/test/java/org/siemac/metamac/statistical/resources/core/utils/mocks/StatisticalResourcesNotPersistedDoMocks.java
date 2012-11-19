@@ -40,6 +40,10 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
         return datasource;
     }
+    
+    public Datasource mockDatasourceForPersist() {
+        return mockDatasource();
+    }
 
     // -----------------------------------------------------------------
     // DATASET VERSION
@@ -63,6 +67,12 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
             ds.addVersion(datasetVersion);
         }
 
+        return datasetVersion;
+    }
+    
+    public DatasetVersion mockDatasetVersionWithNullableSiemacStatisticalResource() {
+        DatasetVersion datasetVersion = mockDatasetVersion();
+        datasetVersion.setSiemacMetadataStatisticalResource(null);
         return datasetVersion;
     }
 
