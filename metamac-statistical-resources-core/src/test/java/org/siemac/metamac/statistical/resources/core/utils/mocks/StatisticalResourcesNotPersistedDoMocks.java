@@ -99,6 +99,12 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
         return publicationVersion;
     }
+    
+    public PublicationVersion mockPublicationVersionWithNullableSiemacStatisticalResource() {
+        PublicationVersion publicationVersion = mockPublicationVersion();
+        publicationVersion.setSiemacMetadataStatisticalResource(null);
+        return publicationVersion;
+    }
 
     // -----------------------------------------------------------------
     // BASE HIERARCHY

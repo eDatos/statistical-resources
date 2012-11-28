@@ -32,7 +32,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
         // Check for unique result and return
         if (result.size() == 0) {
-            throw new MetamacException(ServiceExceptionType.DATASET_NOT_FOUND, urn);
+            throw new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, urn);
         } else if (result.size() > 1) {
             // Exists a database constraint that makes URN unique
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset with urn " + urn);

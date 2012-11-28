@@ -1,6 +1,9 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries-dtos.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btdesign"
 
@@ -43,6 +46,22 @@ Application FacadeStatisticalResources {
 	    	deleteDatasource(String urn) throws MetamacException;
 	    	"Retrieves all datasources of a dataset version"
 	    	List<@DatasourceDto> retrieveDatasourcesByDatasetVersion(String urnDatasetVersion) throws MetamacException;
+	    	
+	    	// DATASETS & DATASET VERSION
+	   		"Creates dataset"
+	   		@DatasetDto createDataset(@DatasetDto datasetDto) throws MetamacException;
+	   		"Updates dataset"
+            @DatasetDto updateDataset(@DatasetDto datasetDto) throws MetamacException;
+            "Deletes dataset"
+            deleteDataset(String urn) throws MetamacException;
+            "Finds concepts schemes by criteria"
+            MetamacCriteriaResult<@DatasetDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException;
+            "Retrieves a dataset by URN"
+            @DatasetDto retrieveDatasetByUrn(String urn) throws MetamacException;
+            "Retrieves all dataset versions"
+            List<@DatasetDto> retrieveDatasetVersions(String urn) throws MetamacException;
+    		"Creates a new version of a dataset, copying metadata from version with provided urn"
+    		@DatasetDto versioningDataset(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
 		}  
 	}
 }

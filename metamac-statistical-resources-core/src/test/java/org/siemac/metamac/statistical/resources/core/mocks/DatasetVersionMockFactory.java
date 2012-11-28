@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> imple
 
     private static Map<String, DatasetVersion> mocks;
 
+    private static final String                DATASET_VERSION_03_VERSION                              = "01.000";
+    private static final String                DATASET_VERSION_04_VERSION                              = "02.000";
+
     @Override
     public void afterPropertiesSet() throws Exception {
         DATASET_VERSION_01_BASIC = createDatasetVersion();
@@ -55,6 +59,8 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> imple
     private DatasetVersion createDatasetVersion03() {
         // Relation with dataset
         DatasetVersion datasetVersion = createDatasetVersion(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        datasetVersion.getSiemacMetadataStatisticalResource().setReplacedBy(DATASET_VERSION_04_VERSION);
 
         // Have two datasources
         datasetVersion.addDatasource(datasourceMockFactory.DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03);
@@ -68,7 +74,10 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> imple
         DatasetVersion datasetVersion = createDatasetVersion(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
 
         // Version 02.000
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("02.000");
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_04_VERSION);
+
+        // ReplaceTo
+        datasetVersion.getSiemacMetadataStatisticalResource().setReplaceTo(DATASET_VERSION_03_VERSION);
 
         // Is last version
         datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);

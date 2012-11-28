@@ -44,6 +44,16 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
         Datasource actual = datasourceRepository.retrieveByUrn(datasourceMockFactory.DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
         assertEqualsDatasource(expected, actual);
     }
+    
+    @Test
+    public void testRetrieveByUrnErrorNotFound() throws Exception {
+        try {
+            datasourceRepository.retrieveByUrn(URN_NOT_EXISTS);
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.DATASOURCE_NOT_FOUND, 1, new String[]{URN_NOT_EXISTS}, e.getExceptionItems().get(0));
+        }
+    }
 
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})

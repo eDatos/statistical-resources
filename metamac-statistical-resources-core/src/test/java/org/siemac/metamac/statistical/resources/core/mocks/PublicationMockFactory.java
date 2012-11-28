@@ -46,8 +46,8 @@ public class PublicationMockFactory extends MockFactory<Publication> implements 
 
     private Publication createPublication03With2PublicationVersions() {
         Publication publication = createPublication();
-        publication.addVersion(publicationVersionMockFactory.PUBLICATION_VERSION_03_ASSOCIATED_WITH_PUBLICATION_03);
-        publication.addVersion(publicationVersionMockFactory.PUBLICATION_VERSION_04_ASSOCIATED_WITH_PUBLICATION_03_AND_LAST_VERSION);
+        publication.addVersion(publicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03);
+        publication.addVersion(publicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION);
         return publication;
     }
 

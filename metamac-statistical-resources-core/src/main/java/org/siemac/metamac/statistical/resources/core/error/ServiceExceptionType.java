@@ -11,7 +11,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASET_NOT_FOUND                                = create("exception.resources.dataset.not_found");
     public static final CommonServiceExceptionType DATASET_VERSION_NOT_FOUND                        = create("exception.resources.dataset.version_not_found");
     public static final CommonServiceExceptionType DATASET_LAST_VERSION_NOT_FOUND                   = create("exception.resources.dataset.last_version_not_found");
-    public static final CommonServiceExceptionType DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED      = create("exception.resources.dataset.already_exist.identifier_duplicated");
 
     // Datasource
     public static final CommonServiceExceptionType DATASOURCE_NOT_FOUND                             = create("exception.resources.datasource.not_found");
@@ -29,6 +28,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED = create("exception.resources.identifiable_statistical_resource.code_duplicated");
 
     // Life Cycle Statistical Resource
-    public static final CommonServiceExceptionType LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE      = create("exception.resources.life_cyacle_statistical_resource.not_modifiable");
+    public static final CommonServiceExceptionType LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE   = create("exception.resources.life_cyacle_statistical_resource.not_modifiable");
 
 }

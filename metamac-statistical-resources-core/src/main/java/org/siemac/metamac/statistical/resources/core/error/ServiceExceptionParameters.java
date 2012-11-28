@@ -8,6 +8,8 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     // PARAMETERS
     public static final String DATASET_VERSION_URN                         = "datasetVersionUrn";
     public static final String DATASET_VERSION_URN_TO_COPY                 = "datasetVersionUrnToCopy";
+    public static final String PUBLICATION_VERSION_URN                         = "publicationVersionUrn";
+    public static final String PUBLICATION_VERSION_URN_TO_COPY                 = "publicationVersionUrnToCopy";
     public static final String VERSION_TYPE                                = "versionType";
 
     // STATISTICAL_RESOURCE
@@ -73,9 +75,16 @@ public class ServiceExceptionParameters extends CommonServiceExceptionParameters
     public static final String DATASOURCE_DATASET_VERSION                  = DATASOURCE + ".datasetVersion";
 
     // COLLECTIONS
-    public static final String COLLECTION                                  = "collection";
-    public static final String COLLECTION_TITLE                            = COLLECTION + ".title";
-    public static final String COLLECTION_OPERATION                        = COLLECTION + ".operation";
+    public static final String PUBLICATION                                 = "collection";
+    public static final String PUBLICATION_TITLE                           = PUBLICATION + ".title";
+    public static final String PUBLICATION_OPERATION                       = PUBLICATION + ".operation";
+
+    // PUBLICATION VERSION
+    public static final String PUBLICATION_VERSION                         = "datasetVersion";
+    public static final String PUBLICATION_VERSION_ID                      = PUBLICATION_VERSION + ".id";
+    public static final String PUBLICATION_VERSION_UUID                    = PUBLICATION_VERSION + ".uuid";
+    public static final String PUBLICATION_VERSION_VERSION                 = PUBLICATION_VERSION + ".version";
+    public static final String PUBLICATION_VERSION_PUBLICATION             = PUBLICATION_VERSION + ".dataset";
 
     // PROC STATUS
     public static final String PROC_STATUS_DRAFT                           = StatisticalResourceProcStatusEnum.DRAFT.name();

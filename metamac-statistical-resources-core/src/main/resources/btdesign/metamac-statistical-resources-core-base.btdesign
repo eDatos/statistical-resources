@@ -85,12 +85,9 @@ Application BaseStatisticalResources {
 			String versionResponsibilityOutOfPrint nullable databaseColumn="VR_OUT_OF_PRINT";
 
 			- @ExternalItem creator nullable cascade="all" databaseColumn="CREATOR_FK";
-			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK"
-			databaseJoinTable="TB_EI_CONTRIBUTORS";
-			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK"
-			databaseJoinTable="TB_EI_PUBLISHERS";
-			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK"
-			databaseJoinTable="TB_EI_MEDIATORS";
+			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_CONTRIBUTORS";
+			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_PUBLISHERS";
+			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_MEDIATORS";
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {

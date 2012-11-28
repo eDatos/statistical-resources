@@ -9,8 +9,10 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -33,9 +35,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     @Autowired
     DatasetServiceInvocationValidator         datasetServiceInvocationValidator;
 
-    
-    private static final String PATTERN_X_Y_INITIAL_VERSION    = "1.0";
-    private static final String PATTERN_XX_YYY_INITIAL_VERSION = "01.000";
     
     public DatasetServiceImpl() {
     }
@@ -153,9 +152,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
 
         // Check status
-        checkStatisticalResourceCouldBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
 
         // TODO: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
         // TODO: Si el codigo ha cambiado debemos actualizar la URN
 
         // TODO: ACtualizar la fecha del optimistic locking
@@ -209,13 +209,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         
         // Check can be deleted
         // TODO: Determinar cuales son los estados en los que se puede borrar
-        checkStatisticalResourceCouldBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
         
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
         
         // TODO: Comprobar si hay que eliminar relaciones a otros recursos
         
-        if (isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
+        if (VersionUtil.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Dataset dataset = datasetVersion.getDataset();
             getDatasetRepository().delete(dataset);
         } else {
@@ -234,8 +234,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Override
     public DatasetVersion versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("versioningPublicationVersion not implemented");
+//        // Validations
+//        datasetServiceInvocationValidator.checkVersioningDatasetVersion(ctx, datasetVersionUrnToCopy, versionType);
+//        
+//        // Initialize new version copying
+//        DatasetVersion datasetVersionToCopy = retrieveDatasetVersionByUrn(ctx, datasetVersionUrnToCopy);
     }
 
     // ------------------------------------------------------------------------
@@ -267,16 +271,5 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
-    }
-
-    private static void checkStatisticalResourceCouldBeEdited(LifeCycleStatisticalResource resource) throws MetamacException {
-        if (!StatisticalResourceProcStatusEnum.DRAFT.equals(resource) && !StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(resource)
-                && !StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(resource) && !StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(resource)) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE).withMessageParameters(resource.getUrn()).build();
-        }
-    }
-    
-    private static Boolean isInitialVersion(String version) {
-        return PATTERN_X_Y_INITIAL_VERSION.equals(version) || PATTERN_XX_YYY_INITIAL_VERSION.equals(version);
     }
 }

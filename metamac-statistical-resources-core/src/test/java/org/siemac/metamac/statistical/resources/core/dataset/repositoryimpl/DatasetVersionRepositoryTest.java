@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
+import static org.junit.Assert.assertEquals;
+import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
@@ -8,9 +10,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
@@ -44,6 +48,16 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     public void testRetrieveByUrn() throws Exception {
         DatasetVersion actual = datasetVersionRepository.retrieveByUrn(datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsDatasetVersion(datasetVersionMockFactory.DATASET_VERSION_01_BASIC, actual);
+    }
+    
+    @Test
+    public void testRetrieveByUrnNotFound() throws Exception {
+        try {
+            datasetVersionRepository.retrieveByUrn(URN_NOT_EXISTS);
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, 1, new String[]{URN_NOT_EXISTS}, e.getExceptionItems().get(0));
+        }
     }
 
     @Test

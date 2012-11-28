@@ -2,6 +2,10 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import java.util.Collection;
 
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -41,6 +45,20 @@ public class PublicationsAsserts extends BaseAsserts {
 
         if (!publicationChecked) {
             assertEqualsPublication(expected.getPublication(), actual.getPublication());
+        }
+    }
+    
+    public static void assertEqualsPublicationVersionCollection(Collection<PublicationVersion> expected, Collection<PublicationVersion> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (PublicationVersion expectedItem : expected) {
+                if (!actual.contains(expectedItem)) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
         }
     }
 }

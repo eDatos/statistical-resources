@@ -90,7 +90,7 @@ public abstract class BaseInvocationValidator {
 
     private static void checkIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
-        StatisticalResourcesValidationUtils.checkSemanticIdentifier(identifiableStatisticalResource.getCode(), exceptions);
+        StatisticalResourcesValidationUtils.checkSemanticIdentifier(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
     }
 
     // ------------------------------------------------------------------------------------

@@ -50,6 +50,20 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEqualsDataset(expected.getDataset(), actual.getDataset());
         }
     }
+    
+    public static void assertEqualsDatasetVersionCollection(Collection<DatasetVersion> expected, Collection<DatasetVersion> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (DatasetVersion expectedItem : expected) {
+                if (!actual.contains(expectedItem)) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
+    }
 
     // -----------------------------------------------------------------
     // DATASOURCE: DO & DO

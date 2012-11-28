@@ -1,4 +1,6 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
 Application PublicationsStatisticalResources {
@@ -15,6 +17,21 @@ Application PublicationsStatisticalResources {
 			> @PublicationRepository
 			> @PublicationVersionRepository
 			
+			// Publications
+	    	"Creates publication version"
+			@PublicationVersion createPublicationVersion(@PublicationVersion publicationVersion) throws MetamacException;
+			"Updates publication version"
+			@PublicationVersion updatePublicationVersion(@PublicationVersion publicationVersion) throws MetamacException;
+			"Retrieves publication version by urn"
+			@PublicationVersion retrievePublicationVersionByUrn(String publicationVersionUrn) throws MetamacException;
+			"Retrieves all publications versions of one publication"
+			List<@PublicationVersion> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
+			"Finds publications by criteria"
+    		PagedResult<@PublicationVersion> findPublicationVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+			"Deletes publication version. This must be last version and no published"
+    		deletePublicationVersion(String publicationVersionUrn) throws MetamacException;
+    		"Creates a new version of a publication, copying metadata from version with provided urn"
+    		@PublicationVersion versioningPublicationVersion(String publicationVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
 		}  
 
 
@@ -47,12 +64,10 @@ Application PublicationsStatisticalResources {
 			- @Publication publication not nullable cascade="none" databaseColumn="PUBLICATION_FK" <-> versions;
 			
 			Repository PublicationVersionRepository {
-//				save;
-//				delete;
-				findById;
+				save;
+				delete;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
-				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@PublicationVersion retrieveByUrn(String urn) throws MetamacException;
 				@PublicationVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;

@@ -288,19 +288,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static String mockAgencyUrn() {
-        return GeneratorUrnUtils.generateSdmxAgencyUrn(MAINTAINER_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.VERSION_INITIAL_VERSION, AGENCY_MOCK);
+        return GeneratorUrnUtils.generateSdmxAgencyUrn(MAINTAINER_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, AGENCY_MOCK);
     }
 
     public static String mockConceptUrn() {
-        return GeneratorUrnUtils.generateSdmxConceptUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.VERSION_INITIAL_VERSION, CONCEPT_MOCK);
+        return GeneratorUrnUtils.generateSdmxConceptUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, CONCEPT_MOCK);
     }
 
     public static String mockConceptSchemeUrn() {
-        return GeneratorUrnUtils.generateSdmxConceptSchemeUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.VERSION_INITIAL_VERSION);
+        return GeneratorUrnUtils.generateSdmxConceptSchemeUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
     public static String mockCodeListExternalItem() {
-        return GeneratorUrnUtils.generateSdmxCodelistUrn(MAINTAINER_MOCK, CODELIST_MOCK, VersionUtil.VERSION_INITIAL_VERSION);
+        return GeneratorUrnUtils.generateSdmxCodelistUrn(MAINTAINER_MOCK, CODELIST_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
     // -----------------------------------------------------------------
