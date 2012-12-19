@@ -24,7 +24,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
     // ------------------------------------------------------------
     // BASE HIERARCHY
     // ------------------------------------------------------------
-    
+
     @Override
     public void nameableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) {
         if (source == null) {
@@ -56,7 +56,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
 
         // Identity
         // Don't set the identity attributes because we choose the ones of the lastest element of the hierarchy
-        
+
         // Auditable
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
@@ -109,6 +109,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
             LocalisedStringDto target = new LocalisedStringDto();
             target.setLabel(source.getLabel());
             target.setLocale(source.getLocale());
+            target.setIsUnmodifiable(source.getIsUnmodifiable());
             targets.add(target);
         }
         return targets;

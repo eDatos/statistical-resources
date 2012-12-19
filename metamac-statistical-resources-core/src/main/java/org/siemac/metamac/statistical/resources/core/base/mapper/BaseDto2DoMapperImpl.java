@@ -32,7 +32,6 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     @Autowired
     private ExternalItemRepository        externalItemRepository;
 
-
     // ------------------------------------------------------------
     // BASE HIERARCHY
     // ------------------------------------------------------------
@@ -42,7 +41,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         // Hierarchy
         identifiableStatisticalResourceDtoToDo(source, target);
-        
+
         // Non modifiable after creation
 
         // Attributes modifiable
@@ -56,7 +55,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     public void identifiableStatisticalResourceDtoToDo(IdentifiableStatisticalResourceDto source, IdentifiableStatisticalResource target) throws MetamacException {
         // Hierarchy
         statisticalResourceDtoToDo(source, target);
-        
+
         // Non modifiable after creation
 
         // Attributes modifiable
@@ -134,6 +133,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     private LocalisedString localisedStringDtoToDo(LocalisedStringDto source, LocalisedString target, InternationalString internationalStringTarget) {
         target.setLabel(source.getLabel());
         target.setLocale(source.getLocale());
+        target.setIsUnmodifiable(source.getIsUnmodifiable());
         target.setInternationalString(internationalStringTarget);
         return target;
     }
@@ -141,7 +141,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     // ------------------------------------------------------------
     // EXTERNAL ITEMS
     // ------------------------------------------------------------
-    
+
     @Override
     public ExternalItem externalItemDtoToDo(ExternalItemDto source, ExternalItem target, String metadataName) throws MetamacException {
         if (source == null) {
