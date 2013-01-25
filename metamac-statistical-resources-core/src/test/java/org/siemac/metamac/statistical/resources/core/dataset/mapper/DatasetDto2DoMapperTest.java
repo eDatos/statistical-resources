@@ -1,12 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.*;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,5 +33,12 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         Datasource entity = datasetDto2DoMapper.datasourceDtoToDo(dto);
         assertEqualsDatasource(dto, entity);
     }
-    
+
+    @Test
+    public void testDatasetDtoToDo() throws MetamacException {
+        DatasetDto dto = StatisticalResourcesDtoMocks.mockDatasetDto();
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertEqualsDatasetVersion(dto, entity);
+    }
+
 }

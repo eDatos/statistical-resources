@@ -29,27 +29,27 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest implements DatasetVersionRepositoryTestBase {
 
     @Autowired
-    protected DatasetVersionRepository datasetVersionRepository;
-    
+    protected DatasetVersionRepository  datasetVersionRepository;
+
     @Autowired
     protected DatasetVersionMockFactory datasetVersionMockFactory;
-    
-    @Autowired
-    protected DatasetMockFactory datasetMockFactory;
-    
 
+    @Autowired
+    protected DatasetMockFactory        datasetMockFactory;
+
+    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
         DatasetVersion actual = datasetVersionRepository.retrieveByUrn(datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsDatasetVersion(datasetVersionMockFactory.DATASET_VERSION_01_BASIC, actual);
     }
-    
+
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
         try {
@@ -60,6 +60,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLastVersion() throws Exception {
@@ -67,10 +68,12 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         assertEqualsDatasetVersion(datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION, actual);
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveByVersion() throws Exception {
-        DatasetVersion actual = datasetVersionRepository.retrieveByVersion(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS.getId(), datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION.getSiemacMetadataStatisticalResource().getVersionLogic());
+        DatasetVersion actual = datasetVersionRepository.retrieveByVersion(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS.getId(),
+                datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEqualsDatasetVersion(datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION, actual);
     }
 }

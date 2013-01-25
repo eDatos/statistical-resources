@@ -34,6 +34,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     public PublicationServiceImpl() {
     }
 
+    @Override
     public PublicationVersion createPublicationVersion(ServiceContext ctx, PublicationVersion publicationVersion) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkCreatePublicationVersion(ctx, publicationVersion);
@@ -59,6 +60,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return publicationVersion;
     }
 
+    @Override
     public PublicationVersion updatePublicationVersion(ServiceContext ctx, PublicationVersion publicationVersion) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkUpdatePublicationVersion(ctx, publicationVersion);
@@ -76,6 +78,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return publicationVersion;
     }
 
+    @Override
     public PublicationVersion retrievePublicationVersionByUrn(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkRetrievePublicationVersionByUrn(ctx, publicationVersionUrn);
@@ -85,6 +88,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return publicationVersion;
     }
 
+    @Override
     public List<PublicationVersion> retrievePublicationVersions(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkRetrievePublicationVersions(ctx, publicationVersionUrn);
@@ -95,6 +99,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return publicationVersions;
     }
 
+    @Override
     public PagedResult<PublicationVersion> findPublicationVersionsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkFindPublicationVersionsByCondition(ctx, conditions, pagingParameter);
@@ -108,6 +113,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return publicationVersionPagedResult;
     }
 
+    @Override
     public void deletePublicationVersion(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkDeletePublicationVersion(ctx, publicationVersionUrn);
@@ -134,13 +140,14 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
             // Update previous version
             PublicationVersion previousPublicationVersion = getPublicationVersionRepository().retrieveByVersion(publication.getId(),
-                    publicationVersion.getSiemacMetadataStatisticalResource().getReplaceTo());
+                    publicationVersion.getSiemacMetadataStatisticalResource().getReplaceToVersion());
             previousPublicationVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
-            previousPublicationVersion.getSiemacMetadataStatisticalResource().setReplacedBy(null);
+            previousPublicationVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
             getPublicationVersionRepository().save(previousPublicationVersion);
         }
     }
 
+    @Override
     public PublicationVersion versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("versioningPublicationVersion not implemented");
@@ -158,6 +165,5 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
     }
-    
 
 }

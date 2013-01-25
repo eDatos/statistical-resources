@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks;
 
+import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -24,15 +25,19 @@ import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
-    private static final String[] MAINTAINER_MOCK            = new String[]{"MaintainerMock"};
-    private static final String   STATISTICAL_OPERATION_MOCK = "StatisticalOperationMock";
-    private static final String   AGENCY_MOCK                = "AgencyMock";
-    private static final String   AGENCY_SCHEME_MOCK         = "AgencySchemeMock";
-    private static final String   CONCEPT_SCHEME_MOCK        = "ConceptSchemeMock";
-    private static final String   CONCEPT_MOCK               = "ConceptMock";
-    private static final String   CODELIST_MOCK              = "CodelistMock";
+    private static final String[] MAINTAINER_MOCK                     = new String[]{"MaintainerMock"};
+    private static final String   ORGANIZATION_UNIT_MOCK              = "OrganizationUnitMock";
+    private static final String   STATISTICAL_OPERATION_MOCK          = "StatisticalOperationMock";
+    private static final String   STATISTICAL_OPERATION_INSTANCE_MOCK = "StatisticalOperationInstanceMock";
+    private static final String   AGENCY_MOCK                         = "AgencyMock";
+    private static final String   AGENCY_SCHEME_MOCK                  = "AgencySchemeMock";
+    private static final String   CONCEPT_SCHEME_MOCK                 = "ConceptSchemeMock";
+    private static final String   CONCEPT_MOCK                        = "ConceptMock";
+    private static final String   CODELIST_MOCK                       = "CodelistMock";
+    private static final String   CODE_MOCK                           = "CodeMock";
+    private static final String   DSD_MOCK                            = "DsdMock";
 
-    private static final String   URI_MOCK_PREFIX            = "lorem/ipsum/dolor/sit/amet/";
+    private static final String   URI_MOCK_PREFIX                     = "lorem/ipsum/dolor/sit/amet/";
 
     // -----------------------------------------------------------------
     // QUERY
@@ -53,18 +58,18 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         return datasource;
     }
-    
+
     protected Datasource mockDatasource() {
         Datasource datasource = new Datasource();
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
 
         return datasource;
     }
-    
+
     // -----------------------------------------------------------------
     // DATASET
     // -----------------------------------------------------------------
-    
+
     public Dataset mockDatasetWithoutGeneratedDatasetVersions() {
         return mockDataset(false);
     }
@@ -72,7 +77,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public Dataset mockDatasetWithGeneratedDatasetVersions() {
         return mockDataset(true);
     }
-    
+
     private Dataset mockDataset(boolean withVersion) {
         Dataset dataset = new Dataset();
         if (withVersion) {
@@ -80,21 +85,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         }
         return dataset;
     }
-    
-    
+
     // -----------------------------------------------------------------
     // DATASET VERSION
     // -----------------------------------------------------------------
-    
+
     public abstract DatasetVersion mockDatasetVersion();
     public abstract DatasetVersion mockDatasetVersion(Dataset dataset);
-    
+
     protected DatasetVersion mockDatasetVersionMetadata() {
         DatasetVersion datasetVersion = new DatasetVersion();
         return datasetVersion;
     }
-    
-    
+
     // -----------------------------------------------------------------
     // PUBLICATION
     // -----------------------------------------------------------------
@@ -113,22 +116,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         }
         return publication;
     }
-    
+
     // -----------------------------------------------------------------
     // PUBLICATION VERSION
     // -----------------------------------------------------------------
-    
+
     protected PublicationVersion mockPublicationVersionMetadata() {
         PublicationVersion publicationVersion = new PublicationVersion();
         return publicationVersion;
     }
-    
-    
-    
+
     protected abstract PublicationVersion mockPublicationVersion();
     protected abstract PublicationVersion mockPublicationVersion(Publication publication);
-    
-    
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -137,19 +137,30 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
         mockLifeCycleStatisticalResource(resource);
 
+        ExternalItem language = mockCodeExternalItem();
+        resource.setLanguage(language);
+        resource.addLanguage(language);
+
+        resource.setStatisticalOperationInstance(mockStatisticalOperationItem());
+        // TODO: KEYWORDS
+
         resource.setType(type);
-        resource.setFormat(format);
+
+        resource.setMaintainer(mockAgencyExternalItem());
+        resource.setCreator(mockOrganizationUnitExternalItem());
+        resource.addPublisher(mockOrganizationUnitExternalItem());
+        resource.setRightsHolder(mockOrganizationUnitExternalItem());
+        resource.setCopyrightedDate(new DateTime());
+        resource.setLicense(mockInternationalString());
+        resource.setAccessRights(mockInternationalString());
+
+        setSpecialCasesSiemacMetadataStatisticalResourceMock(resource);
 
         return resource;
     }
 
     protected LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
         mockVersionableStatisticalResource(resource);
-
-        resource.setCreator(mockAgencyExternalItem());
-        resource.addContributor(mockAgencyExternalItem());
-        resource.addMediator(mockAgencyExternalItem());
-        resource.addPublisher(mockAgencyExternalItem());
 
         setSpecialCasesLifeCycleStatisticalResourceMock(resource);
         return resource;
@@ -187,14 +198,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     protected StatisticalResource mockStatisticalResource(StatisticalResource resource) {
-        resource.setOperation(mockStatisticalOperationItem());
-
         return resource;
     }
 
     // -----------------------------------------------------------------
     // ABSTRACT METHODS
     // -----------------------------------------------------------------
+
+    protected abstract void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource);
 
     protected abstract void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource);
 
@@ -259,7 +270,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return item;
     }
 
+    public static ExternalItem mockStatisticalOperationInstanceItem() {
+        ExternalItem item = new ExternalItem(STATISTICAL_OPERATION_INSTANCE_MOCK, getUriMock(), mockStatisticalOperationInstanceUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
+
     public static ExternalItem mockAgencyExternalItem() {
+        ExternalItem item = new ExternalItem(AGENCY_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY);
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
+
+    public static ExternalItem mockOrganizationUnitExternalItem() {
         ExternalItem item = new ExternalItem(AGENCY_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY);
         item.setVersion(Long.valueOf(0));
         return item;
@@ -278,7 +301,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static ExternalItem mockCodeListSchemeExternalItem() {
-        ExternalItem item = new ExternalItem(CODELIST_MOCK, getUriMock(), mockCodeListExternalItem(), TypeExternalArtefactsEnum.CODELIST);
+        ExternalItem item = new ExternalItem(CODELIST_MOCK, getUriMock(), mockCodeListUrn(), TypeExternalArtefactsEnum.CODELIST);
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
+
+    public static ExternalItem mockCodeExternalItem() {
+        ExternalItem item = new ExternalItem(CODE_MOCK, getUriMock(), mockCodeUrn(), TypeExternalArtefactsEnum.CODE);
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
+
+    public static ExternalItem mockDsdExternalItem() {
+        ExternalItem item = new ExternalItem(DSD_MOCK, getUriMock(), mockDsdUrn(), TypeExternalArtefactsEnum.DATASTRUCTURE);
         item.setVersion(Long.valueOf(0));
         return item;
     }
@@ -287,8 +322,16 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(STATISTICAL_OPERATION_MOCK);
     }
 
+    public static String mockStatisticalOperationInstanceUrn() {
+        return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(STATISTICAL_OPERATION_INSTANCE_MOCK);
+    }
+
     public static String mockAgencyUrn() {
         return GeneratorUrnUtils.generateSdmxAgencyUrn(MAINTAINER_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, AGENCY_MOCK);
+    }
+
+    public static String mockOrganizationUnitUrn() {
+        return GeneratorUrnUtils.generateSdmxOrganisationUnitUrn(MAINTAINER_MOCK, ORGANIZATION_UNIT_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, AGENCY_MOCK);
     }
 
     public static String mockConceptUrn() {
@@ -299,8 +342,16 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return GeneratorUrnUtils.generateSdmxConceptSchemeUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
-    public static String mockCodeListExternalItem() {
-        return GeneratorUrnUtils.generateSdmxCodelistUrn(MAINTAINER_MOCK, CODELIST_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
+    public static String mockCodeListUrn() {
+        return GeneratorUrnUtils.generateSdmxCodelistUrn(MAINTAINER_MOCK, CODE_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
+    }
+
+    public static String mockCodeUrn() {
+        return GeneratorUrnUtils.generateSdmxCodeUrn(MAINTAINER_MOCK, CODELIST_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, CODE_MOCK);
+    }
+
+    public static String mockDsdUrn() {
+        return GeneratorUrnUtils.generateSdmxDatastructureUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
     // -----------------------------------------------------------------

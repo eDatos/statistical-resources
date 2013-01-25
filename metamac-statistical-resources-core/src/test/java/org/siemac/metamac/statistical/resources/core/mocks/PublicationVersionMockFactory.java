@@ -57,7 +57,7 @@ public class PublicationVersionMockFactory extends MockFactory<PublicationVersio
         // Relation with publication
         PublicationVersion publicationVersion = createPublicationVersion(publicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS);
         publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
-        publicationVersion.getSiemacMetadataStatisticalResource().setReplacedBy(PUBLICATION_VERSION_04_VERSION);
+        publicationVersion.getSiemacMetadataStatisticalResource().setReplacedByVersion(PUBLICATION_VERSION_04_VERSION);
 
         return publicationVersion;
     }
@@ -68,7 +68,7 @@ public class PublicationVersionMockFactory extends MockFactory<PublicationVersio
         // Version 02.000
         publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(PUBLICATION_VERSION_04_VERSION);
         // ReplaceTo
-        publicationVersion.getSiemacMetadataStatisticalResource().setReplaceTo(PUBLICATION_VERSION_03_VERSION);
+        publicationVersion.getSiemacMetadataStatisticalResource().setReplaceToVersion(PUBLICATION_VERSION_03_VERSION);
         // Is last version
         publicationVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
 

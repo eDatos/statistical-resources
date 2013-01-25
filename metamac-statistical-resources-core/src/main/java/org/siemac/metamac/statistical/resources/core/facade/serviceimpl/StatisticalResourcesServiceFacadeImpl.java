@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
@@ -221,8 +222,19 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        DatasetsSecurityUtils.canCreateDataset(ctx);
+
+        // Transform
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
+
+        // Retrieve
+        DatasetVersion datasetVersionCreated = getDatasetService().createDatasetVersion(ctx, datasetVersion);
+
+        // Transform
+        DatasetDto datasetCreated = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersionCreated);
+
+        return datasetCreated;
     }
 
     @Override

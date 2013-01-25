@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.dataset.utils;
 
-import static org.siemac.metamac.statistical.resources.core.base.utils.BaseDoCopyUtils.copySiemacMetadataStatisticalResource;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copySiemacMetadataStatisticalResource;
 
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 
-public class DatasetDoCopyUtils {
+public class DatasetVersioningCopyUtils {
 
     /**
      * Create a new {@link DatasetVersion} copying values from a source.

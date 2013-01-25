@@ -9,6 +9,41 @@ Application DatasetsStatisticalResourcesDto {
 		
 		// DATASET
 		DataTransferObject DatasetDto extends @SiemacMetadataStatisticalResourceDto {
+			//temporal codes
+			- Bag<@ExternalItemDto> temporalCoverage;
+			//geographic codes
+			- Bag<@ExternalItemDto> geographicCoverage;
+			//geographic granularities
+			- Bag<@ExternalItemDto> geographicGranularities;
+			//temporal granularities
+			- Bag<@ExternalItemDto> temporalGranularities;
+			//First date which data refers to
+			JAVADATE dateStart;
+			//Last date which data refers to
+			JAVADATE dateEnd;
+			- Bag<@ExternalItemDto> statisticalUnit;
+			- Bag<@ExternalItemDto> measures;
+			
+			//Production descriptor
+			
+			- @ExternalItemDto relatedDsd;
+			
+			//Class descriptors
+			
+			//Number of observations contained in the dataset
+			Integer formatExtentObservations;
+			//Number of diemnsions defined in the DSD
+			Integer formatExtentDimensions;
+			
+			//Publishing descriptors
+			
+			//public date of next update
+			JAVADATE dateNextUpdate;
+			//Frecuency which the data is updated
+			- @ExternalItemDto updateFrequency;
+			//Official/no official statistic
+			//List<String> statisticOfficiality;
+			- @InternationalStringDto bibliographicCitation;
 		}
 		
 		// DATASOURCE

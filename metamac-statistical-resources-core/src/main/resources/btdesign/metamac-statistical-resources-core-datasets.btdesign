@@ -16,7 +16,7 @@ Application DatasetsStatisticalResources {
 			> @DatasourceRepository
 			> @DatasetRepository
 			> @DatasetVersionRepository
-
+			
 			// Datasources
 			@Datasource createDatasource(String datasetVersionUrn, @Datasource datasource) throws MetamacException;
 	    	@Datasource updateDatasource(@Datasource datasource) throws MetamacException;
@@ -45,11 +45,12 @@ Application DatasetsStatisticalResources {
 		// ----------------------------------------------------------------
 		// 							ENTITIES
 		// ---------------------------------------------------------------- 
-
+		
 		Entity Datasource {
 			databaseTable="TB_DATASOURCES"
 			hint="idSequence=DATASOURCES"
 			!auditable
+
 
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
@@ -83,13 +84,53 @@ Application DatasetsStatisticalResources {
 			}
 		}
 		
+
 		Entity DatasetVersion {
 			databaseTable="TB_DATASETS_VERSIONS"
 			hint="idSequence=DATASETS_VERSIONS"
 			!auditable
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
-
+			
+			//Content descriptors
+			//temporal codes
+			- Bag<@ExternalItem> temporalCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMPORAL_COVERAGE";
+			//Dimension code for the geographic dimension
+			String geographicDimensionCode nullable;
+			//geographic codes
+			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEOGRAPHIC_COVERAGE";
+			//geographic granularities
+			- Bag<@ExternalItem> geographicGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_GRANULARITY";
+			//temporal granularities
+			- Bag<@ExternalItem> temporalGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMP_GRANULARITY";
+			//First date which data refers to
+			DateTimeTZ dateStart nullable;
+			//Last date which data refers to
+			DateTimeTZ dateEnd nullable;
+			- Bag<@ExternalItem> statisticalUnit cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_STATISTICAL_UNIT";
+			- Bag<@ExternalItem> measures cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_MEASURES";
+			
+			//Production descriptor
+			//should be nullable?
+			- @ExternalItem relatedDsd nullable; 
+			
+			//Class descriptors
+			
+			//Number of observations contained in the dataset
+			Integer formatExtentObservations nullable;
+			//Number of diemnsions defined in the DSD
+			Integer formatExtentDimensions nullable;
+			
+			//Publishing descriptors
+			
+			//public date of next update
+			DateTimeTZ dateNextUpdate nullable;
+			//Frecuency which the data is updated
+			- @ExternalItem updateFrequency nullable;
+			//Official/no official statistic
+			//List<String> statisticOfficiality;
+			- @InternationalString bibliographicCitation nullable;
+			
 			// Relations
 			"Parent"
 			- @Dataset dataset not nullable cascade="none" databaseColumn="DATASET_FK" <-> versions;
@@ -99,6 +140,7 @@ Application DatasetsStatisticalResources {
 			Repository DatasetVersionRepository {
 				save;
 				delete;
+				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  

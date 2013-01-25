@@ -1,6 +1,7 @@
 
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
 Application BaseStatisticalResources {
 	basePackage=unused
@@ -8,6 +9,30 @@ Application BaseStatisticalResources {
 	Module core_base {
 		basePackage=org.siemac.metamac.statistical.resources.core.base
 
+		"Entity for store information about RelatedResources."	
+    	Entity RelatedResource {
+    		gap
+    		
+    		databaseTable = "TB_RELATED_RESOURCES"
+    		hint="idSequence=RELATED_RESOURCES"
+    		not auditable
+    		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			String code databaseColumn="CODE" required;
+			String uri databaseColumn="URI" required length="4000";
+			String urn databaseColumn="URN" required length="4000";
+			- @TypeExternalArtefactsEnum type databaseColumn="TYPE" required;
+			- @InternationalString title cascade="all" databaseColumn="TITLE_FK" nullable;
+    		
+    		Repository RelatedResourceRepository {
+				findById;
+				delete;
+				findAll;
+			}
+    	}
+    	
 		"Statistical Resource"
 		abstract Entity StatisticalResource {
 			databaseTable="TB_STATISTICAL_RESOURCES"
@@ -20,8 +45,6 @@ Application BaseStatisticalResources {
 			discriminatorColumn="STATISTICAL_RESOURCE_TYPE"
 			discriminatorLength="255"
 
-			- @ExternalItem operation nullable cascade="all" databaseColumn="OPERATION_FK";
-
 			Repository StatisticalResourceRepository {
 				save;
 				delete;
@@ -30,7 +53,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity IdentifiableStatisticalResource extends @StatisticalResource {
-			databaseTable="TB_STATISITCAL_RESOURCES"
+			databaseTable="TB_STATISTICAL_RESOURCES"
 			discriminatorValue="IDENTIFIABLE_RESOURCE"
 
 			String code nullable;
@@ -46,7 +69,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
-			databaseTable="TB_STATISITCAL_RESOURCES"
+			databaseTable="TB_STATISTICAL_RESOURCES"
 			discriminatorValue="NAMEABLE_RESOURCE"
 
 			- @InternationalString title nullable cascade="all" databaseColumn="TITLE_FK";
@@ -54,48 +77,97 @@ Application BaseStatisticalResources {
 		}
 
 		Entity VersionableStatisticalResource extends @NameableStatisticalResource {
-			databaseTable="TB_STATISITCAL_RESOURCES"
+			databaseTable="TB_STATISTICAL_RESOURCES"
 			discriminatorValue="VERSIONABLE_RESOURCE"
 
 			String versionLogic nullable;
-			DateTimeTZ versionDate nullable;
 			DateTimeTZ nextVersionDate nullable;
+			DateTimeTZ validFrom nullable;
+			DateTimeTZ validTo nullable;
 			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType nullable;
 			- @InternationalString versionRationale nullable cascade="all" databaseColumn="VERSION_RATIONALE_FK";
-
-			"True if this version is the last"
+			- @StatisticalResourceNextVersionEnum nextVersion nullable;
 			Boolean isLastVersion nullable;
-			"Version number that replaces the current one"
-			String replacedBy nullable;
-			"Version number who replaces the current one"
-			String replaceTo nullable;
 		}
 
 		Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
-			databaseTable="TB_STATISITCAL_RESOURCES"
+			databaseTable="TB_STATISTICAL_RESOURCES"
 			discriminatorValue="LIFE_CYCLE_RESOURCE"
 
 			- @StatisticalResourceProcStatusEnum procStatus nullable;
-
-			String versionResponsibilityCreator nullable databaseColumn="VR_CREATOR";
-			String versionResponsibilityContributor nullable databaseColumn="VR_CONTRIBUTOR";
-			String versionResponsibilitySubmitted nullable databaseColumn="VR_SUBMITTED";
-			String versionResponsibilityAccepted nullable databaseColumn="VR_ACCEPTED";
-			String versionResponsibilityIssued nullable databaseColumn="VR_ISSUED";
-			String versionResponsibilityOutOfPrint nullable databaseColumn="VR_OUT_OF_PRINT";
-
-			- @ExternalItem creator nullable cascade="all" databaseColumn="CREATOR_FK";
-			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_CONTRIBUTORS";
-			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_PUBLISHERS";
-			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="TB_EXTERNAL_ITEM_FK" databaseJoinTable="TB_EI_MEDIATORS";
+			
+			DateTimeTZ creationDate nullable;
+			String creationUser nullable;
+			DateTimeTZ productionValidationDate nullable;
+			String productionValidationUser nullable;
+			DateTimeTZ diffusionValidationDate nullable;
+			String diffusionValidationUser nullable;
+			DateTimeTZ rejectValidationDate nullable;
+			String rejectValidationUser nullable;
+			DateTimeTZ internalPublicationDate nullable;
+			String internalPublicationUser nullable;
+			DateTimeTZ externalPublicationDate nullable;
+			String externalPublicationUser nullable;
+			
+			Boolean externalPublicationFailed nullable;
+			DateTimeTZ externalPublicationFailedDate nullable;
+			
+			String replacedByVersion nullable;
+			String replaceToVersion nullable;
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
-			databaseTable="TB_STATISITCAL_RESOURCES"
+			databaseTable="TB_STATISTICAL_RESOURCES"
 			discriminatorValue="SIEMAC_RESOURCE"
-
+			
+			//LANGUAGES
+			- @ExternalItem language nullable cascade="all" databaseColumn="LANGUAGE_FK";
+			- Bag<@ExternalItem> languages cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_SR_LANGUAGES";
+			
+			//THEMATIC CONTENT CLASSIFIER
+			- @ExternalItem statisticalOperation nullable cascade="all";
+			- @ExternalItem statisticalOperationInstance nullable cascade="all-delete-orphan";
+			
+			//CONTENT DESCRIPTORS
+			- @InternationalString subtitle cascade="all" databaseColumn="SUBTITLE_FK" nullable;
+			- @InternationalString titleAlternative cascade="all" databaseColumn="TITLE_ALTERNATIVE_FK" nullable;
+			- @InternationalString abstractLogic cascade="all" databaseColumn="ABSTRACT_FK" nullable;
+			//keywords type??
+			
+			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type nullable;
-			- @StatisticalResourceFormatEnum format nullable;
+			
+			//PRODUCTION DESCRIPTORS
+			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
+			- @ExternalItem creator cascade="all" databaseColumn="CREATOR_FK" nullable;
+			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="CONTRIBUTOR_FK" databaseJoinTable="TB_SR_CONTRIBUTORS" nullable;
+			DateTimeTZ resourceCreatedDate nullable;
+			DateTimeTZ lastUpdate nullable;
+			- @InternationalString conformsTo cascade="all" databaseColumn="CONFORMS_TO_FK" nullable;
+			- @InternationalString conformsToInternal cascade="all" databaseColumn="CONFORMS_TO_INTERNAL_FK" nullable;
+			
+			//PUBLISHING DESCRIPTORS
+			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="PUBLISHER_FK" databaseJoinTable="TB_SR_PUBLISHERS";
+			- Bag<@ExternalItem> publisherContributor cascade="all-delete-orphan" databaseColumn="PUBLISHER_FK" databaseJoinTable="TB_SR_PUB_CONTRIBUTORS";
+			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="MEDIATOR_FK" databaseJoinTable="TB_SR_MEDIATORS";
+			DateTimeTZ newnessUntilDate nullable;
+			
+			//RESOURCE RELATIONS DESCRIPTORS
+			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
+			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
+			- @RelatedResource isReplacedBy cascade="all" databaseColumn="IS_REPLACED_BY_FK" nullable;
+			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
+			- Bag<@RelatedResource> requires cascade="all-delete-orphan" databaseColumn="REQUIRES_FK" databaseJoinTable="TB_SR_REQUIRES";
+			- Bag<@RelatedResource> isRequiredBy cascade="all-delete-orphan" databaseColumn="IS_REQUIRED_BY_FK" databaseJoinTable="TB_SR_IS_REQUIRED_BY";
+			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseColumn="HAS_PART_FK" databaseJoinTable="TB_SR_HAS_PART";
+			- Bag<@RelatedResource> isPartOf cascade="all-delete-orphan" databaseColumn="IS_PART_OF_FK" databaseJoinTable="TB_SR_IS_PART_OF";
+			
+			//INTELLECTUAL PROPERTY DESCRIPTORS
+			- @ExternalItem rightsHolder cascade="all" databaseColumn="RIGHTS_HOLDER_FK" nullable;
+			DateTimeTZ copyrightedDate	nullable;
+			- @InternationalString license cascade="all" databaseColumn="LICENSE_FK" nullable;
+			- @InternationalString accessRights cascade="all" databaseColumn="ACCESS_RIGHTS_FK" nullable;
+			
 		}
 
 	}

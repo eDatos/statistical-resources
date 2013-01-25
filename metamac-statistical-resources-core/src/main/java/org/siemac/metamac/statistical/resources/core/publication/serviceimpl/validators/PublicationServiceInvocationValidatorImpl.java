@@ -6,6 +6,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -23,11 +24,11 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     }
 
     public static void checkRetrievePublicationVersionByUrn(String publicationVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkRetrievePublicationVersions(String publicationVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkFindPublicationVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -35,28 +36,29 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     }
 
     public static void checkDeletePublicationVersion(String publicationVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkVersioningPublicationVersion(String publicationVersionUrnToCopy, VersionTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrnToCopy, ServiceExceptionParameters.PUBLICATION_VERSION_URN_TO_COPY, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrnToCopy, ServiceExceptionSingleParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(versionType, ServiceExceptionParameters.VERSION_TYPE, exceptions);
     }
-    
+
     private static void checkNewPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersion, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
 
         if (publicationVersion == null) {
             return;
         }
-        
-        checkNewSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), exceptions);
+
+        checkNewSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE,
+                exceptions);
         checkPublicationVersion(publicationVersion, exceptions);
 
         // Metadata that must be empty for new entities
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getPublication(), ServiceExceptionParameters.PUBLICATION_VERSION_PUBLICATION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getId(), ServiceExceptionParameters.PUBLICATION_VERSION_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getVersion(), ServiceExceptionParameters.PUBLICATION_VERSION_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getPublication(), ServiceExceptionParameters.PUBLICATION_VERSION__PUBLICATION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getId(), ServiceExceptionParameters.PUBLICATION_VERSION__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getVersion(), ServiceExceptionParameters.PUBLICATION_VERSION__VERSION, exceptions);
     }
 
     private static void checkExistingPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
@@ -66,16 +68,16 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
             return;
         }
 
-        checkExistingSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), exceptions);
+        checkExistingSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
         checkPublicationVersion(publicationVersion, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getPublication(), ServiceExceptionParameters.PUBLICATION_VERSION_PUBLICATION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getId(), ServiceExceptionParameters.PUBLICATION_VERSION_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getVersion(), ServiceExceptionParameters.PUBLICATION_VERSION_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getPublication(), ServiceExceptionParameters.PUBLICATION_VERSION__PUBLICATION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getId(), ServiceExceptionParameters.PUBLICATION_VERSION__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getVersion(), ServiceExceptionParameters.PUBLICATION_VERSION__VERSION, exceptions);
     }
 
     private static void checkPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getUuid(), ServiceExceptionParameters.PUBLICATION_VERSION_UUID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getUuid(), ServiceExceptionParameters.PUBLICATION_VERSION__UUID, exceptions);
     }
 }

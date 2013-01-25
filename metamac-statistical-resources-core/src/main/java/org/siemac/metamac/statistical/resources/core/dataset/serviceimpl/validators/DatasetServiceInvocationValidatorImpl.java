@@ -1,18 +1,18 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
 
+import java.util.List;
+
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
-
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
-
-import java.util.List;
 
 public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidator {
 
@@ -24,24 +24,24 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     // -------------
 
     public static void checkCreateDatasource(String datasetVersionUrn, Datasource datasource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
         checkNewDatasource(datasource, exceptions);
     }
 
     public static void checkUpdateDatasource(Datasource datasource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkExistingDatasource(datasource, exceptions);
+        checkExistingDatasource(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
     }
 
     public static void checkRetrieveDatasourceByUrn(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkDeleteDatasource(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkRetrieveDatasourcesByDatasetVersion(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     // DATASETS
@@ -52,15 +52,15 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkUpdateDatasetVersion(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkExistingDatasetVersion(datasetVersion, exceptions);
+        checkExistingDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
     public static void checkRetrieveDatasetVersionByUrn(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkRetrieveDatasetVersions(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkFindDatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -68,13 +68,12 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkDeleteDatasetVersion(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     public static void checkVersioningDatasetVersion(String datasetVersionUrnToCopy, VersionTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrnToCopy, ServiceExceptionParameters.DATASET_VERSION_URN_TO_COPY, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrnToCopy, ServiceExceptionSingleParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(versionType, ServiceExceptionParameters.VERSION_TYPE, exceptions);
-        
     }
 
     // ------------------------------------------------------------------------
@@ -91,33 +90,33 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
             return;
         }
 
-        checkNewIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), exceptions);
-        checkDatasource(datasource, exceptions);
+        checkNewIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE, exceptions);
+        checkDatasource(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
 
         // Metadata that must be empty for new entities
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasource.getDatasetVersion(), ServiceExceptionParameters.DATASOURCE_DATASET_VERSION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasource.getId(), ServiceExceptionParameters.DATASOURCE_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasource.getVersion(), ServiceExceptionParameters.DATASOURCE_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasource.getDatasetVersion(), ServiceExceptionParameters.DATASOURCE__DATASET_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasource.getId(), ServiceExceptionParameters.DATASOURCE__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasource.getVersion(), ServiceExceptionParameters.DATASOURCE__VERSION, exceptions);
     }
 
-    private static void checkExistingDatasource(Datasource datasource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
+    private static void checkExistingDatasource(Datasource datasource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasource, metadataName, exceptions);
 
         if (datasource == null) {
             return;
         }
 
-        checkExistingIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), exceptions);
-        checkDatasource(datasource, exceptions);
+        checkExistingIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), metadataName, exceptions);
+        checkDatasource(datasource, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getDatasetVersion(), ServiceExceptionParameters.DATASOURCE_DATASET_VERSION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getId(), ServiceExceptionParameters.DATASOURCE_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getVersion(), ServiceExceptionParameters.DATASOURCE_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getDatasetVersion(), metadataName + ServiceExceptionSingleParameters.DATASET_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getId(), metadataName + ServiceExceptionSingleParameters.ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getVersion(), metadataName + ServiceExceptionSingleParameters.VERSION, exceptions);
     }
 
-    private static void checkDatasource(Datasource datasource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getUuid(), ServiceExceptionParameters.DATASOURCE_UUID, exceptions);
+    private static void checkDatasource(Datasource datasource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getUuid(), metadataName + ServiceExceptionSingleParameters.UUID, exceptions);
     }
 
     // DATASET VERSION
@@ -130,32 +129,31 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
             return;
         }
 
-        checkNewSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), exceptions);
-        checkDatasetVersion(datasetVersion, exceptions);
+        checkNewSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE, exceptions);
+        checkDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
 
         // Metadata that must be empty for new entities
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasetVersion.getDataset(), ServiceExceptionParameters.DATASET_VERSION_DATASET, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasetVersion.getId(), ServiceExceptionParameters.DATASET_VERSION_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasetVersion.getVersion(), ServiceExceptionParameters.DATASET_VERSION_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasetVersion.getDataset(), ServiceExceptionParameters.DATASET_VERSION__DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasetVersion.getId(), ServiceExceptionParameters.DATASET_VERSION__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(datasetVersion.getVersion(), ServiceExceptionParameters.DATASET_VERSION__VERSION, exceptions);
     }
-
-    private static void checkExistingDatasetVersion(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersion, ServiceExceptionParameters.DATASOURCE, exceptions);
+    private static void checkExistingDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersion, metadataName, exceptions);
 
         if (datasetVersion == null) {
             return;
         }
 
-        checkExistingSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), exceptions);
-        checkDatasetVersion(datasetVersion, exceptions);
+        checkExistingSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), metadataName, exceptions);
+        checkDatasetVersion(datasetVersion, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getDataset(), ServiceExceptionParameters.DATASET_VERSION_DATASET, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getId(), ServiceExceptionParameters.DATASET_VERSION_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getVersion(), ServiceExceptionParameters.DATASET_VERSION_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getDataset(), metadataName + ServiceExceptionSingleParameters.DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getId(), ServiceExceptionSingleParameters.ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getVersion(), ServiceExceptionSingleParameters.VERSION, exceptions);
     }
 
-    private static void checkDatasetVersion(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getUuid(), ServiceExceptionParameters.DATASET_VERSION_UUID, exceptions);
+    private static void checkDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getUuid(), ServiceExceptionSingleParameters.UUID, exceptions);
     }
 }

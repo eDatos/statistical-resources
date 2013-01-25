@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -72,6 +73,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     // DATASOURCES
     // ------------------------------------------------------------------------
 
+    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
@@ -90,7 +92,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn(), expected);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.IDENTIFIABLE_RESOURCE}, e.getExceptionItems().get(0));
+            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE}, e
+                    .getExceptionItems().get(0));
         }
     }
 
@@ -102,11 +105,12 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn(), expected);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            BaseAsserts
-                    .assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, 1, new String[]{ServiceExceptionParameters.DATASOURCE_DATASET_VERSION}, e.getExceptionItems().get(0));
+            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, 1, new String[]{ServiceExceptionParameters.DATASOURCE__DATASET_VERSION}, e.getExceptionItems()
+                    .get(0));
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
@@ -117,6 +121,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEqualsDatasource(expected, actual);
     }
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveDatasourceByUrn() throws Exception {
@@ -131,7 +136,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.URN}, e.getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionSingleParameters.URN}, e.getExceptionItems().get(0));
         }
     }
 
@@ -147,6 +152,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
@@ -176,6 +182,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
@@ -204,6 +211,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     // DATASETS
     // ------------------------------------------------------------------------
 
+    @Override
     @Test
     public void testCreateDatasetVersion() throws Exception {
         DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
@@ -231,10 +239,12 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE}, e.getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE}, e
+                    .getExceptionItems().get(0));
         }
     }
 
+    @Override
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
@@ -261,7 +271,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
                     .getExceptionItems().get(0));
         }
     }
-    
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testUpdateDatasetVersionErrorIncorrectCode() throws Exception {
@@ -273,11 +283,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             fail("incorrect code");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, 1, new String[]{ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE}, e
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, 1, new String[]{ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__CODE}, e
                     .getExceptionItems().get(0));
         }
     }
-    
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testUpdateDatasetVersionErrorDuplicatedCode() throws Exception {
@@ -291,11 +301,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             // TODO: NOTA MENTAL: Es normal que este test no falle hasta que en el servicio se cumplimenten correctamente las URN en función de los CODE
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED, 1, new String[]{duplicatedCode}, e
-                    .getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED, 1, new String[]{duplicatedCode}, e.getExceptionItems().get(0));
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasetVersionByUrn() throws Exception {
@@ -318,7 +328,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), null);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.DATASET_VERSION_URN}, e.getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionSingleParameters.URN}, e.getExceptionItems().get(0));
         }
     }
 
@@ -333,6 +343,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
     public void testRetrieveDatasetVersions() throws Exception {
@@ -343,6 +354,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEqualsDatasetVersionCollection(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS.getVersions(), actual);
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testFindDatasetVersionsByCondition() throws Exception {
@@ -373,6 +385,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testDeleteDatasetVersion() throws Exception {
@@ -411,7 +424,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         DatasetVersion datasetVersionV1 = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), urnV1);
         assertTrue(datasetVersionV1.getSiemacMetadataStatisticalResource().getIsLastVersion());
-        assertNull(datasetVersionV1.getSiemacMetadataStatisticalResource().getReplacedBy());
+        assertNull(datasetVersionV1.getSiemacMetadataStatisticalResource().getIsReplacedBy());
     }
 
     @Test
@@ -440,6 +453,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
     }
 
+    @Override
     @Test
     public void testVersioningDatasetVersion() throws Exception {
         fail("not implemented");

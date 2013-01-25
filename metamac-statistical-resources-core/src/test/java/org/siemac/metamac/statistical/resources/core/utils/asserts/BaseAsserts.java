@@ -5,7 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
+import org.junit.Assert;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
@@ -15,12 +18,17 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 
 public class BaseAsserts extends MetamacAsserts {
 
@@ -29,60 +37,88 @@ public class BaseAsserts extends MetamacAsserts {
     // -----------------------------------------------------------------
 
     protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource expected, SiemacMetadataStatisticalResource actual) {
+        assertEqualsExternalItem(expected.getLanguage(), actual.getLanguage());
+        assertEqualsExternalItemList(expected.getLanguages(), actual.getLanguages());
+
+        assertEqualsExternalItem(expected.getStatisticalOperation(), actual.getStatisticalOperation());
+        assertEqualsExternalItem(expected.getStatisticalOperationInstance(), actual.getStatisticalOperationInstance());
+
+        assertEqualsInternationalString(expected.getSubtitle(), actual.getSubtitle());
+        assertEqualsInternationalString(expected.getTitleAlternative(), actual.getTitleAlternative());
+        assertEqualsInternationalString(expected.getAbstractLogic(), actual.getAbstractLogic());
+
+        // TODO: keywords
+
         assertEquals(expected.getType(), actual.getType());
-        assertEquals(expected.getFormat(), actual.getFormat());
+
+        assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
+        assertEqualsExternalItem(expected.getCreator(), actual.getCreator());
+        assertEqualsExternalItemList(expected.getContributor(), actual.getContributor());
+        assertEqualsDate(expected.getResourceCreatedDate(), actual.getResourceCreatedDate());
+        assertEqualsDate(expected.getLastUpdate(), actual.getLastUpdate());
+        assertEqualsInternationalString(expected.getConformsTo(), actual.getConformsTo());
+        assertEqualsInternationalString(expected.getConformsToInternal(), actual.getConformsToInternal());
+
+        assertEqualsExternalItemList(expected.getPublisher(), actual.getPublisher());
+        assertEqualsExternalItemList(expected.getPublisherContributor(), actual.getPublisherContributor());
+        assertEqualsExternalItemList(expected.getMediator(), actual.getMediator());
+        assertEqualsDate(expected.getNewnessUntilDate(), actual.getNewnessUntilDate());
+
+        assertEqualsRelatedResource(expected.getReplaces(), actual.getReplaces());
+        assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
+        assertEqualsRelatedResource(expected.getIsReplacedBy(), actual.getIsReplacedBy());
+        assertEqualsRelatedResource(expected.getIsReplacedByVersion(), actual.getIsReplacedByVersion());
+        assertEqualsRelatedResourceCollection(expected.getRequires(), actual.getRequires());
+        assertEqualsRelatedResourceCollection(expected.getIsRequiredBy(), actual.getIsRequiredBy());
+        assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
+        assertEqualsRelatedResourceCollection(expected.getIsPartOf(), actual.getIsPartOf());
+
+        assertEqualsExternalItem(expected.getRightsHolder(), actual.getRightsHolder());
+        assertEqualsDate(expected.getCopyrightedDate(), actual.getCopyrightedDate());
+        assertEqualsInternationalString(expected.getLicense(), actual.getLicense());
+        assertEqualsInternationalString(expected.getAccessRights(), actual.getAccessRights());
 
         assertEqualsLifeCycleStatisticalResource(expected, actual);
     }
 
     protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource expected, LifeCycleStatisticalResource actual) {
-        assertEquals(expected.getVersionResponsibilityCreator(), actual.getVersionResponsibilityCreator());
-        assertEquals(expected.getVersionResponsibilityContributor(), actual.getVersionResponsibilityContributor());
-        assertEquals(expected.getVersionResponsibilitySubmitted(), actual.getVersionResponsibilitySubmitted());
-        assertEquals(expected.getVersionResponsibilityAccepted(), actual.getVersionResponsibilityAccepted());
-        assertEquals(expected.getVersionResponsibilityIssued(), actual.getVersionResponsibilityIssued());
-        assertEquals(expected.getVersionResponsibilityOutOfPrint(), actual.getVersionResponsibilityOutOfPrint());
         assertEquals(expected.getProcStatus(), actual.getProcStatus());
 
-        assertEqualsExternalItem(expected.getCreator(), actual.getCreator());
+        assertEquals(expected.getCreationDate(), actual.getCreationDate());
+        assertEquals(expected.getCreationUser(), actual.getCreationUser());
+        assertEquals(expected.getProductionValidationDate(), actual.getProductionValidationDate());
+        assertEquals(expected.getProductionValidationUser(), actual.getProductionValidationUser());
+        assertEquals(expected.getDiffusionValidationDate(), actual.getDiffusionValidationDate());
+        assertEquals(expected.getDiffusionValidationUser(), actual.getDiffusionValidationUser());
+        assertEquals(expected.getRejectValidationDate(), actual.getRejectValidationDate());
+        assertEquals(expected.getRejectValidationUser(), actual.getRejectValidationUser());
+        assertEquals(expected.getInternalPublicationDate(), actual.getInternalPublicationDate());
+        assertEquals(expected.getInternalPublicationUser(), actual.getInternalPublicationUser());
+        assertEquals(expected.getExternalPublicationDate(), actual.getExternalPublicationDate());
+        assertEquals(expected.getExternalPublicationUser(), actual.getExternalPublicationUser());
 
-        assertCollectionStructure(expected.getContributor(), actual.getContributor());
-        if (expected.getContributor() != null) {
-            for (int i = 0; i < expected.getContributor().size(); i++) {
-                assertEqualsExternalItem(expected.getContributor().get(i), actual.getContributor().get(i));
-            }
-        }
+        assertEquals(expected.getExternalPublicationFailed(), actual.getExternalPublicationFailed());
+        assertEquals(expected.getExternalPublicationFailedDate(), actual.getExternalPublicationFailedDate());
 
-        assertCollectionStructure(expected.getPublisher(), actual.getPublisher());
-        if (expected.getPublisher() != null) {
-            for (int i = 0; i < expected.getPublisher().size(); i++) {
-                assertEqualsExternalItem(expected.getPublisher().get(i), actual.getPublisher().get(i));
-            }
-        }
-
-        assertCollectionStructure(expected.getMediator(), actual.getMediator());
-        if (expected.getMediator() != null) {
-            for (int i = 0; i < expected.getMediator().size(); i++) {
-                assertEqualsExternalItem(expected.getMediator().get(i), actual.getMediator().get(i));
-            }
-        }
+        assertEquals(expected.getReplacedByVersion(), actual.getReplacedByVersion());
+        assertEquals(expected.getReplaceToVersion(), actual.getReplaceToVersion());
 
         assertEqualsVersionableStatisticalResource(expected, actual);
     }
 
     protected static void assertEqualsVersionableStatisticalResource(VersionableStatisticalResource expected, VersionableStatisticalResource actual) {
-        assertEquals(expected.getVersionLogic(), actual.getVersionLogic());
-        assertEquals(expected.getNextVersionDate(), actual.getNextVersionDate());
-        assertEquals(expected.getIsLastVersion(), actual.getIsLastVersion());
-        assertEquals(expected.getReplacedBy(), actual.getReplacedBy());
-        assertEquals(expected.getReplaceTo(), actual.getReplaceTo());
-        assertEquals(expected.getVersionRationaleType(), actual.getVersionRationaleType());
 
+        assertEquals(expected.getVersionLogic(), actual.getVersionLogic());
+        assertEqualsDate(expected.getNextVersionDate(), actual.getNextVersionDate());
+        assertEquals(expected.getNextVersion(), actual.getNextVersion());
+        assertEquals(expected.getVersionRationaleType(), actual.getVersionRationaleType());
         assertEqualsInternationalString(expected.getVersionRationale(), actual.getVersionRationale());
+        assertEquals(expected.getIsLastVersion(), actual.getIsLastVersion());
+        assertEquals(expected.getValidFrom(), actual.getValidFrom());
+        assertEquals(expected.getValidTo(), actual.getValidTo());
 
         assertEqualsNameableStatisticalResource(expected, actual);
     }
-
     protected static void assertEqualsNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
@@ -99,13 +135,127 @@ public class BaseAsserts extends MetamacAsserts {
     }
 
     protected static void assertEqualsStatisticalResource(StatisticalResource expected, StatisticalResource actual) {
-        assertEqualsExternalItem(expected.getOperation(), actual.getOperation());
 
     }
 
     // -----------------------------------------------------------------
     // MAIN HERITANCE: DTO & DO
     // -----------------------------------------------------------------
+
+    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceDto dto, MapperEnum mapperEnum) {
+        switch (mapperEnum) {
+            case DO2DTO:
+                assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage());
+                assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
+
+                assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation());
+                assertEqualsExternalItem(entity.getStatisticalOperationInstance(), dto.getStatisticalOperationInstance());
+
+                assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
+                assertEqualsInternationalString(entity.getTitleAlternative(), dto.getTitleAlternative());
+                assertEqualsInternationalString(entity.getAbstractLogic(), dto.getAbstractLogic());
+                // TODO: keywords
+
+                assertEquals(dto.getType(), entity.getType());
+
+                assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer());
+                assertEqualsExternalItem(entity.getCreator(), dto.getCreator());
+                assertEqualsExternalItemCollectionMapper(entity.getContributor(), dto.getContributor());
+                assertEqualsDate(entity.getResourceCreatedDate(), dto.getResourceCreatedDate());
+                assertEqualsDate(entity.getLastUpdate(), dto.getLastUpdate());
+                assertEqualsInternationalString(entity.getConformsTo(), dto.getConformsTo());
+                assertEqualsInternationalString(entity.getConformsToInternal(), dto.getConformsToInternal());
+
+                assertEqualsRelatedResource(entity.getReplaces(), dto.getReplaces());
+                assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
+                assertEqualsRelatedResource(entity.getIsReplacedBy(), dto.getIsReplacedBy());
+                assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
+                assertEqualsRelatedResourceCollectionMapper(entity.getRequires(), dto.getRequires());
+                assertEqualsRelatedResourceCollectionMapper(entity.getIsRequiredBy(), dto.getIsRequiredBy());
+                assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
+                assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());
+
+                assertEqualsExternalItem(entity.getRightsHolder(), dto.getRightsHolder());
+                assertEqualsDate(entity.getCopyrightedDate(), dto.getCopyrightedDate());
+                assertEqualsInternationalString(entity.getLicense(), dto.getLicense());
+                assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
+
+                break;
+            case DTO2DO:
+                assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage());
+                assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
+
+                assertEqualsExternalItem(entity.getStatisticalOperationInstance(), dto.getStatisticalOperationInstance());
+
+                assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
+                assertEqualsInternationalString(entity.getTitleAlternative(), dto.getTitleAlternative());
+                assertEqualsInternationalString(entity.getAbstractLogic(), dto.getAbstractLogic());
+                // TODO: keywords
+
+                assertEqualsExternalItem(entity.getCreator(), dto.getCreator());
+                assertEqualsExternalItemCollectionMapper(entity.getContributor(), dto.getContributor());
+                assertEqualsInternationalString(entity.getConformsTo(), dto.getConformsTo());
+                assertEqualsInternationalString(entity.getConformsToInternal(), dto.getConformsToInternal());
+
+                assertEqualsRelatedResource(entity.getReplaces(), dto.getReplaces());
+                assertEqualsRelatedResource(entity.getIsReplacedBy(), dto.getIsReplacedBy());
+
+                assertEqualsExternalItem(entity.getRightsHolder(), dto.getRightsHolder());
+                assertEqualsInternationalString(entity.getLicense(), dto.getLicense());
+                assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
+
+                break;
+        }
+        assertEqualsLifeCycleStatisticalResource(entity, dto, mapperEnum);
+    }
+    protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource entity, LifeCycleStatisticalResourceDto dto, MapperEnum mapperEnum) {
+        switch (mapperEnum) {
+            case DO2DTO:
+                assertEquals(entity.getProcStatus(), dto.getProcStatus());
+
+                assertEqualsDate(entity.getCreationDate(), dto.getCreationDate());
+                assertEquals(entity.getCreationUser(), dto.getCreationUser());
+                assertEqualsDate(entity.getProductionValidationDate(), dto.getProductionValidationDate());
+                assertEquals(entity.getProductionValidationUser(), dto.getProductionValidationUser());
+                assertEqualsDate(entity.getDiffusionValidationDate(), dto.getDiffusionValidationDate());
+                assertEquals(entity.getDiffusionValidationUser(), dto.getDiffusionValidationUser());
+                assertEqualsDate(entity.getRejectValidationDate(), dto.getRejectValidationDate());
+                assertEquals(entity.getRejectValidationUser(), dto.getRejectValidationUser());
+                assertEqualsDate(entity.getInternalPublicationDate(), dto.getInternalPublicationDate());
+                assertEquals(entity.getInternalPublicationUser(), dto.getInternalPublicationUser());
+                assertEqualsDate(entity.getExternalPublicationDate(), dto.getExternalPublicationDate());
+                assertEquals(entity.getExternalPublicationUser(), dto.getExternalPublicationUser());
+
+                assertEquals(entity.getExternalPublicationFailed(), dto.getExternalPublicationFailed());
+                assertEqualsDate(entity.getExternalPublicationFailedDate(), dto.getExternalPublicationFailedDate());
+
+                assertEquals(entity.getReplacedByVersion(), dto.getReplacedByVersion());
+                assertEquals(entity.getReplaceToVersion(), dto.getReplaceToVersion());
+                break;
+        }
+        assertEqualsVersionableStatisticalResource(entity, dto, mapperEnum);
+    }
+    protected static void assertEqualsVersionableStatisticalResource(VersionableStatisticalResource entity, VersionableStatisticalResourceDto dto, MapperEnum mapperEnum) {
+        switch (mapperEnum) {
+            case DO2DTO:
+                assertEquals(entity.getVersionLogic(), dto.getVersionLogic());
+                assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
+                assertEquals(entity.getValidFrom(), dto.getValidFrom());
+                assertEquals(entity.getValidTo(), dto.getValidTo());
+                assertEquals(entity.getVersionRationaleType(), dto.getVersionRationaleType());
+                assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
+                assertEquals(entity.getNextVersion(), dto.getNextVersion());
+                assertEquals(entity.getIsLastVersion(), dto.getIsLastVersion());
+                break;
+            case DTO2DO:
+                assertEquals(entity.getNextVersion(), dto.getNextVersion());
+                assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
+                assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
+                assertEquals(entity.getVersionRationaleType(), dto.getVersionRationaleType());
+                break;
+        }
+        assertEqualsNameableStatisticalResource(entity, dto, mapperEnum);
+    }
 
     protected static void assertEqualsNameableStatisticalResource(NameableStatisticalResource entity, NameableStatisticalResourceDto dto, MapperEnum mapperEnum) {
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
@@ -123,21 +273,7 @@ public class BaseAsserts extends MetamacAsserts {
     }
 
     protected static void assertEqualsStatisticalResouce(StatisticalResource entity, StatisticalResourceDto dto, MapperEnum mapperEnum) {
-        assertEqualsExternalItem(entity.getOperation(), dto.getOperation());
-        
-        if (MapperEnum.DO2DTO.equals(mapperEnum)) {
-            assertNotNull(entity.getCreatedBy());
-            assertEquals(entity.getCreatedBy(), dto.getCreatedBy());
-            
-            assertNotNull(entity.getCreatedDate());
-            assertEqualsDate(entity.getCreatedDate(), dto.getCreatedDate());
-            
-            assertNotNull(entity.getLastUpdatedBy());
-            assertEquals(entity.getLastUpdatedBy(), dto.getLastUpdatedBy());
-            
-            assertNotNull(entity.getLastUpdated());
-            assertEqualsDate(entity.getLastUpdated(), dto.getLastUpdated());
-        }
+
     }
 
     // -----------------------------------------------------------------
@@ -186,6 +322,93 @@ public class BaseAsserts extends MetamacAsserts {
     }
 
     // -----------------------------------------------------------------
+    // RELATED RESOURCE: DO & DO
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsRelatedResource(RelatedResource expected, RelatedResource actual) {
+
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getUri(), actual.getUri());
+        assertEquals(expected.getUrn(), actual.getUrn());
+        assertEquals(expected.getType(), actual.getType());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+    }
+
+    public static void assertEqualsRelatedResourceCollection(Collection<RelatedResource> expected, Collection<RelatedResource> actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.size(), actual.size());
+
+        for (RelatedResource expec : expected) {
+            if (!actual.contains(expec)) {
+                Assert.fail("Found element in expected collection which is not contained in actual collection");
+            }
+        }
+    }
+
+    public static void assertEqualsRelatedResourceList(List<RelatedResource> expected, List<RelatedResource> actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.size(), actual.size());
+
+        for (int i = 0; i < expected.size(); i++) {
+            assertEqualsRelatedResource(expected.get(i), actual.get(i));
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // RELATED RESOURCES : DTO & DO
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsRelatedResource(RelatedResource entity, RelatedResourceDto dto) {
+
+        assertEqualsNullability(entity, dto);
+        if (entity == null) {
+            return;
+        }
+
+        assertEquals(entity.getCode(), dto.getCode());
+        assertEquals(entity.getUri(), dto.getUri());
+        assertEquals(entity.getUrn(), dto.getUrn());
+        assertEquals(entity.getType(), dto.getType());
+        assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
+    }
+
+    public static void assertEqualsRelatedResourceCollectionMapper(Collection<RelatedResource> entities, Collection<RelatedResourceDto> dtos) {
+
+        assertEqualsNullability(entities, dtos);
+        if (entities == null) {
+            assertNull(dtos);
+        }
+        assertEquals(entities.size(), dtos.size());
+        for (RelatedResource entity : entities) {
+            boolean found = false;
+            Iterator<RelatedResourceDto> itDto = dtos.iterator();
+            while (itDto.hasNext() && !found) {
+                RelatedResourceDto dto = itDto.next();
+                found = true;
+                try {
+                    assertEqualsRelatedResource(entity, dto);
+                } catch (AssertionError e) {
+                    found = false;
+                }
+            }
+            if (!found) {
+                Assert.fail("Not equal collections");
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------
     // EXTERNAL ITEMS: DO & DO
     // -----------------------------------------------------------------
 
@@ -202,6 +425,33 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getType(), actual.getType());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getManagementAppUrl(), actual.getManagementAppUrl());
+    }
+
+    // CAUTION: objects must implement equals!
+    public static void assertEqualsExternalItemCollection(Collection<ExternalItem> expected, Collection<ExternalItem> actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.size(), actual.size());
+
+        for (ExternalItem expec : expected) {
+            if (!actual.contains(expec)) {
+                Assert.fail("Found element in expected collection which is not contained in actual collection");
+            }
+        }
+    }
+
+    public static void assertEqualsExternalItemList(List<ExternalItem> expected, List<ExternalItem> actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.size(), actual.size());
+
+        for (int i = 0; i < expected.size(); i++) {
+            assertEqualsExternalItem(expected.get(i), actual.get(i));
+        }
     }
 
     // -----------------------------------------------------------------
@@ -221,6 +471,31 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(entity.getType(), dto.getType());
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
         assertEquals(entity.getManagementAppUrl(), dto.getManagementAppUrl());
+    }
+
+    public static void assertEqualsExternalItemCollectionMapper(Collection<ExternalItem> entities, Collection<ExternalItemDto> dtos) {
+
+        assertEqualsNullability(entities, dtos);
+        if (entities == null) {
+            assertNull(dtos);
+        }
+        assertEquals(entities.size(), dtos.size());
+        for (ExternalItem entity : entities) {
+            boolean found = false;
+            Iterator<ExternalItemDto> itDto = dtos.iterator();
+            while (itDto.hasNext() && !found) {
+                ExternalItemDto dto = itDto.next();
+                found = true;
+                try {
+                    assertEqualsExternalItem(entity, dto);
+                } catch (AssertionError e) {
+                    found = false;
+                }
+            }
+            if (!found) {
+                Assert.fail("Not equal collections");
+            }
+        }
     }
 
     // -----------------------------------------------------------------

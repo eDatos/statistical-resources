@@ -33,4 +33,13 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
+    // ------------------------------------------------------------------------
+    // DATASETS
+    // ------------------------------------------------------------------------
+
+    public static boolean canCreateDataset(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
 }

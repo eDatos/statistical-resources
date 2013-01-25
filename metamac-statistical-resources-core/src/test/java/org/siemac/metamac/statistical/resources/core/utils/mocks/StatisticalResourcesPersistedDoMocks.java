@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -22,14 +23,16 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public Datasource mockDatasourceWithGeneratedDatasetVersion() {
         return mockDatasource(mockDatasetVersion());
     }
-    
+
     // -----------------------------------------------------------------
     // DATASET VERSION
     // -----------------------------------------------------------------
+    @Override
     public DatasetVersion mockDatasetVersion() {
         return mockDatasetVersion(null);
     }
 
+    @Override
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
 
@@ -45,14 +48,15 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return datasetVersion;
     }
 
-
     // -----------------------------------------------------------------
     // PUBLICATION VERSION
     // -----------------------------------------------------------------
+    @Override
     public PublicationVersion mockPublicationVersion() {
         return mockPublicationVersion(null);
     }
 
+    @Override
     public PublicationVersion mockPublicationVersion(Publication publication) {
         PublicationVersion publicationVersion = mockPublicationVersionMetadata();
 
@@ -67,12 +71,20 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return publicationVersion;
     }
-    
-    
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
-   
+
+    @Override
+    protected void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource) {
+        resource.setStatisticalOperation(mockStatisticalOperationItem());
+
+        resource.setResourceCreatedDate(new DateTime());
+        resource.setLastUpdate(resource.getResourceCreatedDate());
+
+    }
+
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
         resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
@@ -80,8 +92,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     @Override
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
-        resource.setVersionDate(new DateTime());
-        resource.setVersionLogic("01.000");        
+        resource.setNextVersionDate(new DateTime());
+        resource.setVersionLogic("01.000");
     }
 
 }

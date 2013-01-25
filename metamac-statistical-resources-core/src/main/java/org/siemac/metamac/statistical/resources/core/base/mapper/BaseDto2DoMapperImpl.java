@@ -1,8 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.base.mapper;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
@@ -13,13 +17,23 @@ import org.siemac.metamac.core.common.ent.domain.InternationalStringRepository;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,29 +46,94 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     @Autowired
     private ExternalItemRepository        externalItemRepository;
 
+    @Autowired
+    private RelatedResourceRepository     relatedResourceRepository;
+
     // ------------------------------------------------------------
     // BASE HIERARCHY
     // ------------------------------------------------------------
 
     @Override
-    public NameableStatisticalResource nameableStatisticalResourceDtoToDo(NameableStatisticalResourceDto source, NameableStatisticalResource target) throws MetamacException {
-
+    public SiemacMetadataStatisticalResource siemacMetadataStatisticalResourceDtoToDo(SiemacMetadataStatisticalResourceDto source, SiemacMetadataStatisticalResource target, String metadataName)
+            throws MetamacException {
         // Hierarchy
-        identifiableStatisticalResourceDtoToDo(source, target);
+        lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
-        // Non modifiable after creation
+        target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), metadataName + ServiceExceptionSingleParameters.LANGUAGE));
+        externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), metadataName + ServiceExceptionSingleParameters.LANGUAGES);
 
-        // Attributes modifiable
-        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), ServiceExceptionParameters.NAMEABLE_RESOURCE_TITLE));
-        target.setDescription(internationalStringDtoToDo(source.getDescription(), target.getDescription(), ServiceExceptionParameters.NAMEABLE_RESOURCE_DESCRIPTION));
+        target.setStatisticalOperationInstance(externalItemDtoToDo(source.getStatisticalOperationInstance(), target.getStatisticalOperationInstance(), metadataName
+                + ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE));
+
+        target.setSubtitle(internationalStringDtoToDo(source.getSubtitle(), target.getSubtitle(), metadataName + ServiceExceptionSingleParameters.SUBTITLE));
+        target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(), metadataName + ServiceExceptionSingleParameters.TITLE_ALTERNATIVE));
+        target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), metadataName + ServiceExceptionSingleParameters.ABSTRACT_LOGIC));
+
+        // TODO: keywords
+        target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), metadataName + ServiceExceptionSingleParameters.CREATOR));
+        externalItemDtoListToDoList(source.getContributor(), target.getContributor(), metadataName + ServiceExceptionSingleParameters.CONTRIBUTOR);
+        target.setConformsTo(internationalStringDtoToDo(source.getConformsTo(), target.getConformsTo(), metadataName + ServiceExceptionSingleParameters.CONFORMS_TO));
+        target.setConformsToInternal(internationalStringDtoToDo(source.getConformsToInternal(), target.getConformsToInternal(), metadataName + ServiceExceptionSingleParameters.CONFORMS_TO_INTERNAL));
+
+        externalItemDtoListToDoList(source.getPublisher(), target.getPublisher(), metadataName + ServiceExceptionSingleParameters.PUBLISHER);
+        externalItemDtoListToDoList(source.getPublisherContributor(), target.getPublisherContributor(), metadataName + ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR);
+        externalItemDtoListToDoList(source.getMediator(), target.getMediator(), metadataName + ServiceExceptionSingleParameters.MEDIATOR);
+        target.setNewnessUntilDate(dateDtoToDo(source.getNewnessUntilDate()));
+
+        target.setReplaces(relatedResourceDtoToDo(source.getReplaces(), target.getReplaces(), metadataName + ServiceExceptionSingleParameters.REPLACES));
+        target.setIsReplacedBy(relatedResourceDtoToDo(source.getIsReplacedBy(), target.getIsReplacedBy(), metadataName + ServiceExceptionSingleParameters.IS_REPLACED_BY));
+
+        target.setRightsHolder(externalItemDtoToDo(source.getRightsHolder(), target.getRightsHolder(), metadataName + ServiceExceptionSingleParameters.RIGHTS_HOLDER));
+        target.setLicense(internationalStringDtoToDo(source.getLicense(), target.getLicense(), metadataName + ServiceExceptionSingleParameters.LICENSE));
+        target.setAccessRights(internationalStringDtoToDo(source.getAccessRights(), target.getAccessRights(), metadataName + ServiceExceptionSingleParameters.ACCESS_RIGHTS));
+
+        return target;
+    }
+    @Override
+    public LifeCycleStatisticalResource lifeCycleStatisticalResourceDtoToDo(LifeCycleStatisticalResourceDto source, LifeCycleStatisticalResource target, String metadataName) throws MetamacException {
+        // Hierarchy
+        versionableStatisticalResourceDtoToDo(source, target, metadataName);
+
+        // All attributes are automatic, non modifiable
 
         return target;
     }
 
     @Override
-    public void identifiableStatisticalResourceDtoToDo(IdentifiableStatisticalResourceDto source, IdentifiableStatisticalResource target) throws MetamacException {
+    public VersionableStatisticalResource versionableStatisticalResourceDtoToDo(VersionableStatisticalResourceDto source, VersionableStatisticalResource target, String metadataName)
+            throws MetamacException {
         // Hierarchy
-        statisticalResourceDtoToDo(source, target);
+        nameableStatisticalResourceDtoToDo(source, target, metadataName);
+
+        // Non modifiable: versionLogic, versionDate
+
+        // Attributes modifiable
+        target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
+        target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(), metadataName + ServiceExceptionSingleParameters.VERSION_RATIONALE));
+        target.setVersionRationaleType(source.getVersionRationaleType());
+        target.setNextVersion(source.getNextVersion());
+
+        return target;
+    }
+    @Override
+    public NameableStatisticalResource nameableStatisticalResourceDtoToDo(NameableStatisticalResourceDto source, NameableStatisticalResource target, String metadataName) throws MetamacException {
+
+        // Hierarchy
+        identifiableStatisticalResourceDtoToDo(source, target, metadataName);
+
+        // Non modifiable after creation
+
+        // Attributes modifiable
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE));
+        target.setDescription(internationalStringDtoToDo(source.getDescription(), target.getDescription(), metadataName + ServiceExceptionSingleParameters.DESCRIPTION));
+
+        return target;
+    }
+
+    @Override
+    public void identifiableStatisticalResourceDtoToDo(IdentifiableStatisticalResourceDto source, IdentifiableStatisticalResource target, String metadataName) throws MetamacException {
+        // Hierarchy
+        statisticalResourceDtoToDo(source, target, metadataName);
 
         // Non modifiable after creation
 
@@ -68,8 +147,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     }
 
     @Override
-    public void statisticalResourceDtoToDo(StatisticalResourceDto source, StatisticalResource target) throws MetamacException {
-        target.setOperation(externalItemDtoToDo(source.getOperation(), target.getOperation(), ServiceExceptionParameters.STATISTICAL_RESOURCE_OPERATION));
+    public void statisticalResourceDtoToDo(StatisticalResourceDto source, StatisticalResource target, String metadataName) throws MetamacException {
 
     }
 
@@ -161,9 +239,120 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         target.setUrn(source.getUrn());
         target.setType(source.getType());
         target.setManagementAppUrl(source.getManagementAppUrl());
-        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionParameters.EXTERNAL_ITEM_TITLE));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE));
 
         return target;
     }
 
+    @Override
+    public List<ExternalItem> externalItemDtoListToDoList(List<ExternalItemDto> sources, List<ExternalItem> targets, String metadataName) throws MetamacException {
+        List<ExternalItem> targetsBefore = targets;
+        List<ExternalItem> newTargets = new ArrayList<ExternalItem>();
+
+        for (ExternalItemDto source : sources) {
+            boolean existsBefore = false;
+            for (ExternalItem target : targetsBefore) {
+                if (source.getUrn().equals(target.getUrn())) {
+                    newTargets.add(externalItemDtoToDo(source, target, metadataName));
+                    existsBefore = true;
+                    break;
+                }
+            }
+            if (!existsBefore) {
+                newTargets.add(externalItemDtoToDo(source, null, metadataName));
+            }
+        }
+
+        // Delete missing
+        for (ExternalItem oldTarget : targetsBefore) {
+            boolean found = false;
+            for (ExternalItem newTarget : newTargets) {
+                found = found || (oldTarget.getUrn().equals(newTarget.getUri()));
+            }
+            if (!found) {
+                // Delete
+                externalItemDtoToDo(null, oldTarget, metadataName);
+            }
+        }
+
+        targets.clear();
+        for (ExternalItem target : newTargets) {
+            targets.add(target);
+        }
+
+        return targets;
+    }
+
+    // ------------------------------------------------------------
+    // RELATED RESOURCES
+    // ------------------------------------------------------------
+
+    @Override
+    public RelatedResource relatedResourceDtoToDo(RelatedResourceDto source, RelatedResource target, String metadataName) throws MetamacException {
+        if (source == null) {
+            if (target != null) {
+                // delete previous entity
+                relatedResourceRepository.delete(target);
+            }
+            return null;
+        }
+
+        if (target == null) {
+            // New
+            target = new RelatedResource(source.getCode(), source.getUri(), source.getUrn(), source.getType());
+        }
+        target.setCode(source.getCode());
+        target.setUri(source.getUri());
+        target.setUrn(source.getUrn());
+        target.setType(source.getType());
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE));
+
+        return target;
+    }
+
+    @Override
+    public List<RelatedResource> relatedResourceDtoListToDoList(List<RelatedResourceDto> sources, List<RelatedResource> targets, String metadataName) throws MetamacException {
+        List<RelatedResource> targetsBefore = targets;
+        List<RelatedResource> newTargets = new ArrayList<RelatedResource>();
+
+        for (RelatedResourceDto source : sources) {
+            boolean existsBefore = false;
+            for (RelatedResource target : targetsBefore) {
+                if (source.getUrn().equals(target.getUrn())) {
+                    newTargets.add(relatedResourceDtoToDo(source, target, metadataName));
+                    existsBefore = true;
+                    break;
+                }
+            }
+            if (!existsBefore) {
+                newTargets.add(relatedResourceDtoToDo(source, null, metadataName));
+            }
+        }
+
+        // Delete missing
+        for (RelatedResource oldTarget : targetsBefore) {
+            boolean found = false;
+            for (RelatedResource newTarget : newTargets) {
+                found = found || (oldTarget.getUrn().equals(newTarget.getUri()));
+            }
+            if (!found) {
+                // Delete
+                relatedResourceDtoToDo(null, oldTarget, metadataName);
+            }
+        }
+
+        targets.clear();
+        for (RelatedResource target : newTargets) {
+            targets.add(target);
+        }
+
+        return targets;
+    }
+
+    private DateTime dateDtoToDo(Date source) {
+        if (source == null) {
+            return null;
+        }
+        return new DateTime(source);
+    }
 }

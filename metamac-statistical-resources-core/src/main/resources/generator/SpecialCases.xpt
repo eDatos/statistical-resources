@@ -1,4 +1,5 @@
 «IMPORT sculptormetamodel»
+«EXTENSION generator::SpecialCases»
 «EXTENSION extensions::helper»
 «EXTENSION extensions::dbhelper»
 «EXTENSION extensions::properties» 
@@ -60,7 +61,7 @@ NOT NULL«ENDIF»,
 
 «REM»Skip unique constraint in InternationalString and LocalisedString this will be for "id", and primary key restriction already exists for this attribute «ENDREM»
 «AROUND templates::db::OracleDDL::uniqueConstraint FOR DomainObject»
-	«IF name != "InternationalString" && name != "LocalisedString" && name != "ExternalItem" -»
+	«IF name != "InternationalString" && name != "LocalisedString" && name != "ExternalItem" && name != "RelatedResource" -»
 		«targetDef.proceed() -»
 	«ENDIF -»
 «ENDAROUND»
@@ -117,7 +118,14 @@ CREATE sequence SEQ_«domainObject.getHint('idSequence')»;
 «AROUND templates::Root::Root FOR Application»
 	«targetDef.proceed() -»
 	«EXPAND generatorcommon::DbUnitMocksCases::dbUnitProperties»
+	
+
+	«EXPAND generatorcommon::ServiceParameters::serviceParameters»
 «ENDAROUND»
+
+
+
+
 
 
 «AROUND templates::db::OracleDDL::ddl FOR Application»

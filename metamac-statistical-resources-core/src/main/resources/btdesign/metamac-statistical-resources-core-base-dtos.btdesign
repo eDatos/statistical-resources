@@ -1,5 +1,6 @@
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
 Application StatisticalResourcesDto {
 	basePackage=org.siemac.metamac.statistical.resources
@@ -7,8 +8,17 @@ Application StatisticalResourcesDto {
 	Module dtos {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto 
 		
+		DataTransferObject RelatedResourceDto {
+			gap
+			
+			- @InternationalStringDto title nullable;
+			- @TypeExternalArtefactsEnum type required;
+			String code required;
+			String uri required;
+			String urn required;
+		}
+		
 		DataTransferObject StatisticalResourceDto extends @AuditableDto {
-			- @ExternalItemDto operation;
 		}
 
 		DataTransferObject IdentifiableStatisticalResourceDto extends @StatisticalResourceDto {
@@ -23,58 +33,89 @@ Application StatisticalResourcesDto {
 		}
 		
 
-		DataTransferObject VersionableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
+		DataTransferObject VersionableStatisticalResourceDto extends @NameableStatisticalResourceDto {
 			String versionLogic;
-			JAVADATE versionDate;
 			JAVADATE nextVersionDate;
+			- @StatisticalResourceNextVersionEnum nextVersion
 			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType;
 			- @InternationalStringDto versionRationale;
+			JAVADATE validFrom;
+			JAVADATE validTo;
+			Boolean isLastVersion;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
 			- @StatisticalResourceProcStatusEnum procStatus;
 			
-			String versionResponsabilityCreator;
-			String versionResponsabilityContributor;
-			String versionResponsabilitySubmitted;
-			String versionResponsabilityAccepted;
-			String versionResponsabilityIssued;
-			String versionResponsabilityOutOfPrint;
-
-			// Orrganizations level
-			- @ExternalItemDto creator;
-			- Bag<@ExternalItemDto> contributor;
-			- Bag<@ExternalItemDto> publisher;
-			- Bag<@ExternalItemDto> mediator;
-
-			// Dates
-			JAVADATE submittedDate;
-			JAVADATE acceptedDate;
-			JAVADATE issuedDate;
+			JAVADATE creationDate;
+			String creationUser;
+			JAVADATE productionValidationDate;
+			String productionValidationUser;
+			JAVADATE diffusionValidationDate;
+			String diffusionValidationUser;
+			JAVADATE rejectValidationDate;
+			String rejectValidationUser;
+			JAVADATE internalPublicationDate;
+			String internalPublicationUser;
+			JAVADATE externalPublicationDate;
+			String externalPublicationUser;
+			
+			Boolean externalPublicationFailed;
+			JAVADATE externalPublicationFailedDate;
+			
+			String replacedByVersion;
+			String replaceToVersion;
 		}
 		
 		DataTransferObject SiemacMetadataStatisticalResourceDto extends @LifeCycleStatisticalResourceDto {
-			String language;
-			List<String> languages;
+			//LANGUAGES
+			- @ExternalItemDto language;
+			- List<@ExternalItemDto> languages;
 
+			//THEMATIC CONTENT CLASSIFIER
+			- @ExternalItemDto statisticalOperation;
+			- @ExternalItemDto statisticalOperationInstance;
+			
+			//CONTENT DESCRIPTORS
+			- @InternationalStringDto subtitle;
+			- @InternationalStringDto titleAlternative;
 			- @InternationalStringDto description;
-			List<String> keywords;
-
-			List<String> spatialCoverage;
-			List<String> spatialCoverageCodes;
-			List<String> temporalCoverage;
-			List<String> temporalCoverageCodes;
-
-			// Class descriptors
+			- @InternationalStringDto abstractLogic;
+			//keywords type??
+			
+			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type;
-			- @StatisticalResourceFormatEnum format;
-
-			JAVADATE nextUpdateDate;
-			String updateFrequency;
-
-			String rightsHolder;
+			
+			//PRODUCTION DESCRIPTORS
+			- @ExternalItemDto maintainer;
+			- @ExternalItemDto creator;
+			- Bag<@ExternalItemDto> contributor;
+			JAVADATE resourceCreatedDate;
+			JAVADATE lastUpdate;
+			- @InternationalStringDto conformsTo;
+			- @InternationalStringDto conformsToInternal;
+			
+			//PUBLISHING DESCRIPTORS
+			- Bag<@ExternalItemDto> publisher;
+			- Bag<@ExternalItemDto> publisherContributor;
+			- Bag<@ExternalItemDto> mediator;
+			JAVADATE newnessUntilDate;
+			
+			//RESOURCE RELATIONS DESCRIPTORS
+			- @RelatedResourceDto replaces;
+			- @RelatedResourceDto replacesVersion;
+			- @RelatedResourceDto isReplacedBy;
+			- @RelatedResourceDto isReplacedByVersion;
+			- Bag<@RelatedResourceDto> requires;
+			- Bag<@RelatedResourceDto> isRequiredBy;
+			- Bag<@RelatedResourceDto> hasPart;
+			- Bag<@RelatedResourceDto> isPartOf;
+			
+			//INTELLECTUAL PROPERTY DESCRIPTORS
+			- @ExternalItemDto rightsHolder;
 			JAVADATE copyrightedDate;
-			String license;
+			- @InternationalStringDto license;
+			- @InternationalStringDto accessRights;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -19,17 +20,16 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     @Autowired
     StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
 
-    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
-    
+
     public Query mockQueryWithNameableNull() {
         Query query = mockQuery();
         query.setNameableStatisticalResource(null);
         return query;
     }
-    
+
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -40,7 +40,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
         return datasource;
     }
-    
+
     public Datasource mockDatasourceForPersist() {
         return mockDatasource();
     }
@@ -48,6 +48,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // -----------------------------------------------------------------
     // DATASET VERSION
     // -----------------------------------------------------------------
+    @Override
     public DatasetVersion mockDatasetVersion() {
         DatasetVersion datasetVerion = mockDatasetVersion(null);
         datasetVerion.setDataset(null);
@@ -55,6 +56,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         return datasetVerion;
     }
 
+    @Override
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
 
@@ -69,7 +71,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
         return datasetVersion;
     }
-    
+
     public DatasetVersion mockDatasetVersionWithNullableSiemacStatisticalResource() {
         DatasetVersion datasetVersion = mockDatasetVersion();
         datasetVersion.setSiemacMetadataStatisticalResource(null);
@@ -79,12 +81,14 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // -----------------------------------------------------------------
     // PUBLICATION VERSION
     // -----------------------------------------------------------------
+    @Override
     public PublicationVersion mockPublicationVersion() {
         PublicationVersion publicationVersion = mockPublicationVersion(null);
         publicationVersion.setPublication(null);
         return publicationVersion;
     }
 
+    @Override
     public PublicationVersion mockPublicationVersion(Publication publication) {
         PublicationVersion publicationVersion = mockPublicationVersionMetadata();
 
@@ -99,7 +103,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
         return publicationVersion;
     }
-    
+
     public PublicationVersion mockPublicationVersionWithNullableSiemacStatisticalResource() {
         PublicationVersion publicationVersion = mockPublicationVersion();
         publicationVersion.setSiemacMetadataStatisticalResource(null);
@@ -109,6 +113,11 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
+
+    @Override
+    protected void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource) {
+        // NOTHING
+    }
 
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {

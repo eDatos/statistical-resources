@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
 public abstract class BaseInvocationValidator {
@@ -18,142 +18,141 @@ public abstract class BaseInvocationValidator {
     // STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
 
-    protected static void checkNewStatisticalResource(StatisticalResource statisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
+    protected static void checkNewStatisticalResource(StatisticalResource statisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource, metadataName, exceptions);
         if (statisticalResource == null) {
             return;
         }
 
-        checkStatisticalResource(statisticalResource, exceptions);
+        checkStatisticalResource(statisticalResource, metadataName, exceptions);
 
         // Metadata that must be empty for new entities
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getId(), ServiceExceptionParameters.STATISTICAL_RESOURCE_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getVersion(), ServiceExceptionParameters.STATISTICAL_RESOURCE_VERSION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getCreatedDate(), ServiceExceptionParameters.STATISTICAL_RESOURCE_CREATED_DATE, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getCreatedBy(), ServiceExceptionParameters.STATISTICAL_RESOURCE_CREATED_BY, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getLastUpdated(), ServiceExceptionParameters.STATISTICAL_RESOURCE_LAST_UPDATED, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getLastUpdatedBy(), ServiceExceptionParameters.STATISTICAL_RESOURCE_LAST_UPDATED_BY, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getId(), metadataName + ServiceExceptionSingleParameters.ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getVersion(), metadataName + ServiceExceptionSingleParameters.VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getCreatedDate(), metadataName + ServiceExceptionSingleParameters.CREATED_DATE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getCreatedBy(), metadataName + ServiceExceptionSingleParameters.CREATED_BY, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getLastUpdated(), metadataName + ServiceExceptionSingleParameters.LAST_UPDATED, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(statisticalResource.getLastUpdatedBy(), metadataName + ServiceExceptionSingleParameters.LAST_UPDATED_BY, exceptions);
     }
 
-    protected static void checkExistingStatisticalResource(StatisticalResource statisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource, ServiceExceptionParameters.STATISTICAL_RESOURCE, exceptions);
+    protected static void checkExistingStatisticalResource(StatisticalResource statisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource, metadataName, exceptions);
         if (statisticalResource == null) {
             return;
         }
 
-        checkStatisticalResource(statisticalResource, exceptions);
+        checkStatisticalResource(statisticalResource, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getId(), ServiceExceptionParameters.STATISTICAL_RESOURCE_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getVersion(), ServiceExceptionParameters.STATISTICAL_RESOURCE_VERSION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getCreatedDate(), ServiceExceptionParameters.STATISTICAL_RESOURCE_CREATED_DATE, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getCreatedBy(), ServiceExceptionParameters.STATISTICAL_RESOURCE_CREATED_BY, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getLastUpdated(), ServiceExceptionParameters.STATISTICAL_RESOURCE_LAST_UPDATED, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getLastUpdatedBy(), ServiceExceptionParameters.STATISTICAL_RESOURCE_LAST_UPDATED_BY, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getId(), metadataName + ServiceExceptionSingleParameters.ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getVersion(), metadataName + ServiceExceptionSingleParameters.VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getCreatedDate(), metadataName + ServiceExceptionSingleParameters.CREATED_DATE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getCreatedBy(), metadataName + ServiceExceptionSingleParameters.CREATED_BY, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getLastUpdated(), metadataName + ServiceExceptionSingleParameters.LAST_UPDATED, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getLastUpdatedBy(), metadataName + ServiceExceptionSingleParameters.LAST_UPDATED_BY, exceptions);
     }
 
-    private static void checkStatisticalResource(StatisticalResource statisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getOperation(), ServiceExceptionParameters.STATISTICAL_RESOURCE_OPERATION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getUuid(), ServiceExceptionParameters.STATISTICAL_RESOURCE_UUID, exceptions);
+    private static void checkStatisticalResource(StatisticalResource statisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        // StatisticalResourcesValidationUtils.checkMetadataRequired(statisticalResource.getUuid(), metadataName + ServiceExceptionSingleParameters.UUID, exceptions);
     }
 
     // ------------------------------------------------------------------------------------
     // IDENTIFIABLE STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
 
-    protected static void checkNewIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
+    protected static void checkNewIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource, metadataName, exceptions);
         if (identifiableStatisticalResource == null) {
             return;
         }
 
-        checkNewStatisticalResource(identifiableStatisticalResource, exceptions);
-        checkIdentifiableStatisticalResource(identifiableStatisticalResource, exceptions);
+        checkNewStatisticalResource(identifiableStatisticalResource, metadataName, exceptions);
+        checkIdentifiableStatisticalResource(identifiableStatisticalResource, metadataName, exceptions);
 
         // Metadata that must be empty for new entities
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(identifiableStatisticalResource.getUrn(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_URN, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(identifiableStatisticalResource.getUrn(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_URI, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(identifiableStatisticalResource.getUrn(), metadataName + ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(identifiableStatisticalResource.getUrn(), metadataName + ServiceExceptionSingleParameters.URI, exceptions);
     }
 
-    protected static void checkExistingIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource, ServiceExceptionParameters.IDENTIFIABLE_RESOURCE, exceptions);
+    protected static void checkExistingIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource, metadataName, exceptions);
         if (identifiableStatisticalResource == null) {
             return;
         }
 
-        checkExistingStatisticalResource(identifiableStatisticalResource, exceptions);
-        checkIdentifiableStatisticalResource(identifiableStatisticalResource, exceptions);
+        checkExistingStatisticalResource(identifiableStatisticalResource, metadataName, exceptions);
+        checkIdentifiableStatisticalResource(identifiableStatisticalResource, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getUrn(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getUrn(), metadataName + ServiceExceptionSingleParameters.URN, exceptions);
     }
 
-    private static void checkIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
-        StatisticalResourcesValidationUtils.checkSemanticIdentifier(identifiableStatisticalResource.getCode(), ServiceExceptionParameters.IDENTIFIABLE_RESOURCE_CODE, exceptions);
+    private static void checkIdentifiableStatisticalResource(IdentifiableStatisticalResource identifiableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(identifiableStatisticalResource.getCode(), metadataName + ServiceExceptionSingleParameters.CODE, exceptions);
+        StatisticalResourcesValidationUtils.checkSemanticIdentifierAsIDType(identifiableStatisticalResource.getCode(), metadataName + ServiceExceptionSingleParameters.CODE, exceptions);
     }
 
     // ------------------------------------------------------------------------------------
     // NAMEABLE STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
 
-    protected static void checkNewNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
+    protected static void checkNewNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource, metadataName, exceptions);
         if (nameableStatisticalResource == null) {
             return;
         }
 
-        checkNewIdentifiableStatisticalResource(nameableStatisticalResource, exceptions);
-        checkNameableStatisticalResource(nameableStatisticalResource, exceptions);
+        checkNewIdentifiableStatisticalResource(nameableStatisticalResource, metadataName, exceptions);
+        checkNameableStatisticalResource(nameableStatisticalResource, metadataName, exceptions);
     }
 
-    protected static void checkExistingNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource, ServiceExceptionParameters.NAMEABLE_RESOURCE, exceptions);
+    protected static void checkExistingNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource, metadataName, exceptions);
         if (nameableStatisticalResource == null) {
             return;
         }
 
-        checkExistingIdentifiableStatisticalResource(nameableStatisticalResource, exceptions);
-        checkNameableStatisticalResource(nameableStatisticalResource, exceptions);
+        checkExistingIdentifiableStatisticalResource(nameableStatisticalResource, metadataName, exceptions);
+        checkNameableStatisticalResource(nameableStatisticalResource, metadataName, exceptions);
     }
 
-    private static void checkNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource.getTitle(), ServiceExceptionParameters.NAMEABLE_RESOURCE_TITLE, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(nameableStatisticalResource.getDescription(), ServiceExceptionParameters.NAMEABLE_RESOURCE_DESCRIPTION, exceptions);
+    private static void checkNameableStatisticalResource(NameableStatisticalResource nameableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(nameableStatisticalResource.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(nameableStatisticalResource.getDescription(), metadataName + ServiceExceptionSingleParameters.DESCRIPTION, exceptions);
     }
 
     // ------------------------------------------------------------------------------------
     // VERSIONABLE STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
 
-    protected static void checkNewVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
+    protected static void checkNewVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource, metadataName, exceptions);
         if (versionableStatisticalResource == null) {
             return;
         }
 
-        checkNewNameableStatisticalResource(versionableStatisticalResource, exceptions);
-        checkVersionableStatisticalResource(versionableStatisticalResource, exceptions);
+        checkNewNameableStatisticalResource(versionableStatisticalResource, metadataName, exceptions);
+        checkVersionableStatisticalResource(versionableStatisticalResource, metadataName, exceptions);
 
         // Metadata that must be empty when the entity is created
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getVersionLogic(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_LOGIC, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(versionableStatisticalResource.getVersionLogic(), metadataName + ServiceExceptionSingleParameters.VERSION_LOGIC, exceptions);
     }
 
-    protected static void checkExistingVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource, ServiceExceptionParameters.VERSIONABLE_RESOURCE, exceptions);
+    protected static void checkExistingVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource, metadataName, exceptions);
         if (versionableStatisticalResource == null) {
             return;
         }
 
-        checkExistingNameableStatisticalResource(versionableStatisticalResource, exceptions);
-        checkVersionableStatisticalResource(versionableStatisticalResource, exceptions);
+        checkExistingNameableStatisticalResource(versionableStatisticalResource, metadataName, exceptions);
+        checkVersionableStatisticalResource(versionableStatisticalResource, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource.getVersionLogic(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_LOGIC, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(versionableStatisticalResource.getVersionLogic(), metadataName + ServiceExceptionSingleParameters.VERSION_LOGIC, exceptions);
     }
 
-    private static void checkVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(versionableStatisticalResource.getVersionRationale(), ServiceExceptionParameters.VERSIONABLE_RESOURCE_VERSION_RATIONALE,
+    private static void checkVersionableStatisticalResource(VersionableStatisticalResource versionableStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(versionableStatisticalResource.getVersionRationale(), metadataName + ServiceExceptionSingleParameters.VERSION_RATIONALE,
                 exceptions);
     }
 
@@ -161,63 +160,66 @@ public abstract class BaseInvocationValidator {
     // LIFE CYCLE STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
 
-    protected static void checkNewLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
+    protected static void checkNewLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource, metadataName, exceptions);
         if (lifeCycleStatisticalResource == null) {
             return;
         }
 
-        checkNewVersionableStatisticalResource(lifeCycleStatisticalResource, exceptions);
-        checkLifeCycleStatisticalResource(lifeCycleStatisticalResource, exceptions);
+        checkNewVersionableStatisticalResource(lifeCycleStatisticalResource, metadataName, exceptions);
+        checkLifeCycleStatisticalResource(lifeCycleStatisticalResource, metadataName, exceptions);
 
         // Metadata that must be empty for new entities
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(lifeCycleStatisticalResource.getProcStatus(), metadataName + ServiceExceptionSingleParameters.PROC_STATUS, exceptions);
     }
 
-    protected static void checkExistingLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource, ServiceExceptionParameters.LIFE_CYCLE_RESOURCE, exceptions);
+    protected static void checkExistingLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource, metadataName, exceptions);
         if (lifeCycleStatisticalResource == null) {
             return;
         }
 
-        checkExistingVersionableStatisticalResource(lifeCycleStatisticalResource, exceptions);
-        checkLifeCycleStatisticalResource(lifeCycleStatisticalResource, exceptions);
+        checkExistingVersionableStatisticalResource(lifeCycleStatisticalResource, metadataName, exceptions);
+        checkLifeCycleStatisticalResource(lifeCycleStatisticalResource, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PROC_STATUS, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), metadataName + ServiceExceptionSingleParameters.PROC_STATUS, exceptions);
     }
 
-    private static void checkLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(lifeCycleStatisticalResource.getCreator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CREATOR, exceptions);
-        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getContributor(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_CONTRIBUTOR, exceptions);
-        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getPublisher(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_PUBLISHER, exceptions);
-        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(lifeCycleStatisticalResource.getMediator(), ServiceExceptionParameters.LIFE_CYCLE_RESOURCE_MEDIATOR, exceptions);
+    private static void checkLifeCycleStatisticalResource(LifeCycleStatisticalResource lifeCycleStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
     }
 
     // ------------------------------------------------------------------------------------
     // SIEMAC METADATA STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
 
-    protected static void checkNewSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
+    protected static void checkNewSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource, metadataName, exceptions);
         if (siemacMetadataStatisticalResource == null) {
             return;
         }
 
-        checkSiemacMetadataStatisticalResource(siemacMetadataStatisticalResource, exceptions);
-        checkNewLifeCycleStatisticalResource(siemacMetadataStatisticalResource, exceptions);
+        checkSiemacMetadataStatisticalResource(siemacMetadataStatisticalResource, metadataName, exceptions);
+        checkNewLifeCycleStatisticalResource(siemacMetadataStatisticalResource, metadataName, exceptions);
     }
 
-    protected static void checkExistingSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource, ServiceExceptionParameters.SIEMAC_METADATA_RESOURCE, exceptions);
+    protected static void checkExistingSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource, metadataName, exceptions);
         if (siemacMetadataStatisticalResource == null) {
             return;
         }
 
-        checkSiemacMetadataStatisticalResource(siemacMetadataStatisticalResource, exceptions);
-        checkExistingLifeCycleStatisticalResource(siemacMetadataStatisticalResource, exceptions);
+        checkSiemacMetadataStatisticalResource(siemacMetadataStatisticalResource, metadataName, exceptions);
+        checkExistingLifeCycleStatisticalResource(siemacMetadataStatisticalResource, metadataName, exceptions);
     }
 
-    private static void checkSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, List<MetamacExceptionItem> exceptions) {
+    private static void checkSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(siemacMetadataStatisticalResource.getStatisticalOperationInstance(),
+                ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(siemacMetadataStatisticalResource.getCreator(), metadataName + ServiceExceptionSingleParameters.CREATOR, exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(siemacMetadataStatisticalResource.getContributor(), metadataName + ServiceExceptionSingleParameters.CONTRIBUTOR,
+                exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(siemacMetadataStatisticalResource.getPublisher(), metadataName + ServiceExceptionSingleParameters.PUBLISHER, exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(siemacMetadataStatisticalResource.getMediator(), metadataName + ServiceExceptionSingleParameters.MEDIATOR, exceptions);
     }
 }

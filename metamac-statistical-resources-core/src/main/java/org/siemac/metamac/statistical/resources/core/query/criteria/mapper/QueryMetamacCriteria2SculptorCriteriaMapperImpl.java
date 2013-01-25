@@ -36,7 +36,6 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
         return queryCriteriaMapper;
     }
 
-
     /**************************************************************************
      * CallBacks classes
      *************************************************************************/
@@ -55,10 +54,6 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
                     return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case DESCRIPTION:
                     return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
-                case OPERATION_CODE:
-                    return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().operation().code(), propertyRestriction.getStringValue());
-                case OPERATION_ID:
-                    return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().operation().id(), propertyRestriction.getLongValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

@@ -18,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements QueryDto2DoMapper {
 
     @Autowired
-    private QueryRepository               queryRepository;
-
+    private QueryRepository queryRepository;
 
     @Override
     public Query queryDtoToDo(QueryDto source) throws MetamacException {
@@ -53,8 +52,8 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         }
 
         // Hierarchy
-        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource());
-        
+        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.QUERY);
+
         // Non modifiable after creation
 
         // Attributes modifiable

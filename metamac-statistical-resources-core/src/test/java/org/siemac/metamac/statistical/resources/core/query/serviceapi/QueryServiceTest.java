@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
@@ -47,17 +48,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryServiceTest extends StatisticalResourcesBaseTest implements QueryServiceTestBase {
 
     @Autowired
-    protected QueryService     queryService;
+    protected QueryService                            queryService;
 
     @Autowired
-    protected QueryRepository  queryRepository;
+    protected QueryRepository                         queryRepository;
 
     @Autowired
-    protected QueryMockFactory queryMockFactory;
-    
+    protected QueryMockFactory                        queryMockFactory;
+
     @Autowired
     protected StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
 
+    @Override
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveQueryByUrn() throws MetamacException {
@@ -72,10 +74,11 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionParameters.URN}, e.getExceptionItems().get(0));
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, 1, new String[]{ServiceExceptionSingleParameters.URN}, e.getExceptionItems().get(0));
         }
     }
 
+    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME})
     public void testFindQueriesByCondition() throws Exception {
@@ -134,6 +137,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         }
     }
 
+    @Override
     @Test
     public void testCreateQuery() throws Exception {
         Query expected = statisticalResourcesNotPersistedDoMocks.mockQuery();
@@ -148,10 +152,12 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             queryService.createQuery(getServiceContextWithoutPrincipal(), query);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.NAMEABLE_RESOURCE}, e.getExceptionItems().get(0));
+            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.QUERY__NAMEABLE_STATISTICAL_RESOURCE}, e
+                    .getExceptionItems().get(0));
         }
     }
 
+    @Override
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testUpdateQuery() throws Exception {
@@ -162,6 +168,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         assertEqualsQuery(query, updatedQuery);
     }
 
+    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME})
     public void testRetrieveQueries() throws Exception {

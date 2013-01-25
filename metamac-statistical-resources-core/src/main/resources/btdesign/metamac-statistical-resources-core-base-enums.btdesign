@@ -38,6 +38,14 @@ Application StatisticalResourcesEnums {
     		MINOR_OTHER
     	}
     	
+    	
+    	"Next version enum"
+    	enum StatisticalResourceNextVersionEnum {
+    		NO_UPDATES,
+    		NON_SCHEDULED_UPDATE,
+    		SCHEDULED_UPDATE
+    	}
+    	
     	"Format Enum is used to specify statistical resources format"
     	enum StatisticalResourceFormatEnum {
     		DS
