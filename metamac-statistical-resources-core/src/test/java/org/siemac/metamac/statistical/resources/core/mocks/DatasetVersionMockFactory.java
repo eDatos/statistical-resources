@@ -50,9 +50,10 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> imple
     public void afterPropertiesSet() throws Exception {
         DATASET_VERSION_01_BASIC = createDatasetVersion();
         DATASET_VERSION_02_BASIC = createDatasetVersion();
-        DATASET_VERSION_03_FOR_DATASET_03 = createDatasetVersion03();
-        DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION = createDatasetVersion04();
-        DATASET_VERSION_05_FOR_DATASET_04 = createDatasetVersion05();
+
+        setDataset03AndVersionsRelations();
+
+        setDataset04AndVersionsRelations();
 
         mocks = new HashMap<String, DatasetVersion>();
         registerMocks(this, DatasetVersion.class, mocks);
@@ -63,82 +64,108 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> imple
         return mocks.get(id);
     }
 
-    private DatasetVersion createDatasetVersion03() {
-        // Relation with dataset
-        DatasetVersion datasetVersion = createDatasetVersion(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
-        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setReplacedByVersion(DATASET_VERSION_04_VERSION);
+    private void setDataset03AndVersionsRelations() {
+        Dataset dataset03 = datasetMockFactory.getDataset03With2DatasetVersions();
 
-        // Have two datasources
-        datasetVersion.addDatasource(datasourceMockFactory.DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03);
-        datasetVersion.addDatasource(datasourceMockFactory.DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03);
+        DatasetVersion datasetVersion03 = getDatasetVersion03ForDataset03();
+        datasetVersion03.addDatasource(datasourceMockFactory.getDatasorce03BasicForDatasetVersion03());
+        datasetVersion03.addDatasource(datasourceMockFactory.getDatasorce04BasicForDatasetVersion03());
 
-        return datasetVersion;
+        DatasetVersion datasetVersion04 = getDatasetVersion04LastVersionForDataset03();
+        datasetVersion04.addDatasource(datasourceMockFactory.getDatasorce05BasicForDatasetVersion04());
+
+        datasetVersion03.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(datasetVersion04));
+        datasetVersion04.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(DATASET_VERSION_03_FOR_DATASET_03));
+        dataset03.addVersion(datasetVersion03);
+        dataset03.addVersion(datasetVersion04);
+
     }
 
-    private DatasetVersion createDatasetVersion04() {
-        // Relation with dataset
-        DatasetVersion datasetVersion = createDatasetVersion(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS);
+    private void setDataset04AndVersionsRelations() {
+        Dataset dataset = datasetMockFactory.getDataset04With1DatasetVersions();
+        DatasetVersion datasetVersion = getDatasetVersion05ForDataset04();
 
-        // Version 02.000
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_04_VERSION);
-
-        // ReplaceTo
-        datasetVersion.getSiemacMetadataStatisticalResource().setReplaceToVersion(DATASET_VERSION_03_VERSION);
-
-        // Is last version
-        datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
-
-        // Have one datasource
-        datasetVersion.addDatasource(datasourceMockFactory.DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04);
-
-        return datasetVersion;
+        dataset.addVersion(datasetVersion);
     }
 
-    private DatasetVersion createDatasetVersion05() {
-        // Relation with dataset
-        DatasetVersion datasetVersion = createDatasetVersion(datasetMockFactory.DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS);
+    public DatasetVersion getDatasetVersion03ForDataset03() {
+        if (DATASET_VERSION_03_FOR_DATASET_03 == null) {
+            // Relation with dataset
+            DatasetVersion datasetVersion = createDatasetVersion();
+            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_03_VERSION);
+            datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            DATASET_VERSION_03_FOR_DATASET_03 = datasetVersion;
+        }
+        return DATASET_VERSION_03_FOR_DATASET_03;
+    }
 
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+    public DatasetVersion getDatasetVersion04LastVersionForDataset03() {
+        if (DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION == null) {
+            // Relation with dataset
+            DatasetVersion datasetVersion = createDatasetVersion();
 
-        datasetVersion.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            // Version 02.000
+            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_04_VERSION);
 
-        datasetVersion.addTemporalGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            // ReplaceTo
+            // datasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(createRelatedResourceDatasetVersion(DATASET_VERSION_03_FOR_DATASET_03));
 
-        datasetVersion.addMeasure(StatisticalResourcesDoMocks.mockConceptExternalItem());
-        datasetVersion.addMeasure(StatisticalResourcesDoMocks.mockConceptExternalItem());
+            // Is last version
+            datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
 
-        datasetVersion.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
-        datasetVersion.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
+            DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION = datasetVersion;
+        }
+        return DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
+    }
 
-        datasetVersion.setDateStart(new DateTime().minusYears(10));
-        datasetVersion.setDateStart(new DateTime().plusYears(10));
+    public DatasetVersion getDatasetVersion05ForDataset04() {
+        if (DATASET_VERSION_05_FOR_DATASET_04 == null) {
+            // Relation with dataset
+            DatasetVersion datasetVersion = createDatasetVersion();
 
-        datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
-        datasetVersion.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
-        datasetVersion.setFormatExtentDimensions(3);
-        datasetVersion.setFormatExtentObservations(1354);
-        datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
-        datasetVersion.setBibliographicCitation(StatisticalResourcesDoMocks.mockInternationalString("es", "biblio"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
-        // Version 01.000
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_05_VERSION);
+            datasetVersion.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
-        // Is last version
-        datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+            datasetVersion.addTemporalGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
-        datasetVersion.getSiemacMetadataStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
-        datasetVersion.getSiemacMetadataStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
-        datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdatedBy(StatisticalResourcesDoMocks.mockString(10));
-        datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
+            datasetVersion.addMeasure(StatisticalResourcesDoMocks.mockConceptExternalItem());
+            datasetVersion.addMeasure(StatisticalResourcesDoMocks.mockConceptExternalItem());
 
-        return datasetVersion;
+            datasetVersion.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
+            datasetVersion.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
+
+            datasetVersion.setDateStart(new DateTime().minusYears(10));
+            datasetVersion.setDateStart(new DateTime().plusYears(10));
+
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            datasetVersion.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem());
+
+            datasetVersion.setFormatExtentDimensions(3);
+            datasetVersion.setFormatExtentObservations(1354);
+            datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
+            datasetVersion.setBibliographicCitation(StatisticalResourcesDoMocks.mockInternationalString("es", "biblio"));
+
+            // Version 01.000
+            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_05_VERSION);
+
+            // Is last version
+            datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+
+            datasetVersion.getSiemacMetadataStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
+            datasetVersion.getSiemacMetadataStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
+            datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdatedBy(StatisticalResourcesDoMocks.mockString(10));
+            datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
+
+            DATASET_VERSION_05_FOR_DATASET_04 = datasetVersion;
+        }
+        return DATASET_VERSION_05_FOR_DATASET_04;
     }
     private DatasetVersion createDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = statisticalResourcesPersistedDoMocks.mockDatasetVersion(dataset);

@@ -8,7 +8,7 @@ Application StatisticalResourcesDto {
 	Module dtos {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto 
 		
-		DataTransferObject RelatedResourceDto {
+		DataTransferObject RelatedResourceDto extends @IdentityDto {
 			gap
 			
 			- @InternationalStringDto title nullable;
@@ -63,8 +63,8 @@ Application StatisticalResourcesDto {
 			Boolean externalPublicationFailed;
 			JAVADATE externalPublicationFailedDate;
 			
-			String replacedByVersion;
-			String replaceToVersion;
+			- @RelatedResourceDto replacesVersion;
+			- @RelatedResourceDto isReplacedByVersion;
 		}
 		
 		DataTransferObject SiemacMetadataStatisticalResourceDto extends @LifeCycleStatisticalResourceDto {
@@ -103,9 +103,7 @@ Application StatisticalResourcesDto {
 			
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResourceDto replaces;
-			- @RelatedResourceDto replacesVersion;
 			- @RelatedResourceDto isReplacedBy;
-			- @RelatedResourceDto isReplacedByVersion;
 			- Bag<@RelatedResourceDto> requires;
 			- Bag<@RelatedResourceDto> isRequiredBy;
 			- Bag<@RelatedResourceDto> hasPart;

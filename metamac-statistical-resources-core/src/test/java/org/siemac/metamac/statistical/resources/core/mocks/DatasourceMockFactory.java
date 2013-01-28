@@ -40,9 +40,10 @@ public class DatasourceMockFactory extends MockFactory<Datasource> implements In
     public void afterPropertiesSet() throws Exception {
         DATASOURCE_01_BASIC = createDatasource();
         DATASOURCE_02_BASIC = createDatasource();
-        DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 = createDatasource(datasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03);
-        DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 = createDatasource(datasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03);
-        DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04 = createDatasource(datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION);
+
+        getDatasorce03BasicForDatasetVersion03();
+        getDatasorce04BasicForDatasetVersion03();
+        getDatasorce05BasicForDatasetVersion04();
 
         mocks = new HashMap<String, Datasource>();
         registerMocks(this, Datasource.class, mocks);
@@ -51,6 +52,27 @@ public class DatasourceMockFactory extends MockFactory<Datasource> implements In
     @Override
     public Datasource getMock(String id) {
         return mocks.get(id);
+    }
+
+    public Datasource getDatasorce03BasicForDatasetVersion03() {
+        if (DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 == null) {
+            DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 = createDatasource(datasetVersionMockFactory.getDatasetVersion03ForDataset03());
+        }
+        return DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03;
+    }
+
+    public Datasource getDatasorce04BasicForDatasetVersion03() {
+        if (DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 == null) {
+            DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 = createDatasource(datasetVersionMockFactory.getDatasetVersion03ForDataset03());
+        }
+        return DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03;
+    }
+
+    public Datasource getDatasorce05BasicForDatasetVersion04() {
+        if (DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04 == null) {
+            DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04 = createDatasource(datasetVersionMockFactory.getDatasetVersion04LastVersionForDataset03());
+        }
+        return DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
     }
 
     private Datasource createDatasource() {

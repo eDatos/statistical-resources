@@ -18,11 +18,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
-import org.dbunit.dataset.Column;
-import org.dbunit.dataset.DefaultTableMetaData;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.ITableMetaData;
-import org.dbunit.dataset.datatype.DataType;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.utils.EntityMetadata;
@@ -317,61 +312,61 @@ public class DBUnitMockPersister extends MockPersisterBase {
         return filename;
     }
 
-//    private String createDbUnitDataSet(List<EntityMetadata> entitiesMetadata, Map<String, Set<String>> dtdMap) {
-//        Map<String, ITable> tableMetadatas = new HashMap<String, ITableMetaData>();
-//
-//        List<ITable> tables = new ArrayList<ITable>();
-//        for (EntityMetadata entityMetadata : entitiesMetadata) {
-//            Set<String> entityAttributes = dtdMap.get(entityMetadata.getTableName());
-//
-//            ITableMetaData tableMetadata = tableMetadatas.get(entityMetadata.getTableName());
-//            if (tableMetadata == null) {
-//                tableMetadata = createTableMetadataUsingAttrs(entityMetadata.getTableName(), entityAttributes);
-//                tableMetadatas.put(entityMetadata.getTableName(), tableMetadata);
-//            }
-//
-//            tables.add(entityMetadata.getDbUnitTable(entityAttributes));
-//        }
-//
-//        BufferedWriter writer = null;
-//        String filename = null;
-//        try {
-//            File file = File.createTempFile("dbunit-", ".tmp.xml");
-//            filename = file.getAbsolutePath();
-//            writer = new BufferedWriter(new FileWriter(file));
-//            writer.write("<dataset>\n");
-//            for (EntityMetadata metadata : entitiesMetadata) {
-//                writer.write(metadata.getXmlRepresentation(dtdMap.get(metadata.getTableName())));
-//            }
-//            writer.write("</dataset>");
-//        } catch (Exception e) {
-//            throw new RuntimeException("The generated DbUnit file could not be generated ", e);
-//        } finally {
-//            if (writer != null) {
-//                try {
-//                    writer.close();
-//                } catch (Exception e) {
-//                    // NOTHING
-//                }
-//            }
-//        }
-//        return filename;
-//    }
-//
-//    private ITableMetaData createTableMetadataUsingAttrs(String tableName, Set<String> attributes) {
-//        Column[] columns = new Column[attributes.size()];
-//        List<String> attrs = new ArrayList<String>(attributes);
-//        for (int i = 0; i < attrs.size(); i++) {
-//            columns[i] = new Column(attrs.get(i), DataType.NVARCHAR);
-//        }
-//        return new DefaultTableMetaData(tableName, columns);
-//    }
+    // private String createDbUnitDataSet(List<EntityMetadata> entitiesMetadata, Map<String, Set<String>> dtdMap) {
+    // Map<String, ITable> tableMetadatas = new HashMap<String, ITableMetaData>();
+    //
+    // List<ITable> tables = new ArrayList<ITable>();
+    // for (EntityMetadata entityMetadata : entitiesMetadata) {
+    // Set<String> entityAttributes = dtdMap.get(entityMetadata.getTableName());
+    //
+    // ITableMetaData tableMetadata = tableMetadatas.get(entityMetadata.getTableName());
+    // if (tableMetadata == null) {
+    // tableMetadata = createTableMetadataUsingAttrs(entityMetadata.getTableName(), entityAttributes);
+    // tableMetadatas.put(entityMetadata.getTableName(), tableMetadata);
+    // }
+    //
+    // tables.add(entityMetadata.getDbUnitTable(entityAttributes));
+    // }
+    //
+    // BufferedWriter writer = null;
+    // String filename = null;
+    // try {
+    // File file = File.createTempFile("dbunit-", ".tmp.xml");
+    // filename = file.getAbsolutePath();
+    // writer = new BufferedWriter(new FileWriter(file));
+    // writer.write("<dataset>\n");
+    // for (EntityMetadata metadata : entitiesMetadata) {
+    // writer.write(metadata.getXmlRepresentation(dtdMap.get(metadata.getTableName())));
+    // }
+    // writer.write("</dataset>");
+    // } catch (Exception e) {
+    // throw new RuntimeException("The generated DbUnit file could not be generated ", e);
+    // } finally {
+    // if (writer != null) {
+    // try {
+    // writer.close();
+    // } catch (Exception e) {
+    // // NOTHING
+    // }
+    // }
+    // }
+    // return filename;
+    // }
+    //
+    // private ITableMetaData createTableMetadataUsingAttrs(String tableName, Set<String> attributes) {
+    // Column[] columns = new Column[attributes.size()];
+    // List<String> attrs = new ArrayList<String>(attributes);
+    // for (int i = 0; i < attrs.size(); i++) {
+    // columns[i] = new Column(attrs.get(i), DataType.NVARCHAR);
+    // }
+    // return new DefaultTableMetaData(tableName, columns);
+    // }
 
     private Object fillIdentiyAndAuditMetadata(Object mock) {
         fillField(mock, "uuid", UUID.randomUUID().toString());
         fillField(mock, "version", Long.valueOf(0));
-        fillField(mock, "urn", getUrnMock());
-        fillField(mock, "uri", getUriMock());
+        fillFieldIfNull(mock, "urn", getUrnMock());
+        fillFieldIfNull(mock, "uri", getUriMock());
         fillField(mock, "createdDate", new DateTime());
         fillField(mock, "createdBy", "user1");
         fillField(mock, "lastUpdated", new DateTime());
@@ -380,11 +375,11 @@ public class DBUnitMockPersister extends MockPersisterBase {
         return mock;
     }
 
-    private static String getUriMock() {
+    public static String getUriMock() {
         return URI_MOCK_PREFIX + MetamacMocks.mockString(5);
     }
 
-    private static String getUrnMock() {
+    public static String getUrnMock() {
         return URN_MOCK_PREFIX + MetamacMocks.mockString(10);
     }
 
@@ -395,6 +390,27 @@ public class DBUnitMockPersister extends MockPersisterBase {
                 if (!field.isAccessible()) {
                     field.setAccessible(true);
                     field.set(mock, value);
+                    field.setAccessible(false);
+                } else {
+                    field.set(mock, value);
+                }
+            }
+            return mock;
+        } catch (Exception e) {
+            throw new RuntimeException("Error setting " + fieldName + " on mock object ", e);
+        }
+    }
+
+    private Object fillFieldIfNull(Object mock, String fieldName, Object value) {
+        try {
+            Field field = ReflectionUtils.findField(mock.getClass(), fieldName);
+            if (field != null) {
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                    Object retValue = field.get(mock);
+                    if (retValue == null) {
+                        field.set(mock, value);
+                    }
                     field.setAccessible(false);
                 } else {
                     field.set(mock, value);

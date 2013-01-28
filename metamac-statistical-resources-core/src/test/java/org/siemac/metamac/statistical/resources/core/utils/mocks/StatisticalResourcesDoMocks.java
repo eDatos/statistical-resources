@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
@@ -28,6 +29,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String[] MAINTAINER_MOCK                     = new String[]{"MaintainerMock"};
     private static final String   ORGANIZATION_UNIT_MOCK              = "OrganizationUnitMock";
     private static final String   STATISTICAL_OPERATION_MOCK          = "StatisticalOperationMock";
+    private static final String   DATASET_VERSION_MOCK                = "DatasetVersionMock";
+    private static final String   PUBLICATION_VERSION_MOCK            = "PublicationVersionMock";
     private static final String   STATISTICAL_OPERATION_INSTANCE_MOCK = "StatisticalOperationInstanceMock";
     private static final String   AGENCY_MOCK                         = "AgencyMock";
     private static final String   AGENCY_SCHEME_MOCK                  = "AgencySchemeMock";
@@ -354,6 +357,31 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return GeneratorUrnUtils.generateSdmxDatastructureUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
+    // -----------------------------------------------------------------
+    // Related Resource
+    // -----------------------------------------------------------------
+
+    public static RelatedResource mockDatasetVersionRelated() {
+        RelatedResource resource = new RelatedResource(DATASET_VERSION_MOCK, getUriMock(), mockDatasetVersionRelatedUrn(), TypeExternalArtefactsEnum.DATASET_VERSION);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
+    public static RelatedResource mockPublicationVersionRelated() {
+        RelatedResource resource = new RelatedResource(PUBLICATION_VERSION_MOCK, getUriMock(), mockPublicationVersionRelatedUrn(), TypeExternalArtefactsEnum.PUBLICATION_VERSION);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
+    public static String mockDatasetVersionRelatedUrn() {
+        // TODO: change when dataset version urn can be generated with generatorUrnUtils
+        return "TODO:mock";
+    }
+
+    public static String mockPublicationVersionRelatedUrn() {
+        // TODO: change when publication version urn can be generated with generatorUrnUtils
+        return "TODO:mock";
+    }
     // -----------------------------------------------------------------
     // PRIVATE
     // -----------------------------------------------------------------

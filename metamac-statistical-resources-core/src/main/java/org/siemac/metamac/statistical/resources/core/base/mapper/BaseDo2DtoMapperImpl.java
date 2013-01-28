@@ -113,8 +113,8 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.setExternalPublicationUser(source.getExternalPublicationUser());
         target.setExternalPublicationFailedDate(dateDoToDto(source.getExternalPublicationFailedDate()));
 
-        target.setReplacedByVersion(source.getReplacedByVersion());
-        target.setReplaceToVersion(source.getReplaceToVersion());
+        target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
+        target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
     }
 
     @Override

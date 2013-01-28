@@ -36,8 +36,8 @@ public class DatasetMockFactory extends MockFactory<Dataset> implements Initiali
     public void afterPropertiesSet() throws Exception {
         DATASET_01_BASIC = createDataset();
         DATASET_02_BASIC_WITH_GENERATED_VERSION = createDataset();
-        DATASET_03_BASIC_WITH_2_DATASET_VERSIONS = createDataset03With2DatasetVersions();
-        DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS = createDataset04With1DatasetVersions();
+        DATASET_03_BASIC_WITH_2_DATASET_VERSIONS = getDataset03With2DatasetVersions();
+        DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS = getDataset04With1DatasetVersions();
 
         mocks = new HashMap<String, Dataset>();
         registerMocks(this, Dataset.class, mocks);
@@ -48,17 +48,22 @@ public class DatasetMockFactory extends MockFactory<Dataset> implements Initiali
         return mocks.get(id);
     }
 
-    private Dataset createDataset03With2DatasetVersions() {
-        Dataset dataset = createDataset();
-        dataset.addVersion(datasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03);
-        dataset.addVersion(datasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION);
-        return dataset;
+    public Dataset getDataset03With2DatasetVersions() {
+        if (DATASET_03_BASIC_WITH_2_DATASET_VERSIONS == null) {
+            Dataset dataset = createDataset();
+            // Dataset version relation is set in version factory
+            DATASET_03_BASIC_WITH_2_DATASET_VERSIONS = dataset;
+        }
+        return DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
     }
 
-    private Dataset createDataset04With1DatasetVersions() {
-        Dataset dataset = createDataset();
-        // TODO: add versions
-        return dataset;
+    public Dataset getDataset04With1DatasetVersions() {
+        if (DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS == null) {
+            Dataset dataset = createDataset();
+            // Dataset version relation is set in version factory
+            DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS = dataset;
+        }
+        return DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS;
     }
 
     private Dataset createDataset() {

@@ -33,7 +33,7 @@ public class PublicationMockFactory extends MockFactory<Publication> implements 
     public void afterPropertiesSet() throws Exception {
         PUBLICATION_01_BASIC = createPublication();
         PUBLICATION_02_BASIC_WITH_GENERATED_VERSION = createPublicationWithGeneratedPublicationVersions();
-        PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS = createPublication03With2PublicationVersions();
+        PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS = getPublication03With2PublicationVersions();
 
         mocks = new HashMap<String, Publication>();
         registerMocks(this, Publication.class, mocks);
@@ -44,11 +44,13 @@ public class PublicationMockFactory extends MockFactory<Publication> implements 
         return mocks.get(id);
     }
 
-    private Publication createPublication03With2PublicationVersions() {
-        Publication publication = createPublication();
-        publication.addVersion(publicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03);
-        publication.addVersion(publicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION);
-        return publication;
+    public Publication getPublication03With2PublicationVersions() {
+        if (PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS == null) {
+            Publication publication = createPublication();
+            // Versions linked in version mock factory
+            PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS = publication;
+        }
+        return PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS;
     }
 
     private Publication createPublication() {

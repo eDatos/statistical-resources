@@ -220,13 +220,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             Dataset dataset = datasetVersion.getDataset();
             getDatasetRepository().delete(dataset);
         } else {
+            DatasetVersion previousDatasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getUrn());
+
             // Delete version
             Dataset dataset = datasetVersion.getDataset();
             dataset.getVersions().remove(datasetVersion);
             getDatasetVersionRepository().delete(datasetVersion);
 
             // Update previous version
-            DatasetVersion previousDatasetVersion = getDatasetVersionRepository().retrieveByVersion(dataset.getId(), datasetVersion.getSiemacMetadataStatisticalResource().getReplaceToVersion());
             previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
             previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
             getDatasetVersionRepository().save(previousDatasetVersion);

@@ -6,9 +6,11 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
@@ -154,8 +156,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         lifeCycleStatisticalResourceDto.setExternalPublicationFailedDate(new DateTime().toDate());
         lifeCycleStatisticalResourceDto.setExternalPublicationFailed(true);
 
-        lifeCycleStatisticalResourceDto.setReplacedByVersion("02.000");
-        lifeCycleStatisticalResourceDto.setReplaceToVersion("01.000");
+        // Cant mock replacedByVersion and replacesVersion, we don't know the type of resource
 
         mockVersionableStatisticalResourceDto(lifeCycleStatisticalResourceDto);
     }
@@ -232,6 +233,17 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     private static ExternalItemDto createExternalItemDtoMockFromDoMock(ExternalItem item) {
         ExternalItemDto itemDto = new ExternalItemDto(item.getCode(), item.getUri(), item.getUrn(), item.getType());
+        itemDto.setVersion(Long.valueOf(0));
+        return itemDto;
+    }
+
+    public static RelatedResourceDto mockDatasetVersionRelatedDto() {
+        RelatedResourceDto resource = createRelatedResourceDtoMockFromDoMock(StatisticalResourcesDoMocks.mockDatasetVersionRelated());
+        return resource;
+    }
+
+    private static RelatedResourceDto createRelatedResourceDtoMockFromDoMock(RelatedResource item) {
+        RelatedResourceDto itemDto = new RelatedResourceDto(item.getCode(), item.getUri(), item.getUrn(), item.getType());
         itemDto.setVersion(Long.valueOf(0));
         return itemDto;
     }

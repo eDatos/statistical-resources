@@ -100,8 +100,8 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getExternalPublicationFailed(), actual.getExternalPublicationFailed());
         assertEquals(expected.getExternalPublicationFailedDate(), actual.getExternalPublicationFailedDate());
 
-        assertEquals(expected.getReplacedByVersion(), actual.getReplacedByVersion());
-        assertEquals(expected.getReplaceToVersion(), actual.getReplaceToVersion());
+        assertEqualsRelatedResource(expected.getIsReplacedByVersion(), actual.getIsReplacedByVersion());
+        assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
 
         assertEqualsVersionableStatisticalResource(expected, actual);
     }
@@ -229,8 +229,8 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEquals(entity.getExternalPublicationFailed(), dto.getExternalPublicationFailed());
                 assertEqualsDate(entity.getExternalPublicationFailedDate(), dto.getExternalPublicationFailedDate());
 
-                assertEquals(entity.getReplacedByVersion(), dto.getReplacedByVersion());
-                assertEquals(entity.getReplaceToVersion(), dto.getReplaceToVersion());
+                assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
+                assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
                 break;
         }
         assertEqualsVersionableStatisticalResource(entity, dto, mapperEnum);

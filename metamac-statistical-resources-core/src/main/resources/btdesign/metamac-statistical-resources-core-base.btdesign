@@ -112,8 +112,9 @@ Application BaseStatisticalResources {
 			Boolean externalPublicationFailed nullable;
 			DateTimeTZ externalPublicationFailedDate nullable;
 			
-			String replacedByVersion nullable;
-			String replaceToVersion nullable;
+				
+			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
+			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
@@ -154,9 +155,7 @@ Application BaseStatisticalResources {
 			
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
-			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			- @RelatedResource isReplacedBy cascade="all" databaseColumn="IS_REPLACED_BY_FK" nullable;
-			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
 			- Bag<@RelatedResource> requires cascade="all-delete-orphan" databaseColumn="REQUIRES_FK" databaseJoinTable="TB_SR_REQUIRES";
 			- Bag<@RelatedResource> isRequiredBy cascade="all-delete-orphan" databaseColumn="IS_REQUIRED_BY_FK" databaseJoinTable="TB_SR_IS_REQUIRED_BY";
 			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseColumn="HAS_PART_FK" databaseJoinTable="TB_SR_HAS_PART";
