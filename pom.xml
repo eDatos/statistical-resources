@@ -21,7 +21,7 @@
     <modules>
         <module>metamac-statistical-resources-parent</module>
         <module>metamac-statistical-resources-core</module>
-        <module>metamac-statistical-resources-web</module>
+<!--         <module>metamac-statistical-resources-web</module> -->
     </modules>
 
     <build>
