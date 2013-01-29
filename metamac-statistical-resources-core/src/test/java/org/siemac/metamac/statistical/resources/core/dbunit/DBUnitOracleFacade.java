@@ -20,9 +20,13 @@ import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class DBUnitOracleFacade implements DBUnitFacade {
+
+    private Logger              log            = LoggerFactory.getLogger(DBUnitOracleFacade.class);
 
     DataSourceDatabaseTester    databaseTester = null;
 
@@ -32,6 +36,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
     private static List<String> sequences;
     private static List<String> tableNames;
 
+    @Override
     public void setUpDatabase(File xmlDataFile) throws Exception {
         // Setup database tester
         if (databaseTester == null) {
@@ -66,6 +71,9 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             databaseTester.setTearDownOperation(DatabaseOperation.NONE);
             databaseTester.setDataSet(dataset);
             databaseTester.onSetup();
+        } catch (Exception e) {
+            log.error("Error in dbunit file " + xmlDataFile.getAbsolutePath());
+            throw e;
         } finally {
             dbUnitConnection.close();
         }

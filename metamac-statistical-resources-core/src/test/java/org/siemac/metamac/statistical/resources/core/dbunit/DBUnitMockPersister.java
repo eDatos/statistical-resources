@@ -3,7 +3,8 @@ package org.siemac.metamac.statistical.resources.core.dbunit;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -292,7 +293,8 @@ public class DBUnitMockPersister extends MockPersisterBase {
         try {
             File file = File.createTempFile("dbunit-", ".tmp.xml");
             filename = file.getAbsolutePath();
-            writer = new BufferedWriter(new FileWriter(file));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+            writer.write("<?xml version='1.0' encoding='UTF-8'?>\n");
             writer.write("<dataset>\n");
             for (EntityMetadata metadata : entitiesMetadata) {
                 writer.write(metadata.getXmlRepresentation(dtdMap.get(metadata.getTableName())));
