@@ -35,14 +35,14 @@ Application BaseStatisticalResources {
     	
 		"Statistical Resource"
 		abstract Entity StatisticalResource {
-			databaseTable="TB_STATISTICAL_RESOURCES"
+			databaseTable="TB_STAT_RESOURCES"
 
-			hint="idSequence=STATISTICAL_RESOURCES"
+			hint="idSequence=STAT_RESOURCES"
 			inheritanceType=SINGLE_TABLE
 
 			discriminatorType=STRING
 
-			discriminatorColumn="STATISTICAL_RESOURCE_TYPE"
+			discriminatorColumn="STAT_RESOURCE_TYPE"
 			discriminatorLength="255"
 
 			Repository StatisticalResourceRepository {
@@ -53,7 +53,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity IdentifiableStatisticalResource extends @StatisticalResource {
-			databaseTable="TB_STATISTICAL_RESOURCES"
+			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="IDENTIFIABLE_RESOURCE"
 
 			String code nullable;
@@ -69,7 +69,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity NameableStatisticalResource extends @IdentifiableStatisticalResource {
-			databaseTable="TB_STATISTICAL_RESOURCES"
+			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="NAMEABLE_RESOURCE"
 
 			- @InternationalString title nullable cascade="all" databaseColumn="TITLE_FK";
@@ -77,7 +77,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity VersionableStatisticalResource extends @NameableStatisticalResource {
-			databaseTable="TB_STATISTICAL_RESOURCES"
+			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="VERSIONABLE_RESOURCE"
 
 			String versionLogic nullable;
@@ -91,7 +91,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
-			databaseTable="TB_STATISTICAL_RESOURCES"
+			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="LIFE_CYCLE_RESOURCE"
 
 			- @StatisticalResourceProcStatusEnum procStatus nullable;
@@ -118,7 +118,7 @@ Application BaseStatisticalResources {
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
-			databaseTable="TB_STATISTICAL_RESOURCES"
+			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="SIEMAC_RESOURCE"
 			
 			//LANGUAGES
