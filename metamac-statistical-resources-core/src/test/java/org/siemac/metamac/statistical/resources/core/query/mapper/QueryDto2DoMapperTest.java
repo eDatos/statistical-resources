@@ -1,12 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.*;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

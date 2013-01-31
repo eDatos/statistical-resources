@@ -64,7 +64,6 @@ public class QueryAsserts extends BaseAsserts {
             
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
-            // TODO: Comprobar dto.versionOptimisticLocking = entity.version
         }
         assertEqualsNameableStatisticalResource(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
     }

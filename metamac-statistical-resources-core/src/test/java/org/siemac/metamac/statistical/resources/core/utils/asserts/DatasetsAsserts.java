@@ -195,7 +195,6 @@ public class DatasetsAsserts extends BaseAsserts {
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
-            // TODO: Comprobar dto.versionOptimisticLocking = entity.version
 
             assertEquals(entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dto.getDatasetVersionUrn());
         }
