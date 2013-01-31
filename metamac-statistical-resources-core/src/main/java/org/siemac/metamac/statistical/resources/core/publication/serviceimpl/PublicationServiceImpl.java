@@ -72,8 +72,6 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
         // TODO: Si el codigo ha cambiado debemos actualizar la URN
 
-        // TODO: ACtualizar la fecha del optimistic locking
-
         publicationVersion = getPublicationVersionRepository().save(publicationVersion);
         return publicationVersion;
     }

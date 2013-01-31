@@ -159,8 +159,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
         // TODO: Si el codigo ha cambiado debemos actualizar la URN
 
-        // TODO: ACtualizar la fecha del optimistic locking
-
         datasetVersion = getDatasetVersionRepository().save(datasetVersion);
         return datasetVersion;
     }

@@ -162,6 +162,9 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
             return;
         }
 
+        // Optimistic locking
+        target.setOptimisticLockingVersion(source.getVersion());
+        
         // Identity
         // Don't set the identity attributes because we choose the ones of the lastest element of the hierarchy
 

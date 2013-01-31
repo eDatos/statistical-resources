@@ -18,6 +18,7 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -148,7 +149,13 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
     @Override
     public void statisticalResourceDtoToDo(StatisticalResourceDto source, StatisticalResource target, String metadataName) throws MetamacException {
-
+        
+        if (target.getId() != null) {
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+        }
+        
+        // Optimistic locking: Update "update date" attribute to force update to root entity, to increment "version" attribute
+        target.setUpdateDate(new DateTime());
     }
 
     // ------------------------------------------------------------

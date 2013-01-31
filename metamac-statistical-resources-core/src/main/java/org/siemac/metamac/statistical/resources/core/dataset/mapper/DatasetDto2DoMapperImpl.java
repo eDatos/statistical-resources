@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
-import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
@@ -50,7 +49,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASOURCE_NOT_FOUND).withMessageParameters(ServiceExceptionParameters.DATASOURCE)
                         .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
-            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersion());
         }
 
         datasourceDtoToDo(source, target);
@@ -67,10 +65,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         identifiableStatisticalResourceDtoToDo(source, target.getIdentifiableStatisticalResource(), ServiceExceptionParameters.DATASOURCE);
 
         // Non modifiable after creation
-
-        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
-        // TODO: Add update date
-        // target.setUpdateDate(new DateTime());
 
         return target;
     }
@@ -93,7 +87,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASET_VERSION_NOT_FOUND)
                         .withMessageParameters(ServiceExceptionParameters.DATASET_VERSION).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
-            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersion());
         }
 
         datasetVersionDtoToDo(source, target);
@@ -110,10 +103,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION);
 
         // Non modifiable after creation
-
-        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
-        // TODO: Add update date
-        // target.setUpdateDate(new DateTime());
 
         // TODO: It's not clear when coverages are manual, geoDimension attribute missing? same for timeDimension
 

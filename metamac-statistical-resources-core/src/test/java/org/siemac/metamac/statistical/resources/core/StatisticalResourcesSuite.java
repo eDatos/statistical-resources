@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2D
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
+import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
@@ -22,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,
+                     StatisticalResourcesOptimisticLockingTest.class,
                      IdentifiableStatisticalResourceRepositoryTest.class,
                      QueryRepositoryTest.class, 
                      QueryServiceTest.class, 

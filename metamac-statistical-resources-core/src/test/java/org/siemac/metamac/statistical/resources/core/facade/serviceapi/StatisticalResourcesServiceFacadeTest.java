@@ -367,44 +367,58 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // DATASETS
     // ------------------------------------------------------------------------
 
+    @Test
     @Override
     public void testCreateDataset() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testUpdateDataset() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testDeleteDataset() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testFindDatasetsByCondition() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testRetrieveDatasetByUrn() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testRetrieveDatasetVersions() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testVersioningDataset() throws Exception {
+        fail("not implemented");
         // TODO Auto-generated method stub
 
     }

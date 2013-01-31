@@ -37,6 +37,7 @@ Application QueriesStatisticalResources {
 			!auditable
 
 			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			// - @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" nullable; 
 			
 			Repository QueryRepository {
 				save;

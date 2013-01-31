@@ -3,9 +3,7 @@ package org.siemac.metamac.statistical.resources.core.query.mapper;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
-import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -39,7 +37,6 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.QUERY_NOT_FOUND).withMessageParameters(ServiceExceptionParameters.QUERY)
                         .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
-            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersion());
         }
 
         queryDtoToDo(source, target);
@@ -59,10 +56,6 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
         // Attributes modifiable
         // TODO: Dataset
-
-        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
-        // TODO: Add update date
-        // target.setUpdateDate(new DateTime());
 
         return target;
 

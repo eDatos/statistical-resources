@@ -19,6 +19,7 @@ Application StatisticalResourcesDto {
 		}
 		
 		DataTransferObject StatisticalResourceDto extends @AuditableDto {
+			 Long optimisticLockingVersion;
 		}
 
 		DataTransferObject IdentifiableStatisticalResourceDto extends @StatisticalResourceDto {

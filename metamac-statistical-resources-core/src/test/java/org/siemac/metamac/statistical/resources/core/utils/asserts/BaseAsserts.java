@@ -273,7 +273,9 @@ public class BaseAsserts extends MetamacAsserts {
     }
 
     protected static void assertEqualsStatisticalResouce(StatisticalResource entity, StatisticalResourceDto dto, MapperEnum mapperEnum) {
-
+        if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+            assertEquals(entity.getVersion(), dto.getOptimisticLockingVersion());
+        }
     }
 
     // -----------------------------------------------------------------
