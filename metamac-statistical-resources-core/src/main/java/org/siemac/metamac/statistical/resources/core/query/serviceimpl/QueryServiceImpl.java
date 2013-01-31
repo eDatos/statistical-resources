@@ -8,6 +8,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,8 +89,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     }
     
     private void fillMetadataForCreateQuery(Query query) {
-        // TODO: Llamar al método del generator cuando se sepa cómo se construye la URN
-        query.getNameableStatisticalResource().setUrn("todo:mock");
-        query.getNameableStatisticalResource().setUri(null);
+        query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
+        query.getLifeCycleStatisticalResource().setUri(null);
     }
 }

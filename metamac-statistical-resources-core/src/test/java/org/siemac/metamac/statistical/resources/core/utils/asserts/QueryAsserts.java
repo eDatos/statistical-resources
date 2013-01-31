@@ -17,7 +17,7 @@ public class QueryAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsQuery(Query expected, Query actual) {
-        assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+        assertEqualsNameableStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
     }
     
     public static void assertEqualsQueryCollection(Collection<Query> expected, Collection<Query> actual) {
@@ -66,7 +66,7 @@ public class QueryAsserts extends BaseAsserts {
             assertEquals(entity.getVersion(), dto.getVersion());
             // TODO: Comprobar dto.versionOptimisticLocking = entity.version
         }
-        assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto, mapperEnum);
+        assertEqualsNameableStatisticalResource(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
     }
     
     private static void assertEqualsQueryCollection(Collection<Query> entities, Collection<QueryDto> dtos, MapperEnum mapperEnum) {

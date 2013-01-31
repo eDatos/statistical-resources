@@ -48,7 +48,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
             return;
         }
 
-        checkNewNameableStatisticalResource(query.getNameableStatisticalResource(), ServiceExceptionParameters.QUERY__NAMEABLE_STATISTICAL_RESOURCE, exceptions);
+        checkNewLifeCycleStatisticalResource(query.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE, exceptions);
         checkQuery(query, exceptions);
 
         // Metadata that must be empty for new entities
@@ -62,7 +62,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
             return;
         }
 
-        checkExistingNameableStatisticalResource(query.getNameableStatisticalResource(), ServiceExceptionParameters.QUERY, exceptions);
+        checkExistingLifeCycleStatisticalResource(query.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY, exceptions);
         checkQuery(query, exceptions);
 
         // Metadata that must be filled for existing entities

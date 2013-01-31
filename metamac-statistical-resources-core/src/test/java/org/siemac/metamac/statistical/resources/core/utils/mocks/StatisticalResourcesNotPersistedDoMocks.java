@@ -24,9 +24,9 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // QUERY
     // -----------------------------------------------------------------
 
-    public Query mockQueryWithNameableNull() {
+    public Query mockQueryWithStatisticalResourceNull() {
         Query query = mockQuery();
-        query.setNameableStatisticalResource(null);
+        query.setLifeCycleStatisticalResource(null);
         return query;
     }
 

@@ -36,7 +36,7 @@ Application QueriesStatisticalResources {
 			hint="idSequence=QUERIES"
 			!auditable
 
-			- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
 			Repository QueryRepository {
 				save;

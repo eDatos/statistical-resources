@@ -9,7 +9,7 @@ Application QueriesStatisticalResourcesDto {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.query 
 
 		// QUERY
-		DataTransferObject QueryDto extends @NameableStatisticalResourceDto {
+		DataTransferObject QueryDto extends @LifeCycleStatisticalResourceDto {
 			- @DatasetDto dataset;
 		}
 	}

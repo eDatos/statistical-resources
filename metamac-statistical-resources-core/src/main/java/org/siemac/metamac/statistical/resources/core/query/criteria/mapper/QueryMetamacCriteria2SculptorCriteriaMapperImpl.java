@@ -47,13 +47,13 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
             QueryCriteriaPropertyEnum propertyEnum = QueryCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case CODE:
-                    return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue());
                 case URN:
-                    return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().urn(), propertyRestriction.getStringValue());
                 case TITLE:
-                    return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case DESCRIPTION:
-                    return new SculptorPropertyCriteria(QueryProperties.nameableStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -64,11 +64,11 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
             QueryCriteriaOrderEnum propertyOrderEnum = QueryCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
                 case CODE:
-                    return QueryProperties.nameableStatisticalResource().code();
+                    return QueryProperties.lifeCycleStatisticalResource().code();
                 case URN:
-                    return QueryProperties.nameableStatisticalResource().urn();
+                    return QueryProperties.lifeCycleStatisticalResource().urn();
                 case TITLE:
-                    return QueryProperties.nameableStatisticalResource().title().texts().label();
+                    return QueryProperties.lifeCycleStatisticalResource().title().texts().label();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }

@@ -51,8 +51,8 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
     @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(queryMockFactory.QUERY_01_BASIC.getNameableStatisticalResource().getUrn());
-            assertEqualsIdentifiableStatisticalResource(queryMockFactory.QUERY_01_BASIC.getNameableStatisticalResource(), actual);
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
+            assertEqualsIdentifiableStatisticalResource(queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource(), actual);
         }
 
         {
@@ -89,14 +89,14 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
         }
         
         {   // Not error because is the same object
-            identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource());
+            identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource());
         }
     }
 
     @Test
     @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCheckDuplicatedUrnErrorAlreadyExists() throws Exception {
-        String urn = queryMockFactory.QUERY_01_BASIC.getNameableStatisticalResource().getUrn();
+        String urn = queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn();
         try {
             IdentifiableStatisticalResource identifiableStatisticalResource = new IdentifiableStatisticalResource();
             identifiableStatisticalResource.setUrn(urn);

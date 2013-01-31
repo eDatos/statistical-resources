@@ -22,7 +22,7 @@ public class QueryRepositoryImpl extends QueryRepositoryBase {
 
     public Query retrieveByUrn(String urn) throws MetamacException {
         
-        List<ConditionalCriteria> condition = criteriaFor(Query.class).withProperty(QueryProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
+        List<ConditionalCriteria> condition = criteriaFor(Query.class).withProperty(QueryProperties.lifeCycleStatisticalResource().urn()).eq(urn).distinctRoot().build();
         
         List<Query> result = findByCondition(condition);
         

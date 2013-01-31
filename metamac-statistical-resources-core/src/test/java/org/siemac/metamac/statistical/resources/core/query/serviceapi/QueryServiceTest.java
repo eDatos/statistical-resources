@@ -63,7 +63,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveQueryByUrn() throws MetamacException {
-        Query actual = queryService.retrieveQueryByUrn(getServiceContextWithoutPrincipal(), queryMockFactory.QUERY_01_BASIC.getNameableStatisticalResource().getUrn());
+        Query actual = queryService.retrieveQueryByUrn(getServiceContextWithoutPrincipal(), queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
         assertEqualsQuery(queryMockFactory.QUERY_01_BASIC, actual);
     }
 
@@ -84,48 +84,48 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testFindQueriesByCondition() throws Exception {
         // Find all
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).orderBy(QueryProperties.nameableStatisticalResource().code()).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).orderBy(QueryProperties.lifeCycleStatisticalResource().code()).build();
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<Query> queriesPagedResult = queryService.findQueriesByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
 
             // Validate
             assertEquals(3, queriesPagedResult.getTotalRows());
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
-            assertEquals(queryMockFactory.QUERY_03_BASIC_ORDERED_02.getNameableStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
-            assertEquals(queryMockFactory.QUERY_04_BASIC_ORDERED_03.getNameableStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
+            assertEquals(queryMockFactory.QUERY_03_BASIC_ORDERED_02.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
+            assertEquals(queryMockFactory.QUERY_04_BASIC_ORDERED_03.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
         }
 
         // Find code
         {
-            String code = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getCode();
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.nameableStatisticalResource().code()).eq(code).build();
+            String code = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getCode();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.lifeCycleStatisticalResource().code()).eq(code).build();
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<Query> queriesPagedResult = queryService.findQueriesByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
 
             // Validate
             assertEquals(1, queriesPagedResult.getTotalRows());
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
         }
 
         // Find URN
         {
-            String urn = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getUrn();
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.nameableStatisticalResource().urn()).eq(urn).build();
+            String urn = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.lifeCycleStatisticalResource().urn()).eq(urn).build();
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<Query> queriesPagedResult = queryService.findQueriesByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
 
             // Validate
             assertEquals(1, queriesPagedResult.getTotalRows());
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
         }
 
         // Find title
         {
-            String titleQuery = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getTitle().getLocalisedLabel("es");
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.nameableStatisticalResource().title().texts().label())
+            String titleQuery = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getTitle().getLocalisedLabel("es");
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.lifeCycleStatisticalResource().title().texts().label())
                     .eq(titleQuery).build();
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<Query> queriesPagedResult = queryService.findQueriesByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
@@ -133,7 +133,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             // Validate
             assertEquals(1, queriesPagedResult.getTotalRows());
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getNameableStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getNameableStatisticalResource().getUrn());
+            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
         }
     }
 
@@ -147,12 +147,12 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Test
     public void testCreateQueryErrorNameableResourceRequired() throws Exception {
-        Query query = statisticalResourcesNotPersistedDoMocks.mockQueryWithNameableNull();
+        Query query = statisticalResourcesNotPersistedDoMocks.mockQueryWithStatisticalResourceNull();
         try {
             queryService.createQuery(getServiceContextWithoutPrincipal(), query);
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.QUERY__NAMEABLE_STATISTICAL_RESOURCE}, e
+            BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE}, e
                     .getExceptionItems().get(0));
         }
     }
@@ -162,7 +162,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testUpdateQuery() throws Exception {
         Query query = queryMockFactory.QUERY_01_BASIC;
-        query.getNameableStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
 
         Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
         assertEqualsQuery(query, updatedQuery);

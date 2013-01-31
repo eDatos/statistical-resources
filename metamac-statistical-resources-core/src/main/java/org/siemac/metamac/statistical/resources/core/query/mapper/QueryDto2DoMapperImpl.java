@@ -4,6 +4,7 @@ import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
@@ -30,7 +31,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         Query target = null;
         if (source.getId() == null) {
             target = new Query();
-            target.setNameableStatisticalResource(new NameableStatisticalResource());
+            target.setLifeCycleStatisticalResource(new LifeCycleStatisticalResource());
         } else {
             try {
                 target = queryRepository.findById(source.getId());
@@ -52,7 +53,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         }
 
         // Hierarchy
-        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.QUERY);
+        lifeCycleStatisticalResourceDtoToDo(source, target.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY);
 
         // Non modifiable after creation
 

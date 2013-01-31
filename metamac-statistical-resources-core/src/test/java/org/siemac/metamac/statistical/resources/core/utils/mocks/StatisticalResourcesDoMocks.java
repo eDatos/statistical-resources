@@ -47,7 +47,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     public Query mockQuery() {
         Query resource = new Query();
-        resource.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        resource.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
 
         return resource;
     }
@@ -221,7 +221,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public static InternationalString mockInternationalString() {
         InternationalString internationalString = new InternationalString();
         LocalisedString es = new LocalisedString();
-        es.setLabel(mockString(10) + " en Español");
+        es.setLabel(mockString(10) + " en Espanol");
         es.setLocale("es");
         es.setVersion(Long.valueOf(0));
         LocalisedString en = new LocalisedString();

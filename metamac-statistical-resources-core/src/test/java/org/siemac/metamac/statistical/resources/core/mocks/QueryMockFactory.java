@@ -47,7 +47,7 @@ public class QueryMockFactory extends MockFactory<Query> implements Initializing
 
     private Query createPersistedQueryWithCode(String code) {
         Query query = createQuery();
-        query.getNameableStatisticalResource().setCode(code);
+        query.getLifeCycleStatisticalResource().setCode(code);
         return query;
     }
 

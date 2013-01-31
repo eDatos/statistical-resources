@@ -35,7 +35,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
             return null;
         }
 
-        nameableStatisticalResourceDoToDto(source.getNameableStatisticalResource(), target);
+        lifeCycleStatisticalResourceDoToDto(source.getLifeCycleStatisticalResource(), target);
 
         // Identity
         target.setId(source.getId());

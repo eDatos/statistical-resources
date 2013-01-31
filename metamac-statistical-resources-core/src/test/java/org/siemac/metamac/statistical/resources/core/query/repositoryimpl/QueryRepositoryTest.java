@@ -43,7 +43,7 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query actual = queryRepository.retrieveByUrn(queryMockFactory.QUERY_01_BASIC.getNameableStatisticalResource().getUrn());
+        Query actual = queryRepository.retrieveByUrn(queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
         assertEqualsQuery(queryMockFactory.QUERY_01_BASIC, actual);
     }
 
