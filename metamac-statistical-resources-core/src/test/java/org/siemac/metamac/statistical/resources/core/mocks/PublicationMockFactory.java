@@ -49,6 +49,9 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
 
         publication.addVersion(publicationV2);
         publicationV2.setPublication(publication);
+        
+        publicationV1.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(publicationV2));
+        publicationV2.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(publicationV1));
     }
 
     private static Publication createPublication() {
