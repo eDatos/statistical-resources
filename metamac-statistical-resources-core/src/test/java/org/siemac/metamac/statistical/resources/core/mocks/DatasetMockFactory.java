@@ -17,7 +17,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     public static final String DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME        = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
     private static Dataset     DATASET_02_BASIC_WITH_GENERATED_VERSION;
 
-    public static final String DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME       = "DATASET_03_BASIC_WITH_2_DATASET_VERSIONS";
+    public static final String DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME       = "DATASET_03_WITH_2_DATASET_VERSIONS";
     private static Dataset     DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
 
     public static final String DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME";
