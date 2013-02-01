@@ -176,14 +176,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected NameableStatisticalResource mockNameableStatisticalResorce() {
+    protected static NameableStatisticalResource mockNameableStatisticalResorce() {
         NameableStatisticalResource nameableResource = new NameableStatisticalResource();
         mockNameableStatisticalResorce(nameableResource);
 
         return nameableResource;
     }
 
-    protected NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
+    protected static NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
         mockIdentifiableStatisticalResource(resource);
 
         resource.setTitle(mockInternationalString());
@@ -192,7 +192,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
+    protected static IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
         mockStatisticalResource(resource);
 
         resource.setCode("resource-" + mockString(10));
@@ -200,7 +200,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected StatisticalResource mockStatisticalResource(StatisticalResource resource) {
+    protected static StatisticalResource mockStatisticalResource(StatisticalResource resource) {
         return resource;
     }
 

@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,12 +53,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     public void testUpdateQuery() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
         queryDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         queryDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
@@ -84,12 +85,14 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     public void testUpdateDatasource() throws Exception {
         // Retrieve datasource - session 1
-        DatasourceDto datasourceDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
+        DatasourceDto datasourceDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.DATASOURCE_01_BASIC
+                .getIdentifiableStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasourceDtoSession01.getOptimisticLockingVersion());
         datasourceDtoSession01.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
 
         // Retrieve datasource - session 2
-        DatasourceDto datasourceDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
+        DatasourceDto datasourceDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.DATASOURCE_01_BASIC
+                .getIdentifiableStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasourceDtoSession02.getOptimisticLockingVersion());
         datasourceDtoSession02.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
 

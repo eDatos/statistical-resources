@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 
 import org.junit.Test;
@@ -32,19 +33,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements QueryRepositoryTestBase {
 
     @Autowired
-    protected QueryRepository queryRepository;
+    protected QueryRepository               queryRepository;
 
     @Autowired
     protected StatisticalResourceRepository statisticalResourceRepository;
-    
-    @Autowired
-    protected QueryMockFactory queryMockFactory;
 
+    @Autowired
+    protected QueryMockFactory              queryMockFactory;
+
+    @Override
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query actual = queryRepository.retrieveByUrn(queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
-        assertEqualsQuery(queryMockFactory.QUERY_01_BASIC, actual);
+        Query actual = queryRepository.retrieveByUrn(getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
+        assertEqualsQuery(getQuery01Basic(), actual);
     }
 
     @Test

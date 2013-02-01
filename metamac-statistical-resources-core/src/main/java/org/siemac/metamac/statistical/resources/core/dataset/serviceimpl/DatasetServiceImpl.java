@@ -8,6 +8,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
@@ -249,8 +250,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private static void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         datasource.setDatasetVersion(datasetVersion);
         datasource.getIdentifiableStatisticalResource().setUri(null);
-        // TODO: Cuando se sepa como se construye la URN llamar al método correspondiente en el GeneratorUrnUtils
-        datasource.getIdentifiableStatisticalResource().setUrn("TODO:mock");
+        datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacDatasourceUrn(datasource.getIdentifiableStatisticalResource().getCode()));
     }
 
     private void addDatasourceForDatasetVersion(Datasource datasource, DatasetVersion datasetVersion) {
@@ -266,8 +266,17 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private static void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
         datasetVersion.setDataset(dataset);
-        // TODO: Cuando se sepa como se construye la URN llamar al método correspondiente en el GeneratorUrnUtils
-        datasetVersion.getSiemacMetadataStatisticalResource().setUrn("TODO:mock");
+        // TODO: set code
+        /*
+         * String operationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+         * String type = datasetVersion.getSiemacMetadataStatisticalResource().getType().name();
+         * String code = operationCode + " " + type + " ";
+         */
+
+        // datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
+
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");

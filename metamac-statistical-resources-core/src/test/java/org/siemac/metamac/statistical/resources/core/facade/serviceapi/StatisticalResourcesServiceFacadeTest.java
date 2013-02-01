@@ -14,6 +14,10 @@ import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFacto
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_03_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_04_BASIC_ORDERED_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery02BasicOrdered01;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery03BasicOrdered02;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery04BasicOrdered03;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
@@ -86,8 +90,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
     public void testRetrieveQueryByUrn() throws Exception {
-        QueryDto actual = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
-        assertEqualsQuery(queryMockFactory.QUERY_01_BASIC, actual);
+        QueryDto actual = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
+        assertEqualsQuery(getQuery01Basic(), actual);
     }
 
     @Override
@@ -123,7 +127,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
     public void testUpdateQuery() throws Exception {
-        QueryDto expectedQuery = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.QUERY_01_BASIC.getLifeCycleStatisticalResource().getUrn());
+        QueryDto expectedQuery = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
         expectedQuery.setTitle(StatisticalResourcesDoMocks.mockInternationalStringDto());
 
         QueryDto actualQuery = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), expectedQuery);
@@ -160,9 +164,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
 
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
-            assertEquals(queryMockFactory.QUERY_03_BASIC_ORDERED_02.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
-            assertEquals(queryMockFactory.QUERY_04_BASIC_ORDERED_03.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(getQuery03BasicOrdered02().getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(getQuery04BasicOrdered03().getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
         }
 
         // Find code
@@ -183,7 +187,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             metamacCriteria.getPaginator().setCountTotalResults(Boolean.TRUE);
 
             // Restrictions
-            String code = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getCode();
+            String code = getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getCode();
 
             MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
             propertyRestriction.setPropertyName(QueryCriteriaPropertyEnum.CODE.name());
@@ -199,7 +203,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
 
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
         }
 
         // Find URN
@@ -220,7 +224,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             metamacCriteria.getPaginator().setCountTotalResults(Boolean.TRUE);
 
             // Restrictions
-            String urn = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn();
+            String urn = getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getUrn();
 
             MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
             propertyRestriction.setPropertyName(QueryCriteriaPropertyEnum.URN.name());
@@ -236,7 +240,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
 
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
         }
 
         // Find title
@@ -257,7 +261,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             metamacCriteria.getPaginator().setCountTotalResults(Boolean.TRUE);
 
             // Restrictions
-            String titleQuery = queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getTitle().getLocalisedLabel("es");
+            String titleQuery = getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getTitle().getLocalisedLabel("es");
 
             MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
             propertyRestriction.setPropertyName(QueryCriteriaPropertyEnum.TITLE.name());
@@ -273,7 +277,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
 
             int i = 0;
-            assertEquals(queryMockFactory.QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(getQuery02BasicOrdered01().getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
         }
     }
 

@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,14 +9,22 @@ import java.util.Set;
 
 import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 
-public abstract class MockFactory<Model> {
+public abstract class MockFactory<EntityMock> {
 
     protected static final String NAME_FIELD_SUFFIX = "_NAME";
 
-    public abstract Model getMock(String id);
-
-    public List<Model> getMocks(String... ids) {
-        List<Model> list = new ArrayList<Model>();
+    public EntityMock getMock(String id) {
+        String methodName = getMethodNameFromId(id);
+        try {
+            Method method = getClass().getMethod(methodName);
+            Object obj = method.invoke(this);
+            return (EntityMock) obj;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public List<EntityMock> getMocks(String... ids) {
+        List<EntityMock> list = new ArrayList<EntityMock>();
         for (String id : ids) {
             list.add(getMock(id));
         }
@@ -43,4 +52,16 @@ public abstract class MockFactory<Model> {
         }
     }
 
+    private String getMethodNameFromId(String id) {
+        String[] sections = id.split("_");
+        StringBuilder builder = new StringBuilder("get");
+        for (String section : sections) {
+            String firstUpper = toProperCase(section);
+            builder.append(firstUpper);
+        }
+        return builder.toString();
+    }
+    private String toProperCase(String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+    }
 }
