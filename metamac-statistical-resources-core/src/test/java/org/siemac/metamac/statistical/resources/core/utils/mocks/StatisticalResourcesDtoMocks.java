@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.*;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -39,10 +40,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     
     public static QueryDto mockQueryDtoWithDatasetVersion() {
         QueryDto queryDto = mockQueryDto();
-        
-        // TODO: Esto hay que cambiarlo por DATASET_VERSION_06_FOR_QUERIES!!!!!!!!!!!!
-        queryDto.setDatasetVersion(URN_RELATED_RESOURCE_MOCK);
-
+        queryDto.setDatasetVersion(getDatasetVersion06ForQueries().getSiemacMetadataStatisticalResource().getUrn());
         return queryDto;
     }
 
