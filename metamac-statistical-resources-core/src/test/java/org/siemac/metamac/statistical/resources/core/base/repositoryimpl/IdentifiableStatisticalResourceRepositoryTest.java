@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
@@ -59,9 +60,8 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
         }
 
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource()
-                    .getUrn());
-            assertEqualsIdentifiableStatisticalResource(datasetVersionMockFactory.DATASET_VERSION_01_BASIC.getSiemacMetadataStatisticalResource(), actual);
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(getDatasetVersion01Basic().getSiemacMetadataStatisticalResource().getUrn());
+            assertEqualsIdentifiableStatisticalResource(getDatasetVersion01Basic().getSiemacMetadataStatisticalResource(), actual);
         }
 
         {

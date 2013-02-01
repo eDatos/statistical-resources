@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasource01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
 
@@ -85,14 +86,14 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     public void testUpdateDatasource() throws Exception {
         // Retrieve datasource - session 1
-        DatasourceDto datasourceDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.DATASOURCE_01_BASIC
-                .getIdentifiableStatisticalResource().getUrn());
+        DatasourceDto datasourceDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), getDatasource01Basic().getIdentifiableStatisticalResource()
+                .getUrn());
         assertEquals(Long.valueOf(0), datasourceDtoSession01.getOptimisticLockingVersion());
         datasourceDtoSession01.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
 
         // Retrieve datasource - session 2
-        DatasourceDto datasourceDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.DATASOURCE_01_BASIC
-                .getIdentifiableStatisticalResource().getUrn());
+        DatasourceDto datasourceDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), getDatasource01Basic().getIdentifiableStatisticalResource()
+                .getUrn());
         assertEquals(Long.valueOf(0), datasourceDtoSession02.getOptimisticLockingVersion());
         datasourceDtoSession02.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
 
