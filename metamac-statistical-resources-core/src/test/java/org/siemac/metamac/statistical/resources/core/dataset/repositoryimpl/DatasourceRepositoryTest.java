@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasource01Basic;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 
 import org.junit.Test;
@@ -37,14 +38,15 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
     @Autowired
     protected DatasourceMockFactory datasourceMockFactory;
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrn() throws MetamacException {
-        Datasource expected = datasourceMockFactory.DATASOURCE_01_BASIC;
-        Datasource actual = datasourceRepository.retrieveByUrn(datasourceMockFactory.DATASOURCE_01_BASIC.getIdentifiableStatisticalResource().getUrn());
+        Datasource expected = getDatasource01Basic();
+        Datasource actual = datasourceRepository.retrieveByUrn(getDatasource01Basic().getIdentifiableStatisticalResource().getUrn());
         assertEqualsDatasource(expected, actual);
     }
-    
+
     @Test
     public void testRetrieveByUrnErrorNotFound() throws Exception {
         try {
