@@ -6,6 +6,7 @@ import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMe
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.getPublicationVersion01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
@@ -21,7 +22,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -47,9 +47,6 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
     @Autowired
     protected DatasetVersionMockFactory                 datasetVersionMockFactory;
 
-    @Autowired
-    protected PublicationVersionMockFactory             publicationVersionMockFactory;
-
     @Override
     @Test
     @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
@@ -65,9 +62,8 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
         }
 
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(publicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC
-                    .getSiemacMetadataStatisticalResource().getUrn());
-            assertEqualsIdentifiableStatisticalResource(publicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC.getSiemacMetadataStatisticalResource(), actual);
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(getPublicationVersion01Basic().getSiemacMetadataStatisticalResource().getUrn());
+            assertEqualsIdentifiableStatisticalResource(getPublicationVersion01Basic().getSiemacMetadataStatisticalResource(), actual);
         }
 
     }

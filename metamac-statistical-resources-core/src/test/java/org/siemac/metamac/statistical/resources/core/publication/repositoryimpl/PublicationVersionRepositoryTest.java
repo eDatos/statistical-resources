@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
-import static org.siemac.metamac.statistical.resources.core.mocks.PublicationMockFactory.getPublication03With2PublicationVersions;
+import static org.siemac.metamac.statistical.resources.core.mocks.PublicationMockFactory.getPublication03BasicWith2PublicationVersions;
 import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.PUBLICATION_VERSION_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.getPublicationVersion01Basic;
+import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.getPublicationVersion04ForPublication03AndLastVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 
 import org.junit.Test;
@@ -15,7 +17,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +37,12 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     @Autowired
     protected PublicationVersionRepository  publicationVersionRepository;
 
-    @Autowired
-    protected PublicationVersionMockFactory publicationVersionMockFactory;
 
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
-        PublicationVersion actual = publicationVersionRepository.retrieveByUrn(publicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC.getSiemacMetadataStatisticalResource().getUrn());
-        assertEqualsPublicationVersion(publicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC, actual);
+        PublicationVersion actual = publicationVersionRepository.retrieveByUrn(getPublicationVersion01Basic().getSiemacMetadataStatisticalResource().getUrn());
+        assertEqualsPublicationVersion(getPublicationVersion01Basic(), actual);
     }
 
     @Test
@@ -59,15 +58,15 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveLastVersion() throws Exception {
-        PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(getPublication03With2PublicationVersions().getId());
-        assertEqualsPublicationVersion(publicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION, actual);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(getPublication03BasicWith2PublicationVersions().getId());
+        assertEqualsPublicationVersion(getPublicationVersion04ForPublication03AndLastVersion(), actual);
     }
 
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveByVersion() throws Exception {
-        PublicationVersion actual = publicationVersionRepository.retrieveByVersion(getPublication03With2PublicationVersions().getId(),
-                publicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION.getSiemacMetadataStatisticalResource().getVersionLogic());
-        assertEqualsPublicationVersion(publicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION, actual);
+        PublicationVersion actual = publicationVersionRepository.retrieveByVersion(getPublication03BasicWith2PublicationVersions().getId(),
+                getPublicationVersion04ForPublication03AndLastVersion().getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEqualsPublicationVersion(getPublicationVersion04ForPublication03AndLastVersion(), actual);
     }
 }

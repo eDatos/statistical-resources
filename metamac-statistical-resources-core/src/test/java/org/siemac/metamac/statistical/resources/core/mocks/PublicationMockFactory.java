@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.springframework.stereotype.Component;
+import static org.siemac.metamac.statistical.resources.core.mocks.PublicationVersionMockFactory.*;
 
 @Component
 public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publication> {
@@ -29,13 +31,24 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return PUBLICATION_02_BASIC_WITH_GENERATED_VERSION;
     }
 
-    public static Publication getPublication03With2PublicationVersions() {
+    public static Publication getPublication03BasicWith2PublicationVersions() {
         if (PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS == null) {
             Publication publication = createPublication();
-            // Versions linked in version mock factory
             PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS = publication;
+            setPublication03Versions(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS);
         }
         return PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS;
+    }
+
+    private static void setPublication03Versions(Publication publication) {
+        PublicationVersion publicationV1 = getPublicationVersion03ForPublication03();
+        PublicationVersion publicationV2 = getPublicationVersion04ForPublication03AndLastVersion();
+
+        publication.addVersion(publicationV1);
+        publicationV1.setPublication(publication);
+
+        publication.addVersion(publicationV2);
+        publicationV2.setPublication(publication);
     }
 
     private static Publication createPublication() {
