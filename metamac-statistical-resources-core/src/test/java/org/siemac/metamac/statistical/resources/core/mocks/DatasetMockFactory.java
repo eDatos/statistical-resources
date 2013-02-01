@@ -55,6 +55,10 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
         dataset.addVersion(dsV2);
         dsV2.setDataset(dataset);
+
+        // Needs urns
+        dsV1.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(dsV2));
+        dsV2.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(dsV1));
     }
 
     public static Dataset getDataset04With1DatasetVersions() {

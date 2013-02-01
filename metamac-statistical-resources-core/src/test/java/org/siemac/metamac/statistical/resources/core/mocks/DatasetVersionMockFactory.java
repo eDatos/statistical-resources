@@ -71,13 +71,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
             DATASET_VERSION_03_FOR_DATASET_03 = datasetVersion;
-            setDatasetVersion03Datasources();
+            setDatasetVersion03Datasources(datasetVersion);
         }
         return DATASET_VERSION_03_FOR_DATASET_03;
     }
 
-    private static void setDatasetVersion03Datasources() {
-        DatasetVersion datasetVersion03 = getDatasetVersion03ForDataset03();
+    private static void setDatasetVersion03Datasources(DatasetVersion datasetVersion03) {
         datasetVersion03.addDatasource(getDatasorce03BasicForDatasetVersion03());
         datasetVersion03.addDatasource(getDatasorce04BasicForDatasetVersion03());
     }
