@@ -9,40 +9,32 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<DatasetVersion> {
 
-    @Autowired
-    StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
+    public static final String    DATASET_VERSION_01_BASIC_NAME                           = "DATASET_VERSION_01_BASIC";
+    private static DatasetVersion DATASET_VERSION_01_BASIC;
 
-    @Autowired
-    DatasourceMockFactory                datasourceMockFactory;
+    public static final String    DATASET_VERSION_02_BASIC_NAME                           = "DATASET_VERSION_02_BASIC";
+    private static DatasetVersion DATASET_VERSION_02_BASIC;
 
-    public static final String           DATASET_VERSION_01_BASIC_NAME                           = "DATASET_VERSION_01_BASIC";
-    private static DatasetVersion        DATASET_VERSION_01_BASIC;
+    public static final String    DATASET_VERSION_03_FOR_DATASET_03_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
+    private static DatasetVersion DATASET_VERSION_03_FOR_DATASET_03;
 
-    public static final String           DATASET_VERSION_02_BASIC_NAME                           = "DATASET_VERSION_02_BASIC";
-    private static DatasetVersion        DATASET_VERSION_02_BASIC;
+    public static final String    DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME = "DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION";
+    private static DatasetVersion DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
 
-    public static final String           DATASET_VERSION_03_FOR_DATASET_03_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
-    private static DatasetVersion        DATASET_VERSION_03_FOR_DATASET_03;
+    public static final String    DATASET_VERSION_05_FOR_DATASET_04_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
+    private static DatasetVersion DATASET_VERSION_05_FOR_DATASET_04;
 
-    public static final String           DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME = "DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION";
-    private static DatasetVersion        DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
+    public static final String    DATASET_VERSION_06_FOR_QUERIES_NAME                     = "DATASET_VERSION_06_FOR_QUERIES";
+    private static DatasetVersion DATASET_VERSION_06_FOR_QUERIES;
 
-    public static final String           DATASET_VERSION_05_FOR_DATASET_04_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
-    private static DatasetVersion        DATASET_VERSION_05_FOR_DATASET_04;
-
-    public static final String           DATASET_VERSION_06_FOR_QUERIES_NAME                     = "DATASET_VERSION_06_FOR_QUERIES";
-    private static DatasetVersion        DATASET_VERSION_06_FOR_QUERIES;
-
-    private static final String          DATASET_VERSION_03_VERSION                              = "01.000";
-    private static final String          DATASET_VERSION_04_VERSION                              = "02.000";
-    private static final String          DATASET_VERSION_05_VERSION                              = "01.000";
+    private static final String   DATASET_VERSION_03_VERSION                              = "01.000";
+    private static final String   DATASET_VERSION_04_VERSION                              = "02.000";
+    private static final String   DATASET_VERSION_05_VERSION                              = "01.000";
 
     public void afterPropertiesSet() throws Exception {
 
