@@ -3,11 +3,13 @@ package org.siemac.metamac.statistical.resources.core.mocks;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasorce03BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery05WithDatasetVersion;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.springframework.stereotype.Component;
 
@@ -150,8 +152,14 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static DatasetVersion getDatasetVersion06ForQueries() {
         if (DATASET_VERSION_06_FOR_QUERIES == null) {
             DATASET_VERSION_06_FOR_QUERIES = createDatasetVersion();
+            setDatasetVersion06Queries(DATASET_VERSION_06_FOR_QUERIES);
         }
         return DATASET_VERSION_06_FOR_QUERIES;
+    }
+
+    private static void setDatasetVersion06Queries(DatasetVersion datasetVersion06) {
+        Query query = getQuery05WithDatasetVersion();
+        query.setDatasetVersion(datasetVersion06);
     }
 
     private static DatasetVersion createDatasetVersion() {
