@@ -6,30 +6,22 @@ import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersion
 
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset> {
 
-    @Autowired
-    StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
+    public static final String DATASET_01_BASIC_NAME                               = "DATASET_01_BASIC";
+    private static Dataset     DATASET_01_BASIC;
 
-    @Autowired
-    DatasetVersionMockFactory            datasetVersionMockFactory;
+    public static final String DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME        = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
+    private static Dataset     DATASET_02_BASIC_WITH_GENERATED_VERSION;
 
-    public static final String           DATASET_01_BASIC_NAME                               = "DATASET_01_BASIC";
-    private static Dataset               DATASET_01_BASIC;
+    public static final String DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME       = "DATASET_03_BASIC_WITH_2_DATASET_VERSIONS";
+    private static Dataset     DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
 
-    public static final String           DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME        = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
-    private static Dataset               DATASET_02_BASIC_WITH_GENERATED_VERSION;
-
-    public static final String           DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME       = "DATASET_03_BASIC_WITH_2_DATASET_VERSIONS";
-    private static Dataset               DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
-
-    public static final String           DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME";
-    private static Dataset               DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS;
+    public static final String DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME";
+    private static Dataset     DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS;
 
     public static Dataset getDataset01Basic() {
         if (DATASET_01_BASIC == null) {

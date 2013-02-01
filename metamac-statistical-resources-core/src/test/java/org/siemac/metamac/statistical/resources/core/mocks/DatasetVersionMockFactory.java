@@ -156,6 +156,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return DATASET_VERSION_05_FOR_DATASET_04;
     }
 
+    public static DatasetVersion getDatasetVersion06ForQueries() {
+        if (DATASET_VERSION_06_FOR_QUERIES == null) {
+            DATASET_VERSION_06_FOR_QUERIES = createDatasetVersion();
+        }
+        return DATASET_VERSION_06_FOR_QUERIES;
+    }
+
     private static DatasetVersion createDatasetVersion() {
         return createDatasetVersion(null);
     }

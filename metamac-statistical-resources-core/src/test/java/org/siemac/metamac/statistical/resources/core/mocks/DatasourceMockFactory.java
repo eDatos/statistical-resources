@@ -1,34 +1,25 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datasource> {
 
-    @Autowired
-    StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
+    public static final String DATASOURCE_01_BASIC_NAME                        = "DATASOURCE_01_BASIC";
+    private static Datasource  DATASOURCE_01_BASIC;
 
-    @Autowired
-    DatasetVersionMockFactory            datasetVersionMockFactory;
+    public static final String DATASOURCE_02_BASIC_NAME                        = "DATASOURCE_02_BASIC";
+    private static Datasource  DATASOURCE_02_BASIC;
 
-    public static final String           DATASOURCE_01_BASIC_NAME                        = "DATASOURCE_01_BASIC";
-    private static Datasource            DATASOURCE_01_BASIC;
+    public static final String DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03_NAME = "DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03";
+    private static Datasource  DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03;
 
-    public static final String           DATASOURCE_02_BASIC_NAME                        = "DATASOURCE_02_BASIC";
-    private static Datasource            DATASOURCE_02_BASIC;
+    public static final String DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03_NAME = "DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03";
+    private static Datasource  DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03;
 
-    public static final String           DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03_NAME = "DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03";
-    private static Datasource            DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03;
-
-    public static final String           DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03_NAME = "DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03";
-    private static Datasource            DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03;
-
-    public static final String           DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04_NAME = "DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04";
-    private static Datasource            DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
+    public static final String DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04_NAME = "DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04";
+    private static Datasource  DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
 
     public static Datasource getDatasource01Basic() {
         if (DATASOURCE_01_BASIC == null) {
@@ -70,10 +61,6 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
 
     private static Datasource createDatasource() {
         return getStatisticalResourcesPersistedDoMocks().mockDatasourceWithGeneratedDatasetVersion();
-    }
-
-    private Datasource createDatasource(DatasetVersion datasetVersion) {
-        return statisticalResourcesPersistedDoMocks.mockDatasource(datasetVersion);
     }
 
 }
