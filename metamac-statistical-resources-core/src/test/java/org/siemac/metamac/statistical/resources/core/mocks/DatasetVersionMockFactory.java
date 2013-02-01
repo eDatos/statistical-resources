@@ -1,93 +1,67 @@
 package org.siemac.metamac.statistical.resources.core.mocks;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.*;
 
 @Component
-public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> implements InitializingBean {
+public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<DatasetVersion> {
 
     @Autowired
-    StatisticalResourcesPersistedDoMocks       statisticalResourcesPersistedDoMocks;
+    StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
 
     @Autowired
-    DatasetMockFactory                         datasetMockFactory;
+    DatasourceMockFactory                datasourceMockFactory;
 
-    @Autowired
-    DatasourceMockFactory                      datasourceMockFactory;
+    public static final String           DATASET_VERSION_01_BASIC_NAME                           = "DATASET_VERSION_01_BASIC";
+    private static DatasetVersion        DATASET_VERSION_01_BASIC;
 
-    public static final String                 DATASET_VERSION_01_BASIC_NAME                           = "DATASET_VERSION_01_BASIC";
-    public DatasetVersion                      DATASET_VERSION_01_BASIC;
+    public static final String           DATASET_VERSION_02_BASIC_NAME                           = "DATASET_VERSION_02_BASIC";
+    private static DatasetVersion        DATASET_VERSION_02_BASIC;
 
-    public static final String                 DATASET_VERSION_02_BASIC_NAME                           = "DATASET_VERSION_02_BASIC";
-    public DatasetVersion                      DATASET_VERSION_02_BASIC;
+    public static final String           DATASET_VERSION_03_FOR_DATASET_03_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
+    private static DatasetVersion        DATASET_VERSION_03_FOR_DATASET_03;
 
-    public static final String                 DATASET_VERSION_03_FOR_DATASET_03_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
-    public DatasetVersion                      DATASET_VERSION_03_FOR_DATASET_03;
+    public static final String           DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME = "DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION";
+    private static DatasetVersion        DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
 
-    public static final String                 DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME = "DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION";
-    public DatasetVersion                      DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
+    public static final String           DATASET_VERSION_05_FOR_DATASET_04_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
+    private static DatasetVersion        DATASET_VERSION_05_FOR_DATASET_04;
 
-    public static final String                 DATASET_VERSION_05_FOR_DATASET_04_NAME                  = "DATASET_VERSION_03_FOR_DATASET_03";
-    public DatasetVersion                      DATASET_VERSION_05_FOR_DATASET_04;
+    public static final String           DATASET_VERSION_06_FOR_QUERIES_NAME                     = "DATASET_VERSION_06_FOR_QUERIES";
+    private static DatasetVersion        DATASET_VERSION_06_FOR_QUERIES;
 
-    private static Map<String, DatasetVersion> mocks;
+    private static final String          DATASET_VERSION_03_VERSION                              = "01.000";
+    private static final String          DATASET_VERSION_04_VERSION                              = "02.000";
+    private static final String          DATASET_VERSION_05_VERSION                              = "01.000";
 
-    private static final String                DATASET_VERSION_03_VERSION                              = "01.000";
-    private static final String                DATASET_VERSION_04_VERSION                              = "02.000";
-    private static final String                DATASET_VERSION_05_VERSION                              = "01.000";
-
-    @Override
     public void afterPropertiesSet() throws Exception {
-        DATASET_VERSION_01_BASIC = createDatasetVersion();
-        DATASET_VERSION_02_BASIC = createDatasetVersion();
-
         setDataset03AndVersionsRelations();
-
         setDataset04AndVersionsRelations();
 
-        mocks = new HashMap<String, DatasetVersion>();
-        registerMocks(this, DatasetVersion.class, mocks);
+        DATASET_VERSION_06_FOR_QUERIES = createDatasetVersion();
     }
-
-    @Override
-    public DatasetVersion getMock(String id) {
-        return mocks.get(id);
+    
+    public static DatasetVersion getDatasetVersion01Basic() {
+        if (DATASET_VERSION_01_BASIC == null) {
+            DATASET_VERSION_01_BASIC = createDatasetVersion();
+        }
+        return DATASET_VERSION_01_BASIC;
     }
-
-    private void setDataset03AndVersionsRelations() {
-        Dataset dataset03 = datasetMockFactory.getDataset03With2DatasetVersions();
-
-        DatasetVersion datasetVersion03 = getDatasetVersion03ForDataset03();
-        datasetVersion03.addDatasource(datasourceMockFactory.getDatasorce03BasicForDatasetVersion03());
-        datasetVersion03.addDatasource(datasourceMockFactory.getDatasorce04BasicForDatasetVersion03());
-
-        DatasetVersion datasetVersion04 = getDatasetVersion04LastVersionForDataset03();
-        datasetVersion04.addDatasource(datasourceMockFactory.getDatasorce05BasicForDatasetVersion04());
-
-        datasetVersion03.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(datasetVersion04));
-        datasetVersion04.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(DATASET_VERSION_03_FOR_DATASET_03));
-        dataset03.addVersion(datasetVersion03);
-        dataset03.addVersion(datasetVersion04);
-
+    
+    public static DatasetVersion getDatasetVersion02Basic() {
+        if (DATASET_VERSION_02_BASIC == null) {
+            DATASET_VERSION_02_BASIC = createDatasetVersion();
+        }
+        return DATASET_VERSION_02_BASIC;
     }
-
-    private void setDataset04AndVersionsRelations() {
-        Dataset dataset = datasetMockFactory.getDataset04With1DatasetVersions();
-        DatasetVersion datasetVersion = getDatasetVersion05ForDataset04();
-
-        dataset.addVersion(datasetVersion);
-    }
-
+    
     public DatasetVersion getDatasetVersion03ForDataset03() {
         if (DATASET_VERSION_03_FOR_DATASET_03 == null) {
             // Relation with dataset
@@ -164,16 +138,43 @@ public class DatasetVersionMockFactory extends MockFactory<DatasetVersion> imple
             datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
 
             DATASET_VERSION_05_FOR_DATASET_04 = datasetVersion;
+            setDataset0
         }
         return DATASET_VERSION_05_FOR_DATASET_04;
     }
-    private DatasetVersion createDatasetVersion(Dataset dataset) {
-        DatasetVersion datasetVersion = statisticalResourcesPersistedDoMocks.mockDatasetVersion(dataset);
-        return datasetVersion;
+    
+    
+    private static void setDataset03AndVersionsRelations() {
+        Dataset dataset03 = getDataset03With2DatasetVersions();
+
+        DatasetVersion datasetVersion03 = getDatasetVersion03ForDataset03();
+        datasetVersion03.addDatasource(getDatasorce03BasicForDatasetVersion03());
+        datasetVersion03.addDatasource(getDatasorce04BasicForDatasetVersion03());
+
+        DatasetVersion datasetVersion04 = getDatasetVersion04LastVersionForDataset03();
+        datasetVersion04.addDatasource(getDatasorce05BasicForDatasetVersion04());
+
+        datasetVersion03.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(datasetVersion04));
+        datasetVersion04.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(DATASET_VERSION_03_FOR_DATASET_03));
+        dataset03.addVersion(datasetVersion03);
+        dataset03.addVersion(datasetVersion04);
+
     }
 
-    private DatasetVersion createDatasetVersion() {
+    private static void setDataset04AndVersionsRelations() {
+        Dataset dataset = getDataset04With1DatasetVersions();
+        DatasetVersion datasetVersion = getDatasetVersion05ForDataset04();
+
+        dataset.addVersion(datasetVersion);
+    }
+
+    private static DatasetVersion createDatasetVersion() {
         return createDatasetVersion(null);
+    }
+
+    private static DatasetVersion createDatasetVersion(Dataset dataset) {
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(dataset);
+        return datasetVersion;
     }
 
 }

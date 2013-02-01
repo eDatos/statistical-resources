@@ -36,6 +36,15 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         return queryDto;
     }
+    
+    public static QueryDto mockQueryDtoWithDatasetVersion() {
+        QueryDto queryDto = mockQueryDto();
+        
+        // TODO: Esto hay que cambiarlo por DATASET_VERSION_06_FOR_QUERIES!!!!!!!!!!!!
+        queryDto.setDatasetVersion(URN_RELATED_RESOURCE_MOCK);
+
+        return queryDto;
+    }
 
     // -----------------------------------------------------------------
     // DATASOURCES

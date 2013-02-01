@@ -8,6 +8,7 @@ import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMe
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.getDataset03With2DatasetVersions;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
@@ -33,7 +34,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
@@ -59,9 +59,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     @Autowired
     protected DatasetVersionMockFactory               datasetVersionMockFactory;
-
-    @Autowired
-    protected DatasetMockFactory                      datasetMockFactory;
 
     @Autowired
     protected DatasourceMockFactory                   datasourceMockFactory;
@@ -351,7 +348,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<DatasetVersion> actual = datasetService.retrieveDatasetVersions(getServiceContextWithoutPrincipal(), urn);
 
         assertEquals(2, actual.size());
-        assertEqualsDatasetVersionCollection(datasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS.getVersions(), actual);
+        assertEqualsDatasetVersionCollection(getDataset03With2DatasetVersions().getVersions(), actual);
     }
 
     @Override

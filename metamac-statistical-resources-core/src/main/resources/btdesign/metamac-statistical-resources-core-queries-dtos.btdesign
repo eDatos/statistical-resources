@@ -10,7 +10,7 @@ Application QueriesStatisticalResourcesDto {
 
 		// QUERY
 		DataTransferObject QueryDto extends @LifeCycleStatisticalResourceDto {
-			- @DatasetDto dataset;
+			String datasetVersion;
 		}
 	}
 }

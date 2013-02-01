@@ -95,5 +95,4 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         resource.setNextVersionDate(new DateTime());
         resource.setVersionLogic("01.000");
     }
-
 }

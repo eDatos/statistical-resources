@@ -5,6 +5,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -18,6 +20,9 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
     @Autowired
     private QueryRepository queryRepository;
+    
+    @Autowired 
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Override
     public Query queryDtoToDo(QueryDto source) throws MetamacException {
@@ -52,10 +57,11 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY);
 
-        // Non modifiable after creation
-
-        // Attributes modifiable
-        // TODO: Dataset
+        // DatasetVersion
+        if (source.getDatasetVersion() != null) {
+            DatasetVersion datasetVersionTarget = datasetVersionRepository.retrieveByUrn(source.getDatasetVersion());
+            target.setDatasetVersion(datasetVersionTarget);
+        }
 
         return target;
 

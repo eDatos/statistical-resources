@@ -1,4 +1,5 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 
 Application QueriesStatisticalResources {
@@ -37,7 +38,7 @@ Application QueriesStatisticalResources {
 			!auditable
 
 			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
-			// - @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" nullable; 
+			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" nullable; 
 			
 			Repository QueryRepository {
 				save;

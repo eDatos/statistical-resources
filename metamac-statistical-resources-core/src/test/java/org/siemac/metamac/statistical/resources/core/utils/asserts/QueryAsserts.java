@@ -18,6 +18,7 @@ public class QueryAsserts extends BaseAsserts {
 
     public static void assertEqualsQuery(Query expected, Query actual) {
         assertEqualsNameableStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
+        DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
     }
     
     public static void assertEqualsQueryCollection(Collection<Query> expected, Collection<Query> actual) {
@@ -66,8 +67,10 @@ public class QueryAsserts extends BaseAsserts {
             assertEquals(entity.getVersion(), dto.getVersion());
         }
         assertEqualsNameableStatisticalResource(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
+        assertEqualsDatasetVersionInQuery(entity, dto.getDatasetVersion());
     }
     
+
     private static void assertEqualsQueryCollection(Collection<Query> entities, Collection<QueryDto> dtos, MapperEnum mapperEnum) {
         if (entities != null) {
             assertNotNull(dtos);
@@ -90,5 +93,18 @@ public class QueryAsserts extends BaseAsserts {
         } else {
             assertNull(dtos);
         }
+    }
+    
+    // -----------------------------------------------------------------
+    // DATASET VERSION: QUERY AND DATASETVERSION URN 
+    // -----------------------------------------------------------------
+    private static void assertEqualsDatasetVersionInQuery(Query entity, String datasetVersionDtoUrn) {
+        String datasetVersionEntityUrn = null; 
+            
+        if (entity.getDatasetVersion() != null && entity.getDatasetVersion().getSiemacMetadataStatisticalResource() != null) {
+            datasetVersionEntityUrn = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+        }
+        
+        assertEquals(datasetVersionEntityUrn, datasetVersionDtoUrn);
     }
 }

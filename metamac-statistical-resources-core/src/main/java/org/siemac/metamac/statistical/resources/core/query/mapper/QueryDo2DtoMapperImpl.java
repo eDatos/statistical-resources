@@ -35,7 +35,13 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
             return null;
         }
 
+        // Hierarchy
         lifeCycleStatisticalResourceDoToDto(source.getLifeCycleStatisticalResource(), target);
+        
+        // DatasetVersion
+        if (source.getDatasetVersion() != null) {
+            target.setDatasetVersion(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        }
 
         // Identity
         target.setId(source.getId());

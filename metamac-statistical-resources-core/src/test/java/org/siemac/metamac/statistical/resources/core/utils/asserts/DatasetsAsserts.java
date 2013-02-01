@@ -39,7 +39,11 @@ public class DatasetsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual) {
-        assertEqualsDatasetVersion(expected, actual, false);
+        if ((expected != null && actual == null) || (expected == null && actual != null)) {
+            fail("The expected datasetVersion and the actual are not equals");
+        } else if (expected != null && actual != null) {
+            assertEqualsDatasetVersion(expected, actual, false);
+        }
     }
 
     private static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual, boolean datasetChecked) {
@@ -94,7 +98,7 @@ public class DatasetsAsserts extends BaseAsserts {
     }
 
     // -----------------------------------------------------------------
-    // DATASET: DTO & DO
+    // DATASET VERSION: DTO & DO
     // -----------------------------------------------------------------
 
     public static void assertEqualsDatasetVersion(DatasetVersion entity, DatasetDto dto) {

@@ -51,6 +51,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         return resource;
     }
+    
+    public Query mockQueryWithDatasetVersion() {
+        Query query = mockQuery();
+        query.setDatasetVersion(mockDatasetVersion());
+        return query;
+    }
 
     // -----------------------------------------------------------------
     // DATASOURCE
