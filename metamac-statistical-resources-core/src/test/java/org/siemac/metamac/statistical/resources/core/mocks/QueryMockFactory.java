@@ -54,14 +54,17 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     public static Query getQuery05WithDatasetVersion() {
         if (QUERY_05_WITH_DATASET_VERSION == null) {
-            QUERY_05_WITH_DATASET_VERSION = createQuery();
-            // Dataset version relation we'll be in datasetversion factory
+            QUERY_05_WITH_DATASET_VERSION = createQueryWithDatasetVersion();
         }
         return QUERY_05_WITH_DATASET_VERSION;
     }
 
     private static Query createQuery() {
         return getStatisticalResourcesPersistedDoMocks().mockQuery();
+   }
+    
+    private static Query createQueryWithDatasetVersion() {
+         return getStatisticalResourcesPersistedDoMocks().mockQueryWithDatasetVersion();
     }
 
 }

@@ -7,6 +7,7 @@ import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -20,7 +21,6 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.*;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -38,9 +38,9 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         return queryDto;
     }
     
-    public static QueryDto mockQueryDtoWithDatasetVersion() {
+    public static QueryDto mockQueryDtoWithDatasetVersion(DatasetVersion datasetVersion) {
         QueryDto queryDto = mockQueryDto();
-        queryDto.setDatasetVersion(getDatasetVersion06ForQueries().getSiemacMetadataStatisticalResource().getUrn());
+        queryDto.setDatasetVersion(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
         return queryDto;
     }
 

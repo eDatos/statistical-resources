@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.query.mapper;
 
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion06ForQueries;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class QueryDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testQueryDtoToDoWithDatasetVersion() throws MetamacException {
-        QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDtoWithDatasetVersion();
+        QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDtoWithDatasetVersion(getDatasetVersion06ForQueries());
         Query actual = queryDto2DoMapper.queryDtoToDo(expected);
         assertEqualsQuery(expected, actual);
         assertTrue(expected.getDatasetVersion().equals(actual.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));
