@@ -9,6 +9,14 @@ import java.util.Set;
 
 import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 
+/*
+ * All Mock factories should extend from this class.
+ * The MetamacMock Annotation will look for factories that extend from this one
+ * and will look for the mock id in every and each one of them
+ * Each mock factory will produce mocks using the lazy initialization pattern, and must ensure
+ * that relations among mocks get resolved at the end of the method that produces the mock.
+ * so cycles are prevented
+ */
 public abstract class MockFactory<EntityMock> {
 
     protected static final String NAME_FIELD_SUFFIX = "_NAME";
