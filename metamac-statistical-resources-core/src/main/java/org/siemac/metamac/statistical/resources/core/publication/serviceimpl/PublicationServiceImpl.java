@@ -3,10 +3,10 @@ package org.siemac.metamac.statistical.resources.core.publication.serviceimpl;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -103,10 +103,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkFindPublicationVersionsByCondition(ctx, conditions, pagingParameter);
 
         // Find
-        if (conditions == null) {
-            conditions = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class).distinctRoot().build();
-        }
-
+        conditions = CriteriaUtils.initConditions(conditions, PublicationVersion.class);
+        pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
+        
         PagedResult<PublicationVersion> publicationVersionPagedResult = getPublicationVersionRepository().findByCondition(conditions, pagingParameter);
         return publicationVersionPagedResult;
     }

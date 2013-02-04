@@ -3,10 +3,10 @@ package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -51,9 +51,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryServiceInvocationValidator.checkFindQueriesByCondition(ctx, conditions, pagingParameter);
         
         // Find
-        if (conditions == null) {
-            conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).distinctRoot().build();
-        }
+        conditions = CriteriaUtils.initConditions(conditions, Query.class);
+        pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
+
         PagedResult<Query> queryPagedResult = getQueryRepository().findByCondition(conditions, pagingParameter);
         return queryPagedResult;
         
