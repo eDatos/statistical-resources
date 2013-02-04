@@ -12,11 +12,19 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
 
+    // -----------------------------------------------------------------
+    // QUERIES
+    // -----------------------------------------------------------------
+    public Query mockQueryWithDatasetVersion() {
+        return mockQueryWithDatasetVersion(mockDatasetVersion());
+    }
+    
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------

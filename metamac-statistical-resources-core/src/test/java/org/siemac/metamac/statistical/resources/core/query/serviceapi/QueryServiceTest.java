@@ -3,14 +3,18 @@ package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion06ForQueries;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_03_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_04_BASIC_ORDERED_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_05_WITH_DATASET_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery02BasicOrdered01;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery03BasicOrdered02;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery04BasicOrdered03;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery05WithDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryCollection;
 
@@ -25,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
@@ -53,6 +58,9 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Autowired
     protected QueryService                            queryService;
+
+    @Autowired
+    protected DatasetService                          datasetService;
 
     @Autowired
     protected QueryRepository                         queryRepository;
@@ -150,6 +158,14 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
+    @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
+    public void testCreateQueryWithDatasetVersion() throws Exception {
+        Query expected = statisticalResourcesNotPersistedDoMocks.mockQueryWithDatasetVersion(getDatasetVersion06ForQueries());
+        Query actual = queryService.createQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsQuery(expected, actual);
+    }
+
+    @Test
     public void testCreateQueryErrorNameableResourceRequired() throws Exception {
         Query query = statisticalResourcesNotPersistedDoMocks.mockQueryWithStatisticalResourceNull();
         try {
@@ -170,6 +186,21 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
         assertEqualsQuery(query, updatedQuery);
+    }
+
+    @Test
+    @MetamacMock({QUERY_05_WITH_DATASET_VERSION_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQuery() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        
+        Query query = getQuery05WithDatasetVersion();
+        query.setDatasetVersion(getDatasetVersion06ForQueries());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
+        
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
     }
 
     @Override
