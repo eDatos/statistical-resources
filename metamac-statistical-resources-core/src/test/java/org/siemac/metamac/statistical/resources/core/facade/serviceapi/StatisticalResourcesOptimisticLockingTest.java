@@ -4,10 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion01Basic;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion06ForQueries;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasource01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_05_WITH_DATASET_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +55,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     protected DatasetVersionMockFactory         datasetVersionMockFactory;
 
     @Test
-    @MetamacMock({QUERY_01_BASIC_NAME})
     @Override
+    @MetamacMock({QUERY_01_BASIC_NAME})
     public void testUpdateQuery() throws Exception {
         // Retrieve query - session 1
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
@@ -81,6 +86,38 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         assertTrue(queryDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
+    @Test
+    @MetamacMock({QUERY_05_WITH_DATASET_VERSION_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
+    public void testUpdateDatasetInQuery() throws Exception {
+        // Retrieve query - session 1
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery05WithDatasetVersion().getLifeCycleStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
+        queryDtoSession01.setDatasetVersion(getDatasetVersion06ForQueries().getSiemacMetadataStatisticalResource().getUrn());
+        
+        // Retrieve query - session 2
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), getQuery05WithDatasetVersion().getLifeCycleStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
+        queryDtoSession02.setDatasetVersion(getDatasetVersion01Basic().getSiemacMetadataStatisticalResource().getUrn());
+        
+        // Update query - session 1 --> OK
+        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession01);
+        assertEquals(getDatasetVersion06ForQueries().getSiemacMetadataStatisticalResource().getUrn(), queryDtoSession1AfterUpdate01.getDatasetVersion());
+        assertTrue(queryDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
+        
+        // Update query - session 2 --> FAIL
+        try {
+            statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession02);
+            fail("optimistic locking");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+        }
+        
+        // Update query - session 1 --> OK
+        queryDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
+        assertTrue(queryDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+    }
+    
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME})
     @Override
