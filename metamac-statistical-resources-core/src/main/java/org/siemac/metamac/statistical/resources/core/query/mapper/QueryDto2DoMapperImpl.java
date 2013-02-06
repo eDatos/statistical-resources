@@ -62,6 +62,9 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
             DatasetVersion datasetVersionTarget = datasetVersionRepository.retrieveByUrn(source.getDatasetVersion());
             target.setDatasetVersion(datasetVersionTarget);
         }
+        
+        // Status
+        // Not mapped. It's automatically managed.
 
         return target;
 

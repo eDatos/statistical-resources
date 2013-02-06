@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
 
+import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -110,13 +112,13 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         checkDatasource(datasource, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getDatasetVersion(), metadataName + ServiceExceptionSingleParameters.DATASET_VERSION, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getId(), metadataName + ServiceExceptionSingleParameters.ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getVersion(), metadataName + ServiceExceptionSingleParameters.VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getDatasetVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.DATASET_VERSION), exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getId(), addParameter(metadataName, ServiceExceptionSingleParameters.ID), exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION), exceptions);
     }
 
     private static void checkDatasource(Datasource datasource, String metadataName, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getUuid(), metadataName + ServiceExceptionSingleParameters.UUID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getUuid(), addParameter(metadataName, ServiceExceptionSingleParameters.UUID), exceptions);
     }
 
     // DATASET VERSION
@@ -148,7 +150,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         checkDatasetVersion(datasetVersion, metadataName, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getDataset(), metadataName + ServiceExceptionSingleParameters.DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getDataset(), addParameter(metadataName, ServiceExceptionSingleParameters.DATASET), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getId(), ServiceExceptionSingleParameters.ID, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getVersion(), ServiceExceptionSingleParameters.VERSION, exceptions);
     }

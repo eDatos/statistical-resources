@@ -1,17 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.QUERY_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery01Basic;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.mocks.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory;
@@ -33,30 +28,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements QueryRepositoryTestBase {
 
     @Autowired
-    protected QueryRepository               queryRepository;
+    private QueryRepository               queryRepository;
 
     @Autowired
-    protected StatisticalResourceRepository statisticalResourceRepository;
-
-    @Autowired
-    protected QueryMockFactory              queryMockFactory;
+    private QueryMockFactory              queryMockFactory;
 
     @Override
     @Test
     @MetamacMock(QUERY_01_BASIC_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query actual = queryRepository.retrieveByUrn(getQuery01Basic().getLifeCycleStatisticalResource().getUrn());
-        assertEqualsQuery(getQuery01Basic(), actual);
+        Query actual = queryRepository.retrieveByUrn(queryMockFactory.retrieveMock(QUERY_01_BASIC_NAME).getLifeCycleStatisticalResource().getUrn());
+        assertEqualsQuery(queryMockFactory.retrieveMock(QUERY_01_BASIC_NAME), actual);
     }
 
     @Test
-    public void testRetrieveByUrnNotFound() {
-        try {
-            queryRepository.retrieveByUrn(URN_NOT_EXISTS);
-            fail("not found");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.QUERY_NOT_FOUND, 1, new String[]{URN_NOT_EXISTS}, e.getExceptionItems().get(0));
-        }
+    public void testRetrieveByUrnNotFound() throws MetamacException {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, URN_NOT_EXISTS), 1);
+
+        queryRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
 }

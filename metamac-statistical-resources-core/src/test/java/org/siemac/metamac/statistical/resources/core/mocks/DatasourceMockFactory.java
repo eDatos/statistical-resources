@@ -21,21 +21,21 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
     public static final String DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04_NAME = "DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04";
     private static Datasource  DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
 
-    public static Datasource getDatasource01Basic() {
+    protected static Datasource getDatasource01Basic() {
         if (DATASOURCE_01_BASIC == null) {
             DATASOURCE_01_BASIC = createDatasource();
         }
         return DATASOURCE_01_BASIC;
     }
 
-    public static Datasource getDatasource02Basic() {
+    protected static Datasource getDatasource02Basic() {
         if (DATASOURCE_02_BASIC == null) {
             DATASOURCE_02_BASIC = createDatasource();
         }
         return DATASOURCE_02_BASIC;
     }
 
-    public static Datasource getDatasorce03BasicForDatasetVersion03() {
+    protected static Datasource getDatasorce03BasicForDatasetVersion03() {
         if (DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 == null) {
             DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 = createDatasource();
             // Dataset link set in datasetversion
@@ -43,7 +43,7 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
         return DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03;
     }
 
-    public static Datasource getDatasorce04BasicForDatasetVersion03() {
+    protected static Datasource getDatasorce04BasicForDatasetVersion03() {
         if (DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 == null) {
             DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 = createDatasource();
             // Dataset link set in datasetversion
@@ -51,7 +51,7 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
         return DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03;
     }
 
-    public static Datasource getDatasorce05BasicForDatasetVersion04() {
+    protected static Datasource getDatasorce05BasicForDatasetVersion04() {
         if (DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04 == null) {
             DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04 = createDatasource();
             // Dataset link set in datasetversion

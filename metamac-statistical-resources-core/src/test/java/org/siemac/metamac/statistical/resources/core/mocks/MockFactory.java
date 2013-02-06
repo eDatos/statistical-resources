@@ -21,10 +21,11 @@ public abstract class MockFactory<EntityMock> {
 
     protected static final String NAME_FIELD_SUFFIX = "_NAME";
 
+    @SuppressWarnings("unchecked")
     public EntityMock getMock(String id) {
         String methodName = getMethodNameFromId(id);
         try {
-            Method method = getClass().getMethod(methodName);
+            Method method = getClass().getDeclaredMethod(methodName);
             Object obj = method.invoke(this);
             return (EntityMock) obj;
         } catch (Exception e) {

@@ -1,0 +1,16 @@
+Application QueriesStatisticalResourcesEnums {
+    basePackage=org.siemac.metamac.statistical.resources
+
+    Module queries_enums {    	
+
+		basePackage=org.siemac.metamac.statistical.resources.core.enume.query
+    	
+    	"QueryStatus Enum is used to specify the valid states of the query"
+    	enum QueryStatusEnum {
+    		ACTIVE,
+    		DISCONTINUED,
+    		PENDING_REVIEW
+    	}
+    }
+
+}

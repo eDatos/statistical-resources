@@ -37,6 +37,7 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 @org.springframework.stereotype.Component("baseDto2DoMapper")
 public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
@@ -60,33 +61,33 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
-        target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), metadataName + ServiceExceptionSingleParameters.LANGUAGE));
-        externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), metadataName + ServiceExceptionSingleParameters.LANGUAGES);
+        target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
+        externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
 
         target.setStatisticalOperationInstance(externalItemDtoToDo(source.getStatisticalOperationInstance(), target.getStatisticalOperationInstance(), metadataName
                 + ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE));
 
-        target.setSubtitle(internationalStringDtoToDo(source.getSubtitle(), target.getSubtitle(), metadataName + ServiceExceptionSingleParameters.SUBTITLE));
-        target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(), metadataName + ServiceExceptionSingleParameters.TITLE_ALTERNATIVE));
-        target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), metadataName + ServiceExceptionSingleParameters.ABSTRACT_LOGIC));
+        target.setSubtitle(internationalStringDtoToDo(source.getSubtitle(), target.getSubtitle(), addParameter(metadataName, ServiceExceptionSingleParameters.SUBTITLE)));
+        target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
+        target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
 
         // TODO: keywords
-        target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), metadataName + ServiceExceptionSingleParameters.CREATOR));
-        externalItemDtoListToDoList(source.getContributor(), target.getContributor(), metadataName + ServiceExceptionSingleParameters.CONTRIBUTOR);
-        target.setConformsTo(internationalStringDtoToDo(source.getConformsTo(), target.getConformsTo(), metadataName + ServiceExceptionSingleParameters.CONFORMS_TO));
-        target.setConformsToInternal(internationalStringDtoToDo(source.getConformsToInternal(), target.getConformsToInternal(), metadataName + ServiceExceptionSingleParameters.CONFORMS_TO_INTERNAL));
+        target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR)));
+        externalItemDtoListToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
+        target.setConformsTo(internationalStringDtoToDo(source.getConformsTo(), target.getConformsTo(), addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO)));
+        target.setConformsToInternal(internationalStringDtoToDo(source.getConformsToInternal(), target.getConformsToInternal(), addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO_INTERNAL)));
 
-        externalItemDtoListToDoList(source.getPublisher(), target.getPublisher(), metadataName + ServiceExceptionSingleParameters.PUBLISHER);
-        externalItemDtoListToDoList(source.getPublisherContributor(), target.getPublisherContributor(), metadataName + ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR);
-        externalItemDtoListToDoList(source.getMediator(), target.getMediator(), metadataName + ServiceExceptionSingleParameters.MEDIATOR);
+        externalItemDtoListToDoList(source.getPublisher(), target.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER));
+        externalItemDtoListToDoList(source.getPublisherContributor(), target.getPublisherContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR));
+        externalItemDtoListToDoList(source.getMediator(), target.getMediator(), addParameter(metadataName, ServiceExceptionSingleParameters.MEDIATOR));
         target.setNewnessUntilDate(dateDtoToDo(source.getNewnessUntilDate()));
 
-        target.setReplaces(relatedResourceDtoToDo(source.getReplaces(), target.getReplaces(), metadataName + ServiceExceptionSingleParameters.REPLACES));
-        target.setIsReplacedBy(relatedResourceDtoToDo(source.getIsReplacedBy(), target.getIsReplacedBy(), metadataName + ServiceExceptionSingleParameters.IS_REPLACED_BY));
+        target.setReplaces(relatedResourceDtoToDo(source.getReplaces(), target.getReplaces(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES)));
+        target.setIsReplacedBy(relatedResourceDtoToDo(source.getIsReplacedBy(), target.getIsReplacedBy(), addParameter(metadataName, ServiceExceptionSingleParameters.IS_REPLACED_BY)));
 
-        target.setRightsHolder(externalItemDtoToDo(source.getRightsHolder(), target.getRightsHolder(), metadataName + ServiceExceptionSingleParameters.RIGHTS_HOLDER));
-        target.setLicense(internationalStringDtoToDo(source.getLicense(), target.getLicense(), metadataName + ServiceExceptionSingleParameters.LICENSE));
-        target.setAccessRights(internationalStringDtoToDo(source.getAccessRights(), target.getAccessRights(), metadataName + ServiceExceptionSingleParameters.ACCESS_RIGHTS));
+        target.setRightsHolder(externalItemDtoToDo(source.getRightsHolder(), target.getRightsHolder(), addParameter(metadataName, ServiceExceptionSingleParameters.RIGHTS_HOLDER)));
+        target.setLicense(internationalStringDtoToDo(source.getLicense(), target.getLicense(), addParameter(metadataName, ServiceExceptionSingleParameters.LICENSE)));
+        target.setAccessRights(internationalStringDtoToDo(source.getAccessRights(), target.getAccessRights(), addParameter(metadataName, ServiceExceptionSingleParameters.ACCESS_RIGHTS)));
 
         return target;
     }
@@ -110,7 +111,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         // Attributes modifiable
         target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
-        target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(), metadataName + ServiceExceptionSingleParameters.VERSION_RATIONALE));
+        target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
         target.setVersionRationaleType(source.getVersionRationaleType());
         target.setNextVersion(source.getNextVersion());
 
@@ -125,8 +126,8 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Non modifiable after creation
 
         // Attributes modifiable
-        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE));
-        target.setDescription(internationalStringDtoToDo(source.getDescription(), target.getDescription(), metadataName + ServiceExceptionSingleParameters.DESCRIPTION));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE)));
+        target.setDescription(internationalStringDtoToDo(source.getDescription(), target.getDescription(), addParameter(metadataName, ServiceExceptionSingleParameters.DESCRIPTION)));
 
         return target;
     }
@@ -246,7 +247,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         target.setUrn(source.getUrn());
         target.setType(source.getType());
         target.setManagementAppUrl(source.getManagementAppUrl());
-        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE)));
 
         return target;
     }
@@ -312,7 +313,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         target.setUri(source.getUri());
         target.setUrn(source.getUrn());
         target.setType(source.getType());
-        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName + ServiceExceptionSingleParameters.TITLE));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE)));
 
         return target;
     }

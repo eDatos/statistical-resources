@@ -23,6 +23,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     public DatasetVersionRepositoryImpl() {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String getLastCodeUsedInStatisticalOperation(String statisticalOperationUrn) {
         String hql = "select siemac.code " + 

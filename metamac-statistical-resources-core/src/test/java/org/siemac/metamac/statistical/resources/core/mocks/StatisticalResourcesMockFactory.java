@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.mocks;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
 
+import com.arte.lang.ObjectUtils;
+
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {
 
     private static StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
@@ -12,5 +14,9 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
             statisticalResourcesPersistedDoMocks = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesPersistedDoMocks.class);
         }
         return statisticalResourcesPersistedDoMocks;
+    }
+    
+    public EntityMock retrieveMock(String mockName) {
+        return ObjectUtils.deepCopy((getMock(mockName)));
     }
 }

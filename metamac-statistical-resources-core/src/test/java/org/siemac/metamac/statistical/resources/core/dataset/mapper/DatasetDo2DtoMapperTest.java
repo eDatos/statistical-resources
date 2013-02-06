@@ -3,10 +3,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 import static org.junit.Assert.assertEquals;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion03ForDataset03;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion05ForDataset04;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasource01Basic;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
@@ -39,15 +36,15 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     private DatasetDo2DtoMapper       datasetDo2DtoMapper;
 
     @Autowired
-    private DatasourceMockFactory     datasourceMockFactory;
-
-    @Autowired
     private DatasetVersionMockFactory datasetVersionMockFactory;
+    
+    @Autowired
+    private DatasourceMockFactory datasourceMockFactory;
 
     @Test
     @MetamacMock(DATASOURCE_01_BASIC_NAME)
     public void testDatasourceDo2Dto() {
-        Datasource expected = getDatasource01Basic();
+        Datasource expected = datasourceMockFactory.getMock(DATASOURCE_01_BASIC_NAME);
         DatasourceDto actual = datasetDo2DtoMapper.datasourceDoToDto(expected);
         assertEqualsDatasource(expected, actual);
     }
@@ -55,7 +52,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock({DATASET_VERSION_03_FOR_DATASET_03_NAME})
     public void testDatasourceDoListToDtoList() {
-        List<Datasource> expected = getDatasetVersion03ForDataset03().getDatasources();
+        List<Datasource> expected = datasetVersionMockFactory.getMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
 
         List<DatasourceDto> actual = datasetDo2DtoMapper.datasourceDoListToDtoList(expected);
 
@@ -66,7 +63,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
     public void testDatasetDoToDto() {
-        DatasetVersion expected = getDatasetVersion05ForDataset04();
+        DatasetVersion expected = datasetVersionMockFactory.getMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
 
         DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
 

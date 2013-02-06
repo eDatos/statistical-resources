@@ -65,6 +65,9 @@ public class QueryAsserts extends BaseAsserts {
             
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
+            
+            assertNotNull(entity.getStatus());
+            assertEquals(entity.getStatus(), dto.getStatus());
         }
         assertEqualsNameableStatisticalResource(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
         assertEqualsDatasetVersionInQuery(entity, dto.getDatasetVersion());

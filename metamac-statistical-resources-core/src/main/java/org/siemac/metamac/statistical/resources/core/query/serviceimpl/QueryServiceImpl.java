@@ -9,6 +9,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +92,8 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private void fillMetadataForCreateQuery(Query query) {
         query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
         query.getLifeCycleStatisticalResource().setUri(null);
+        
+        // TODO METAMAC-1161: Pendiente de si una consulta sólo se puede crear sobre últimas versiones de dataset. 
+        query.setStatus(QueryStatusEnum.ACTIVE);
     }
 }

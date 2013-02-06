@@ -21,6 +21,7 @@
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
             <version>${metamac-sso.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -51,6 +52,22 @@
         <!-- <scope>provided</scope> -->
         <!-- </dependency> -->
 
+        <!-- ARTE -->
+        <dependency>
+            <groupId>com.arte.libs.lang</groupId>
+            <artifactId>arte-libs-lang</artifactId>
+            <version>${arte-libs-lang.version}</version>
+        </dependency>
+
+        <!-- XSTREAM -->
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>${xstream.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JAVAX -->
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
@@ -64,6 +81,8 @@
             <!-- Add scope provided when deployed in jboss -->
             <!-- <scope>provided</scope> -->
         </dependency>
+
+        <!-- HIBERNATE -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -108,6 +127,7 @@
             <!-- Add scope provided when deployed in jboss -->
             <!-- <scope>provided</scope> -->
         </dependency>
+
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
@@ -314,7 +334,7 @@
                             <target>
                                 <!-- Delete spring configuration files -->
                                 <copy toDir="${metamac-statistical-resources.etcDir}/db/01-create">
-                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create"/>
+                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
                                 </copy>
                                 <delete file="${basedir}/src/main/resources/spring.properties" />
                                 <delete file="${basedir}/src/main/resources/more.xml" />
@@ -332,10 +352,10 @@
                                 <delete file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
                                 <delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
                                 <delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
-                                
+
                                 <!-- Delete generated /src/test/java/.../*Test.java -->
-<!--                                 <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceFacadeTest.java" /> -->
-<!--                                 <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceTest.java" /> -->
+                                <!-- <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceFacadeTest.java" /> -->
+                                <!-- <delete file="${basedir}/src/test/java/org/siemac/metamac/statistical/resources/core/serviceapi/StatisticalResourcesServiceTest.java" /> -->
                             </target>
                         </configuration>
                     </execution>

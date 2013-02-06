@@ -29,6 +29,14 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         query.setLifeCycleStatisticalResource(null);
         return query;
     }
+    
+    
+    // TODO METAMAC-1161: NO ES NECESARIO PORQUE SIEMPRE SERÍA NULL
+//    public Query mockQueryWithStatusNull() {
+//        Query query = mockQuery();
+//        query.setStatus(null);
+//        return query;
+//    }
 
     // -----------------------------------------------------------------
     // DATASOURCE
@@ -129,5 +137,11 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         // NOTHING
 
+    }
+
+    @Override
+    protected void setSpecialCasesQueryMock(Query query) {
+        // NOTHING
+        
     }
 }

@@ -21,14 +21,14 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     public static final String QUERY_05_WITH_DATASET_VERSION_NAME = "QUERY_05_WITH_DATASET_VERSION";
     private static Query       QUERY_05_WITH_DATASET_VERSION;
 
-    public static Query getQuery01Basic() {
+    protected static Query getQuery01Basic() {
         if (QUERY_01_BASIC == null) {
             QUERY_01_BASIC = createQuery();
         }
         return QUERY_01_BASIC;
     }
 
-    public static Query getQuery02BasicOrdered01() {
+    protected static Query getQuery02BasicOrdered01() {
         if (QUERY_02_BASIC_ORDERED_01 == null) {
             QUERY_02_BASIC_ORDERED_01 = createQuery();
             QUERY_02_BASIC_ORDERED_01.getLifeCycleStatisticalResource().setCode("a");
@@ -36,7 +36,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_02_BASIC_ORDERED_01;
     }
 
-    public static Query getQuery03BasicOrdered02() {
+    protected static Query getQuery03BasicOrdered02() {
         if (QUERY_03_BASIC_ORDERED_02 == null) {
             QUERY_03_BASIC_ORDERED_02 = createQuery();
             QUERY_03_BASIC_ORDERED_02.getLifeCycleStatisticalResource().setCode("b");
@@ -44,7 +44,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_03_BASIC_ORDERED_02;
     }
 
-    public static Query getQuery04BasicOrdered03() {
+    protected static Query getQuery04BasicOrdered03() {
         if (QUERY_04_BASIC_ORDERED_03 == null) {
             QUERY_04_BASIC_ORDERED_03 = createQuery();
             QUERY_04_BASIC_ORDERED_03.getLifeCycleStatisticalResource().setCode("c");
@@ -52,7 +52,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_04_BASIC_ORDERED_03;
     }
 
-    public static Query getQuery05WithDatasetVersion() {
+    protected static Query getQuery05WithDatasetVersion() {
         if (QUERY_05_WITH_DATASET_VERSION == null) {
             QUERY_05_WITH_DATASET_VERSION = createQueryWithDatasetVersion();
         }
@@ -61,10 +61,11 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     private static Query createQuery() {
         return getStatisticalResourcesPersistedDoMocks().mockQuery();
-   }
-    
-    private static Query createQueryWithDatasetVersion() {
-         return getStatisticalResourcesPersistedDoMocks().mockQueryWithDatasetVersion();
     }
+
+    private static Query createQueryWithDatasetVersion() {
+        return getStatisticalResourcesPersistedDoMocks().mockQueryWithDatasetVersion();
+    }
+
 
 }

@@ -42,6 +42,9 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         if (source.getDatasetVersion() != null) {
             target.setDatasetVersion(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
         }
+        
+        // Status
+        target.setStatus(source.getStatus());
 
         // Identity
         target.setId(source.getId());

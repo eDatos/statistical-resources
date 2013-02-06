@@ -54,6 +54,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         // Metadata that must be empty for new entities
         StatisticalResourcesValidationUtils.checkMetadataEmpty(query.getId(), ServiceExceptionParameters.QUERY__ID, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataEmpty(query.getVersion(), ServiceExceptionParameters.QUERY__VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(query.getStatus(), ServiceExceptionParameters.QUERY__STATUS, exceptions);
     }
 
     private static void checkExistingQuery(Query query, List<MetamacExceptionItem> exceptions) {
@@ -68,6 +69,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         // Metadata that must be filled for existing entities
         StatisticalResourcesValidationUtils.checkMetadataRequired(query.getId(), ServiceExceptionParameters.QUERY__ID, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(query.getVersion(), ServiceExceptionParameters.QUERY__VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(query.getStatus(), ServiceExceptionParameters.QUERY__STATUS, exceptions);
     }
 
     private static void checkQuery(Query query, List<MetamacExceptionItem> exceptions) {

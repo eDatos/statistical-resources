@@ -48,6 +48,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public Query mockQuery() {
         Query resource = new Query();
         resource.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
+        
+        // TODO METAMAC-1161: De momento lo cumplimenta el servicio. Pendiente decisión.
+        // resource.setStatus(QueryStatusEnum.ACTIVE); 
+        setSpecialCasesQueryMock(resource);
 
         return resource;
     }
@@ -220,6 +224,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource);
 
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
+    
+    protected abstract void setSpecialCasesQueryMock(Query query);
 
     // -----------------------------------------------------------------
     // INTERNATIONAL STRING
@@ -342,6 +348,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public static String mockStatisticalOperationCode() {
         return mockString(8);
     }
+
 
     public static String mockStatisticalOperationInstanceUrn() {
         return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(STATISTICAL_OPERATION_INSTANCE_MOCK);

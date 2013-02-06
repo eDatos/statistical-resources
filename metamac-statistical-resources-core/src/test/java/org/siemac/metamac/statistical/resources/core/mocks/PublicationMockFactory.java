@@ -17,21 +17,21 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
     public static final String PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME = "PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS";
     private static Publication PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS;
 
-    public static Publication getPublication01Basic() {
+    protected static Publication getPublication01Basic() {
         if (PUBLICATION_01_BASIC == null) {
             PUBLICATION_01_BASIC = createPublication();
         }
         return PUBLICATION_01_BASIC;
     }
 
-    public static Publication getPublication02BasicWithGeneratedVersion() {
+    protected static Publication getPublication02BasicWithGeneratedVersion() {
         if (PUBLICATION_02_BASIC_WITH_GENERATED_VERSION == null) {
             PUBLICATION_02_BASIC_WITH_GENERATED_VERSION = createPublicationWithGeneratedPublicationVersions();
         }
         return PUBLICATION_02_BASIC_WITH_GENERATED_VERSION;
     }
 
-    public static Publication getPublication03BasicWith2PublicationVersions() {
+    protected static Publication getPublication03BasicWith2PublicationVersions() {
         if (PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS == null) {
             Publication publication = createPublication();
             PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS = publication;

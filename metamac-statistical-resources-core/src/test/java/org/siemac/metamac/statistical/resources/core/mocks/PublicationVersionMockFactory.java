@@ -29,7 +29,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     private static final String       PUBLICATION_VERSION_03_VERSION                                  = "01.000";
     private static final String       PUBLICATION_VERSION_04_VERSION                                  = "02.000";
 
-    public static PublicationVersion getPublicationVersion01Basic() {
+    protected static PublicationVersion getPublicationVersion01Basic() {
         if (PUBLICATION_VERSION_01_BASIC == null) {
             PUBLICATION_VERSION_01_BASIC = createPublicationVersion();
         }
@@ -37,14 +37,14 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     }
     
     
-    public static PublicationVersion getPublicationVersion02Basic() {
+    protected static PublicationVersion getPublicationVersion02Basic() {
         if (PUBLICATION_VERSION_02_BASIC == null) {
             PUBLICATION_VERSION_02_BASIC = createPublicationVersion();
         }
         return PUBLICATION_VERSION_02_BASIC;
     }
 
-    public static PublicationVersion getPublicationVersion03ForPublication03() {
+    protected static PublicationVersion getPublicationVersion03ForPublication03() {
         if (PUBLICATION_VERSION_03_FOR_PUBLICATION_03 == null) {
 
             // Relation with publication
@@ -57,7 +57,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_03_FOR_PUBLICATION_03;
     }
 
-    public static PublicationVersion getPublicationVersion04ForPublication03AndLastVersion() {
+    protected static PublicationVersion getPublicationVersion04ForPublication03AndLastVersion() {
         if (PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION == null) {
             // Relation with publication
             PublicationVersion publicationVersion = createPublicationVersion();
