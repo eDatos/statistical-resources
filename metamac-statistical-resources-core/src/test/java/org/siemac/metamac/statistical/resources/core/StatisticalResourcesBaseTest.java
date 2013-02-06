@@ -15,7 +15,7 @@ import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
-import org.siemac.metamac.statistical.resources.core.mocks.MockAnnotationRule;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockAnnotationRule;
 import org.springframework.beans.factory.annotation.Value;
 
 public abstract class StatisticalResourcesBaseTest {

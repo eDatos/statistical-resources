@@ -23,6 +23,6 @@
 
 
     <!--  Mocking framework -->
-    <bean id="dbUnitFacade" class="org.siemac.metamac.statistical.resources.core.dbunit.DBUnitOracleFacade"></bean>
-    <bean id="mockPersister" class="org.siemac.metamac.statistical.resources.core.dbunit.DBUnitMockPersister"></bean> 
+    <bean id="dbUnitFacade" class="org.siemac.metamac.statistical.resources.core.utils.dbunit.DBUnitOracleFacade"></bean>
+    <bean id="mockPersister" class="org.siemac.metamac.statistical.resources.core.utils.dbunit.DBUnitMockPersister"></bean> 
 </beans>

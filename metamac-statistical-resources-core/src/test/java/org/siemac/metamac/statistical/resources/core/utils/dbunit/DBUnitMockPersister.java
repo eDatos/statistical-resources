@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dbunit;
+package org.siemac.metamac.statistical.resources.core.utils.dbunit;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +22,7 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.utils.EntityMetadata;
-import org.siemac.metamac.statistical.resources.core.mocks.MockPersisterBase;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockPersisterBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 

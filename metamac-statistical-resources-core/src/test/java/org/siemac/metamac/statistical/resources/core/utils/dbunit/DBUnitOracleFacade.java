@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dbunit;
+package org.siemac.metamac.statistical.resources.core.utils.dbunit;
 
 import java.io.File;
 import java.io.FileInputStream;
