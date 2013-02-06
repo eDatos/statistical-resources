@@ -217,7 +217,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected);
+        String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(operationCode + "_DATASET_0001", actual.getSiemacMetadataStatisticalResource().getCode());
 
         assertEqualsDatasetVersion(expected, actual);
     }
@@ -269,39 +271,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             assertEquals(1, e.getExceptionItems().size());
             assertEqualsMetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE, 1, new String[]{finalDataset.getSiemacMetadataStatisticalResource().getUrn()}, e
                     .getExceptionItems().get(0));
-        }
-    }
-
-    @Test
-    @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
-    public void testUpdateDatasetVersionErrorIncorrectCode() throws Exception {
-        DatasetVersion dataset = getDatasetVersion04LastVersionForDataset03();
-
-        try {
-            dataset.getSiemacMetadataStatisticalResource().setCode("12345");
-            datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), dataset);
-            fail("incorrect code");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, 1, new String[]{ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__CODE}, e
-                    .getExceptionItems().get(0));
-        }
-    }
-
-    @Test
-    @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
-    public void testUpdateDatasetVersionErrorDuplicatedCode() throws Exception {
-        DatasetVersion dataset = getDatasetVersion04LastVersionForDataset03();
-        String duplicatedCode = getDatasetVersion01Basic().getSiemacMetadataStatisticalResource().getCode();
-
-        try {
-            dataset.getSiemacMetadataStatisticalResource().setCode(duplicatedCode);
-            datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), dataset);
-            fail("duplicated code");
-            // TODO: NOTA MENTAL: Es normal que este test no falle hasta que en el servicio se cumplimenten correctamente las URN en función de los CODE
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEqualsMetamacExceptionItem(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED, 1, new String[]{duplicatedCode}, e.getExceptionItems().get(0));
         }
     }
 

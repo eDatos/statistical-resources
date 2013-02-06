@@ -42,7 +42,7 @@ Application DatasetsStatisticalResourcesDto {
 			//Frecuency which the data is updated
 			- @ExternalItemDto updateFrequency;
 			//Official/no official statistic
-			//List<String> statisticOfficiality;
+			- @StatisticOfficialityDto statisticOfficiality;
 			- @InternationalStringDto bibliographicCitation;
 		}
 		
@@ -50,7 +50,14 @@ Application DatasetsStatisticalResourcesDto {
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {
 			"Parent"
 			String datasetVersionUrn;
-		}		
+		}	
+		
+		"Dto for Statistic officiality"
+        DataTransferObject StatisticOfficialityDto extends @IdentityDto {
+            String identifier;
+            - @InternationalStringDto description nullable;
+        }
+			
 	}
 
 }

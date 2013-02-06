@@ -51,7 +51,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         return resource;
     }
-    
+
     public Query mockQueryWithDatasetVersion(DatasetVersion datasetVersion) {
         Query query = mockQuery();
         query.setDatasetVersion(datasetVersion);
@@ -104,6 +104,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected DatasetVersion mockDatasetVersionMetadata() {
         DatasetVersion datasetVersion = new DatasetVersion();
+
         return datasetVersion;
     }
 
@@ -150,7 +151,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setLanguage(language);
         resource.addLanguage(language);
 
-        resource.setStatisticalOperationInstance(mockStatisticalOperationItem());
+        resource.setStatisticalOperation(mockStatisticalOperationItem());
         // TODO: KEYWORDS
 
         resource.setType(type);
@@ -274,7 +275,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public static ExternalItem mockStatisticalOperationItem() {
-        ExternalItem item = new ExternalItem(STATISTICAL_OPERATION_MOCK, getUriMock(), mockStatisticalOperationUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        String code = mockStatisticalOperationCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockStatisticalOperationUrn(code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
+
+    public static ExternalItem mockStatisticalOperationItem(String code) {
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockStatisticalOperationUrn(code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
         item.setVersion(Long.valueOf(0));
         return item;
     }
@@ -327,8 +335,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return item;
     }
 
-    public static String mockStatisticalOperationUrn() {
-        return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(STATISTICAL_OPERATION_MOCK);
+    public static String mockStatisticalOperationUrn(String code) {
+        return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(code);
+    }
+
+    public static String mockStatisticalOperationCode() {
+        return mockString(8);
     }
 
     public static String mockStatisticalOperationInstanceUrn() {

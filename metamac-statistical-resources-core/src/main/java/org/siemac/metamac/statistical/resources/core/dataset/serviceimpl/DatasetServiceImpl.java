@@ -156,9 +156,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Check status
         BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
 
-        // TODO: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
-        // TODO: Si el codigo ha cambiado debemos actualizar la URN
 
         datasetVersion = getDatasetVersionRepository().save(datasetVersion);
         return datasetVersion;
@@ -263,16 +261,25 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         getDatasetVersionRepository().save(parent);
     }
 
-    private static void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
+    private void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
         datasetVersion.setDataset(dataset);
-        // TODO: set code
-        /*
-         * String operationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-         * String type = datasetVersion.getSiemacMetadataStatisticalResource().getType().name();
-         * String code = operationCode + " " + type + " ";
-         */
 
-        // datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
+        String operationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        String type = datasetVersion.getSiemacMetadataStatisticalResource().getType().name();
+
+        String previousCode = getDatasetVersionRepository().getLastCodeUsedInStatisticalOperation(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        int nextSequantialId = 1;
+        if (previousCode != null) {
+            String previousSequential = previousCode.split(type + "_")[1];
+            nextSequantialId = Integer.parseInt(previousSequential);
+            nextSequantialId++;
+        }
+
+        String seqCode = String.format("%04d", nextSequantialId);
+        String code = operationCode + "_" + type + "_" + seqCode;
+
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setUrn(
                 GeneratorUrnUtils.generateSiemacDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));

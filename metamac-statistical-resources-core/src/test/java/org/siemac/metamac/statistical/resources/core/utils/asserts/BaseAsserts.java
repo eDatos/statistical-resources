@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -29,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 
 public class BaseAsserts extends MetamacAsserts {
 
@@ -276,6 +278,30 @@ public class BaseAsserts extends MetamacAsserts {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getVersion(), dto.getOptimisticLockingVersion());
         }
+    }
+
+    // -----------------------------------------------------------------
+    // STATISTIC OFFICIALITY: DO & DO
+    // -----------------------------------------------------------------
+    public static void assertEqualsStatisticOfficiality(StatisticOfficiality expected, StatisticOfficiality actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
+    }
+
+    // -----------------------------------------------------------------
+    // STATISTIC OFFICIALITY: DTO & DO
+    // -----------------------------------------------------------------
+    public static void assertEqualsStatisticOfficiality(StatisticOfficiality expected, StatisticOfficialityDto actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
 
     // -----------------------------------------------------------------

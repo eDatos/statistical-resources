@@ -91,9 +91,9 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEquals(expected.getFormatExtentDimensions(), actual.getFormatExtentDimensions());
         assertEquals(expected.getFormatExtentObservations(), actual.getFormatExtentObservations());
 
-        assertEqualsInternationalString(expected.getBibliographicCitation(), actual.getBibliographicCitation());
+        assertEqualsStatisticOfficiality(expected.getStatisticOfficiality(), actual.getStatisticOfficiality());
 
-        assertEquals(expected.getBibliographicCitation(), actual.getBibliographicCitation());
+        assertEqualsInternationalString(expected.getBibliographicCitation(), actual.getBibliographicCitation());
 
     }
 

@@ -1,18 +1,22 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetMockFactory.getDataset03With2DatasetVersions;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_07_VALID_CODE_0001_NAME;
+import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.DATASET_VERSION_08_VALID_CODE_0002_NAME;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion01Basic;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasetVersionMockFactory.getDatasetVersion04LastVersionForDataset03;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -74,5 +78,26 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         DatasetVersion actual = datasetVersionRepository.retrieveByVersion(getDataset03With2DatasetVersions().getId(), getDatasetVersion04LastVersionForDataset03()
                 .getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEqualsDatasetVersion(getDatasetVersion04LastVersionForDataset03(), actual);
+    }
+
+    @Test
+    @Override
+    @MetamacMock({DATASET_VERSION_07_VALID_CODE_0001_NAME, DATASET_VERSION_08_VALID_CODE_0002_NAME})
+    public void testGetLastCodeUsedInStatisticalOperation() throws Exception {
+        ExternalItem statOper = DatasetVersionMockFactory.getDatasetVersion07ValidCode0001().getSiemacMetadataStatisticalResource().getStatisticalOperation();
+        String statisticalOperationUrn = statOper.getUrn();
+
+        String code = datasetVersionRepository.getLastCodeUsedInStatisticalOperation(statisticalOperationUrn);
+        assertEquals("OPER_0001_DSC_0002", code);
+    }
+
+    @Test
+    public void testGetLastCodeUsedInStatisticalOperationEmpty() throws Exception {
+        String statisticalOperationUrn = "DUMMY";
+
+        String code = datasetVersionRepository.getLastCodeUsedInStatisticalOperation(statisticalOperationUrn);
+        datasetVersionRepository.getLastCodeUsedInStatisticalOperation(statisticalOperationUrn);
+        assertNull(code);
+
     }
 }

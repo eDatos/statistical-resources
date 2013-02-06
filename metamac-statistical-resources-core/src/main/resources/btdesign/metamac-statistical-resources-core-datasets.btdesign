@@ -95,8 +95,6 @@ Application DatasetsStatisticalResources {
 			//Content descriptors
 			//temporal codes
 			- Bag<@ExternalItem> temporalCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMPORAL_COVERAGE";
-			//Dimension code for the geographic dimension
-			String geographicDimensionCode nullable;
 			//geographic codes
 			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEOGRAPHIC_COVERAGE";
 			//geographic granularities
@@ -112,7 +110,7 @@ Application DatasetsStatisticalResources {
 			
 			//Production descriptor
 			//should be nullable?
-			- @ExternalItem relatedDsd nullable; 
+			- @ExternalItem relatedDsd nullable databaseColumn="RELATED_DSD_FK"; 
 			
 			//Class descriptors
 			
@@ -126,10 +124,11 @@ Application DatasetsStatisticalResources {
 			//public date of next update
 			DateTimeTZ dateNextUpdate nullable;
 			//Frecuency which the data is updated
-			- @ExternalItem updateFrequency nullable;
+			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK";
 			//Official/no official statistic
-			//List<String> statisticOfficiality;
-			- @InternationalString bibliographicCitation nullable;
+			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK";
+			//Bibliographic citation
+			- @InternationalString bibliographicCitation nullable databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
 			
 			// Relations
 			"Parent"
@@ -143,10 +142,26 @@ Application DatasetsStatisticalResources {
 				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
+				String getLastCodeUsedInStatisticalOperation(String statisticalOperationUrn);
 				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  
 				@DatasetVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
 				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 			}
 		}
+		
+		"Statistic officiality List"
+    	Entity StatisticOfficiality {
+    		databaseTable="TB_LIS_STAT_OFFICIALITY"
+    		hint="idSequence=STAT_OFFICIALITY"
+    		
+    		not auditable
+    		String identifier;
+    		- @InternationalString description nullable;
+    		
+    		Repository StatisticOfficialityRepository {
+    			findById;
+    			findAll;
+    		}
+    	}
 	}
 }

@@ -24,7 +24,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public Query mockQueryWithDatasetVersion() {
         return mockQueryWithDatasetVersion(mockDatasetVersion());
     }
-    
+
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------

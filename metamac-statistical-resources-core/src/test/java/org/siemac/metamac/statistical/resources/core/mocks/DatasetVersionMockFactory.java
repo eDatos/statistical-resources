@@ -3,14 +3,14 @@ package org.siemac.metamac.statistical.resources.core.mocks;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasorce03BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.mocks.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
-import static org.siemac.metamac.statistical.resources.core.mocks.QueryMockFactory.getQuery05WithDatasetVersion;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,6 +34,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_06_FOR_QUERIES_NAME                     = "DATASET_VERSION_06_FOR_QUERIES";
     private static DatasetVersion DATASET_VERSION_06_FOR_QUERIES;
 
+    public static final String    DATASET_VERSION_07_VALID_CODE_0001_NAME                 = "DATASET_VERSION_07_VALID_CODE_0001";
+    private static DatasetVersion DATASET_VERSION_07_VALID_CODE_0001;
+    public static final String    DATASET_VERSION_08_VALID_CODE_0002_NAME                 = "DATASET_VERSION_08_VALID_CODE_0002";
+    private static DatasetVersion DATASET_VERSION_08_VALID_CODE_0002;
+    private static ExternalItem   STATISTICAL_OPERATION_0001;
+
     private static final String   DATASET_VERSION_03_VERSION                              = "01.000";
     private static final String   DATASET_VERSION_04_VERSION                              = "02.000";
     private static final String   DATASET_VERSION_05_VERSION                              = "01.000";
@@ -50,6 +56,34 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return DATASET_VERSION_01_BASIC;
     }
 
+    public static DatasetVersion getDatasetVersion07ValidCode0001() {
+        if (DATASET_VERSION_07_VALID_CODE_0001 == null) {
+            DatasetVersion dsVersion = createDatasetVersion();
+            DATASET_VERSION_07_VALID_CODE_0001 = dsVersion;
+
+            dsVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(getStatisticalOperation0001());
+            dsVersion.getSiemacMetadataStatisticalResource().setCode("OPER_0001_DSC_0002");
+        }
+        return DATASET_VERSION_07_VALID_CODE_0001;
+    }
+
+    public static DatasetVersion getDatasetVersion08ValidCode0002() {
+        if (DATASET_VERSION_08_VALID_CODE_0002 == null) {
+            DatasetVersion dsVersion = createDatasetVersion();
+            DATASET_VERSION_08_VALID_CODE_0002 = dsVersion;
+
+            dsVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(getStatisticalOperation0001());
+            dsVersion.getSiemacMetadataStatisticalResource().setCode("OPER_0001_DSC_0002");
+        }
+        return DATASET_VERSION_08_VALID_CODE_0002;
+    }
+
+    private static ExternalItem getStatisticalOperation0001() {
+        if (STATISTICAL_OPERATION_0001 == null) {
+            STATISTICAL_OPERATION_0001 = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem("OPER_0001");
+        }
+        return STATISTICAL_OPERATION_0001;
+    }
     public static DatasetVersion getDatasetVersion02Basic() {
         if (DATASET_VERSION_02_BASIC == null) {
             DATASET_VERSION_02_BASIC = createDatasetVersion();
@@ -155,7 +189,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_06_FOR_QUERIES;
     }
-
 
     private static DatasetVersion createDatasetVersion() {
         return createDatasetVersion(null);

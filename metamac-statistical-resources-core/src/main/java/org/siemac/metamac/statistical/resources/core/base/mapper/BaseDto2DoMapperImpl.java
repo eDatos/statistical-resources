@@ -149,11 +149,11 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
     @Override
     public void statisticalResourceDtoToDo(StatisticalResourceDto source, StatisticalResource target, String metadataName) throws MetamacException {
-        
+
         if (target.getId() != null) {
             OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
         }
-        
+
         // Optimistic locking: Update "update date" attribute to force update to root entity, to increment "version" attribute
         target.setUpdateDate(new DateTime());
     }
