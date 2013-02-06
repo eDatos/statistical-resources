@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MockFactory;
 
 public abstract class MockPersisterBase implements MockPersister {
 

@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
+package org.siemac.metamac.statistical.resources.core.utils.mocks.configuration;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -26,6 +26,7 @@ public abstract class MockFactory<EntityMock> {
         String methodName = getMethodNameFromId(id);
         try {
             Method method = getClass().getDeclaredMethod(methodName);
+            method.setAccessible(true);
             Object obj = method.invoke(this);
             return (EntityMock) obj;
         } catch (Exception e) {
