@@ -54,6 +54,10 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
                     return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case DESCRIPTION:
                     return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                case STATUS:
+                    return new SculptorPropertyCriteria(QueryProperties.status(), propertyRestriction.getEnumValue());
+                case PROC_STATUS:
+                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

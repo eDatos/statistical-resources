@@ -19,6 +19,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_04_BASIC_ORDERED_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_06_BASIC_ACTIVE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_07_BASIC_ACTIVE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_08_BASIC_DISCONTINUED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_BASIC_PENDING_REVIEW_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
@@ -287,6 +292,82 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             int i = 0;
             assertEquals(queryMockFactory.getMock(QUERY_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+        }
+    }
+
+    @Test
+    @MetamacMock({QUERY_06_BASIC_ACTIVE_NAME, QUERY_07_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    public void testFindQueriesByConditionUsingStatus() throws Exception {
+
+        // ACTIVE
+        {
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+
+            MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
+            propertyRestriction.setPropertyName(QueryCriteriaPropertyEnum.STATUS.name());
+            propertyRestriction.setOperationType(OperationType.EQ);
+            propertyRestriction.setEnumValue(QueryStatusEnum.ACTIVE);
+            metamacCriteria.setRestriction(propertyRestriction);
+
+            MetamacCriteriaResult<QueryDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+
+            // Validate
+            assertEquals(2, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
+            assertEquals(2, queriesPagedResult.getResults().size());
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
+        }
+
+        // DISCONTINUED
+        {
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+
+            MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
+            propertyRestriction.setPropertyName(QueryCriteriaPropertyEnum.STATUS.name());
+            propertyRestriction.setOperationType(OperationType.EQ);
+            propertyRestriction.setEnumValue(QueryStatusEnum.DISCONTINUED);
+            metamacCriteria.setRestriction(propertyRestriction);
+
+            MetamacCriteriaResult<QueryDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+
+            // Validate
+            assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
+            assertEquals(1, queriesPagedResult.getResults().size());
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
+        }
+
+        // PENDING_REVIEW
+        {
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+
+            MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
+            propertyRestriction.setPropertyName(QueryCriteriaPropertyEnum.STATUS.name());
+            propertyRestriction.setOperationType(OperationType.EQ);
+            propertyRestriction.setEnumValue(QueryStatusEnum.PENDING_REVIEW);
+            metamacCriteria.setRestriction(propertyRestriction);
+
+            MetamacCriteriaResult<QueryDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+
+            // Validate
+            assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
+            assertEquals(1, queriesPagedResult.getResults().size());
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
+        }
+
+        // PENDING_REVIEW or DISCONTINUED
+        {
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            
+            MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
+            disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QueryCriteriaPropertyEnum.STATUS.name(), QueryStatusEnum.PENDING_REVIEW, OperationType.EQ));
+            disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QueryCriteriaPropertyEnum.STATUS.name(), QueryStatusEnum.DISCONTINUED, OperationType.EQ));
+            metamacCriteria.setRestriction(disjunction);
+
+            MetamacCriteriaResult<QueryDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+
+            // Validate
+            assertEquals(2, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
+            assertEquals(2, queriesPagedResult.getResults().size());
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryDto);
         }
     }
 

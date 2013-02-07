@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.query.criteria.enums;
 
 public enum QueryCriteriaPropertyEnum {
 
-    CODE, TITLE, DESCRIPTION, OPERATION_CODE, OPERATION_ID, URN;
+    CODE, TITLE, DESCRIPTION, URN, STATUS, PROC_STATUS;
 
     public String value() {
         return name();
