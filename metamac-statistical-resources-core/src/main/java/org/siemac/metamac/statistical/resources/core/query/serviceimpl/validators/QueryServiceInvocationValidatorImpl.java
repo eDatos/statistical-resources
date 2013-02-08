@@ -37,6 +37,11 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     public static void checkUpdateQuery(Query query, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkExistingQuery(query, exceptions);
     }
+    
+    public static void checkMarkQueryAsDiscontinued(Query query, List<MetamacExceptionItem> exceptions) {
+        checkExistingQuery(query, exceptions);
+        
+    }
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS

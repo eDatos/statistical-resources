@@ -41,4 +41,10 @@ public class QueriesSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canMarkQueryAsDiscontinued(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canMarkQueryAsDiscontinued(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }        
+    }
+
 }

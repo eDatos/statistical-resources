@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.query.serviceimpl.validators.QueryConstraintValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +96,22 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         
         // TODO METAMAC-1161: Pendiente de si una consulta sólo se puede crear sobre últimas versiones de dataset. 
         query.setStatus(QueryStatusEnum.ACTIVE);
+    }
+
+    @Override
+    public Query markQueryAsDiscontinued(ServiceContext ctx, Query query) throws MetamacException {
+        // Validations
+        queryServiceInvocationValidator.checkMarkQueryAsDiscontinued(ctx, query);
+
+        // Retrieve entity
+        query = retrieveQueryByUrn(ctx, query.getLifeCycleStatisticalResource().getUrn());
+        
+        // Check that query is pending_review
+        QueryConstraintValidator.checkQueryForMarkAsDiscontinued(query); 
+        
+        // Change status
+        query.setStatus(QueryStatusEnum.DISCONTINUED);
+        
+        return getQueryRepository().save(query);
     }
 }

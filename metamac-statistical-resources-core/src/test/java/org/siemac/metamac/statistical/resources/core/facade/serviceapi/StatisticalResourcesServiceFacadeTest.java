@@ -148,6 +148,19 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         QueryDto actualQuery = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), expectedQuery);
         assertEquals(expectedStatus, actualQuery.getStatus());
     }
+    
+    @Override
+    @Test
+    @MetamacMock({QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    public void testMarkQueryAsDiscontinued() throws Exception {
+        // Retrieve Dto
+        QueryDto mockDto = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.getMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn()); 
+        
+        // Test
+        QueryDto queryDto = statisticalResourcesServiceFacade.markQueryAsDiscontinued(getServiceContextAdministrador(), mockDto);
+        assertEquals(QueryStatusEnum.DISCONTINUED, queryDto.getStatus());
+        assertEquals(queryMockFactory.getMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn(), queryDto.getUrn());
+    }
 
     @Override
     @Test

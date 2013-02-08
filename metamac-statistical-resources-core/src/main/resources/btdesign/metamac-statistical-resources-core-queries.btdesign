@@ -26,6 +26,8 @@ Application QueriesStatisticalResources {
             @Query createQuery(@Query query) throws MetamacException;
             "Update query"
             @Query updateQuery(@Query query) throws MetamacException;
+            "Mark query as discontinued because the data is not going to be updated"
+            @Query markQueryAsDiscontinued(@Query query) throws MetamacException;
 		}  
 
 

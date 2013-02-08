@@ -32,8 +32,9 @@ Application FacadeStatisticalResources {
             "Update a query"
             @QueryDto updateQuery(@QueryDto queryDto) throws MetamacException;
             "Find queries by criteria"
-    		 MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
-    		 
+    		MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
+    		"Mark query as discontinued because the data is not going to be updated"
+            @QueryDto markQueryAsDiscontinued(@QueryDto queryDto) throws MetamacException;
     		 			
 			// DATASOURCES
 			"Creates a datasource"

@@ -7,7 +7,7 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     // ------------------------------------------------------------------------
     // QUERIES
     // ------------------------------------------------------------------------
-    
+
     public static boolean canRetrieveQueryByUrn(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
@@ -29,6 +29,11 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canUpdateQuery(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canMarkQueryAsDiscontinued(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }

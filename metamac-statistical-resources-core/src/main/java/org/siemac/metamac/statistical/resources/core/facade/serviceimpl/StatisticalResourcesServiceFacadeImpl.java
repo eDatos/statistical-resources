@@ -140,6 +140,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return metamacCriteriaResult;
     }
+    
+    @Override
+    public QueryDto markQueryAsDiscontinued(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canMarkQueryAsDiscontinued(ctx);
+        
+        // Transform
+        Query query = queryDto2DoMapper.queryDtoToDo(queryDto);
+        
+        // Update
+        query = getQueryService().markQueryAsDiscontinued(ctx, query);
+        
+        // Transform
+        queryDto = queryDo2DtoMapper.queryDoToDto(query);
+        
+        return queryDto;
+    }
 
     // ------------------------------------------------------------------------
     // DATASOURCES

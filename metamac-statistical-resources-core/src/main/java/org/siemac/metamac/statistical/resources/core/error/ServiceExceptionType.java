@@ -22,6 +22,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Query
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                  = create("exception.resources.query.not_found");
+    public static final CommonServiceExceptionType QUERY_INVALID_STATUS                             = create("exception.resources.query.invalid_status");
 
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND      = create("exception.resources.identifiable_statistical_resource.not_found");
@@ -29,7 +30,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Life Cycle Statistical Resource
     public static final CommonServiceExceptionType LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE   = create("exception.resources.life_cyacle_statistical_resource.not_modifiable");
-    
+
     // LISTS
     public static final CommonServiceExceptionType STATISTIC_OFFICIALITY_NOT_FOUND                  = create("exception.resources.statistic_officiality.not_found");
 

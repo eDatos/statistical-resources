@@ -9,6 +9,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_04_BASIC_ORDERED_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_05_WITH_DATASET_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_06_BASIC_ACTIVE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_08_BASIC_DISCONTINUED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_BASIC_PENDING_REVIEW_NAME;
 
 import java.util.List;
 
@@ -27,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
@@ -225,5 +229,37 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         List<Query> actual = queryService.retrieveQueries(getServiceContextWithoutPrincipal());
 
         assertEqualsQueryCollection(expected, actual);
+    }
+
+    @Override
+    @Test
+    @MetamacMock({QUERY_09_BASIC_PENDING_REVIEW_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
+    public void testMarkQueryAsDiscontinued() throws Exception {
+        // Get entity
+        Query queryMock = queryMockFactory.getMock(QUERY_09_BASIC_PENDING_REVIEW_NAME);
+        
+        // Modify entity
+        Query queryModified = queryMock;
+        queryModified.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+        Query queryAfterUpdate = queryService.markQueryAsDiscontinued(getServiceContextWithoutPrincipal(), queryModified);
+        
+        // Checks 
+        QueryAsserts.assertEqualsInternationalString(queryMock.getLifeCycleStatisticalResource().getTitle(), queryModified.getLifeCycleStatisticalResource().getTitle()); // title has to be the original
+        assertEquals(queryMockFactory.getMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn(), queryAfterUpdate.getLifeCycleStatisticalResource().getUrn());
+        assertEquals(QueryStatusEnum.DISCONTINUED, queryAfterUpdate.getStatus());
+    }
+    
+    @Test
+    @MetamacMock({QUERY_09_BASIC_PENDING_REVIEW_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME})
+    public void testMarkQueryAsDiscontinuedErrorUnexpectedStatusActive() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_INVALID_STATUS, QueryStatusEnum.PENDING_REVIEW), 1);
+        queryService.markQueryAsDiscontinued(getServiceContextWithoutPrincipal(), queryMockFactory.getMock(QUERY_06_BASIC_ACTIVE_NAME));
+    }
+    
+    @Test
+    @MetamacMock({QUERY_09_BASIC_PENDING_REVIEW_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME})
+    public void testMarkQueryAsDiscontinuedErrorUnexpectedStatusDiscontinued() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_INVALID_STATUS, QueryStatusEnum.PENDING_REVIEW), 1);
+        queryService.markQueryAsDiscontinued(getServiceContextWithoutPrincipal(), queryMockFactory.getMock(QUERY_08_BASIC_DISCONTINUED_NAME));
     }
 }
