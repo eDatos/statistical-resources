@@ -28,6 +28,8 @@ Application QueriesStatisticalResources {
             @Query updateQuery(@Query query) throws MetamacException;
             "Mark query as discontinued because the data is not going to be updated"
             @Query markQueryAsDiscontinued(@Query query) throws MetamacException;
+            "Delete query"
+            deleteQuery(String urn) throws MetamacException;
 		}  
 
 
@@ -82,6 +84,7 @@ Application QueriesStatisticalResources {
 			
 			Repository QueryRepository {
 				save;
+				delete;
 				findAll;
 				findById;
 				findByCondition;

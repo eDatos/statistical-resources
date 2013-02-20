@@ -139,6 +139,7 @@ Application DatasetsStatisticalResources {
 			Repository DatasetVersionRepository {
 				save;
 				delete;
+				findAll;
 				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);

@@ -47,4 +47,10 @@ public class QueriesSecurityUtils extends SecurityUtils {
         }        
     }
 
+    public static void canDeleteQuery(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canDeleteQuery(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        } 
+    }
+
 }

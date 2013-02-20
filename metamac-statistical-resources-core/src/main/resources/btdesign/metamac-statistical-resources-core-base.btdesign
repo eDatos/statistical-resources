@@ -50,6 +50,7 @@ Application BaseStatisticalResources {
 			Repository StatisticalResourceRepository {
 				save;
 				delete;
+				findAll;
 			}
 
 		}

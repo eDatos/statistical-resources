@@ -35,6 +35,8 @@ Application FacadeStatisticalResources {
     		MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
     		"Mark query as discontinued because the data is not going to be updated"
             @QueryDto markQueryAsDiscontinued(@QueryDto queryDto) throws MetamacException;
+            "Delete query"
+            deleteQuery(String urn) throws MetamacException;
     		 			
 			// DATASOURCES
 			"Creates a datasource"

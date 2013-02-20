@@ -114,4 +114,19 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         
         return getQueryRepository().save(query);
     }
+    
+    @Override
+    public void deleteQuery(ServiceContext ctx, String urn) throws MetamacException {
+        // Validations
+        queryServiceInvocationValidator.checkDeleteQuery(ctx, urn);
+        
+        // Retrieve entity
+        Query query = retrieveQueryByUrn(ctx, urn);
+        
+        // Check that query is pending_review
+        QueryConstraintValidator.checkQueryForDelete(query);
+        
+        // Delete
+        getQueryRepository().delete(query);
+    }
 }

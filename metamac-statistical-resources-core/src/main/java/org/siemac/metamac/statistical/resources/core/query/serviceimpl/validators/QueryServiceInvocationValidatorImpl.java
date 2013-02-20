@@ -42,7 +42,10 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     
     public static void checkMarkQueryAsDiscontinued(Query query, List<MetamacExceptionItem> exceptions) {
         checkExistingQuery(query, exceptions);
-        
+    }
+    
+    public static void checkDeleteQuery(String urn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
     // ------------------------------------------------------------------------

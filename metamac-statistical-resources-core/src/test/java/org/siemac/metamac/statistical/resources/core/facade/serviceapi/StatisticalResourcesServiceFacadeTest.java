@@ -205,6 +205,19 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(QueryStatusEnum.DISCONTINUED, queryDto.getStatus());
         assertEquals(queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn(), queryDto.getUrn());
     }
+    
+    @Override
+    @Test
+    @MetamacMock({QUERY_06_BASIC_ACTIVE_NAME, QUERY_01_WITH_SELECTION_NAME})
+    public void testDeleteQuery() throws Exception {
+        String urn = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn();
+        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn), 1);
+        
+        statisticalResourcesServiceFacade.deleteQuery(getServiceContextAdministrador(), urn);
+        statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        
+    }
 
     @Override
     @Test

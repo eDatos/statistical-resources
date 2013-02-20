@@ -124,8 +124,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
         assertTrue(queryDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
-    
-    
+
     @SuppressWarnings("serial")
     @Test
     @MetamacMock({QUERY_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
@@ -134,14 +133,24 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
-        Map<String, Set<String>> selection = new HashMap<String, Set<String>>(){{put("DIM_SESSION1", new HashSet<String>(Arrays.asList("A", "B")));}};
+        Map<String, Set<String>> selection = new HashMap<String, Set<String>>() {
+
+            {
+                put("DIM_SESSION1", new HashSet<String>(Arrays.asList("A", "B")));
+            }
+        };
         queryDtoSession01.setSelection(selection);
 
         // Retrieve query - session 2
         QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
-        selection = new HashMap<String, Set<String>>(){{put("DIM_SESSION2", new HashSet<String>(Arrays.asList("C", "D")));}};
+        selection = new HashMap<String, Set<String>>() {
+
+            {
+                put("DIM_SESSION2", new HashSet<String>(Arrays.asList("C", "D")));
+            }
+        };
         queryDtoSession02.setSelection(selection);
 
         // Update query - session 1 --> OK
@@ -274,11 +283,9 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         }
     }
 
-    @Test
     @Override
     public void testUpdateDataset() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
+        // no optimistic locking in this operation
     }
 
     @Override
@@ -353,5 +360,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testMarkQueryAsDiscontinued() throws Exception {
+    }
+
+    @Override
+    public void testDeleteQuery() throws Exception {
+        // TODO Auto-generated method stub
+
     }
 }
