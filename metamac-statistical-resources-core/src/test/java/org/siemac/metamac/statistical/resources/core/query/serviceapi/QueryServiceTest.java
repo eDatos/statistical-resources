@@ -368,9 +368,9 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Override
     @Test
-    @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME})
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME})
     public void testDeleteQuery() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_11_DRAFT_NAME).getLifeCycleStatisticalResource().getUrn();
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn), 1);
 
@@ -393,9 +393,9 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME})
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME})
     public void testDeleteQueryAndCheckDependencies() throws Exception {
-        Query query = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME);
+        Query query = queryMockFactory.retrieveMock(QUERY_11_DRAFT_NAME);
         String urn = query.getLifeCycleStatisticalResource().getUrn();
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn), 1);

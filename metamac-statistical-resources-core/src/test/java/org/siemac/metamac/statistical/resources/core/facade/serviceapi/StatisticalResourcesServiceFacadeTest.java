@@ -25,6 +25,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_08_BASIC_DISCONTINUED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_BASIC_PENDING_REVIEW_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_10_ACTIVE_LATEST_DATA_5_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_11_DRAFT_NAME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -208,9 +209,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     
     @Override
     @Test
-    @MetamacMock({QUERY_06_BASIC_ACTIVE_NAME, QUERY_01_WITH_SELECTION_NAME})
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_01_WITH_SELECTION_NAME})
     public void testDeleteQuery() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_11_DRAFT_NAME).getLifeCycleStatisticalResource().getUrn();
         
         expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn), 1);
         
