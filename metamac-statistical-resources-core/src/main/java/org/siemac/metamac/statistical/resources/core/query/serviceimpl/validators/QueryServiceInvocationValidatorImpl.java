@@ -8,7 +8,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
@@ -79,5 +81,15 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
 
     private static void checkQuery(Query query, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(query.getUuid(), ServiceExceptionParameters.QUERY__UUID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(query.getDatasetVersion(), ServiceExceptionParameters.QUERY__DATASET_VERSION, exceptions);
+        if (QueryTypeEnum.LATEST_DATA.equals(query.getType())) {
+            StatisticalResourcesValidationUtils.checkMetadataRequired(query.getLatestDataNumber(), ServiceExceptionParameters.QUERY__LATEST_DATA_NUMBER, exceptions);
+            if (query.getLatestDataNumber() != null && query.getLatestDataNumber() <= Integer.valueOf(0)) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.QUERY__LATEST_DATA_NUMBER));
+            }
+        } else {
+            StatisticalResourcesValidationUtils.checkMetadataEmpty(query.getLatestDataNumber(), ServiceExceptionParameters.QUERY__LATEST_DATA_NUMBER, exceptions);
+        }
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(query.getSelection(), ServiceExceptionParameters.QUERY__SELECTION, exceptions);
     }
 }

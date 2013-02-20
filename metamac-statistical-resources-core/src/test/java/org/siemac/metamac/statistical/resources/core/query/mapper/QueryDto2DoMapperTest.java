@@ -32,16 +32,9 @@ public class QueryDto2DoMapperTest extends StatisticalResourcesBaseTest {
     private QueryDto2DoMapper queryDto2DoMapper;
 
     @Test
-    public void testQueryDtoToDoWithoutDatasetVersion() throws MetamacException {
-        QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDto();
-        Query actual = queryDto2DoMapper.queryDtoToDo(expected);
-        assertEqualsQuery(expected, actual);
-    }
-    
-    @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
-    public void testQueryDtoToDoWithDatasetVersion() throws MetamacException {
-        QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDtoWithDatasetVersion(datasetVersionMockFactory.getMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+    public void testQueryDtoToDo() throws MetamacException {
+        QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         Query actual = queryDto2DoMapper.queryDtoToDo(expected);
         assertEqualsQuery(expected, actual);
         assertTrue(expected.getDatasetVersion().equals(actual.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));

@@ -1,6 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
@@ -21,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -30,19 +36,22 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     // QUERY
     // -----------------------------------------------------------------
 
-    public static QueryDto mockQueryDto() {
+    public static QueryDto mockQueryDto(DatasetVersion datasetVersion) {
         QueryDto queryDto = new QueryDto();
 
         mockNameableStatisticalResorceDto(queryDto);
+        queryDto.setDatasetVersion(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        queryDto.setType(QueryTypeEnum.FIXED);
+        
+        
+        Map<String, Set<String>> selection = new HashMap<String, Set<String>>();
+        selection.put("SEX", new HashSet<String>(Arrays.asList("FEMALE")));
+        selection.put("REGION", new HashSet<String>(Arrays.asList("TENERIFE", "LA_GOMERA")));
+        queryDto.setSelection(selection );
 
         return queryDto;
     }
     
-    public static QueryDto mockQueryDtoWithDatasetVersion(DatasetVersion datasetVersion) {
-        QueryDto queryDto = mockQueryDto();
-        queryDto.setDatasetVersion(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        return queryDto;
-    }
 
     // -----------------------------------------------------------------
     // DATASOURCES

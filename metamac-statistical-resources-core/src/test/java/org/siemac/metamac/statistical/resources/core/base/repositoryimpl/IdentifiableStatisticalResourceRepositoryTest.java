@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.core.base.repositoryimpl;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsIdentifiableStatisticalResource;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
 
 import org.junit.Test;
@@ -46,29 +46,29 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
 
     @Override
     @Test
-    @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
+    @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(queryMockFactory.getMock(QUERY_01_BASIC_NAME).getLifeCycleStatisticalResource().getUrn());
-            assertEqualsIdentifiableStatisticalResource(queryMockFactory.getMock(QUERY_01_BASIC_NAME).getLifeCycleStatisticalResource(), actual);
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
+            assertEqualsIdentifiableStatisticalResource(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource(), actual);
         }
 
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(datasetVersionMockFactory.getMock(DATASET_VERSION_01_BASIC_NAME)
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
                     .getSiemacMetadataStatisticalResource().getUrn());
-            assertEqualsIdentifiableStatisticalResource(datasetVersionMockFactory.getMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource(), actual);
+            assertEqualsIdentifiableStatisticalResource(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource(), actual);
         }
 
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(publicationVersionMockFactory.getMock(PUBLICATION_VERSION_01_BASIC_NAME)
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME)
                     .getSiemacMetadataStatisticalResource().getUrn());
-            assertEqualsIdentifiableStatisticalResource(publicationVersionMockFactory.getMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource(), actual);
+            assertEqualsIdentifiableStatisticalResource(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource(), actual);
         }
 
     }
 
     @Test
-    @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
+    @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testRetrieveByUrnNotFound() throws MetamacException {
         expectedMetamacException(new MetamacException(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND, URN_NOT_EXISTS), 1);
         identifiableStatisticalResourceRepository.retrieveByUrn(URN_NOT_EXISTS);
@@ -76,7 +76,7 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
 
     @Override
     @Test
-    @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
+    @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCheckDuplicatedUrn() throws Exception {
         { // Not error because URN not exists
             IdentifiableStatisticalResource identifiableStatisticalResource = new IdentifiableStatisticalResource();
@@ -85,14 +85,14 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
         }
 
         { // Not error because is the same object
-            identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryMockFactory.getMock(QUERY_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource());
+            identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryMockFactory.retrieveMock(QUERY_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource());
         }
     }
 
     @Test
-    @MetamacMock({QUERY_01_BASIC_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
+    @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCheckDuplicatedUrnErrorAlreadyExists() throws Exception {
-        String urn = queryMockFactory.getMock(QUERY_01_BASIC_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED, urn), 1);
 
         IdentifiableStatisticalResource identifiableStatisticalResource = new IdentifiableStatisticalResource();

@@ -13,6 +13,10 @@ Application QueriesStatisticalResourcesDto {
 		DataTransferObject QueryDto extends @LifeCycleStatisticalResourceDto {
 			String datasetVersion;
 			- @QueryStatusEnum status;
+			- @QueryTypeEnum type;
+			Integer latestDataNumber;
+			QuerySelection selection;
+			
 		}
 	}
 }

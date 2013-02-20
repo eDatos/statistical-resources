@@ -10,7 +10,9 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +26,35 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // QUERY
     // -----------------------------------------------------------------
 
-    public Query mockQueryWithStatisticalResourceNull() {
-        Query query = mockQuery();
+    public Query mockQueryWithStatisticalResourceNull(DatasetVersion datasetVersion) {
+        Query query = mockQueryWithDatasetVersion(datasetVersion);
         query.setLifeCycleStatisticalResource(null);
+        return query;
+    }
+    
+    public Query mockQueryWithSelectionNull(DatasetVersion datasetVersion) {
+        Query query = mockQueryWithDatasetVersion(datasetVersion);
+        query.getSelection().clear();
+        return query;
+    }
+    
+    public Query mockQueryWithSelectionIncorrectDimensionNull(DatasetVersion datasetVersion) {
+        Query query = mockQueryWithDatasetVersion(datasetVersion);
+        QuerySelectionItem querySelectionItem = new QuerySelectionItem();
+        querySelectionItem.setDimension(null);
+        CodeItem code = new CodeItem();
+        code.setCode("CODE01");
+        querySelectionItem.addCode(code);
+        query.addSelection(querySelectionItem);
+        return query;
+    }
+    
+    public Query mockQueryWithSelectionIncorrectCodesNull(DatasetVersion datasetVersion) {
+        Query query = mockQueryWithDatasetVersion(datasetVersion);
+        QuerySelectionItem querySelectionItem = new QuerySelectionItem();
+        querySelectionItem.setDimension("DIMENSION01");
+        querySelectionItem.getCodes().clear();
+        query.addSelection(querySelectionItem);
         return query;
     }
     

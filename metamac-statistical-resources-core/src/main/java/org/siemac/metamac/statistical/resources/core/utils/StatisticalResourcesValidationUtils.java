@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -9,9 +10,22 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 
 public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
+    /**
+     * Check for a required metadata and add an exception for a failed validation.
+     * @param parameter
+     * @param parameterName
+     * @param exceptions
+     */
+    public static void checkMetadataRequired(Set<QuerySelectionItem> parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (isEmpty(parameter)) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
+        }
+    }
+    
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -65,6 +79,23 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
         }
     }
+    
+    /**
+     * Check if a metadata is valid
+     * @param parameter
+     * @param parameterName
+     * @param exceptions
+     */
+    public static void checkMetadataOptionalIsValid(QuerySelectionItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (parameter == null) {
+            return;
+        }
+        
+        // If it is not null, it must be complete
+        if (isEmpty(parameter)) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
+        }
+    }
 
     /**
      * Check if a collection metadata is valid.
@@ -83,10 +114,12 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         int exceptionSize = exceptions.size();
 
         for (Object item : parameter) {
-            if (InternationalString.class.isInstance(parameter)) {
+            if (InternationalString.class.isInstance(item)) {
                 checkMetadataOptionalIsValid((InternationalString) item, parameterName, exceptions);
-            } else if (ExternalItem.class.isInstance(parameter)) {
+            } else if (ExternalItem.class.isInstance(item)) {
                 checkMetadataOptionalIsValid((ExternalItem) item, parameterName, exceptions);
+            } else if (QuerySelectionItem.class.isInstance(item)) {
+                checkMetadataOptionalIsValid((QuerySelectionItem) item, parameterName, exceptions);
             } else {
                 checkMetadataOptionalIsValid(item, parameterName, exceptions);
             }
@@ -97,7 +130,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             }
         }
     }
-
+    
     /**
      * Check if an InternationalString is empty.
      */
@@ -127,5 +160,37 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         }
 
         return isEmpty(parameter.getCode()) || isEmpty(parameter.getUri()) || isEmpty(parameter.getUrn()) || isEmpty(parameter.getType());
+    }
+    
+    /**
+     * Check if a Set<QuerySelectionItem> is empty
+     * @param parameter
+     * @return
+     */
+    private static Boolean isEmpty(Set<QuerySelectionItem> parameter) {
+        if (parameter == null || parameter.size() == 0) {
+            return Boolean.TRUE;
+        }
+        
+        for (QuerySelectionItem querySelectionItem : parameter) {
+            if (isEmpty(querySelectionItem)) {
+                return Boolean.TRUE;
+            }
+        }
+        
+        return Boolean.FALSE;
+    }
+    
+    /**
+     * Check if a QuerySelectionItem is empty
+     * @param parameter
+     * @return
+     */
+    private static Boolean isEmpty(QuerySelectionItem parameter) {
+        if (isEmpty(parameter.getDimension()) || isEmpty(parameter.getCodes())) {
+            return Boolean.TRUE;
+        }
+        
+        return Boolean.FALSE;
     }
 }

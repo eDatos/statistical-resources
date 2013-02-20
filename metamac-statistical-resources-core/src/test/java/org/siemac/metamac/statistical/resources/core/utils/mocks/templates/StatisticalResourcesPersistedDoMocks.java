@@ -19,13 +19,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
 
+    
     // -----------------------------------------------------------------
-    // QUERIES
+    // QUERY
     // -----------------------------------------------------------------
-    public Query mockQueryWithDatasetVersion() {
-        return mockQueryWithDatasetVersion(mockDatasetVersion());
+    public Query mockQueryWithGeneratedDatasetVersion() {
+        Query query = mockQuery(mockDatasetVersion());
+        return query;
     }
-
+    
+    public Query mockQueryWithSelectionAndGeneratedDatasetVersion() {
+        Query query = mockQueryWithSelectionAndDatasetVersion(mockDatasetVersion());
+        return query;
+    }
+    
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -91,7 +98,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         resource.setResourceCreatedDate(new DateTime());
         resource.setLastUpdate(resource.getResourceCreatedDate());
-
     }
 
     @Override
@@ -109,4 +115,5 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesQueryMock(Query query) {
         query.setStatus(QueryStatusEnum.ACTIVE);
     }
+ 
 }

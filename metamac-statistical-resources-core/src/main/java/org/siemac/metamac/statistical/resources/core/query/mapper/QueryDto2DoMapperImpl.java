@@ -1,5 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -10,8 +15,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.exception.QueryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +30,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     
     @Autowired 
     private DatasetVersionRepository datasetVersionRepository;
-
+    
     @Override
     public Query queryDtoToDo(QueryDto source) throws MetamacException {
         if (source == null) {
@@ -65,8 +72,44 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         
         // Status
         // Not mapped. It's automatically managed.
+        
+        // Type
+        target.setType(source.getType());
+        
+        // Latest Data Number
+        target.setLatestDataNumber(source.getLatestDataNumber());
+        
+        // Selection
+        target.getSelection().addAll(querySelectionDto2Do(source.getSelection(), target.getSelection(), target, ServiceExceptionParameters.QUERY__SELECTION));
 
         return target;
+    }
 
+    private Set<QuerySelectionItem> querySelectionDto2Do(Map<String, Set<String>> source, Set<QuerySelectionItem> target, Query queryTarget, String metadataName) {
+        if (source.isEmpty()) {
+            return new HashSet<QuerySelectionItem>();
+        } else {
+            target.clear();
+            target = new HashSet<QuerySelectionItem>();
+            for (Map.Entry<String, Set<String>> entry : source.entrySet()) {
+                target.add(selectionItemDto2Do(entry, queryTarget));
+            }
+            return target;
+        }
+    }
+
+    private QuerySelectionItem selectionItemDto2Do(Entry<String, Set<String>> sourceSelectionItem, Query queryTarget) {
+        QuerySelectionItem targetSelectionItem = new QuerySelectionItem();
+        targetSelectionItem.setQuery(queryTarget);
+        targetSelectionItem.setDimension(sourceSelectionItem.getKey());
+        if (!sourceSelectionItem.getValue().isEmpty()) {
+            for (String sourceCodeItem : sourceSelectionItem.getValue()) {
+                CodeItem code = new CodeItem();
+                code.setCode(sourceCodeItem);
+                code.setQuerySelectionItem(targetSelectionItem);
+                targetSelectionItem.addCode(code);
+            }
+        }
+        return targetSelectionItem;
     }
 }

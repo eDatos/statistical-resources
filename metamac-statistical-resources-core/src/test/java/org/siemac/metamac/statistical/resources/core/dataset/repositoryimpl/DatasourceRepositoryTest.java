@@ -38,8 +38,8 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrn() throws MetamacException {
-        Datasource expected = datasourceMockFactory.getMock(DATASOURCE_01_BASIC_NAME);
-        Datasource actual = datasourceRepository.retrieveByUrn(datasourceMockFactory.getMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn());
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        Datasource actual = datasourceRepository.retrieveByUrn(datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn());
         assertEqualsDatasource(expected, actual);
     }
 

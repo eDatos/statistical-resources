@@ -22,7 +22,7 @@ public abstract class MockFactory<EntityMock> {
     protected static final String NAME_FIELD_SUFFIX = "_NAME";
 
     @SuppressWarnings("unchecked")
-    public EntityMock getMock(String id) {
+    protected EntityMock getMock(String id) {
         String methodName = getMethodNameFromId(id);
         try {
             Method method = getClass().getDeclaredMethod(methodName);

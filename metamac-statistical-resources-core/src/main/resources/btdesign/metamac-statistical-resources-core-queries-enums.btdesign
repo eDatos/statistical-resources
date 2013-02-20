@@ -11,6 +11,12 @@ Application QueriesStatisticalResourcesEnums {
     		DISCONTINUED,
     		PENDING_REVIEW
     	}
+    	
+    	enum QueryTypeEnum {
+    		AUTOINCREMENTAL,
+    		LATEST_DATA,
+    		FIXED
+    	}
     }
 
 }

@@ -1,13 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryDoAndDtoCollection;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_ORDERED_02_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_05_WITH_DATASET_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_05_BASIC_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,34 +37,25 @@ public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     private QueryMockFactory queryMockFactory;
 
     @Test
-    @MetamacMock(QUERY_01_BASIC_NAME)
-    public void testQueryDo2DtoWithoutDatasetVersion() {
-        Query expected = queryMockFactory.getMock(QUERY_01_BASIC_NAME);
+    @MetamacMock(QUERY_01_WITH_SELECTION_NAME)
+    public void testQueryDo2Dto() {
+        Query expected = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME);
         QueryDto actual = queryDo2DtoMapper.queryDoToDto(expected);
         assertEqualsQuery(expected, actual);
     }
 
     @Test
-    @MetamacMock(QUERY_05_WITH_DATASET_VERSION_NAME)
-    public void testQueryDo2DtoWithDatasetVersion() {
-        Query expected = queryMockFactory.getMock(QUERY_05_WITH_DATASET_VERSION_NAME);
-        QueryDto actual = queryDo2DtoMapper.queryDoToDto(expected);
-        assertEqualsQuery(expected, actual);
-        assertTrue(actual.getDatasetVersion().equals(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));
-    }
-
-    @Test
-    @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_05_WITH_DATASET_VERSION_NAME})
+    @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_05_BASIC_NAME, QUERY_01_WITH_SELECTION_NAME})
     public void testQueryDoListToDtoList() {
         List<Query> expected = new ArrayList<Query>();
-        expected.add(queryMockFactory.getMock(QUERY_02_BASIC_ORDERED_01_NAME));
-        expected.add(queryMockFactory.getMock(QUERY_03_BASIC_ORDERED_02_NAME));
-        expected.add(queryMockFactory.getMock(QUERY_05_WITH_DATASET_VERSION_NAME));
+        expected.add(queryMockFactory.retrieveMock(QUERY_02_BASIC_ORDERED_01_NAME));
+        expected.add(queryMockFactory.retrieveMock(QUERY_03_BASIC_ORDERED_02_NAME));
+        expected.add(queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME));
+        expected.add(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME));
         
         List<QueryDto> actual = queryDo2DtoMapper.queryDoListToDtoList(expected);
 
         assertEquals(expected.size(), actual.size());
         assertEqualsQueryDoAndDtoCollection(expected, actual);
     }
-
 }

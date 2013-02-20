@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_WITH_SELECTION_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,10 +35,10 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
 
     @Override
     @Test
-    @MetamacMock(QUERY_01_BASIC_NAME)
+    @MetamacMock(QUERY_01_WITH_SELECTION_NAME)
     public void testRetrieveByUrn() throws MetamacException {
-        Query actual = queryRepository.retrieveByUrn(queryMockFactory.retrieveMock(QUERY_01_BASIC_NAME).getLifeCycleStatisticalResource().getUrn());
-        assertEqualsQuery(queryMockFactory.retrieveMock(QUERY_01_BASIC_NAME), actual);
+        Query actual = queryRepository.retrieveByUrn(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
+        assertEqualsQuery(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME), actual);
     }
 
     @Test

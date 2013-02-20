@@ -20,9 +20,12 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
@@ -39,15 +42,30 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   CODELIST_MOCK                       = "CodelistMock";
     private static final String   CODE_MOCK                           = "CodeMock";
     private static final String   DSD_MOCK                            = "DsdMock";
+    private static final String   DIMENSION_MOCK                            = "DimensionMock";
 
     private static final String   URI_MOCK_PREFIX                     = "lorem/ipsum/dolor/sit/amet/";
 
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
-    public Query mockQuery() {
+    public Query mockQueryWithDatasetVersion(DatasetVersion datasetVersion) {
+        Query query = mockQuery(datasetVersion);
+        return query;
+    }
+    
+    public Query mockQueryWithSelectionAndDatasetVersion(DatasetVersion datasetVersion) {
+        Query resource = mockQuery(datasetVersion);
+        resource.addSelection(mockQuerySelectionItem());
+        
+        return resource;
+    }
+    
+    protected Query mockQuery(DatasetVersion datasetVersion) {
         Query resource = new Query();
         resource.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
+        resource.setDatasetVersion(datasetVersion);
+        resource.setType(QueryTypeEnum.FIXED);
         
         // TODO METAMAC-1161: De momento lo cumplimenta el servicio. Pendiente decisión.
         // resource.setStatus(QueryStatusEnum.ACTIVE); 
@@ -55,11 +73,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         return resource;
     }
+    
+    
+    private QuerySelectionItem mockQuerySelectionItem() {
+        QuerySelectionItem querySelectionItem = new QuerySelectionItem();
+        querySelectionItem.setDimension("SEX");
+        querySelectionItem.addCode(mockCodeItem());
+        return querySelectionItem;
+    }
 
-    public Query mockQueryWithDatasetVersion(DatasetVersion datasetVersion) {
-        Query query = mockQuery();
-        query.setDatasetVersion(datasetVersion);
-        return query;
+    private CodeItem mockCodeItem() {
+        CodeItem code = new CodeItem();
+        code.setCode(mockString(6));
+        return code;
     }
 
     // -----------------------------------------------------------------
@@ -340,6 +366,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         item.setVersion(Long.valueOf(0));
         return item;
     }
+    
+    public static ExternalItem mockDimensionExternalItem() {
+        ExternalItem item = new ExternalItem(DIMENSION_MOCK, getUriMock(), mockDimensionUrn(), TypeExternalArtefactsEnum.DIMENSION);
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
 
     public static String mockStatisticalOperationUrn(String code) {
         return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(code);
@@ -380,6 +412,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public static String mockDsdUrn() {
         return GeneratorUrnUtils.generateSdmxDatastructureUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
+    }
+    
+    public static String mockDimensionUrn() {
+        return GeneratorUrnUtils.generateSdmxDimensionUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_XX_YYY_INITIAL_VERSION, DIMENSION_MOCK);
     }
 
     // -----------------------------------------------------------------

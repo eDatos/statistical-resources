@@ -35,14 +35,50 @@ Application QueriesStatisticalResources {
 		// 							ENTITIES
 		// ---------------------------------------------------------------- 
 
+		Entity CodeItem {
+			databaseTable="TB_CODE_ITEMS"
+			hint="idSequence=CODE_ITEMS"
+			!auditable
+		
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			String code;
+			- @QuerySelectionItem querySelectionItem not nullable cascade="none" databaseColumn="QUERY_SELECTION_ITEM_FK" <-> codes;
+			
+			Repository CodeItemRepository {
+				findAll;
+			}
+		}
+
+		Entity QuerySelectionItem {
+			databaseTable="TB_QUERY_SELECTION_ITEMS"
+			hint="idSequence=QUERY_SELECTION_ITEMS"
+			!auditable
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			String dimension not nullable;
+			- Set<@CodeItem> codes inverse <-> querySelectionItem not nullable cascade="all-delete-orphan"; 
+			- @Query query not nullable cascade="none" databaseColumn="QUERY_FK" <-> selection;
+			
+			Repository QuerySelectionItemRepository {
+				findAll;
+			}
+		}
+
 		Entity Query {
 			databaseTable="TB_QUERIES"
 			hint="idSequence=QUERIES"
 			!auditable
-
+			
 			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
-			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" nullable;
+			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" not nullable;
 			- @QueryStatusEnum status not nullable;
+			- Set<@QuerySelectionItem> selection inverse <-> query cascade="all-delete-orphan";
+			- @QueryTypeEnum type not nullable;
+			Integer latestDataNumber nullable;
+			
 			
 			Repository QueryRepository {
 				save;

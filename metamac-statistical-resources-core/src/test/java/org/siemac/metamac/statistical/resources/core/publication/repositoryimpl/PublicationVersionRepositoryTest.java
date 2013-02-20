@@ -45,8 +45,8 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
         PublicationVersion actual = publicationVersionRepository
-                .retrieveByUrn(publicationVersionMockFactory.getMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
-        assertEqualsPublicationVersion(publicationVersionMockFactory.getMock(PUBLICATION_VERSION_01_BASIC_NAME), actual);
+                .retrieveByUrn(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME), actual);
     }
 
     @Test
@@ -59,15 +59,15 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveLastVersion() throws Exception {
-        PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(publicationMockFactory.getMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME).getId());
-        assertEqualsPublicationVersion(publicationVersionMockFactory.getMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(publicationMockFactory.retrieveMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME).getId());
+        assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
     }
 
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveByVersion() throws Exception {
-        PublicationVersion actual = publicationVersionRepository.retrieveByVersion(publicationMockFactory.getMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME).getId(),
-                publicationVersionMockFactory.getMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getVersionLogic());
-        assertEqualsPublicationVersion(publicationVersionMockFactory.getMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
+        PublicationVersion actual = publicationVersionRepository.retrieveByVersion(publicationMockFactory.retrieveMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME).getId(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
     }
 }

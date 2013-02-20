@@ -44,7 +44,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock(DATASOURCE_01_BASIC_NAME)
     public void testDatasourceDo2Dto() {
-        Datasource expected = datasourceMockFactory.getMock(DATASOURCE_01_BASIC_NAME);
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
         DatasourceDto actual = datasetDo2DtoMapper.datasourceDoToDto(expected);
         assertEqualsDatasource(expected, actual);
     }
@@ -52,7 +52,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock({DATASET_VERSION_03_FOR_DATASET_03_NAME})
     public void testDatasourceDoListToDtoList() {
-        List<Datasource> expected = datasetVersionMockFactory.getMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
+        List<Datasource> expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
 
         List<DatasourceDto> actual = datasetDo2DtoMapper.datasourceDoListToDtoList(expected);
 
@@ -63,7 +63,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
     public void testDatasetDoToDto() {
-        DatasetVersion expected = datasetVersionMockFactory.getMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
+        DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
 
         DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
 
