@@ -247,7 +247,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private static void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         datasource.setDatasetVersion(datasetVersion);
         datasource.getIdentifiableStatisticalResource().setUri(null);
-        datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacDatasourceUrn(datasource.getIdentifiableStatisticalResource().getCode()));
+        datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(datasource.getIdentifiableStatisticalResource().getCode()));
     }
 
     private void addDatasourceForDatasetVersion(Datasource datasource, DatasetVersion datasetVersion) {
@@ -282,7 +282,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");

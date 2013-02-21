@@ -91,7 +91,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     }
     
     private void fillMetadataForCreateQuery(Query query) {
-        query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
+        query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
         query.getLifeCycleStatisticalResource().setUri(null);
         
         // TODO METAMAC-1161: Pendiente de si una consulta sólo se puede crear sobre últimas versiones de dataset. 
