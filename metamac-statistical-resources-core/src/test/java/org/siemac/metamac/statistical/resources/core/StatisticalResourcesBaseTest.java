@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.siemac.metamac.common.test.MetamacBaseTest;
 import org.siemac.metamac.common.test.dbunit.MetamacDBUnitBaseTests.DataBaseProvider;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
@@ -27,6 +28,9 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
     @Rule
     public MockAnnotationRule mockRule = new MockAnnotationRule();
+    
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     
     protected ServiceContext getServiceContextWithoutPrincipal() {

@@ -41,6 +41,7 @@ Application QueriesStatisticalResources {
 			databaseTable="TB_CODE_ITEMS"
 			hint="idSequence=CODE_ITEMS"
 			!auditable
+			gap
 		
 			"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
@@ -56,6 +57,7 @@ Application QueriesStatisticalResources {
 			databaseTable="TB_QUERY_SELECTION_ITEMS"
 			hint="idSequence=QUERY_SELECTION_ITEMS"
 			!auditable
+			gap
 			
 			"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
@@ -66,6 +68,7 @@ Application QueriesStatisticalResources {
 			
 			Repository QuerySelectionItemRepository {
 				findAll;
+				delete;
 			}
 		}
 
