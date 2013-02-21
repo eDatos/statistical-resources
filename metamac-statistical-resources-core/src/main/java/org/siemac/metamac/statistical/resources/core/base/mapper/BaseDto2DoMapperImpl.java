@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.base.mapper;
 
+import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -37,7 +39,6 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 @org.springframework.stereotype.Component("baseDto2DoMapper")
 public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
@@ -68,14 +69,16 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
                 + ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE));
 
         target.setSubtitle(internationalStringDtoToDo(source.getSubtitle(), target.getSubtitle(), addParameter(metadataName, ServiceExceptionSingleParameters.SUBTITLE)));
-        target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
+        target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
         target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
 
         // TODO: keywords
         target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR)));
         externalItemDtoListToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
         target.setConformsTo(internationalStringDtoToDo(source.getConformsTo(), target.getConformsTo(), addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO)));
-        target.setConformsToInternal(internationalStringDtoToDo(source.getConformsToInternal(), target.getConformsToInternal(), addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO_INTERNAL)));
+        target.setConformsToInternal(internationalStringDtoToDo(source.getConformsToInternal(), target.getConformsToInternal(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO_INTERNAL)));
 
         externalItemDtoListToDoList(source.getPublisher(), target.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER));
         externalItemDtoListToDoList(source.getPublisherContributor(), target.getPublisherContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR));
@@ -91,6 +94,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         return target;
     }
+
     @Override
     public LifeCycleStatisticalResource lifeCycleStatisticalResourceDtoToDo(LifeCycleStatisticalResourceDto source, LifeCycleStatisticalResource target, String metadataName) throws MetamacException {
         // Hierarchy
@@ -111,12 +115,14 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         // Attributes modifiable
         target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
-        target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
+        target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
         target.setVersionRationaleType(source.getVersionRationaleType());
         target.setNextVersion(source.getNextVersion());
 
         return target;
     }
+
     @Override
     public NameableStatisticalResource nameableStatisticalResourceDtoToDo(NameableStatisticalResourceDto source, NameableStatisticalResource target, String metadataName) throws MetamacException {
 
@@ -150,7 +156,6 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
     @Override
     public void statisticalResourceDtoToDo(StatisticalResourceDto source, StatisticalResource target, String metadataName) throws MetamacException {
-
         if (target.getId() != null) {
             OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
         }
@@ -158,6 +163,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Optimistic locking: Update "update date" attribute to force update to root entity, to increment "version" attribute
         target.setUpdateDate(new DateTime());
     }
+
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
