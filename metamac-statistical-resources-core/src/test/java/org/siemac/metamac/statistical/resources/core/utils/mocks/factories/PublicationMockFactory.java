@@ -36,6 +36,8 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
     protected static Publication getPublication03BasicWith2PublicationVersions() {
         if (PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS == null) {
             Publication publication = createPublication();
+            
+            // Relations
             PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS = publication;
             setPublication03Versions(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS);
         }

@@ -67,8 +67,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setDatasetVersion(datasetVersion);
         resource.setType(QueryTypeEnum.FIXED);
         
-        // TODO METAMAC-1161: De momento lo cumplimenta el servicio. Pendiente decisión.
-        // resource.setStatus(QueryStatusEnum.ACTIVE); 
         setSpecialCasesQueryMock(resource);
 
         return resource;

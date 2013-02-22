@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_02_BASIC_ORDERED_01_NAME;
@@ -12,7 +14,16 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_06_BASIC_ACTIVE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_08_BASIC_DISCONTINUED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_BASIC_PENDING_REVIEW_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_10_ACTIVE_LATEST_DATA_5_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_11_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_12_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_13_DIFUSSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_14_VALIDATION_REJECTED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_15_PUBLICATION_PROGRAMMED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_16_PUBLICATION_PENDING_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_17_PUBLICATION_FAILED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_18_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_19_ARCHIVED_NAME;
 
 import java.util.List;
 
@@ -168,8 +179,54 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         Query expected = statisticalResourcesNotPersistedDoMocks.mockQueryWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         Query actual = queryService.createQuery(getServiceContextWithoutPrincipal(), expected);
         assertEqualsQuery(expected, actual);
-        // TODO METAMAC-1161: Pte. status al crear
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME})
+    public void testCreateQueryDiscontinued() throws Exception {
+        Query expected = statisticalResourcesNotPersistedDoMocks.mockQueryWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME));
+        Query actual = queryService.createQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsQuery(expected, actual);
+        assertEquals(QueryStatusEnum.DISCONTINUED, actual.getStatus());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME})
+    public void testCreateQueryActive() throws Exception {
+        Query expected = statisticalResourcesNotPersistedDoMocks.mockQueryWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME));
+        Query actual = queryService.createQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsQuery(expected, actual);
         assertEquals(QueryStatusEnum.ACTIVE, actual.getStatus());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    public void testUpdateDatasetVersionQueryChangesQueryStatusFromDiscontinuedToActive() throws Exception {
+        Query expected = queryMockFactory.retrieveMock(QUERY_08_BASIC_DISCONTINUED_NAME);
+        expected.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME));
+
+        Query actual = queryService.updateQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEquals(QueryStatusEnum.ACTIVE, actual.getStatus());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    public void testUpdateDatasetVersionQueryChangesQueryStatusFromPendingReviewToActive() throws Exception {
+        Query expected = queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME);
+        expected.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME));
+
+        Query actual = queryService.updateQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEquals(QueryStatusEnum.ACTIVE, actual.getStatus());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    public void testUpdateDatasetVersionQueryChangesQueryStatusFromActiveToDiscontinued() throws Exception {
+        Query expected = queryMockFactory.retrieveMock(QUERY_06_BASIC_ACTIVE_NAME);
+        expected.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME));
+
+        Query actual = queryService.updateQuery(getServiceContextWithoutPrincipal(), expected);
+        assertEquals(QueryStatusEnum.DISCONTINUED, actual.getStatus());
     }
 
     @Test
@@ -196,18 +253,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         Query query = statisticalResourcesNotPersistedDoMocks.mockQueryWithStatisticalResourceNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQuery(getServiceContextWithoutPrincipal(), query);
     }
-
-    // TODO METAMAC-1161: pte. status al crear. de momento lo cumplimenta el servicio.
-    // @Test
-    // public void testCreateQueryErrorStatusRequired() throws Exception {
-    // // Query query = statisticalResourcesNotPersistedDoMocks.mockQueryWithStatusNull();
-    // try {
-    // queryService.createQuery(getServiceContextWithoutPrincipal(), query);
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // BaseAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, 1, new String[]{ServiceExceptionParameters.QUERY__STATUS}, e.getExceptionItems().get(0));
-    // }
-    // }
 
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
@@ -321,6 +366,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
         assertEquals(datasetVersionsBefore, datasetVersionsAfter);
     }
+    
 
     @Override
     @Test

@@ -98,7 +98,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // QUERIES
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
     public void testRetrieveQueryByUrn() throws Exception {
@@ -107,11 +106,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQuery(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME), actual);
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME, QUERY_10_ACTIVE_LATEST_DATA_5_NAME, QUERY_01_WITH_SELECTION_NAME})
     public void testRetrieveQueries() throws Exception {
-        List<Query> expected = queryMockFactory.getMocks(QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME, QUERY_10_ACTIVE_LATEST_DATA_5_NAME,
+        List<Query> expected = queryMockFactory.retrieveMocks(QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME, QUERY_10_ACTIVE_LATEST_DATA_5_NAME,
                 QUERY_01_WITH_SELECTION_NAME);
         List<QueryDto> actual = statisticalResourcesServiceFacade.retrieveQueries(getServiceContextAdministrador());
 
@@ -121,13 +119,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test(expected = AssertionError.class)
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME})
     public void testRetrieveQueriesErrorDifferentResponse() throws Exception {
-        List<Query> expected = queryMockFactory.getMocks(QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME);
+        List<Query> expected = queryMockFactory.retrieveMocks(QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME);
         List<QueryDto> actual = statisticalResourcesServiceFacade.retrieveQueries(getServiceContextAdministrador());
 
         assertEqualsQueryDoAndDtoCollection(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQuery() throws Exception {
@@ -137,7 +134,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedQuery.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
     public void testUpdateQuery() throws Exception {
@@ -193,7 +189,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(expectedStatus, actualQuery.getStatus());
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
     public void testMarkQueryAsDiscontinued() throws Exception {
@@ -207,7 +202,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn(), queryDto.getUrn());
     }
     
-    @Override
     @Test
     @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_01_WITH_SELECTION_NAME})
     public void testDeleteQuery() throws Exception {
@@ -220,7 +214,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME})
     public void testFindQueriesByCondition() throws Exception {
@@ -446,7 +439,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // DATASOURCES
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
@@ -456,7 +448,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedDatasource.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
@@ -469,7 +460,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testRetrieveDatasourceByUrn() throws Exception {
@@ -478,7 +468,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDatasource(datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME), actual);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
@@ -489,7 +478,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceUrn);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
@@ -528,7 +516,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // ------------------------------------------------------------------------
 
     @Test
-    @Override
     public void testCreateDataset() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub
@@ -536,7 +523,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    @Override
     public void testUpdateDataset() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub
@@ -544,7 +530,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    @Override
     public void testDeleteDataset() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub
@@ -552,7 +537,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    @Override
     public void testFindDatasetsByCondition() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub
@@ -560,7 +544,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    @Override
     public void testRetrieveDatasetByUrn() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub
@@ -568,7 +551,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    @Override
     public void testRetrieveDatasetVersions() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub
@@ -576,7 +558,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
-    @Override
     public void testVersioningDataset() throws Exception {
         fail("not implemented");
         // TODO Auto-generated method stub

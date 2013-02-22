@@ -26,9 +26,7 @@ public class DatasetsAsserts extends BaseAsserts {
         if (expected.getVersions() != null) {
             assertNotNull(actual.getVersions());
             assertEquals(expected.getVersions().size(), actual.getVersions().size());
-            for (int i = 0; i < expected.getVersions().size(); i++) {
-                assertEqualsDatasetVersion(expected.getVersions().get(i), actual.getVersions().get(i), true);
-            }
+            assertEqualsDatasetVersionCollection(expected.getVersions(), actual.getVersions());
         } else {
             assertEquals(null, actual);
         }

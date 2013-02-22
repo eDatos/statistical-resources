@@ -109,11 +109,14 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         resource.setNextVersionDate(new DateTime());
         resource.setVersionLogic("01.000");
+        resource.setIsLastVersion(Boolean.FALSE);
     }
 
     @Override
     protected void setSpecialCasesQueryMock(Query query) {
-        query.setStatus(QueryStatusEnum.ACTIVE);
+        
+        // has to be discontinued because the related dataset is not final
+        query.setStatus(QueryStatusEnum.DISCONTINUED);
     }
  
 }

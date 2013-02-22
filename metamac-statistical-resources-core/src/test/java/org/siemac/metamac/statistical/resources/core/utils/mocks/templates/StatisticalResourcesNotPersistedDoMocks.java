@@ -58,13 +58,6 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         return query;
     }
     
-    
-    // TODO METAMAC-1161: NO ES NECESARIO PORQUE SIEMPRE SERÍA NULL
-//    public Query mockQueryWithStatusNull() {
-//        Query query = mockQuery();
-//        query.setStatus(null);
-//        return query;
-//    }
 
     // -----------------------------------------------------------------
     // DATASOURCE

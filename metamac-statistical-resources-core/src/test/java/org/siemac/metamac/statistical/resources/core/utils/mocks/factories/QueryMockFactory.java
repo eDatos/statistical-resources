@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -114,7 +115,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     protected static Query getQuery07BasicActive() {
         if (QUERY_07_BASIC_ACTIVE == null) {
-            QUERY_07_BASIC_ACTIVE = createQueryWithGeneratedDatasetVersion();
+            QUERY_07_BASIC_ACTIVE = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion());
             QUERY_07_BASIC_ACTIVE.setStatus(QueryStatusEnum.ACTIVE);
         }
         return QUERY_07_BASIC_ACTIVE;
@@ -122,7 +123,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     protected static Query getQuery08BasicDiscontinued() {
         if (QUERY_08_BASIC_DISCONTINUED == null) {
-            QUERY_08_BASIC_DISCONTINUED = createQueryWithGeneratedDatasetVersion();
+            QUERY_08_BASIC_DISCONTINUED = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion03ForDataset03());
             QUERY_08_BASIC_DISCONTINUED.setStatus(QueryStatusEnum.DISCONTINUED);
         }
         return QUERY_08_BASIC_DISCONTINUED;
@@ -130,7 +131,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     protected static Query getQuery09BasicPendingReview() {
         if (QUERY_09_BASIC_PENDING_REVIEW == null) {
-            QUERY_09_BASIC_PENDING_REVIEW = createQueryWithGeneratedDatasetVersion();
+            QUERY_09_BASIC_PENDING_REVIEW = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion03ForDataset03());
             QUERY_09_BASIC_PENDING_REVIEW.setStatus(QueryStatusEnum.PENDING_REVIEW);
         }
         return QUERY_09_BASIC_PENDING_REVIEW;
@@ -138,7 +139,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     public static Query getQuery10ActiveLatestData5() {
         if (QUERY_10_ACTIVE_LATEST_DATA_5 == null) {
-            QUERY_10_ACTIVE_LATEST_DATA_5 = createQueryWithGeneratedDatasetVersion();
+            QUERY_10_ACTIVE_LATEST_DATA_5 = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion());
             QUERY_10_ACTIVE_LATEST_DATA_5.setType(QueryTypeEnum.LATEST_DATA);
             QUERY_10_ACTIVE_LATEST_DATA_5.setLatestDataNumber(Integer.valueOf(5));
         }
@@ -218,6 +219,11 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_19_ARCHIVED;
     }
 
+    
+    private static Query createQueryWithDatasetVersion(DatasetVersion datasetVersion) {
+        return getStatisticalResourcesPersistedDoMocks().mockQueryWithDatasetVersion(datasetVersion);
+    }
+    
     private static Query createQueryWithGeneratedDatasetVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedDatasetVersion();
     }

@@ -81,6 +81,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         // Validations
         queryServiceInvocationValidator.checkUpdateQuery(ctx, query);
         
+        // Fill metadata
+        fillMetadataForUpdateQuery(query);
+        
         // Check that could be update
         // TODO
         
@@ -90,13 +93,6 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         
     }
     
-    private void fillMetadataForCreateQuery(Query query) {
-        query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
-        query.getLifeCycleStatisticalResource().setUri(null);
-        
-        // TODO METAMAC-1161: Pendiente de si una consulta sólo se puede crear sobre últimas versiones de dataset. 
-        query.setStatus(QueryStatusEnum.ACTIVE);
-    }
 
     @Override
     public Query markQueryAsDiscontinued(ServiceContext ctx, Query query) throws MetamacException {
@@ -128,5 +124,24 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         
         // Delete
         getQueryRepository().delete(query);
+    }
+    
+    
+    private void fillMetadataForCreateQuery(Query query) {
+        query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
+        query.getLifeCycleStatisticalResource().setUri(null);
+        query.setStatus(determineQueryStatus(query));
+    }
+
+    private QueryStatusEnum determineQueryStatus(Query query) {
+        if (query.getDatasetVersion().getSiemacMetadataStatisticalResource().getIsLastVersion()) {
+            return QueryStatusEnum.ACTIVE;
+        } else {
+            return QueryStatusEnum.DISCONTINUED;
+        }
+    }
+    
+    private void fillMetadataForUpdateQuery(Query query) {
+        query.setStatus(determineQueryStatus(query));
     }
 }

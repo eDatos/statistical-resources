@@ -34,7 +34,7 @@ public abstract class MockFactory<EntityMock> {
         }
     }
     
-    public List<EntityMock> getMocks(String... ids) {
+    protected List<EntityMock> getMocks(String... ids) {
         List<EntityMock> list = new ArrayList<EntityMock>();
         for (String id : ids) {
             list.add(getMock(id));

@@ -47,25 +47,30 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     protected static PublicationVersion getPublicationVersion03ForPublication03() {
         if (PUBLICATION_VERSION_03_FOR_PUBLICATION_03 == null) {
 
-            // Relation with publication
             PublicationVersion publicationVersion = createPublicationVersion();
             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(PUBLICATION_VERSION_03_VERSION);
             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
+            // Relations
             PUBLICATION_VERSION_03_FOR_PUBLICATION_03 = publicationVersion;
+            PUBLICATION_VERSION_03_FOR_PUBLICATION_03.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
         }
         return PUBLICATION_VERSION_03_FOR_PUBLICATION_03;
     }
 
     protected static PublicationVersion getPublicationVersion04ForPublication03AndLastVersion() {
         if (PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION == null) {
-            // Relation with publication
             PublicationVersion publicationVersion = createPublicationVersion();
+            
             // Version 02.000
             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(PUBLICATION_VERSION_04_VERSION);
 
+            // Last version
             publicationVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+            
+            // Relations
             PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION = publicationVersion;
+            PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
         }
         return PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
     }
