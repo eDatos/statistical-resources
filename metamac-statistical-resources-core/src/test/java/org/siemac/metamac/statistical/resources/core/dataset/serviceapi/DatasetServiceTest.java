@@ -384,7 +384,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urnDatasetVersion);
     }
 
-    @Override
     @Test
     public void testVersioningDatasetVersion() throws Exception {
         thrown.expect(UnsupportedOperationException.class);
