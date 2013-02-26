@@ -246,6 +246,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Override
     @Test
     public void testVersioningPublicationVersion() throws Exception {
-        fail("not implemented");
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), null, null);
     }
 }
