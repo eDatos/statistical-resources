@@ -518,49 +518,43 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     public void testCreateDataset() throws Exception {
         fail("not implemented");
-        // TODO Auto-generated method stub
-
     }
 
     @Test
     public void testUpdateDataset() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
-
+        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
+        statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), null);
     }
 
     @Test
     public void testDeleteDataset() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
+        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
+        statisticalResourcesServiceFacade.deleteDataset(getServiceContextAdministrador(), null);
 
     }
 
     @Test
     public void testFindDatasetsByCondition() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
-
+        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
+        statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), null);
     }
 
     @Test
     public void testRetrieveDatasetByUrn() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
-
+        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
+        statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), null);
     }
 
     @Test
     public void testRetrieveDatasetVersions() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
-
+        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
+        statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), null);
     }
 
     @Test
     public void testVersioningDataset() throws Exception {
-        fail("not implemented");
-        // TODO Auto-generated method stub
+        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
+        statisticalResourcesServiceFacade.versioningDataset(getServiceContextAdministrador(), null, null);
 
     }
 }
