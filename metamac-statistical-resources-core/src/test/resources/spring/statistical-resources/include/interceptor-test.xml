@@ -7,10 +7,5 @@
         
         <aop:advisor pointcut-ref="servicePointCut" advice-ref="txAdvice" order="1" />
         <aop:advisor pointcut-ref="servicePointCut" advice-ref="serviceContextStoreAdvice" order="2" />
-    
-<!--         <aop:pointcut id="testPointCut" expression="execution(public * org.siemac.metamac.statistical.resources..*.test*(..))" /> -->
-
-<!--         <aop:advisor pointcut-ref="testPointCut" advice-ref="txAdvice" order="1" /> -->
-<!--         <aop:advisor pointcut-ref="testPointCut" advice-ref="serviceContextStoreAdvice" order="2" /> -->
     </aop:config>
 </beans>

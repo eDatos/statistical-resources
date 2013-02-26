@@ -143,7 +143,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Add version to dataset
         dataset.addVersion(datasetVersion);
         getDatasetRepository().save(dataset);
-        datasetVersion = getDatasetVersionRepository().save(datasetVersion);
+        datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         return datasetVersion;
     }

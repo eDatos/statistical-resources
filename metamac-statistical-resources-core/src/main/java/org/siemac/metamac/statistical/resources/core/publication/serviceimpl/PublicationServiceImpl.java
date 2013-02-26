@@ -55,7 +55,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Add version to publication
         publication.addVersion(publicationVersion);
         getPublicationRepository().save(publication);
-        publicationVersion = getPublicationVersionRepository().save(publicationVersion);
+        publicationVersion = getPublicationVersionRepository().retrieveByUrn(publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         return publicationVersion;
     }
