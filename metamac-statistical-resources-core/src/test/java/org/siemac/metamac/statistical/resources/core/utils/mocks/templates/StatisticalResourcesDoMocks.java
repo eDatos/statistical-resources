@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStat
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -167,6 +168,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract PublicationVersion mockPublicationVersion();
     protected abstract PublicationVersion mockPublicationVersion(Publication publication);
 
+    
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -238,6 +240,21 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected static StatisticalResource mockStatisticalResource(StatisticalResource resource) {
         return resource;
     }
+    
+
+    // -----------------------------------------------------------------
+    // STATISTICAL OFFICIALITY
+    // -----------------------------------------------------------------
+    
+    public StatisticOfficiality mockStatisticOfficiality(String identifier) {
+        StatisticOfficiality mock = new StatisticOfficiality();
+        mock.setDescription(mockInternationalString());
+        mock.setIdentifier(identifier);
+        
+        setSpecialCasesStatisticOfficialityMock(mock);
+        
+        return mock;
+    }
 
     // -----------------------------------------------------------------
     // ABSTRACT METHODS
@@ -250,6 +267,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
     
     protected abstract void setSpecialCasesQueryMock(Query query);
+    
+    protected abstract void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality);
 
     // -----------------------------------------------------------------
     // INTERNATIONAL STRING
@@ -300,6 +319,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return target;
     }
 
+    
     // -----------------------------------------------------------------
     // EXTERNAL ITEM
     // -----------------------------------------------------------------

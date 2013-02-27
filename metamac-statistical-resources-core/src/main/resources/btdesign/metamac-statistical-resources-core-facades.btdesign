@@ -1,3 +1,5 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 
@@ -52,7 +54,7 @@ Application FacadeStatisticalResources {
 	    	
 	    	// DATASETS & DATASET VERSION
 	   		"Creates dataset"
-	   		@DatasetDto createDataset(@DatasetDto datasetDto) throws MetamacException;
+	   		@DatasetDto createDataset(@DatasetDto datasetDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates dataset"
             @DatasetDto updateDataset(@DatasetDto datasetDto) throws MetamacException;
             "Deletes dataset"

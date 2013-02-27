@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
@@ -26,6 +25,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_BASIC_PENDING_REVIEW_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_10_ACTIVE_LATEST_DATA_5_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_11_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,9 +42,12 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
@@ -58,6 +61,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.M
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +88,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Autowired
     private DatasourceMockFactory             datasourceMockFactory;
+    
+    @Autowired
+    private StatisticOfficialityMockFactory statisticOfficialityMockFactory;
 
     @Autowired
     private DatasetVersionMockFactory         datasetVersionMockFactory;
@@ -98,6 +105,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // QUERIES
     // ------------------------------------------------------------------------
 
+    @Override
     @Test
     @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
     public void testRetrieveQueryByUrn() throws Exception {
@@ -106,6 +114,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQuery(queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME), actual);
     }
 
+    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME, QUERY_10_ACTIVE_LATEST_DATA_5_NAME, QUERY_01_WITH_SELECTION_NAME})
     public void testRetrieveQueries() throws Exception {
@@ -125,6 +134,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQueryDoAndDtoCollection(expected, actual);
     }
 
+    @Override
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQuery() throws Exception {
@@ -134,6 +144,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedQuery.getUrn());
     }
 
+    @Override
     @Test
     @MetamacMock({QUERY_01_WITH_SELECTION_NAME, QUERY_02_BASIC_ORDERED_01_NAME})
     public void testUpdateQuery() throws Exception {
@@ -189,6 +200,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(expectedStatus, actualQuery.getStatus());
     }
 
+    @Override
     @Test
     @MetamacMock({QUERY_06_BASIC_ACTIVE_NAME, QUERY_08_BASIC_DISCONTINUED_NAME, QUERY_09_BASIC_PENDING_REVIEW_NAME})
     public void testMarkQueryAsDiscontinued() throws Exception {
@@ -202,6 +214,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn(), queryDto.getUrn());
     }
     
+    @Override
     @Test
     @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_01_WITH_SELECTION_NAME})
     public void testDeleteQuery() throws Exception {
@@ -214,6 +227,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         
     }
 
+    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_ORDERED_01_NAME, QUERY_03_BASIC_ORDERED_02_NAME, QUERY_04_BASIC_ORDERED_03_NAME})
     public void testFindQueriesByCondition() throws Exception {
@@ -439,6 +453,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // DATASOURCES
     // ------------------------------------------------------------------------
 
+    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
@@ -448,6 +463,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedDatasource.getUrn());
     }
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
@@ -460,6 +476,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
     }
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testRetrieveDatasourceByUrn() throws Exception {
@@ -468,6 +485,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDatasource(datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME), actual);
     }
 
+    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
@@ -478,6 +496,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceUrn);
     }
 
+    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
@@ -515,17 +534,28 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // DATASETS
     // ------------------------------------------------------------------------
 
+    @Override
     @Test
+    @MetamacMock(STATISTIC_OFFICIALITY_01_BASIC_NAME)
     public void testCreateDataset() throws Exception {
-        fail("not implemented");
+        StatisticOfficiality officiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
+        DatasetDto datasetDto = StatisticalResourcesDtoMocks.mockDatasetDto(officiality);
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationItem();
+        
+        DatasetDto newDatasetDto = statisticalResourcesServiceFacade.createDataset(getServiceContextAdministrador(), datasetDto, statisticalOperation);
+        assertNotNull(newDatasetDto);
+        assertNotNull(newDatasetDto.getUrn());
     }
+    
 
+    @Override
     @Test
     public void testUpdateDataset() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
         statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), null);
     }
 
+    @Override
     @Test
     public void testDeleteDataset() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
@@ -533,24 +563,28 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     }
 
+    @Override
     @Test
     public void testFindDatasetsByCondition() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
         statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), null);
     }
 
+    @Override
     @Test
     public void testRetrieveDatasetByUrn() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
         statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), null);
     }
 
+    @Override
     @Test
     public void testRetrieveDatasetVersions() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
         statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), null);
     }
 
+    @Override
     @Test
     public void testVersioningDataset() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);

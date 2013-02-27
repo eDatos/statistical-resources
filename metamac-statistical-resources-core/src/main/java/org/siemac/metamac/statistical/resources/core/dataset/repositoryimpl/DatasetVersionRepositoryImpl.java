@@ -23,26 +23,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     public DatasetVersionRepositoryImpl() {
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public String getLastCodeUsedInStatisticalOperation(String statisticalOperationUrn) {
-        String hql = "select siemac.code " + 
-                    "from DatasetVersion dv join dv.siemacMetadataStatisticalResource as siemac " + 
-                    "where siemac.statisticalOperation.urn = :statisticalOperationUrn "
-                    + "order by siemac.creationDate desc ";
-
-        Query query = getEntityManager().createQuery(hql); 
-        query.setParameter("statisticalOperationUrn", statisticalOperationUrn);
-        query.setMaxResults(1);
-
-        List<String> results = query.getResultList();
-        if (results != null && results.size() == 1) {
-            String lastCode = results.get(0);
-            return lastCode;
-        } else {
-            return null;
-        }
-    }
     @Override
     public DatasetVersion retrieveByUrn(String urn) throws MetamacException {
         // Prepare criteria

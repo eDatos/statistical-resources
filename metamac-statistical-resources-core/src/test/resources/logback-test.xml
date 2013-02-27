@@ -7,6 +7,7 @@
         </encoder>
     </appender>
     <logger name="org.siemac.metamac.statistical.resources" level="DEBUG" />
+    <logger name="org.hibernate.type" level="TRACE" />
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>

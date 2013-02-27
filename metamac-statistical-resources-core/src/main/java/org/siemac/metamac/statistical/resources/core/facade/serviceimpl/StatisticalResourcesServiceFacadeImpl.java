@@ -7,7 +7,11 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
@@ -48,6 +52,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Autowired
     @Qualifier("datasetDto2DoMapper")
     private DatasetDto2DoMapper                         datasetDto2DoMapper;
+    
+    @Autowired
+    @Qualifier("baseDto2DoMapper")
+    private BaseDto2DoMapper                            baseDto2DoMapper;
 
     @Autowired
     private QueryMetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
@@ -247,15 +255,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     // ------------------------------------------------------------------------
 
     @Override
-    public DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+    public DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canCreateDataset(ctx);
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
+        ExternalItem statisticalOperation = baseDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionSingleParameters.STATISTICAL_OPERATION);
 
         // Retrieve
-        DatasetVersion datasetVersionCreated = getDatasetService().createDatasetVersion(ctx, datasetVersion);
+        DatasetVersion datasetVersionCreated = getDatasetService().createDatasetVersion(ctx, datasetVersion, statisticalOperation);
 
         // Transform
         DatasetDto datasetCreated = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersionCreated);

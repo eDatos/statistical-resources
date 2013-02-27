@@ -129,8 +129,8 @@ Application BaseStatisticalResources {
 			- Bag<@ExternalItem> languages cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_SR_LANGUAGES";
 			
 			//THEMATIC CONTENT CLASSIFIER
-			- @ExternalItem statisticalOperation nullable cascade="all";
-			- @ExternalItem statisticalOperationInstance nullable cascade="all-delete-orphan";
+			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
+			- @ExternalItem statisticalOperationInstance nullable cascade="all-delete-orphan" databaseColumn="STAT_OPERATION_INST_FK";
 			
 			//CONTENT DESCRIPTORS
 			- @InternationalString subtitle cascade="all" databaseColumn="SUBTITLE_FK" nullable;

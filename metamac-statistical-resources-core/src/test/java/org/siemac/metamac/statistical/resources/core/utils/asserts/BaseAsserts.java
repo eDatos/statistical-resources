@@ -289,6 +289,9 @@ public class BaseAsserts extends MetamacAsserts {
             return;
         }
         assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getKey(), actual.getKey());
+        assertEquals(expected.getUuid(), actual.getKey());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
 
@@ -301,7 +304,23 @@ public class BaseAsserts extends MetamacAsserts {
             return;
         }
         assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
+    }
+    
+    // -----------------------------------------------------------------
+    // STATISTIC OFFICIALITY: DO & DTO
+    // -----------------------------------------------------------------
+    public static void assertEqualsStatisticOfficiality(StatisticOfficialityDto expected, StatisticOfficiality actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getUuid(), actual.getUuid());
+        assertEqualsInternationalString(actual.getDescription(), expected.getDescription());
     }
 
     // -----------------------------------------------------------------

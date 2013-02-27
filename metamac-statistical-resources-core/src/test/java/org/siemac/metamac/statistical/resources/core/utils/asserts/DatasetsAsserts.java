@@ -129,6 +129,7 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEqualsDate(entity.getDateEnd(), dto.getDateEnd());
                 assertEqualsDate(entity.getDateNextUpdate(), dto.getDateNextUpdate());
 
+                assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
                 assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd());
                 assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency());
                 assertEquals(entity.getFormatExtentDimensions(), dto.getFormatExtentDimensions());
@@ -140,6 +141,7 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalUnit(), dto.getStatisticalUnit());
                 assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd());
                 assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency());
+                assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
                 break;
         }
     }

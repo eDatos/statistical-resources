@@ -73,25 +73,4 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEqualsDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), actual);
     }
-
-    @Test
-    @Override
-    @MetamacMock({DATASET_VERSION_07_VALID_CODE_0001_NAME, DATASET_VERSION_08_VALID_CODE_0002_NAME})
-    public void testGetLastCodeUsedInStatisticalOperation() throws Exception {
-        ExternalItem statOper = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_07_VALID_CODE_0001_NAME).getSiemacMetadataStatisticalResource().getStatisticalOperation();
-        String statisticalOperationUrn = statOper.getUrn();
-
-        String code = datasetVersionRepository.getLastCodeUsedInStatisticalOperation(statisticalOperationUrn);
-        assertEquals("OPER_0001_DSC_0002", code);
-    }
-
-    @Test
-    public void testGetLastCodeUsedInStatisticalOperationEmpty() throws Exception {
-        String statisticalOperationUrn = "DUMMY";
-
-        String code = datasetVersionRepository.getLastCodeUsedInStatisticalOperation(statisticalOperationUrn);
-        datasetVersionRepository.getLastCodeUsedInStatisticalOperation(statisticalOperationUrn);
-        assertNull(code);
-
-    }
 }

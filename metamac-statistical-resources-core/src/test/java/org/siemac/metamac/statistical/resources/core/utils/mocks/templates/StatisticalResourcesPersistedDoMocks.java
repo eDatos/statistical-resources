@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStat
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -47,12 +48,17 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public DatasetVersion mockDatasetVersion() {
         return mockDatasetVersion(null);
     }
-
+    
     @Override
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
 
         datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET, StatisticalResourceFormatEnum.DS));
+        
+        // Mock code
+        String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(statisticalOperationCode+"_DATASET_0001");
+        
         if (dataset != null) {
             datasetVersion.setDataset(dataset);
         } else {
@@ -87,7 +93,13 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return publicationVersion;
     }
-
+    
+    // -----------------------------------------------------------------
+    // STATISTICAL OFFICIALITY
+    // -----------------------------------------------------------------
+    
+    
+    
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -117,6 +129,11 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         
         // has to be discontinued because the related dataset is not final
         query.setStatus(QueryStatusEnum.DISCONTINUED);
+    }
+    
+    @Override
+    protected void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality) {
+        officiality.setVersion(0L);
     }
  
 }

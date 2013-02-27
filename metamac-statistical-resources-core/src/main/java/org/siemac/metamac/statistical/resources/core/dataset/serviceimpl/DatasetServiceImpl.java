@@ -2,22 +2,30 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +35,8 @@ import org.springframework.stereotype.Service;
 @Service("datasetService")
 public class DatasetServiceImpl extends DatasetServiceImplBase {
 
+    private static final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
+    
     @Autowired
     IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
 
@@ -123,29 +133,51 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // ------------------------------------------------------------------------
 
     @Override
-    public DatasetVersion createDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
+    public DatasetVersion createDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, ExternalItem statisticalOperation) throws MetamacException {
         // Validations
-        datasetServiceInvocationValidator.checkCreateDatasetVersion(ctx, datasetVersion);
+        datasetServiceInvocationValidator.checkCreateDatasetVersion(ctx, datasetVersion, statisticalOperation);
 
         // Create dataset
         Dataset dataset = new Dataset();
         dataset = getDatasetRepository().save(dataset);
 
         // Fill metadata
-        fillMetadataForCreateDatasetVersion(datasetVersion, dataset);
+        fillMetadataForCreateDatasetVersion(datasetVersion, dataset, statisticalOperation);
 
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
 
         // Save version
         datasetVersion.setDataset(dataset);
-
-        // Add version to dataset
-        dataset.addVersion(datasetVersion);
-        getDatasetRepository().save(dataset);
+        
+        assignCodeAndSaveDataset(dataset,datasetVersion);
         datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         return datasetVersion;
+    }
+    
+    private synchronized Dataset assignCodeAndSaveDataset(Dataset dataset, DatasetVersion datasetVersion) throws MetamacException {
+        ExternalItem statisticalOperation = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation();
+        String seqCodeStr = getDatasetRepository().findLastDatasetCode(statisticalOperation.getUrn());
+        int seqCode = 1;
+        if (!StringUtils.isEmpty(seqCodeStr)) {
+            try { 
+                seqCode = Integer.parseInt(seqCodeStr); 
+                seqCode++;
+            } catch (NumberFormatException e) {
+                log.error("Error parsing last sequential code in statistical operation "+statisticalOperation.getCode()+" ("+seqCodeStr+")");
+                throw new MetamacException(CommonServiceExceptionType.UNKNOWN, e.getMessage());
+            }
+        }
+        if (seqCode >= 9999) {
+            throw new MetamacException(ServiceExceptionType.DATASET_MAX_REACHED_IN_OPERATION,statisticalOperation.getUrn());
+        }
+        String code = statisticalOperation.getCode()+"_"+StatisticalResourceTypeEnum.DATASET.name()+"_"+String.format("%04d", seqCode);
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
+
+        // Add version to dataset
+        dataset.addVersion(datasetVersion);
+        return getDatasetRepository().save(datasetVersion.getDataset());
     }
 
     @Override
@@ -261,30 +293,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         getDatasetVersionRepository().save(parent);
     }
 
-    private void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset) {
+    private void fillMetadataForCreateDatasetVersion(DatasetVersion datasetVersion, Dataset dataset, ExternalItem statisticalOperation) {
         datasetVersion.setDataset(dataset);
 
-        String operationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        String type = datasetVersion.getSiemacMetadataStatisticalResource().getType().name();
-
-        String previousCode = getDatasetVersionRepository().getLastCodeUsedInStatisticalOperation(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-
-        int nextSequantialId = 1;
-        if (previousCode != null) {
-            String previousSequential = previousCode.split(type + "_")[1];
-            nextSequantialId = Integer.parseInt(previousSequential);
-            nextSequantialId++;
-        }
-
-        String seqCode = String.format("%04d", nextSequantialId);
-        String code = operationCode + "_" + type + "_" + seqCode;
-
-        datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
-
+        datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
         datasetVersion.getSiemacMetadataStatisticalResource().setUrn(
                 GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
     }
 }

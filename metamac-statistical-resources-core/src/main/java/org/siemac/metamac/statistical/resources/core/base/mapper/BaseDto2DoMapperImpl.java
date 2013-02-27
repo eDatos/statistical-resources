@@ -65,6 +65,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
         externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
 
+        target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
         target.setStatisticalOperationInstance(externalItemDtoToDo(source.getStatisticalOperationInstance(), target.getStatisticalOperationInstance(), metadataName
                 + ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE));
 

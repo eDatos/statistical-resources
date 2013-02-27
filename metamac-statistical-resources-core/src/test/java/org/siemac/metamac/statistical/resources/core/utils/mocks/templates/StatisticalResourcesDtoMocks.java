@@ -10,9 +10,15 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -22,16 +28,18 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     private static final String URN_RELATED_RESOURCE_MOCK = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + mockString(10);
-
+    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
@@ -70,7 +78,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     // DATASETS
     // -----------------------------------------------------------------
 
-    public static DatasetDto mockDatasetDto() {
+    public static DatasetDto mockDatasetDto(StatisticOfficiality officiality) {
         DatasetDto datasetDto = new DatasetDto();
 
         datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
@@ -99,7 +107,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         datasetDto.setDateNextUpdate(mockDate());
         datasetDto.setUpdateFrequency(mockCodeExternalItemDto());
-        // TODO: statistic officiality
+        datasetDto.setStatisticOfficiality(createStatisticOfficialityDtoFromDo(officiality));
         datasetDto.setBibliographicCitation(mockInternationalStringDto());
 
         mockSiemacMetadataStatisticalResource(datasetDto, StatisticalResourceTypeEnum.DATASET);
@@ -209,6 +217,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // resource.setOperation(mockExternalItemDto(URN_RELATED_RESOURCE_MOCK, TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
     }
 
+
     // EXTERNAL ITEM DTOs
 
     public static ExternalItemDto mockStatisticalOperationItem() {
@@ -263,10 +272,36 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         itemDto.setVersion(Long.valueOf(0));
         return itemDto;
     }
+    
+    private static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
+        StatisticOfficialityDto dto = new StatisticOfficialityDto();
+        dto.setIdentifier(officiality.getIdentifier());
+        dto.setUuid(officiality.getUuid());
+        dto.setId(officiality.getId());
+        dto.setDescription(createInternationalStringDtoFromDo(officiality.getDescription()));
+        return dto;
+    }
+    
+    private static InternationalStringDto createInternationalStringDtoFromDo(InternationalString intString) {
+        InternationalStringDto dto = new InternationalStringDto();
+        
+        dto.setId(intString.getId());
+        for (LocalisedString loc : intString.getTexts()) {
+            LocalisedStringDto locDto = new LocalisedStringDto();
+            locDto.setId(loc.getId());
+            locDto.setIsUnmodifiable(loc.getIsUnmodifiable());
+            locDto.setLabel(loc.getLabel());
+            locDto.setLocale(loc.getLocale());
+            locDto.setVersion(loc.getVersion());
+            dto.addText(locDto);
+        }
+        return dto;
+    }
 
     // UTILS
 
     private static Date mockDate() {
         return mockDateTime().toDate();
     }
+    
 }

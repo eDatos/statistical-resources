@@ -26,7 +26,7 @@ Application DatasetsStatisticalResources {
 	    	
 	    	// Datasets
 	    	"Creates dataset version"
-			@DatasetVersion createDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
+			@DatasetVersion createDatasetVersion(@DatasetVersion datasetVersion, @ExternalItem statisticalOperation) throws MetamacException;
 			"Updates dataset version"
 			@DatasetVersion updateDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
 			"Retrieves dataset version by urn"
@@ -79,6 +79,8 @@ Application DatasetsStatisticalResources {
 			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
 			
 			Repository DatasetRepository {
+				String findLastDatasetCode(String operationUrn);
+				findByCondition;
 				save;
 				delete;
 			}
@@ -110,7 +112,7 @@ Application DatasetsStatisticalResources {
 			
 			//Production descriptor
 			//should be nullable?
-			- @ExternalItem relatedDsd nullable databaseColumn="RELATED_DSD_FK"; 
+			- @ExternalItem relatedDsd nullable cascade="all" databaseColumn="RELATED_DSD_FK"; 
 			
 			//Class descriptors
 			
@@ -124,7 +126,7 @@ Application DatasetsStatisticalResources {
 			//public date of next update
 			DateTimeTZ dateNextUpdate nullable;
 			//Frecuency which the data is updated
-			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK";
+			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK" cascade="all";
 			//Official/no official statistic
 			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK";
 			//Bibliographic citation
@@ -143,7 +145,6 @@ Application DatasetsStatisticalResources {
 				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
-				String getLastCodeUsedInStatisticalOperation(String statisticalOperationUrn);
 				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  
 				@DatasetVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
 				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
@@ -157,7 +158,7 @@ Application DatasetsStatisticalResources {
     		
     		not auditable
     		String identifier;
-    		- @InternationalString description nullable;
+    		- @InternationalString description nullable cascade="all";
     		
     		Repository StatisticOfficialityRepository {
     			findById;
