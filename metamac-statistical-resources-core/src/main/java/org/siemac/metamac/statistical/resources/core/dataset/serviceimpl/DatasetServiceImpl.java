@@ -174,6 +174,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         String code = statisticalOperation.getCode()+"_"+StatisticalResourceTypeEnum.DATASET.name()+"_"+String.format("%04d", seqCode);
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
 
         // Add version to dataset
         dataset.addVersion(datasetVersion);
@@ -298,8 +299,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
-        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
     }
