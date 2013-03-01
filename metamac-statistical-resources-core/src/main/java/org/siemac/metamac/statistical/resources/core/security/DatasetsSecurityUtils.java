@@ -42,11 +42,47 @@ public class DatasetsSecurityUtils extends SecurityUtils {
     }
 
     // ------------------------------------------------------------------------
-    // DATASOURCES
+    // DATASETS
     // ------------------------------------------------------------------------
 
     public static void canCreateDataset(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canCreateDataset(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canUpdateDataset(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canUpdateDataset(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canDeleteDataset(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canDeleteDataset(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canFindDatasetsByCondition(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canFindDatasetsByCondition(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveDatasetByUrn(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveDatasetByUrn(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveDatasetVersions(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveDatasetVersions(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canVersionDataset(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

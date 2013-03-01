@@ -120,7 +120,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     private static void mockSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto, StatisticalResourceTypeEnum type) {
         siemacMetadataStatisticalResourceDto.setLanguage(mockCodeExternalItemDto());
-        siemacMetadataStatisticalResourceDto.addLanguage(siemacMetadataStatisticalResourceDto.getLanguage());
+        siemacMetadataStatisticalResourceDto.addLanguage(mockCodeExternalItemDto());
         siemacMetadataStatisticalResourceDto.addLanguage(mockCodeExternalItemDto());
 
         siemacMetadataStatisticalResourceDto.setStatisticalOperation(mockStatisticalOperationItem());

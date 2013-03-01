@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -12,6 +13,8 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
@@ -58,10 +61,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private BaseDto2DoMapper                            baseDto2DoMapper;
 
     @Autowired
-    private QueryMetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
+    private QueryMetamacCriteria2SculptorCriteriaMapper queryMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QuerySculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
+    private QuerySculptorCriteria2MetamacCriteriaMapper querySculptorCriteria2MetamacCriteriaMapper;
+    
+    @Autowired
+    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper datasetMetamacCriteria2SculptorCriteriaMapper;
+    
+    @Autowired
+    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper datasetSculptorCriteria2MetamacCriteriaMapper;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -138,13 +147,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canFindQueriesByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
         PagedResult<Query> result = getQueryService().findQueriesByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<QueryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
+        MetamacCriteriaResult<QueryDto> metamacCriteriaResult = querySculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
     }
@@ -274,32 +283,84 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetDto updateDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
-        throw new UnsupportedOperationException("not implemented");
+        //Security
+        DatasetsSecurityUtils.canUpdateDataset(ctx);
+        
+        //Transform
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
+        
+        ////Update
+        datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion);
+        
+        
+        //Transform
+        return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
     }
 
     @Override
     public void deleteDataset(ServiceContext ctx, String urn) throws MetamacException {
-        throw new UnsupportedOperationException("not implemented");
+        //Security
+        DatasetsSecurityUtils.canDeleteDataset(ctx);
+        
+        //Delete
+        getDatasetService().deleteDatasetVersion(ctx, urn);
     }
 
     @Override
     public MetamacCriteriaResult<DatasetDto> findDatasetsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
-        throw new UnsupportedOperationException("not implemented");
+        //Security
+        DatasetsSecurityUtils.canFindDatasetsByCondition(ctx);
+        
+        //Transform
+        SculptorCriteria sculptorCriteria = datasetMetamacCriteria2SculptorCriteriaMapper.getDatasetVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        
+        //Find
+        PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        
+        // Transform
+        MetamacCriteriaResult<DatasetDto> metamacCriteriaResult = datasetSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(result, sculptorCriteria.getPageSize());
+
+        return metamacCriteriaResult;
     }
 
     @Override
     public DatasetDto retrieveDatasetByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        throw new UnsupportedOperationException("not implemented");
+        //Security
+        DatasetsSecurityUtils.canRetrieveDatasetByUrn(ctx);
+        
+        //Retrieve
+        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
+        
+        //Transform
+        return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
     }
 
     @Override
     public List<DatasetDto> retrieveDatasetVersions(ServiceContext ctx, String urn) throws MetamacException {
-        throw new UnsupportedOperationException("not implemented");
+        //Security
+        DatasetsSecurityUtils.canRetrieveDatasetVersions(ctx);
+        
+        //Retrieve
+        List<DatasetVersion> datasetVersions = getDatasetService().retrieveDatasetVersions(ctx, urn);
+        
+        //Transform
+        List<DatasetDto> datasets = new ArrayList<DatasetDto>();
+        for (DatasetVersion version : datasetVersions) {
+            datasets.add(datasetDo2DtoMapper.datasetVersionDoToDto(version));
+        }
+        return datasets;
     }
 
     @Override
     public DatasetDto versioningDataset(ServiceContext ctx, String urnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        throw new UnsupportedOperationException("not implemented");
+        //Security
+        DatasetsSecurityUtils.canVersionDataset(ctx);
+        
+        //Versioning
+        DatasetVersion datasetVersion = getDatasetService().versioningDatasetVersion(ctx, urnToCopy, versionType);
+        
+        //Transform
+        return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
     }
 
 }

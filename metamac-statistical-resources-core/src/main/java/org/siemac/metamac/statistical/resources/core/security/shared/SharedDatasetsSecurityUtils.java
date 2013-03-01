@@ -41,5 +41,35 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
+    
+    public static boolean canUpdateDataset(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canDeleteDataset(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canFindDatasetsByCondition(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveDatasetByUrn(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveDatasetVersions(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canVersionDataset(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
 
 }

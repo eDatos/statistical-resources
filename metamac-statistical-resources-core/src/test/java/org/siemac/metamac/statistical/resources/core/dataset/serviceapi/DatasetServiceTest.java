@@ -255,9 +255,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
     
     @Test
-    @MetamacMock(DATASET_VERSION_11_OPER_0002_MAX_CODE_NAME)
+    @MetamacMock(DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME)
     public void testCreateDatasetVersionMaxCode() throws Exception {
-        DatasetVersion datasetVersionOper1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_11_OPER_0002_MAX_CODE_NAME);
+        DatasetVersion datasetVersionOper1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME);
         String operationCode = datasetVersionOper1.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_MAX_REACHED_IN_OPERATION, datasetVersionOper1.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn()), 1);
         

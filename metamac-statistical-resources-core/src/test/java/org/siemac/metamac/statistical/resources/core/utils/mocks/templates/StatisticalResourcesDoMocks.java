@@ -177,9 +177,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
         mockLifeCycleStatisticalResource(resource);
 
-        ExternalItem language = mockCodeExternalItem();
-        resource.setLanguage(language);
-        resource.addLanguage(language);
+        resource.setLanguage(mockCodeExternalItem());
+        resource.addLanguage(mockCodeExternalItem());
 
         resource.setStatisticalOperation(mockStatisticalOperationItem());
         // TODO: KEYWORDS

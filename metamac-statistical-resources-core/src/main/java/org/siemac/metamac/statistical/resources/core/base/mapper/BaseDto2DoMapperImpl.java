@@ -282,7 +282,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         for (ExternalItem oldTarget : targetsBefore) {
             boolean found = false;
             for (ExternalItem newTarget : newTargets) {
-                found = found || (oldTarget.getUrn().equals(newTarget.getUri()));
+                found = found || (oldTarget.getUrn().equals(newTarget.getUrn()));
             }
             if (!found) {
                 // Delete
