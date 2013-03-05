@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -361,7 +362,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         datasetVersion.getSiemacMetadataStatisticalResource().setCreatedDate(new DateTime());
         datasetVersion.getSiemacMetadataStatisticalResource().setCreatedBy(ctx.getUserId());
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE);
+        datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().clear();
+        datasetVersion.getSiemacMetadataStatisticalResource().addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
         //CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block 
     }
 }

@@ -18,6 +18,11 @@ Application StatisticalResourcesDto {
 			String urn required;
 		}
 		
+		DataTransferObject VersionRationaleTypeDto extends @IdentityDto {
+			- @StatisticalResourceVersionRationaleTypeEnum value required;
+		}
+		
+		
 		DataTransferObject StatisticalResourceDto extends @AuditableDto {
 			 Long optimisticLockingVersion;
 		}
@@ -38,7 +43,7 @@ Application StatisticalResourcesDto {
 			String versionLogic;
 			JAVADATE nextVersionDate;
 			- @StatisticalResourceNextVersionEnum nextVersion
-			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType;
+			- List<@VersionRationaleTypeDto> versionRationaleTypes;
 			- @InternationalStringDto versionRationale;
 			JAVADATE validFrom;
 			JAVADATE validTo;

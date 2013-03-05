@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -191,7 +192,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         versionableStatisticalResourceDto.setValidFrom(new DateTime().toDate());
         versionableStatisticalResourceDto.setValidTo(new DateTime().toDate());
 
-        versionableStatisticalResourceDto.setVersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MINOR_OTHER);
+        versionableStatisticalResourceDto.addVersionRationaleType(new VersionRationaleTypeDto(StatisticalResourceVersionRationaleTypeEnum.MINOR_OTHER));
         versionableStatisticalResourceDto.setVersionRationale(mockInternationalStringDto());
 
         versionableStatisticalResourceDto.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -31,6 +31,7 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
@@ -116,7 +117,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertNotNull(next.getVersionLogic());
         assertFalse(previous.getVersionLogic().equals(next.getVersionLogic()));
         
-        assertNull(next.getVersionRationaleType());
+        assertEquals(0,next.getVersionRationaleTypes().size());
         assertNull(next.getVersionRationale());
         assertNull(next.getValidFrom());
         assertNull(next.getValidTo());
@@ -218,7 +219,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getVersionLogic(), actual.getVersionLogic());
         assertEqualsDate(expected.getNextVersionDate(), actual.getNextVersionDate());
         assertEquals(expected.getNextVersion(), actual.getNextVersion());
-        assertEquals(expected.getVersionRationaleType(), actual.getVersionRationaleType());
+        assertEqualsVersionRationaleTypeCollection(expected.getVersionRationaleTypes(), actual.getVersionRationaleTypes());
         assertEqualsInternationalString(expected.getVersionRationale(), actual.getVersionRationale());
         assertEquals(expected.getIsLastVersion(), actual.getIsLastVersion());
         assertEquals(expected.getValidFrom(), actual.getValidFrom());
@@ -349,7 +350,7 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
                 assertEquals(entity.getValidFrom(), dto.getValidFrom());
                 assertEquals(entity.getValidTo(), dto.getValidTo());
-                assertEquals(entity.getVersionRationaleType(), dto.getVersionRationaleType());
+                assertEqualsVersionRationaleTypeCollectionMapper(entity.getVersionRationaleTypes(), dto.getVersionRationaleTypes());
                 assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());
                 assertEquals(entity.getIsLastVersion(), dto.getIsLastVersion());
@@ -358,7 +359,7 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());
                 assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
                 assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
-                assertEquals(entity.getVersionRationaleType(), dto.getVersionRationaleType());
+                assertEqualsVersionRationaleTypeCollectionMapper(entity.getVersionRationaleTypes(), dto.getVersionRationaleTypes());
                 break;
         }
         assertEqualsNameableStatisticalResource(entity, dto, mapperEnum);
@@ -426,6 +427,79 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsInternationalString(actual.getDescription(), expected.getDescription());
+    }
+    
+    // -----------------------------------------------------------------
+    // VERSION RATIONALE TYPE: DO & DO
+    // -----------------------------------------------------------------
+    public static void assertEqualsVersionRationaleType(VersionRationaleType expected, VersionRationaleType actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.getValue(), actual.getValue());
+    }
+    
+    public static void assertEqualsVersionRationaleTypeCollection(Collection<VersionRationaleType> expected, Collection<VersionRationaleType> actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.size(), actual.size());
+
+        for (VersionRationaleType expec : expected) {
+            boolean found = false;
+            for (VersionRationaleType actualRes : actual) {
+                if (actualRes.getValue().equals(expec.getValue())) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                Assert.fail("Found element in expected collection which is not contained in actual collection");
+            }
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // VERSION RATIONALE TYPE: DTO & DO
+    // -----------------------------------------------------------------
+    public static void assertEqualsVersionRationaleType(VersionRationaleType expected, VersionRationaleTypeDto actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.getValue(), actual.getValue());
+    }
+    
+    public static void assertEqualsVersionRationaleTypeCollectionMapper(Collection<VersionRationaleType> entities, Collection<VersionRationaleTypeDto> dtos) {
+
+        assertEqualsNullability(entities, dtos);
+        if (entities == null) {
+            assertNull(dtos);
+        }
+        assertEquals(entities.size(), dtos.size());
+        for (VersionRationaleType entity : entities) {
+            boolean found = false;
+            Iterator<VersionRationaleTypeDto> itDto = dtos.iterator();
+            while (itDto.hasNext() && !found) {
+                VersionRationaleTypeDto dto = itDto.next();
+                found = dto.getValue().equals(entity.getValue());
+            }
+            if (!found) {
+                Assert.fail("Not equal collections");
+            }
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // VERSION RATIONALE TYPE: DO & DTO
+    // -----------------------------------------------------------------
+    public static void assertEqualsVersionRationaleType(VersionRationaleTypeDto expected, VersionRationaleType actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.getValue(), actual.getValue());
     }
 
     // -----------------------------------------------------------------

@@ -28,6 +28,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleTypeRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -36,6 +38,7 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,9 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
     @Autowired
     private RelatedResourceRepository     relatedResourceRepository;
+    
+    @Autowired
+    private VersionRationaleTypeRepository versionRationaleTypeRepository;    
 
     // ------------------------------------------------------------
     // BASE HIERARCHY
@@ -118,7 +124,8 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
         target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
-        target.setVersionRationaleType(source.getVersionRationaleType());
+        versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), 
+                addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
         target.setNextVersion(source.getNextVersion());
 
         return target;
@@ -348,7 +355,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         for (RelatedResource oldTarget : targetsBefore) {
             boolean found = false;
             for (RelatedResource newTarget : newTargets) {
-                found = found || (oldTarget.getUrn().equals(newTarget.getUri()));
+                found = found || (oldTarget.getUrn().equals(newTarget.getUrn()));
             }
             if (!found) {
                 // Delete
@@ -363,7 +370,64 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         return targets;
     }
+    
+    
+    @Override
+    public VersionRationaleType versionRationaleTypeDtoToDo(VersionRationaleTypeDto source, VersionRationaleType target, String metadataName) throws MetamacException {
+        if (source == null) {
+            if (target != null) {
+                // delete previous entity
+                versionRationaleTypeRepository.delete(target);
+            }
+            return null;
+        }
 
+        if (target == null) {
+            target = new VersionRationaleType(source.getValue());
+        }
+        return target;
+    }
+
+    @Override
+    public List<VersionRationaleType> versionRationaleTypeDtoListToDoList(List<VersionRationaleTypeDto> sources, List<VersionRationaleType> targets, String metadataName) throws MetamacException {
+        List<VersionRationaleType> targetsBefore = targets;
+        List<VersionRationaleType> newTargets = new ArrayList<VersionRationaleType>();
+
+        for (VersionRationaleTypeDto source : sources) {
+            boolean existsBefore = false;
+            for (VersionRationaleType target : targetsBefore) {
+                if (source.getValue().equals(target.getValue())) {
+                    newTargets.add(versionRationaleTypeDtoToDo(source, target, metadataName));
+                    existsBefore = true;
+                    break;
+                }
+            }
+            if (!existsBefore) {
+                newTargets.add(versionRationaleTypeDtoToDo(source, null, metadataName));
+            }
+        }
+
+        // Delete missing
+        for (VersionRationaleType oldTarget : targetsBefore) {
+            boolean found = false;
+            for (VersionRationaleType newTarget : newTargets) {
+                found = found || (oldTarget.getValue().equals(newTarget.getValue()));
+            }
+            if (!found) {
+                // Delete
+                versionRationaleTypeDtoToDo(null, oldTarget, metadataName);
+            }
+        }
+
+        targets.clear();
+        for (VersionRationaleType target : newTargets) {
+            targets.add(target);
+        }
+
+        return targets;
+    }
+    
+    
     private DateTime dateDtoToDo(Date source) {
         if (source == null) {
             return null;

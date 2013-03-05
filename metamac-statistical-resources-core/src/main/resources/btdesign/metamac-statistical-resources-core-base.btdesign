@@ -32,6 +32,19 @@ Application BaseStatisticalResources {
 			}
     	}
     	
+    	Entity VersionRationaleType {
+    		databaseTable = "TB_VERSION_RATIONALE_TYPE"
+    		hint="idSequence=VERSION_RATIONALE_TYPE"
+    		not auditable
+    		
+    		- @StatisticalResourceVersionRationaleTypeEnum value required;
+    		
+    		Repository VersionRationaleTypeRepository {
+				findById;
+				delete;
+			}
+    	}
+    	
 		"Statistical Resource"
 		abstract Entity StatisticalResource {
 			databaseTable="TB_STAT_RESOURCES"
@@ -87,7 +100,7 @@ Application BaseStatisticalResources {
 			DateTimeTZ nextVersionDate nullable;
 			DateTimeTZ validFrom nullable;
 			DateTimeTZ validTo nullable;
-			- @StatisticalResourceVersionRationaleTypeEnum versionRationaleType nullable;
+			- Bag<@VersionRationaleType> versionRationaleTypes cascade="all-delete-orphan" databaseJoinTable="TB_SR_VRATIONALE_TYPES";
 			- @InternationalString versionRationale nullable cascade="all" databaseColumn="VERSION_RATIONALE_FK";
 			- @StatisticalResourceNextVersionEnum nextVersion nullable;
 			Boolean isLastVersion nullable;

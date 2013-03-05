@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
@@ -21,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 
 public interface BaseDo2DtoMapper {
@@ -40,6 +42,12 @@ public interface BaseDo2DtoMapper {
     // Related resource
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source);
     public RelatedResourceDto relatedResourceDoToDto(RelatedResource source);
+    
+    // Version rationale type
+    public Collection<VersionRationaleTypeDto> versionRationaleTypeDoCollectionToDtoCollection(Collection<VersionRationaleType> source);
+    public VersionRationaleTypeDto versionRationaleTypeDoToDto(VersionRationaleType source);
+    
+    
 
     // International String
     public InternationalStringDto internationalStringDoToDto(InternationalString source);

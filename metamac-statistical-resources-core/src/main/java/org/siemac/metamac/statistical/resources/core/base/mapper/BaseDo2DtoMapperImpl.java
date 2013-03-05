@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
@@ -25,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 
 @org.springframework.stereotype.Component("baseDo2DtoMapper")
@@ -127,7 +129,8 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.setVersionLogic(source.getVersionLogic());
         target.setNextVersionDate(dateDoToDto(source.getNextVersionDate()));
         target.setVersionRationale(internationalStringDoToDto(source.getVersionRationale()));
-        target.setVersionRationaleType(source.getVersionRationaleType());
+        target.getVersionRationaleTypes().clear();
+        target.getVersionRationaleTypes().addAll(versionRationaleTypeDoCollectionToDtoCollection(source.getVersionRationaleTypes()));
         target.setValidFrom(dateDoToDto(source.getValidFrom()));
         target.setValidTo(dateDoToDto(source.getValidTo()));
         target.setIsLastVersion(source.getIsLastVersion());
@@ -221,6 +224,28 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
 
         return target;
     }
+    
+    // ------------------------------------------------------------
+    // VERSION RATIONALE TYPE
+    // ------------------------------------------------------------
+    
+    @Override
+    public Collection<VersionRationaleTypeDto> versionRationaleTypeDoCollectionToDtoCollection(Collection<VersionRationaleType> source) {
+        HashSet<VersionRationaleTypeDto> result = new HashSet<VersionRationaleTypeDto>();
+        for (VersionRationaleType resource : source) {
+            result.add(versionRationaleTypeDoToDto(resource));
+        }
+        return result;
+    }
+    
+    @Override
+    public VersionRationaleTypeDto versionRationaleTypeDoToDto(VersionRationaleType source) {
+        if (source == null) {
+            return null;
+        }
+        return new VersionRationaleTypeDto(source.getValue());
+    }
+    
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
     // ------------------------------------------------------------
