@@ -31,7 +31,9 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
@@ -474,7 +476,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
     
     private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) {
-        checkNewSiemacMetadataSRVersionCreated(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
+        BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
         
         //Non inherited fields
         assertEquals(0, next.getGeographicCoverage().size());
@@ -494,87 +496,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         BaseAsserts.assertEqualsStatisticOfficiality(previous.getStatisticOfficiality(), next.getStatisticOfficiality());
     }
     
-    private static void checkNewSiemacMetadataSRVersionCreated(SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next) {
-        checkNewLifeCycleSRVersionCreated(previous, next);
-        
-        //Not inherited
-        assertNull(next.getLastUpdate());
-        assertNull(next.getNewnessUntilDate());
-        assertNull(next.getReplaces());
-        assertNull(next.getIsReplacedBy());
-        assertEquals(0, next.getHasPart().size());
-        assertEquals(0, next.getIsPartOf().size());
-        assertNull(next.getCopyrightedDate());
-        
-        //Inherited
-        BaseAsserts.assertEqualsExternalItem(previous.getLanguage(), next.getLanguage());
-        BaseAsserts.assertEqualsExternalItemCollection(previous.getLanguages(), next.getLanguages());
-        
-        BaseAsserts.assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
-        BaseAsserts.assertEqualsExternalItem(previous.getStatisticalOperationInstance(), next.getStatisticalOperationInstance());
-        
-        BaseAsserts.assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
-        BaseAsserts.assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
-        BaseAsserts.assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
-        //TODO: keywords?
-        assertEquals(previous.getType(), next.getType());
-        
-        BaseAsserts.assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
-        BaseAsserts.assertEqualsExternalItem(previous.getCreator(), next.getCreator());
-        BaseAsserts.assertEqualsExternalItemCollection(previous.getContributor(), next.getContributor());
-        BaseAsserts.assertEqualsDate(previous.getCreatedDate(), next.getCreatedDate());
-        BaseAsserts.assertEqualsInternationalString(previous.getConformsTo(), next.getConformsTo());
-        BaseAsserts.assertEqualsInternationalString(previous.getConformsToInternal(), next.getConformsToInternal());
-        
-        BaseAsserts.assertEqualsExternalItemCollection(previous.getPublisher(), next.getPublisher());
-        BaseAsserts.assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
-        BaseAsserts.assertEqualsExternalItemCollection(previous.getMediator(), next.getMediator());
-        
-        BaseAsserts.assertEqualsRelatedResourceCollection(previous.getRequires(), next.getRequires());
-        BaseAsserts.assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
-        
-        BaseAsserts.assertEqualsExternalItem(previous.getRightsHolder(), next.getRightsHolder());
-        BaseAsserts.assertEqualsInternationalString(previous.getLicense(), next.getLicense());
-        BaseAsserts.assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
-    }
 
-    private static void checkNewLifeCycleSRVersionCreated(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
-        checkNewVersionableSRVersionCreated(previous, next);
-        assertEquals(StatisticalResourceProcStatusEnum.DRAFT, next.getProcStatus());
-        
-        assertNotNull(next.getCreationDate());
-        assertFalse(previous.getCreationDate().equals(next.getCreationDate()));
-        assertNotNull(next.getCreationUser());
-        assertFalse(previous.getCreationUser().equals(next.getCreationUser()));
-        
-        assertNull(next.getProductionValidationDate());
-        assertNull(next.getProductionValidationUser());
-        assertNull(next.getDiffusionValidationDate());
-        assertNull(next.getDiffusionValidationUser());
-        assertNull(next.getRejectValidationDate());
-        assertNull(next.getRejectValidationUser());
-        assertNull(next.getInternalPublicationDate());
-        assertNull(next.getInternalPublicationUser());
-        assertNull(next.getExternalPublicationDate());
-        assertNull(next.getExternalPublicationUser());
-        assertNull(next.getExternalPublicationFailed());
-        assertNull(next.getExternalPublicationFailedDate());
-        assertNull(next.getReplacesVersion());
-        assertNull(next.getIsReplacedByVersion());
-    }
-    
-    private static void checkNewVersionableSRVersionCreated(VersionableStatisticalResource previous, VersionableStatisticalResource next) {
-        assertNotNull(next.getVersionLogic());
-        assertFalse(previous.getVersionLogic().equals(next.getVersionLogic()));
-        
-        //assertNull(0,next.getVersionRationaleType().);
-        assertNull(next.getVersionRationale());
-        assertNull(next.getValidFrom());
-        assertNull(next.getValidTo());
-        assertNull(next.getNextVersion());
-        assertNull(next.getNextVersionDate());
-    }
-    
     private static String buildDatasetUrn(String operationCode, int datasetSequentialId, String versionNumber) {
         StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=");
         strBuilder.append(operationCode)

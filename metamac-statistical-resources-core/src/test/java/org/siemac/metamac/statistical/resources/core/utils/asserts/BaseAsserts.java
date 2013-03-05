@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -32,9 +33,112 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 
 public class BaseAsserts extends MetamacAsserts {
 
+    // -----------------------------------------------------------------
+    // VERSIONING ASSERTS: DO & DO
+    // -----------------------------------------------------------------
+    
+    public static void assertEqualsVersioningSiemacMetadata(SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next) {
+        assertEqualsVersioningLifecycle(previous, next);
+        
+        //Not inherited
+        assertNull(next.getLastUpdate());
+        assertNull(next.getNewnessUntilDate());
+        assertNull(next.getReplaces());
+        assertNull(next.getIsReplacedBy());
+        assertEquals(0, next.getHasPart().size());
+        assertEquals(0, next.getIsPartOf().size());
+        assertNull(next.getCopyrightedDate());
+        
+        //Inherited
+        assertEqualsExternalItem(previous.getLanguage(), next.getLanguage());
+        assertEqualsExternalItemCollection(previous.getLanguages(), next.getLanguages());
+        
+        assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
+        assertEqualsExternalItem(previous.getStatisticalOperationInstance(), next.getStatisticalOperationInstance());
+        
+        assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
+        assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
+        assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
+        //TODO: keywords?
+        assertEquals(previous.getType(), next.getType());
+        
+        assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
+        assertEqualsExternalItem(previous.getCreator(), next.getCreator());
+        assertEqualsExternalItemCollection(previous.getContributor(), next.getContributor());
+        assertEqualsDate(previous.getCreatedDate(), next.getCreatedDate());
+        assertEqualsInternationalString(previous.getConformsTo(), next.getConformsTo());
+        assertEqualsInternationalString(previous.getConformsToInternal(), next.getConformsToInternal());
+        
+        assertEqualsExternalItemCollection(previous.getPublisher(), next.getPublisher());
+        assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
+        assertEqualsExternalItemCollection(previous.getMediator(), next.getMediator());
+        
+        assertEqualsRelatedResourceCollection(previous.getRequires(), next.getRequires());
+        assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
+        
+        assertEqualsExternalItem(previous.getRightsHolder(), next.getRightsHolder());
+        assertEqualsInternationalString(previous.getLicense(), next.getLicense());
+        assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
+    }
+
+    private static void assertEqualsVersioningLifecycle(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
+        assertEqualsVersioningVersionable(previous, next);
+        assertEquals(StatisticalResourceProcStatusEnum.DRAFT, next.getProcStatus());
+        
+        assertNotNull(next.getCreationDate());
+        assertFalse(previous.getCreationDate().equals(next.getCreationDate()));
+        assertNotNull(next.getCreationUser());
+        assertFalse(previous.getCreationUser().equals(next.getCreationUser()));
+        
+        assertNull(next.getProductionValidationDate());
+        assertNull(next.getProductionValidationUser());
+        assertNull(next.getDiffusionValidationDate());
+        assertNull(next.getDiffusionValidationUser());
+        assertNull(next.getRejectValidationDate());
+        assertNull(next.getRejectValidationUser());
+        assertNull(next.getInternalPublicationDate());
+        assertNull(next.getInternalPublicationUser());
+        assertNull(next.getExternalPublicationDate());
+        assertNull(next.getExternalPublicationUser());
+        assertNull(next.getExternalPublicationFailed());
+        assertNull(next.getExternalPublicationFailedDate());
+        assertNull(next.getReplacesVersion());
+        assertNull(next.getIsReplacedByVersion());
+    }
+    
+    private static void assertEqualsVersioningVersionable(VersionableStatisticalResource previous, VersionableStatisticalResource next) {
+        assertEqualsVersioningNameable(previous, next);
+        
+        assertNotNull(next.getVersionLogic());
+        assertFalse(previous.getVersionLogic().equals(next.getVersionLogic()));
+        
+        assertNull(next.getVersionRationaleType());
+        assertNull(next.getVersionRationale());
+        assertNull(next.getValidFrom());
+        assertNull(next.getValidTo());
+        assertNull(next.getNextVersion());
+        assertNull(next.getNextVersionDate());
+    }
+    
+    private static void assertEqualsVersioningNameable(NameableStatisticalResource previous, NameableStatisticalResource next) {
+        assertEqualsVersioningIdentifiable(previous, next);
+        
+        assertEqualsInternationalString(previous.getTitle(), next.getTitle());
+        assertEqualsInternationalString(previous.getDescription(), next.getDescription());
+    }
+    
+    private static void assertEqualsVersioningIdentifiable(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
+        assertEquals(previous.getCode(), next.getCode());
+        assertNotNull(next.getUrn());
+        assertFalse(next.getUrn().equals(previous.getUrn()));
+        assertNull(next.getUri());
+    }
+    
+    
     // -----------------------------------------------------------------
     // MAIN HERITANCE: DO & DO
     // -----------------------------------------------------------------
