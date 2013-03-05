@@ -147,9 +147,9 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         // TODO: mock Related resources
 
-        siemacMetadataStatisticalResourceDto.setReplaces(null);
+        siemacMetadataStatisticalResourceDto.setReplaces(mockDatasetRelatedResorceItem());
         siemacMetadataStatisticalResourceDto.setReplacesVersion(null);
-        siemacMetadataStatisticalResourceDto.setIsReplacedBy(null);
+        siemacMetadataStatisticalResourceDto.setIsReplacedBy(mockDatasetRelatedResorceItem());
         siemacMetadataStatisticalResourceDto.setIsReplacedByVersion(null);
         siemacMetadataStatisticalResourceDto.addRequire(null);
         siemacMetadataStatisticalResourceDto.addIsRequiredBy(null);
@@ -218,6 +218,12 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     }
 
 
+    // RELATED RESOURCE DTOs
+    public static RelatedResourceDto mockDatasetRelatedResorceItem() {
+        return createRelatedResourceDtoMockFromDoMock(StatisticalResourcesDoMocks.mockDatasetVersionRelated());
+    }
+    
+    
     // EXTERNAL ITEM DTOs
 
     public static ExternalItemDto mockStatisticalOperationItem() {

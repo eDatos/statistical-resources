@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -394,7 +395,13 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.size(), actual.size());
 
         for (RelatedResource expec : expected) {
-            if (!actual.contains(expec)) {
+            boolean found = false;
+            for (RelatedResource actualRes : actual) {
+                if (actualRes.getUrn().equals(expec.getUrn())) {
+                    found = true;
+                }
+            }
+            if (!found) {
                 Assert.fail("Found element in expected collection which is not contained in actual collection");
             }
         }
@@ -483,11 +490,18 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.size(), actual.size());
 
         for (ExternalItem expec : expected) {
-            if (!actual.contains(expec)) {
+            boolean found = false;
+            for (ExternalItem actualItem : actual) {
+                if (actualItem.getUrn().equals(expec.getUrn())) {
+                    found = true;
+                }
+            }
+            if (!found) {
                 Assert.fail("Found element in expected collection which is not contained in actual collection");
             }
         }
     }
+    
 
     public static void assertEqualsExternalItemList(List<ExternalItem> expected, List<ExternalItem> actual) {
         assertEqualsNullability(expected, actual);

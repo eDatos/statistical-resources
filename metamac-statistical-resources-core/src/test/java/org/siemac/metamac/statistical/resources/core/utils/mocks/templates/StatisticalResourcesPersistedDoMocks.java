@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
 
-    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
@@ -115,6 +114,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
         resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        resource.setCreationDate(new DateTime());
+        resource.setCreationUser(USER_MOCK);
     }
 
     @Override

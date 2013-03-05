@@ -46,6 +46,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   DIMENSION_MOCK                            = "DimensionMock";
 
     private static final String   URI_MOCK_PREFIX                     = "lorem/ipsum/dolor/sit/amet/";
+    protected static final String   USER_MOCK                           = "MockedUser";
 
     // -----------------------------------------------------------------
     // QUERY

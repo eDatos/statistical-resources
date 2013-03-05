@@ -1,4 +1,5 @@
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"

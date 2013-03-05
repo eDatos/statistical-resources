@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
@@ -20,45 +21,65 @@ public class BaseVersioningCopyUtils {
     // --------------------------------------------------------------------------
 
     public static void copySiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResource target) {
-        // target.setType(source.getType());
-        // target.setFormat(source.getFormat());
-        //
-        // copyLifeCycleStatisticalResource(source, target);
+        copyLifeCycleStatisticalResource(source, target);
+        
+        //Languages
+        target.setLanguage(copyExternalItem(source.getLanguage()));
+        target.getLanguages().clear();
+        target.getLanguages().addAll(copyListExternalItem(source.getLanguages()));
+        
+        // Theme content classifiers
+        target.setStatisticalOperation(copyExternalItem(source.getStatisticalOperation()));
+        target.setStatisticalOperationInstance(copyExternalItem(source.getStatisticalOperationInstance()));
+        
+        // Content descriptors
+        target.setSubtitle(copyInternationalString(source.getSubtitle()));
+        target.setTitleAlternative(copyInternationalString(source.getTitleAlternative()));
+        target.setAbstractLogic(copyInternationalString(source.getAbstractLogic()));
+        //TODO: KEYWORDS?
+        
+        // Class descriptor
+        target.setType(source.getType());
+        
+        // Production descriptors
+        target.setMaintainer(copyExternalItem(source.getMaintainer()));
+        target.setCreator(copyExternalItem(source.getCreator()));
+        target.getContributor().clear();
+        target.getContributor().addAll(copyListExternalItem(source.getContributor()));
+        target.setCreatedDate(source.getCreatedDate());
+        target.setConformsTo(copyInternationalString(source.getConformsTo()));
+        target.setConformsToInternal(copyInternationalString(source.getConformsToInternal()));
+        
+        // Publishing descriptors
+        target.getPublisher().clear();
+        target.getPublisher().addAll(copyListExternalItem(source.getPublisher()));
+        target.getPublisherContributor().clear();
+        target.getPublisherContributor().addAll(copyListExternalItem(source.getPublisherContributor()));
+        target.getMediator().clear();
+        target.getMediator().addAll(copyListExternalItem(source.getMediator()));
+        
+        // Resources relation descriptors
+        //TODO: requires and is required are inherited, but must be changed if a query is discontinued
+        target.getRequires().clear();
+        target.getRequires().addAll(copyListRelatedResource(source.getRequires()));
+        target.getIsRequiredBy().clear();
+        target.getIsRequiredBy().addAll(copyListRelatedResource(source.getIsRequiredBy()));
+        
+        // Intellectual ownership descriptors
+        target.setRightsHolder(copyExternalItem(source.getRightsHolder()));
+        target.setLicense(copyInternationalString(source.getLicense()));
+        target.setAccessRights(copyInternationalString(source.getAccessRights()));
     }
 
     private static void copyLifeCycleStatisticalResource(LifeCycleStatisticalResource source, LifeCycleStatisticalResource target) {
-
-        // // PROC_STATUS is automatically filled
-        // // VERSION_RESPONSIBILITY_CREATOR is automatically filled
-        // target.setVersionResponsibilityContributor(source.getVersionResponsibilityContributor());
-        // // VERSION_RESPONSIBILITY_SUBMITTED is automatically filled
-        // // VERSION_RESPONSIBILITY_ACCEPTED is automatically filled
-        // // VERSION_RESPONSIBILITY_ISSUED is automatically filled
-        // // VERSION_RESPONSIBILITY_OUT_OF_PRINT is automatically filled
-        //
-        // target.setCreator(copyExternalItem(source.getCreator()));
-        // target.getContributor().addAll(copyListExternalItem(source.getContributor()));
-        // target.getPublisher().addAll(copyListExternalItem(source.getPublisher()));
-        // target.getMediator().addAll(copyListExternalItem(source.getMediator()));
-        //
-        // copyVersionableStatisticalResource(source, target);
+        copyVersionableStatisticalResource(source, target);
+        // ALL lifecycle metadata are filled automatically
     }
 
     private static void copyVersionableStatisticalResource(VersionableStatisticalResource source, VersionableStatisticalResource target) {
-
-        // VERSION_LOGIC is automatically filled
-        // VERSION_DATE is automatically filled
-
-        // NEXT_VERSION_DATE isn't inheritable
-
-        // VERSION_RATIONALE_TYPE isn't inheritable
-        // VERSION_RATIONALE isn't inheritable
-
-        // IS_LAST_VERSION is automatically filled
-        // REPLACED_BY is automatically filled
-        // REPLACE_TO is automatically filled
-
         copyNameableStatisticalResource(source, target);
+
+        target.setNextVersion(source.getNextVersion());
     }
 
     private static void copyNameableStatisticalResource(NameableStatisticalResource source, NameableStatisticalResource target) {
@@ -69,12 +90,9 @@ public class BaseVersioningCopyUtils {
         copyIdentifiableStatisticalResource(source, target);
     }
 
-    private static void copyIdentifiableStatisticalResource(IdentifiableStatisticalResource source, IdentifiableStatisticalResource target) {
-        // TODO: ¿El code es el mismo?
+    public static void copyIdentifiableStatisticalResource(IdentifiableStatisticalResource source, IdentifiableStatisticalResource target) {
+        // TODO: Is the code always the same?
         target.setCode(source.getCode());
-
-        // URI is automatically filled
-        // URN is automatically filled
 
         copyStatisticalResource(source, target);
     }
@@ -126,12 +144,37 @@ public class BaseVersioningCopyUtils {
 
     public static List<ExternalItem> copyListExternalItem(List<ExternalItem> source) {
         if (source.isEmpty()) {
-            return null;
+            return new ArrayList<ExternalItem>();
         }
 
         List<ExternalItem> target = new ArrayList<ExternalItem>();
         for (ExternalItem item : source) {
             target.add(copyExternalItem(item));
+        }
+        return target;
+    }
+    
+    // --------------------------------------------------------------------------
+    // RELATED RESOURCES
+    // --------------------------------------------------------------------------
+    
+    public static RelatedResource copyRelatedResource(RelatedResource source) {
+        if (source == null) {
+            return null;
+        }
+        RelatedResource target = new RelatedResource(source.getCode(), source.getUri(), source.getUrn(), source.getType());
+        target.setTitle(copyInternationalString(source.getTitle()));
+        return target;
+    }
+    
+    public static List<RelatedResource> copyListRelatedResource(List<RelatedResource> source) {
+        if (source.isEmpty()) {
+            return new ArrayList<RelatedResource>();
+        }
+        
+        List<RelatedResource> target = new ArrayList<RelatedResource>();
+        for (RelatedResource item : source) {
+            target.add(copyRelatedResource(item));
         }
         return target;
     }

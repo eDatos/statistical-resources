@@ -43,6 +43,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
@@ -678,9 +679,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     @Test
+    @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDataset() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "not implemented"), 1);
-        statisticalResourcesServiceFacade.versioningDataset(getServiceContextAdministrador(), null, null);
+        DatasetVersion dsVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        DatasetDto newVersion = statisticalResourcesServiceFacade.versioningDataset(getServiceContextAdministrador(), dsVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
+        assertNotNull(newVersion);
     }
     
     

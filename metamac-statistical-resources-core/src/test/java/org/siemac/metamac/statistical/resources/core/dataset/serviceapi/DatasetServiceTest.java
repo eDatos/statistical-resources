@@ -1,8 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
@@ -29,15 +27,21 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
@@ -205,7 +209,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_DATASET_0001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset="+operationCode+"_DATASET_0001(01.000)",actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildDatasetUrn(operationCode, 1, "01.000"),actual.getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsDatasetVersion(expected, actual);
     }
     
@@ -222,7 +226,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_DATASET_0004", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset="+operationCode+"_DATASET_0004(01.000)",actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildDatasetUrn(operationCode, 4, "01.000"),actual.getSiemacMetadataStatisticalResource().getUrn());
         
         assertEqualsDatasetVersion(expected, actual);
     }
@@ -239,7 +243,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_DATASET_0004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset="+operationCode+"_DATASET_0004(01.000)",actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(buildDatasetUrn(operationCode, 4, "01.000"),actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsDatasetVersion(expected, actual);
         }
         {
@@ -249,7 +253,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_DATASET_0005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset="+operationCode+"_DATASET_0005(01.000)",actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(buildDatasetUrn(operationCode, 5, "01.000"),actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsDatasetVersion(expected, actual);
         }
     }
@@ -459,9 +463,124 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     @Override
     @Test
+    @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersion() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        datasetService.versioningDatasetVersion(getServiceContextWithoutPrincipal(), null, null);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        
+        DatasetVersion datasetNewVersion = datasetService.versioningDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
+        assertNotNull(datasetNewVersion);
+        assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        checkNewDatasetVersionCreated(datasetVersion, datasetNewVersion);
+    }
+    
+    private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) {
+        checkNewSiemacMetadataSRVersionCreated(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
+        
+        //Non inherited fields
+        assertEquals(0, next.getGeographicCoverage().size());
+        assertEquals(0, next.getTemporalCoverage().size());
+        assertNull(next.getDateStart());
+        assertNull(next.getDateEnd());
+        assertEquals(0, next.getMeasures().size());
+        assertNull(next.getDateNextUpdate());
+        assertNull(next.getBibliographicCitation());
+        
+        //Inherited
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getGeographicGranularities(), next.getGeographicGranularities());
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getTemporalGranularities(), next.getTemporalGranularities());
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getStatisticalUnit(), next.getStatisticalUnit());
+        BaseAsserts.assertEqualsExternalItem(previous.getRelatedDsd(), next.getRelatedDsd());
+        BaseAsserts.assertEqualsExternalItem(previous.getUpdateFrequency(), next.getUpdateFrequency());
+        BaseAsserts.assertEqualsStatisticOfficiality(previous.getStatisticOfficiality(), next.getStatisticOfficiality());
+    }
+    
+    private static void checkNewSiemacMetadataSRVersionCreated(SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next) {
+        checkNewLifeCycleSRVersionCreated(previous, next);
+        
+        //Not inherited
+        assertNull(next.getLastUpdate());
+        assertNull(next.getNewnessUntilDate());
+        assertNull(next.getReplaces());
+        assertNull(next.getIsReplacedBy());
+        assertEquals(0, next.getHasPart().size());
+        assertEquals(0, next.getIsPartOf().size());
+        assertNull(next.getCopyrightedDate());
+        
+        //Inherited
+        BaseAsserts.assertEqualsExternalItem(previous.getLanguage(), next.getLanguage());
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getLanguages(), next.getLanguages());
+        
+        BaseAsserts.assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
+        BaseAsserts.assertEqualsExternalItem(previous.getStatisticalOperationInstance(), next.getStatisticalOperationInstance());
+        
+        BaseAsserts.assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
+        BaseAsserts.assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
+        BaseAsserts.assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
+        //TODO: keywords?
+        assertEquals(previous.getType(), next.getType());
+        
+        BaseAsserts.assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
+        BaseAsserts.assertEqualsExternalItem(previous.getCreator(), next.getCreator());
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getContributor(), next.getContributor());
+        BaseAsserts.assertEqualsDate(previous.getCreatedDate(), next.getCreatedDate());
+        BaseAsserts.assertEqualsInternationalString(previous.getConformsTo(), next.getConformsTo());
+        BaseAsserts.assertEqualsInternationalString(previous.getConformsToInternal(), next.getConformsToInternal());
+        
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getPublisher(), next.getPublisher());
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
+        BaseAsserts.assertEqualsExternalItemCollection(previous.getMediator(), next.getMediator());
+        
+        BaseAsserts.assertEqualsRelatedResourceCollection(previous.getRequires(), next.getRequires());
+        BaseAsserts.assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
+        
+        BaseAsserts.assertEqualsExternalItem(previous.getRightsHolder(), next.getRightsHolder());
+        BaseAsserts.assertEqualsInternationalString(previous.getLicense(), next.getLicense());
+        BaseAsserts.assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
     }
 
+    private static void checkNewLifeCycleSRVersionCreated(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
+        checkNewVersionableSRVersionCreated(previous, next);
+        assertEquals(StatisticalResourceProcStatusEnum.DRAFT, next.getProcStatus());
+        
+        assertNotNull(next.getCreationDate());
+        assertFalse(previous.getCreationDate().equals(next.getCreationDate()));
+        assertNotNull(next.getCreationUser());
+        assertFalse(previous.getCreationUser().equals(next.getCreationUser()));
+        
+        assertNull(next.getProductionValidationDate());
+        assertNull(next.getProductionValidationUser());
+        assertNull(next.getDiffusionValidationDate());
+        assertNull(next.getDiffusionValidationUser());
+        assertNull(next.getRejectValidationDate());
+        assertNull(next.getRejectValidationUser());
+        assertNull(next.getInternalPublicationDate());
+        assertNull(next.getInternalPublicationUser());
+        assertNull(next.getExternalPublicationDate());
+        assertNull(next.getExternalPublicationUser());
+        assertNull(next.getExternalPublicationFailed());
+        assertNull(next.getExternalPublicationFailedDate());
+        assertNull(next.getReplacesVersion());
+        assertNull(next.getIsReplacedByVersion());
+    }
+    
+    private static void checkNewVersionableSRVersionCreated(VersionableStatisticalResource previous, VersionableStatisticalResource next) {
+        assertNotNull(next.getVersionLogic());
+        assertFalse(previous.getVersionLogic().equals(next.getVersionLogic()));
+        
+        //assertNull(0,next.getVersionRationaleType().);
+        assertNull(next.getVersionRationale());
+        assertNull(next.getValidFrom());
+        assertNull(next.getValidTo());
+        assertNull(next.getNextVersion());
+        assertNull(next.getNextVersionDate());
+    }
+    
+    private static String buildDatasetUrn(String operationCode, int datasetSequentialId, String versionNumber) {
+        StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=");
+        strBuilder.append(operationCode)
+                    .append("_DATASET_")
+                    .append(String.format("%04d",datasetSequentialId))
+                    .append("(").append(versionNumber).append(")");
+        return strBuilder.toString();
+    }
 }

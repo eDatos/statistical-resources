@@ -19,10 +19,10 @@ public class DatasetRepositoryImpl extends DatasetRepositoryBase {
     public String findLastDatasetCode(String operationUrn) {
 
         String subCodeHql = "substring(dsv.siemacMetadataStatisticalResource.code, length(dsv.siemacMetadataStatisticalResource.code)-3, length(dsv.siemacMetadataStatisticalResource.code))";  
-        String hql = "select distinct("+subCodeHql+")" +
+        String hql = "select distinct(" + subCodeHql + ")" +
                      "from DatasetVersion as dsv " +
-                     "where dsv.siemacMetadataStatisticalResource.statisticalOperation.urn = :operationUrn "+
-                     "order by "+subCodeHql+" desc";
+                     "where dsv.siemacMetadataStatisticalResource.statisticalOperation.urn = :operationUrn " +
+                     "order by " + subCodeHql + " desc";
         
         
         Query query = getEntityManager().createQuery(hql);
