@@ -15,9 +15,10 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeAcronymEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -54,7 +55,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publication = getPublicationRepository().save(publication);
 
         // Fill metadata
-        fillMetadataForCreatePublicationVersion(publicationVersion, publication, statisticalOperation);
+        fillMetadataForCreatePublicationVersion(publicationVersion, publication, statisticalOperation, ctx);
 
         // Save version
         publicationVersion.setPublication(publication);
@@ -158,15 +159,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-    private static void fillMetadataForCreatePublicationVersion(PublicationVersion publicationVersion, Publication publication, ExternalItem statisticalOperation) {
+    private static void fillMetadataForCreatePublicationVersion(PublicationVersion publicationVersion, Publication publication, ExternalItem statisticalOperation, ServiceContext ctx) {
         publicationVersion.setPublication(publication);
-
-        // TODO: Completar todos los metadatos necesarios al crear. Ya estan en dataset. Mirar a ver si puede ser comun para dataset y publication
-        publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
-        publicationVersion.getSiemacMetadataStatisticalResource().setUri(null);
-        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
-        // CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block
+        FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(publicationVersion.getSiemacMetadataStatisticalResource(), statisticalOperation, StatisticalResourceTypeEnum.COLLECTION, ctx);
     }
 
     private synchronized Publication assignCodeAndSavePublicationVersion(Publication publication, PublicationVersion publicationVersion) throws MetamacException {

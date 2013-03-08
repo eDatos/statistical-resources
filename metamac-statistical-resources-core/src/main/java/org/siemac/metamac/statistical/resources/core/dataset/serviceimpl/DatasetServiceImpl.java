@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -334,22 +335,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private void fillMetadataForCreateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, Dataset dataset, ExternalItem statisticalOperation) {
         datasetVersion.setDataset(dataset);
-
-        //TODO: set LANGUAGE to DEFAULT language got form DATA property, add the language also to LANGUAGES, but different objects!!
-        //datasetVersion.getSiemacMetadataStatisticalResource().setLanguage(language);
-        //datasetVersion.getSiemacMetadataStatisticalResource().getLanguages().add();
-        
-        //TODO: maintainer, got from data property
-        
-        datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic("01.000");
-        datasetVersion.getSiemacMetadataStatisticalResource().setUri(null);
-        datasetVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.DATASET);
-        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        datasetVersion.getSiemacMetadataStatisticalResource().setCreatedDate(new DateTime());
-        datasetVersion.getSiemacMetadataStatisticalResource().setCreatedBy(ctx.getUserId());
-        datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().clear();
-        datasetVersion.getSiemacMetadataStatisticalResource().addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
-        //CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block 
+        FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(datasetVersion.getSiemacMetadataStatisticalResource(), statisticalOperation, StatisticalResourceTypeEnum.DATASET, ctx);
     }
 }
