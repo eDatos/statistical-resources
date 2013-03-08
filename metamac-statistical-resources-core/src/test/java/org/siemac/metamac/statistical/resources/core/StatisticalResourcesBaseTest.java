@@ -22,8 +22,6 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
     protected static String   URN_NOT_EXISTS  = "not_exists";
     protected static String   CODE_NOT_EXISTS = "NOT_EXISTS";
 
-    protected static String   QUERY_1         = "urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1";
-
     @Value("${metamac.statistical_resources.db.provider}")
     private String            databaseProvider;
 
