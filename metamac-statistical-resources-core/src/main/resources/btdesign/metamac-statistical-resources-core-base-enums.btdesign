@@ -53,11 +53,6 @@ Application StatisticalResourcesEnums {
     		SCHEDULED_UPDATE
     	}
     	
-    	"Format Enum is used to specify statistical resources format"
-    	enum StatisticalResourceFormatEnum {
-    		DS
-    	}
-    	
     	enum StatisticalResourcesRoleEnum {
     		TECNICO_APOYO_PRODUCCION,
     		TECNICO_PRODUCCION,

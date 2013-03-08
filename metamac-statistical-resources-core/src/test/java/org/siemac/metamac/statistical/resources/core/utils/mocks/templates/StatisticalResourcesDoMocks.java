@@ -19,7 +19,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
@@ -32,7 +31,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private static final String[] MAINTAINER_MOCK                     = new String[]{"MaintainerMock"};
     private static final String   ORGANIZATION_UNIT_MOCK              = "OrganizationUnitMock";
-    private static final String   STATISTICAL_OPERATION_MOCK          = "StatisticalOperationMock";
     private static final String   DATASET_VERSION_MOCK                = "DatasetVersionMock";
     private static final String   PUBLICATION_VERSION_MOCK            = "PublicationVersionMock";
     private static final String   STATISTICAL_OPERATION_INSTANCE_MOCK = "StatisticalOperationInstanceMock";
