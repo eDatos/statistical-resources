@@ -8,10 +8,8 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
@@ -20,7 +18,6 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
@@ -52,10 +49,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private DatasetServiceInvocationValidator         datasetServiceInvocationValidator;
-    
-    @Autowired
-    private ConfigurationService configurationService;
-    
     
 
     public DatasetServiceImpl() {
@@ -322,13 +315,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         
     }
     
-    private RelatedResource createRelatedResourceWithType(LifeCycleStatisticalResource resource, TypeExternalArtefactsEnum type) {
-        RelatedResource related = new RelatedResource(resource.getCode(), resource.getUri(), resource.getUrn(), type);
-        related.setTitle(resource.getTitle());
-        return related;
-    }
-
-
     private static void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         datasource.setDatasetVersion(datasetVersion);
         datasource.getIdentifiableStatisticalResource().setUri(null);

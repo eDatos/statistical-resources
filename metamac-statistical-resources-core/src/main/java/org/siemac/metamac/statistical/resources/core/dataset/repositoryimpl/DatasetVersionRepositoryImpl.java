@@ -4,8 +4,6 @@ import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCrit
 
 import java.util.List;
 
-import javax.persistence.Query;
-
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.siemac.metamac.core.common.exception.MetamacException;
