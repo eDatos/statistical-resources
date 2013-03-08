@@ -3,13 +3,15 @@ package org.siemac.metamac.statistical.resources.core.publication.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
 
 import java.util.List;
 
@@ -19,9 +21,11 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeAcronymEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -65,9 +69,14 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     public void testCreatePublicationVersion() throws Exception {
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
 
-        PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected);
+        PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+        String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(operationCode + "_" + StatisticalResourceTypeAcronymEnum.PDD + "_0001", actual.getSiemacMetadataStatisticalResource().getCode());
+        assertEquals(buildPublicationUrn(operationCode, 1, "01.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersion(expected, actual);
     }
@@ -75,15 +84,18 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     public void testCreatePublicationVersionErrorParameterPublicationRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION), 1);
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
 
-        publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), null);
+        publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), null, statisticalOperation);
     }
 
     @Test
     public void testCreatePublicationVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE), 1);
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
+        
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersionWithNullableSiemacStatisticalResource();
-        publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected);
+        publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
     }
 
     @Override
@@ -248,5 +260,13 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     public void testVersioningPublicationVersion() throws Exception {
         thrown.expect(UnsupportedOperationException.class);
         publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), null, null);
+    }
+    
+    private Object buildPublicationUrn(String operationCode, int datasetSequentialId, String versionNumber) {
+        StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=");
+        strBuilder.append(operationCode)
+                    .append("_PDD_")
+                    .append(String.format("%04d", datasetSequentialId));
+        return strBuilder.toString();
     }
 }

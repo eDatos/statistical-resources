@@ -28,7 +28,6 @@
     </tx:advice>
 
     <aop:config>
-<!--         <aop:pointcut id="updateServicePointCut" expression="execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.*update*(..))" /> -->
         <aop:pointcut id="updateServicePointCut" expression="(execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.*(..)) and not 
                                                                 (execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.retrieve*(..)) or 
                                                                  execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.find*(..))))" />

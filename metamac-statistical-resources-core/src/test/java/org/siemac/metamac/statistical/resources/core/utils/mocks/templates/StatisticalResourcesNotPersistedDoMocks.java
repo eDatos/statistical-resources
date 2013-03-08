@@ -90,7 +90,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
 
-        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET, StatisticalResourceFormatEnum.DS));
+        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
         if (dataset != null) {
             datasetVersion.setDataset(dataset);
         } else {
@@ -122,7 +122,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     public PublicationVersion mockPublicationVersion(Publication publication) {
         PublicationVersion publicationVersion = mockPublicationVersionMetadata();
 
-        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET, StatisticalResourceFormatEnum.DS));
+        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
         if (publication != null) {
             publicationVersion.setPublication(publication);
         } else {

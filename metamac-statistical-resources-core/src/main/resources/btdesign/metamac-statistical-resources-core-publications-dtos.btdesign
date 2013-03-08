@@ -11,6 +11,8 @@ Application PublicationsStatisticalResourcesDto {
 		// COLLECTION
 		DataTransferObject CollectionDto extends @SiemacMetadataStatisticalResourceDto {
 			- @CollectionStructureHierarchyDto structure;
+			
+			Integer formatExtentResources;
 		}
 		
 		DataTransferObject CollectionStructureHierarchyDto extends @IdentityDto {

@@ -20,7 +20,7 @@ Application PublicationsStatisticalResources {
 			
 			// Publications
 	    	"Creates publication version"
-			@PublicationVersion createPublicationVersion(@PublicationVersion publicationVersion) throws MetamacException;
+			@PublicationVersion createPublicationVersion(@PublicationVersion publicationVersion, @ExternalItem statisticalOperation) throws MetamacException;
 			"Updates publication version"
 			@PublicationVersion updatePublicationVersion(@PublicationVersion publicationVersion) throws MetamacException;
 			"Retrieves publication version by urn"
@@ -49,6 +49,8 @@ Application PublicationsStatisticalResources {
 			- Bag<@PublicationVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> publication orderby="id asc";
 			
 			Repository PublicationRepository {
+				String findLastPublicationCode(String operationUrn);
+				findByCondition;
 				save;
 				delete;
 			}
@@ -60,6 +62,9 @@ Application PublicationsStatisticalResources {
 			!auditable
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			// Format extent resources: Number of tables that contains the collection
+			Integer formatExtentResources nullable;
 
 			"Parent"
 			- @Publication publication not nullable cascade="none" databaseColumn="PUBLICATION_FK" <-> versions;

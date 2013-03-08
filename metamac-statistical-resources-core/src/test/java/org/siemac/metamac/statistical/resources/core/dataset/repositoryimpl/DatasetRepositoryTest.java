@@ -35,27 +35,27 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest
     @Test
     @MetamacMock({DATASET_VERSION_08_VALID_CODE_0002_NAME, DATASET_VERSION_07_VALID_CODE_0001_NAME})
     public void testFindLastDatasetCode() throws Exception {
-        DatasetVersion dv = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_08_VALID_CODE_0002_NAME);
-        String code = datasetRepository.findLastDatasetCode(dv.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_08_VALID_CODE_0002_NAME);
+        String code = datasetRepository.findLastDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
         assertNotNull(code);
-        assertEquals("0002",code);
+        assertEquals("0002", code);
     }
     
     @Test
     @MetamacMock({DATASET_VERSION_08_VALID_CODE_0002_NAME, DATASET_VERSION_07_VALID_CODE_0001_NAME, DATASET_VERSION_10_OPER_0002_CODE_0001_NAME, 
         DATASET_VERSION_09_OPER_0001_CODE_0003_NAME})
     public void testFindLastDatasetCodeMultiOperation() throws Exception {
-        DatasetVersion dv = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_0003_NAME);
-        String code = datasetRepository.findLastDatasetCode(dv.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_0003_NAME);
+        String code = datasetRepository.findLastDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
         assertNotNull(code);
-        assertEquals("0003",code);
+        assertEquals("0003", code);
         
-        dv = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_10_OPER_0002_CODE_0001_NAME);
-        code = datasetRepository.findLastDatasetCode(dv.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
+        datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_10_OPER_0002_CODE_0001_NAME);
+        code = datasetRepository.findLastDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
         assertNotNull(code);
-        assertEquals("0001",code);
+        assertEquals("0001", code);
         
-        code = datasetRepository.findLastDatasetCode("NOT-EXIST");
+        code = datasetRepository.findLastDatasetCode(CODE_NOT_EXISTS);
         assertNull(code);
     }
 }

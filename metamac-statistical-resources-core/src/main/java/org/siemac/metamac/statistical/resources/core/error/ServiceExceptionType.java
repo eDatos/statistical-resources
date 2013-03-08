@@ -20,6 +20,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType PUBLICATION_NOT_FOUND                            = create("exception.resources.publication.not_found");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_NOT_FOUND                    = create("exception.resources.publication.version_not_found");
     public static final CommonServiceExceptionType PUBLICATION_LAST_VERSION_NOT_FOUND               = create("exception.resources.publication.last_version_not_found");
+    public static final CommonServiceExceptionType PUBLICATION_MAX_REACHED_IN_OPERATION             = create("exception.resource.publication.max_reached_in_operation");
 
     // Query
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                  = create("exception.resources.query.not_found");
@@ -34,5 +35,4 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // LISTS
     public static final CommonServiceExceptionType STATISTIC_OFFICIALITY_NOT_FOUND                  = create("exception.resources.statistic_officiality.not_found");
-
 }

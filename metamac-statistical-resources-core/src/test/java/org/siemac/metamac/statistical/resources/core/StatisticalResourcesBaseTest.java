@@ -16,23 +16,23 @@ import org.springframework.beans.factory.annotation.Value;
 
 public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
-    protected static String      EMPTY             = StringUtils.EMPTY;
+    protected static String   EMPTY           = StringUtils.EMPTY;
 
-    protected static Long        ID_NOT_EXISTS     = Long.valueOf(-1);
-    protected static String      URN_NOT_EXISTS    = "not_exists";
+    protected static Long     ID_NOT_EXISTS   = Long.valueOf(-1);
+    protected static String   URN_NOT_EXISTS  = "not_exists";
+    protected static String   CODE_NOT_EXISTS = "NOT_EXISTS";
 
-    protected static String      QUERY_1           = "urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1";
+    protected static String   QUERY_1         = "urn:siemac.org.siemac.infomodel.statisticalResources.Query=QUERY1";
 
     @Value("${metamac.statistical_resources.db.provider}")
-    private String               databaseProvider;
+    private String            databaseProvider;
 
     @Rule
-    public MockAnnotationRule mockRule = new MockAnnotationRule();
-    
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public MockAnnotationRule mockRule        = new MockAnnotationRule();
 
-    
+    @Rule
+    public ExpectedException  thrown          = ExpectedException.none();
+
     protected ServiceContext getServiceContextWithoutPrincipal() {
         return mockServiceContextWithoutPrincipal();
     }
@@ -55,7 +55,7 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(role.getName(), StatisticalResourcesConstants.SECURITY_APPLICATION_ID, null));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
     }
-    
+
     @Override
     protected DataBaseProvider getDatabaseProvider() {
         return DataBaseProvider.valueOf(databaseProvider);

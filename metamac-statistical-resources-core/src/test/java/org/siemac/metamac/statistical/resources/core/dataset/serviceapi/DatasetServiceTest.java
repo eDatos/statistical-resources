@@ -205,7 +205,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     public void testCreateDatasetVersion() throws Exception {
         DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-        ExternalItem statisticalOperation = expected.getSiemacMetadataStatisticalResource().getStatisticalOperation();
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
         
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
@@ -223,7 +223,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
         DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-        expected.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
         
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
@@ -241,7 +240,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
             DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-            expected.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_DATASET_0004", actual.getSiemacMetadataStatisticalResource().getCode());
@@ -251,7 +249,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
             DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-            expected.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_DATASET_0005", actual.getSiemacMetadataStatisticalResource().getCode());
@@ -269,7 +266,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         
         DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
-        expected.getSiemacMetadataStatisticalResource().setStatisticalOperation(statisticalOperation);
         
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
     }

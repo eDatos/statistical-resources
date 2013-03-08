@@ -4,11 +4,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
 
-import java.util.Calendar;
-
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
@@ -38,32 +35,31 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_07_VALID_CODE_0001_NAME                 = "DATASET_VERSION_07_VALID_CODE_0001";
     private static DatasetVersion DATASET_VERSION_07_VALID_CODE_0001;
-    
+
     public static final String    DATASET_VERSION_08_VALID_CODE_0002_NAME                 = "DATASET_VERSION_08_VALID_CODE_0002";
     private static DatasetVersion DATASET_VERSION_08_VALID_CODE_0002;
-    
-    public static final String    DATASET_VERSION_09_OPER_0001_CODE_0003_NAME       = "DATASET_VERSION_09_OPER_0001_CODE_0003";
+
+    public static final String    DATASET_VERSION_09_OPER_0001_CODE_0003_NAME             = "DATASET_VERSION_09_OPER_0001_CODE_0003";
     private static DatasetVersion DATASET_VERSION_09_OPER_0001_CODE_0003;
-    
-    public static final String    DATASET_VERSION_10_OPER_0002_CODE_0001_NAME        = "DATASET_VERSION_10_OPER_0002_CODE_0001";
+
+    public static final String    DATASET_VERSION_10_OPER_0002_CODE_0001_NAME             = "DATASET_VERSION_10_OPER_0002_CODE_0001";
     private static DatasetVersion DATASET_VERSION_10_OPER_0002_CODE_0001;
-    
-    public static final String    DATASET_VERSION_11_OPER_0002_CODE_0002_NAME        = "DATASET_VERSION_11_OPER_0002_CODE_0002";
+
+    public static final String    DATASET_VERSION_11_OPER_0002_CODE_0002_NAME             = "DATASET_VERSION_11_OPER_0002_CODE_0002";
     private static DatasetVersion DATASET_VERSION_11_OPER_0002_CODE_0002;
-    
-    public static final String    DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME        = "DATASET_VERSION_12_OPER_0002_MAX_CODE";
+
+    public static final String    DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME              = "DATASET_VERSION_12_OPER_0002_MAX_CODE";
     private static DatasetVersion DATASET_VERSION_12_OPER_0002_MAX_CODE;
-    
-    public static final String    DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL_NAME        = "DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL";
+
+    public static final String    DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL_NAME    = "DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL";
     private static DatasetVersion DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL;
-    
-    public static final String    DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME        = "DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED";
+
+    public static final String    DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME       = "DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED";
     private static DatasetVersion DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
 
     private static final String   DATASET_VERSION_03_VERSION                              = "01.000";
     private static final String   DATASET_VERSION_04_VERSION                              = "02.000";
     private static final String   DATASET_VERSION_05_VERSION                              = "01.000";
-
 
     protected static DatasetVersion getDatasetVersion01Basic() {
         if (DATASET_VERSION_01_BASIC == null) {
@@ -110,7 +106,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
     }
-
 
     protected static DatasetVersion getDatasetVersion05ForDataset04() {
         if (DATASET_VERSION_05_FOR_DATASET_04 == null) {
@@ -167,101 +162,100 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_06_FOR_QUERIES;
     }
-    
+
     protected static DatasetVersion getDatasetVersion07ValidCode0001() {
         if (DATASET_VERSION_07_VALID_CODE_0001 == null) {
-            DATASET_VERSION_07_VALID_CODE_0001 = createDatasetVersionInSpecificOperation("OPER_0001",1);
+            DATASET_VERSION_07_VALID_CODE_0001 = createDatasetVersionInSpecificOperation("OPER_0001", 1);
         }
         return DATASET_VERSION_07_VALID_CODE_0001;
     }
 
     protected static DatasetVersion getDatasetVersion08ValidCode0002() {
         if (DATASET_VERSION_08_VALID_CODE_0002 == null) {
-            DATASET_VERSION_08_VALID_CODE_0002 = createDatasetVersionInSpecificOperation("OPER_0001",2);
+            DATASET_VERSION_08_VALID_CODE_0002 = createDatasetVersionInSpecificOperation("OPER_0001", 2);
         }
         return DATASET_VERSION_08_VALID_CODE_0002;
     }
 
+    protected static DatasetVersion getDatasetVersion09Oper0001Code0003() {
+        if (DATASET_VERSION_09_OPER_0001_CODE_0003 == null) {
+            DATASET_VERSION_09_OPER_0001_CODE_0003 = createDatasetVersionInSpecificOperation("OPER_0001", 3);
+        }
+        return DATASET_VERSION_09_OPER_0001_CODE_0003;
+    }
+
+    protected static DatasetVersion getDatasetVersion10Oper0002Code0001() {
+        if (DATASET_VERSION_10_OPER_0002_CODE_0001 == null) {
+            DATASET_VERSION_10_OPER_0002_CODE_0001 = createDatasetVersionInSpecificOperation("OPER_0002", 1);
+        }
+        return DATASET_VERSION_10_OPER_0002_CODE_0001;
+    }
+
+    protected static DatasetVersion getDatasetVersion11Oper0002Code0002() {
+        if (DATASET_VERSION_11_OPER_0002_CODE_0002 == null) {
+            DATASET_VERSION_11_OPER_0002_CODE_0002 = createDatasetVersionInSpecificOperation("OPER_0002", 2);
+        }
+        return DATASET_VERSION_11_OPER_0002_CODE_0002;
+    }
+
+    protected static DatasetVersion getDatasetVersion12Oper0002MaxCode() {
+        if (DATASET_VERSION_12_OPER_0002_MAX_CODE == null) {
+            DATASET_VERSION_12_OPER_0002_MAX_CODE = createDatasetVersionInSpecificOperation("OPER_0002", 9999);
+        }
+        return DATASET_VERSION_12_OPER_0002_MAX_CODE;
+    }
+
+    protected static DatasetVersion getDatasetVersion13Oper0002Code0003ProdVal() {
+        if (DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL == null) {
+            DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL = createDatasetVersionInSpecificOperation("OPER_0002", 3);
+            fillDatasetVersionInProductionValidation(DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL);
+        }
+        return DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL;
+    }
+
+    protected static DatasetVersion getDatasetVersion14Oper03Code01Published() {
+        if (DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED == null) {
+            DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED = createDatasetVersionInSpecificOperation("OPER_0003", 1);
+            fillDatasetVersionInPublished(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED);
+        }
+        return DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
+    }
 
     private static void setDatasetVersion03Datasources(DatasetVersion datasetVersion03) {
         datasetVersion03.addDatasource(getDatasorce03BasicForDatasetVersion03());
         datasetVersion03.addDatasource(getDatasorce04BasicForDatasetVersion03());
     }
-    
+
     private static void setDatasetVersion04LastVersionForDataset03Datasources() {
         DatasetVersion datasetVersion04 = getDatasetVersion04ForDataset03AndLastVersion();
         datasetVersion04.addDatasource(getDatasorce05BasicForDatasetVersion04());
     }
     
-    protected static DatasetVersion getDatasetVersion09Oper0001Code0003() {
-        if (DATASET_VERSION_09_OPER_0001_CODE_0003 == null) {
-            DATASET_VERSION_09_OPER_0001_CODE_0003 = createDatasetVersionInSpecificOperation("OPER_0001",3);
-        }
-        return DATASET_VERSION_09_OPER_0001_CODE_0003;
-    }
-    
-    protected static DatasetVersion getDatasetVersion10Oper0002Code0001() {
-        if (DATASET_VERSION_10_OPER_0002_CODE_0001 == null) {
-            DATASET_VERSION_10_OPER_0002_CODE_0001 = createDatasetVersionInSpecificOperation("OPER_0002",1);
-        }
-        return DATASET_VERSION_10_OPER_0002_CODE_0001;
-    }
-    
-    protected static DatasetVersion getDatasetVersion11Oper0002Code0002() {
-        if (DATASET_VERSION_11_OPER_0002_CODE_0002 == null) {
-            DATASET_VERSION_11_OPER_0002_CODE_0002 = createDatasetVersionInSpecificOperation("OPER_0002",2);
-        }
-        return DATASET_VERSION_11_OPER_0002_CODE_0002;
-    }
-    
-    protected static DatasetVersion getDatasetVersion12Oper0002MaxCode() {
-        if (DATASET_VERSION_12_OPER_0002_MAX_CODE == null) {
-            DATASET_VERSION_12_OPER_0002_MAX_CODE = createDatasetVersionInSpecificOperation("OPER_0002",9999);
-        }
-        return DATASET_VERSION_12_OPER_0002_MAX_CODE;
-    }
-    
-    protected static DatasetVersion getDatasetVersion13Oper0002Code0003ProdVal() {
-        if (DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL == null) {
-            DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL =  createDatasetVersionInSpecificOperation("OPER_0002",3);
-            fillDatasetVersionInProductionValidation(DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL);
-        }
-        return DATASET_VERSION_13_OPER_0002_CODE_0003_PROD_VAL;
-    }
-    
-    protected static DatasetVersion getDatasetVersion14Oper03Code01Published() {
-        if (DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED == null) {
-            DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED = createDatasetVersionInSpecificOperation("OPER_0003",1);
-            fillDatasetVersionInPublished(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED);
-        }
-        return DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
-    }
-    
     private static DatasetVersion createDatasetVersion(Integer sequentialId) {
-        DatasetVersion dv = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
-        ExternalItem operation = dv.getSiemacMetadataStatisticalResource().getStatisticalOperation();
-        dv.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operation.getCode(), sequentialId));
-        return dv;
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
+        ExternalItem operation = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation();
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operation.getCode(), sequentialId));
+        return datasetVersion;
     }
-    
+
     private static DatasetVersion createDatasetVersionInSpecificOperation(String operationCode, Integer sequentialId) {
         ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem(operationCode);
-        DatasetVersion dv = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
-        dv.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
-        dv.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operationCode, sequentialId));
-        return dv;
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
+        datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operationCode, sequentialId));
+        return datasetVersion;
     }
-    
+
     private static String buildDatasetCode(String operationCode, int sequentialId) {
         return operationCode + "_DATASET_" + String.format("%04d", sequentialId);
     }
 
-    private static void fillDatasetVersionInProductionValidation(DatasetVersion dsVersion) {
-        dsVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+    private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
+        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
     }
-    
-    private static void fillDatasetVersionInPublished(DatasetVersion dsVersion) {
-        dsVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+
+    private static void fillDatasetVersionInPublished(DatasetVersion datasetVersion) {
+        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
     }
 
 }

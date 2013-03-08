@@ -25,6 +25,12 @@ Application StatisticalResourcesEnums {
     		QUERY
     	}
     	
+    	"Type Acronym Enum is used in resources codes"
+    	enum StatisticalResourceTypeAcronymEnum {
+    		DSC,	// Dataset
+    		PDD		// Collection
+    	}
+    	
     	"Version Rationale Type Enum is used to specify all types of version rationale"
     	enum StatisticalResourceVersionRationaleTypeEnum {
     		MAJOR_NEW_RESOURCE,

@@ -5,11 +5,13 @@ import org.junit.runners.Suite;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
+import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
+import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapperTest;
@@ -29,11 +31,13 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      QueryServiceTest.class, 
                      QueryDo2DtoMapperTest.class,
                      QueryDto2DoMapperTest.class,
-                     DatasetVersionRepositoryTest.class, 
                      DatasourceRepositoryTest.class,
+                     DatasetVersionRepositoryTest.class, 
+                     DatasetRepositoryTest.class,
                      DatasetDo2DtoMapperTest.class,
                      DatasetDto2DoMapperTest.class,
                      DatasetServiceTest.class, 
+                     PublicationRepositoryTest.class,
                      PublicationVersionRepositoryTest.class,
                      PublicationServiceTest.class})
 public class StatisticalResourcesSuite {

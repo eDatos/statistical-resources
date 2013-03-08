@@ -174,14 +174,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // BASE HIERARCHY
     // -----------------------------------------------------------------
 
-    protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum type, StatisticalResourceFormatEnum format) {
+    protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum type) {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
         mockLifeCycleStatisticalResource(resource);
 
         resource.setLanguage(mockCodeExternalItem());
         resource.addLanguage(mockCodeExternalItem());
 
-        resource.setStatisticalOperation(mockStatisticalOperationItem());
+        // resource.setStatisticalOperation(mockStatisticalOperationItem());
         // TODO: KEYWORDS
 
         resource.setType(type);

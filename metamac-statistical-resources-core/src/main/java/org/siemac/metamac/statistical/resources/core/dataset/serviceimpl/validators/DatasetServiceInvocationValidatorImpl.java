@@ -51,7 +51,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     // -------------
 
     public static void checkCreateDatasetVersion(DatasetVersion datasetVersion, ExternalItem statisticalOperation, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkNewDatasetVersion(datasetVersion, statisticalOperation, exceptions);
+        checkNewDatasetVersion(datasetVersion, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION, exceptions);
     }
 
     public static void checkUpdateDatasetVersion(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -125,9 +126,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     // DATASET VERSION
     // ----------------
 
-    private static void checkNewDatasetVersion(DatasetVersion datasetVersion, ExternalItem statisticalOperation, List<MetamacExceptionItem> exceptions) {
+    private static void checkNewDatasetVersion(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION, exceptions);
 
         if (datasetVersion == null) {
             return;
