@@ -218,8 +218,11 @@ public abstract class BaseInvocationValidator {
     }
 
     private static void checkSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource siemacMetadataStatisticalResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE), exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(siemacMetadataStatisticalResource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(siemacMetadataStatisticalResource.getStatisticalOperationInstance(),
                 ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(siemacMetadataStatisticalResource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(siemacMetadataStatisticalResource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(siemacMetadataStatisticalResource.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR),
                 exceptions);
