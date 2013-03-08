@@ -145,7 +145,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     public static PublicationVersion getPublicationVersion11Operation0002CodeMax() {
         if (PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX == null) {
-            PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX = createPublicationVersionInOperation(OPERATION_01_CODE, 1);
+            PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX = createPublicationVersionInOperation(OPERATION_01_CODE, 9999);
         }
         return PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
     }

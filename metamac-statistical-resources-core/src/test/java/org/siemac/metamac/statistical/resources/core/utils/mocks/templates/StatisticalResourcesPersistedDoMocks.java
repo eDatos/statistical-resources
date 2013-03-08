@@ -126,7 +126,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     @Override
     protected void setSpecialCasesQueryMock(Query query) {
-        
         // has to be discontinued because the related dataset is not final
         query.setStatus(QueryStatusEnum.DISCONTINUED);
     }

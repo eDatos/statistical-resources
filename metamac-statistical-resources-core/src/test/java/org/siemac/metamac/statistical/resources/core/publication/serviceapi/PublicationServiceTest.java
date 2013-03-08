@@ -12,6 +12,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.*;
 
 import java.util.List;
 
@@ -73,29 +74,92 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        
+
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_" + StatisticalResourceTypeAcronymEnum.PDD + "_0001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationUrn(operationCode, 1, "01.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildPublicationUrn(operationCode, 1), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersion(expected, actual);
     }
 
     @Test
+    @MetamacMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME)
+    public void testCreatePublicationVersionInSameOperationThatAlreadyExistsPublications() throws Exception {
+        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME);
+        String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+
+        PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+        assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(operationCode + "_PDD_0004", actual.getSiemacMetadataStatisticalResource().getCode());
+        assertEquals(buildPublicationUrn(operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
+
+        assertEqualsPublicationVersion(expected, actual);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME)
+    public void testCreateConsecutivesPublicationVersionInSameOperationThatAlreadyExistsPublications() throws Exception {
+        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME);
+        String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        {
+            ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+            PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+            PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+
+            assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(operationCode + "_PDD_0004", actual.getSiemacMetadataStatisticalResource().getCode());
+            assertEquals(buildPublicationUrn(operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEqualsPublicationVersion(expected, actual);
+        }
+        {
+            ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+            PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+            PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+
+            assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(operationCode + "_PDD_0005", actual.getSiemacMetadataStatisticalResource().getCode());
+            assertEquals(buildPublicationUrn(operationCode, 5), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEqualsPublicationVersion(expected, actual);
+        }
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME)
+    public void testCreatePublicationVersionMaxCodeReached() throws Exception {
+        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_MAX_REACHED_IN_OPERATION, publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn()), 1);
+        
+        String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), statisticalResourcesNotPersistedDoMocks.mockPublicationVersion(), statisticalOperation);
+    }
+
+    @Test
     public void testCreatePublicationVersionErrorParameterPublicationRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION), 1);
+        
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
-
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), null, statisticalOperation);
     }
 
     @Test
     public void testCreatePublicationVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE), 1);
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
         
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersionWithNullableSiemacStatisticalResource();
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+    }
+    
+    @Test
+    public void testCreateDatasetVersionErrorParameterStatisticalOperationRequired() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION), 1);
+        
+        PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, null);
     }
 
     @Override
@@ -186,8 +250,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<PublicationVersion> publicationVersionPagedResult = publicationService.findPublicationVersionsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
             assertEquals(1, publicationVersionPagedResult.getTotalRows());
-            assertEquals(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(), publicationVersionPagedResult.getValues().get(0)
-                    .getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                    publicationVersionPagedResult.getValues().get(0).getSiemacMetadataStatisticalResource().getUrn());
         }
 
         {
@@ -199,8 +263,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<PublicationVersion> publicationVersionPagedResult = publicationService.findPublicationVersionsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
             assertEquals(1, publicationVersionPagedResult.getTotalRows());
-            assertEquals(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(), publicationVersionPagedResult.getValues().get(0)
-                    .getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                    publicationVersionPagedResult.getValues().get(0).getSiemacMetadataStatisticalResource().getUrn());
         }
     }
 
@@ -261,12 +325,10 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         thrown.expect(UnsupportedOperationException.class);
         publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), null, null);
     }
-    
-    private Object buildPublicationUrn(String operationCode, int datasetSequentialId, String versionNumber) {
+
+    private Object buildPublicationUrn(String operationCode, int datasetSequentialId) {
         StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=");
-        strBuilder.append(operationCode)
-                    .append("_PDD_")
-                    .append(String.format("%04d", datasetSequentialId));
+        strBuilder.append(operationCode).append("_PDD_").append(String.format("%04d", datasetSequentialId));
         return strBuilder.toString();
     }
 }
