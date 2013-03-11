@@ -126,8 +126,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
 
         // Check can be deleted
-        // TODO: Determinar cuales son los estados en los que se puede borrar
-        BaseValidator.checkStatisticalResourceCanBeEdited(publicationVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeDeleted(publicationVersion.getSiemacMetadataStatisticalResource());
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 

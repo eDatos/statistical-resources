@@ -31,7 +31,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED = create("exception.resources.identifiable_statistical_resource.code_duplicated");
 
     // Life Cycle Statistical Resource
-    public static final CommonServiceExceptionType LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE   = create("exception.resources.life_cyacle_statistical_resource.not_modifiable");
+    public static final CommonServiceExceptionType LIFE_CYCLE_WRONG_PROC_STATUS                     = create("exception.resources.life_cycle.wrong_proc_status");
 
     // LISTS
     public static final CommonServiceExceptionType STATISTIC_OFFICIALITY_NOT_FOUND                  = create("exception.resources.statistic_officiality.not_found");

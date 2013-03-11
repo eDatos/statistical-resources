@@ -19,7 +19,6 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
@@ -30,7 +29,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validato
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -245,8 +243,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Check can be deleted
-        // TODO: Determinar cuales son los estados en los que se puede borrar
-        BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeDeleted(datasetVersion.getSiemacMetadataStatisticalResource());
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 

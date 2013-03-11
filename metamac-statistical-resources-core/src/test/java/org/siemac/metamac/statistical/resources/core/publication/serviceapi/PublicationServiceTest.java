@@ -179,7 +179,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testUpdatePublicationVersionErrorFinal() throws Exception {
         PublicationVersion finalPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME);
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE, finalPublication.getSiemacMetadataStatisticalResource().getUrn()), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, finalPublication.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"), 1);
 
         publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), finalPublication);
     }
@@ -314,7 +314,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     public void testDeletePublicationVersionErrorNoLastVersion() throws Exception {
         String urnV1 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_STATISTICAL_RESOURCE_NOT_MODIFIABLE, urnV1), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urnV1, "DRAFT, VALIDATION_REJECTED"), 1);
 
         publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urnV1);
     }
