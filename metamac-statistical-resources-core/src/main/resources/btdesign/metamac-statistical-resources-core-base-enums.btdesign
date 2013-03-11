@@ -63,7 +63,7 @@ Application StatisticalResourcesEnums {
     		ANY_ROLE_ALLOWED
     	}
     	
-    	enum CollectionStructureHierarchyTypeEnum {
+    	enum PublicationStructureHierarchyTypeEnum {
     		TITLE,
     		CHAPTER,
     		SUBCHAPTER1,
