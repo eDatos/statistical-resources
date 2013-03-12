@@ -8,7 +8,9 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
+import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
@@ -67,7 +69,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryServiceInvocationValidator.checkCreateQuery(ctx, query);
         
         // Fill metadata
-        fillMetadataForCreateQuery(query);
+        fillMetadataForCreateQuery(ctx, query);
         
         // Save
         query = getQueryRepository().save(query);
@@ -120,16 +122,15 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         Query query = retrieveQueryByUrn(ctx, urn);
         
         // Check that query is pending_review
-        QueryConstraintValidator.checkQueryForDelete(query);
+        BaseValidator.checkStatisticalResourceCanBeDeleted(query.getLifeCycleStatisticalResource());
         
         // Delete
         getQueryRepository().delete(query);
     }
     
     
-    private void fillMetadataForCreateQuery(Query query) {
-        query.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(query.getLifeCycleStatisticalResource().getCode()));
-        query.getLifeCycleStatisticalResource().setUri(null);
+    private void fillMetadataForCreateQuery(ServiceContext ctx, Query query) {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(query.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY, ctx);
         query.setStatus(determineQueryStatus(query));
     }
 

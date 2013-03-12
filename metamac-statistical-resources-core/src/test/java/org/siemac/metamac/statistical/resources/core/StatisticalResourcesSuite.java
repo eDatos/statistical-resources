@@ -9,6 +9,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.Data
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
+import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
+import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationRepositoryTest;
@@ -39,6 +41,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetServiceTest.class, 
                      PublicationRepositoryTest.class,
                      PublicationVersionRepositoryTest.class,
-                     PublicationServiceTest.class})
+                     PublicationServiceTest.class,
+                     ProcStatusEnumUtilsTest.class, 
+                     QueryStatusEnumUtilsTest.class})
 public class StatisticalResourcesSuite {
 }
