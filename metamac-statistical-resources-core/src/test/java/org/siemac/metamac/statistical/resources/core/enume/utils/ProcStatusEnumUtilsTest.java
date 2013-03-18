@@ -14,19 +14,19 @@ public class ProcStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
         LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
         resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DRAFT, StatisticalResourceProcStatusEnum.ARCHIVED);
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DRAFT, StatisticalResourceProcStatusEnum.PUBLISHED);
     }
     
     @Test
     public void testCheckPossibleProcStatusExpectingException() throws Exception {
         String urn = "URN_DUMMY";
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, ARCHIVED"), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, PUBLISHED"), 1);
 
         LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
         resource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
         resource.setUrn(urn);
         
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DRAFT, StatisticalResourceProcStatusEnum.ARCHIVED);
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DRAFT, StatisticalResourceProcStatusEnum.PUBLISHED);
     }
 
 }

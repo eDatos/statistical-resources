@@ -11,11 +11,8 @@ Application StatisticalResourcesEnums {
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
     		VALIDATION_REJECTED,
-    		PUBLICATION_PROGRAMMED,
-    		PUBLICATION_PENDING,
     		PUBLICATION_FAILED,
-    		PUBLISHED,
-    		ARCHIVED
+    		PUBLISHED
     	}
     	
     	"Type Enum is used to specify statistical resources type"
