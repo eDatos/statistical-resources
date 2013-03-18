@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
@@ -13,9 +12,10 @@ import com.arte.lang.ObjectUtils;
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {
 
     private static StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
-    
-    protected static ExternalItem   STATISTICAL_OPERATION_0001;
-    protected static ExternalItem   STATISTICAL_OPERATION_0002;
+
+    protected static final String                       OPERATION_01_CODE = "C00025A";
+    protected static final String                       OPERATION_02_CODE = "C00025B";
+    protected static final String                       OPERATION_03_CODE = "C00025C";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
         if (statisticalResourcesPersistedDoMocks == null) {
@@ -23,30 +23,16 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
         }
         return statisticalResourcesPersistedDoMocks;
     }
-    
+
     public EntityMock retrieveMock(String mockName) {
         return ObjectUtils.deepCopy((getMock(mockName)));
     }
-    
+
     public List<EntityMock> retrieveMocks(String... names) {
         List<EntityMock> list = new ArrayList<EntityMock>();
         for (String name : names) {
             list.add(retrieveMock(name));
         }
         return list;
-    }
-    
-    protected static ExternalItem getStatisticalOperation0001() {
-        if (STATISTICAL_OPERATION_0001 == null) {
-            STATISTICAL_OPERATION_0001 = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem("OPER_0001");
-        }
-        return STATISTICAL_OPERATION_0001;
-    }
-    
-    protected static ExternalItem getStatisticalOperation0002() {
-        if (STATISTICAL_OPERATION_0002 == null) {
-            STATISTICAL_OPERATION_0002 = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem("OPER_0002");
-        }
-        return STATISTICAL_OPERATION_0002;
     }
 }

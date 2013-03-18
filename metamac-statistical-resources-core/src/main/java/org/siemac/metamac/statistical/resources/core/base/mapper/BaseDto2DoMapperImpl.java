@@ -157,10 +157,8 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Attributes modifiable
         // TODO: EL code hay momentos en los que no se puede editar
         target.setCode(source.getCode());
-        // TODO: La URI no debería estar como metadato porque la cumplimenta la API
-        target.setUri(source.getUri());
-        // TODO: La URN se cumplimenta en el servicio
-        target.setUrn(source.getUrn());
+        // URI: Not necessary. Service fill it.
+        // URN: Not necessary. Service fill it.
     }
 
     @Override

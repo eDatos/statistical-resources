@@ -49,7 +49,6 @@ Application PublicationsStatisticalResources {
 			- Bag<@PublicationVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> publication orderby="id asc";
 			
 			Repository PublicationRepository {
-				String findLastPublicationCode(String operationUrn);
 				findByCondition;
 				save;
 				delete;

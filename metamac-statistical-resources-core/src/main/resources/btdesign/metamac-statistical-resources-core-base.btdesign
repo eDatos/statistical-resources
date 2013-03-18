@@ -157,7 +157,7 @@ Application BaseStatisticalResources {
 			//PRODUCTION DESCRIPTORS
 			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
 			- @ExternalItem creator cascade="all" databaseColumn="CREATOR_FK" nullable;
-			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="CONTRIBUTOR_FK" databaseJoinTable="TB_SR_CONTRIBUTORS" nullable;
+			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="CONTRIBUTOR_FK" databaseJoinTable="TB_SR_CONTRIBUTORS";
 			DateTimeTZ resourceCreatedDate nullable;
 			DateTimeTZ lastUpdate nullable;
 			- @InternationalString conformsTo cascade="all" databaseColumn="CONFORMS_TO_FK" nullable;
@@ -182,6 +182,10 @@ Application BaseStatisticalResources {
 			DateTimeTZ copyrightedDate	nullable;
 			- @InternationalString license cascade="all" databaseColumn="LICENSE_FK" nullable;
 			- @InternationalString accessRights cascade="all" databaseColumn="ACCESS_RIGHTS_FK" nullable;
+			
+			Repository SiemacMetadataStatisticalResourceRepository {
+				String findLastUsedCodeForResourceType(String operationUrn, @StatisticalResourceTypeEnum resourceType);
+			}
 			
 		}
 

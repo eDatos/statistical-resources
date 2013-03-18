@@ -80,7 +80,6 @@ Application DatasetsStatisticalResources {
 			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
 			
 			Repository DatasetRepository {
-				String findLastDatasetCode(String operationUrn);
 				findByCondition;
 				save;
 				delete;

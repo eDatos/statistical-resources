@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeAcronymEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
@@ -29,29 +28,26 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String        PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME = "PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION";
     private static PublicationVersion PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
 
-    public static final String        PUBLICATION_VERSION_05_OPERATION_0001_CODE_0001_NAME            = "PUBLICATION_VERSION_05_OPERATION_0001_CODE_0001";
-    private static PublicationVersion PUBLICATION_VERSION_05_OPERATION_0001_CODE_0001;
+    public static final String        PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME          = "PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001";
+    private static PublicationVersion PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001;
 
-    public static final String        PUBLICATION_VERSION_06_OPERATION_0001_CODE_0002_NAME            = "PUBLICATION_VERSION_06_OPERATION_0001_CODE_0002";
-    private static PublicationVersion PUBLICATION_VERSION_06_OPERATION_0001_CODE_0002;
+    public static final String        PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME          = "PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002";
+    private static PublicationVersion PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002;
 
-    public static final String        PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME            = "PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003";
-    private static PublicationVersion PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003;
+    public static final String        PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME          = "PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003";
+    private static PublicationVersion PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003;
 
-    public static final String        PUBLICATION_VERSION_08_OPERATION_0002_CODE_0001_NAME            = "PUBLICATION_VERSION_08_OPERATION_0002_CODE_0001";
-    private static PublicationVersion PUBLICATION_VERSION_08_OPERATION_0002_CODE_0001;
+    public static final String        PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME          = "PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001";
+    private static PublicationVersion PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001;
 
-    public static final String        PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002_NAME            = "PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002";
+    public static final String        PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME          = "PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002";
     private static PublicationVersion PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002;
 
-    public static final String        PUBLICATION_VERSION_10_OPERATION_0002_CODE_0003_NAME            = "PUBLICATION_VERSION_10_OPERATION_0002_CODE_0003";
-    private static PublicationVersion PUBLICATION_VERSION_10_OPERATION_0002_CODE_0003;
+    public static final String        PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME          = "PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003";
+    private static PublicationVersion PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003;
 
     public static final String        PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME             = "PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX";
     private static PublicationVersion PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
-
-    private static final String       OPERATION_01_CODE                                               = "C00025A";
-    private static final String       OPERATION_02_CODE                                               = "C00022A";
 
     private static final String       PUBLICATION_VERSION_03_VERSION                                  = "01.000";
     private static final String       PUBLICATION_VERSION_04_VERSION                                  = "02.000";
@@ -101,51 +97,51 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
     }
 
-    public static PublicationVersion getPublicationVersion05Operation0001Code0001() {
-        if (PUBLICATION_VERSION_05_OPERATION_0001_CODE_0001 == null) {
-            PUBLICATION_VERSION_05_OPERATION_0001_CODE_0001 = createPublicationVersionInOperation(OPERATION_01_CODE, 1);
+    public static PublicationVersion getPublicationVersion05Operation0001Code000001() {
+        if (PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001 == null) {
+            PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001 = createPublicationVersionInOperation(OPERATION_01_CODE, 1);
         }
-        return PUBLICATION_VERSION_05_OPERATION_0001_CODE_0001;
+        return PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001;
     }
 
-    public static PublicationVersion getPublicationVersion06Operation0001Code0002() {
-        if (PUBLICATION_VERSION_06_OPERATION_0001_CODE_0002 == null) {
-            PUBLICATION_VERSION_06_OPERATION_0001_CODE_0002 = createPublicationVersionInOperation(OPERATION_01_CODE, 2);
+    public static PublicationVersion getPublicationVersion06Operation0001Code000002() {
+        if (PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002 == null) {
+            PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002 = createPublicationVersionInOperation(OPERATION_01_CODE, 2);
         }
-        return PUBLICATION_VERSION_06_OPERATION_0001_CODE_0002;
+        return PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002;
     }
 
-    public static PublicationVersion getPublicationVersion07Operation0001Code0003() {
-        if (PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003 == null) {
-            PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003 = createPublicationVersionInOperation(OPERATION_01_CODE, 3);
+    public static PublicationVersion getPublicationVersion07Operation0001Code000003() {
+        if (PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003 == null) {
+            PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003 = createPublicationVersionInOperation(OPERATION_01_CODE, 3);
         }
-        return PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003;
+        return PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003;
     }
 
-    public static PublicationVersion getPublicationVersion08Operation0002Code0001() {
-        if (PUBLICATION_VERSION_08_OPERATION_0002_CODE_0001 == null) {
-            PUBLICATION_VERSION_08_OPERATION_0002_CODE_0001 = createPublicationVersionInOperation(OPERATION_02_CODE, 1);
+    public static PublicationVersion getPublicationVersion08Operation0002Code000001() {
+        if (PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001 == null) {
+            PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001 = createPublicationVersionInOperation(OPERATION_02_CODE, 1);
         }
-        return PUBLICATION_VERSION_08_OPERATION_0002_CODE_0001;
+        return PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001;
     }
 
-    public static PublicationVersion getPublicationVersion09Operation0002Code0002() {
+    public static PublicationVersion getPublicationVersion09Operation0002Code000002() {
         if (PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002 == null) {
             PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002 = createPublicationVersionInOperation(OPERATION_02_CODE, 2);
         }
         return PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002;
     }
 
-    public static PublicationVersion getPublicationVersion10Operation0002Code0003() {
-        if (PUBLICATION_VERSION_10_OPERATION_0002_CODE_0003 == null) {
-            PUBLICATION_VERSION_10_OPERATION_0002_CODE_0003 = createPublicationVersionInOperation(OPERATION_02_CODE, 3);
+    public static PublicationVersion getPublicationVersion10Operation0002Code000003() {
+        if (PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003 == null) {
+            PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003 = createPublicationVersionInOperation(OPERATION_02_CODE, 3);
         }
-        return PUBLICATION_VERSION_10_OPERATION_0002_CODE_0003;
+        return PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003;
     }
 
     public static PublicationVersion getPublicationVersion11Operation0002CodeMax() {
         if (PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX == null) {
-            PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX = createPublicationVersionInOperation(OPERATION_01_CODE, 9999);
+            PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX = createPublicationVersionInOperation(OPERATION_01_CODE, 999999);
         }
         return PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
     }
@@ -176,6 +172,6 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     }
 
     private static String buildPublicationCode(String operationCode, int sequentialId) {
-        return operationCode + "_" + StatisticalResourceTypeAcronymEnum.PDD + "_" + String.format("%04d", sequentialId);
+        return operationCode + "_" + String.format("%06d", sequentialId);
     }
 }

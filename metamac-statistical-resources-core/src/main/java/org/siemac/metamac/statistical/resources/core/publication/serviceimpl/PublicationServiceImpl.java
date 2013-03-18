@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.core.publication.serviceimpl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -10,21 +9,17 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeAcronymEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +29,11 @@ import org.springframework.stereotype.Service;
 @Service("publicationService")
 public class PublicationServiceImpl extends PublicationServiceImplBase {
 
-    private static final Logger               log = LoggerFactory.getLogger(PublicationServiceImpl.class);
-
     @Autowired
     IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
+
+    @Autowired
+    SiemacStatisticalResourceGeneratedCode    siemacStatisticalResourceGeneratedCode;
 
     @Autowired
     PublicationServiceInvocationValidator     publicationServiceInvocationValidator;
@@ -160,29 +156,16 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     private static void fillMetadataForCreatePublicationVersion(PublicationVersion publicationVersion, Publication publication, ExternalItem statisticalOperation, ServiceContext ctx) {
         publicationVersion.setPublication(publication);
-        FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(publicationVersion.getSiemacMetadataStatisticalResource(), statisticalOperation, StatisticalResourceTypeEnum.COLLECTION, ctx);
+        FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(publicationVersion.getSiemacMetadataStatisticalResource(), statisticalOperation,
+                StatisticalResourceTypeEnum.COLLECTION, ctx);
     }
 
     private synchronized Publication assignCodeAndSavePublicationVersion(Publication publication, PublicationVersion publicationVersion) throws MetamacException {
-        ExternalItem statisticalOperation = publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation();
-        String sequenceCodeStr = getPublicationRepository().findLastPublicationCode(statisticalOperation.getUrn());
-        int sequenceCode = 1;
-        if (!StringUtils.isEmpty(sequenceCodeStr)) {
-            try {
-                sequenceCode = Integer.parseInt(sequenceCodeStr);
-                sequenceCode++;
-            } catch (NumberFormatException e) {
-                log.error("Error parsing last sequential code in statistical operation " + statisticalOperation.getCode() + " (" + sequenceCodeStr + ")");
-                throw new MetamacException(CommonServiceExceptionType.UNKNOWN, e.getMessage());
-            }
-        }
-        if (sequenceCode >= 9999) {
-            throw new MetamacException(ServiceExceptionType.PUBLICATION_MAX_REACHED_IN_OPERATION, statisticalOperation.getUrn());
-        }
-        String code = statisticalOperation.getCode() + "_" + StatisticalResourceTypeAcronymEnum.PDD.name() + "_" + String.format("%04d", sequenceCode);
+        String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateSiemacMetadataResource(publicationVersion.getSiemacMetadataStatisticalResource());
+        String[] creator = new String[]{publicationVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
         publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
         publicationVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(publicationVersion.getSiemacMetadataStatisticalResource().getCode()));
+                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(creator, publicationVersion.getSiemacMetadataStatisticalResource().getCode()));
 
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());

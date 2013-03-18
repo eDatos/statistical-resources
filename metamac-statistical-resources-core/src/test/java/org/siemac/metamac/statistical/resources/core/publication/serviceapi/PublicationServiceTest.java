@@ -12,7 +12,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeAcronymEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -76,16 +76,16 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
-        assertEquals(operationCode + "_" + StatisticalResourceTypeAcronymEnum.PDD + "_0001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationUrn(operationCode, 1), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
+        assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getCreator().getCode(), operationCode, 1), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersion(expected, actual);
     }
 
     @Test
-    @MetamacMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME)
+    @MetamacMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME)
     public void testCreatePublicationVersionInSameOperationThatAlreadyExistsPublications() throws Exception {
-        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME);
+        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME);
         String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
@@ -93,16 +93,16 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
-        assertEquals(operationCode + "_PDD_0004", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationUrn(operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
+        assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getCreator().getCode(), operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersion(expected, actual);
     }
 
     @Test
-    @MetamacMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME)
+    @MetamacMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME)
     public void testCreateConsecutivesPublicationVersionInSameOperationThatAlreadyExistsPublications() throws Exception {
-        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_0003_NAME);
+        PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME);
         String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
@@ -110,8 +110,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
-            assertEquals(operationCode + "_PDD_0004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildPublicationUrn(operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
+            assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getCreator().getCode(), operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsPublicationVersion(expected, actual);
         }
         {
@@ -120,8 +120,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
-            assertEquals(operationCode + "_PDD_0005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildPublicationUrn(operationCode, 5), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
+            assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getCreator().getCode(), operationCode, 5), actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsPublicationVersion(expected, actual);
         }
     }
@@ -326,9 +326,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), null, null);
     }
 
-    private Object buildPublicationUrn(String operationCode, int datasetSequentialId) {
+    private Object buildPublicationUrn(String maintainerCode, String operationCode, int datasetSequentialId) {
         StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=");
-        strBuilder.append(operationCode).append("_PDD_").append(String.format("%04d", datasetSequentialId));
+        strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId));
         return strBuilder.toString();
     }
 }
