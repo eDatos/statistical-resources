@@ -13,7 +13,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.*;
 
 import java.util.List;
 
@@ -125,13 +125,14 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             assertEqualsPublicationVersion(expected, actual);
         }
     }
-    
+
     @Test
     @MetamacMock(PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME)
     public void testCreatePublicationVersionMaxCodeReached() throws Exception {
         PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME);
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_MAX_REACHED_IN_OPERATION, publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn()), 1);
-        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_MAX_REACHED_IN_OPERATION, publicationVersionOperation01.getSiemacMetadataStatisticalResource()
+                .getStatisticalOperation().getUrn()), 1);
+
         String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), statisticalResourcesNotPersistedDoMocks.mockPublicationVersion(), statisticalOperation);
@@ -140,7 +141,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     public void testCreatePublicationVersionErrorParameterPublicationRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION), 1);
-        
+
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), null, statisticalOperation);
     }
@@ -148,16 +149,17 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     public void testCreatePublicationVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE), 1);
-        
+
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersionWithNullableSiemacStatisticalResource();
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
     }
-    
+
     @Test
     public void testCreateDatasetVersionErrorParameterStatisticalOperationRequired() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION), 1);
-        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED,
+                ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION), 1);
+
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, null);
     }
@@ -179,7 +181,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testUpdatePublicationVersionErrorFinal() throws Exception {
         PublicationVersion finalPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME);
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, finalPublication.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, finalPublication.getSiemacMetadataStatisticalResource().getUrn(),
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"), 1);
 
         publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), finalPublication);
     }
@@ -192,6 +195,78 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         PublicationVersion publication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME);
         publication.getSiemacMetadataStatisticalResource().setCode("@12345");
         publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), publication);
+    }
+
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testUpdatePublicationVersionDraftProcStatus() throws Exception {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME);
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+
+        PublicationVersion actual = publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testUpdatePublicationVersionProductionValidationProcStatus() throws Exception {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME);
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+
+        PublicationVersion actual = publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testUpdatePublicationVersionDifussionValidationProcStatus() throws Exception {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME);
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+
+        PublicationVersion actual = publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testUpdatePublicationVersionValidationRejectedProcStatus() throws Exception {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME);
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+
+        PublicationVersion actual = publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), expected);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testUpdatePublicationVersionPublicationFailedProcStatus() throws Exception {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, expected.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"), 1);
+        
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), expected);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testUpdatePublicationVersionPublishedProcStatus() throws Exception {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_PUBLISHED_NAME);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, expected.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"), 1);
+        
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        publicationService.updatePublicationVersion(getServiceContextWithoutPrincipal(), expected);
     }
 
     @Override
@@ -317,6 +392,63 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urnV1, "DRAFT, VALIDATION_REJECTED"), 1);
 
         publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urnV1);
+    }
+    
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testDeletePublicationVersionDraftProcStatus() throws Exception {
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testDeletePublicationVersionProductionValidationProcStatus() throws Exception {
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"), 1);
+
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testDeletePublicationVersionDiffusionValidationProcStatus() throws Exception {
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"), 1);
+
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testDeletePublicationVersionValidationRejectedProcStatus() throws Exception {
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testDeletePublicationVersionPublicationFailedProcStatus() throws Exception {
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"), 1);
+
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME, PUBLICATION_VERSION_17_PUBLISHED_NAME})
+    public void testDeletePublicationVersionPublishedProcStatus() throws Exception {
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"), 1);
+
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
     }
 
     @Override

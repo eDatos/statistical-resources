@@ -323,7 +323,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Test
     @MetamacMock(QUERY_10_ACTIVE_LATEST_DATA_5_NAME)
-    public void testUpdateQueryErrorLatestDataNumberIncorrectValue0() throws Exception {
+    public void testUpdateQueryErrorLatestDataNumberIncorrectValue() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.QUERY__LATEST_DATA_NUMBER), 1);
 
         Query query = queryMockFactory.retrieveMock(QUERY_10_ACTIVE_LATEST_DATA_5_NAME);
@@ -349,6 +349,72 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         Query query = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME);
         query.setDatasetVersion(null);
         queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+    }
+
+    @Test
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_12_PRODUCTION_VALIDATION_NAME, QUERY_13_DIFUSSION_VALIDATION_NAME, QUERY_14_VALIDATION_REJECTED_NAME, QUERY_17_PUBLICATION_FAILED_NAME,
+            QUERY_18_PUBLISHED_NAME})
+    public void testUpdateQueryDraftProcStatus() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_11_DRAFT_NAME);
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
+    }
+    
+    @Test
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_12_PRODUCTION_VALIDATION_NAME, QUERY_13_DIFUSSION_VALIDATION_NAME, QUERY_14_VALIDATION_REJECTED_NAME, QUERY_17_PUBLICATION_FAILED_NAME,
+            QUERY_18_PUBLISHED_NAME})
+    public void testUpdateQueryProductionValidationProcStatus() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_12_PRODUCTION_VALIDATION_NAME);
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
+    }
+    
+    @Test
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_12_PRODUCTION_VALIDATION_NAME, QUERY_13_DIFUSSION_VALIDATION_NAME, QUERY_14_VALIDATION_REJECTED_NAME, QUERY_17_PUBLICATION_FAILED_NAME,
+            QUERY_18_PUBLISHED_NAME})
+    public void testUpdateQueryDiffusionValidationProcStatus() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_13_DIFUSSION_VALIDATION_NAME);
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
+    }
+    
+    @Test
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_12_PRODUCTION_VALIDATION_NAME, QUERY_13_DIFUSSION_VALIDATION_NAME, QUERY_14_VALIDATION_REJECTED_NAME, QUERY_17_PUBLICATION_FAILED_NAME,
+            QUERY_18_PUBLISHED_NAME})
+    public void testUpdateQueryValidationRejectedProcStatus() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_14_VALIDATION_REJECTED_NAME);
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
+    }
+    
+    @Test
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_12_PRODUCTION_VALIDATION_NAME, QUERY_13_DIFUSSION_VALIDATION_NAME, QUERY_14_VALIDATION_REJECTED_NAME, QUERY_17_PUBLICATION_FAILED_NAME,
+            QUERY_18_PUBLISHED_NAME})
+    public void testUpdateQueryPublicationFailedProcStatus() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_17_PUBLICATION_FAILED_NAME);
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
+    }
+    
+    @Test
+    @MetamacMock({QUERY_11_DRAFT_NAME, QUERY_12_PRODUCTION_VALIDATION_NAME, QUERY_13_DIFUSSION_VALIDATION_NAME, QUERY_14_VALIDATION_REJECTED_NAME, QUERY_17_PUBLICATION_FAILED_NAME,
+            QUERY_18_PUBLISHED_NAME})
+    public void testUpdateQueryPublishedProcStatus() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_18_PUBLISHED_NAME);
+        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
+
+        Query updatedQuery = queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQuery(query, updatedQuery);
     }
 
     @Test
