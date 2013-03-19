@@ -88,7 +88,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
                 target = datasetVersionRepository.findById(source.getId());
             } catch (DatasetVersionNotFoundException e) {
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASET_VERSION_NOT_FOUND)
-                        .withMessageParameters(ServiceExceptionParameters.DATASET_VERSION).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+                        .withMessageParameters(source.getUrn()).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
         }
 
@@ -103,7 +103,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         }
 
         // Hierarchy
-        siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION);
+        siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
 
         // Non modifiable after creation
 

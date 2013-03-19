@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -15,7 +16,6 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -30,12 +30,12 @@ import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalR
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -115,6 +115,21 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         return datasetDto;
     }
+    
+    // -----------------------------------------------------------------
+    // PUBLICATIONS
+    // -----------------------------------------------------------------
+
+    public static PublicationDto mockPublicationDto() {
+        PublicationDto publicationDto = new PublicationDto();
+
+        publicationDto.setFormatExtentResources(RandomUtils.nextInt(999));
+
+        mockSiemacMetadataStatisticalResource(publicationDto, StatisticalResourceTypeEnum.COLLECTION);
+
+        return publicationDto;
+    }
+    
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------

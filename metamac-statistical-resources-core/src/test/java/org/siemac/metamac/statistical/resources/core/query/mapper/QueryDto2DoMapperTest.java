@@ -39,5 +39,4 @@ public class QueryDto2DoMapperTest extends StatisticalResourcesBaseTest {
         assertEqualsQuery(expected, actual);
         assertTrue(expected.getDatasetVersion().equals(actual.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));
     }
-    
 }

@@ -50,7 +50,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
             try {
                 target = queryRepository.findById(source.getId());
             } catch (QueryNotFoundException e) {
-                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.QUERY_NOT_FOUND).withMessageParameters(ServiceExceptionParameters.QUERY)
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.QUERY_NOT_FOUND).withMessageParameters(source.getUrn())
                         .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
         }

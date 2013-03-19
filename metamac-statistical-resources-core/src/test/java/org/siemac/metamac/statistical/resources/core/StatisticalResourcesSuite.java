@@ -13,6 +13,8 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
+import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
+import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapperTest;
@@ -40,6 +42,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetServiceTest.class, 
                      PublicationVersionRepositoryTest.class,
                      PublicationServiceTest.class,
+                     PublicationDo2DtoMapperTest.class,
+                     PublicationDto2DoMapperTest.class,
                      ProcStatusEnumUtilsTest.class, 
                      QueryStatusEnumUtilsTest.class})
 public class StatisticalResourcesSuite {

@@ -18,7 +18,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.Dat
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.PublicationDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -50,7 +50,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     @Qualifier("datasetDo2DtoMapper")
-    private DatasetDo2DtoMapper                         datasetDo2DtoMapper;
+    private PublicationDo2DtoMapper                         datasetDo2DtoMapper;
 
     @Autowired
     @Qualifier("datasetDto2DoMapper")
