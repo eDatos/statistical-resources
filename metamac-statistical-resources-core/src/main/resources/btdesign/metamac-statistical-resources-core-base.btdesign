@@ -22,7 +22,7 @@ Application BaseStatisticalResources {
 			String code databaseColumn="CODE" required;
 			String uri databaseColumn="URI" required length="4000";
 			String urn databaseColumn="URN" required length="4000";
-			- @TypeExternalArtefactsEnum type databaseColumn="TYPE" required;
+			- @TypeRelatedResourceEnum type databaseColumn="TYPE" required;
 			- @InternationalString title cascade="all" databaseColumn="TITLE_FK" nullable;
     		
     		Repository RelatedResourceRepository {

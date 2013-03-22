@@ -12,7 +12,7 @@ Application StatisticalResourcesDto {
 			gap
 			
 			- @InternationalStringDto title nullable;
-			- @TypeExternalArtefactsEnum type required;
+			- @TypeRelatedResourceEnum type required;
 			String code required;
 			String uri required;
 			String urn required;

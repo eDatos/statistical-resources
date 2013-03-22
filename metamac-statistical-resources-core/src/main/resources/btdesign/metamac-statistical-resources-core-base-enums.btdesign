@@ -60,6 +60,11 @@ Application StatisticalResourcesEnums {
     		ANY_ROLE_ALLOWED
     	}
     	
+    	enum TypeRelatedResourceEnum {
+    		DATASET_VERSION,
+    		PUBLICATION_VERSION
+    	}
+    	
     	enum PublicationStructureHierarchyTypeEnum {
     		TITLE,
     		CHAPTER,

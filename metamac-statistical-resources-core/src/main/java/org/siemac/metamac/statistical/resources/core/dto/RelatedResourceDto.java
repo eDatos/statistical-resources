@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.dto;
 
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 /**
  * Data transfer object for RelatedResourceDto. Properties and associations are
@@ -13,7 +13,7 @@ public class RelatedResourceDto extends RelatedResourceDtoBase {
     public RelatedResourceDto() {
     }
 
-    public RelatedResourceDto(String code, String uri, String urn, TypeExternalArtefactsEnum type) {
+    public RelatedResourceDto(String code, String uri, String urn, TypeRelatedResourceEnum type) {
         super(code, uri, urn, type);
     }
 }
