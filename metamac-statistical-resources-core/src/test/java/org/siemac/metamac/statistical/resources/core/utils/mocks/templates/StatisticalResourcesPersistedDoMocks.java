@@ -55,7 +55,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         
         // Mock code
         String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        datasetVersion.getSiemacMetadataStatisticalResource().setCode(statisticalOperationCode+"_DATASET_0001");
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(statisticalOperationCode+"_000001");
         
         if (dataset != null) {
             datasetVersion.setDataset(dataset);

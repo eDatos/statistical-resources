@@ -20,7 +20,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_13_DIFUSSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_14_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_17_PUBLICATION_FAILED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_18_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.*;
 
 import java.util.List;
 
@@ -301,6 +301,18 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         assertEqualsQuery(query, updatedQuery);
     }
 
+    @Test
+    @MetamacMock({QUERY_19_WITH_CODE_AND_URN_QUERY01_NAME, QUERY_20_WITH_CODE_AND_URN_QUERY02_NAME})
+    public void testUpdateQueryErrorDuplicatedUrn() throws Exception {
+        String duplicatedCode = queryMockFactory.retrieveMock(QUERY_20_WITH_CODE_AND_URN_QUERY02_NAME).getLifeCycleStatisticalResource().getCode();
+        String duplicatedUrn = queryMockFactory.retrieveMock(QUERY_20_WITH_CODE_AND_URN_QUERY02_NAME).getLifeCycleStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED, duplicatedUrn), 1);
+
+        Query query = queryMockFactory.retrieveMock(QUERY_19_WITH_CODE_AND_URN_QUERY01_NAME);
+        query.getLifeCycleStatisticalResource().setCode(duplicatedCode);
+        queryService.updateQuery(getServiceContextWithoutPrincipal(), query);
+    }
+    
     @Test
     @MetamacMock(QUERY_10_ACTIVE_LATEST_DATA_5_NAME)
     public void testUpdateQueryErrorLatestDataNumberNull() throws Exception {

@@ -47,6 +47,5 @@ public class FillMetadataForCreateResourceUtils {
 
         }
         // DATASETS AND PUBLICATIONS: CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block
-
     }
 }

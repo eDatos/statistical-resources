@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
@@ -10,53 +11,59 @@ import org.springframework.stereotype.Component;
 @Component
 public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
-    public static final String QUERY_01_WITH_SELECTION_NAME         = "QUERY_01_WITH_SELECTION";
+    public static final String QUERY_01_WITH_SELECTION_NAME            = "QUERY_01_WITH_SELECTION";
     private static Query       QUERY_01_WITH_SELECTION;
 
-    public static final String QUERY_02_BASIC_ORDERED_01_NAME       = "QUERY_02_BASIC_ORDERED_01";
+    public static final String QUERY_02_BASIC_ORDERED_01_NAME          = "QUERY_02_BASIC_ORDERED_01";
     private static Query       QUERY_02_BASIC_ORDERED_01;
 
-    public static final String QUERY_03_BASIC_ORDERED_02_NAME       = "QUERY_03_BASIC_ORDERED_02";
+    public static final String QUERY_03_BASIC_ORDERED_02_NAME          = "QUERY_03_BASIC_ORDERED_02";
     private static Query       QUERY_03_BASIC_ORDERED_02;
 
-    public static final String QUERY_04_BASIC_ORDERED_03_NAME       = "QUERY_04_BASIC_ORDERED_03";
+    public static final String QUERY_04_BASIC_ORDERED_03_NAME          = "QUERY_04_BASIC_ORDERED_03";
     private static Query       QUERY_04_BASIC_ORDERED_03;
 
-    public static final String QUERY_05_BASIC_NAME                  = "QUERY_05_BASIC";
+    public static final String QUERY_05_BASIC_NAME                     = "QUERY_05_BASIC";
     private static Query       QUERY_05_BASIC;
 
-    public static final String QUERY_06_BASIC_ACTIVE_NAME           = "QUERY_06_BASIC_ACTIVE";
+    public static final String QUERY_06_BASIC_ACTIVE_NAME              = "QUERY_06_BASIC_ACTIVE";
     private static Query       QUERY_06_BASIC_ACTIVE;
 
-    public static final String QUERY_07_BASIC_ACTIVE_NAME           = "QUERY_07_BASIC_ACTIVE";
+    public static final String QUERY_07_BASIC_ACTIVE_NAME              = "QUERY_07_BASIC_ACTIVE";
     private static Query       QUERY_07_BASIC_ACTIVE;
 
-    public static final String QUERY_08_BASIC_DISCONTINUED_NAME     = "QUERY_08_BASIC_DISCONTINUED";
+    public static final String QUERY_08_BASIC_DISCONTINUED_NAME        = "QUERY_08_BASIC_DISCONTINUED";
     private static Query       QUERY_08_BASIC_DISCONTINUED;
 
-    public static final String QUERY_09_BASIC_PENDING_REVIEW_NAME   = "QUERY_09_BASIC_PENDING_REVIEW";
+    public static final String QUERY_09_BASIC_PENDING_REVIEW_NAME      = "QUERY_09_BASIC_PENDING_REVIEW";
     private static Query       QUERY_09_BASIC_PENDING_REVIEW;
 
-    public static final String QUERY_10_ACTIVE_LATEST_DATA_5_NAME   = "QUERY_10_ACTIVE_LATEST_DATA_5";
+    public static final String QUERY_10_ACTIVE_LATEST_DATA_5_NAME      = "QUERY_10_ACTIVE_LATEST_DATA_5";
     private static Query       QUERY_10_ACTIVE_LATEST_DATA_5;
 
-    public static final String QUERY_11_DRAFT_NAME                  = "QUERY_11_DRAFT";
+    public static final String QUERY_11_DRAFT_NAME                     = "QUERY_11_DRAFT";
     private static Query       QUERY_11_DRAFT;
 
-    public static final String QUERY_12_PRODUCTION_VALIDATION_NAME  = "QUERY_12_PRODUCTION_VALIDATION";
+    public static final String QUERY_12_PRODUCTION_VALIDATION_NAME     = "QUERY_12_PRODUCTION_VALIDATION";
     private static Query       QUERY_12_PRODUCTION_VALIDATION;
 
-    public static final String QUERY_13_DIFUSSION_VALIDATION_NAME   = "QUERY_13_DIFUSSION_VALIDATION";
+    public static final String QUERY_13_DIFUSSION_VALIDATION_NAME      = "QUERY_13_DIFUSSION_VALIDATION";
     private static Query       QUERY_13_DIFUSSION_VALIDATION;
 
-    public static final String QUERY_14_VALIDATION_REJECTED_NAME    = "QUERY_14_VALIDATION_REJECTED";
+    public static final String QUERY_14_VALIDATION_REJECTED_NAME       = "QUERY_14_VALIDATION_REJECTED";
     private static Query       QUERY_14_VALIDATION_REJECTED;
 
-    public static final String QUERY_17_PUBLICATION_FAILED_NAME     = "QUERY_17_PUBLICATION_FAILED";
+    public static final String QUERY_17_PUBLICATION_FAILED_NAME        = "QUERY_17_PUBLICATION_FAILED";
     private static Query       QUERY_17_PUBLICATION_FAILED;
 
-    public static final String QUERY_18_PUBLISHED_NAME              = "QUERY_18_PUBLISHED";
+    public static final String QUERY_18_PUBLISHED_NAME                 = "QUERY_18_PUBLISHED";
     private static Query       QUERY_18_PUBLISHED;
+
+    public static final String QUERY_19_WITH_CODE_AND_URN_QUERY01_NAME = "QUERY_19_WITH_CODE_AND_URN_QUERY01";
+    private static Query       QUERY_19_WITH_CODE_AND_URN_QUERY01;
+
+    public static final String QUERY_20_WITH_CODE_AND_URN_QUERY02_NAME = "QUERY_20_WITH_CODE_AND_URN_QUERY02";
+    private static Query       QUERY_20_WITH_CODE_AND_URN_QUERY02;
 
     protected static Query getQuery01WithSelection() {
         if (QUERY_01_WITH_SELECTION == null) {
@@ -185,11 +192,31 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         }
         return QUERY_18_PUBLISHED;
     }
-    
+
+    public static Query getQuery19WithCodeAndUrnQuery01() {
+        if (QUERY_19_WITH_CODE_AND_URN_QUERY01 == null) {
+            String queryCode = "QUERY01";
+            QUERY_19_WITH_CODE_AND_URN_QUERY01 = createQueryWithSelectionAndGeneratedDatasetVersion();
+            QUERY_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().setCode(queryCode);
+            QUERY_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(queryCode));
+        }
+        return QUERY_19_WITH_CODE_AND_URN_QUERY01;
+    }
+
+    public static Query getQuery20WithCodeAndUrnQuery02() {
+        if (QUERY_20_WITH_CODE_AND_URN_QUERY02 == null) {
+            String queryCode = "QUERY02";
+            QUERY_20_WITH_CODE_AND_URN_QUERY02 = createQueryWithSelectionAndGeneratedDatasetVersion();
+            QUERY_20_WITH_CODE_AND_URN_QUERY02.getLifeCycleStatisticalResource().setCode(queryCode);
+            QUERY_20_WITH_CODE_AND_URN_QUERY02.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(queryCode));
+        }
+        return QUERY_20_WITH_CODE_AND_URN_QUERY02;
+    }
+
     private static Query createQueryWithDatasetVersion(DatasetVersion datasetVersion) {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithDatasetVersion(datasetVersion);
     }
-    
+
     private static Query createQueryWithGeneratedDatasetVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedDatasetVersion();
     }
