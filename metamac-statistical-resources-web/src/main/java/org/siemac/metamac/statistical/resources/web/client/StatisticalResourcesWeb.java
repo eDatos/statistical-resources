@@ -9,14 +9,14 @@ import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResour
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
-import org.siemac.metamac.web.common.client.widgets.IstacNavBar;
+import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
-import org.siemac.metamac.web.common.shared.GetEditionLanguagesAction;
-import org.siemac.metamac.web.common.shared.GetEditionLanguagesResult;
 import org.siemac.metamac.web.common.shared.GetLoginPageUrlAction;
 import org.siemac.metamac.web.common.shared.GetLoginPageUrlResult;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlResult;
+import org.siemac.metamac.web.common.shared.LoadConfigurationPropertiesAction;
+import org.siemac.metamac.web.common.shared.LoadConfigurationPropertiesResult;
 import org.siemac.metamac.web.common.shared.MockCASUserAction;
 import org.siemac.metamac.web.common.shared.MockCASUserResult;
 
@@ -48,7 +48,9 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
         CssResource css();
     }
 
+    @Override
     public void onModuleLoad() {
+        setUncaughtExceptionHandler();
         ginjector.getDispatcher().execute(new GetNavigationBarUrlAction(), new WaitingAsyncCallback<GetNavigationBarUrlResult>() {
 
             @Override
@@ -57,9 +59,14 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
                 loadNonSecuredApplication();
             }
 
+            @Override
             public void onWaitSuccess(GetNavigationBarUrlResult result) {
                 // Load scripts for navigation bar
-                IstacNavBar.loadScripts(result.getNavigationBarUrl());
+                if (result.getNavigationBarUrl() != null) {
+                    MetamacNavBar.loadScripts(result.getNavigationBarUrl());
+                } else {
+                    logger.log(Level.SEVERE, "Error loading toolbar");
+                }
                 loadNonSecuredApplication();
             };
         });
@@ -80,7 +87,7 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
                 StatisticalResourcesWeb.principal = result.getMetamacPrincipal();
 
                 // Load edition languages
-                ginjector.getDispatcher().execute(new GetEditionLanguagesAction(), new WaitingAsyncCallback<GetEditionLanguagesResult>() {
+                ginjector.getDispatcher().execute(new LoadConfigurationPropertiesAction(), new WaitingAsyncCallback<LoadConfigurationPropertiesResult>() {
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
@@ -90,7 +97,7 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
                         loadApplication();
                     }
                     @Override
-                    public void onWaitSuccess(GetEditionLanguagesResult result) {
+                    public void onWaitSuccess(LoadConfigurationPropertiesResult result) {
                         ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
                         loadApplication();
                     }
@@ -130,13 +137,13 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
     // }
     // @Override
     // public void onWaitSuccess(ValidateTicketResult result) {
-    // ResourcesWeb.principal = result.getMetamacPrincipal();
+    // StatisticalResourcesWeb.principal = result.getMetamacPrincipal();
     //
     // String url = Window.Location.createUrlBuilder().setHash("").buildString();
     // Window.Location.assign(url);
     //
     // // Load edition languages
-    // ginjector.getDispatcher().execute(new GetEditionLanguagesAction(), new WaitingAsyncCallback<GetEditionLanguagesResult>() {
+    // ginjector.getDispatcher().execute(new LoadConfigurationPropertiesAction(), new WaitingAsyncCallback<LoadConfigurationPropertiesResult>() {
     //
     // @Override
     // public void onWaitFailure(Throwable caught) {
@@ -147,7 +154,7 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
     // loadApplication();
     // }
     // @Override
-    // public void onWaitSuccess(GetEditionLanguagesResult result) {
+    // public void onWaitSuccess(LoadConfigurationPropertiesResult result) {
     // ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
     // loadApplication();
     // }
@@ -213,5 +220,4 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
     public static void showErrorPage() {
         ginjector.getPlaceManager().revealErrorPlace(null);
     }
-
 }

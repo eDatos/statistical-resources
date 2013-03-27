@@ -182,7 +182,7 @@ public class PublicationStructurePanel extends HLayout {
         typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
         ViewTextItem typeViewName = new ViewTextItem(PublicationStructureDS.TYPE_VIEW_NAME, getConstants().collectionStructureElementType());
 
-        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(PublicationStructureDS.TEXT, getConstants().collectionStructureElementText(), FORM_ITEM_CUSTOM_WIDTH);
+        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(PublicationStructureDS.TEXT, getConstants().collectionStructureElementText(), String.valueOf(FORM_ITEM_CUSTOM_WIDTH));
         text.setRequired(true);
         text.setShowIfCondition(new FormItemIfFunction() {
 
