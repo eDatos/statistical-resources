@@ -19,8 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
@@ -78,7 +78,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     public interface DatasetListView extends View, HasUiHandlers<DatasetListUiHandlers> {
 
-        void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationPaginatedListResult datasetsPaginatedList);
+        void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationResult datasetsPaginatedList);
         void goToDatasetListLastPageAfterCreate();
     }
 
@@ -133,19 +133,18 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     @Override
     public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
         final String statisticalOperationUrn = operationUrn;
-        dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(operationUrn, firstResult, maxResults),
-                new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
+        dispatcher.execute(new GetDatasetsByStatisticalOperationAction(operationUrn, firstResult, maxResults), new WaitingAsyncCallback<GetDatasetsByStatisticalOperationResult>() {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
-                    }
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
 
-                    @Override
-                    public void onWaitSuccess(GetDatasetsByStatisticalOperationPaginatedListResult result) {
-                        getView().setDatasetPaginatedList(statisticalOperationUrn, result);
-                    }
-                });
+            @Override
+            public void onWaitSuccess(GetDatasetsByStatisticalOperationResult result) {
+                getView().setDatasetPaginatedList(statisticalOperationUrn, result);
+            }
+        });
 
     }
 

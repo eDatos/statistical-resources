@@ -15,7 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -154,7 +154,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
     }
 
     @Override
-    public void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationPaginatedListResult datasetsPaginatedList) {
+    public void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationResult datasetsPaginatedList) {
         setOperation(operationUrn);
         setDatasetList(datasetsPaginatedList.getDatasetsList());
         datasetsList.refreshPaginationInfo(datasetsPaginatedList.getPageNumber(), datasetsPaginatedList.getDatasetsList().size(), datasetsPaginatedList.getTotalResults());

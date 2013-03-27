@@ -21,8 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
@@ -128,15 +128,15 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
     private void retrieveResourcesByStatisticalOperation(String urn) {
         // DataSets
-        dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS),
-                new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
+        dispatcher.execute(new GetDatasetsByStatisticalOperationAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS),
+                new WaitingAsyncCallback<GetDatasetsByStatisticalOperationResult>() {
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
                         ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
                     }
                     @Override
-                    public void onWaitSuccess(GetDatasetsByStatisticalOperationPaginatedListResult result) {
+                    public void onWaitSuccess(GetDatasetsByStatisticalOperationResult result) {
                         getView().setDatasets(result.getDatasetsList());
                     }
                 });

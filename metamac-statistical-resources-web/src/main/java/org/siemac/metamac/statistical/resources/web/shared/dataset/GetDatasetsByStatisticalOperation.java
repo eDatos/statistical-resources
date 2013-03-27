@@ -9,7 +9,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetDatasetsByStatisticalOperationPaginatedList {
+public class GetDatasetsByStatisticalOperation {
 
     @In(1)
     String           operationUrn;
@@ -28,5 +28,4 @@ public class GetDatasetsByStatisticalOperationPaginatedList {
 
     @Out(3)
     Integer          totalResults;
-
 }
