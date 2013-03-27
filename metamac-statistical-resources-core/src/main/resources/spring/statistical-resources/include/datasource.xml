@@ -10,9 +10,9 @@
     default-autowire="byName">
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${metamac.statistical.resources.db.driverName}" />
-        <property name="url" value="${metamac.statistical.resources.db.url}" />
-        <property name="username" value="${metamac.statistical.resources.db.username}" />
-        <property name="password" value="${metamac.statistical.resources.db.password}" />
+        <property name="driverClassName"    value="${metamac.statistical.resources.db.driverName}" />
+        <property name="url"                value="${metamac.statistical.resources.db.url}" />
+        <property name="username"           value="${metamac.statistical.resources.db.username}" />
+        <property name="password"           value="${metamac.statistical.resources.db.password}" />
     </bean>
 </beans>
