@@ -238,7 +238,7 @@ public class PublicationStructurePanel extends HLayout {
         form.setValue(
                 PublicationStructureDS.TYPE,
                 collectionStructureHierarchyDto.getType() != null ? getCoreMessages().getString(
-                        getCoreMessages().collectionStructureHierarchyTypeEnum() + collectionStructureHierarchyDto.getType().name()) : StringUtils.EMPTY);
+                        getCoreMessages().publicationStructureHierarchyTypeEnum() + collectionStructureHierarchyDto.getType().name()) : StringUtils.EMPTY);
         form.setValue(PublicationStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
         form.setValue(PublicationStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
         form.setValue(PublicationStructureDS.URL, collectionStructureHierarchyDto.getUrl());

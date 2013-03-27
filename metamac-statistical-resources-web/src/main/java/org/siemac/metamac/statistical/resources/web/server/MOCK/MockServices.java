@@ -162,10 +162,10 @@ public class MockServices {
         }
         DatasetDto oldDataset = getDatasets().get(datasetDto.getUrn());
 
-        // if (!oldDataset.getOperation().getUrn().equals(datasetDto.getOperation().getUrn())) {
-        // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_OPERATION);
+        // if (!oldDataset.getStatisticalOperation().getUrn().equals(datasetDto.getStatisticalOperation().getUrn())) {
+        // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_SOPERATION);
         // }
-        //
+
         // Date now = new Date();
         // datasetDto.setDateLastUpdate(now);
         // datasetDto.setLastUpdateUser(ctx.getUserId());
@@ -470,7 +470,7 @@ public class MockServices {
     // COLLECTIONS
     //
 
-    public static PublicationDto createCollection(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
+    public static PublicationDto createPublication(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
         String identifier = PublicationDto.getCode();
         String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, identifier);
         // if (getCollections().containsKey(collectionUrn)) {
@@ -518,20 +518,20 @@ public class MockServices {
         return PublicationDto;
     }
 
-    public static PublicationDto retrieveCollection(ServiceContext ctx, String collectionUrn) throws MetamacException {
+    public static PublicationDto retrievePublication(ServiceContext ctx, String collectionUrn) throws MetamacException {
         PublicationDto collection = getCollections().get(collectionUrn);
-        // if (collection != null) {
-        return collection;
-        // } else {
-        // throw new MetamacException(ServiceExceptionType.COLLECTION_NOT_FOUND, collectionUrn);
-        // }
+        if (collection != null) {
+            return collection;
+        } else {
+            throw new MetamacException(ServiceExceptionType.PUBLICATION_NOT_FOUND, collectionUrn);
+        }
     }
 
-    public static PublicationDto updateCollection(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
-        if (PublicationDto.getId() == null) {
+    public static PublicationDto updatePublication(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
+        if (publicationDto.getId() == null) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
-        PublicationDto oldCollection = getCollections().get(PublicationDto.getUrn());
+        PublicationDto oldCollection = getCollections().get(publicationDto.getUrn());
 
         // if (!oldCollection.getOperation().getUrn().equals(PublicationDto.getOperation().getUrn())) {
         // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.COLLECTION_OPERATION);
@@ -541,11 +541,11 @@ public class MockServices {
         // PublicationDto.setDateLastUpdate(now);
         // PublicationDto.setLastUpdateUser(ctx.getUserId());
 
-        PublicationDto.setVersion(PublicationDto.getVersion() + 1);
+        publicationDto.setVersion(publicationDto.getVersion() + 1);
 
-        getCollections().put(PublicationDto.getUrn(), PublicationDto);
+        getCollections().put(publicationDto.getUrn(), publicationDto);
 
-        return PublicationDto;
+        return publicationDto;
     }
 
     public static void deleteCollection(ServiceContext ctx, String urn) throws MetamacException {
@@ -558,12 +558,12 @@ public class MockServices {
     public static List<PublicationDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
         List<PublicationDto> collectionList = new ArrayList<PublicationDto>();
         List<PublicationDto> PublicationDtos = new ArrayList<PublicationDto>(getCollections().values());
-        // for (PublicationDto collection : PublicationDtos) {
-        // if (operationUrn.equals(collection.getOperation().getUrn())) {
-        // PublicationDto c = collection;
-        // collectionList.add(c);
-        // }
-        // }
+        for (PublicationDto collection : PublicationDtos) {
+            // if (operationUrn.equals(collection.getStatisticalOperation().getUrn())) {
+            PublicationDto c = collection;
+            collectionList.add(c);
+            // }
+        }
 
         int endIndex = collectionList.size();
         if (endIndex - firstResult > maxResults) {
@@ -573,61 +573,37 @@ public class MockServices {
     }
 
     public static PublicationDto sendCollectionToProductionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
         return PublicationDto;
     }
 
     public static PublicationDto sendCollectionToDiffusionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
         return PublicationDto;
     }
 
     public static PublicationDto rejectCollectionProductionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         return PublicationDto;
     }
 
     public static PublicationDto rejectCollectionDiffusionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         return PublicationDto;
     }
 
-    // public static PublicationDto sendCollectionToPendingPublication(String urn) throws MetamacException {
-    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-    // return PublicationDto;
-    // }
-    //
-    // public static PublicationDto programCollectionPublication(String urn) throws MetamacException {
-    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
-    // return PublicationDto;
-    // }
-    //
-    // public static PublicationDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
-    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-    // return PublicationDto;
-    // }
-
     public static PublicationDto publishCollection(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
         return PublicationDto;
     }
 
-    // public static PublicationDto archiveCollection(String urn) throws MetamacException {
-    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
-    // return PublicationDto;
-    // }
-
     public static PublicationDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
-        PublicationDto publicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto publicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         publicationDto.setId(Long.valueOf(collections.size() + 1));
         // PublicationDto.setVersionLogic(VersionUtil.createNextVersionTag(PublicationDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
         publicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
@@ -658,12 +634,12 @@ public class MockServices {
 
     private static void createCollection(String code, String title_es, String title_en, ExternalItemDto operation) {
         Date now = new Date();
-        PublicationDto PublicationDto = new PublicationDto();
+        PublicationDto publicationDto = new PublicationDto();
 
-        PublicationDto.setId(Long.valueOf(collections.size() + 1));
-        PublicationDto.setUuid(UUID.randomUUID().toString());
-        PublicationDto.setVersion(1L);
-        // PublicationDto.setOperation(operation);
+        publicationDto.setId(Long.valueOf(collections.size() + 1));
+        publicationDto.setUuid(UUID.randomUUID().toString());
+        publicationDto.setVersion(1L);
+        publicationDto.setStatisticalOperation(operation);
         //
         // // Audit
         // PublicationDto.setResponsabilityCreator("ISTAC_ADMIN");
@@ -672,18 +648,18 @@ public class MockServices {
         // PublicationDto.setLastUpdateUser("ISTAC_ADMIN");
 
         // Identifiers
-        PublicationDto.setCode(code);
-        PublicationDto.setTitle(createInternationalString(title_es, title_en));
-        PublicationDto.setUri(COLLECTION_URI_PREFIX + code);
-        PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
+        publicationDto.setCode(code);
+        publicationDto.setTitle(createInternationalString(title_es, title_en));
+        publicationDto.setUri(COLLECTION_URI_PREFIX + code);
+        publicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
 
         // Version
         // PublicationDto.setVersionDate(now);
         // PublicationDto.setVersionLogic("01.000");
         //
         // // Life cycle
-        // PublicationDto.setCreator(istacAgency);
-        // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        publicationDto.setCreator(istacAgency);
+        publicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         //
         // // Content
         // ContentMetadataDto contentMetadata = new ContentMetadataDto();
@@ -729,9 +705,9 @@ public class MockServices {
 
         PublicationStructureHierarchyDto structure = createCollectionStructure();
 
-        PublicationDto.setStructure(structure);
+        publicationDto.setStructure(structure);
 
-        collections.put(PublicationDto.getUrn(), PublicationDto);
+        collections.put(publicationDto.getUrn(), publicationDto);
     }
 
     private static PublicationStructureHierarchyDto createCollectionStructureBase(InternationalStringDto title) {

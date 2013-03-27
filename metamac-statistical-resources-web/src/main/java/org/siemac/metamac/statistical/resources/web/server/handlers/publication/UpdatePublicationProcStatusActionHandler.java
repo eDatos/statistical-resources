@@ -1,8 +1,13 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
+import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.shared.ActionException;
@@ -16,39 +21,31 @@ public class UpdatePublicationProcStatusActionHandler extends SecurityActionHand
 
     @Override
     public UpdatePublicationProcStatusResult executeSecurityAction(UpdatePublicationProcStatusAction action) throws ActionException {
-        // String urn = action.getUrn();
-        // StatisticalResourceProcStatusEnum procStatus = action.getNextProcStatus();
-        // try {
-        // PublicationDto collectionDto = null;
-        // if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
-        // collectionDto = MockServices.sendPublicationToProductionValidation(urn);
-        // } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
-        // collectionDto = MockServices.sendPublicationToDiffusionValidation(urn);
-        // } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
-        // StatisticalResourceProcStatusEnum currentProcStatus = action.getCurrentProcStatus();
-        // if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(currentProcStatus)) {
-        // collectionDto = MockServices.rejectPublicationProductionValidation(urn);
-        // } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(currentProcStatus)) {
-        // collectionDto = MockServices.rejectPublicationDiffusionValidation(urn);
-        // }
-        // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
-        // collectionDto = MockServices.sendPublicationToPendingPublication(urn);
-        // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
-        // collectionDto = MockServices.programPublicationPublication(urn);
-        // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
-        // collectionDto = MockServices.cancelProgrammedPublicationPublication(urn);
-        // } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
-        // collectionDto = MockServices.publishPublication(urn);
-        // } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(procStatus)) {
-        // collectionDto = MockServices.archivePublication(urn);
-        // }
-        // return new UpdateCollectionProcStatusResult(collectionDto);
-        // } catch (MetamacException e) {
-        // throw WebExceptionUtils.createMetamacWebException(e);
-        // }
 
         // FIXME: invoke core
-        return new UpdatePublicationProcStatusResult(null);
-    }
 
+        String urn = action.getUrn();
+
+        StatisticalResourceProcStatusEnum procStatus = action.getNextProcStatus();
+        try {
+            PublicationDto collectionDto = null;
+            if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
+                collectionDto = MockServices.sendCollectionToProductionValidation(urn);
+            } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
+                collectionDto = MockServices.sendCollectionToDiffusionValidation(urn);
+            } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
+                StatisticalResourceProcStatusEnum currentProcStatus = action.getCurrentProcStatus();
+                if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(currentProcStatus)) {
+                    collectionDto = MockServices.rejectCollectionProductionValidation(urn);
+                } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(currentProcStatus)) {
+                    collectionDto = MockServices.rejectCollectionDiffusionValidation(urn);
+                }
+            } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                collectionDto = MockServices.publishCollection(urn);
+            }
+            return new UpdatePublicationProcStatusResult(collectionDto);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
 }

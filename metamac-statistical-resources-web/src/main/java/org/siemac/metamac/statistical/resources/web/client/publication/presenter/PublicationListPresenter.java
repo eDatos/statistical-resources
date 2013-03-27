@@ -21,8 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
@@ -164,7 +164,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
     @Override
     public void deletePublication(List<String> urns) {
-        dispatcher.execute(new DeletePublicationListAction(urns), new WaitingAsyncCallback<DeletePublicationListResult>() {
+        dispatcher.execute(new DeletePublicationsAction(urns), new WaitingAsyncCallback<DeletePublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -172,7 +172,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
             }
 
             @Override
-            public void onWaitSuccess(DeletePublicationListResult result) {
+            public void onWaitSuccess(DeletePublicationsResult result) {
                 ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getMessageList(getMessages().collectionDeleted()), MessageTypeEnum.SUCCESS);
                 retrievePublications(PublicationListPresenter.this.operation.getUrn(), PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
             };

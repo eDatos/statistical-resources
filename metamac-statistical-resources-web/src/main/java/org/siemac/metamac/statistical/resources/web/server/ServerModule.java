@@ -12,7 +12,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Upda
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationActionHandler;
@@ -29,7 +29,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
@@ -83,7 +83,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetPublicationsAction.class, GetPublicationsActionHandler.class);
         bindHandler(GetPublicationAction.class, GetPublicationActionHandler.class);
         bindHandler(SavePublicationAction.class, SavePublicationActionHandler.class);
-        bindHandler(DeletePublicationListAction.class, DeletePublicationListActionHandler.class);
+        bindHandler(DeletePublicationsAction.class, DeletePublicationsActionHandler.class);
         bindHandler(UpdatePublicationProcStatusAction.class, UpdatePublicationProcStatusActionHandler.class);
         bindHandler(VersionPublicationAction.class, VersionPublicationActionHandler.class);
 
