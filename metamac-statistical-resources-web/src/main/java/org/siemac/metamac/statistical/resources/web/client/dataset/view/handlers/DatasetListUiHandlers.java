@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view.handler
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 

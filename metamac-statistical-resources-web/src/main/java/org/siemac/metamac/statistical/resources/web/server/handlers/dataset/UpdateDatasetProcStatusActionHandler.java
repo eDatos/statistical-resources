@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
@@ -36,16 +36,13 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
                 } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(currentProcStatus)) {
                     datasetDto = MockServices.rejectDatasetDiffusionValidation(urn);
                 }
-            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
-                datasetDto = MockServices.sendDatasetToPendingPublication(urn);
-            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
-                datasetDto = MockServices.programDatasetPublication(urn);
-            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
+// FIXME: the checkings bellow need the date of pending publication
+//            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
+//                datasetDto = MockServices.programDatasetPublication(urn);
+//            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
                 datasetDto = MockServices.cancelProgrammedDatasetPublication(urn);
             } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
                 datasetDto = MockServices.publishDataset(urn);
-            } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(procStatus)) {
-                datasetDto = MockServices.archiveDataset(urn);
             }
             return new UpdateDatasetProcStatusResult(datasetDto);
         } catch (MetamacException e) {

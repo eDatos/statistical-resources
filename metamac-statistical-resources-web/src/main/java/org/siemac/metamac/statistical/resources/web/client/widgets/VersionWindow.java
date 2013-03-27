@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets;
 
-import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;

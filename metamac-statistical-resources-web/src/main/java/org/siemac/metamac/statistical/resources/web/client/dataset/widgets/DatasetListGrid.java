@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;

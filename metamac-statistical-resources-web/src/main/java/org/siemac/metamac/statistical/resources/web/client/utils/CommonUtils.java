@@ -4,11 +4,10 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.LinkedHashMap;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
 
 public class CommonUtils {
 
@@ -54,20 +53,21 @@ public class CommonUtils {
         return versionRationaleType != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceVersionRationaleTypeEnum() + versionRationaleType.name()) : null;
     }
 
-    public static LinkedHashMap<String, String> getStatisticalResourceFormatHashMap() {
-        if (statisticalResourceFormatHashMap == null) {
-            statisticalResourceFormatHashMap = new LinkedHashMap<String, String>();
-            statisticalResourceFormatHashMap.put(new String(), new String());
-            for (StatisticalResourceFormatEnum f : StatisticalResourceFormatEnum.values()) {
-                statisticalResourceFormatHashMap.put(f.toString(), getStatisticalResourceFormatName(f));
-            }
-        }
-        return statisticalResourceFormatHashMap;
-    }
-
-    public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
-        return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
-    }
+//    TODO: FORMAT WILL NOT BE USED in STAT REOSURCES 
+//    public static LinkedHashMap<String, String> getStatisticalResourceFormatHashMap() {
+//        if (statisticalResourceFormatHashMap == null) {
+//            statisticalResourceFormatHashMap = new LinkedHashMap<String, String>();
+//            statisticalResourceFormatHashMap.put(new String(), new String());
+//            for (StatisticalResourceFormatEnum f : StatisticalResourceFormatEnum.values()) {
+//                statisticalResourceFormatHashMap.put(f.toString(), getStatisticalResourceFormatName(f));
+//            }
+//        }
+//        return statisticalResourceFormatHashMap;
+//    }
+//
+//    public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
+//        return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
+//    }
 
     public static LinkedHashMap<String, String> getVersionTypeHashMap() {
         if (versionTypeHashMap == null) {

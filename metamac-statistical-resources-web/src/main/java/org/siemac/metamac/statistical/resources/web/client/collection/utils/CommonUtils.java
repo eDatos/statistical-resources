@@ -4,8 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.LinkedHashMap;
 
-import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
-
 public class CommonUtils {
 
     private static LinkedHashMap<String, String> structureHierarchyTypeHashMap                  = null;

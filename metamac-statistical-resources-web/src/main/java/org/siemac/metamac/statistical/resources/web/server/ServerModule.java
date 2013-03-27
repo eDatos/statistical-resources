@@ -2,12 +2,12 @@ package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.agency.GetAgenciesPaginatedListActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.collection.DeleteCollectionListActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetCollectionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetCollectionPaginatedListActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.collection.SaveCollectionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.collection.UpdateCollectionProcStatusActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.collection.VersionCollectionActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.DeletePublicationListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetPublicationActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.GetPublicationPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.SavePublicationActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.UpdatePublicationProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.collection.VersionPublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationPaginatedListActionHandler;
@@ -19,12 +19,12 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Vers
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.DeleteCollectionListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.SaveCollectionAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.UpdateCollectionProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.VersionCollectionAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.DeletePublicationListAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.SavePublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.UpdatePublicationProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.VersionPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
@@ -59,6 +59,7 @@ public class ServerModule extends HandlerModule {
     public ServerModule() {
     }
 
+    @Override
     protected void configureHandlers() {
 
         // STATISTICAL OPERATIONS
@@ -79,12 +80,12 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
 
         // COLLECTIONS
-        bindHandler(GetCollectionPaginatedListAction.class, GetCollectionPaginatedListActionHandler.class);
-        bindHandler(GetCollectionAction.class, GetCollectionActionHandler.class);
-        bindHandler(SaveCollectionAction.class, SaveCollectionActionHandler.class);
-        bindHandler(DeleteCollectionListAction.class, DeleteCollectionListActionHandler.class);
-        bindHandler(UpdateCollectionProcStatusAction.class, UpdateCollectionProcStatusActionHandler.class);
-        bindHandler(VersionCollectionAction.class, VersionCollectionActionHandler.class);
+        bindHandler(GetPublicationPaginatedListAction.class, GetPublicationPaginatedListActionHandler.class);
+        bindHandler(GetPublicationAction.class, GetPublicationActionHandler.class);
+        bindHandler(SavePublicationAction.class, SavePublicationActionHandler.class);
+        bindHandler(DeletePublicationListAction.class, DeletePublicationListActionHandler.class);
+        bindHandler(UpdatePublicationProcStatusAction.class, UpdatePublicationProcStatusActionHandler.class);
+        bindHandler(VersionPublicationAction.class, VersionPublicationActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

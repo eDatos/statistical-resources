@@ -5,7 +5,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
@@ -19,7 +19,6 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;

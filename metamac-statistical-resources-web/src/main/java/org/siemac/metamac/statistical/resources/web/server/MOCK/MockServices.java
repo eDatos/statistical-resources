@@ -17,23 +17,18 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
-import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.common.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.core.dto.CollectionStructureHierarchyDto;
-import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.QueryDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceFormatEnum;
+import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.web.common.client.utils.UrnUtils;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -51,7 +46,7 @@ public class MockServices {
 
     private static Map<String, DatasetDto>                 datasets;
     private static Map<String, DatasourceDto>              datasources;
-    private static Map<String, CollectionDto>              collections;
+    private static Map<String, PublicationDto>              collections;
     private static Map<String, ExternalItemDto>            agencies;
     private static StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
     
@@ -501,8 +496,8 @@ public class MockServices {
     // COLLECTIONS
     //
 
-    public static CollectionDto createCollection(ServiceContext ctx, CollectionDto collectionDto) throws MetamacException {
-        String identifier = collectionDto.getIdentifier();
+    public static PublicationDto createCollection(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
+        String identifier = PublicationDto.getIdentifier();
         String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, identifier);
         if (getCollections().containsKey(collectionUrn)) {
             throw new MetamacException(ServiceExceptionType.COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
@@ -510,27 +505,27 @@ public class MockServices {
 
         Date now = new Date();
 
-        collectionDto.setId(Long.valueOf(getCollections().size() + 1));
-        collectionDto.setUuid(UUID.randomUUID().toString());
-        collectionDto.setVersion(1L);
+        PublicationDto.setId(Long.valueOf(getCollections().size() + 1));
+        PublicationDto.setUuid(UUID.randomUUID().toString());
+        PublicationDto.setVersion(1L);
 
         // Audit
-        collectionDto.setResponsabilityCreator(ctx.getUserId());
-        collectionDto.setDateCreated(now);
-        collectionDto.setDateLastUpdate(now);
-        collectionDto.setLastUpdateUser(ctx.getUserId());
+        PublicationDto.setResponsabilityCreator(ctx.getUserId());
+        PublicationDto.setDateCreated(now);
+        PublicationDto.setDateLastUpdate(now);
+        PublicationDto.setLastUpdateUser(ctx.getUserId());
 
         // Identifiers
-        collectionDto.setUri(COLLECTION_URI_PREFIX + collectionDto.getIdentifier());
-        collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionDto.getIdentifier()));
+        PublicationDto.setUri(COLLECTION_URI_PREFIX + PublicationDto.getIdentifier());
+        PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, PublicationDto.getIdentifier()));
 
         // Version
-        collectionDto.setVersionDate(now);
-        collectionDto.setVersionLogic("01.000");
+        PublicationDto.setVersionDate(now);
+        PublicationDto.setVersionLogic("01.000");
 
         // Life cycle
-        collectionDto.setCreator(istacAgency);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        PublicationDto.setCreator(istacAgency);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
@@ -539,18 +534,18 @@ public class MockServices {
         contentMetadata.setTemporalCoverage(new ArrayList<String>());
         contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        collectionDto.setContentMetadata(contentMetadata);
+        PublicationDto.setContentMetadata(contentMetadata);
         
-        CollectionStructureHierarchyDto structure = createCollectionStructureBase(collectionDto.getTitle());
+        CollectionStructureHierarchyDto structure = createCollectionStructureBase(PublicationDto.getTitle());
 
-        collectionDto.setStructure(structure);
+        PublicationDto.setStructure(structure);
 
-        getCollections().put(collectionDto.getUrn(), collectionDto);
-        return collectionDto;
+        getCollections().put(PublicationDto.getUrn(), PublicationDto);
+        return PublicationDto;
     }
 
-    public static CollectionDto retrieveCollection(ServiceContext ctx, String collectionUrn) throws MetamacException {
-        CollectionDto collection = getCollections().get(collectionUrn);
+    public static PublicationDto retrieveCollection(ServiceContext ctx, String collectionUrn) throws MetamacException {
+        PublicationDto collection = getCollections().get(collectionUrn);
         if (collection != null) {
             return collection;
         } else {
@@ -558,25 +553,25 @@ public class MockServices {
         }
     }
 
-    public static CollectionDto updateCollection(ServiceContext ctx, CollectionDto collectionDto) throws MetamacException {
-        if (collectionDto.getId() == null) {
+    public static PublicationDto updateCollection(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
+        if (PublicationDto.getId() == null) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
-        CollectionDto oldCollection = getCollections().get(collectionDto.getUrn());
+        PublicationDto oldCollection = getCollections().get(PublicationDto.getUrn());
 
-        if (!oldCollection.getOperation().getUrn().equals(collectionDto.getOperation().getUrn())) {
+        if (!oldCollection.getOperation().getUrn().equals(PublicationDto.getOperation().getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.COLLECTION_OPERATION);
         }
 
         Date now = new Date();
-        collectionDto.setDateLastUpdate(now);
-        collectionDto.setLastUpdateUser(ctx.getUserId());
+        PublicationDto.setDateLastUpdate(now);
+        PublicationDto.setLastUpdateUser(ctx.getUserId());
 
-        collectionDto.setVersion(collectionDto.getVersion() + 1);
+        PublicationDto.setVersion(PublicationDto.getVersion() + 1);
 
-        getCollections().put(collectionDto.getUrn(), collectionDto);
+        getCollections().put(PublicationDto.getUrn(), PublicationDto);
 
-        return collectionDto;
+        return PublicationDto;
     }
     
     public static void deleteCollection(ServiceContext ctx, String urn) throws MetamacException {
@@ -586,12 +581,12 @@ public class MockServices {
         getCollections().remove(urn);
     }
 
-    public static List<CollectionDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
-        List<CollectionDto> collectionList = new ArrayList<CollectionDto>();
-        List<CollectionDto> collectionDtos = new ArrayList<CollectionDto>(getCollections().values());
-        for (CollectionDto collection : collectionDtos) {
+    public static List<PublicationDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
+        List<PublicationDto> collectionList = new ArrayList<PublicationDto>();
+        List<PublicationDto> PublicationDtos = new ArrayList<PublicationDto>(getCollections().values());
+        for (PublicationDto collection : PublicationDtos) {
             if (operationUrn.equals(collection.getOperation().getUrn())) {
-                CollectionDto c = collection;
+                PublicationDto c = collection;
                 collectionList.add(c);
             }
         }
@@ -600,75 +595,75 @@ public class MockServices {
         if (endIndex - firstResult > maxResults) {
             endIndex = firstResult + maxResults;
         }
-        return new ArrayList<CollectionDto>(collectionList.subList(firstResult, endIndex));
+        return new ArrayList<PublicationDto>(collectionList.subList(firstResult, endIndex));
     }
 
-    public static CollectionDto sendCollectionToProductionValidation(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
-        return collectionDto;
+    public static PublicationDto sendCollectionToProductionValidation(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        return PublicationDto;
     }
 
-    public static CollectionDto sendCollectionToDiffusionValidation(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
-        return collectionDto;
+    public static PublicationDto sendCollectionToDiffusionValidation(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        return PublicationDto;
     }
 
-    public static CollectionDto rejectCollectionProductionValidation(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        return collectionDto;
+    public static PublicationDto rejectCollectionProductionValidation(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        return PublicationDto;
     }
 
-    public static CollectionDto rejectCollectionDiffusionValidation(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        return collectionDto;
+    public static PublicationDto rejectCollectionDiffusionValidation(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        return PublicationDto;
     }
 
-    public static CollectionDto sendCollectionToPendingPublication(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-        return collectionDto;
+    public static PublicationDto sendCollectionToPendingPublication(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+        return PublicationDto;
     }
 
-    public static CollectionDto programCollectionPublication(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
-        return collectionDto;
+    public static PublicationDto programCollectionPublication(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
+        return PublicationDto;
     }
 
-    public static CollectionDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-        return collectionDto;
+    public static PublicationDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+        return PublicationDto;
     }
 
-    public static CollectionDto publishCollection(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
-        return collectionDto;
+    public static PublicationDto publishCollection(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        return PublicationDto;
     }
 
-    public static CollectionDto archiveCollection(String urn) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
-        return collectionDto;
+    public static PublicationDto archiveCollection(String urn) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
+        return PublicationDto;
     }
 
-    public static CollectionDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
-        CollectionDto collectionDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        collectionDto.setId(Long.valueOf(collections.size() + 1));
-        collectionDto.setVersionLogic(VersionUtil.createNextVersionTag(collectionDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        getCollections().put(collectionDto.getUrn(), collectionDto);
-        return collectionDto;
+    public static PublicationDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
+        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        PublicationDto.setId(Long.valueOf(collections.size() + 1));
+        PublicationDto.setVersionLogic(VersionUtil.createNextVersionTag(PublicationDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        getCollections().put(PublicationDto.getUrn(), PublicationDto);
+        return PublicationDto;
     }
 
-    private static Map<String, CollectionDto> getCollections() {
+    private static Map<String, PublicationDto> getCollections() {
         if (collections == null) {
-            collections = new HashMap<String, CollectionDto>();
+            collections = new HashMap<String, PublicationDto>();
             try {
                 List<ExternalItemDto> operations = getOperationsList();
                 if (operations.size() > 0) {
@@ -689,32 +684,32 @@ public class MockServices {
 
     private static void createCollection(String code, String title_es, String title_en, ExternalItemDto operation) {
         Date now = new Date();
-        CollectionDto collectionDto = new CollectionDto();
+        PublicationDto PublicationDto = new PublicationDto();
 
-        collectionDto.setId(Long.valueOf(collections.size() + 1));
-        collectionDto.setUuid(UUID.randomUUID().toString());
-        collectionDto.setVersion(1L);
-        collectionDto.setOperation(operation);
+        PublicationDto.setId(Long.valueOf(collections.size() + 1));
+        PublicationDto.setUuid(UUID.randomUUID().toString());
+        PublicationDto.setVersion(1L);
+        PublicationDto.setOperation(operation);
 
         // Audit
-        collectionDto.setResponsabilityCreator("ISTAC_ADMIN");
-        collectionDto.setDateCreated(now);
-        collectionDto.setDateLastUpdate(now);
-        collectionDto.setLastUpdateUser("ISTAC_ADMIN");
+        PublicationDto.setResponsabilityCreator("ISTAC_ADMIN");
+        PublicationDto.setDateCreated(now);
+        PublicationDto.setDateLastUpdate(now);
+        PublicationDto.setLastUpdateUser("ISTAC_ADMIN");
 
         // Identifiers
-        collectionDto.setIdentifier(code);
-        collectionDto.setTitle(createInternationalString(title_es, title_en));
-        collectionDto.setUri(COLLECTION_URI_PREFIX + code);
-        collectionDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
+        PublicationDto.setIdentifier(code);
+        PublicationDto.setTitle(createInternationalString(title_es, title_en));
+        PublicationDto.setUri(COLLECTION_URI_PREFIX + code);
+        PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
 
         // Version
-        collectionDto.setVersionDate(now);
-        collectionDto.setVersionLogic("01.000");
+        PublicationDto.setVersionDate(now);
+        PublicationDto.setVersionLogic("01.000");
 
         // Life cycle
-        collectionDto.setCreator(istacAgency);
-        collectionDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        PublicationDto.setCreator(istacAgency);
+        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
         ContentMetadataDto contentMetadata = new ContentMetadataDto();
@@ -754,15 +749,15 @@ public class MockServices {
         contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
         contentMetadata.setType(StatisticalResourceTypeEnum.COLLECTION);
         contentMetadata.setCopyrightedDate(new Date());
-        collectionDto.setContentMetadata(contentMetadata);
+        PublicationDto.setContentMetadata(contentMetadata);
 
         // STRUCTURE
 
         CollectionStructureHierarchyDto structure = createCollectionStructure();
 
-        collectionDto.setStructure(structure);
+        PublicationDto.setStructure(structure);
 
-        collections.put(collectionDto.getUrn(), collectionDto);
+        collections.put(PublicationDto.getUrn(), PublicationDto);
     }
 
     private static CollectionStructureHierarchyDto createCollectionStructureBase(InternationalStringDto title) {

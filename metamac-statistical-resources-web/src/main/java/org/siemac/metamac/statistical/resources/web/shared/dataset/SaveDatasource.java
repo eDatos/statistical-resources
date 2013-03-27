@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
-import org.siemac.metamac.statistical.resources.core.dto.DatasourceDto;
+
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;

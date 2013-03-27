@@ -4,10 +4,10 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.record.CollectionRecord;
-import org.siemac.metamac.statistical.resources.web.client.collection.widgets.CollectionListGrid;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.collection.model.record.PublicationRecord;
+import org.siemac.metamac.statistical.resources.web.client.collection.widgets.PublicationListGrid;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
@@ -29,7 +29,7 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     private OperationResourcesUiHandlers uiHandlers;
 
     private DatasetListGrid              datasetsListGrid;
-    private CollectionListGrid           collectionsListGrid;
+    private PublicationListGrid           publicationsListGrid;
 
     private VLayout                      panel;
     private SectionStack                 sections;
@@ -58,21 +58,21 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
         lastModifiedDatasetsSection.setItems(datasetsListGrid);
         sections.addSection(lastModifiedDatasetsSection);
 
-        collectionsListGrid = new CollectionListGrid();
-        collectionsListGrid.addRecordClickHandler(new RecordClickHandler() {
+        publicationsListGrid = new PublicationListGrid();
+        publicationsListGrid.addRecordClickHandler(new RecordClickHandler() {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
-                CollectionRecord record = (CollectionRecord) event.getRecord();
-                uiHandlers.goToCollection(record.getUrn());
+                PublicationRecord record = (PublicationRecord) event.getRecord();
+                uiHandlers.goToPublication(record.getUrn());
             }
         });
 
-        SectionStackSection lastModifiedCollectionsSection = new SectionStackSection();
-        lastModifiedCollectionsSection.setTitle(getConstants().collectionLastModified());
-        lastModifiedCollectionsSection.setExpanded(false);
-        lastModifiedCollectionsSection.setItems(collectionsListGrid);
-        sections.addSection(lastModifiedCollectionsSection);
+        SectionStackSection lastModifiedPublicationsSection = new SectionStackSection();
+        lastModifiedPublicationsSection.setTitle(getConstants().collectionLastModified());
+        lastModifiedPublicationsSection.setExpanded(false);
+        lastModifiedPublicationsSection.setItems(publicationsListGrid);
+        sections.addSection(lastModifiedPublicationsSection);
 
         SectionStackSection lastModifiedQueriesSection = new SectionStackSection();
         lastModifiedQueriesSection.setTitle(getConstants().queryLastModified());
@@ -95,8 +95,8 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     }
 
     @Override
-    public void setCollections(List<CollectionDto> collectionDtos) {
-        collectionsListGrid.setCollections(collectionDtos);
+    public void setPublications(List<PublicationDto> publicationDtos) {
+        publicationsListGrid.setPublications(publicationDtos);
     }
     
     @Override

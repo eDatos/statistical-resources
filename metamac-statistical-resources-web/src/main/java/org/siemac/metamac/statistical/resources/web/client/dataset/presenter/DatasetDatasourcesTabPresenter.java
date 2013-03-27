@@ -6,8 +6,8 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;

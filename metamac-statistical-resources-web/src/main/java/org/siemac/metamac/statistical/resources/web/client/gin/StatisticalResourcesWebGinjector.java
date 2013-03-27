@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.client.gin;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionListPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionMetadataTabPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.CollectionStructureTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
@@ -43,10 +43,10 @@ public interface StatisticalResourcesWebGinjector extends Ginjector {
     AsyncProvider<DatasetPresenter> getDatasetPresenter();
     AsyncProvider<DatasetMetadataTabPresenter> getDatasetMetadataTabPresenter();
     AsyncProvider<DatasetDatasourcesTabPresenter> getDatasetDatasourcesTabPresenter();
-    AsyncProvider<CollectionListPresenter> getCollectionListPresenter();
-    AsyncProvider<CollectionPresenter> getCollectionPresenter();
-    AsyncProvider<CollectionMetadataTabPresenter> getCollectionMetadataTabPresenter();
-    AsyncProvider<CollectionStructureTabPresenter> getCollectionStructureTabPresenter();
+    AsyncProvider<PublicationListPresenter> getCollectionListPresenter();
+    AsyncProvider<PublicationPresenter> getCollectionPresenter();
+    AsyncProvider<PublicationMetadataTabPresenter> getCollectionMetadataTabPresenter();
+    AsyncProvider<PublicationStructureTabPresenter> getCollectionStructureTabPresenter();
 
     AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();
     AsyncProvider<UnauthorizedPagePresenter> getUnauthorizedPagePresenter();

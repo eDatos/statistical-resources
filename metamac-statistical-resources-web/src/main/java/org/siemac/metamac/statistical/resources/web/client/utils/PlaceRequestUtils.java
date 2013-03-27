@@ -29,7 +29,7 @@ public class PlaceRequestUtils {
         return null;
     }
 
-    public static String getCollectionParamFromUrl(PlaceManager placeManager) {
+    public static String getPublicationParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.collectionPage.equals(request.getNameToken())) {
                 return request.getParameter(PlaceRequestParams.collectionParam, null);

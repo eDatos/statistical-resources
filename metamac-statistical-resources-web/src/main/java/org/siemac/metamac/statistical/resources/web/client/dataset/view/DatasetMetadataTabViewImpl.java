@@ -9,8 +9,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
@@ -139,7 +138,8 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
                 uiHandlers.sendToPendingPublication(datasetDto.getUrn(), datasetDto.getProcStatus());
             }
         });
-        mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
+        //FIXME: add clickhandler
+        /*mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -163,7 +163,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
             public void onClick(ClickEvent event) {
                 uiHandlers.cancelProgrammedPublication(datasetDto.getUrn(), datasetDto.getProcStatus());
             }
-        });
+        });*/
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
 
             @Override
@@ -188,13 +188,14 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
                 });
             }
         });
-        mainFormLayout.getArchiveButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                uiHandlers.archive(datasetDto.getUrn(), datasetDto.getProcStatus());
-            }
-        });
+//        FIXME: ADD CLICK HANDLER
+//        mainFormLayout.getArchiveButton().addClickHandler(new ClickHandler() {
+//
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                uiHandlers.archive(datasetDto.getUrn(), datasetDto.getProcStatus());
+//            }
+//        });
     }
 
     private void createViewForm() {

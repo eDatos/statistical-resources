@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetResult;

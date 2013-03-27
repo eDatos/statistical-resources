@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;

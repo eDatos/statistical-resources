@@ -8,8 +8,8 @@ import java.util.List;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.core.dto.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -21,8 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
@@ -62,7 +62,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
 
         void setDatasets(List<DatasetDto> datasetDtos);
-        void setCollections(List<CollectionDto> collectionDtos);
+        void setPublications(List<PublicationDto> collectionDtos);
     }
 
     @ProxyCodeSplit
@@ -140,16 +140,16 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             }
         });
 
-        // Collections
-        dispatcher.execute(new GetCollectionPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetCollectionPaginatedListResult>() {
+        // Publications
+        dispatcher.execute(new GetPublicationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetPublicationPaginatedListResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetCollectionPaginatedListResult result) {
-                getView().setCollections(result.getCollectionList());
+            public void onWaitSuccess(GetPublicationPaginatedListResult result) {
+                getView().setPublications(result.getPublicationList());
             }
         });
     }
@@ -162,7 +162,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     }
 
     @Override
-    public void goToCollection(String urn) {
+    public void goToPublication(String urn) {
         if (!StringUtils.isBlank(urn)) {
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.collectionPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
         }
