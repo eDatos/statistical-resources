@@ -14,12 +14,8 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
     private MainFormLayoutButton              productionValidation;
     private MainFormLayoutButton              diffusionValidation;
     private MainFormLayoutButton              rejectValidation;
-    private MainFormLayoutButton              pendingPublication;
-    private MainFormLayoutButton              programPublication;
-    private MainFormLayoutButton              cancelProgrammedPublication;
     private MainFormLayoutButton              publish;
     private MainFormLayoutButton              versioning;
-    private MainFormLayoutButton              archive;
 
     private StatisticalResourceProcStatusEnum status;
 
@@ -40,22 +36,14 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
         rejectValidation = new MainFormLayoutButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
-        pendingPublication = new MainFormLayoutButton(getConstants().lifeCycleSendToPendingPublication(), GlobalResources.RESOURCE.pendingPublication().getURL());
-        programPublication = new MainFormLayoutButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
-        cancelProgrammedPublication = new MainFormLayoutButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
-        archive = new MainFormLayoutButton(getConstants().lifeCycleArchive(), GlobalResources.RESOURCE.archive().getURL());
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
-        toolStrip.addButton(pendingPublication);
         toolStrip.addButton(rejectValidation);
-        toolStrip.addButton(programPublication);
-        toolStrip.addButton(cancelProgrammedPublication);
         toolStrip.addButton(publish);
         toolStrip.addButton(versioning);
-        toolStrip.addButton(archive);
     }
 
     @Override
@@ -86,22 +74,12 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
             showDiffusionValidationButton();
             showRejectValidationButton();
         } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            showPendingPublicationButton();
             showRejectValidationButton();
-            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
-            // showProgramPublicationButton();
-            // showPublishButton();
-            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
-            // showCancelProgrammedPublication();
-            // // showPublishButton();
+            showPublishButton();
         } else if (StatisticalResourceProcStatusEnum.PUBLICATION_FAILED.equals(status)) {
-            showProgramPublicationButton();
             showPublishButton();
         } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
-            showArchiveButton();
-            // } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(status)) {
-            // showVersioningButton();
         }
     }
 
@@ -109,12 +87,8 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();
-        pendingPublication.hide();
-        programPublication.hide();
-        cancelProgrammedPublication.hide();
         publish.hide();
         versioning.hide();
-        archive.hide();
     }
 
     private void showProductionValidationButton() {
@@ -129,28 +103,12 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         rejectValidation.show();
     }
 
-    private void showPendingPublicationButton() {
-        pendingPublication.show();
-    }
-
-    private void showProgramPublicationButton() {
-        programPublication.show();
-    }
-
-    private void showCancelProgrammedPublication() {
-        cancelProgrammedPublication.show();
-    }
-
     private void showPublishButton() {
         publish.show();
     }
 
     private void showVersioningButton() {
         versioning.show();
-    }
-
-    private void showArchiveButton() {
-        archive.show();
     }
 
     public HasClickHandlers getProductionValidationButton() {
@@ -165,18 +123,6 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         return rejectValidation;
     }
 
-    public HasClickHandlers getPendingPublicationButton() {
-        return pendingPublication;
-    }
-
-    public HasClickHandlers getProgramPublicationButton() {
-        return programPublication;
-    }
-
-    public HasClickHandlers getCancelProgrammedPublication() {
-        return cancelProgrammedPublication;
-    }
-
     public HasClickHandlers getPublishButton() {
         return publish;
     }
@@ -184,9 +130,4 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
     public HasClickHandlers getVersioningButton() {
         return versioning;
     }
-
-    public HasClickHandlers getArchiveButton() {
-        return archive;
-    }
-
 }

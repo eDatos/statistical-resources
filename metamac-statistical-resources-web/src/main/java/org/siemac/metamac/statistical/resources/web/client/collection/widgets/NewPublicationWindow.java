@@ -49,7 +49,7 @@ public class NewPublicationWindow extends CustomWindow {
 
     public PublicationDto getNewPublicationDto() {
         PublicationDto collectionDto = new PublicationDto();
-        collectionDto.setCode(form.getValueAsString(PublicationDS.IDENTIFIER));
+        collectionDto.setCode(form.getValueAsString(PublicationDS.CODE));
         collectionDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(PublicationDS.TITLE)));
         return collectionDto;
     }

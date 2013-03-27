@@ -36,11 +36,11 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
                 } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(currentProcStatus)) {
                     datasetDto = MockServices.rejectDatasetDiffusionValidation(urn);
                 }
-// FIXME: the checkings bellow need the date of pending publication
-//            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
-//                datasetDto = MockServices.programDatasetPublication(urn);
-//            } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
-                datasetDto = MockServices.cancelProgrammedDatasetPublication(urn);
+                // FIXME: the checkings bellow need the date of pending publication
+                // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
+                // datasetDto = MockServices.programDatasetPublication(urn);
+                // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
+                // datasetDto = MockServices.cancelProgrammedDatasetPublication(urn);
             } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
                 datasetDto = MockServices.publishDataset(urn);
             }

@@ -46,7 +46,7 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
         tabSet.setMargin(10);
 
         collectionMetadataTab = new Tab(getConstants().collectionMetadata());
-        collectionStructureTab = new Tab(getConstants().collectionStructure());
+        collectionStructureTab = new Tab(getConstants().publicationStructure());
 
         tabSet.setTabs(collectionMetadataTab, collectionStructureTab);
 

@@ -21,13 +21,12 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
-import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.web.common.client.utils.UrnUtils;
@@ -38,26 +37,26 @@ import org.slf4j.LoggerFactory;
 
 public class MockServices {
 
-    private static final String                            DATASOURCE_URI_PREFIX    = "/datasources/";
-    private static final String                            AGENCY_URI_PREFIX    = "http://siemac.metamac/agency/";
+    private static final String                            DATASOURCE_URI_PREFIX = "/datasources/";
+    private static final String                            AGENCY_URI_PREFIX     = "http://siemac.metamac/agency/";
     private static final String                            DATASET_URI_PREFIX    = "http://siemac.metamac/datasets/";
     private static final String                            COLLECTION_URI_PREFIX = "http://siemac.metamac/collections/";
     private static final String                            QUERY_URI_PREFIX      = "http://siemac.metamac/queries/";
 
     private static Map<String, DatasetDto>                 datasets;
     private static Map<String, DatasourceDto>              datasources;
-    private static Map<String, PublicationDto>              collections;
+    private static Map<String, PublicationDto>             collections;
     private static Map<String, ExternalItemDto>            agencies;
     private static StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
-    
-    private static ExternalItemDto  istacAgency;
 
-    private static Logger                                  logger          = LoggerFactory.getLogger(MockServices.class);
-    
+    private static ExternalItemDto                         istacAgency;
+
+    private static Logger                                  logger                = LoggerFactory.getLogger(MockServices.class);
+
     static {
         getAgencies();
     }
-    
+
     //
     // ORGANIZATIONS
     //
@@ -93,9 +92,9 @@ public class MockServices {
     }
 
     private static ExternalItemDto createAgency(String code, String title_es, String title_en) {
-        String uri = AGENCY_URI_PREFIX+code;
+        String uri = AGENCY_URI_PREFIX + code;
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SDMX_CLASS_AGENCY_PREFIX, code);
-        ExternalItemDto agency = new ExternalItemDto(code,uri, urn, TypeExternalArtefactsEnum.AGENCY,createInternationalString(title_es, title_en));
+        ExternalItemDto agency = new ExternalItemDto(code, uri, urn, TypeExternalArtefactsEnum.AGENCY, createInternationalString(title_es, title_en));
         agencies.put(agency.getUrn(), agency);
         return agency;
     }
@@ -105,11 +104,11 @@ public class MockServices {
     //
 
     public static DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
-        String identifier = datasetDto.getIdentifier();
+        String identifier = datasetDto.getCode();
         String datasetUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, identifier);
-        if (getDatasets().containsKey(datasetUrn)) {
-            throw new MetamacException(ServiceExceptionType.DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
-        }
+        // if (getDatasets().containsKey(datasetUrn)) {
+        // throw new MetamacException(ServiceExceptionType.DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
+        // }
 
         Date now = new Date();
 
@@ -118,17 +117,17 @@ public class MockServices {
         datasetDto.setVersion(1L);
 
         // Audit
-        datasetDto.setResponsabilityCreator(ctx.getUserId());
-        datasetDto.setDateCreated(now);
-        datasetDto.setDateLastUpdate(now);
-        datasetDto.setLastUpdateUser(ctx.getUserId());
+        // datasetDto.setResponsabilityCreator(ctx.getUserId());
+        // datasetDto.setDateCreated(now);
+        // datasetDto.setDateLastUpdate(now);
+        // datasetDto.setLastUpdateUser(ctx.getUserId());
 
         // Identifiers
-        datasetDto.setUri(DATASET_URI_PREFIX + datasetDto.getIdentifier());
-        datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetDto.getIdentifier()));
+        datasetDto.setUri(DATASET_URI_PREFIX + datasetDto.getCode());
+        datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetDto.getCode()));
 
         // Version
-        datasetDto.setVersionDate(now);
+        // datasetDto.setVersionDate(now);
         datasetDto.setVersionLogic("01.000");
 
         // Life cycle
@@ -136,13 +135,13 @@ public class MockServices {
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
-        ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        contentMetadata.setSpatialCoverage(new ArrayList<String>());
-        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
-        contentMetadata.setTemporalCoverage(new ArrayList<String>());
-        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
-        contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        datasetDto.setContentMetadata(contentMetadata);
+        // ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        // contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        // contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        // contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        // contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        // contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        // datasetDto.setContentMetadata(contentMetadata);
 
         getDatasets().put(datasetDto.getUrn(), datasetDto);
         return datasetDto;
@@ -163,13 +162,13 @@ public class MockServices {
         }
         DatasetDto oldDataset = getDatasets().get(datasetDto.getUrn());
 
-        if (!oldDataset.getOperation().getUrn().equals(datasetDto.getOperation().getUrn())) {
-            throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_OPERATION);
-        }
-
-        Date now = new Date();
-        datasetDto.setDateLastUpdate(now);
-        datasetDto.setLastUpdateUser(ctx.getUserId());
+        // if (!oldDataset.getOperation().getUrn().equals(datasetDto.getOperation().getUrn())) {
+        // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_OPERATION);
+        // }
+        //
+        // Date now = new Date();
+        // datasetDto.setDateLastUpdate(now);
+        // datasetDto.setLastUpdateUser(ctx.getUserId());
 
         datasetDto.setVersion(datasetDto.getVersion() + 1);
 
@@ -177,7 +176,7 @@ public class MockServices {
 
         return datasetDto;
     }
-    
+
     public static void deleteDataset(ServiceContext ctx, String urn) throws MetamacException {
         if (urn == null || !getDatasets().containsKey(urn)) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
@@ -187,11 +186,11 @@ public class MockServices {
 
     public static MetamacCriteriaResult<DatasetDto> findDatasets(String operationUrn, int firstResult, int maxResults) throws MetamacException {
         List<DatasetDto> datasetsList = new ArrayList<DatasetDto>();
-        for (DatasetDto dataset : getDatasets().values()) {
-            if (operationUrn.equals(dataset.getOperation().getUrn())) {
-                datasetsList.add(dataset);
-            }
-        }
+        // for (DatasetDto dataset : getDatasets().values()) {
+        // if (operationUrn.equals(dataset.getOperation().getUrn())) {
+        // datasetsList.add(dataset);
+        // }
+        // }
 
         int endIndex = datasetsList.size();
         if (endIndex - firstResult > maxResults) {
@@ -235,17 +234,17 @@ public class MockServices {
         datasetDto.setId(Long.valueOf(datasets.size() + 1));
         datasetDto.setUuid(UUID.randomUUID().toString());
         datasetDto.setVersion(1L);
-        //Base
-        datasetDto.setOperation(operation);
-        datasetDto.setResponsabilityCreator("ISTAC_ADMIN");
-        datasetDto.setDateCreated(now);
-        datasetDto.setDateLastUpdate(now);
-        datasetDto.setLastUpdateUser("ISTAC_ADMIN");
-        datasetDto.setIdentifier(code);
+        // Base
+        // datasetDto.setOperation(operation);
+        // datasetDto.setResponsabilityCreator("ISTAC_ADMIN");
+        // datasetDto.setDateCreated(now);
+        // datasetDto.setDateLastUpdate(now);
+        // datasetDto.setLastUpdateUser("ISTAC_ADMIN");
+        datasetDto.setCode(code);
         datasetDto.setTitle(createInternationalString(title_es, title_en));
         datasetDto.setUri(DATASET_URI_PREFIX + code);
         datasetDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
-        datasetDto.setVersionDate(now);
+        // datasetDto.setVersionDate(now);
         datasetDto.setVersionLogic("01.000");
 
         // Life cycle
@@ -253,51 +252,51 @@ public class MockServices {
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
-        ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        contentMetadata.setLanguage("es");
-        contentMetadata.setLanguages(new ArrayList<String>());
-        contentMetadata.getLanguages().add("es");
-        contentMetadata.getLanguages().add("en");
-        contentMetadata.setDescription(createInternationalString(
-                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
-                        + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
-                        + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
-
-        contentMetadata.setKeywords(new ArrayList<String>());
-        contentMetadata.getKeywords().add("statistic");
-        contentMetadata.getKeywords().add("data");
-        contentMetadata.getKeywords().add("dataset");
-
-        contentMetadata.setSpatialCoverage(new ArrayList<String>());
-        contentMetadata.getSpatialCoverage().add("CANARIAS");
-        contentMetadata.getSpatialCoverage().add("LANZAROTE");
-        contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
-        contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
-
-        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
-        contentMetadata.getSpatialCoverageCodes().add("ES70");
-        contentMetadata.getSpatialCoverageCodes().add("ES708");
-        contentMetadata.getSpatialCoverageCodes().add("ES708A01");
-        contentMetadata.getSpatialCoverageCodes().add("ES708A02");
-
-        contentMetadata.setTemporalCoverage(new ArrayList<String>());
-        contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
-        contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
-        contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
-
-        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
-        contentMetadata.getTemporalCoverageCodes().add("2002Q1");
-        contentMetadata.getTemporalCoverageCodes().add("2002Q2");
-        contentMetadata.getTemporalCoverageCodes().add("2002Q3");
-
-        contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        contentMetadata.setType(StatisticalResourceTypeEnum.DATASET);
-        contentMetadata.setCopyrightedDate(new Date());
-        datasetDto.setContentMetadata(contentMetadata);
+        // ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        // contentMetadata.setLanguage("es");
+        // contentMetadata.setLanguages(new ArrayList<String>());
+        // contentMetadata.getLanguages().add("es");
+        // contentMetadata.getLanguages().add("en");
+        // contentMetadata.setDescription(createInternationalString(
+        // "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
+        // + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
+        // + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
+        //
+        // contentMetadata.setKeywords(new ArrayList<String>());
+        // contentMetadata.getKeywords().add("statistic");
+        // contentMetadata.getKeywords().add("data");
+        // contentMetadata.getKeywords().add("dataset");
+        //
+        // contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        // contentMetadata.getSpatialCoverage().add("CANARIAS");
+        // contentMetadata.getSpatialCoverage().add("LANZAROTE");
+        // contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
+        // contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
+        //
+        // contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        // contentMetadata.getSpatialCoverageCodes().add("ES70");
+        // contentMetadata.getSpatialCoverageCodes().add("ES708");
+        // contentMetadata.getSpatialCoverageCodes().add("ES708A01");
+        // contentMetadata.getSpatialCoverageCodes().add("ES708A02");
+        //
+        // contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        // contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
+        // contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
+        // contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
+        //
+        // contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        // contentMetadata.getTemporalCoverageCodes().add("2002Q1");
+        // contentMetadata.getTemporalCoverageCodes().add("2002Q2");
+        // contentMetadata.getTemporalCoverageCodes().add("2002Q3");
+        //
+        // contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        // contentMetadata.setType(StatisticalResourceTypeEnum.DATASET);
+        // contentMetadata.setCopyrightedDate(new Date());
+        // datasetDto.setContentMetadata(contentMetadata);
 
         datasets.put(datasetDto.getUrn(), datasetDto);
     }
-    
+
     public static DatasetDto sendDatasetToProductionValidation(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
@@ -322,72 +321,48 @@ public class MockServices {
         return datasetDto;
     }
 
-    public static DatasetDto sendDatasetToPendingPublication(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-        return datasetDto;
-    }
-
-    public static DatasetDto programDatasetPublication(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
-        return datasetDto;
-    }
-
-    public static DatasetDto cancelProgrammedDatasetPublication(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-        return datasetDto;
-    }
-
     public static DatasetDto publishDataset(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
         return datasetDto;
     }
 
-    public static DatasetDto archiveDataset(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
-        return datasetDto;
-    }
-
     public static DatasetDto versionDataset(String urn, VersionTypeEnum versionType) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setId(Long.valueOf(collections.size() + 1));
-        datasetDto.setVersionLogic(VersionUtil.createNextVersionTag(datasetDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
+        // datasetDto.setVersionLogic(VersionUtil.createNextVersionTag(datasetDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
         datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         getDatasets().put(datasetDto.getUrn(), datasetDto);
         return datasetDto;
     }
-    
+
     //
-    //  DATASOURCES
+    // DATASOURCES
     //
-    
+
     public static DatasourceDto createDatasource(ServiceContext ctx, DatasourceDto datasourceDto) throws MetamacException {
-        String identifier = datasourceDto.getIdentifier();
+        String identifier = datasourceDto.getCode();
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, identifier);
-        if (getDatasources().containsKey(urn)) {
-            throw new MetamacException(ServiceExceptionType.DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
-        }
+        // if (getDatasources().containsKey(urn)) {
+        // throw new MetamacException(ServiceExceptionType.DATASET_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
+        // }
 
         Date now = new Date();
 
         datasourceDto.setId(Long.valueOf(getDatasets().size() + 1));
         datasourceDto.setUuid(UUID.randomUUID().toString());
         datasourceDto.setVersion(1L);
-        datasourceDto.setOperation(datasourceDto.getOperation());
-
-        // Audit
-        datasourceDto.setResponsabilityCreator(ctx.getUserId());
-        datasourceDto.setDateCreated(now);
-        datasourceDto.setDateLastUpdate(now);
-        datasourceDto.setLastUpdateUser(ctx.getUserId());
+        // datasourceDto.setOperation(datasourceDto.getOperation());
+        //
+        // // Audit
+        // datasourceDto.setResponsabilityCreator(ctx.getUserId());
+        // datasourceDto.setDateCreated(now);
+        // datasourceDto.setDateLastUpdate(now);
+        // datasourceDto.setLastUpdateUser(ctx.getUserId());
 
         // Identifiers
-        datasourceDto.setUri(DATASET_URI_PREFIX + datasourceDto.getIdentifier());
-        datasourceDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, datasourceDto.getIdentifier()));
+        datasourceDto.setUri(DATASET_URI_PREFIX + datasourceDto.getCode());
+        datasourceDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, datasourceDto.getCode()));
 
         getDatasources().put(datasourceDto.getUrn(), datasourceDto);
         return datasourceDto;
@@ -408,13 +383,13 @@ public class MockServices {
         }
         DatasourceDto oldDatasource = getDatasources().get(datasourceDto.getUrn());
 
-        if (!oldDatasource.getDataset().getUrn().equals(datasourceDto.getDataset().getUrn())) {
-            throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASOURCE_DATASET);
-        }
-
-        Date now = new Date();
-        datasourceDto.setDateLastUpdate(now);
-        datasourceDto.setLastUpdateUser(ctx.getUserId());
+        // if (!oldDatasource.getDataset().getUrn().equals(datasourceDto.getDataset().getUrn())) {
+        // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASOURCE_DATASET);
+        // }
+        //
+        // Date now = new Date();
+        // datasourceDto.setDateLastUpdate(now);
+        // datasourceDto.setLastUpdateUser(ctx.getUserId());
 
         datasourceDto.setVersion(datasourceDto.getVersion() + 1);
 
@@ -422,7 +397,7 @@ public class MockServices {
 
         return datasourceDto;
     }
-    
+
     public static void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
         if (urn == null || !getDatasets().containsKey(urn)) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
@@ -433,9 +408,9 @@ public class MockServices {
     public static MetamacCriteriaResult<DatasourceDto> findDatasources(String datasetUrn, int firstResult, int maxResults) throws MetamacException {
         List<DatasourceDto> datasourcesList = new ArrayList<DatasourceDto>();
         for (DatasourceDto datasource : getDatasources().values()) {
-            if (datasetUrn.equals(datasource.getDataset().getUrn())) {
-                datasourcesList.add(datasource);
-            }
+            // if (datasetUrn.equals(datasource.getDataset().getUrn())) {
+            // datasourcesList.add(datasource);
+            // }
         }
 
         int endIndex = datasourcesList.size();
@@ -476,32 +451,31 @@ public class MockServices {
         datasourceDto.setId(Long.valueOf(datasources.size() + 1));
         datasourceDto.setUuid(UUID.randomUUID().toString());
         datasourceDto.setVersion(1L);
-        //Base
-        datasourceDto.setOperation(dataset.getOperation());
-        datasourceDto.setDataset(dataset);
-        datasourceDto.setResponsabilityCreator("ISTAC_ADMIN");
-        datasourceDto.setDateCreated(now);
-        datasourceDto.setDateLastUpdate(now);
-        datasourceDto.setLastUpdateUser("ISTAC_ADMIN");
-        datasourceDto.setIdentifier(code);
-        datasourceDto.setTitle(createInternationalString(title_es, title_en));
-        datasourceDto.setUri(dataset.getUri() + DATASOURCE_URI_PREFIX + code);
+        // Base
+        // datasourceDto.setOperation(dataset.getOperation());
+        // datasourceDto.setDataset(dataset);
+        // datasourceDto.setResponsabilityCreator("ISTAC_ADMIN");
+        // datasourceDto.setDateCreated(now);
+        // datasourceDto.setDateLastUpdate(now);
+        // datasourceDto.setLastUpdateUser("ISTAC_ADMIN");
+        // datasourceDto.setIdentifier(code);
+        // datasourceDto.setTitle(createInternationalString(title_es, title_en));
+        // datasourceDto.setUri(dataset.getUri() + DATASOURCE_URI_PREFIX + code);
         datasourceDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, code));
 
         datasources.put(datasourceDto.getUrn(), datasourceDto);
     }
-    
 
     //
     // COLLECTIONS
     //
 
     public static PublicationDto createCollection(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
-        String identifier = PublicationDto.getIdentifier();
+        String identifier = PublicationDto.getCode();
         String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, identifier);
-        if (getCollections().containsKey(collectionUrn)) {
-            throw new MetamacException(ServiceExceptionType.COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
-        }
+        // if (getCollections().containsKey(collectionUrn)) {
+        // throw new MetamacException(ServiceExceptionType.COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
+        // }
 
         Date now = new Date();
 
@@ -510,17 +484,17 @@ public class MockServices {
         PublicationDto.setVersion(1L);
 
         // Audit
-        PublicationDto.setResponsabilityCreator(ctx.getUserId());
-        PublicationDto.setDateCreated(now);
-        PublicationDto.setDateLastUpdate(now);
-        PublicationDto.setLastUpdateUser(ctx.getUserId());
+        // PublicationDto.setResponsabilityCreator(ctx.getUserId());
+        // PublicationDto.setDateCreated(now);
+        // PublicationDto.setDateLastUpdate(now);
+        // PublicationDto.setLastUpdateUser(ctx.getUserId());
 
         // Identifiers
-        PublicationDto.setUri(COLLECTION_URI_PREFIX + PublicationDto.getIdentifier());
-        PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, PublicationDto.getIdentifier()));
+        PublicationDto.setUri(COLLECTION_URI_PREFIX + PublicationDto.getCode());
+        PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, PublicationDto.getCode()));
 
         // Version
-        PublicationDto.setVersionDate(now);
+        // PublicationDto.setVersionDate(now);
         PublicationDto.setVersionLogic("01.000");
 
         // Life cycle
@@ -528,15 +502,15 @@ public class MockServices {
         PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
 
         // Content
-        ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        contentMetadata.setSpatialCoverage(new ArrayList<String>());
-        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
-        contentMetadata.setTemporalCoverage(new ArrayList<String>());
-        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
-        contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        PublicationDto.setContentMetadata(contentMetadata);
-        
-        CollectionStructureHierarchyDto structure = createCollectionStructureBase(PublicationDto.getTitle());
+        // ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        // contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        // contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        // contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        // contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        // contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        // PublicationDto.setContentMetadata(contentMetadata);
+
+        PublicationStructureHierarchyDto structure = createCollectionStructureBase(PublicationDto.getTitle());
 
         PublicationDto.setStructure(structure);
 
@@ -546,11 +520,11 @@ public class MockServices {
 
     public static PublicationDto retrieveCollection(ServiceContext ctx, String collectionUrn) throws MetamacException {
         PublicationDto collection = getCollections().get(collectionUrn);
-        if (collection != null) {
-            return collection;
-        } else {
-            throw new MetamacException(ServiceExceptionType.COLLECTION_NOT_FOUND, collectionUrn);
-        }
+        // if (collection != null) {
+        return collection;
+        // } else {
+        // throw new MetamacException(ServiceExceptionType.COLLECTION_NOT_FOUND, collectionUrn);
+        // }
     }
 
     public static PublicationDto updateCollection(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
@@ -559,13 +533,13 @@ public class MockServices {
         }
         PublicationDto oldCollection = getCollections().get(PublicationDto.getUrn());
 
-        if (!oldCollection.getOperation().getUrn().equals(PublicationDto.getOperation().getUrn())) {
-            throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.COLLECTION_OPERATION);
-        }
-
-        Date now = new Date();
-        PublicationDto.setDateLastUpdate(now);
-        PublicationDto.setLastUpdateUser(ctx.getUserId());
+        // if (!oldCollection.getOperation().getUrn().equals(PublicationDto.getOperation().getUrn())) {
+        // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.COLLECTION_OPERATION);
+        // }
+        //
+        // Date now = new Date();
+        // PublicationDto.setDateLastUpdate(now);
+        // PublicationDto.setLastUpdateUser(ctx.getUserId());
 
         PublicationDto.setVersion(PublicationDto.getVersion() + 1);
 
@@ -573,7 +547,7 @@ public class MockServices {
 
         return PublicationDto;
     }
-    
+
     public static void deleteCollection(ServiceContext ctx, String urn) throws MetamacException {
         if (urn == null || !getCollections().containsKey(urn)) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
@@ -584,12 +558,12 @@ public class MockServices {
     public static List<PublicationDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
         List<PublicationDto> collectionList = new ArrayList<PublicationDto>();
         List<PublicationDto> PublicationDtos = new ArrayList<PublicationDto>(getCollections().values());
-        for (PublicationDto collection : PublicationDtos) {
-            if (operationUrn.equals(collection.getOperation().getUrn())) {
-                PublicationDto c = collection;
-                collectionList.add(c);
-            }
-        }
+        // for (PublicationDto collection : PublicationDtos) {
+        // if (operationUrn.equals(collection.getOperation().getUrn())) {
+        // PublicationDto c = collection;
+        // collectionList.add(c);
+        // }
+        // }
 
         int endIndex = collectionList.size();
         if (endIndex - firstResult > maxResults) {
@@ -622,23 +596,23 @@ public class MockServices {
         return PublicationDto;
     }
 
-    public static PublicationDto sendCollectionToPendingPublication(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-        return PublicationDto;
-    }
-
-    public static PublicationDto programCollectionPublication(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
-        return PublicationDto;
-    }
-
-    public static PublicationDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
-        return PublicationDto;
-    }
+    // public static PublicationDto sendCollectionToPendingPublication(String urn) throws MetamacException {
+    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+    // return PublicationDto;
+    // }
+    //
+    // public static PublicationDto programCollectionPublication(String urn) throws MetamacException {
+    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED);
+    // return PublicationDto;
+    // }
+    //
+    // public static PublicationDto cancelProgrammedCollectionPublication(String urn) throws MetamacException {
+    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_PENDING);
+    // return PublicationDto;
+    // }
 
     public static PublicationDto publishCollection(String urn) throws MetamacException {
         PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
@@ -646,19 +620,19 @@ public class MockServices {
         return PublicationDto;
     }
 
-    public static PublicationDto archiveCollection(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
-        return PublicationDto;
-    }
+    // public static PublicationDto archiveCollection(String urn) throws MetamacException {
+    // PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+    // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.ARCHIVED);
+    // return PublicationDto;
+    // }
 
     public static PublicationDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
-        PublicationDto PublicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setId(Long.valueOf(collections.size() + 1));
-        PublicationDto.setVersionLogic(VersionUtil.createNextVersionTag(PublicationDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        getCollections().put(PublicationDto.getUrn(), PublicationDto);
-        return PublicationDto;
+        PublicationDto publicationDto = retrieveCollection(ServiceContextHolder.getCurrentServiceContext(), urn);
+        publicationDto.setId(Long.valueOf(collections.size() + 1));
+        // PublicationDto.setVersionLogic(VersionUtil.createNextVersionTag(PublicationDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
+        publicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        getCollections().put(publicationDto.getUrn(), publicationDto);
+        return publicationDto;
     }
 
     private static Map<String, PublicationDto> getCollections() {
@@ -689,97 +663,97 @@ public class MockServices {
         PublicationDto.setId(Long.valueOf(collections.size() + 1));
         PublicationDto.setUuid(UUID.randomUUID().toString());
         PublicationDto.setVersion(1L);
-        PublicationDto.setOperation(operation);
-
-        // Audit
-        PublicationDto.setResponsabilityCreator("ISTAC_ADMIN");
-        PublicationDto.setDateCreated(now);
-        PublicationDto.setDateLastUpdate(now);
-        PublicationDto.setLastUpdateUser("ISTAC_ADMIN");
+        // PublicationDto.setOperation(operation);
+        //
+        // // Audit
+        // PublicationDto.setResponsabilityCreator("ISTAC_ADMIN");
+        // PublicationDto.setDateCreated(now);
+        // PublicationDto.setDateLastUpdate(now);
+        // PublicationDto.setLastUpdateUser("ISTAC_ADMIN");
 
         // Identifiers
-        PublicationDto.setIdentifier(code);
+        PublicationDto.setCode(code);
         PublicationDto.setTitle(createInternationalString(title_es, title_en));
         PublicationDto.setUri(COLLECTION_URI_PREFIX + code);
         PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
 
         // Version
-        PublicationDto.setVersionDate(now);
-        PublicationDto.setVersionLogic("01.000");
-
-        // Life cycle
-        PublicationDto.setCreator(istacAgency);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-
-        // Content
-        ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        contentMetadata.setLanguage("es");
-        contentMetadata.setDescription(createInternationalString(
-                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
-                        + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
-                        + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
-
-        contentMetadata.setKeywords(new ArrayList<String>());
-        contentMetadata.getKeywords().add("statistic");
-        contentMetadata.getKeywords().add("data");
-        contentMetadata.getKeywords().add("collection");
-
-        contentMetadata.setSpatialCoverage(new ArrayList<String>());
-        contentMetadata.getSpatialCoverage().add("CANARIAS");
-        contentMetadata.getSpatialCoverage().add("LANZAROTE");
-        contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
-        contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
-
-        contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
-        contentMetadata.getSpatialCoverageCodes().add("ES70");
-        contentMetadata.getSpatialCoverageCodes().add("ES708");
-        contentMetadata.getSpatialCoverageCodes().add("ES708A01");
-        contentMetadata.getSpatialCoverageCodes().add("ES708A02");
-
-        contentMetadata.setTemporalCoverage(new ArrayList<String>());
-        contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
-        contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
-        contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
-
-        contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
-        contentMetadata.getTemporalCoverageCodes().add("2002Q1");
-        contentMetadata.getTemporalCoverageCodes().add("2002Q2");
-        contentMetadata.getTemporalCoverageCodes().add("2002Q3");
-
-        contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        contentMetadata.setType(StatisticalResourceTypeEnum.COLLECTION);
-        contentMetadata.setCopyrightedDate(new Date());
-        PublicationDto.setContentMetadata(contentMetadata);
+        // PublicationDto.setVersionDate(now);
+        // PublicationDto.setVersionLogic("01.000");
+        //
+        // // Life cycle
+        // PublicationDto.setCreator(istacAgency);
+        // PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        //
+        // // Content
+        // ContentMetadataDto contentMetadata = new ContentMetadataDto();
+        // contentMetadata.setLanguage("es");
+        // contentMetadata.setDescription(createInternationalString(
+        // "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
+        // + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
+        // + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
+        //
+        // contentMetadata.setKeywords(new ArrayList<String>());
+        // contentMetadata.getKeywords().add("statistic");
+        // contentMetadata.getKeywords().add("data");
+        // contentMetadata.getKeywords().add("collection");
+        //
+        // contentMetadata.setSpatialCoverage(new ArrayList<String>());
+        // contentMetadata.getSpatialCoverage().add("CANARIAS");
+        // contentMetadata.getSpatialCoverage().add("LANZAROTE");
+        // contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
+        // contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
+        //
+        // contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
+        // contentMetadata.getSpatialCoverageCodes().add("ES70");
+        // contentMetadata.getSpatialCoverageCodes().add("ES708");
+        // contentMetadata.getSpatialCoverageCodes().add("ES708A01");
+        // contentMetadata.getSpatialCoverageCodes().add("ES708A02");
+        //
+        // contentMetadata.setTemporalCoverage(new ArrayList<String>());
+        // contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
+        // contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
+        // contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
+        //
+        // contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
+        // contentMetadata.getTemporalCoverageCodes().add("2002Q1");
+        // contentMetadata.getTemporalCoverageCodes().add("2002Q2");
+        // contentMetadata.getTemporalCoverageCodes().add("2002Q3");
+        //
+        // contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
+        // contentMetadata.setType(StatisticalResourceTypeEnum.COLLECTION);
+        // contentMetadata.setCopyrightedDate(new Date());
+        // PublicationDto.setContentMetadata(contentMetadata);
 
         // STRUCTURE
 
-        CollectionStructureHierarchyDto structure = createCollectionStructure();
+        PublicationStructureHierarchyDto structure = createCollectionStructure();
 
         PublicationDto.setStructure(structure);
 
         collections.put(PublicationDto.getUrn(), PublicationDto);
     }
 
-    private static CollectionStructureHierarchyDto createCollectionStructureBase(InternationalStringDto title) {
-        CollectionStructureHierarchyDto titleNode = createTitleNode(title);
+    private static PublicationStructureHierarchyDto createCollectionStructureBase(InternationalStringDto title) {
+        PublicationStructureHierarchyDto titleNode = createTitleNode(title);
         return titleNode;
     }
-    private static CollectionStructureHierarchyDto createCollectionStructure() {
-        CollectionStructureHierarchyDto title = createTitleNode(createInternationalString("Título", "Title"));
-        CollectionStructureHierarchyDto chapter1 = createChapterNode("Capítulo 1", "Chapter 1");
-        CollectionStructureHierarchyDto chapter2 = createChapterNode("Capítulo 2", "Chapter 2");
-        CollectionStructureHierarchyDto chapter3 = createChapterNode("Capítulo 3", "Chapter 3");
-        CollectionStructureHierarchyDto subchapter1 = createSubChapter1Node("Subcapítulo 1", "Subchapter 1");
-        CollectionStructureHierarchyDto subchapter11 = createSubChapter2Node("Subcapítulo 11", "Subchapter 11");
-        CollectionStructureHierarchyDto text11 = createTextNode("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+    private static PublicationStructureHierarchyDto createCollectionStructure() {
+        PublicationStructureHierarchyDto title = createTitleNode(createInternationalString("Título", "Title"));
+        PublicationStructureHierarchyDto chapter1 = createChapterNode("Capítulo 1", "Chapter 1");
+        PublicationStructureHierarchyDto chapter2 = createChapterNode("Capítulo 2", "Chapter 2");
+        PublicationStructureHierarchyDto chapter3 = createChapterNode("Capítulo 3", "Chapter 3");
+        PublicationStructureHierarchyDto subchapter1 = createSubChapter1Node("Subcapítulo 1", "Subchapter 1");
+        PublicationStructureHierarchyDto subchapter11 = createSubChapter2Node("Subcapítulo 11", "Subchapter 11");
+        PublicationStructureHierarchyDto text11 = createTextNode("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
                 "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.");
-        CollectionStructureHierarchyDto dataSet11 = createDataSetNode("urn:dataset", "Dataset 1", "Dataset 1");
-        CollectionStructureHierarchyDto query11 = createQueryNode("urn:query", "Consulta 1", "Query 1");
-        CollectionStructureHierarchyDto text2 = createTextNode("Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. "
+        PublicationStructureHierarchyDto dataSet11 = createDataSetNode("urn:dataset", "Dataset 1", "Dataset 1");
+        PublicationStructureHierarchyDto query11 = createQueryNode("urn:query", "Consulta 1", "Query 1");
+        PublicationStructureHierarchyDto text2 = createTextNode("Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. "
                 + "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. ", "English");
-        CollectionStructureHierarchyDto dataSet2 = createDataSetNode("urn:dataset", "Dataset 2", "Dataset 2");
-        CollectionStructureHierarchyDto query2 = createQueryNode("urn:query", "Consulta 2", "Query 2");
-        CollectionStructureHierarchyDto url2 = createUrlNode("http://www.gobiernodecanarias.org/istac/", "URL del ISTAC", "ISTAC URL");
+        PublicationStructureHierarchyDto dataSet2 = createDataSetNode("urn:dataset", "Dataset 2", "Dataset 2");
+        PublicationStructureHierarchyDto query2 = createQueryNode("urn:query", "Consulta 2", "Query 2");
+        PublicationStructureHierarchyDto url2 = createUrlNode("http://www.gobiernodecanarias.org/istac/", "URL del ISTAC", "ISTAC URL");
 
         title.getChildren().add(chapter1);
 
@@ -803,68 +777,68 @@ public class MockServices {
         return title;
     }
 
-    private static CollectionStructureHierarchyDto createTitleNode(InternationalStringDto text) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createTitleNode(InternationalStringDto text) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.TITLE);
+        node.setType(PublicationStructureHierarchyTypeEnum.TITLE);
         node.setText(text);
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createChapterNode(String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createChapterNode(String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.CHAPTER);
+        node.setType(PublicationStructureHierarchyTypeEnum.CHAPTER);
         node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createSubChapter1Node(String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createSubChapter1Node(String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER1);
+        node.setType(PublicationStructureHierarchyTypeEnum.SUBCHAPTER1);
         node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createSubChapter2Node(String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createSubChapter2Node(String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.SUBCHAPTER2);
+        node.setType(PublicationStructureHierarchyTypeEnum.SUBCHAPTER2);
         node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createTextNode(String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createTextNode(String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.TEXT);
+        node.setType(PublicationStructureHierarchyTypeEnum.TEXT);
         node.setText(createInternationalString(text_es, text_en));
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createUrlNode(String url, String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createUrlNode(String url, String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.URL);
+        node.setType(PublicationStructureHierarchyTypeEnum.URL);
         node.setText(createInternationalString(text_es, text_en));
         node.setUrl(url);
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createDataSetNode(String urn, String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createDataSetNode(String urn, String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.DATASET);
+        node.setType(PublicationStructureHierarchyTypeEnum.DATASET);
         node.setText(createInternationalString(text_es, text_en));
         node.setUrn(urn);
         return node;
     }
 
-    private static CollectionStructureHierarchyDto createQueryNode(String urn, String text_es, String text_en) {
-        CollectionStructureHierarchyDto node = new CollectionStructureHierarchyDto();
+    private static PublicationStructureHierarchyDto createQueryNode(String urn, String text_es, String text_en) {
+        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
         node.setId(RandomUtils.nextLong());
-        node.setType(CollectionStructureHierarchyTypeEnum.QUERY);
+        node.setType(PublicationStructureHierarchyTypeEnum.QUERY);
         node.setText(createInternationalString(text_es, text_en));
         node.setUrn(urn);
         return node;

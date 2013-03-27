@@ -125,7 +125,7 @@ public class PublicationStructurePanel extends HLayout {
 
     // TREE GRID
 
-    public void setCollectionStructure(PublicationStructureHierarchyDto structureHierarchyDto) {
+    public void setPublicationStructure(PublicationStructureHierarchyDto structureHierarchyDto) {
         mainFormLayout.hide();
         collectionStructureTreeGrid.setCollectionStructure(structureHierarchyDto);
     }
