@@ -6,6 +6,13 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesP
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.PublicationListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.PublicationMetadataTabViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.PublicationStructureTabViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.collection.view.PublicationViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;

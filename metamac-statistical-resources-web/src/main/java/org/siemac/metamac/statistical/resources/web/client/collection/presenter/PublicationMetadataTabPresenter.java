@@ -49,14 +49,14 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-public class PublicationMetadataTabPresenter extends Presenter<PublicationMetadataTabPresenter.CollectionMetadataTabView, PublicationMetadataTabPresenter.CollectionMetadataTabProxy> implements PublicationMetadataTabUiHandlers {
+public class PublicationMetadataTabPresenter extends Presenter<PublicationMetadataTabPresenter.PublicationMetadataTabView, PublicationMetadataTabPresenter.PublicationMetadataTabProxy> implements PublicationMetadataTabUiHandlers {
 
     private DispatchAsync dispatcher;
     private PlaceManager placeManager;
     
     private ExternalItemDto operation;;
     
-    public interface CollectionMetadataTabView extends View,HasUiHandlers<PublicationMetadataTabUiHandlers> {
+    public interface PublicationMetadataTabView extends View,HasUiHandlers<PublicationMetadataTabUiHandlers> {
         void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result);
         void setPublication(PublicationDto collectionDto);
     }

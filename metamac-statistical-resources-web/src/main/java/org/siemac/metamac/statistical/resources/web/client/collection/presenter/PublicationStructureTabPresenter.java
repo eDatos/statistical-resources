@@ -7,15 +7,15 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetCollectionResult;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -38,25 +38,25 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-public class PublicationStructureTabPresenter extends Presenter<PublicationStructureTabPresenter.CollectionStructureTabView, PublicationStructureTabPresenter.CollectionStructureTabProxy> {
+public class PublicationStructureTabPresenter extends Presenter<PublicationStructureTabPresenter.PublicationStructureTabView, PublicationStructureTabPresenter.PublicationStructureTabProxy> {
 
     private DispatchAsync dispatcher;
     private PlaceManager placeManager;
     
     private ExternalItemDto operation;
     
-    public interface CollectionStructureTabView extends View {
-        void setCollection(CollectionDto collectionDto);
+    public interface PublicationStructureTabView extends View {
+        void setPublication(PublicationDto collectionDto);
     }
     
     @ProxyCodeSplit
     @NameToken(NameTokens.collectionStructurePage)
     @UseGatekeeper(LoggedInGatekeeper.class)
-    public interface CollectionStructureTabProxy extends Proxy<PublicationStructureTabPresenter>, Place {
+    public interface PublicationStructureTabProxy extends Proxy<PublicationStructureTabPresenter>, Place {
     }
 
     @Inject
-    public PublicationStructureTabPresenter(EventBus eventBus, CollectionStructureTabView view, CollectionStructureTabProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
+    public PublicationStructureTabPresenter(EventBus eventBus, PublicationStructureTabView view, PublicationStructureTabProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
@@ -76,12 +76,12 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        String collectionCode = PlaceRequestUtils.getCollectionParamFromUrl(placeManager);
+        String collectionCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(collectionCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
             String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionCode);
-            retrieveCollection(collectionUrn);
+            retrievePublication(collectionUrn);
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -104,16 +104,16 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         }
     }
 
-    private void retrieveCollection(String urn) {
-        dispatcher.execute(new GetCollectionAction(urn), new WaitingAsyncCallback<GetCollectionResult>() {
+    private void retrievePublication(String urn) {
+        dispatcher.execute(new GetPublicationAction(urn), new WaitingAsyncCallback<GetPublicationResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(PublicationStructureTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieve()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetCollectionResult result) {
-                getView().setCollection(result.getCollectionDto());
+            public void onWaitSuccess(GetPublicationResult result) {
+                getView().setPublication(result.getPublicationDto());
             }
         });
     }
