@@ -12,17 +12,16 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class DeleteDatasetListActionHandler extends SecurityActionHandler<DeleteDatasetListAction, DeleteDatasetListResult>{
+public class DeleteDatasetListActionHandler extends SecurityActionHandler<DeleteDatasetListAction, DeleteDatasetListResult> {
 
-    
     public DeleteDatasetListActionHandler() {
         super(DeleteDatasetListAction.class);
     }
-    
+
     @Override
     public DeleteDatasetListResult executeSecurityAction(DeleteDatasetListAction action) throws ActionException {
         try {
-            for(String urn : action.getUrns()) {
+            for (String urn : action.getUrns()) {
                 MockServices.deleteDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
             }
         } catch (MetamacException e) {

@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
-
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 
@@ -18,6 +17,6 @@ public class VersionDataset {
     VersionTypeEnum versionType;
 
     @Out(1)
-    DatasetDto         datasetDto;
+    DatasetDto      datasetDto;
 
 }

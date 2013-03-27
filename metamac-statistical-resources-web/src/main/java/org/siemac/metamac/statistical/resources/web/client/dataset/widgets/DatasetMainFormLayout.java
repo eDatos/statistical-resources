@@ -35,7 +35,7 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
 
     private void common() {
         // Remove handler from edit button
-        //editHandlerRegistration.removeHandler();
+        // editHandlerRegistration.removeHandler();
 
         productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
@@ -69,11 +69,11 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         super.setEditionMode();
         hideAllLifeCycleButtons();
     }
-    
+
     public void updatePublishSection(StatisticalResourceProcStatusEnum status) {
         this.status = status;
     }
-    
+
     private void updateVisibility() {
         // Hide all buttons
         hideAllLifeCycleButtons();
@@ -88,13 +88,13 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
             showPendingPublicationButton();
             showRejectValidationButton();
-            //FIXME add cases for pub pending and publication programmed
-//        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
-//            showProgramPublicationButton();
-//            showPublishButton();
-//        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
-//            showCancelProgrammedPublication();
-//            // showPublishButton();
+            // FIXME add cases for pub pending and publication programmed
+            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
+            // showProgramPublicationButton();
+            // showPublishButton();
+            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
+            // showCancelProgrammedPublication();
+            // // showPublishButton();
         } else if (StatisticalResourceProcStatusEnum.PUBLICATION_FAILED.equals(status)) {
             showProgramPublicationButton();
             showPublishButton();
@@ -115,7 +115,7 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         versioning.hide();
         archive.hide();
     }
-    
+
     private void showProductionValidationButton() {
         productionValidation.show();
     }

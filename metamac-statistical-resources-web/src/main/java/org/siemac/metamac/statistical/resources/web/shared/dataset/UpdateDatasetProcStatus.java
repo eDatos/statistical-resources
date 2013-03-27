@@ -20,6 +20,6 @@ public class UpdateDatasetProcStatus {
     StatisticalResourceProcStatusEnum currentProcStatus;
 
     @Out(1)
-    DatasetDto                     datasetDto;
+    DatasetDto                        datasetDto;
 
 }

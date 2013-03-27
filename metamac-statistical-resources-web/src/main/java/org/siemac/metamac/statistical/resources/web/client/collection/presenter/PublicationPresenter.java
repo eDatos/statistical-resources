@@ -50,12 +50,12 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     private final PlaceManager                        placeManager;
 
     private ExternalItemDto                           operation;
-    
+
     @ContentSlot
-    public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaMetadata = new Type<RevealContentHandler<?>>();
-    
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata  = new Type<RevealContentHandler<?>>();
+
     @ContentSlot
-    public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaStructure = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaStructure = new Type<RevealContentHandler<?>>();
 
     @ProxyCodeSplit
     @NameToken(NameTokens.collectionPage)
@@ -69,6 +69,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     }
 
     public interface PublicationView extends View, HasUiHandlers<PublicationPresenter> {
+
         void setPublication(PublicationDto collectionDto);
         void showMetadata();
     }
@@ -101,7 +102,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
             StatisticalResourcesWeb.showErrorPage();
         }
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
@@ -132,14 +133,14 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
             }
         });
     }
-    
+
     @Override
     public void goToPublicationMetadata() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.collectionPage);
         hierarchy.add(new PlaceRequest(NameTokens.collectionMetadataPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
-    
+
     @Override
     public void goToPublicationStructure() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.collectionPage);

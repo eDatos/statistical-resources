@@ -44,25 +44,25 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy>
+        implements
+            DatasetDatasourcesTabUiHandlers {
 
+    public final static int DATASOURCE_LIST_FIRST_RESULT = 0;
+    public final static int DATASOURCE_LIST_MAX_RESULTS  = 30;
 
-public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy> implements DatasetDatasourcesTabUiHandlers {
-
-
-    public final static int                           DATASOURCE_LIST_FIRST_RESULT                           = 0;
-    public final static int                           DATASOURCE_LIST_MAX_RESULTS                            = 30;
-    
     private DispatchAsync   dispatcher;
     private PlaceManager    placeManager;
 
     private ExternalItemDto operation;
     private DatasetDto      dataset;
-    
+
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
+
         void setDatasourcesPaginatedList(String datasetUrn, GetDatasourcesByDatasetPaginatedListResult datasourcesPaginatedList);
         void setDatasource(DatasourceDto datasourceDto);
     }
-    
+
     @ProxyCodeSplit
     @NameToken(NameTokens.datasetDatasourcesPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
@@ -76,12 +76,12 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         this.placeManager = placeManager;
         getView().setUiHandlers(this);
     }
-    
+
     @TitleFunction
     public String title() {
         return getConstants().breadcrumbDatasources();
     }
-    
+
     private void setDataset(DatasetDto datasetDto) {
         this.dataset = datasetDto;
     }
@@ -89,7 +89,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
-        
+
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
@@ -102,7 +102,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             StatisticalResourcesWeb.showErrorPage();
         }
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
@@ -119,7 +119,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             });
         }
     }
-    
+
     public void retrieveDataset(String datasetUrn) {
         dispatcher.execute(new GetDatasetAction(datasetUrn), new WaitingAsyncCallback<GetDatasetResult>() {
 
@@ -133,10 +133,10 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             }
         });
     }
-    
+
     @Override
     public void retrieveDatasourcesByDataset(final String datasetUrn, int firstResult, int maxResults) {
-        dispatcher.execute(new GetDatasourcesByDatasetPaginatedListAction(datasetUrn,firstResult,maxResults), new WaitingAsyncCallback<GetDatasourcesByDatasetPaginatedListResult>() {
+        dispatcher.execute(new GetDatasourcesByDatasetPaginatedListAction(datasetUrn, firstResult, maxResults), new WaitingAsyncCallback<GetDatasourcesByDatasetPaginatedListResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -148,7 +148,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             }
         });
     }
-    
+
     @Override
     public void saveDatasource(DatasourceDto datasourceDto) {
         datasourceDto.setDatasetVersionUrn(dataset.getUrn());
@@ -165,7 +165,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             }
         });
     }
-    
+
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);

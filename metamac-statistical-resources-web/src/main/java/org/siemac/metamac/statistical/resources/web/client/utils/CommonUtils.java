@@ -21,7 +21,7 @@ public class CommonUtils {
                 ? getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName())
                 : null;
     }
-    
+
     public static LinkedHashMap<String, String> getStatisticalResourceTypeHashMap() {
         if (statisticalResourceTypeHashMap == null) {
             statisticalResourceTypeHashMap = new LinkedHashMap<String, String>();
@@ -53,21 +53,21 @@ public class CommonUtils {
         return versionRationaleType != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceVersionRationaleTypeEnum() + versionRationaleType.name()) : null;
     }
 
-//    TODO: FORMAT WILL NOT BE USED in STAT REOSURCES 
-//    public static LinkedHashMap<String, String> getStatisticalResourceFormatHashMap() {
-//        if (statisticalResourceFormatHashMap == null) {
-//            statisticalResourceFormatHashMap = new LinkedHashMap<String, String>();
-//            statisticalResourceFormatHashMap.put(new String(), new String());
-//            for (StatisticalResourceFormatEnum f : StatisticalResourceFormatEnum.values()) {
-//                statisticalResourceFormatHashMap.put(f.toString(), getStatisticalResourceFormatName(f));
-//            }
-//        }
-//        return statisticalResourceFormatHashMap;
-//    }
-//
-//    public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
-//        return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
-//    }
+    // TODO: FORMAT WILL NOT BE USED in STAT REOSURCES
+    // public static LinkedHashMap<String, String> getStatisticalResourceFormatHashMap() {
+    // if (statisticalResourceFormatHashMap == null) {
+    // statisticalResourceFormatHashMap = new LinkedHashMap<String, String>();
+    // statisticalResourceFormatHashMap.put(new String(), new String());
+    // for (StatisticalResourceFormatEnum f : StatisticalResourceFormatEnum.values()) {
+    // statisticalResourceFormatHashMap.put(f.toString(), getStatisticalResourceFormatName(f));
+    // }
+    // }
+    // return statisticalResourceFormatHashMap;
+    // }
+    //
+    // public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
+    // return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
+    // }
 
     public static LinkedHashMap<String, String> getVersionTypeHashMap() {
         if (versionTypeHashMap == null) {

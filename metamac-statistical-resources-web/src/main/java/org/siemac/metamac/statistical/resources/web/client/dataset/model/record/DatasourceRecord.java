@@ -5,9 +5,8 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.Data
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-
 public class DatasourceRecord extends ListGridRecord {
-    
+
     public DatasourceRecord(Long id, String code, String urn, DatasourceDto datasourceDto) {
         setId(id);
         setIdentifier(code);

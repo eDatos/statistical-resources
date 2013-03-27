@@ -12,20 +12,20 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasourcesByDatasetPaginatedList {
 
     @In(1)
-    String         datasetUrn;
+    String              datasetUrn;
 
     @In(2)
-    int            firstResult;
+    int                 firstResult;
 
     @In(3)
-    int            maxResults;
+    int                 maxResults;
 
     @Out(1)
     List<DatasourceDto> datasourcesList;
 
     @Out(2)
-    Integer        pageNumber;
+    Integer             pageNumber;
 
     @Out(3)
-    Integer        totalResults;
+    Integer             totalResults;
 }

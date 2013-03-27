@@ -2,10 +2,9 @@ package org.siemac.metamac.statistical.resources.web.client.collection.view.hand
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-
 public interface PublicationUiHandlers extends UiHandlers {
 
     void goToPublicationMetadata();
-    
+
     void goToPublicationStructure();
 }

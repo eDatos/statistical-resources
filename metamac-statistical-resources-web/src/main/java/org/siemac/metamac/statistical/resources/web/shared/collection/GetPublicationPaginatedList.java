@@ -12,23 +12,23 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetPublicationPaginatedList {
 
     @In(1)
-    String              operationUrn;
+    String               operationUrn;
 
     @In(2)
-    int                 firstResult;
+    int                  firstResult;
 
     @In(3)
-    int                 maxResults;
+    int                  maxResults;
 
     @In(4)
-    String              publication;
+    String               publication;
 
     @Out(1)
     List<PublicationDto> publicationList;
 
     @Out(2)
-    Integer             firstResultOut;
+    Integer              firstResultOut;
 
     @Out(3)
-    Integer             totalResults;
+    Integer              totalResults;
 }

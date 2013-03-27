@@ -14,17 +14,17 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class GetDatasourcesByDatasetPaginatedListActionHandler extends SecurityActionHandler<GetDatasourcesByDatasetPaginatedListAction, GetDatasourcesByDatasetPaginatedListResult> {
-    
-    
+
     public GetDatasourcesByDatasetPaginatedListActionHandler() {
         super(GetDatasourcesByDatasetPaginatedListAction.class);
     }
-    
+
     @Override
     public GetDatasourcesByDatasetPaginatedListResult executeSecurityAction(GetDatasourcesByDatasetPaginatedListAction action) throws ActionException {
         try {
             MetamacCriteriaResult<DatasourceDto> criteriaResult = MockServices.findDatasources(action.getDatasetUrn(), action.getFirstResult(), action.getMaxResults());
-            return new GetDatasourcesByDatasetPaginatedListResult(criteriaResult.getResults(), criteriaResult.getPaginatorResult().getFirstResult(),criteriaResult.getPaginatorResult().getTotalResults());
+            return new GetDatasourcesByDatasetPaginatedListResult(criteriaResult.getResults(), criteriaResult.getPaginatorResult().getFirstResult(), criteriaResult.getPaginatorResult()
+                    .getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

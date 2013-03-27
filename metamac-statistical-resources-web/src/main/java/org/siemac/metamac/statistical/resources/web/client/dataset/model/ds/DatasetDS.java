@@ -4,7 +4,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleSta
 
 public class DatasetDS extends LifeCycleStatisticalResourceDS {
 
-    //CONTENT-METADATA
+    // CONTENT-METADATA
     public static final String LANGUAGE                = "cm-lang";
     public static final String LANGUAGES               = "cm-langs";
     public static final String KEYWORDS                = "cm-keywords";
@@ -21,8 +21,7 @@ public class DatasetDS extends LifeCycleStatisticalResourceDS {
     public static final String TYPE                    = "cm-type";
     public static final String FORMAT                  = "cm-format";
 
-
-    public static String       DTO                        = "ds-dto";
+    public static String       DTO                     = "ds-dto";
 
     public DatasetDS() {
         super();

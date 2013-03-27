@@ -14,19 +14,19 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class GetAgenciesPaginatedListActionHandler extends SecurityActionHandler<GetAgenciesPaginatedListAction, GetAgenciesPaginatedListResult> {
-    
+
     public GetAgenciesPaginatedListActionHandler() {
         super(GetAgenciesPaginatedListAction.class);
     }
-    
+
     @Override
     public GetAgenciesPaginatedListResult executeSecurityAction(GetAgenciesPaginatedListAction action) throws ActionException {
         try {
-            MetamacCriteriaResult<ExternalItemDto> criteriaResult =  MockServices.findAgencies(action.getFirstResult(), action.getMaxResults());
+            MetamacCriteriaResult<ExternalItemDto> criteriaResult = MockServices.findAgencies(action.getFirstResult(), action.getMaxResults());
             return new GetAgenciesPaginatedListResult(criteriaResult.getResults(), criteriaResult.getPaginatorResult().getFirstResult(), criteriaResult.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
-    
+
 }

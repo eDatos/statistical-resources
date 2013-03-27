@@ -46,64 +46,62 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-
 public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDatasourcesTabView {
-    
+
     private DatasetDatasourcesTabUiHandlers uiHandlers;
     private VLayout                         panel;
-    
+
     private DatasourcesListPanel            datasourcesListPanel;
     private DatasourceFormPanel             datasourceFormPanel;
 
-    
-    private String datasetUrn;
-    
+    private String                          datasetUrn;
+
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
         panel.setMargin(5);
         panel.setHeight100();
-        
+
         datasourcesListPanel = new DatasourcesListPanel();
         datasourcesListPanel.setWidth("99%");
         datasourceFormPanel = new DatasourceFormPanel();
         datasourceFormPanel.setWidth("99%");
-        
+
         panel.addMember(datasourcesListPanel);
         panel.addMember(datasourceFormPanel);
     }
-    
+
     @Override
     public void setDatasourcesPaginatedList(String datasetUrn, GetDatasourcesByDatasetPaginatedListResult result) {
         this.datasetUrn = datasetUrn;
         datasourcesListPanel.setDatasourcesPaginatedList(result);
     }
-    
+
     @Override
     public void setDatasource(DatasourceDto datasourceDto) {
         datasourceFormPanel.selectDatasource(datasourceDto);
     }
-    
+
     @Override
     public Widget asWidget() {
         return panel;
     }
-    
+
     @Override
     public void setUiHandlers(DatasetDatasourcesTabUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-    
-    private class DatasourcesListPanel extends VLayout {
-        private ToolStripButton                 newDatasourceButton;
-        private ToolStripButton                 deleteDatasourceButton;
-        private PaginatedCheckListGrid          datasourcesList;
 
-        private DeleteConfirmationWindow        deleteConfirmationWindow;
-        
-        
+    private class DatasourcesListPanel extends VLayout {
+
+        private ToolStripButton          newDatasourceButton;
+        private ToolStripButton          deleteDatasourceButton;
+        private PaginatedCheckListGrid   datasourcesList;
+
+        private DeleteConfirmationWindow deleteConfirmationWindow;
+
         public DatasourcesListPanel() {
-            //Toolstrip
-            
+            // Toolstrip
+
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.setWidth100();
 
@@ -116,34 +114,36 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
 
             toolStrip.addButton(newDatasourceButton);
             toolStrip.addButton(deleteDatasourceButton);
-            
-            //List
-            
+
+            // List
+
             datasourcesList = new PaginatedCheckListGrid(DatasetDatasourcesTabPresenter.DATASOURCE_LIST_MAX_RESULTS, new PaginatedAction() {
+
                 @Override
                 public void retrieveResultSet(int firstResult, int maxResults) {
                     uiHandlers.retrieveDatasourcesByDataset(datasetUrn, firstResult, maxResults);
                 }
             });
-            
+
             datasourcesList.getListGrid().setAutoFitMaxRecords(DatasetDatasourcesTabPresenter.DATASOURCE_LIST_MAX_RESULTS);
             datasourcesList.getListGrid().setAutoFitData(Autofit.VERTICAL);
             datasourcesList.getListGrid().setDataSource(new DatasourceDS());
             datasourcesList.getListGrid().setUseAllDataSourceFields(false);
-            
+
             ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().datasetIdentifier());
             fieldCode.setAlign(Alignment.LEFT);
             ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().datasetTitle());
             datasourcesList.getListGrid().setFields(fieldCode, fieldName);
-            
-            //Panel conf
+
+            // Panel conf
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
         }
-        
+
         private void bindEvents() {
             datasourcesList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+
                 @Override
                 public void onSelectionChanged(SelectionEvent event) {
                     if (datasourcesList.getListGrid().getSelectedRecords().length > 0) {
@@ -153,14 +153,14 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
                     }
                 }
             });
-            
+
             datasourcesList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
                 @Override
                 public void onRecordClick(RecordClickEvent event) {
                     if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
                         DatasourceRecord record = ((DatasourceRecord) event.getRecord());
-                        datasourceFormPanel.selectDatasource((DatasourceDto)record.getAttributeAsObject(DatasourceDS.DTO));
+                        datasourceFormPanel.selectDatasource((DatasourceDto) record.getAttributeAsObject(DatasourceDS.DTO));
                     }
                 }
             });
@@ -179,13 +179,13 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
                 }
             });
         }
-        
+
         private void showListGridDeleteButton() {
             if (DatasetClientSecurityUtils.canDeleteDatasource()) {
                 deleteDatasourceButton.show();
             }
         }
-        
+
         public void setDatasourcesPaginatedList(GetDatasourcesByDatasetPaginatedListResult result) {
             DatasourceRecord[] records = new DatasourceRecord[result.getDatasourcesList().size()];
             int index = 0;
@@ -198,46 +198,48 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
     }
 
     private class DatasourceFormPanel extends VLayout {
-        
+
         private MainFormLayout   mainFormLayout;
         private GroupDynamicForm identifiersForm;
         private GroupDynamicForm identifiersEditionForm;
 
         private DatasourceDto    datasource;
-        
+
         public DatasourceFormPanel() {
             super();
             setWidth("99%");
-            
+
             mainFormLayout = new MainFormLayout();
             mainFormLayout.setMargin(0);
-            
+
             this.addMember(mainFormLayout);
             createViewForm();
             createEditionForm();
-            
+
             bindEvents();
             this.hide();
         }
-        
+
         private void bindEvents() {
             mainFormLayout.getSave().addClickHandler(new ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     uiHandlers.saveDatasource(getDatasource());
                 }
             });
-            
+
             mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     if (isCreationMode()) {
-                        DatasourceFormPanel.this.hide(); 
+                        DatasourceFormPanel.this.hide();
                     }
                 }
             });
         }
-        
+
         private void createViewForm() {
             identifiersForm = new GroupDynamicForm(getConstants().datasourceIdentifiers());
             ViewTextItem identifier = new ViewTextItem(DatasourceDS.CODE, getConstants().datasourceIdentifier());
@@ -247,11 +249,12 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             identifiersForm.setFields(identifier, title, uri, urn);
             mainFormLayout.addViewCanvas(identifiersForm);
         }
-        
+
         private void createEditionForm() {
             identifiersEditionForm = new GroupDynamicForm(getConstants().datasourceIdentifiers());
             ViewTextItem identifierView = new ViewTextItem(DatasourceDS.CODE_VIEW, getConstants().datasourceIdentifier());
             identifierView.setShowIfCondition(new FormItemIfFunction() {
+
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     return !isCreationMode();
@@ -259,6 +262,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             });
             RequiredTextItem identifier = new RequiredTextItem(DatasourceDS.CODE, getConstants().datasourceIdentifier());
             identifier.setShowIfCondition(new FormItemIfFunction() {
+
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     return isCreationMode();
@@ -272,22 +276,22 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             identifiersEditionForm.setFields(identifierView, identifier, title, uri, urn);
             mainFormLayout.addEditionCanvas(identifiersEditionForm);
         }
-        
+
         private void createDatasource() {
             this.datasource = new DatasourceDto();
-            
+
             mainFormLayout.setTitleLabelContents(getConstants().datasourceNew());
             mainFormLayout.setEditionMode();
             fillViewForm(datasource);
             fillEditionForm(datasource);
-            
+
             mainFormLayout.redraw();
             this.show();
         }
-        
+
         private void selectDatasource(DatasourceDto datasourceDto) {
             this.datasource = datasourceDto;
-            //FIXME: datasource title
+            // FIXME: datasource title
             mainFormLayout.setTitleLabelContents(datasourceDto.getCode());
             mainFormLayout.setViewMode();
             fillViewForm(datasource);
@@ -295,30 +299,30 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             mainFormLayout.redraw();
             this.show();
         }
-        
+
         private void fillViewForm(DatasourceDto datasourceDto) {
             identifiersForm.setValue(DatasourceDS.CODE, datasourceDto.getCode());
             identifiersForm.setValue(DatasourceDS.URI, datasourceDto.getUri());
             identifiersForm.setValue(DatasourceDS.URN, datasourceDto.getUrn());
-            //identifiersForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
+            // identifiersForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
         }
-        
+
         private void fillEditionForm(DatasourceDto datasourceDto) {
             identifiersEditionForm.setValue(DatasourceDS.CODE_VIEW, datasourceDto.getCode());
             identifiersEditionForm.setValue(DatasourceDS.CODE, datasourceDto.getCode());
             identifiersEditionForm.setValue(DatasourceDS.URI, datasourceDto.getUri());
             identifiersEditionForm.setValue(DatasourceDS.URN, datasourceDto.getUrn());
-           // identifiersEditionForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
+            // identifiersEditionForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
         }
-        
+
         private DatasourceDto getDatasource() {
             if (isCreationMode()) {
                 datasource.setCode(identifiersEditionForm.getValueAsString(DatasourceDS.CODE));
             }
-            //datasource.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasourceDS.TITLE));
+            // datasource.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasourceDS.TITLE));
             return datasource;
         }
-        
+
         private boolean isCreationMode() {
             return StringUtils.isEmpty(this.datasource.getUrn());
         }

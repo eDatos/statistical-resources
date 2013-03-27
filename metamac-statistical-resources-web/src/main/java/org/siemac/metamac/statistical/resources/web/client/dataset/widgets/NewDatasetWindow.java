@@ -50,8 +50,8 @@ public class NewDatasetWindow extends CustomWindow {
 
     public DatasetDto getNewDatasetDto(String operationUrn) {
         DatasetDto datasetDto = new DatasetDto();
-        //FIXME: code can not be updated
-        //datasetDto.setCode(form.getValueAsString(DatasetDS.IDENTIFIER));
+        // FIXME: code can not be updated
+        // datasetDto.setCode(form.getValueAsString(DatasetDS.IDENTIFIER));
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         // datasetDto.setOperationUrn(operationUrn);
         return datasetDto;

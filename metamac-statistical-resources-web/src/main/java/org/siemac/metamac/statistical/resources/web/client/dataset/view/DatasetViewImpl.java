@@ -30,7 +30,6 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     private Tab               datasetMetadataTab;
     private Tab               datasetDatasourcesTab;
 
-    
     public DatasetViewImpl() {
         panel = new VLayout();
         panel.setHeight100();
@@ -39,7 +38,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
         titleLabel = new TitleLabel(new String());
         titleLabel.setStyleName("sectionTitleLeftMargin");
         titleLabel.setVisibility(Visibility.HIDDEN);
-        
+
         // TABS
         tabSet = new TabSet();
         tabSet.setMargin(10);
@@ -48,47 +47,48 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());
 
         tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab);
-        
+
         panel.addMember(titleLabel);
         panel.addMember(tabSet);
         bindEvents();
     }
-    
-    
+
     private void bindEvents() {
         datasetMetadataTab.addTabSelectedHandler(new TabSelectedHandler() {
+
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 uiHandlers.goToDatasetMetadata();
             }
         });
-        
+
         datasetDatasourcesTab.addTabSelectedHandler(new TabSelectedHandler() {
+
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 uiHandlers.goToDatasetDatasources();
             }
         });
     }
-    
+
     @Override
     public void setDataset(DatasetDto datasetDto) {
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(datasetDto.getTitle()));
         titleLabel.show();
     }
-    
+
     @Override
     public void showMetadata() {
         tabSet.selectTab(datasetMetadataTab);
         uiHandlers.goToDatasetMetadata();
     }
-    
+
     @Override
     public void setInSlot(Object slot, Widget content) {
         if (slot == DatasetPresenter.TYPE_SetContextAreaMetadata) {
-            datasetMetadataTab.setPane((Canvas)content);
+            datasetMetadataTab.setPane((Canvas) content);
         } else if (slot == DatasetPresenter.TYPE_SetContextAreaDatasources) {
-            datasetDatasourcesTab.setPane((Canvas)content);
+            datasetDatasourcesTab.setPane((Canvas) content);
         } else {
             super.setInSlot(slot, content);
         }
@@ -98,7 +98,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     public Widget asWidget() {
         return panel;
     }
-    
+
     @Override
     public void setUiHandlers(DatasetUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;

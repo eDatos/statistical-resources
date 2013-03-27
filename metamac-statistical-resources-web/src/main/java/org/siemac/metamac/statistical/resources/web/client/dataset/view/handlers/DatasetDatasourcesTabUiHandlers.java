@@ -7,6 +7,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
 
     void retrieveDatasourcesByDataset(String datasetUrn, int firstResult, int maxResults);
-    
+
     void saveDatasource(DatasourceDto datasourceDto);
 }

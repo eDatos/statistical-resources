@@ -26,7 +26,7 @@ public class LifeCycleStatisticalResourceDS extends DataSource {
     public static final String RATIONALE                   = "lc-rationale";
     public static final String RATIONALE_TYPE              = "lc-rationale-type";
     // LIFE CYCLE
-    public static final String RESPONSABILITY_CREATOR  = "lc-resp-creator";
+    public static final String RESPONSABILITY_CREATOR      = "lc-resp-creator";
     public static final String RESPONSABILITY_CONTRIBUTOR  = "lc-resp-contr";
     public static final String RESPONSABILITY_SUBMITTED    = "lc-resp-subm";
     public static final String RESPONSABILITY_ACCEPTED     = "lc-resp-acc";

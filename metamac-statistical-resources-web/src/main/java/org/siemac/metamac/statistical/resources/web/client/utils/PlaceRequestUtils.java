@@ -46,7 +46,7 @@ public class PlaceRequestUtils {
         }
         return false;
     }
-    
+
     public static List<PlaceRequest> getHierarchyUntilNameToken(PlaceManager placeManager, String nameToken) {
         List<PlaceRequest> filteredHierarchy = new ArrayList<PlaceRequest>();
         List<PlaceRequest> hierarchy = placeManager.getCurrentPlaceHierarchy();

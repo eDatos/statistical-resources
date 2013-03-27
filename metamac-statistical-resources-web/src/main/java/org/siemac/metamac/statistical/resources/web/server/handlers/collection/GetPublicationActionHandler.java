@@ -16,14 +16,14 @@ public class GetPublicationActionHandler extends SecurityActionHandler<GetPublic
 
     @Override
     public GetPublicationResult executeSecurityAction(GetPublicationAction action) throws ActionException {
-//        try {
-//            return new GetPublicationResult(MockServices.retrievePublication(ServiceContextHolder.getCurrentServiceContext(), action.getUrn()));
-//        } catch (MetamacException e) {
-//            throw WebExceptionUtils.createMetamacWebException(e);
-//        }
-        
-        //FIXME INVOKE CORE 
-         return new GetPublicationResult(null);
+        // try {
+        // return new GetPublicationResult(MockServices.retrievePublication(ServiceContextHolder.getCurrentServiceContext(), action.getUrn()));
+        // } catch (MetamacException e) {
+        // throw WebExceptionUtils.createMetamacWebException(e);
+        // }
+
+        // FIXME INVOKE CORE
+        return new GetPublicationResult(null);
     }
 
 }

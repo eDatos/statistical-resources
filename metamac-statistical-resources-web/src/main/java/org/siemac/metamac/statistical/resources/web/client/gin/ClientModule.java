@@ -65,16 +65,20 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(OperationListPresenter.class, OperationListPresenter.OperationListView.class, OperationListViewImpl.class, OperationListPresenter.OperationListProxy.class);
         bindPresenter(OperationResourcesPresenter.class, OperationResourcesPresenter.OperationResourcesView.class, OperationResourcesViewImpl.class,
                 OperationResourcesPresenter.OperationResourcesProxy.class);
-        
+
         bindPresenter(DatasetListPresenter.class, DatasetListPresenter.DatasetListView.class, DatasetListViewImpl.class, DatasetListPresenter.DatasetListProxy.class);
         bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
-        bindPresenter(DatasetMetadataTabPresenter.class, DatasetMetadataTabPresenter.DatasetMetadataTabView.class, DatasetMetadataTabViewImpl.class, DatasetMetadataTabPresenter.DatasetMetadataTabProxy.class);
-        bindPresenter(DatasetDatasourcesTabPresenter.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView.class, DatasetDatasourcesTabViewImpl.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy.class);
-        
+        bindPresenter(DatasetMetadataTabPresenter.class, DatasetMetadataTabPresenter.DatasetMetadataTabView.class, DatasetMetadataTabViewImpl.class,
+                DatasetMetadataTabPresenter.DatasetMetadataTabProxy.class);
+        bindPresenter(DatasetDatasourcesTabPresenter.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView.class, DatasetDatasourcesTabViewImpl.class,
+                DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy.class);
+
         bindPresenter(PublicationListPresenter.class, PublicationListPresenter.PublicationListView.class, PublicationListViewImpl.class, PublicationListPresenter.PublicationListProxy.class);
         bindPresenter(PublicationPresenter.class, PublicationPresenter.PublicationView.class, PublicationViewImpl.class, PublicationPresenter.PublicationProxy.class);
-        bindPresenter(PublicationMetadataTabPresenter.class, PublicationMetadataTabPresenter.PublicationMetadataTabView.class, PublicationMetadataTabViewImpl.class, PublicationMetadataTabPresenter.PublicationMetadataTabProxy.class);
-        bindPresenter(PublicationStructureTabPresenter.class, PublicationStructureTabPresenter.PublicationStructureTabView.class, PublicationStructureTabViewImpl.class, PublicationStructureTabPresenter.PublicationStructureTabProxy.class);
+        bindPresenter(PublicationMetadataTabPresenter.class, PublicationMetadataTabPresenter.PublicationMetadataTabView.class, PublicationMetadataTabViewImpl.class,
+                PublicationMetadataTabPresenter.PublicationMetadataTabProxy.class);
+        bindPresenter(PublicationStructureTabPresenter.class, PublicationStructureTabPresenter.PublicationStructureTabView.class, PublicationStructureTabViewImpl.class,
+                PublicationStructureTabPresenter.PublicationStructureTabProxy.class);
 
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);

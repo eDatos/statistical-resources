@@ -58,7 +58,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
 
-    private ExternalItemDto                             operation;
+    private ExternalItemDto                           operation;
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
@@ -112,7 +112,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
         super.onReset();
         SetTitleEvent.fire(this, getConstants().datasets());
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {

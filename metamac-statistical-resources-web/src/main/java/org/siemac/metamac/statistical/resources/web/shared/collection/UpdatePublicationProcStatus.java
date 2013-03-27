@@ -20,6 +20,6 @@ public class UpdatePublicationProcStatus {
     StatisticalResourceProcStatusEnum currentProcStatus;
 
     @Out(1)
-    PublicationDto                     publicationDto;
+    PublicationDto                    publicationDto;
 
 }

@@ -6,8 +6,8 @@ import org.siemac.metamac.statistical.resources.web.client.view.handlers.LifeCyc
 public interface DatasetMetadataTabUiHandlers extends LifeCycleUiHandlers {
 
     void retrieveAgencies(int firstResult, int maxResults, String queryText);
-    
+
     void retrieveDataset(String datasetIdentifier);
-    
+
     void saveDataset(DatasetDto datasetDto);
 }

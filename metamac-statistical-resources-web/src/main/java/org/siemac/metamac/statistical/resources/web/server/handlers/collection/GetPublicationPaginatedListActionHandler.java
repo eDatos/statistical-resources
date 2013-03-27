@@ -34,15 +34,15 @@ public class GetPublicationPaginatedListActionHandler extends SecurityActionHand
         // criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
         // criteria.getPaginator().setCountTotalResults(true);
 
-//        try {
-//            int firstResult = 0;
-//            int totalResults = 0;
-//            List<CollectionDto> collectionsDtos = MockServices.findCollections(action.getOperationUrn(), action.getFirstResult(), action.getMaxResults());
-//            return new GetCollectionPaginatedListResult(collectionsDtos, firstResult, totalResults);
-//        } catch (MetamacException e) {
-//            throw WebExceptionUtils.createMetamacWebException(e);
-//        }
-        //FIXME: invoke core
+        // try {
+        // int firstResult = 0;
+        // int totalResults = 0;
+        // List<CollectionDto> collectionsDtos = MockServices.findCollections(action.getOperationUrn(), action.getFirstResult(), action.getMaxResults());
+        // return new GetCollectionPaginatedListResult(collectionsDtos, firstResult, totalResults);
+        // } catch (MetamacException e) {
+        // throw WebExceptionUtils.createMetamacWebException(e);
+        // }
+        // FIXME: invoke core
         return new GetPublicationPaginatedListResult(null, 0, 0);
     }
 

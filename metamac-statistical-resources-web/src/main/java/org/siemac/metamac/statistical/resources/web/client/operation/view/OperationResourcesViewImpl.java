@@ -29,7 +29,7 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     private OperationResourcesUiHandlers uiHandlers;
 
     private DatasetListGrid              datasetsListGrid;
-    private PublicationListGrid           publicationsListGrid;
+    private PublicationListGrid          publicationsListGrid;
 
     private VLayout                      panel;
     private SectionStack                 sections;
@@ -98,7 +98,7 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     public void setPublications(List<PublicationDto> publicationDtos) {
         publicationsListGrid.setPublications(publicationDtos);
     }
-    
+
     @Override
     public void setDatasets(List<DatasetDto> datasetsDtos) {
         datasetsListGrid.setDatasets(datasetsDtos);

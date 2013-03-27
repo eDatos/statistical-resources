@@ -8,22 +8,22 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class DeletePublicationListActionHandler  extends SecurityActionHandler<DeletePublicationListAction, DeletePublicationListResult>{
+public class DeletePublicationListActionHandler extends SecurityActionHandler<DeletePublicationListAction, DeletePublicationListResult> {
 
     public DeletePublicationListActionHandler() {
         super(DeletePublicationListAction.class);
     }
-    
+
     @Override
     public DeletePublicationListResult executeSecurityAction(DeletePublicationListAction action) throws ActionException {
-        //FIXME: invoke core
-//        try {
-//            for (String urn : action.getUrns()) {
-//                MockServices.deletePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-//            }
-//        } catch (MetamacException e) {
-//            WebExceptionUtils.createMetamacWebException(e);
-//        }
+        // FIXME: invoke core
+        // try {
+        // for (String urn : action.getUrns()) {
+        // MockServices.deletePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
+        // }
+        // } catch (MetamacException e) {
+        // WebExceptionUtils.createMetamacWebException(e);
+        // }
         return new DeletePublicationListResult();
     }
 }

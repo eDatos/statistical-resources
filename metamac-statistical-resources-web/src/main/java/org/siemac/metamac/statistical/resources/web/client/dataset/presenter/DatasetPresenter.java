@@ -47,18 +47,19 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers {
 
-    private PlaceManager  placeManager;
-    private DispatchAsync dispatcher;
-    
-    private ExternalItemDto operation;
-    
+    private PlaceManager                              placeManager;
+    private DispatchAsync                             dispatcher;
+
+    private ExternalItemDto                           operation;
+
     @ContentSlot
-    public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaMetadata = new Type<RevealContentHandler<?>>();
-    
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata    = new Type<RevealContentHandler<?>>();
+
     @ContentSlot
-    public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaDatasources = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaDatasources = new Type<RevealContentHandler<?>>();
 
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
+
         void setDataset(DatasetDto datasetDto);
         void showMetadata();
     }
@@ -76,7 +77,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
     }
-    
+
     @TitleFunction
     public String getTitle() {
         return getConstants().dataset();
@@ -90,7 +91,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
-        
+
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
@@ -102,7 +103,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
             StatisticalResourcesWeb.showErrorPage();
         }
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
@@ -119,7 +120,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
             });
         }
     }
-    
+
     public void retrieveDataset(String datasetIdentifier) {
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
         dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallback<GetDatasetResult>() {
@@ -135,19 +136,19 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
             }
         });
     }
-    
+
     @Override
     public void goToDatasetMetadata() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
         hierarchy.add(new PlaceRequest(NameTokens.datasetMetadataPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
-    
+
     @Override
     public void goToDatasetDatasources() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
         hierarchy.add(new PlaceRequest(NameTokens.datasetDatasourcesPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
-    
+
 }

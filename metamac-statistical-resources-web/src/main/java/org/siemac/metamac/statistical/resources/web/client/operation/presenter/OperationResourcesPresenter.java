@@ -128,17 +128,18 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
     private void retrieveResourcesByStatisticalOperation(String urn) {
         // DataSets
-        dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS), new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
+        dispatcher.execute(new GetDatasetsByStatisticalOperationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS),
+                new WaitingAsyncCallback<GetDatasetsByStatisticalOperationPaginatedListResult>() {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onWaitSuccess(GetDatasetsByStatisticalOperationPaginatedListResult result) {
-                getView().setDatasets(result.getDatasetsList());
-            }
-        });
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(GetDatasetsByStatisticalOperationPaginatedListResult result) {
+                        getView().setDatasets(result.getDatasetsList());
+                    }
+                });
 
         // Publications
         dispatcher.execute(new GetPublicationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetPublicationPaginatedListResult>() {
@@ -158,7 +159,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     public void goToDataset(String urn) {
         if (!StringUtils.isBlank(urn)) {
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn)));
-        }        
+        }
     }
 
     @Override

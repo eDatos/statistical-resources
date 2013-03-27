@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.collection.presenter;
 
-
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
@@ -40,15 +39,16 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 public class PublicationStructureTabPresenter extends Presenter<PublicationStructureTabPresenter.PublicationStructureTabView, PublicationStructureTabPresenter.PublicationStructureTabProxy> {
 
-    private DispatchAsync dispatcher;
-    private PlaceManager placeManager;
-    
+    private DispatchAsync   dispatcher;
+    private PlaceManager    placeManager;
+
     private ExternalItemDto operation;
-    
+
     public interface PublicationStructureTabView extends View {
+
         void setPublication(PublicationDto collectionDto);
     }
-    
+
     @ProxyCodeSplit
     @NameToken(NameTokens.collectionStructurePage)
     @UseGatekeeper(LoggedInGatekeeper.class)
@@ -61,7 +61,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
     }
-    
+
     @TitleFunction
     public String title() {
         return getConstants().breadcrumbStructure();
@@ -71,7 +71,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     protected void revealInParent() {
         RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaStructure, this);
     }
-    
+
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
@@ -86,7 +86,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             StatisticalResourcesWeb.showErrorPage();
         }
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
@@ -117,5 +117,5 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             }
         });
     }
-    
+
 }

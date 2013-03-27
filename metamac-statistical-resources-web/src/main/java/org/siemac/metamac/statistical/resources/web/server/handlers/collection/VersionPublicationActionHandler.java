@@ -16,13 +16,13 @@ public class VersionPublicationActionHandler extends SecurityActionHandler<Versi
 
     @Override
     public VersionPublicationResult executeSecurityAction(VersionPublicationAction action) throws ActionException {
-//        try {
-//            PublicationDto collectionDto = MockServices.versionPublication(action.getUrn(), action.getVersionType());
-//            return new VersionPublicationResult(collectionDto);
-//        } catch (MetamacException e) {
-//            throw WebExceptionUtils.createMetamacWebException(e);
-//        }
-        //FIXME: CALL CORE
+        // try {
+        // PublicationDto collectionDto = MockServices.versionPublication(action.getUrn(), action.getVersionType());
+        // return new VersionPublicationResult(collectionDto);
+        // } catch (MetamacException e) {
+        // throw WebExceptionUtils.createMetamacWebException(e);
+        // }
+        // FIXME: CALL CORE
         return new VersionPublicationResult(null);
     }
 }

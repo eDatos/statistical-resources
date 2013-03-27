@@ -8,9 +8,9 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetAgenciesPaginatedList {
-    
+
     @In(1)
     int                   firstResult;
 

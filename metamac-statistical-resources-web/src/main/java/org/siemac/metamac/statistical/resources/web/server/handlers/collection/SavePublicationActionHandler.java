@@ -16,19 +16,19 @@ public class SavePublicationActionHandler extends SecurityActionHandler<SavePubl
 
     @Override
     public SavePublicationResult executeSecurityAction(SavePublicationAction action) throws ActionException {
-//        PublicationDto collectionToSave = action.getPublicationDto();
-//        PublicationDto collectionSaved = null;
-//        try {
-//            if (collectionToSave.getId() == null) {
-//                collectionSaved = MockServices.createPublication(ServiceContextHolder.getCurrentServiceContext(), collectionToSave);
-//            } else {
-//                collectionSaved = MockServices.updatePublication(ServiceContextHolder.getCurrentServiceContext(), collectionToSave);
-//            }
-//            return new SavePublicationResult(collectionSaved);
-//        } catch (MetamacException e) {
-//            throw WebExceptionUtils.createMetamacWebException(e);
-//        }
-        //FIXME: invoke core
+        // PublicationDto collectionToSave = action.getPublicationDto();
+        // PublicationDto collectionSaved = null;
+        // try {
+        // if (collectionToSave.getId() == null) {
+        // collectionSaved = MockServices.createPublication(ServiceContextHolder.getCurrentServiceContext(), collectionToSave);
+        // } else {
+        // collectionSaved = MockServices.updatePublication(ServiceContextHolder.getCurrentServiceContext(), collectionToSave);
+        // }
+        // return new SavePublicationResult(collectionSaved);
+        // } catch (MetamacException e) {
+        // throw WebExceptionUtils.createMetamacWebException(e);
+        // }
+        // FIXME: invoke core
         return new SavePublicationResult(null);
     }
 

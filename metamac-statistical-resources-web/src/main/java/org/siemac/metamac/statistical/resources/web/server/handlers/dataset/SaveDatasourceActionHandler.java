@@ -13,11 +13,11 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class SaveDatasourceActionHandler extends SecurityActionHandler<SaveDatasourceAction, SaveDatasourceResult> {
-    
+
     public SaveDatasourceActionHandler() {
         super(SaveDatasourceAction.class);
     }
-    
+
     @Override
     public SaveDatasourceResult executeSecurityAction(SaveDatasourceAction action) throws ActionException {
         try {
@@ -31,7 +31,7 @@ public class SaveDatasourceActionHandler extends SecurityActionHandler<SaveDatas
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
-        
+
     }
 
 }

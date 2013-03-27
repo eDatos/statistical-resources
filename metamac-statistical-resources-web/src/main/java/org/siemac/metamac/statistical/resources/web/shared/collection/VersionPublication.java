@@ -17,6 +17,6 @@ public class VersionPublication {
     VersionTypeEnum versionType;
 
     @Out(1)
-    PublicationDto   publicationDto;
+    PublicationDto  publicationDto;
 
 }

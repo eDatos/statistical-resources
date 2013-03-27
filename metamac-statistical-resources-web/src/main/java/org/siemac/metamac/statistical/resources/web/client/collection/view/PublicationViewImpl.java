@@ -24,19 +24,19 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 public class PublicationViewImpl extends ViewImpl implements PublicationPresenter.PublicationView {
 
     private PublicationUiHandlers uiHandlers;
-    
-    private VLayout                  panel;
-    private TitleLabel               titleLabel;
 
-    private TabSet tabSet; 
-    private Tab collectionMetadataTab;
-    private Tab collectionStructureTab;
-    
+    private VLayout               panel;
+    private TitleLabel            titleLabel;
+
+    private TabSet                tabSet;
+    private Tab                   collectionMetadataTab;
+    private Tab                   collectionStructureTab;
+
     @Inject
     public PublicationViewImpl(PublicationMetadataTabView metadataView, PublicationStructureTabView structureView) {
         super();
         panel = new VLayout();
-        
+
         titleLabel = new TitleLabel(new String());
         titleLabel.setStyleName("sectionTitleLeftMargin");
         titleLabel.setVisibility(Visibility.HIDDEN);
@@ -54,16 +54,17 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
         panel.addMember(tabSet);
         bindEvents();
     }
-    
-    
+
     private void bindEvents() {
         collectionMetadataTab.addTabSelectedHandler(new TabSelectedHandler() {
+
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 uiHandlers.goToPublicationMetadata();
             }
         });
         collectionStructureTab.addTabSelectedHandler(new TabSelectedHandler() {
+
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 uiHandlers.goToPublicationStructure();
@@ -76,24 +77,24 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
         titleLabel.show();
     }
-    
+
     @Override
     public void showMetadata() {
         tabSet.selectTab(collectionMetadataTab);
         uiHandlers.goToPublicationMetadata();
-    }        
-    
+    }
+
     @Override
     public void setInSlot(Object slot, Widget content) {
         if (slot == PublicationPresenter.TYPE_SetContextAreaMetadata) {
-            collectionMetadataTab.setPane((Canvas)content);
+            collectionMetadataTab.setPane((Canvas) content);
         } else if (slot == PublicationPresenter.TYPE_SetContextAreaStructure) {
-            collectionStructureTab.setPane((Canvas)content);
+            collectionStructureTab.setPane((Canvas) content);
         } else {
             super.setInSlot(slot, content);
         }
     }
-    
+
     @Override
     public Widget asWidget() {
         return panel;
@@ -103,6 +104,5 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
     public void setUiHandlers(PublicationPresenter uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-
 
 }

@@ -25,7 +25,8 @@ public class GetDatasetsByStatisticalOperationPaginatedListActionHandler
     public GetDatasetsByStatisticalOperationPaginatedListResult executeSecurityAction(GetDatasetsByStatisticalOperationPaginatedListAction action) throws ActionException {
         try {
             MetamacCriteriaResult<DatasetDto> criteriaResult = MockServices.findDatasets(action.getOperationUrn(), action.getFirstResult(), action.getMaxResults());
-            return new GetDatasetsByStatisticalOperationPaginatedListResult(criteriaResult.getResults(), criteriaResult.getPaginatorResult().getFirstResult(), criteriaResult.getPaginatorResult().getTotalResults());
+            return new GetDatasetsByStatisticalOperationPaginatedListResult(criteriaResult.getResults(), criteriaResult.getPaginatorResult().getFirstResult(), criteriaResult.getPaginatorResult()
+                    .getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
