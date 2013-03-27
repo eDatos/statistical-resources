@@ -10,6 +10,9 @@ import "classpath:/btdesign/metamac-statistical-resources-core-queries-dtos.btde
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-publications-dtos.btdesign"
+
 Application FacadeStatisticalResources {
 	basePackage=unused
 
@@ -60,7 +63,7 @@ Application FacadeStatisticalResources {
             @DatasetDto updateDataset(@DatasetDto datasetDto) throws MetamacException;
             "Deletes dataset"
             deleteDataset(String urn) throws MetamacException;
-            "Finds concepts schemes by criteria"
+            "Finds datasets by criteria"
             MetamacCriteriaResult<@DatasetDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a dataset by URN"
             @DatasetDto retrieveDatasetByUrn(String urn) throws MetamacException;
@@ -68,6 +71,22 @@ Application FacadeStatisticalResources {
             List<@DatasetDto> retrieveDatasetVersions(String urn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetDto versioningDataset(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		
+    		// PUBLICATIONS & PUBLICATION VERSION
+	   		"Creates publication"
+	   		@PublicationDto createPublication(@PublicationDto publicationDto, @ExternalItemDto statisticalOperation) throws MetamacException;
+	   		"Updates publication"
+            @PublicationDto updatePublication(@PublicationDto publicationDto) throws MetamacException;
+            "Deletes publication"
+            deletePublication(String urn) throws MetamacException;
+            "Finds publications by criteria"
+            MetamacCriteriaResult<@PublicationDto> findPublicationByCondition(MetamacCriteria criteria) throws MetamacException;
+            "Retrieves a publication by URN"
+            @PublicationDto retrievePublicationByUrn(String urn) throws MetamacException;
+            "Retrieves all publication versions"
+            List<@PublicationDto> retrievePublicationVersions(String urn) throws MetamacException;
+    		"Creates a new version of a publication, copying metadata from version with provided urn"
+    		@PublicationDto versioningPublication(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
 		}  
 	}
 }

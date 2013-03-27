@@ -10,7 +10,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 
 @org.springframework.stereotype.Component("datasetDo2DtoMapper")
-public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements PublicationDo2DtoMapper {
+public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
 
     @Override
     public DatasourceDto datasourceDoToDto(Datasource source) {

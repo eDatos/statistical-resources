@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private PublicationDo2DtoMapper       datasetDo2DtoMapper;
+    private DatasetDo2DtoMapper       datasetDo2DtoMapper;
 
     @Autowired
     private DatasetVersionMockFactory datasetVersionMockFactory;

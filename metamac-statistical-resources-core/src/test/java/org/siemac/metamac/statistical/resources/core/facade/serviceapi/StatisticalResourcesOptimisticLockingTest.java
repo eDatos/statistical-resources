@@ -367,4 +367,46 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void testCreatePublication() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testUpdatePublication() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testDeletePublication() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testFindPublicationByCondition() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testRetrievePublicationByUrn() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testRetrievePublicationVersions() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testVersioningPublication() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
 }

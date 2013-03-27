@@ -6,10 +6,8 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.mapper.SculptorCriteria2MetamacCriteria;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.PublicationDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class DatasetVersionSculptorCriteria2MetamacCriteriaMapperImpl implements DatasetVersionSculptorCriteria2MetamacCriteriaMapper {
 
     @Autowired
-    private PublicationDo2DtoMapper              do2DtoMapper;
+    private DatasetDo2DtoMapper              do2DtoMapper;
 
 
     @Override

@@ -62,11 +62,15 @@ Application PublicationsStatisticalResources {
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
-			// Format extent resources: Number of tables that contains the collection
+			// Format extent resources: Number of cubes that contains the collection
 			Integer formatExtentResources nullable;
 
 			"Parent"
 			- @Publication publication not nullable cascade="none" databaseColumn="PUBLICATION_FK" <-> versions;
+			"Association to all elements in the publication version"
+			- Bag<@ElementLevel> childrenAllLevels cascade="all-delete-orphan" fetch="lazy" inverse orderby="parent asc, orderInLevel asc" <-> publicationVersion;
+			"Association to elements in the first level of the publication"
+			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> publicationVersionFirstLevel;
 			
 			Repository PublicationVersionRepository {
 				save;
@@ -79,5 +83,88 @@ Application PublicationsStatisticalResources {
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 			}
 		}
+		
+		"Publication level"
+        Entity ElementLevel {
+        	databaseTable="TB_ELEMENTS_LEVELS"
+        	hint="idSequence=ELEMENTS_LEVELS"
+        	gap
+        	!auditable
+        	
+            "Order in level"
+			Long orderInLevel not nullable;
+			
+			// Relations
+			"Children"
+			- Bag<@ElementLevel> children cascade="all-delete-orphan" inverse orderby="orderInLevel asc" <-> parent;
+            "Parent"
+            - @ElementLevel parent cascade="none" databaseColumn="PARENT_FK" nullable <-> children;
+			"Chapter"
+			- @Chapter chapter cascade="all" nullable databaseColumn="CHAPTER_FK" <-> elementLevel;
+			"Cube"
+			- @Cube cube cascade="all" nullable databaseColumn="TABLE_FK" <-> elementLevel;
+            "Relation to publication, filled for all items, regardless of the level"
+			- @PublicationVersion publicationVersion cascade="none" fetch="lazy" not nullable databaseColumn="PUBLICATION_VERSION_ALL_FK" <-> childrenAllLevels;
+			"Relation to publication, only filled for items in first level"
+			- @PublicationVersion publicationVersionFirstLevel cascade="none" fetch="lazy" nullable databaseColumn="PUBLICATION_VERSION_FIRST_FK" <-> childrenFirstLevel;
+			
+			"Provides access to ElementLevel"
+            Repository ElementLevelRepository {
+            	findByCondition;
+            	@ElementLevel save(@ElementLevel entity);
+            	delete;
+            }
+        }  	
+        
+        "Publication chapter"
+        Entity Chapter {
+        	databaseTable="TB_CHAPTERS"
+        	hint="idSequence=CHAPTERS"
+        	
+        	- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+
+			// Relations
+            "Element level"
+            - @ElementLevel elementLevel cascade="none" not nullable inverse <-> chapter;
+			            
+			"Provides access to Dimension"
+            Repository ChapterRepository {
+            	findByCondition;
+            	findAll;
+            	@Chapter save(@Chapter entity);
+            	@Chapter retrieveChapterByUrn(String urn) throws MetamacException;
+            	protected List<@Chapter> findByQuery;
+            }
+        }
+        
+        "Publication cube "
+        Entity Cube {
+        	databaseTable="TB_CUBES"
+        	hint="idSequence=CUBES"
+			gap
+			
+			- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			// Relations
+            "Element level"
+            - @ElementLevel elementLevel cascade="none" not nullable inverse <-> cube;
+        	// "Dataset"
+			// - @Dataset dataset cascade="none" not nullable databaseColumn="DATASET_FK" <-> indicatorsInstances;
+            
+			"Provides access to Cube"
+            Repository CubeRepository {
+            	@Cube save(@Cube entity);
+            	findByCondition;
+            	@Cube retrieveCubeByUrn(String urn) throws MetamacException;
+            	@Cube retrieveCubePublishedByCode(String code) throws MetamacException;
+            	Boolean existAnyCube(String publicationCode, String publicationVersionNumber) throws MetamacException;
+            	findByCondition(PagingParameter pagingParameter) throws MetamacException;
+            	List<String> findDatasetsLinkedWithPublicationVersion(Long publicationVersionId) throws MetamacException;
+            	// List<String> findPublicationPublishedWithDataset(String datasetCode) throws MetamacException;
+            	// List<String> findCubesInPublishedPublicationWithDataset(String datasetCode) throws MetamacException;
+            	@Cube retrieveCubeInPublishedPublication(String publicationCode, String cubeCode) throws MetamacException;
+            	List<@Cube> findCubesInPublishedPublication(String publicationCode) throws MetamacException;
+            }
+        }         		
 	}
 }

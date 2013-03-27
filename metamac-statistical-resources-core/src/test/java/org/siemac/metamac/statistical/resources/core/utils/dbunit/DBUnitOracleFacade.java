@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -62,7 +63,12 @@ public class DBUnitOracleFacade implements DBUnitFacade {
              * ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
              * IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
              */
-            IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
+            
+//            IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
+           
+            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
+           /* ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);*/
 
             // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
             initializeDatabase(dbUnitConnection);
@@ -93,7 +99,11 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
-            IDataSet dataset = (new FlatXmlDataSetBuilder()).build(xmlDataFile);
+            /*IDataSet dataSetReplacement = (new FlatXmlDataSetBuilder()).build(xmlDataFile);
+            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);*/
+            
+            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(),(new FlatXmlDataSetBuilder()).build(xmlDataFile));
 
             databaseTester.setSetUpOperation(DatabaseOperation.DELETE_ALL);
             databaseTester.setTearDownOperation(DatabaseOperation.NONE);

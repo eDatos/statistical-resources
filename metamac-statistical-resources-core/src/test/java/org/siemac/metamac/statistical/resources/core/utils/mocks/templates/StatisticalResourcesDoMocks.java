@@ -22,6 +22,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -168,6 +170,34 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract PublicationVersion mockPublicationVersion();
 
     protected abstract PublicationVersion mockPublicationVersion(Publication publication);
+    
+    
+    // CHAPTER
+    public Chapter mockChapter() {
+        Chapter chapter = new Chapter();
+        chapter.setElementLevel(mockElementLevelForChapter(chapter));
+        chapter.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        return chapter;
+    }
+    
+    // ELEMENT LEVEL
+    private ElementLevel mockElementLevel() {
+        PublicationVersion publicationVersion = mockPublicationVersion();
+        
+        ElementLevel elementLevel = new ElementLevel();
+        elementLevel.setOrderInLevel(Long.valueOf(1));
+        elementLevel.setPublicationVersion(publicationVersion);
+        elementLevel.setPublicationVersionFirstLevel(publicationVersion);
+        elementLevel.setChapter(null);
+        elementLevel.setCube(null);
+        return elementLevel;
+    }
+    
+    private ElementLevel mockElementLevelForChapter(Chapter chapter) {
+        ElementLevel elementLevel = mockElementLevel();
+        elementLevel.setChapter(chapter);
+        return elementLevel;
+    }
 
     // -----------------------------------------------------------------
     // BASE HIERARCHY

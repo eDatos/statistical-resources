@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core;
 
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +52,7 @@ public class MetamacReflectionUtils {
         }
     }
     
+    @SuppressWarnings("rawtypes")
     public static List<Field> getAllFields(Class clazz) {
         final List<Field> fields = new ArrayList<Field>();
         ReflectionUtils.doWithFields(clazz, new FieldCallback() {
@@ -58,5 +62,18 @@ public class MetamacReflectionUtils {
             }
         });
         return fields;
+    }
+    
+    
+    public static Long retrieveObjectId(Object object) {
+        try {
+            Method method = object.getClass().getDeclaredMethod("getId");
+            method.setAccessible(true);
+            Long objectId = (Long) method.invoke(object);
+            return objectId;
+        } catch (Exception e) {
+            fail("The object doesn't have getId method");
+            return null;
+        }
     }
 }

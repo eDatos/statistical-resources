@@ -19,6 +19,7 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -756,7 +757,6 @@ public class BaseAsserts extends MetamacAsserts {
         }
     }
     
-    
     private static boolean messageParametersEquals(Serializable[] expected, Serializable[] actual) {
         if (expected != null && actual != null) {
             for (Serializable expec: expected) {
@@ -774,5 +774,16 @@ public class BaseAsserts extends MetamacAsserts {
             return expected == null && actual == null;
         }
         return true;
+    }
+    
+    
+    protected static void assertRelaxedEqualsObject(Object expected, Object actual) {
+        if ((expected != null && actual == null) || (expected == null && actual != null)) {
+            fail("The expected object and the actual are not equals");
+        } else if (expected != null && actual != null) {
+            Long expectedId = MetamacReflectionUtils.retrieveObjectId(expected);
+            Long actualId = MetamacReflectionUtils.retrieveObjectId(actual);
+            assertEquals(expectedId, actualId);
+        }
     }
 }

@@ -18,20 +18,26 @@ import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.Dat
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.PublicationDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionSculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QuerySculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.security.PublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,36 +47,43 @@ import org.springframework.stereotype.Service;
 public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesServiceFacadeImplBase {
 
     @Autowired
-    @Qualifier("queryDo2DtoMapper")
-    private QueryDo2DtoMapper                           queryDo2DtoMapper;
+    private QueryDo2DtoMapper                                        queryDo2DtoMapper;
 
     @Autowired
-    @Qualifier("queryDto2DoMapper")
-    private QueryDto2DoMapper                           queryDto2DoMapper;
+    private QueryDto2DoMapper                                        queryDto2DoMapper;
 
     @Autowired
-    @Qualifier("datasetDo2DtoMapper")
-    private PublicationDo2DtoMapper                         datasetDo2DtoMapper;
+    private DatasetDo2DtoMapper                                      datasetDo2DtoMapper;
 
     @Autowired
-    @Qualifier("datasetDto2DoMapper")
-    private DatasetDto2DoMapper                         datasetDto2DoMapper;
-    
-    @Autowired
-    @Qualifier("baseDto2DoMapper")
-    private BaseDto2DoMapper                            baseDto2DoMapper;
+    private DatasetDto2DoMapper                                      datasetDto2DoMapper;
 
     @Autowired
-    private QueryMetamacCriteria2SculptorCriteriaMapper queryMetamacCriteria2SculptorCriteriaMapper;
+    private PublicationDo2DtoMapper                                  publicationDo2DtoMapper;
 
     @Autowired
-    private QuerySculptorCriteria2MetamacCriteriaMapper querySculptorCriteria2MetamacCriteriaMapper;
-    
+    private PublicationDto2DoMapper                                  publicationDto2DoMapper;
+
     @Autowired
-    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper datasetMetamacCriteria2SculptorCriteriaMapper;
-    
+    private BaseDto2DoMapper                                         baseDto2DoMapper;
+
     @Autowired
-    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper datasetSculptorCriteria2MetamacCriteriaMapper;
+    private QueryMetamacCriteria2SculptorCriteriaMapper              queryMetamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
+    private QuerySculptorCriteria2MetamacCriteriaMapper              querySculptorCriteria2MetamacCriteriaMapper;
+
+    @Autowired
+    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper     datasetMetamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
+    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper     datasetSculptorCriteria2MetamacCriteriaMapper;
+
+    @Autowired
+    private PublicationVersionMetamacCriteria2SculptorCriteriaMapper publicationMetamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
+    private PublicationVersionSculptorCriteria2MetamacCriteriaMapper publicationSculptorCriteria2MetamacCriteriaMapper;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -179,7 +192,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     public void deleteQuery(ServiceContext ctx, String urn) throws MetamacException {
         // Security
         QueriesSecurityUtils.canDeleteQuery(ctx);
-        
+
         // Delete
         getQueryService().deleteQuery(ctx, urn);
     }
@@ -283,40 +296,39 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetDto updateDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
-        //Security
+        // Security
         DatasetsSecurityUtils.canUpdateDataset(ctx);
-        
-        //Transform
+
+        // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
-        
-        ////Update
+
+        // //Update
         datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion);
-        
-        
-        //Transform
+
+        // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
     }
 
     @Override
     public void deleteDataset(ServiceContext ctx, String urn) throws MetamacException {
-        //Security
+        // Security
         DatasetsSecurityUtils.canDeleteDataset(ctx);
-        
-        //Delete
+
+        // Delete
         getDatasetService().deleteDatasetVersion(ctx, urn);
     }
 
     @Override
     public MetamacCriteriaResult<DatasetDto> findDatasetsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
-        //Security
+        // Security
         DatasetsSecurityUtils.canFindDatasetsByCondition(ctx);
-        
-        //Transform
+
+        // Transform
         SculptorCriteria sculptorCriteria = datasetMetamacCriteria2SculptorCriteriaMapper.getDatasetVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
-        
-        //Find
+
+        // Find
         PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
-        
+
         // Transform
         MetamacCriteriaResult<DatasetDto> metamacCriteriaResult = datasetSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(result, sculptorCriteria.getPageSize());
 
@@ -325,25 +337,25 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetDto retrieveDatasetByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        //Security
+        // Security
         DatasetsSecurityUtils.canRetrieveDatasetByUrn(ctx);
-        
-        //Retrieve
+
+        // Retrieve
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
-        
-        //Transform
+
+        // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
     }
 
     @Override
     public List<DatasetDto> retrieveDatasetVersions(ServiceContext ctx, String urn) throws MetamacException {
-        //Security
+        // Security
         DatasetsSecurityUtils.canRetrieveDatasetVersions(ctx);
-        
-        //Retrieve
+
+        // Retrieve
         List<DatasetVersion> datasetVersions = getDatasetService().retrieveDatasetVersions(ctx, urn);
-        
-        //Transform
+
+        // Transform
         List<DatasetDto> datasets = new ArrayList<DatasetDto>();
         for (DatasetVersion version : datasetVersions) {
             datasets.add(datasetDo2DtoMapper.datasetVersionDoToDto(version));
@@ -353,14 +365,97 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetDto versioningDataset(ServiceContext ctx, String urnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        //Security
+        // Security
         DatasetsSecurityUtils.canVersionDataset(ctx);
-        
-        //Versioning
+
+        // Versioning
         DatasetVersion datasetVersion = getDatasetService().versioningDatasetVersion(ctx, urnToCopy, versionType);
-        
-        //Transform
+
+        // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+    }
+
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public PublicationDto createPublication(ServiceContext ctx, PublicationDto publicationDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canCreatePublication(ctx);
+
+        // Transform
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
+        ExternalItem statisticalOperation = baseDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionSingleParameters.STATISTICAL_OPERATION);
+
+        // Retrieve
+        PublicationVersion publicationVersionCreated = getPublicationService().createPublicationVersion(ctx, publicationVersion, statisticalOperation);
+
+        // Transform
+        PublicationDto publicationCreated = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersionCreated);
+
+        return publicationCreated;
+    }
+
+    @Override
+    public PublicationDto updatePublication(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canUpdatePublication(ctx);
+
+        // Transform
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
+
+        // //Update
+        publicationVersion = getPublicationService().updatePublicationVersion(ctx, publicationVersion);
+
+        // Transform
+        return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+    }
+
+    @Override
+    public void deletePublication(ServiceContext ctx, String urn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canDeletePublication(ctx);
+
+        // Delete
+        getPublicationService().deletePublicationVersion(ctx, urn);
+
+    }
+
+    @Override
+    public MetamacCriteriaResult<PublicationDto> findPublicationByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canFindPublicationsByCondition(ctx);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = publicationMetamacCriteria2SculptorCriteriaMapper.getPublicationVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Find
+        PagedResult<PublicationVersion> result = getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<PublicationDto> metamacCriteriaResult = publicationSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationVersion(result,
+                sculptorCriteria.getPageSize());
+
+        return metamacCriteriaResult;
+    }
+
+    @Override
+    public PublicationDto retrievePublicationByUrn(ServiceContext ctx, String urn) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<PublicationDto> retrievePublicationVersions(ServiceContext ctx, String urn) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public PublicationDto versioningPublication(ServiceContext ctx, String urnToCopy, VersionTypeEnum versionType) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -21,6 +21,7 @@ public class QueryAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsQuery(Query expected, Query actual) {
+        // TODO: Comprobar por qué este assert no es de lifeCycle en lugar de nameable
         assertEqualsNameableStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
         assertEquals(expected.getType(), actual.getType());

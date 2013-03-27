@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.springframework.stereotype.Component;
 
 @Component("publicationDo2DtoMapper")
