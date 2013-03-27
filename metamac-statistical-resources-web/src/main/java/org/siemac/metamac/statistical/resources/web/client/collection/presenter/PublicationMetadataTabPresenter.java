@@ -49,14 +49,17 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-public class PublicationMetadataTabPresenter extends Presenter<PublicationMetadataTabPresenter.PublicationMetadataTabView, PublicationMetadataTabPresenter.PublicationMetadataTabProxy> implements PublicationMetadataTabUiHandlers {
+public class PublicationMetadataTabPresenter extends Presenter<PublicationMetadataTabPresenter.PublicationMetadataTabView, PublicationMetadataTabPresenter.PublicationMetadataTabProxy>
+        implements
+            PublicationMetadataTabUiHandlers {
 
-    private DispatchAsync dispatcher;
-    private PlaceManager placeManager;
-    
-    private ExternalItemDto operation;;
-    
-    public interface PublicationMetadataTabView extends View,HasUiHandlers<PublicationMetadataTabUiHandlers> {
+    private DispatchAsync   dispatcher;
+    private PlaceManager    placeManager;
+
+    private ExternalItemDto operation;    ;
+
+    public interface PublicationMetadataTabView extends View, HasUiHandlers<PublicationMetadataTabUiHandlers> {
+
         void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result);
         void setPublication(PublicationDto collectionDto);
     }
@@ -74,7 +77,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
         this.placeManager = placeManager;
         getView().setUiHandlers(this);
     }
-    
+
     @TitleFunction
     public String title() {
         return getConstants().breadcrumbMetadata();
@@ -84,7 +87,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     protected void revealInParent() {
         RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaMetadata, this);
     }
-    
+
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
@@ -99,7 +102,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
             StatisticalResourcesWeb.showErrorPage();
         }
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
@@ -130,10 +133,10 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
             }
         });
     }
-    
+
     @Override
     public void retrieveAgencies(int firstResult, int maxResults, String queryText) {
-        dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult,maxResults,queryText), new WaitingAsyncCallback<GetAgenciesPaginatedListResult>() {
+        dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult, maxResults, queryText), new WaitingAsyncCallback<GetAgenciesPaginatedListResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -144,9 +147,9 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
                 getView().setAgenciesPaginatedList(result);
             }
         });
-        
+
     }
-    
+
     @Override
     public void savePublication(PublicationDto collectionDto) {
         dispatcher.execute(new SavePublicationAction(collectionDto), new WaitingAsyncCallback<SavePublicationResult>() {
@@ -170,7 +173,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()), MessageTypeEnum.ERROR);
+                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()),
+                                MessageTypeEnum.ERROR);
                     }
                     @Override
                     public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
@@ -187,7 +191,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()), MessageTypeEnum.ERROR);
+                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()),
+                                MessageTypeEnum.ERROR);
                     }
                     @Override
                     public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
@@ -215,57 +220,6 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @Override
-    public void sendToPendingPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PENDING, currentProcStatus),
-                new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToPendingPublication()), MessageTypeEnum.ERROR);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToPendingPublication()), MessageTypeEnum.SUCCESS);
-                        getView().setPublication(result.getPublicationDto());
-                    }
-                });
-    }
-
-//    @Override
-//    public void programPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-//        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED, currentProcStatus),
-//                new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
-//
-//                    @Override
-//                    public void onWaitFailure(Throwable caught) {
-//                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorProgramPublication()), MessageTypeEnum.ERROR);
-//                    }
-//                    @Override
-//                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-//                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceProgramPublication()), MessageTypeEnum.SUCCESS);
-//                        getView().setPublication(result.getPublicationDto());
-//                    }
-//                });
-//    }
-//
-//    @Override
-//    public void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-//        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PENDING, currentProcStatus),
-//                new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
-//
-//                    @Override
-//                    public void onWaitFailure(Throwable caught) {
-//                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorCancelProgrammedPublication()), MessageTypeEnum.ERROR);
-//                    }
-//                    @Override
-//                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-//                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceCancelProgrammedPublication()), MessageTypeEnum.SUCCESS);
-//                        getView().setPublication(result.getPublicationDto());
-//                    }
-//                });
-//    }
-
-    @Override
     public void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
         dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
 
@@ -280,22 +234,6 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
             }
         });
     }
-
-//    @Override
-//    public void archive(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-//        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.ARCHIVED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
-//
-//            @Override
-//            public void onWaitFailure(Throwable caught) {
-//                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorArchive()), MessageTypeEnum.ERROR);
-//            }
-//            @Override
-//            public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-//                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceArchive()), MessageTypeEnum.SUCCESS);
-//                getView().setPublication(result.getPublicationDto());
-//            }
-//        });
-//    }
 
     @Override
     public void version(String urn, VersionTypeEnum versionType) {

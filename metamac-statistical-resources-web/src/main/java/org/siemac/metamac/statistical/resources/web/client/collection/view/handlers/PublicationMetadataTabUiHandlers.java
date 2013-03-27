@@ -1,12 +1,21 @@
 package org.siemac.metamac.statistical.resources.web.client.collection.view.handlers;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.client.view.handlers.LifeCycleUiHandlers;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 
+import com.gwtplatform.mvp.client.UiHandlers;
 
-public interface PublicationMetadataTabUiHandlers extends LifeCycleUiHandlers {
-    
+public interface PublicationMetadataTabUiHandlers extends UiHandlers {
+
     void retrieveAgencies(int firstResult, int maxResults, String queryText);
-    
     void savePublication(PublicationDto collectionDto);
+
+    // LIFECYCLE
+
+    void sendToProductionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void sendToDiffusionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void rejectValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void version(String urn, VersionTypeEnum versionType);
 }

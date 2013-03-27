@@ -58,8 +58,8 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
             PublicationListUiHandlers,
             SetOperationHandler {
 
-    public final static int                           PUBLICATION_LIST_FIRST_RESULT                        = 0;
-    public final static int                           PUBLICATION_LIST_MAX_RESULTS                         = 30;
+    public final static int                           PUBLICATION_LIST_FIRST_RESULT                       = 0;
+    public final static int                           PUBLICATION_LIST_MAX_RESULTS                        = 30;
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
@@ -108,7 +108,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrievePublications(operationUrn, PUBLICATION_LIST_FIRST_RESULT, COLLECTION_LIST_MAX_RESULTS, null);
+            retrievePublications(operationUrn, PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -146,9 +146,9 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
     }
 
     @Override
-    public void createPublication(PublicationDto PublicationDto) {
-        PublicationDto.setOperation(operation);
-        dispatcher.execute(new SavePublicationAction(PublicationDto), new WaitingAsyncCallback<SavePublicationResult>() {
+    public void createPublication(PublicationDto publicationDto) {
+        // publicationDto.setOperation(operation);
+        dispatcher.execute(new SavePublicationAction(publicationDto), new WaitingAsyncCallback<SavePublicationResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -156,7 +156,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
             }
             @Override
             public void onWaitSuccess(SavePublicationResult result) {
-                retrievePublications(PUBLICATION_LIST_FIRST_RESULT, COLLECTION_LIST_MAX_RESULTS, null);
+                retrievePublications(PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
             }
         });
 
@@ -165,15 +165,16 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
     @Override
     public void deletePublication(List<String> urns) {
         dispatcher.execute(new DeletePublicationListAction(urns), new WaitingAsyncCallback<DeletePublicationListResult>() {
+
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorDelete()), MessageTypeEnum.ERROR);
             }
-            
+
             @Override
             public void onWaitSuccess(DeletePublicationListResult result) {
                 ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getMessageList(getMessages().collectionDeleted()), MessageTypeEnum.SUCCESS);
-                retrievePublications(PublicationListPresenter.this.operation.getUrn(), PUBLICATION_LIST_FIRST_RESULT, COLLECTION_LIST_MAX_RESULTS,null);                
+                retrievePublications(PublicationListPresenter.this.operation.getUrn(), PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
             };
         });
     }
@@ -201,5 +202,4 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.collectionPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
         }
     }
-
 }
