@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.server.handlers.collection;
+package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
 
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListResult;
