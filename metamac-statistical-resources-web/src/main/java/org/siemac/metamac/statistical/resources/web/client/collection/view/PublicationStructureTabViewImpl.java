@@ -2,8 +2,8 @@ package org.siemac.metamac.statistical.resources.web.client.collection.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter.CollectionStructureTabView;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.PublicationStructurePanel;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
@@ -13,12 +13,12 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 
-public class PublicationStructureTabViewImpl extends ViewImpl implements CollectionStructureTabView {
+public class PublicationStructureTabViewImpl extends ViewImpl implements PublicationStructureTabView {
 
     private VLayout panel;
     private PublicationStructurePanel structurePanel;
 
-    private CollectionDto            collectionDto;
+    private PublicationDto            collectionDto;
     
     @Inject
     public PublicationStructureTabViewImpl() {
@@ -36,10 +36,10 @@ public class PublicationStructureTabViewImpl extends ViewImpl implements Collect
     }
     
     @Override
-    public void setCollection(CollectionDto collectionDto) {
+    public void setPublication(PublicationDto collectionDto) {
         this.collectionDto = collectionDto;
 
-        structurePanel.setCollectionStructure(collectionDto.getStructure());
+        structurePanel.setPublicationStructure(collectionDto.getStructure());
     }
     
     @Override

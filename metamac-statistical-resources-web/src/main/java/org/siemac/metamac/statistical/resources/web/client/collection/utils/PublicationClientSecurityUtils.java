@@ -3,15 +3,15 @@ package org.siemac.metamac.statistical.resources.web.client.collection.utils;
 // TODO: Add real rules not only "true"
 public class PublicationClientSecurityUtils {
 
-    public static boolean canCreateCollection() {
+    public static boolean canCreatePublication() {
         return true;
     }
 
-    public static boolean canUpdateCollection() {
+    public static boolean canUpdatePublication() {
         return true;
     }
 
-    public static boolean canDeleteCollection() {
+    public static boolean canDeletePublication() {
         return true;
     }
 

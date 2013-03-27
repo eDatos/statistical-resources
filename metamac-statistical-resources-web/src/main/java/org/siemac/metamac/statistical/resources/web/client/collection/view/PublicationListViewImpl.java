@@ -7,7 +7,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationListPresenter;
@@ -26,7 +26,6 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -43,7 +42,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class PublicationListViewImpl extends ViewImpl implements PublicationListPresenter.CollectionListView {
+public class PublicationListViewImpl extends ViewImpl implements PublicationListPresenter.PublicationListView {
 
     private PublicationListUiHandlers uiHandlers;
 
@@ -52,8 +51,8 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
     private SearchSectionStack       searchSectionStack;
     private PaginatedCheckListGrid   collectionListGrid;
 
-    private ToolStripButton          newCollectionButton;
-    private ToolStripButton          deleteCollectionButton;
+    private ToolStripButton          newPublicationButton;
+    private ToolStripButton          deletePublicationButton;
 
     private DeleteConfirmationWindow deleteConfirmationWindow;
 
@@ -66,25 +65,25 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
         ToolStrip toolStrip = new ToolStrip();
         toolStrip.setWidth100();
-        newCollectionButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newCollectionButton.addClickHandler(new ClickHandler() {
+        newPublicationButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
+        newPublicationButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                final NewPublicationWindow newCollectionWindow = new NewPublicationWindow(getConstants().collectionCreate());
-                newCollectionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                final NewPublicationWindow newPublicationWindow = new NewPublicationWindow(getConstants().collectionCreate());
+                newPublicationWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (newCollectionWindow.validateForm()) {
-                            uiHandlers.createCollection(newCollectionWindow.getNewCollectionDto());
-                            newCollectionWindow.destroy();
+                        if (newPublicationWindow.validateForm()) {
+                            uiHandlers.createPublication(newPublicationWindow.getNewPublicationDto());
+                            newPublicationWindow.destroy();
                         }
                     }
                 });
             }
         });
-        newCollectionButton.setVisibility(PublicationClientSecurityUtils.canCreateCollection() ? Visibility.VISIBLE : Visibility.HIDDEN);
+        newPublicationButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
         deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().collectionDeleteConfirmationTitle(), getMessages().collectionDeleteConfirmation());
         deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
@@ -92,14 +91,14 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.deleteCollection(getUrnsFromSelectedCollections());
+                uiHandlers.deletePublication(getUrnsFromSelectedPublications());
                 deleteConfirmationWindow.hide();
             }
         });
 
-        deleteCollectionButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteCollectionButton.setVisibility(Visibility.HIDDEN);
-        deleteCollectionButton.addClickHandler(new ClickHandler() {
+        deletePublicationButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
+        deletePublicationButton.setVisibility(Visibility.HIDDEN);
+        deletePublicationButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -107,8 +106,8 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
             }
         });
 
-        toolStrip.addButton(newCollectionButton);
-        toolStrip.addButton(deleteCollectionButton);
+        toolStrip.addButton(newPublicationButton);
+        toolStrip.addButton(deletePublicationButton);
 
         // Search
 
@@ -117,17 +116,17 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                uiHandlers.retrieveCollections(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
+                uiHandlers.retrievePublications(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
             }
         });
 
-        // Collection list
+        // Publication list
 
         collectionListGrid = new PaginatedCheckListGrid(PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveCollections(firstResult, maxResults, null);
+                uiHandlers.retrievePublications(firstResult, maxResults, null);
             }
         });
         collectionListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS);
@@ -142,7 +141,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
                     // Show delete button
                     showListGridDeleteButton();
                 } else {
-                    deleteCollectionButton.hide();
+                    deletePublicationButton.hide();
                 }
             }
         });
@@ -153,7 +152,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
             public void onRecordClick(RecordClickEvent event) {
                 if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
                     String urn = ((PublicationRecord) event.getRecord()).getAttribute(PublicationDS.URN);
-                    uiHandlers.goToCollection(urn);
+                    uiHandlers.goToPublication(urn);
                 }
             }
         });
@@ -170,11 +169,11 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
     }
 
     @Override
-    public void setCollectionPaginatedList(List<CollectionDto> collectionDtos, int firstResult, int totalResults) {
+    public void setPublicationPaginatedList(List<PublicationDto> collectionDtos, int firstResult, int totalResults) {
         PublicationRecord[] records = new PublicationRecord[collectionDtos.size()];
         int index = 0;
-        for (CollectionDto scheme : collectionDtos) {
-            records[index++] = StatisticalResourcesRecordUtils.getCollectionRecord(scheme);
+        for (PublicationDto scheme : collectionDtos) {
+            records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
         collectionListGrid.getListGrid().setData(records);
     }
@@ -211,12 +210,12 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
     }
 
     private void showListGridDeleteButton() {
-        if (PublicationClientSecurityUtils.canDeleteCollection()) {
-            deleteCollectionButton.show();
+        if (PublicationClientSecurityUtils.canDeletePublication()) {
+            deletePublicationButton.show();
         }
     }
 
-    private List<String> getUrnsFromSelectedCollections() {
+    private List<String> getUrnsFromSelectedPublications() {
         List<String> urns = new ArrayList<String>();
         for (ListGridRecord record : collectionListGrid.getListGrid().getSelectedRecords()) {
             PublicationRecord collectionRecord = (PublicationRecord) record;

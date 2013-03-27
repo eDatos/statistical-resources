@@ -2,10 +2,10 @@ package org.siemac.metamac.statistical.resources.web.client.collection.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter.CollectionMetadataTabView;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter.CollectionStructureTabView;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
@@ -13,7 +13,6 @@ import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -22,7 +21,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
-public class PublicationViewImpl extends ViewImpl implements PublicationPresenter.CollectionView {
+public class PublicationViewImpl extends ViewImpl implements PublicationPresenter.PublicationView {
 
     private PublicationUiHandlers uiHandlers;
     
@@ -34,7 +33,7 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
     private Tab collectionStructureTab;
     
     @Inject
-    public PublicationViewImpl(CollectionMetadataTabView metadataView, CollectionStructureTabView structureView) {
+    public PublicationViewImpl(PublicationMetadataTabView metadataView, PublicationStructureTabView structureView) {
         super();
         panel = new VLayout();
         
@@ -61,19 +60,19 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
         collectionMetadataTab.addTabSelectedHandler(new TabSelectedHandler() {
             @Override
             public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.goToCollectionMetadata();
+                uiHandlers.goToPublicationMetadata();
             }
         });
         collectionStructureTab.addTabSelectedHandler(new TabSelectedHandler() {
             @Override
             public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.goToCollectionStructure();
+                uiHandlers.goToPublicationStructure();
             }
         });
     }
 
     @Override
-    public void setCollection(CollectionDto collectionDto) {
+    public void setPublication(PublicationDto collectionDto) {
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
         titleLabel.show();
     }
@@ -81,7 +80,7 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
     @Override
     public void showMetadata() {
         tabSet.selectTab(collectionMetadataTab);
-        uiHandlers.goToCollectionMetadata();
+        uiHandlers.goToPublicationMetadata();
     }        
     
     @Override

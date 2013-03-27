@@ -9,15 +9,13 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.CollectionDto;
-import org.siemac.metamac.statistical.resources.core.dto.ContentMetadataDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationDS;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter.CollectionMetadataTabView;
+import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.collection.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.collection.widgets.PublicationMainFormLayout;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
@@ -53,7 +51,7 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 
-public class PublicationMetadataTabViewImpl extends ViewImpl implements CollectionMetadataTabView {
+public class PublicationMetadataTabViewImpl extends ViewImpl implements PublicationMetadataTabView {
 
     private PublicationMetadataTabUiHandlers uiHandlers;
     private VLayout                         panel;
@@ -73,7 +71,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
     private SearchExternalItemWindow         searchAgencyWindow;
     private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private CollectionDto                   collectionDto;
+    private PublicationDto                   collectionDto;
     
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -81,7 +79,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
         panel.setHeight100();
         panel.setOverflow(Overflow.SCROLL);
         
-        mainFormLayout = new PublicationMainFormLayout(PublicationClientSecurityUtils.canUpdateCollection());
+        mainFormLayout = new PublicationMainFormLayout(PublicationClientSecurityUtils.canUpdatePublication());
         bindMainFormLayoutEvents();
         createViewForm();
         createEditionForm();
@@ -116,7 +114,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
             @Override
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && versionEditionForm.validate(false) && lifeCycleEditionForm.validate(false) && contentMetadataEditionForm.validate(false)) {
-                    uiHandlers.saveCollection(getCollectionDto());
+                    uiHandlers.savePublication(getPublicationDto());
                 }
             }
         });
@@ -352,7 +350,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
         return agencyItem;
     }
     
-    private void setCollectionViewMode(CollectionDto collectionDto) {
+    private void setPublicationViewMode(PublicationDto collectionDto) {
         // Identifiers form
         identifiersForm.setValue(PublicationDS.IDENTIFIER, collectionDto.getIdentifier());
         identifiersForm.setValue(PublicationDS.TITLE, RecordUtils.getInternationalStringRecord(collectionDto.getTitle()));
@@ -409,7 +407,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
         contentMetadataForm.setValue(PublicationDS.LICENSE, contentMetadataDto.getLicense());
     }
 
-    private void setCollectionEditionMode(CollectionDto collectionDto) {
+    private void setPublicationEditionMode(PublicationDto collectionDto) {
         // Identifiers form
         identifiersEditionForm.setValue(PublicationDS.IDENTIFIER, collectionDto.getIdentifier());
         identifiersEditionForm.setValue(PublicationDS.TITLE, RecordUtils.getInternationalStringRecord(collectionDto.getTitle()));
@@ -464,14 +462,14 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
     }
     
     @Override
-    public void setCollection(CollectionDto collectionDto) {
+    public void setPublication(PublicationDto collectionDto) {
         this.collectionDto = collectionDto;
         
         mainFormLayout.updatePublishSection(collectionDto.getProcStatus());
         mainFormLayout.setViewMode();
 
-        setCollectionViewMode(collectionDto);
-        setCollectionEditionMode(collectionDto);
+        setPublicationViewMode(collectionDto);
+        setPublicationEditionMode(collectionDto);
     }
     
     @Override
@@ -484,7 +482,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Collecti
         }
     }
 
-    private CollectionDto getCollectionDto() {
+    private PublicationDto getPublicationDto() {
         // Identifiers form
         collectionDto.setIdentifier(identifiersEditionForm.getValueAsString(PublicationDS.IDENTIFIER));
         collectionDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(PublicationDS.TITLE));

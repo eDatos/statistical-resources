@@ -2,8 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.collection.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.CollectionStructureHierarchyDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationStructureDS;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;

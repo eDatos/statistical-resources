@@ -4,8 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.CollectionStructureHierarchyDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.CollectionStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationStructureDS;
 import org.siemac.metamac.statistical.resources.web.client.collection.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
