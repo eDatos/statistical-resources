@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.web.client.collection.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationStructureDS;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -78,10 +80,10 @@ public class PublicationStructureTreeGrid extends TreeGrid {
         contextMenu.addItem(deleteElementMenuItem);
     }
 
-    public void setCollectionStructure(CollectionStructureHierarchyDto structureHierarchyDto) {
+    public void setCollectionStructure(PublicationStructureHierarchyDto structureHierarchyDto) {
         if (structureHierarchyDto != null) {
             TreeNode collectionTreeNode = createCollectionTreeNode(structureHierarchyDto);
-            
+
             Tree tree = new Tree();
             tree.setModelType(TreeModelType.CHILDREN);
             tree.setData(new TreeNode[]{collectionTreeNode});
@@ -90,10 +92,10 @@ public class PublicationStructureTreeGrid extends TreeGrid {
         }
     }
 
-    private TreeNode createCollectionTreeNode(CollectionStructureHierarchyDto structureHierarchyDto) {
+    private TreeNode createCollectionTreeNode(PublicationStructureHierarchyDto structureHierarchyDto) {
         TreeNode node = new TreeNode();
         // If node type is URL, show the URL in the tree, not the text
-        if (CollectionStructureHierarchyTypeEnum.URL.equals(structureHierarchyDto.getType())) {
+        if (PublicationStructureHierarchyTypeEnum.URL.equals(structureHierarchyDto.getType())) {
             node.setAttribute(PublicationStructureDS.TEXT, structureHierarchyDto.getUrl());
         } else {
             node.setAttribute(PublicationStructureDS.TEXT, InternationalStringUtils.getLocalisedString(structureHierarchyDto.getText()));
@@ -105,8 +107,8 @@ public class PublicationStructureTreeGrid extends TreeGrid {
             children[i] = createCollectionTreeNode(structureHierarchyDto.getChildren().get(i));
         }
         // To show a file icon in TEXT, URL, DATASET and QUERY nodes
-        if (!CollectionStructureHierarchyTypeEnum.TEXT.equals(structureHierarchyDto.getType()) && !CollectionStructureHierarchyTypeEnum.URL.equals(structureHierarchyDto.getType())
-                && !CollectionStructureHierarchyTypeEnum.DATASET.equals(structureHierarchyDto.getType()) && !CollectionStructureHierarchyTypeEnum.QUERY.equals(structureHierarchyDto.getType())) {
+        if (!PublicationStructureHierarchyTypeEnum.TEXT.equals(structureHierarchyDto.getType()) && !PublicationStructureHierarchyTypeEnum.URL.equals(structureHierarchyDto.getType())
+                && !PublicationStructureHierarchyTypeEnum.DATASET.equals(structureHierarchyDto.getType()) && !PublicationStructureHierarchyTypeEnum.QUERY.equals(structureHierarchyDto.getType())) {
             node.setChildren(children);
         }
 
@@ -121,17 +123,16 @@ public class PublicationStructureTreeGrid extends TreeGrid {
         return deleteElementMenuItem;
     }
 
-    public void showContextMenu(CollectionStructureHierarchyTypeEnum type) {
+    public void showContextMenu(PublicationStructureHierarchyTypeEnum type) {
         contextMenu.markForRedraw();
         contextMenu.showContextMenu();
         updateNodeMenuItems(type);
     }
 
-    private void updateNodeMenuItems(CollectionStructureHierarchyTypeEnum type) {
-        boolean isFinalNode = CollectionStructureHierarchyTypeEnum.TEXT.equals(type) || CollectionStructureHierarchyTypeEnum.URL.equals(type)
-                || CollectionStructureHierarchyTypeEnum.DATASET.equals(type) || CollectionStructureHierarchyTypeEnum.QUERY.equals(type);
+    private void updateNodeMenuItems(PublicationStructureHierarchyTypeEnum type) {
+        boolean isFinalNode = PublicationStructureHierarchyTypeEnum.TEXT.equals(type) || PublicationStructureHierarchyTypeEnum.URL.equals(type)
+                || PublicationStructureHierarchyTypeEnum.DATASET.equals(type) || PublicationStructureHierarchyTypeEnum.QUERY.equals(type);
         createElementMenuItem.setEnabled(!isFinalNode);
-        deleteElementMenuItem.setEnabled(!CollectionStructureHierarchyTypeEnum.TITLE.equals(type));
+        deleteElementMenuItem.setEnabled(!PublicationStructureHierarchyTypeEnum.TITLE.equals(type));
     }
-
 }

@@ -12,19 +12,19 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 public class StatisticalResourcesRecordUtils {
 
     public static DatasetRecord getDatasetRecord(DatasetDto datasetDto) {
-        DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getCode(), getLocalisedString(datasetDto.getTitle()), getLocalisedString(datasetDto.getDescription()), CommonUtils.getProcStatusName(datasetDto), datasetDto.getVersionLogic(), datasetDto.getUrn(), datasetDto);
+        DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getCode(), getLocalisedString(datasetDto.getTitle()), getLocalisedString(datasetDto.getDescription()),
+                CommonUtils.getProcStatusName(datasetDto), datasetDto.getVersionLogic(), datasetDto.getUrn(), datasetDto);
         return record;
     }
-    
+
     public static DatasourceRecord getDatasourceRecord(DatasourceDto datasourceDto) {
         DatasourceRecord record = new DatasourceRecord(datasourceDto.getId(), datasourceDto.getCode(), datasourceDto.getUrn(), datasourceDto);
         return record;
     }
 
-    public static PublicationRecord getCollectionRecord(PublicationDto collectionDto) {
-        PublicationRecord record = new PublicationRecord(collectionDto.getId(), collectionDto.getCode(), getLocalisedString(collectionDto.getTitle()), getLocalisedString(collectionDto
-                .getDescription()), CommonUtils.getProcStatusName(collectionDto), collectionDto.getVersionLogic(), collectionDto.getUrn(), collectionDto);
+    public static PublicationRecord getPublicationRecord(PublicationDto publicationDto) {
+        PublicationRecord record = new PublicationRecord(publicationDto.getId(), publicationDto.getCode(), getLocalisedString(publicationDto.getTitle()),
+                getLocalisedString(publicationDto.getDescription()), CommonUtils.getProcStatusName(publicationDto), publicationDto.getVersionLogic(), publicationDto.getUrn(), publicationDto);
         return record;
     }
-
 }

@@ -35,7 +35,7 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
 
     private void common() {
         // Remove handler from edit button
-        //editHandlerRegistration.removeHandler();
+        // editHandlerRegistration.removeHandler();
 
         productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
@@ -88,20 +88,20 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
             showPendingPublicationButton();
             showRejectValidationButton();
-        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
-            showProgramPublicationButton();
-            showPublishButton();
-        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
-            showCancelProgrammedPublication();
+            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
+            // showProgramPublicationButton();
             // showPublishButton();
+            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
+            // showCancelProgrammedPublication();
+            // // showPublishButton();
         } else if (StatisticalResourceProcStatusEnum.PUBLICATION_FAILED.equals(status)) {
             showProgramPublicationButton();
             showPublishButton();
         } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
             showArchiveButton();
-        } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(status)) {
-            showVersioningButton();
+            // } else if (StatisticalResourceProcStatusEnum.ARCHIVED.equals(status)) {
+            // showVersioningButton();
         }
     }
 

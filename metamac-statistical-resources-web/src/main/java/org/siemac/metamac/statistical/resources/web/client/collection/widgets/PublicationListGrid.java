@@ -56,5 +56,4 @@ public class PublicationListGrid extends BaseCustomListGrid {
             setData(records);
         }
     }
-
 }

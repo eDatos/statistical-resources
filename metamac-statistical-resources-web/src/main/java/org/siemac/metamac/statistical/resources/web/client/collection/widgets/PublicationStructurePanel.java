@@ -4,6 +4,8 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationStructureDS;
 import org.siemac.metamac.statistical.resources.web.client.collection.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
@@ -36,15 +38,15 @@ import com.smartgwt.client.widgets.tree.events.LeafContextClickHandler;
 
 public class PublicationStructurePanel extends HLayout {
 
-    private static final int                FORM_ITEM_CUSTOM_WIDTH = 250;
+    private static final int                 FORM_ITEM_CUSTOM_WIDTH = 250;
 
     private PublicationStructureTreeGrid     collectionStructureTreeGrid;
 
-    private InternationalMainFormLayout     mainFormLayout;
-    private GroupDynamicForm                form;
-    private GroupDynamicForm                editionForm;
+    private InternationalMainFormLayout      mainFormLayout;
+    private GroupDynamicForm                 form;
+    private GroupDynamicForm                 editionForm;
 
-    private CollectionStructureHierarchyDto selectedNode;
+    private PublicationStructureHierarchyDto selectedNode;
 
     public PublicationStructurePanel() {
 
@@ -57,7 +59,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public void onClick(MenuItemClickEvent event) {
-                setElementInForm(new CollectionStructureHierarchyDto());
+                setElementInForm(new PublicationStructureHierarchyDto());
                 mainFormLayout.setEditionMode();
             }
         });
@@ -66,7 +68,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public void onFolderContextClick(final FolderContextClickEvent event) {
-                selectedNode = (CollectionStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
+                selectedNode = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
                 collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
             }
         });
@@ -75,7 +77,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public void onLeafContextClick(LeafContextClickEvent event) {
-                selectedNode = (CollectionStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
+                selectedNode = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
                 collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
 
             }
@@ -85,8 +87,8 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public void onFolderClick(FolderClickEvent event) {
-                selectedNode = (CollectionStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
-                CollectionStructureHierarchyDto collectionStructureHierarchyDto = (CollectionStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
+                selectedNode = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
+                PublicationStructureHierarchyDto collectionStructureHierarchyDto = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
                 setElementInForm(collectionStructureHierarchyDto);
             }
         });
@@ -95,8 +97,8 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public void onLeafClick(LeafClickEvent event) {
-                selectedNode = (CollectionStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
-                CollectionStructureHierarchyDto collectionStructureHierarchyDto = (CollectionStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
+                selectedNode = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
+                PublicationStructureHierarchyDto collectionStructureHierarchyDto = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
                 setElementInForm(collectionStructureHierarchyDto);
             }
         });
@@ -123,12 +125,12 @@ public class PublicationStructurePanel extends HLayout {
 
     // TREE GRID
 
-    public void setCollectionStructure(CollectionStructureHierarchyDto structureHierarchyDto) {
+    public void setCollectionStructure(PublicationStructureHierarchyDto structureHierarchyDto) {
         mainFormLayout.hide();
         collectionStructureTreeGrid.setCollectionStructure(structureHierarchyDto);
     }
 
-    private void setElementInForm(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
+    private void setElementInForm(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
         mainFormLayout.show();
         if (selectedNode != null) {
             updateFormElementTypeValueMap(selectedNode.getType());
@@ -152,7 +154,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
+                return PublicationStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
             }
         });
 
@@ -161,8 +163,8 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
-                        || CollectionStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+                return PublicationStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
+                        || PublicationStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
             }
         });
 
@@ -186,7 +188,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return !CollectionStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+                return !PublicationStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
             }
         });
 
@@ -197,7 +199,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+                return PublicationStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
             }
         });
 
@@ -206,7 +208,7 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
+                return PublicationStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
             }
         });
         url.setWidth(FORM_ITEM_CUSTOM_WIDTH);
@@ -216,8 +218,8 @@ public class PublicationStructurePanel extends HLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return CollectionStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
-                        || CollectionStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+                return PublicationStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
+                        || PublicationStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
             }
         });
         urn.setWidth(FORM_ITEM_CUSTOM_WIDTH);
@@ -227,12 +229,12 @@ public class PublicationStructurePanel extends HLayout {
         mainFormLayout.addEditionCanvas(editionForm);
     }
 
-    private void setElement(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
+    private void setElement(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
         setElementViewMode(collectionStructureHierarchyDto);
         setElementEditionMode(collectionStructureHierarchyDto);
     }
 
-    private void setElementViewMode(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
+    private void setElementViewMode(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
         form.setValue(
                 PublicationStructureDS.TYPE,
                 collectionStructureHierarchyDto.getType() != null ? getCoreMessages().getString(
@@ -245,7 +247,7 @@ public class PublicationStructurePanel extends HLayout {
         form.markForRedraw();
     }
 
-    private void setElementEditionMode(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
+    private void setElementEditionMode(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
         editionForm.setValue(PublicationStructureDS.TYPE, collectionStructureHierarchyDto.getType() != null
                 ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType())
                 : StringUtils.EMPTY);
@@ -260,21 +262,21 @@ public class PublicationStructurePanel extends HLayout {
         editionForm.markForRedraw();
     }
 
-    private void updateFormElementTypeValueMap(CollectionStructureHierarchyTypeEnum type) {
-        if (CollectionStructureHierarchyTypeEnum.TITLE.equals(type)) {
+    private void updateFormElementTypeValueMap(PublicationStructureHierarchyTypeEnum type) {
+        if (PublicationStructureHierarchyTypeEnum.TITLE.equals(type)) {
             editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTitleValidTypesHashMap());
-        } else if (CollectionStructureHierarchyTypeEnum.CHAPTER.equals(type)) {
+        } else if (PublicationStructureHierarchyTypeEnum.CHAPTER.equals(type)) {
             editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyChapterValidTypesHashMap());
-        } else if (CollectionStructureHierarchyTypeEnum.SUBCHAPTER1.equals(type)) {
+        } else if (PublicationStructureHierarchyTypeEnum.SUBCHAPTER1.equals(type)) {
             editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter1ValidTypesHashMap());
-        } else if (CollectionStructureHierarchyTypeEnum.SUBCHAPTER2.equals(type)) {
+        } else if (PublicationStructureHierarchyTypeEnum.SUBCHAPTER2.equals(type)) {
             editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter2ValidTypesHashMap());
         } else {
             editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTypeHashMap());
         }
     }
 
-    private void updateFormTypeItemVisibility(CollectionStructureHierarchyDto collectionStructureHierarchyDto) {
+    private void updateFormTypeItemVisibility(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
         if (collectionStructureHierarchyDto.getId() == null) {
             editionForm.getItem(PublicationStructureDS.TYPE).show();
             editionForm.getItem(PublicationStructureDS.TYPE_VIEW_NAME).hide();

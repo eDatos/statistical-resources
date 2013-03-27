@@ -4,6 +4,8 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.LinkedHashMap;
 
+import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
+
 public class CommonUtils {
 
     private static LinkedHashMap<String, String> structureHierarchyTypeHashMap                  = null;
@@ -16,7 +18,7 @@ public class CommonUtils {
         if (structureHierarchyTypeHashMap == null) {
             structureHierarchyTypeHashMap = new LinkedHashMap<String, String>();
             structureHierarchyTypeHashMap.put(new String(), new String());
-            for (CollectionStructureHierarchyTypeEnum c : CollectionStructureHierarchyTypeEnum.values()) {
+            for (PublicationStructureHierarchyTypeEnum c : PublicationStructureHierarchyTypeEnum.values()) {
                 String value = getCoreMessages().getString(getCoreMessages().collectionStructureHierarchyTypeEnum() + c.getName());
                 structureHierarchyTypeHashMap.put(c.toString(), value);
             }
@@ -28,11 +30,11 @@ public class CommonUtils {
         if (structureHierarchyTitleValidTypesHashMap == null) {
             structureHierarchyTitleValidTypesHashMap = new LinkedHashMap<String, String>();
             structureHierarchyTitleValidTypesHashMap.put(new String(), new String());
-            structureHierarchyTitleValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.CHAPTER.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumCHAPTER());
-            structureHierarchyTitleValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
-            structureHierarchyTitleValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
-            structureHierarchyTitleValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
-            structureHierarchyTitleValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
+            structureHierarchyTitleValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.CHAPTER.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumCHAPTER());
+            structureHierarchyTitleValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
+            structureHierarchyTitleValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
+            structureHierarchyTitleValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
+            structureHierarchyTitleValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
         }
         return structureHierarchyTitleValidTypesHashMap;
     }
@@ -41,11 +43,11 @@ public class CommonUtils {
         if (structureHierarchyChapterValidTypesHashMap == null) {
             structureHierarchyChapterValidTypesHashMap = new LinkedHashMap<String, String>();
             structureHierarchyChapterValidTypesHashMap.put(new String(), new String());
-            structureHierarchyChapterValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.SUBCHAPTER1.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumSUBCHAPTER1());
-            structureHierarchyChapterValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
-            structureHierarchyChapterValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
-            structureHierarchyChapterValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
-            structureHierarchyChapterValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
+            structureHierarchyChapterValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.SUBCHAPTER1.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumSUBCHAPTER1());
+            structureHierarchyChapterValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
+            structureHierarchyChapterValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
+            structureHierarchyChapterValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
+            structureHierarchyChapterValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
         }
         return structureHierarchyChapterValidTypesHashMap;
     }
@@ -54,11 +56,11 @@ public class CommonUtils {
         if (structureHierarchySubChapter1ValidTypesHashMap == null) {
             structureHierarchySubChapter1ValidTypesHashMap = new LinkedHashMap<String, String>();
             structureHierarchySubChapter1ValidTypesHashMap.put(new String(), new String());
-            structureHierarchySubChapter1ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.SUBCHAPTER2.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumSUBCHAPTER2());
-            structureHierarchySubChapter1ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
-            structureHierarchySubChapter1ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
-            structureHierarchySubChapter1ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
-            structureHierarchySubChapter1ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
+            structureHierarchySubChapter1ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.SUBCHAPTER2.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumSUBCHAPTER2());
+            structureHierarchySubChapter1ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
+            structureHierarchySubChapter1ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
+            structureHierarchySubChapter1ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
+            structureHierarchySubChapter1ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
         }
         return structureHierarchySubChapter1ValidTypesHashMap;
     }
@@ -67,16 +69,15 @@ public class CommonUtils {
         if (structureHierarchySubChapter2ValidTypesHashMap == null) {
             structureHierarchySubChapter2ValidTypesHashMap = new LinkedHashMap<String, String>();
             structureHierarchySubChapter2ValidTypesHashMap.put(new String(), new String());
-            structureHierarchySubChapter2ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
-            structureHierarchySubChapter2ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
-            structureHierarchySubChapter2ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
-            structureHierarchySubChapter2ValidTypesHashMap.put(CollectionStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
+            structureHierarchySubChapter2ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.TEXT.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumTEXT());
+            structureHierarchySubChapter2ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.URL.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumURL());
+            structureHierarchySubChapter2ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.DATASET.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumDATASET());
+            structureHierarchySubChapter2ValidTypesHashMap.put(PublicationStructureHierarchyTypeEnum.QUERY.toString(), getCoreMessages().collectionStructureHierarchyTypeEnumQUERY());
         }
         return structureHierarchySubChapter2ValidTypesHashMap;
     }
 
-    public static String getStructureHierarchyTypeName(CollectionStructureHierarchyTypeEnum structureHierarchyTypeEnum) {
+    public static String getStructureHierarchyTypeName(PublicationStructureHierarchyTypeEnum structureHierarchyTypeEnum) {
         return structureHierarchyTypeEnum != null ? getCoreMessages().getString(getCoreMessages().collectionStructureHierarchyTypeEnum() + structureHierarchyTypeEnum.name()) : null;
     }
-
 }

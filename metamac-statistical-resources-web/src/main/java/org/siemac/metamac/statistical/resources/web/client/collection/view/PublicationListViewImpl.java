@@ -46,15 +46,15 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
     private PublicationListUiHandlers uiHandlers;
 
-    private VLayout                  panel;
+    private VLayout                   panel;
 
-    private SearchSectionStack       searchSectionStack;
-    private PaginatedCheckListGrid   collectionListGrid;
+    private SearchSectionStack        searchSectionStack;
+    private PaginatedCheckListGrid    collectionListGrid;
 
-    private ToolStripButton          newPublicationButton;
-    private ToolStripButton          deletePublicationButton;
+    private ToolStripButton           newPublicationButton;
+    private ToolStripButton           deletePublicationButton;
 
-    private DeleteConfirmationWindow deleteConfirmationWindow;
+    private DeleteConfirmationWindow  deleteConfirmationWindow;
 
     @Inject
     public PublicationListViewImpl() {
@@ -116,20 +116,20 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                uiHandlers.retrievePublications(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
+                uiHandlers.retrievePublications(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
             }
         });
 
         // Publication list
 
-        collectionListGrid = new PaginatedCheckListGrid(PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS, new PaginatedAction() {
+        collectionListGrid = new PaginatedCheckListGrid(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 uiHandlers.retrievePublications(firstResult, maxResults, null);
             }
         });
-        collectionListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.COLLECTION_LIST_MAX_RESULTS);
+        collectionListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS);
         collectionListGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         collectionListGrid.getListGrid().setDataSource(new PublicationDS());
         collectionListGrid.getListGrid().setUseAllDataSourceFields(false);
