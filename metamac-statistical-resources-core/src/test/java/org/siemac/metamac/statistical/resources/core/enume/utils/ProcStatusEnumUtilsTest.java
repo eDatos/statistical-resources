@@ -20,7 +20,7 @@ public class ProcStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
     @Test
     public void testCheckPossibleProcStatusExpectingException() throws Exception {
         String urn = "URN_DUMMY";
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, PUBLISHED"), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, PUBLISHED"));
 
         LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
         resource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);

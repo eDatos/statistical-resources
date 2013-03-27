@@ -1,15 +1,21 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -97,6 +103,13 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     // -----------------------------------------------------------------
     
     
+    // -----------------------------------------------------------------
+    // VERSION RATIONALE TYPE
+    // -----------------------------------------------------------------
+    private static VersionRationaleType mockVersionRationaleType(StatisticalResourceVersionRationaleTypeEnum enumValue) {
+        return new VersionRationaleType(enumValue);
+    }
+    
     
     // -----------------------------------------------------------------
     // BASE HIERARCHY
@@ -134,5 +147,65 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality) {
         officiality.setVersion(0L);
     }
- 
+    
+    
+    
+    /* Lifecycle preparations */
+    
+    public static void prepareToProductionValidationSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
+        prepareToProductionValidationLifecycleResource(siemacResource);
+        
+        prepareToLifecycleCommonSiemacResource(siemacResource);
+    }
+    
+    public static void prepareToProductionValidationLifecycleResource(LifeCycleStatisticalResource lifecycleResource) {
+        prepareToLifecycleCommonLifeCycleResource(lifecycleResource);
+        
+        lifecycleResource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+    }
+    
+    public static void prepareToDiffusionValidationSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
+        prepareToDiffusionValidationLifecycleResource(siemacResource);
+        
+        prepareToLifecycleCommonSiemacResource(siemacResource);
+    }
+    
+    public static void prepareToDiffusionValidationLifecycleResource(LifeCycleStatisticalResource lifecycleResource) {
+        prepareToLifecycleCommonLifeCycleResource(lifecycleResource);
+        
+        lifecycleResource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        lifecycleResource.setProductionValidationDate(new DateTime().minusDays(1));
+        lifecycleResource.setProductionValidationUser("productionUser");
+    }
+    
+    
+    public static void prepareToLifecycleCommonSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
+        siemacResource.setLanguage(mockCodeExternalItem());
+        siemacResource.addLanguage(mockCodeExternalItem());
+        siemacResource.addLanguage(mockCodeExternalItem());
+        
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem();
+        siemacResource.setStatisticalOperation(operation);
+        
+        siemacResource.setMaintainer(mockAgencyExternalItem());
+        siemacResource.setCreator(mockOrganizationUnitExternalItem());
+        siemacResource.setLastUpdate(new DateTime().minusMinutes(10));
+        
+        siemacResource.addPublisher(mockOrganizationUnitExternalItem());
+        
+        siemacResource.setRightsHolder(mockOrganizationUnitExternalItem());
+        siemacResource.setLicense(mockInternationalString());
+        
+    }
+    
+    private static void prepareToLifecycleCommonLifeCycleResource(LifeCycleStatisticalResource lifeCycleResource) {
+        lifeCycleResource.setVersionLogic("02.000");
+        lifeCycleResource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MINOR_DATA_UPDATE));
+        lifeCycleResource.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+        
+        lifeCycleResource.setTitle(mockInternationalString());
+        lifeCycleResource.setDescription(mockInternationalString());
+    }
+    
+    
 }

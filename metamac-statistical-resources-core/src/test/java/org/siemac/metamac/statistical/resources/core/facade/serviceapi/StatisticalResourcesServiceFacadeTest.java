@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsDate;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
@@ -38,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -60,6 +62,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -68,6 +71,7 @@ import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryC
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
@@ -231,7 +235,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testDeleteQuery() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_11_DRAFT_NAME).getLifeCycleStatisticalResource().getUrn();
         
-        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn));
         
         statisticalResourcesServiceFacade.deleteQuery(getServiceContextAdministrador(), urn);
         statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
@@ -415,13 +419,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
-        DatasourceDto expectedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME)
+        DatasourceDto updatedDatasource = statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME)
                 .getIdentifiableStatisticalResource().getUrn());
-        expectedDatasource.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
+        String oldCode = updatedDatasource.getCode();
+        updatedDatasource.setCode("newCode" + StatisticalResourcesDtoMocks.mockString(5));
 
-        DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextAdministrador(), expectedDatasource);
+        DatasourceDto actualDatasource = statisticalResourcesServiceFacade.updateDatasource(getServiceContextAdministrador(), updatedDatasource);
         assertNotNull(actualDatasource);
-        assertEquals(expectedDatasource.getCode(), actualDatasource.getCode());
+        assertEquals(oldCode, actualDatasource.getCode());
     }
 
     @Override
@@ -438,7 +443,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
         String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
 
         statisticalResourcesServiceFacade.deleteDatasource(getServiceContextAdministrador(), datasourceUrn);
         statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceUrn);
@@ -546,6 +551,69 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
+    public void testUpdateDatasetChangeCodeNotAllowed() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        
+        DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetDto.setCode("CHANGED");
+        
+        DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
+        assertNotNull(updatedDataset);
+        assertEquals(datasetVersion.getSiemacMetadataStatisticalResource().getCode(), updatedDataset.getCode());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
+    public void testUpdateDatasetChangeStatisticalOperationNotAllowed() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String originalStatisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(); 
+        
+        DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationItem();
+        datasetDto.setStatisticalOperation(statisticalOperation);
+        
+        DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
+        assertNotNull(updatedDataset);
+        assertEquals(originalStatisticalOperationCode, updatedDataset.getStatisticalOperation().getCode());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
+    public void testUpdateDatasetIgnoreDateNextVersion() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DateTime originalDateNextVersion = datasetVersion.getSiemacMetadataStatisticalResource().getNextVersionDate();
+        
+        {
+            DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+            datasetDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
+            datasetDto.setNextVersion(StatisticalResourceNextVersionEnum.NO_UPDATES);
+            
+            DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
+            assertNotNull(updatedDataset);
+            assertEqualsDate(originalDateNextVersion, updatedDataset.getNextVersionDate());
+        }
+        {
+            DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+            datasetDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
+            datasetDto.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+            
+            DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
+            assertNotNull(updatedDataset);
+            assertEqualsDate(originalDateNextVersion, updatedDataset.getNextVersionDate());
+        }
+        {
+            DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+            datasetDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
+            datasetDto.setNextVersion(StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE);
+            
+            DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
+            assertNotNull(updatedDataset);
+            assertEqualsDate(new DateTime(datasetDto.getNextVersionDate()), updatedDataset.getNextVersionDate());
+        }
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetNotAllowedMetadata() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         
@@ -567,7 +635,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn()));
         statisticalResourcesServiceFacade.deleteDataset(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()));
         statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 

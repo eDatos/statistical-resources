@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +18,7 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -34,6 +37,7 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 
 public class BaseAsserts extends MetamacAsserts {
@@ -357,7 +361,9 @@ public class BaseAsserts extends MetamacAsserts {
                 break;
             case DTO2DO:
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());
-                assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
+                if (StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.equals(entity.getNextVersionDate())) {
+                    assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
+                }
                 assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
                 assertEqualsVersionRationaleTypeCollectionMapper(entity.getVersionRationaleTypes(), dto.getVersionRationaleTypes());
                 break;
@@ -748,5 +754,25 @@ public class BaseAsserts extends MetamacAsserts {
         } else {
             assertNull(actual);
         }
+    }
+    
+    
+    private static boolean messageParametersEquals(Serializable[] expected, Serializable[] actual) {
+        if (expected != null && actual != null) {
+            for (Serializable expec: expected) {
+                boolean found = false;
+                for (Serializable act : actual) {
+                    if (expec.equals(act)) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    return false;
+                }
+            }
+        } else {
+            return expected == null && actual == null;
+        }
+        return true;
     }
 }

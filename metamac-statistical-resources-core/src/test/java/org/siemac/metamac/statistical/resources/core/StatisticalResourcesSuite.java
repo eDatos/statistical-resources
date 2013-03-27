@@ -4,6 +4,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.base.serviceimpl.LifecycleServiceTest;
+import org.siemac.metamac.statistical.resources.core.base.serviceimpl.SiemacLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
@@ -13,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.DatasetLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
@@ -45,6 +48,9 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      PublicationDo2DtoMapperTest.class,
                      PublicationDto2DoMapperTest.class,
                      ProcStatusEnumUtilsTest.class, 
-                     QueryStatusEnumUtilsTest.class})
+                     QueryStatusEnumUtilsTest.class,
+                     LifecycleServiceTest.class,
+                     SiemacLifecycleServiceTest.class,
+                     DatasetLifecycleServiceTest.class})
 public class StatisticalResourcesSuite {
 }

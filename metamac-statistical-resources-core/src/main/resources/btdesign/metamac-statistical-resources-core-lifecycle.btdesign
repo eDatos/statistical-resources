@@ -1,0 +1,18 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
+
+Application LifecycleStatisticalResources {
+	basePackage=unused
+
+	Module core_facades {
+		basePackage=org.siemac.metamac.statistical.resources.core.lifecycle
+
+		// ----------------------------------------------------------------
+		// 							FACADE SERVICES
+		// ----------------------------------------------------------------  
+		
+		Service DatasetLifecycleService {
+			sendToProductionValidation(@DatasetVersion datasetVersion) throws MetamacException;
+			sendToDiffusionValidation(@DatasetVersion datasetVersion) throws MetamacException;
+		}  
+	}
+}

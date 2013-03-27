@@ -33,7 +33,7 @@ public class QueryStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
     @Test
     public void testCheckPossibleQueryStatusExpectingException() throws Exception {
         String urn = "URN_DUMMY";
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DISCONTINUED, PENDING_REVIEW"), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DISCONTINUED, PENDING_REVIEW"));
 
         Query resource = statisticalResourcesPersistedDoMocks.mockQueryWithGeneratedDatasetVersion();
         resource.setStatus(QueryStatusEnum.ACTIVE);

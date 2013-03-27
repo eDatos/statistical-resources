@@ -1,8 +1,13 @@
 package org.siemac.metamac.statistical.resources.core;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.ReflectionUtils.FieldCallback;
 
 
 public class MetamacReflectionUtils {
@@ -44,5 +49,14 @@ public class MetamacReflectionUtils {
         }
     }
     
-    
+    public static List<Field> getAllFields(Class clazz) {
+        final List<Field> fields = new ArrayList<Field>();
+        ReflectionUtils.doWithFields(clazz, new FieldCallback() {
+            @Override
+            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+                fields.add(field);
+            }
+        });
+        return fields;
+    }
 }

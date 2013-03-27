@@ -6,8 +6,16 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
@@ -56,6 +64,24 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME       = "DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED";
     private static DatasetVersion DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
+    
+    public static final String    DATASET_VERSION_15_DRAFT_BASIC_NAME                     = "DATASET_VERSION_15_DRAFT_BASIC";
+    private static DatasetVersion DATASET_VERSION_15_DRAFT_BASIC;
+    
+    public static final String    DATASET_VERSION_16_PRODUCTION_VALIDATION_READY_NAME        = "DATASET_VERSION_16_PRODUCTION_VALIDATION_READY";
+    private static DatasetVersion DATASET_VERSION_16_PRODUCTION_VALIDATION_READY;
+    
+    public static final String    DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA_NAME        = "DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA";
+    private static DatasetVersion DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
+    
+    public static final String    DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME        = "DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
+    private static DatasetVersion DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
+    
+    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_DRAFT_BASIC_NAME                     = "DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC";
+    private static DatasetVersion DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC;
+    
+    public static final String    DATASET_VERSION_20_DIFFUSION_VALIDATION_READY_NAME        = "DATASET_VERSION_20_DIFFUSION_VALIDATION_READY";
+    private static DatasetVersion DATASET_VERSION_20_DIFFUSION_VALIDATION_READY;
 
     private static final String   DATASET_VERSION_03_VERSION                              = "01.000";
     private static final String   DATASET_VERSION_04_VERSION                              = "02.000";
@@ -231,24 +257,59 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion04.addDatasource(getDatasorce05BasicForDatasetVersion04());
     }
 
-    private static DatasetVersion createDatasetVersion(Integer sequentialId) {
-        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
-        ExternalItem operation = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation();
-        datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operation.getCode(), sequentialId));
-        return datasetVersion;
+    protected static DatasetVersion getDatasetVersion15DraftBasic() {
+        if (DATASET_VERSION_15_DRAFT_BASIC == null) {
+            DATASET_VERSION_15_DRAFT_BASIC = createDatasetVersion(1);
+            DATASET_VERSION_15_DRAFT_BASIC.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        }
+        return DATASET_VERSION_15_DRAFT_BASIC;
+    }
+    
+    protected static DatasetVersion getDatasetVersion16ProductionValidationReady() {
+        if (DATASET_VERSION_16_PRODUCTION_VALIDATION_READY == null) {
+            DATASET_VERSION_16_PRODUCTION_VALIDATION_READY = createDatasetVersionEmpty();
+            prepareToProductionValidation(DATASET_VERSION_16_PRODUCTION_VALIDATION_READY);
+        }
+        return DATASET_VERSION_16_PRODUCTION_VALIDATION_READY;
     }
 
-    private static DatasetVersion createDatasetVersionInSpecificOperation(String operationCode, Integer sequentialId) {
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem(operationCode);
-        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
-        datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
-        datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operationCode, sequentialId));
-        return datasetVersion;
+    protected static DatasetVersion getDatasetVersion17VersionRationaleTypeMinorErrata() {
+        if (DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA == null) {
+            DatasetVersion datasetVersion = createDatasetVersionEmpty();
+            DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA = datasetVersion;
+            prepareToProductionValidation(datasetVersion);
+            datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MINOR_ERRATA));
+        }
+        return DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
     }
 
-    private static String buildDatasetCode(String operationCode, int sequentialId) {
-        return operationCode + String.format("%06d", sequentialId);
+    protected static DatasetVersion getDatasetVersion18NextVersionNotScheduledDateFilled() {
+        if (DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED == null) {
+            DatasetVersion datasetVersion = createDatasetVersionEmpty();
+            DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED = datasetVersion;
+            prepareToProductionValidation(datasetVersion);
+            datasetVersion.getSiemacMetadataStatisticalResource().setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+            datasetVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(new DateTime().plusDays(10));
+        }
+        return DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
     }
+    
+    protected static DatasetVersion getDatasetVersion19ProductionValidationBasic() {
+        if (DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC == null) {
+            DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC = createDatasetVersionEmpty();
+            prepareToDiffusionValidation(DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC);
+        }
+        return DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC;
+    }
+    
+    protected static DatasetVersion getDatasetVersion20DiffusionValidationReady() {
+        if (DATASET_VERSION_20_DIFFUSION_VALIDATION_READY == null) {
+            DATASET_VERSION_20_DIFFUSION_VALIDATION_READY = createDatasetVersionEmpty();
+            prepareToDiffusionValidation(DATASET_VERSION_20_DIFFUSION_VALIDATION_READY);
+        }
+        return DATASET_VERSION_20_DIFFUSION_VALIDATION_READY;
+    }
+    
 
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
@@ -257,5 +318,72 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static void fillDatasetVersionInPublished(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
     }
+    
+    private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
+        StatisticalResourcesPersistedDoMocks.prepareToDiffusionValidationSiemacResource(datasetVersion.getSiemacMetadataStatisticalResource());
+        prepareToLifecycleCommon(datasetVersion);
+    }
+    
+    private static void prepareToProductionValidation(DatasetVersion datasetVersion) {
+        StatisticalResourcesPersistedDoMocks.prepareToProductionValidationSiemacResource(datasetVersion.getSiemacMetadataStatisticalResource());
+        prepareToLifecycleCommon(datasetVersion);
+    }
+    
+    private static void prepareToLifecycleCommon(DatasetVersion datasetVersion) {
+        ExternalItem dsd = StatisticalResourcesPersistedDoMocks.mockDsdExternalItem();
+        datasetVersion.setRelatedDsd(dsd);
+        
+        datasetVersion.setDateNextUpdate(new DateTime().plusDays(10));
+        
+        ExternalItem codeUpdateFreq = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.setUpdateFrequency(codeUpdateFreq);
+        
+        StatisticOfficiality officiality = getStatisticalResourcesPersistedDoMocks().mockStatisticOfficiality("officiality");
+        datasetVersion.setStatisticOfficiality(officiality);
+        
+        //Inherited fields that need customization based on Resource's type
+        String code  = buildDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(buildDatasetUrn(code, datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        datasetVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.DATASET);
+    }
+    
+    private static DatasetVersion createDatasetVersion(Integer sequentialId) {
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
+        ExternalItem operation = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation();
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operation.getCode(), sequentialId));
+        return datasetVersion;
+    }
+    
+    private static DatasetVersion createDatasetVersionEmpty() {
+        Dataset ds = getStatisticalResourcesPersistedDoMocks().mockDatasetWithoutGeneratedDatasetVersions();
+        ExternalItem statisticalOperation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem();
+        DatasetVersion datasetVersion = new DatasetVersion();
+        datasetVersion.setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());
+        
+        
+        datasetVersion.setDataset(ds);
+        return datasetVersion;
+    }
+
+
+    
+    private static DatasetVersion createDatasetVersionInSpecificOperation(String operationCode, Integer sequentialId) {
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
+        datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operationCode, sequentialId));
+        return datasetVersion;
+    }
+
+    private static String buildDatasetUrn(String code, String version) {
+        return GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(new String[]{"maitainer"},code, version);
+    }
+    
+    
+    private static String buildDatasetCode(String operationCode, int sequentialId) {
+        return operationCode + String.format("%06d", sequentialId);
+    }
 
 }
+

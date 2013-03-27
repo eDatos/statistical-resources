@@ -41,6 +41,7 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     @Autowired
     private PublicationVersionRepository  publicationVersionRepository;
 
+    @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
@@ -51,11 +52,12 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
 
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, URN_NOT_EXISTS), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, URN_NOT_EXISTS));
 
         publicationVersionRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
 
+    @Override
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveLastVersion() throws Exception {
@@ -63,6 +65,7 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
         assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
     }
 
+    @Override
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveByVersion() throws Exception {

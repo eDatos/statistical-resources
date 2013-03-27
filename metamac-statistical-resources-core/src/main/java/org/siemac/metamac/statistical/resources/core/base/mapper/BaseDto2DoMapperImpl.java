@@ -40,6 +40,7 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,13 +66,18 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     @Override
     public SiemacMetadataStatisticalResource siemacMetadataStatisticalResourceDtoToDo(SiemacMetadataStatisticalResourceDto source, SiemacMetadataStatisticalResource target, String metadataName)
             throws MetamacException {
+        
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
+        // Only modifiable in creation
+        if (target.getId() == null) {
+            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
+        }
+        
+        //Always Modifiable
         target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
         externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
-
-        target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
         target.setStatisticalOperationInstance(externalItemDtoToDo(source.getStatisticalOperationInstance(), target.getStatisticalOperationInstance(), metadataName
                 + ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE));
 
@@ -121,14 +127,20 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         // Non modifiable: versionLogic, versionDate
 
+        // Non modifiable in creation mode
+        
         // Attributes modifiable
-        target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
+        target.setNextVersion(source.getNextVersion());
+        
+        if (StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.equals(target.getNextVersion())) {
+            target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
+        }
+        
         target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
+        
         versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), 
                 addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
-        target.setNextVersion(source.getNextVersion());
-
         return target;
     }
 
@@ -155,10 +167,9 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Non modifiable after creation
 
         // Attributes modifiable
-        // TODO: EL code hay momentos en los que no se puede editar
-        target.setCode(source.getCode());
-        // URI: Not necessary. Service fill it.
-        // URN: Not necessary. Service fill it.
+        if (target.getId() == null) {
+            target.setCode(source.getCode());
+        }
     }
 
     @Override
@@ -427,7 +438,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     }
     
     
-    private DateTime dateDtoToDo(Date source) {
+    protected DateTime dateDtoToDo(Date source) {
         if (source == null) {
             return null;
         }

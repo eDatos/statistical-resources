@@ -47,8 +47,6 @@ public interface BaseDo2DtoMapper {
     public Collection<VersionRationaleTypeDto> versionRationaleTypeDoCollectionToDtoCollection(Collection<VersionRationaleType> source);
     public VersionRationaleTypeDto versionRationaleTypeDoToDto(VersionRationaleType source);
     
-    
-
     // International String
     public InternationalStringDto internationalStringDoToDto(InternationalString source);
 

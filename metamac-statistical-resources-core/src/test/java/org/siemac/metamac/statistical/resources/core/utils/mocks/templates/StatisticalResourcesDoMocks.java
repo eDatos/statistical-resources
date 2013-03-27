@@ -180,7 +180,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setLanguage(mockCodeExternalItem());
         resource.addLanguage(mockCodeExternalItem());
 
-        // resource.setStatisticalOperation(mockStatisticalOperationItem());
         // TODO: KEYWORDS
 
         resource.setType(type);
@@ -347,7 +346,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static ExternalItem mockOrganizationUnitExternalItem() {
-        ExternalItem item = new ExternalItem(AGENCY_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY);
+        ExternalItem item = new ExternalItem(ORGANIZATION_UNIT_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY); //FIXME: ORGANIZATION_UNIT 
         item.setVersion(Long.valueOf(0));
         return item;
     }

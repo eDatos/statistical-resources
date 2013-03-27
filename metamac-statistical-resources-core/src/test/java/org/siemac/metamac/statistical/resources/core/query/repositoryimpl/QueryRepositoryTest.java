@@ -57,7 +57,7 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
 
     @Test
     public void testRetrieveByUrnNotFound() throws MetamacException {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, URN_NOT_EXISTS), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, URN_NOT_EXISTS));
 
         queryRepository.retrieveByUrn(URN_NOT_EXISTS);
     }

@@ -105,19 +105,18 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         // Hierarchy
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
 
-        // Non modifiable after creation
-
-        // TODO: It's not clear when coverages are manual, geoDimension attribute missing? same for timeDimension
-        
+        // modifiable
         externalItemDtoListToDoList(source.getGeographicGranularities(), target.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES);
         externalItemDtoListToDoList(source.getTemporalGranularities(), target.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES);
         externalItemDtoListToDoList(source.getStatisticalUnit(), target.getStatisticalUnit(), ServiceExceptionParameters.DATASET_VERSION__STATISTICAL_UNIT);
 
         // TODO: when measures can be filled?
 
+        // TODO: when a dsd can be changed?
         target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
 
         // TODO: how do i know if date_next_update can be updated?
+        //target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
         
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
         

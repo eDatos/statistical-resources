@@ -45,7 +45,7 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
 
     @Test
     public void testRetrieveByUrnErrorNotFound() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, URN_NOT_EXISTS), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, URN_NOT_EXISTS));
 
         datasourceRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
@@ -53,7 +53,7 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveByUrnNotFound() throws MetamacException {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, URN_NOT_EXISTS), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, URN_NOT_EXISTS));
 
         datasourceRepository.retrieveByUrn(URN_NOT_EXISTS);
     }

@@ -52,7 +52,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
 
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, URN_NOT_EXISTS), 1);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, URN_NOT_EXISTS));
         
         datasetVersionRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
