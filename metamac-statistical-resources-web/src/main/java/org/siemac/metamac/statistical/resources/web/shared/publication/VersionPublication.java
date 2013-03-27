@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.shared.collection;
+package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
@@ -18,5 +18,4 @@ public class VersionPublication {
 
     @Out(1)
     PublicationDto  publicationDto;
-
 }

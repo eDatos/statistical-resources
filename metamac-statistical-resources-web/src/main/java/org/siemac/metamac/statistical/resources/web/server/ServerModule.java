@@ -19,12 +19,6 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Vers
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.DeletePublicationListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.SavePublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.UpdatePublicationProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.VersionPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationPaginatedListAction;
@@ -35,6 +29,12 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationAction;
 import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetLoginPageUrlActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetNavigationBarUrlActionHandler;

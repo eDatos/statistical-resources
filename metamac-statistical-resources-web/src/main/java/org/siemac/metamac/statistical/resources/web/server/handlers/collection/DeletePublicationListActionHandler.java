@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.collection;
 
-import org.siemac.metamac.statistical.resources.web.shared.collection.DeletePublicationListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.DeletePublicationListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.stereotype.Component;
 

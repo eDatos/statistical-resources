@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.shared.collection;
+package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
@@ -21,5 +21,4 @@ public class UpdatePublicationProcStatus {
 
     @Out(1)
     PublicationDto                    publicationDto;
-
 }

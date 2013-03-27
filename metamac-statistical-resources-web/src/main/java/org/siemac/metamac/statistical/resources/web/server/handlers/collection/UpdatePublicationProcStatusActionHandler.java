@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.collection;
 
-import org.siemac.metamac.statistical.resources.web.shared.collection.UpdatePublicationProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.UpdatePublicationProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.stereotype.Component;
 

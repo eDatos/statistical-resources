@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.shared.collection;
+package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import java.util.List;
 

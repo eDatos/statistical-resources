@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.collection;
 
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.GetPublicationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.stereotype.Component;
 

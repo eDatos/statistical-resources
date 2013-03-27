@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.collection;
 
-import org.siemac.metamac.statistical.resources.web.shared.collection.SavePublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.collection.SavePublicationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.stereotype.Component;
 
