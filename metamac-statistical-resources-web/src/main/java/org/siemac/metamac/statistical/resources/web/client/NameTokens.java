@@ -19,5 +19,4 @@ public class NameTokens {
 
     public static final String errorPage               = "error";
     public static final String unauthorizedAccessPage  = "unauthorizedAccess";
-
 }

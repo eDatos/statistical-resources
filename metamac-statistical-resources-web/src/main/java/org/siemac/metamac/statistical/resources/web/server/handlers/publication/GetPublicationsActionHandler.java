@@ -1,21 +1,21 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
 
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetPublicationPaginatedListActionHandler extends SecurityActionHandler<GetPublicationPaginatedListAction, GetPublicationPaginatedListResult> {
+public class GetPublicationsActionHandler extends SecurityActionHandler<GetPublicationsAction, GetPublicationsResult> {
 
-    public GetPublicationPaginatedListActionHandler() {
-        super(GetPublicationPaginatedListAction.class);
+    public GetPublicationsActionHandler() {
+        super(GetPublicationsAction.class);
     }
 
     @Override
-    public GetPublicationPaginatedListResult executeSecurityAction(GetPublicationPaginatedListAction action) throws ActionException {
+    public GetPublicationsResult executeSecurityAction(GetPublicationsAction action) throws ActionException {
         // MetamacCriteria criteria = new MetamacCriteria();
         // // Order
         // MetamacCriteriaOrder order = new MetamacCriteriaOrder();
@@ -43,7 +43,7 @@ public class GetPublicationPaginatedListActionHandler extends SecurityActionHand
         // throw WebExceptionUtils.createMetamacWebException(e);
         // }
         // FIXME: invoke core
-        return new GetPublicationPaginatedListResult(null, 0, 0);
+        return new GetPublicationsResult(null, 0, 0);
     }
 
 }

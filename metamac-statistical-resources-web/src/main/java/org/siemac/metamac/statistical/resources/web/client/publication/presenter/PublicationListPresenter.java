@@ -23,8 +23,8 @@ import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisti
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -132,14 +132,14 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
     }
 
     private void retrievePublications(String operationUrn, int firstResult, int maxResults, String collection) {
-        dispatcher.execute(new GetPublicationPaginatedListAction(operationUrn, firstResult, maxResults, collection), new WaitingAsyncCallback<GetPublicationPaginatedListResult>() {
+        dispatcher.execute(new GetPublicationsAction(operationUrn, firstResult, maxResults, collection), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetPublicationPaginatedListResult result) {
+            public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublicationPaginatedList(result.getPublicationList(), result.getFirstResultOut(), result.getTotalResults());
             }
         });

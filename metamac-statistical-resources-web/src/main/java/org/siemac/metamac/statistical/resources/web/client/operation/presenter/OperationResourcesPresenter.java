@@ -25,8 +25,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsBy
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -142,14 +142,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
                 });
 
         // Publications
-        dispatcher.execute(new GetPublicationPaginatedListAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetPublicationPaginatedListResult>() {
+        dispatcher.execute(new GetPublicationsAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetPublicationPaginatedListResult result) {
+            public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublications(result.getPublicationList());
             }
         });

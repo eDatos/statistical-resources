@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.operation.Ge
 import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationActionHandler;
@@ -31,7 +31,7 @@ import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisti
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationListAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationAction;
@@ -80,7 +80,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
 
         // COLLECTIONS
-        bindHandler(GetPublicationPaginatedListAction.class, GetPublicationPaginatedListActionHandler.class);
+        bindHandler(GetPublicationsAction.class, GetPublicationsActionHandler.class);
         bindHandler(GetPublicationAction.class, GetPublicationActionHandler.class);
         bindHandler(SavePublicationAction.class, SavePublicationActionHandler.class);
         bindHandler(DeletePublicationListAction.class, DeletePublicationListActionHandler.class);
