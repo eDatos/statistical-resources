@@ -151,7 +151,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     
     @Override
     public void saveDatasource(DatasourceDto datasourceDto) {
-        datasourceDto.setDataset(dataset);
+        datasourceDto.setDatasetVersionUrn(dataset.getUrn());
         dispatcher.execute(new SaveDatasourceAction(datasourceDto), new WaitingAsyncCallback<SaveDatasourceResult>() {
 
             @Override

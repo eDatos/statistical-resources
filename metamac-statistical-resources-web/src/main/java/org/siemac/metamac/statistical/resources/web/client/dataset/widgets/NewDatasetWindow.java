@@ -28,7 +28,7 @@ public class NewDatasetWindow extends CustomWindow {
         super(title);
         setAutoSize(true);
 
-        RequiredTextItem identifierItem = new RequiredTextItem(DatasetDS.IDENTIFIER, getConstants().datasetIdentifier());
+        RequiredTextItem identifierItem = new RequiredTextItem(DatasetDS.CODE, getConstants().datasetIdentifier());
         identifierItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         identifierItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 

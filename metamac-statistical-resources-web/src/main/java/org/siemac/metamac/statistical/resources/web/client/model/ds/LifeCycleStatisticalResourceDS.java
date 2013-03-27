@@ -15,7 +15,7 @@ public class LifeCycleStatisticalResourceDS extends DataSource {
     // public static final String LAST_UPDATE_USER = "lc-update-user";
     // public static final String DATE_LAST_UPDATE = "lc-last-update";
     // IDENTIFIABLE
-    public static final String IDENTIFIER                  = "lc-identifier";
+    public static final String CODE                        = "lc-code";
     public static final String URI                         = "lc-uri";
     public static final String URN                         = "lc-urn";
     public static final String TITLE                       = "lc-title";

@@ -20,7 +20,7 @@ public class DatasourceRecord extends ListGridRecord {
     }
 
     public void setIdentifier(String identifier) {
-        setAttribute(DatasourceDS.IDENTIFIER, identifier);
+        setAttribute(DatasourceDS.CODE, identifier);
     }
 
     public void setUrn(String value) {
@@ -36,7 +36,7 @@ public class DatasourceRecord extends ListGridRecord {
     }
 
     public String getIdentifier() {
-        return getAttribute(DatasourceDS.IDENTIFIER);
+        return getAttribute(DatasourceDS.CODE);
     }
 
     public String getUrn() {

@@ -132,7 +132,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
             }
         });
 
-        ListGridField fieldCode = new ListGridField(DatasetDS.IDENTIFIER, getConstants().datasetIdentifier());
+        ListGridField fieldCode = new ListGridField(DatasetDS.CODE, getConstants().datasetIdentifier());
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(DatasetDS.TITLE, getConstants().datasetTitle());
         ListGridField status = new ListGridField(DatasetDS.PROC_STATUS, getConstants().datasetProcStatus());

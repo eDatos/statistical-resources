@@ -32,7 +32,7 @@ public class PublicationRecord extends ListGridRecord {
     }
 
     public void setIdentifier(String identifier) {
-        setAttribute(PublicationDS.IDENTIFIER, identifier);
+        setAttribute(PublicationDS.CODE, identifier);
     }
 
     public void setProcStatus(String value) {
@@ -56,7 +56,7 @@ public class PublicationRecord extends ListGridRecord {
     }
 
     public String getIdentifier() {
-        return getAttribute(PublicationDS.IDENTIFIER);
+        return getAttribute(PublicationDS.CODE);
     }
 
     public String getName() {

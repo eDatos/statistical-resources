@@ -209,7 +209,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     private void createViewForm() {
         // Identifiers form
         identifiersForm = new GroupDynamicForm(getConstants().collectionIdentifiers());
-        ViewTextItem identifier = new ViewTextItem(PublicationDS.IDENTIFIER, getConstants().collectionIdentifier());
+        ViewTextItem identifier = new ViewTextItem(PublicationDS.CODE, getConstants().collectionIdentifier());
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(PublicationDS.TITLE, getConstants().collectionTitle());
         ViewTextItem uri = new ViewTextItem(PublicationDS.URI, getConstants().collectionUri());
         ViewTextItem urn = new ViewTextItem(PublicationDS.URN, getConstants().collectionUrn());
@@ -271,7 +271,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void createEditionForm() {
         identifiersEditionForm = new GroupDynamicForm(getConstants().collectionIdentifiers());
-        RequiredTextItem identifier = new RequiredTextItem(PublicationDS.IDENTIFIER, getConstants().collectionIdentifier());
+        RequiredTextItem identifier = new RequiredTextItem(PublicationDS.CODE, getConstants().collectionIdentifier());
         identifier.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         MultiLanguageTextItem title = new MultiLanguageTextItem(PublicationDS.TITLE, getConstants().collectionTitle());
         title.setRequired(true);
@@ -352,7 +352,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     
     private void setPublicationViewMode(PublicationDto collectionDto) {
         // Identifiers form
-        identifiersForm.setValue(PublicationDS.IDENTIFIER, collectionDto.getIdentifier());
+        identifiersForm.setValue(PublicationDS.CODE, collectionDto.getIdentifier());
         identifiersForm.setValue(PublicationDS.TITLE, RecordUtils.getInternationalStringRecord(collectionDto.getTitle()));
         identifiersForm.setValue(PublicationDS.URI, collectionDto.getUri());
         identifiersForm.setValue(PublicationDS.URN, collectionDto.getUrn());
@@ -409,7 +409,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void setPublicationEditionMode(PublicationDto collectionDto) {
         // Identifiers form
-        identifiersEditionForm.setValue(PublicationDS.IDENTIFIER, collectionDto.getIdentifier());
+        identifiersEditionForm.setValue(PublicationDS.CODE, collectionDto.getIdentifier());
         identifiersEditionForm.setValue(PublicationDS.TITLE, RecordUtils.getInternationalStringRecord(collectionDto.getTitle()));
         identifiersEditionForm.setValue(PublicationDS.URI, collectionDto.getUri());
         identifiersEditionForm.setValue(PublicationDS.URN, collectionDto.getUrn());
@@ -484,7 +484,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private PublicationDto getPublicationDto() {
         // Identifiers form
-        collectionDto.setIdentifier(identifiersEditionForm.getValueAsString(PublicationDS.IDENTIFIER));
+        collectionDto.setIdentifier(identifiersEditionForm.getValueAsString(PublicationDS.CODE));
         collectionDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(PublicationDS.TITLE));
 
         // Version form

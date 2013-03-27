@@ -26,7 +26,7 @@ public class NewPublicationWindow extends CustomWindow {
         super(title);
         setAutoSize(true);
 
-        RequiredTextItem identifierItem = new RequiredTextItem(PublicationDS.IDENTIFIER, getConstants().collectionIdentifier());
+        RequiredTextItem identifierItem = new RequiredTextItem(PublicationDS.CODE, getConstants().collectionIdentifier());
         identifierItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         identifierItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 

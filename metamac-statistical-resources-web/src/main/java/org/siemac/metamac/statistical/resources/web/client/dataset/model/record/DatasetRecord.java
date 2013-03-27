@@ -32,7 +32,7 @@ public class DatasetRecord extends ListGridRecord {
     }
 
     public void setIdentifier(String identifier) {
-        setAttribute(DatasetDS.IDENTIFIER, identifier);
+        setAttribute(DatasetDS.CODE, identifier);
     }
 
     public void setProcStatus(String value) {
@@ -56,7 +56,7 @@ public class DatasetRecord extends ListGridRecord {
     }
 
     public String getIdentifier() {
-        return getAttribute(DatasetDS.IDENTIFIER);
+        return getAttribute(DatasetDS.CODE);
     }
 
     public String getName() {

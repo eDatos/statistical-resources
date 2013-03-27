@@ -10,7 +10,7 @@ public interface LifeCycleUiHandlers extends UiHandlers {
     void sendToProductionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     void sendToDiffusionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     void rejectValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
-    void sendToPendingPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    //void sendToPendingPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     //void programPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     //void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus);

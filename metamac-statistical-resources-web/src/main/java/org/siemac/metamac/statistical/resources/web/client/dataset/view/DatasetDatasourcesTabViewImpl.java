@@ -131,7 +131,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             datasourcesList.getListGrid().setDataSource(new DatasourceDS());
             datasourcesList.getListGrid().setUseAllDataSourceFields(false);
             
-            ListGridField fieldCode = new ListGridField(DatasourceDS.IDENTIFIER, getConstants().datasetIdentifier());
+            ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().datasetIdentifier());
             fieldCode.setAlign(Alignment.LEFT);
             ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().datasetTitle());
             datasourcesList.getListGrid().setFields(fieldCode, fieldName);
@@ -240,7 +240,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
         
         private void createViewForm() {
             identifiersForm = new GroupDynamicForm(getConstants().datasourceIdentifiers());
-            ViewTextItem identifier = new ViewTextItem(DatasourceDS.IDENTIFIER, getConstants().datasourceIdentifier());
+            ViewTextItem identifier = new ViewTextItem(DatasourceDS.CODE, getConstants().datasourceIdentifier());
             ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(DatasourceDS.TITLE, getConstants().datasourceTitle());
             ViewTextItem uri = new ViewTextItem(DatasourceDS.URI, getConstants().datasourceUri());
             ViewTextItem urn = new ViewTextItem(DatasourceDS.URN, getConstants().datasourceUrn());
@@ -250,14 +250,14 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
         
         private void createEditionForm() {
             identifiersEditionForm = new GroupDynamicForm(getConstants().datasourceIdentifiers());
-            ViewTextItem identifierView = new ViewTextItem(DatasourceDS.IDENTIFIER_VIEW, getConstants().datasourceIdentifier());
+            ViewTextItem identifierView = new ViewTextItem(DatasourceDS.CODE_VIEW, getConstants().datasourceIdentifier());
             identifierView.setShowIfCondition(new FormItemIfFunction() {
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     return !isCreationMode();
                 }
             });
-            RequiredTextItem identifier = new RequiredTextItem(DatasourceDS.IDENTIFIER, getConstants().datasourceIdentifier());
+            RequiredTextItem identifier = new RequiredTextItem(DatasourceDS.CODE, getConstants().datasourceIdentifier());
             identifier.setShowIfCondition(new FormItemIfFunction() {
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -287,8 +287,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
         
         private void selectDatasource(DatasourceDto datasourceDto) {
             this.datasource = datasourceDto;
-
-            mainFormLayout.setTitleLabelContents(InternationalStringUtils.getLocalisedString(datasourceDto.getTitle()));
+            //FIXME: datasource title
+            mainFormLayout.setTitleLabelContents(datasourceDto.getCode());
             mainFormLayout.setViewMode();
             fillViewForm(datasource);
             fillEditionForm(datasource);
@@ -297,25 +297,25 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
         }
         
         private void fillViewForm(DatasourceDto datasourceDto) {
-            identifiersForm.setValue(DatasourceDS.IDENTIFIER, datasourceDto.getIdentifier());
+            identifiersForm.setValue(DatasourceDS.CODE, datasourceDto.getCode());
             identifiersForm.setValue(DatasourceDS.URI, datasourceDto.getUri());
             identifiersForm.setValue(DatasourceDS.URN, datasourceDto.getUrn());
-            identifiersForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
+            //identifiersForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
         }
         
         private void fillEditionForm(DatasourceDto datasourceDto) {
-            identifiersEditionForm.setValue(DatasourceDS.IDENTIFIER_VIEW, datasourceDto.getIdentifier());
-            identifiersEditionForm.setValue(DatasourceDS.IDENTIFIER, datasourceDto.getIdentifier());
+            identifiersEditionForm.setValue(DatasourceDS.CODE_VIEW, datasourceDto.getCode());
+            identifiersEditionForm.setValue(DatasourceDS.CODE, datasourceDto.getCode());
             identifiersEditionForm.setValue(DatasourceDS.URI, datasourceDto.getUri());
             identifiersEditionForm.setValue(DatasourceDS.URN, datasourceDto.getUrn());
-            identifiersEditionForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
+           // identifiersEditionForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
         }
         
         private DatasourceDto getDatasource() {
             if (isCreationMode()) {
-                datasource.setIdentifier(identifiersEditionForm.getValueAsString(DatasourceDS.IDENTIFIER));
+                datasource.setCode(identifiersEditionForm.getValueAsString(DatasourceDS.CODE));
             }
-            datasource.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasourceDS.TITLE));
+            //datasource.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasourceDS.TITLE));
             return datasource;
         }
         
