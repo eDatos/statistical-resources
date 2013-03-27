@@ -10,7 +10,8 @@
         <properties fileName="${environment.metamac.data}/common/conf/static/resources.xml" basePath="" config-optional="false" />
         <properties fileName="${environment.metamac.data}/common/conf/dynamic/security.xml" basePath="" config-optional="false" />
         <properties fileName="${environment.metamac.data}/common/conf/static/endpoints.xml" basePath="" config-optional="false" />
-        <properties fileName="${environment.metamac.data}/statistical-resources/conf/static/resources.xml" basePath="" config-optional="false" />
+       	<properties fileName="${environment.metamac.data}/statistical-resources/conf/static/datasources.xml" basePath="" config-optional="false" />
+	    <properties fileName="${environment.metamac.data}/statistical-resources/conf/static/resources.xml" basePath="" config-optional="false" />
     </override>
 
 </configuration>
