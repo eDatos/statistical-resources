@@ -1,10 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.gin;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationListPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
@@ -15,6 +11,10 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.presenter.ErrorPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.presenter.UnauthorizedPagePresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.AsyncProvider;

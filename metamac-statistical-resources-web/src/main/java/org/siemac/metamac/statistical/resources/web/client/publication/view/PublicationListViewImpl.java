@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.view;
+package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationDS;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.record.PublicationRecord;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationListPresenter;
-import org.siemac.metamac.statistical.resources.web.client.collection.utils.PublicationClientSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.PublicationListUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.collection.widgets.NewPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
+import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;

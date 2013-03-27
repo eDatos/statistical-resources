@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.view.handlers;
+package org.siemac.metamac.statistical.resources.web.client.publication.view.handlers;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;

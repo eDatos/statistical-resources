@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.utils;
+package org.siemac.metamac.statistical.resources.web.client.publication.utils;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
 

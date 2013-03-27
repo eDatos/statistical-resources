@@ -1,10 +1,10 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.widgets;
+package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationStructureDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationStructureDS;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 

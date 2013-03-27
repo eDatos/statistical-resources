@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.record.PublicationRecord;
-import org.siemac.metamac.statistical.resources.web.client.collection.widgets.PublicationListGrid;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationListGrid;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;

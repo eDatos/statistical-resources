@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.widgets;
+package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 

@@ -1,10 +1,10 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.view;
+package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
-import org.siemac.metamac.statistical.resources.web.client.collection.widgets.PublicationStructurePanel;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructurePanel;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;

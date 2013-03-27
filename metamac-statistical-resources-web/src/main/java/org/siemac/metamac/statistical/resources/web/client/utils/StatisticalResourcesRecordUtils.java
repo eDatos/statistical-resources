@@ -5,9 +5,9 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 
 public class StatisticalResourcesRecordUtils {
 

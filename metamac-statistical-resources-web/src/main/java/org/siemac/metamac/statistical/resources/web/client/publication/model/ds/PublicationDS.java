@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.model.ds;
+package org.siemac.metamac.statistical.resources.web.client.publication.model.ds;
 
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleStatisticalResourceDS;
 

@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.view;
+package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
@@ -7,11 +7,11 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationDS;
-import org.siemac.metamac.statistical.resources.web.client.collection.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
-import org.siemac.metamac.statistical.resources.web.client.collection.utils.PublicationClientSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.collection.view.handlers.PublicationMetadataTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.collection.widgets.PublicationMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
+import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;

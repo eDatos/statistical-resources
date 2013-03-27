@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.widgets;
+package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
@@ -6,8 +6,8 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
-import org.siemac.metamac.statistical.resources.web.client.collection.model.ds.PublicationStructureDS;
-import org.siemac.metamac.statistical.resources.web.client.collection.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationStructureDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;

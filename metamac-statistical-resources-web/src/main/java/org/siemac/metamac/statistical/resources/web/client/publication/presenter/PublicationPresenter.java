@@ -1,7 +1,8 @@
-package org.siemac.metamac.statistical.resources.web.client.collection.presenter;
+package org.siemac.metamac.statistical.resources.web.client.publication.presenter;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
+
+import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -11,6 +12,8 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
+import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
@@ -23,10 +26,13 @@ import org.siemac.metamac.web.common.client.utils.UrnUtils;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
@@ -36,40 +42,49 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class PublicationStructureTabPresenter extends Presenter<PublicationStructureTabPresenter.PublicationStructureTabView, PublicationStructureTabPresenter.PublicationStructureTabProxy> {
+public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy> implements PublicationUiHandlers {
 
-    private DispatchAsync   dispatcher;
-    private PlaceManager    placeManager;
+    private final DispatchAsync                       dispatcher;
+    private final PlaceManager                        placeManager;
 
-    private ExternalItemDto operation;
+    private ExternalItemDto                           operation;
 
-    public interface PublicationStructureTabView extends View {
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata  = new Type<RevealContentHandler<?>>();
 
-        void setPublication(PublicationDto collectionDto);
-    }
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaStructure = new Type<RevealContentHandler<?>>();
 
     @ProxyCodeSplit
-    @NameToken(NameTokens.collectionStructurePage)
+    @NameToken(NameTokens.collectionPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
-    public interface PublicationStructureTabProxy extends Proxy<PublicationStructureTabPresenter>, Place {
-    }
-
-    @Inject
-    public PublicationStructureTabPresenter(EventBus eventBus, PublicationStructureTabView view, PublicationStructureTabProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, view, proxy);
-        this.dispatcher = dispatcher;
-        this.placeManager = placeManager;
+    public interface PublicationProxy extends Proxy<PublicationPresenter>, Place {
     }
 
     @TitleFunction
-    public String title() {
-        return getConstants().breadcrumbStructure();
+    public static String getTranslatedTitle() {
+        return StatisticalResourcesWeb.getConstants().breadcrumbCollection();
+    }
+
+    public interface PublicationView extends View, HasUiHandlers<PublicationPresenter> {
+
+        void setPublication(PublicationDto collectionDto);
+        void showMetadata();
+    }
+
+    @Inject
+    public PublicationPresenter(EventBus eventBus, PublicationView collectionView, PublicationProxy collectionProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
+        super(eventBus, collectionView, collectionProxy);
+        this.placeManager = placeManager;
+        this.dispatcher = dispatcher;
+        getView().setUiHandlers(this);
     }
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaStructure, this);
+        RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
     }
 
     @Override
@@ -82,6 +97,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             retrieveOperation(operationUrn);
             String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionCode);
             retrievePublication(collectionUrn);
+            getView().showMetadata();
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -93,12 +109,12 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(PublicationStructureTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fire(PublicationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    PublicationStructureTabPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(PublicationStructureTabPresenter.this, result.getOperation());
+                    PublicationPresenter.this.operation = result.getOperation();
+                    SetOperationEvent.fire(PublicationPresenter.this, result.getOperation());
                 }
             });
         }
@@ -109,13 +125,27 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationStructureTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fire(PublicationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieve()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
                 getView().setPublication(result.getPublicationDto());
             }
         });
+    }
+
+    @Override
+    public void goToPublicationMetadata() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.collectionPage);
+        hierarchy.add(new PlaceRequest(NameTokens.collectionMetadataPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goToPublicationStructure() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.collectionPage);
+        hierarchy.add(new PlaceRequest(NameTokens.collectionStructurePage));
+        placeManager.revealPlaceHierarchy(hierarchy);
     }
 
 }
