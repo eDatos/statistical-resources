@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.utils.Pub
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
@@ -31,12 +32,14 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private NameableResourceIdentifiersForm                  identifiersForm;
     private StatisticalResourceContentDescriptorsForm        contentDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                   lifeCycleForm;
     // private GroupDynamicForm versionForm;
     // private GroupDynamicForm lifeCycleForm;
     // private GroupDynamicForm contentMetadataForm;
 
     private NameableResourceIdentifiersEditionForm           identifiersEditionForm;
     private StatisticalResourceContentDescriptorsEditionForm contentDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                   lifeCycleEditionForm;
     // private GroupDynamicForm versionEditionForm;
     // private GroupDynamicForm lifeCycleEditionForm;
     // private GroupDynamicForm contentMetadataEditionForm;
@@ -71,6 +74,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
                 contentDescriptorsForm.setTranslationsShowed(translationsShowed);
                 contentDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
+                lifeCycleForm.setTranslationsShowed(translationsShowed);
+                lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
 
                 // versionForm.setTranslationsShowed(translationsShowed);
                 // versionEditionForm.setTranslationsShowed(translationsShowed);
@@ -149,6 +155,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         // Content descriptors form
         contentDescriptorsForm = new StatisticalResourceContentDescriptorsForm();
 
+        // Life cycle
+        lifeCycleForm = new LifeCycleResourceLifeCycleForm();
+
         // Version form
         // versionForm = new GroupDynamicForm(getConstants().versionableVersion());
         // ViewTextItem version = new ViewTextItem(PublicationDS.VERSION_LOGIC, getConstants().versionableVersion());
@@ -200,6 +209,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         mainFormLayout.addViewCanvas(identifiersForm);
         mainFormLayout.addViewCanvas(contentDescriptorsForm);
+        mainFormLayout.addViewCanvas(lifeCycleForm);
         // mainFormLayout.addViewCanvas(versionForm);
         // mainFormLayout.addViewCanvas(lifeCycleForm);
         // mainFormLayout.addViewCanvas(contentMetadataForm);
@@ -211,6 +221,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Content descriptors form
         contentDescriptorsEditionForm = new StatisticalResourceContentDescriptorsEditionForm();
+
+        // Life cycle
+        lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
 
         // Version form
         // versionEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
@@ -263,6 +276,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
         mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
+        mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
         // mainFormLayout.addEditionCanvas(versionEditionForm);
         // mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
         // mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
@@ -284,12 +298,15 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     // return agencyItem;
     // }
 
-    private void setPublicationViewMode(PublicationDto collectionDto) {
+    private void setPublicationViewMode(PublicationDto publicationDto) {
         // Identifiers form
-        identifiersForm.setNameableStatisticalResourceDto(collectionDto);
+        identifiersForm.setNameableStatisticalResourceDto(publicationDto);
 
         // Content descriptors form
-        contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(collectionDto);
+        contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Life cycle
+        lifeCycleForm.setLifeCycleStatisticalResourceDto(publicationDto);
 
         // // Version form
         // versionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -347,6 +364,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Content descriptors form
         contentDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Life cycle
+        lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
 
         // // Version form
         // versionEditionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
