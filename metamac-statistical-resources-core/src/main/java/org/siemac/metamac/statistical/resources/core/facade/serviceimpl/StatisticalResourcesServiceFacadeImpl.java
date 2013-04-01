@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -442,20 +443,100 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public PublicationDto retrievePublicationByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        PublicationsSecurityUtils.canRetrievePublicationByUrn(ctx);
+
+        // Retrieve
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, urn);
+
+        // Transform
+        return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
     }
 
     @Override
     public List<PublicationDto> retrievePublicationVersions(ServiceContext ctx, String urn) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        PublicationsSecurityUtils.canRetrievePublicationVersions(ctx);
+
+        // Retrieve
+        List<PublicationVersion> publicationVersions = getPublicationService().retrievePublicationVersions(ctx, urn);
+
+        // Transform
+        List<PublicationDto> publications = publicationDo2DtoMapper.publicationVersionDoListToDtoList(publicationVersions);
+
+        return publications;
     }
 
     @Override
     public PublicationDto versioningPublication(ServiceContext ctx, String urnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        // Security
+        PublicationsSecurityUtils.canVersionPublication(ctx);
+
+        // Versioning
+        PublicationVersion publicationVersion = getPublicationService().versioningPublicationVersion(ctx, urnToCopy, versionType);
+
+        // Transform
+        return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+    }
+
+    @Override
+    // TODO: Este metodo debe ser eliminado cuando la jerarquia este bien hecha
+    public List<String> findDatasetVersionForPublicationVersion(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
+        // Security
+        // not security
+
+        // Service call
+        Set<DatasetVersion> datasetsVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn).getDatasets();
+
+        // Transform to Dto
+        List<String> datasetVersionsUrn = datasetVersionSetDo2UrnList(datasetsVersion);
+
+        // Return
+        return datasetVersionsUrn;
+    }
+
+    @Override
+    // TODO: Este metodo debe ser eliminado cuando la jerarquia este bien hecha
+    public List<String> addDatasetVersionToPublicationVersion(ServiceContext ctx, String publicationVersionUrn, String datasetVersionUrn) throws MetamacException {
+        // Security
+        // not security
+
+        // Service call
+        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+
+        publicationVersion.addDataset(datasetVersion);
+
+        getPublicationService().updatePublicationVersion(ctx, publicationVersion);
+
+        // Return
+        return findDatasetVersionForPublicationVersion(ctx, publicationVersionUrn);
+    }
+
+    @Override
+    // TODO: Este metodo debe ser eliminado cuando la jerarquia este bien hecha
+    public List<String> removeDatasetVersionToPublicationVersion(ServiceContext ctx, String publicationVersionUrn, String datasetVersionUrn) throws MetamacException {
+        // Security
+        // not security
+
+        // Service call
+        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+
+        publicationVersion.removeDataset(datasetVersion);
+
+        getPublicationService().updatePublicationVersion(ctx, publicationVersion);
+
+        // Return
+        return findDatasetVersionForPublicationVersion(ctx, publicationVersionUrn);
+    }
+
+    private List<String> datasetVersionSetDo2UrnList(Set<DatasetVersion> datasetsVersion) {
+        List<String> datasetVersionUrnList = new ArrayList<String>();
+        for (DatasetVersion item : datasetsVersion) {
+            datasetVersionUrnList.add(item.getSiemacMetadataStatisticalResource().getUrn());
+        }
+        return datasetVersionUrnList;
     }
 
 }

@@ -87,6 +87,11 @@ Application FacadeStatisticalResources {
             List<@PublicationDto> retrievePublicationVersions(String urn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationDto versioningPublication(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		
+    		// TODO: Pendiente de eliminar cuando la jerarquia este bien hecha
+    		List<String> findDatasetVersionForPublicationVersion(String publicationVersionUrn) throws MetamacException;
+    		List<String> addDatasetVersionToPublicationVersion(String publicationVersionUrn, String datasetVersionUrn) throws MetamacException;
+       		List<String> removeDatasetVersionToPublicationVersion(String publicationVersionUrn, String datasetVersionUrn) throws MetamacException;
 		}  
 	}
 }

@@ -15,11 +15,13 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
+import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.publication.utils.PublicationVersioningCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -147,7 +149,24 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public PublicationVersion versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        throw new UnsupportedOperationException("versioningPublicationVersion not implemented");
+        publicationServiceInvocationValidator.checkVersioningPublicationVersion(ctx, publicationVersionUrnToCopy, versionType);
+        
+        //TODO: check only published datasets can be versioned
+        
+        PublicationVersion publicationVersionToCopy = retrievePublicationVersionByUrn(ctx, publicationVersionUrnToCopy);
+        PublicationVersion publicationNewVersion = PublicationVersioningCopyUtils.copyPublicationVersion(publicationVersionToCopy);
+        
+        FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, publicationVersionToCopy.getSiemacMetadataStatisticalResource(), publicationNewVersion.getSiemacMetadataStatisticalResource(), versionType);
+
+        //DATASET URN
+        String[] creator = new String[]{publicationNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
+        publicationNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        
+        //TODO: DATE_NEXT_UPDATE
+        
+        publicationNewVersion = getPublicationVersionRepository().save(publicationNewVersion);
+        
+        return publicationNewVersion;
     }
 
     // ------------------------------------------------------------------------

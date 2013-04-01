@@ -1,6 +1,8 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
+
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
@@ -71,6 +73,10 @@ Application PublicationsStatisticalResources {
 			- Bag<@ElementLevel> childrenAllLevels cascade="all-delete-orphan" fetch="lazy" inverse orderby="parent asc, orderInLevel asc" <-> publicationVersion;
 			"Association to elements in the first level of the publication"
 			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> publicationVersionFirstLevel;
+			
+			// TODO: PROVISIONAL. Esto debe eliminarse
+			"Related datasets"
+       		- Set<@DatasetVersion> datasets cascade="none";
 			
 			Repository PublicationVersionRepository {
 				save;

@@ -15,6 +15,9 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 
 public class PublicationsAsserts extends BaseAsserts {
 
+    // TODO: EN todos los assertEquals hay que meter la estructura de la publicacion
+    
+    
     // -----------------------------------------------------------------
     // PUBLICATION: DO & DO
     // -----------------------------------------------------------------

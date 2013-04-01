@@ -7,9 +7,6 @@ import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
@@ -47,16 +44,16 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
 
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            DatasetCriteriaPropertyEnum propertyEnum = DatasetCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
+            PublicationCriteriaPropertyEnum propertyEnum = PublicationCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case CODE:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().code(), propertyRestriction.getStringValue());
                 case URN:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().urn(), propertyRestriction.getStringValue());
                 case TITLE:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case PROC_STATUS:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -64,7 +61,7 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
 
         @Override
         public Property<PublicationVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            DatasetCriteriaOrderEnum propertyOrderEnum = DatasetCriteriaOrderEnum.fromValue(order.getPropertyName());
+            PublicationCriteriaOrderEnum propertyOrderEnum = PublicationCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
                 case CODE:
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().code();
@@ -72,6 +69,8 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().urn();
                 case TITLE:
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label();
+                case PROC_STATUS:
+                    return PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }

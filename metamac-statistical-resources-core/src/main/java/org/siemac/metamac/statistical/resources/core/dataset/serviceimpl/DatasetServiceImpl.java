@@ -6,27 +6,22 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
-import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
+import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -244,7 +239,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DatasetVersion datasetVersionToCopy = retrieveDatasetVersionByUrn(ctx, datasetVersionUrnToCopy);
         DatasetVersion datasetNewVersion = DatasetVersioningCopyUtils.copyDatasetVersion(datasetVersionToCopy);
         
-        fillVersioningMetadataSiemacMetadataSR(ctx, datasetVersionToCopy.getSiemacMetadataStatisticalResource(), datasetNewVersion.getSiemacMetadataStatisticalResource(), versionType);
+        FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, datasetVersionToCopy.getSiemacMetadataStatisticalResource(), datasetNewVersion.getSiemacMetadataStatisticalResource(), versionType);
 
         //DATASET URN
         String[] creator = new String[]{datasetNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
@@ -262,33 +257,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-
-    private void fillVersioningMetadataSiemacMetadataSR(ServiceContext ctx, SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next, VersionTypeEnum versionType) {
-        fillVersioningMetadataLifecycleSR(ctx, previous, next, versionType);
-        
-    }
-    
-    private void fillVersioningMetadataLifecycleSR(ServiceContext ctx, LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next, VersionTypeEnum versionType) {
-        fillVersioningMetadataVersionableSR(ctx, previous, next, versionType);
-        
-        next.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
-        next.setCreationDate(new DateTime());
-        next.setCreationUser(ctx.getUserId());
-    }
-    
-
-    private void fillVersioningMetadataVersionableSR(ServiceContext ctx,VersionableStatisticalResource previous, VersionableStatisticalResource next, VersionTypeEnum versionType) {
-        String newVersion = VersionUtil.createNextVersion(previous.getVersionLogic(), VersionPatternEnum.XX_YYY, versionType);
-        next.setVersionLogic(newVersion);
-        
-    }
-    
     private static void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         datasource.setDatasetVersion(datasetVersion);
         datasource.getIdentifiableStatisticalResource().setUri(null);
         datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(datasource.getIdentifiableStatisticalResource().getCode()));
     }
-
+    
     private void addDatasourceForDatasetVersion(Datasource datasource, DatasetVersion datasetVersion) {
         datasetVersion.addDatasource(datasource);
         getDatasetVersionRepository().save(datasetVersion);
