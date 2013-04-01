@@ -2,41 +2,22 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.List;
-
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
-import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasetContentDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasetContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
-import org.siemac.metamac.web.common.client.widgets.SearchExternalItemWindow;
-import org.siemac.metamac.web.common.client.widgets.SearchMultipleExternalItemWindow;
-import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.actions.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalListItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalViewTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetadataTabView {
@@ -48,17 +29,19 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     private DatasetMainFormLayout                  mainFormLayout;
 
     private NameableResourceIdentifiersForm        identifiersForm;
-    private GroupDynamicForm                       contentMetadataForm;
-    private GroupDynamicForm                       versioningForm;
-    private GroupDynamicForm                       lifeCycleForm;
+    private DatasetContentDescriptorsForm          contentDescriptorsForm;
+    // private GroupDynamicForm contentMetadataForm;
+    // private GroupDynamicForm versioningForm;
+    // private GroupDynamicForm lifeCycleForm;
 
     private NameableResourceIdentifiersEditionForm identifiersEditionForm;
-    private GroupDynamicForm                       contentMetadataEditionForm;
-    private GroupDynamicForm                       versioningEditionForm;
-    private GroupDynamicForm                       lifeCycleEditionForm;
+    private DatasetContentDescriptorsEditionForm   contentDescriptorsEditionForm;
+    // private GroupDynamicForm contentMetadataEditionForm;
+    // private GroupDynamicForm versioningEditionForm;
+    // private GroupDynamicForm lifeCycleEditionForm;
 
-    private SearchExternalItemWindow               searchAgencyWindow;
-    private SearchMultipleExternalItemWindow       searchMultiAgencyWindow;
+    // private SearchExternalItemWindow searchAgencyWindow;
+    // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
     private DatasetDto                             datasetDto;
 
@@ -82,9 +65,14 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
             public void onClick(ClickEvent event) {
                 boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
                 identifiersForm.setTranslationsShowed(translationsShowed);
-                versioningForm.setTranslationsShowed(translationsShowed);
-                contentMetadataForm.setTranslationsShowed(translationsShowed);
-                lifeCycleForm.setTranslationsShowed(translationsShowed);
+                identifiersEditionForm.setTranslationsShowed(translationsShowed);
+
+                contentDescriptorsForm.setTranslationsShowed(translationsShowed);
+                contentDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
+                // versioningForm.setTranslationsShowed(translationsShowed);
+                // contentMetadataForm.setTranslationsShowed(translationsShowed);
+                // lifeCycleForm.setTranslationsShowed(translationsShowed);
             }
         });
 
@@ -93,7 +81,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
             @Override
             public void onClick(ClickEvent event) {
-                if (identifiersEditionForm.validate(false) && versioningEditionForm.validate(false) && lifeCycleEditionForm.validate(false) && contentMetadataEditionForm.validate(false)) {
+                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false)) {
                     uiHandlers.saveDataset(getDatasetDto());
                 }
             }
@@ -191,137 +179,147 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         // Identifiers Form
         identifiersForm = new NameableResourceIdentifiersForm();
 
+        // Content descriptors form
+        contentDescriptorsForm = new DatasetContentDescriptorsForm();
+
         // version
-        versioningForm = new GroupDynamicForm(getConstants().datasetVersioning());
-        ViewTextItem version = new ViewTextItem(DatasetDS.VERSION_LOGIC, getConstants().datasetVersion());
-        ViewTextItem dateVersion = new ViewTextItem(DatasetDS.VERSION_DATE, getConstants().datasetVersionDate());
-        ViewTextItem nextVersion = new ViewTextItem(DatasetDS.NEXT_VERSION_DATE, getConstants().datasetNextVersion());
-        ViewTextItem rationale = new ViewTextItem(DatasetDS.RATIONALE, getConstants().datasetRationale());
-        ViewTextItem rationaleType = new ViewTextItem(DatasetDS.RATIONALE_TYPE, getConstants().datasetRationaleType());
-        versioningForm.setFields(version, dateVersion, nextVersion, rationaleType, rationale);
+        // versioningForm = new GroupDynamicForm(getConstants().datasetVersioning());
+        // ViewTextItem version = new ViewTextItem(DatasetDS.VERSION_LOGIC, getConstants().datasetVersion());
+        // ViewTextItem dateVersion = new ViewTextItem(DatasetDS.VERSION_DATE, getConstants().datasetVersionDate());
+        // ViewTextItem nextVersion = new ViewTextItem(DatasetDS.NEXT_VERSION_DATE, getConstants().datasetNextVersion());
+        // ViewTextItem rationale = new ViewTextItem(DatasetDS.RATIONALE, getConstants().datasetRationale());
+        // ViewTextItem rationaleType = new ViewTextItem(DatasetDS.RATIONALE_TYPE, getConstants().datasetRationaleType());
+        // versioningForm.setFields(version, dateVersion, nextVersion, rationaleType, rationale);
 
         // Life cycle form
-        lifeCycleForm = new GroupDynamicForm(getConstants().datasetLifeCycle());
-        ViewTextItem procStatus = new ViewTextItem(DatasetDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
-        ViewTextItem responsabilityCreator = new ViewTextItem(DatasetDS.RESPONSABILITY_CREATOR, getConstants().lifeCycleResponsabilityCreator());
-        ViewTextItem responsabilityContributor = new ViewTextItem(DatasetDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityContributor());
-        ViewTextItem responsabilitySubmitted = new ViewTextItem(DatasetDS.RESPONSABILITY_SUBMITTED, getConstants().lifeCycleResponsabilitySubmitted());
-        ViewTextItem responsabilityAccepted = new ViewTextItem(DatasetDS.RESPONSABILITY_ACCEPTED, getConstants().lifeCycleResponsabilityAccepted());
-        ViewTextItem responsabilityIssued = new ViewTextItem(DatasetDS.RESPONSABILITY_ISSUED, getConstants().lifeCycleResponsabilityIssued());
-        ViewTextItem responsabilityOutOfPrint = new ViewTextItem(DatasetDS.RESPONSABILITY_OUT_OF_PRINT, getConstants().lifeCycleResponsabilityOutOfPrint());
-        ViewTextItem creator = new ViewTextItem(DatasetDS.CREATOR, getConstants().lifeCycleCreator());
+        // lifeCycleForm = new GroupDynamicForm(getConstants().datasetLifeCycle());
+        // ViewTextItem procStatus = new ViewTextItem(DatasetDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
+        // ViewTextItem responsabilityCreator = new ViewTextItem(DatasetDS.RESPONSABILITY_CREATOR, getConstants().lifeCycleResponsabilityCreator());
+        // ViewTextItem responsabilityContributor = new ViewTextItem(DatasetDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityContributor());
+        // ViewTextItem responsabilitySubmitted = new ViewTextItem(DatasetDS.RESPONSABILITY_SUBMITTED, getConstants().lifeCycleResponsabilitySubmitted());
+        // ViewTextItem responsabilityAccepted = new ViewTextItem(DatasetDS.RESPONSABILITY_ACCEPTED, getConstants().lifeCycleResponsabilityAccepted());
+        // ViewTextItem responsabilityIssued = new ViewTextItem(DatasetDS.RESPONSABILITY_ISSUED, getConstants().lifeCycleResponsabilityIssued());
+        // ViewTextItem responsabilityOutOfPrint = new ViewTextItem(DatasetDS.RESPONSABILITY_OUT_OF_PRINT, getConstants().lifeCycleResponsabilityOutOfPrint());
+        // ViewTextItem creator = new ViewTextItem(DatasetDS.CREATOR, getConstants().lifeCycleCreator());
 
-        SearchExternalListItem contributor = createRelatedMultiAgencyItem(DatasetDS.CONTRIBUTOR, getConstants().lifeCycleContributor(), AgencyField.AGENCY_CONTRIBUTOR, false);
-        SearchExternalListItem publisher = createRelatedMultiAgencyItem(DatasetDS.PUBLISHER, getConstants().lifeCyclePublisher(), AgencyField.AGENCY_PUBLISHER, false);
-        SearchExternalListItem mediator = createRelatedMultiAgencyItem(DatasetDS.MEDIATOR, getConstants().lifeCycleMediator(), AgencyField.AGENCY_MEDIATOR, false);
-
-        ViewTextItem submittedDate = new ViewTextItem(DatasetDS.SUBMITTED_DATE, getConstants().lifeCycleSubmittedDate());
-        ViewTextItem acceptedDate = new ViewTextItem(DatasetDS.ACCEPTED_DATE, getConstants().lifeCycleAcceptedDate());
-        ViewTextItem issuedDate = new ViewTextItem(DatasetDS.ISSUED_DATE, getConstants().lifeCycleIssuedDate());
-        lifeCycleForm.setFields(procStatus, responsabilityCreator, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint, creator,
-                contributor, publisher, mediator, submittedDate, acceptedDate, issuedDate);
+        // SearchExternalListItem contributor = createRelatedMultiAgencyItem(DatasetDS.CONTRIBUTOR, getConstants().lifeCycleContributor(), AgencyField.AGENCY_CONTRIBUTOR, false);
+        // SearchExternalListItem publisher = createRelatedMultiAgencyItem(DatasetDS.PUBLISHER, getConstants().lifeCyclePublisher(), AgencyField.AGENCY_PUBLISHER, false);
+        // SearchExternalListItem mediator = createRelatedMultiAgencyItem(DatasetDS.MEDIATOR, getConstants().lifeCycleMediator(), AgencyField.AGENCY_MEDIATOR, false);
+        //
+        // ViewTextItem submittedDate = new ViewTextItem(DatasetDS.SUBMITTED_DATE, getConstants().lifeCycleSubmittedDate());
+        // ViewTextItem acceptedDate = new ViewTextItem(DatasetDS.ACCEPTED_DATE, getConstants().lifeCycleAcceptedDate());
+        // ViewTextItem issuedDate = new ViewTextItem(DatasetDS.ISSUED_DATE, getConstants().lifeCycleIssuedDate());
+        // lifeCycleForm.setFields(procStatus, responsabilityCreator, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint,
+        // creator,
+        // contributor, publisher, mediator, submittedDate, acceptedDate, issuedDate);
 
         // Content metadata form
-        contentMetadataForm = new GroupDynamicForm(getConstants().datasetContentMetadata());
-        ViewTextItem language = new ViewTextItem(DatasetDS.LANGUAGE, getConstants().contentMetadataLanguage());
-        ViewTextItem languages = new ViewTextItem(DatasetDS.LANGUAGES, getConstants().contentMetadataLanguages());
-        ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(DatasetDS.DESCRIPTION, getConstants().contentMetadataDescription());
-        ViewTextItem keywords = new ViewTextItem(DatasetDS.KEYWORDS, getConstants().contentMetadataKeywords());
-        ViewTextItem spatialCoverage = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE, getConstants().contentMetadataSpatialCoverage());
-        ViewTextItem spatialCoverageCodes = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE_CODES, getConstants().contentMetadataSpatialCoverageCodes());
-        ViewTextItem temporalCoverage = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().contentMetadataTemporalCoverage());
-        ViewTextItem temporalCoverageCodes = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE_CODES, getConstants().contentMetadataTemporalCoverageCodes());
-        ViewTextItem type = new ViewTextItem(DatasetDS.TYPE, getConstants().contentMetadataType());
-        ViewTextItem format = new ViewTextItem(DatasetDS.FORMAT, getConstants().contentMetadataFormat());
-        ViewTextItem nextUpdate = new ViewTextItem(DatasetDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());
-        ViewTextItem updateFrequency = new ViewTextItem(DatasetDS.UPDATE_FREQUENCY, getConstants().contentMetadataUpdateFrequency());
-        ViewTextItem rightsHolder = new ViewTextItem(DatasetDS.RIGHTS_HOLDER, getConstants().contentMetadataRightsHolder());
-        ViewTextItem copyrightedDate = new ViewTextItem(DatasetDS.COPYRIGHTED_DATE, getConstants().contentMetadataCopyrightedDate());
-        ViewTextItem license = new ViewTextItem(DatasetDS.LICENSE, getConstants().contentMetadataLicense());
-        contentMetadataForm.setFields(language, languages, description, keywords, spatialCoverage, spatialCoverageCodes, temporalCoverage, temporalCoverageCodes, type, format, nextUpdate,
-                updateFrequency, rightsHolder, copyrightedDate, license);
+        // contentMetadataForm = new GroupDynamicForm(getConstants().datasetContentMetadata());
+        // ViewTextItem language = new ViewTextItem(DatasetDS.LANGUAGE, getConstants().contentMetadataLanguage());
+        // ViewTextItem languages = new ViewTextItem(DatasetDS.LANGUAGES, getConstants().contentMetadataLanguages());
+        // ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(DatasetDS.DESCRIPTION, getConstants().contentMetadataDescription());
+        // ViewTextItem keywords = new ViewTextItem(DatasetDS.KEYWORDS, getConstants().contentMetadataKeywords());
+        // ViewTextItem spatialCoverage = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE, getConstants().contentMetadataSpatialCoverage());
+        // ViewTextItem spatialCoverageCodes = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE_CODES, getConstants().contentMetadataSpatialCoverageCodes());
+        // ViewTextItem temporalCoverage = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().contentMetadataTemporalCoverage());
+        // ViewTextItem temporalCoverageCodes = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE_CODES, getConstants().contentMetadataTemporalCoverageCodes());
+        // ViewTextItem type = new ViewTextItem(DatasetDS.TYPE, getConstants().contentMetadataType());
+        // ViewTextItem format = new ViewTextItem(DatasetDS.FORMAT, getConstants().contentMetadataFormat());
+        // ViewTextItem nextUpdate = new ViewTextItem(DatasetDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());
+        // ViewTextItem updateFrequency = new ViewTextItem(DatasetDS.UPDATE_FREQUENCY, getConstants().contentMetadataUpdateFrequency());
+        // ViewTextItem rightsHolder = new ViewTextItem(DatasetDS.RIGHTS_HOLDER, getConstants().contentMetadataRightsHolder());
+        // ViewTextItem copyrightedDate = new ViewTextItem(DatasetDS.COPYRIGHTED_DATE, getConstants().contentMetadataCopyrightedDate());
+        // ViewTextItem license = new ViewTextItem(DatasetDS.LICENSE, getConstants().contentMetadataLicense());
+        // contentMetadataForm.setFields(language, languages, description, keywords, spatialCoverage, spatialCoverageCodes, temporalCoverage, temporalCoverageCodes, type, format, nextUpdate,
+        // updateFrequency, rightsHolder, copyrightedDate, license);
 
         mainFormLayout.addViewCanvas(identifiersForm);
-        mainFormLayout.addViewCanvas(versioningForm);
-        mainFormLayout.addViewCanvas(lifeCycleForm);
-        mainFormLayout.addViewCanvas(contentMetadataForm);
+        mainFormLayout.addViewCanvas(contentDescriptorsForm);
+        // mainFormLayout.addViewCanvas(versioningForm);
+        // mainFormLayout.addViewCanvas(lifeCycleForm);
+        // mainFormLayout.addViewCanvas(contentMetadataForm);
     }
 
     private void createEditionForm() {
+        // Identifiers form
         identifiersEditionForm = new NameableResourceIdentifiersEditionForm();
 
+        // Content descriptors form
+        contentDescriptorsEditionForm = new DatasetContentDescriptorsEditionForm();
+
         // Version form
-        versioningEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
-        ViewTextItem version = new ViewTextItem(DatasetDS.VERSION_LOGIC, getConstants().versionableVersion());
-        ViewTextItem versionDate = new ViewTextItem(DatasetDS.VERSION_DATE, getConstants().versionableVersionDate());
-        CustomDateItem nextVerstionDate = new CustomDateItem(DatasetDS.NEXT_VERSION_DATE, getConstants().versionableNextVersionDate()); // TODO what formItem should be used?
-        CustomSelectItem rationaleType = new CustomSelectItem(DatasetDS.RATIONALE_TYPE, getConstants().versionableRationaleType());
-        rationaleType.setValueMap(CommonUtils.getStatisticalResourceVersionRationaleTypeHashMap());
-        CustomTextItem rationale = new CustomTextItem(DatasetDS.RATIONALE, getConstants().versionableRationale());
-        versioningEditionForm.setFields(version, versionDate, nextVerstionDate, rationaleType, rationale);
+        // versioningEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
+        // ViewTextItem version = new ViewTextItem(DatasetDS.VERSION_LOGIC, getConstants().versionableVersion());
+        // ViewTextItem versionDate = new ViewTextItem(DatasetDS.VERSION_DATE, getConstants().versionableVersionDate());
+        // CustomDateItem nextVerstionDate = new CustomDateItem(DatasetDS.NEXT_VERSION_DATE, getConstants().versionableNextVersionDate()); // TODO what formItem should be used?
+        // CustomSelectItem rationaleType = new CustomSelectItem(DatasetDS.RATIONALE_TYPE, getConstants().versionableRationaleType());
+        // rationaleType.setValueMap(CommonUtils.getStatisticalResourceVersionRationaleTypeHashMap());
+        // CustomTextItem rationale = new CustomTextItem(DatasetDS.RATIONALE, getConstants().versionableRationale());
+        // versioningEditionForm.setFields(version, versionDate, nextVerstionDate, rationaleType, rationale);
 
         // Life cycle form
-        lifeCycleEditionForm = new GroupDynamicForm(getConstants().datasetLifeCycle());
-        ViewTextItem procStatus = new ViewTextItem(DatasetDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
-        ViewTextItem responsabilityCreator = new ViewTextItem(DatasetDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityCreator());
-        ViewTextItem responsabilityContributor = new ViewTextItem(DatasetDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityContributor());
-        ViewTextItem responsabilitySubmitted = new ViewTextItem(DatasetDS.RESPONSABILITY_SUBMITTED, getConstants().lifeCycleResponsabilitySubmitted());
-        ViewTextItem responsabilityAccepted = new ViewTextItem(DatasetDS.RESPONSABILITY_ACCEPTED, getConstants().lifeCycleResponsabilityAccepted());
-        ViewTextItem responsabilityIssued = new ViewTextItem(DatasetDS.RESPONSABILITY_ISSUED, getConstants().lifeCycleResponsabilityIssued());
-        ViewTextItem responsabilityOutOfPrint = new ViewTextItem(DatasetDS.RESPONSABILITY_OUT_OF_PRINT, getConstants().lifeCycleResponsabilityOutOfPrint());
-
-        SearchViewTextItem creator = createRelatedAgencyItem(DatasetDS.CREATOR, getConstants().lifeCycleCreator(), AgencyField.AGENCY_CREATOR);
-        SearchExternalListItem contributor = createRelatedMultiAgencyItem(DatasetDS.CONTRIBUTOR, getConstants().lifeCycleContributor(), AgencyField.AGENCY_CONTRIBUTOR, true);
-        SearchExternalListItem publisher = createRelatedMultiAgencyItem(DatasetDS.PUBLISHER, getConstants().lifeCyclePublisher(), AgencyField.AGENCY_PUBLISHER, true);
-        SearchExternalListItem mediator = createRelatedMultiAgencyItem(DatasetDS.MEDIATOR, getConstants().lifeCycleMediator(), AgencyField.AGENCY_MEDIATOR, true);
-
-        ViewTextItem submittedDate = new ViewTextItem(DatasetDS.SUBMITTED_DATE, getConstants().lifeCycleSubmittedDate());
-        ViewTextItem acceptedDate = new ViewTextItem(DatasetDS.ACCEPTED_DATE, getConstants().lifeCycleAcceptedDate());
-        ViewTextItem issuedDate = new ViewTextItem(DatasetDS.ISSUED_DATE, getConstants().lifeCycleIssuedDate());
-        lifeCycleEditionForm.setFields(procStatus, responsabilityCreator, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint,
-                creator, contributor, publisher, mediator, submittedDate, acceptedDate, issuedDate);
+        // lifeCycleEditionForm = new GroupDynamicForm(getConstants().datasetLifeCycle());
+        // ViewTextItem procStatus = new ViewTextItem(DatasetDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
+        // ViewTextItem responsabilityCreator = new ViewTextItem(DatasetDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityCreator());
+        // ViewTextItem responsabilityContributor = new ViewTextItem(DatasetDS.RESPONSABILITY_CONTRIBUTOR, getConstants().lifeCycleResponsabilityContributor());
+        // ViewTextItem responsabilitySubmitted = new ViewTextItem(DatasetDS.RESPONSABILITY_SUBMITTED, getConstants().lifeCycleResponsabilitySubmitted());
+        // ViewTextItem responsabilityAccepted = new ViewTextItem(DatasetDS.RESPONSABILITY_ACCEPTED, getConstants().lifeCycleResponsabilityAccepted());
+        // ViewTextItem responsabilityIssued = new ViewTextItem(DatasetDS.RESPONSABILITY_ISSUED, getConstants().lifeCycleResponsabilityIssued());
+        // ViewTextItem responsabilityOutOfPrint = new ViewTextItem(DatasetDS.RESPONSABILITY_OUT_OF_PRINT, getConstants().lifeCycleResponsabilityOutOfPrint());
+        //
+        // SearchViewTextItem creator = createRelatedAgencyItem(DatasetDS.CREATOR, getConstants().lifeCycleCreator(), AgencyField.AGENCY_CREATOR);
+        // SearchExternalListItem contributor = createRelatedMultiAgencyItem(DatasetDS.CONTRIBUTOR, getConstants().lifeCycleContributor(), AgencyField.AGENCY_CONTRIBUTOR, true);
+        // SearchExternalListItem publisher = createRelatedMultiAgencyItem(DatasetDS.PUBLISHER, getConstants().lifeCyclePublisher(), AgencyField.AGENCY_PUBLISHER, true);
+        // SearchExternalListItem mediator = createRelatedMultiAgencyItem(DatasetDS.MEDIATOR, getConstants().lifeCycleMediator(), AgencyField.AGENCY_MEDIATOR, true);
+        //
+        // ViewTextItem submittedDate = new ViewTextItem(DatasetDS.SUBMITTED_DATE, getConstants().lifeCycleSubmittedDate());
+        // ViewTextItem acceptedDate = new ViewTextItem(DatasetDS.ACCEPTED_DATE, getConstants().lifeCycleAcceptedDate());
+        // ViewTextItem issuedDate = new ViewTextItem(DatasetDS.ISSUED_DATE, getConstants().lifeCycleIssuedDate());
+        // lifeCycleEditionForm.setFields(procStatus, responsabilityCreator, responsabilityContributor, responsabilitySubmitted, responsabilityAccepted, responsabilityIssued, responsabilityOutOfPrint,
+        // creator, contributor, publisher, mediator, submittedDate, acceptedDate, issuedDate);
 
         // Content metadata form
-        contentMetadataEditionForm = new GroupDynamicForm(getConstants().datasetContentMetadata());
-        ViewTextItem language = new ViewTextItem(DatasetDS.LANGUAGE, getConstants().contentMetadataLanguage()); // TODO edit?
-        ViewTextItem languages = new ViewTextItem(DatasetDS.LANGUAGES, getConstants().contentMetadataLanguages()); // TODO if can be edited, what formItem should be used?
-        MultiLanguageTextAreaItem description = new MultiLanguageTextAreaItem(DatasetDS.DESCRIPTION, getConstants().contentMetadataDescription());
-        ViewTextItem keywords = new ViewTextItem(DatasetDS.KEYWORDS, getConstants().contentMetadataKeywords()); // TODO what formItem should be used?
-        ViewTextItem spatialCoverage = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE, getConstants().contentMetadataSpatialCoverage()); // TODO what formItem should be used?
-        ViewTextItem spatialCoverageCodes = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE_CODES, getConstants().contentMetadataSpatialCoverageCodes()); // TODO what formItem should be used?
-        ViewTextItem temporalCoverage = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().contentMetadataTemporalCoverage()); // TODO what formItem should be used?
-        ViewTextItem temporalCoverageCodes = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE_CODES, getConstants().contentMetadataTemporalCoverageCodes()); // TODO what formItem should be used?
-        ViewTextItem type = new ViewTextItem(DatasetDS.TYPE, getConstants().contentMetadataType());// TODO what formItem should be used?
-        ViewTextItem format = new ViewTextItem(DatasetDS.FORMAT, getConstants().contentMetadataFormat());// TODO what formItem should be used?
-        CustomDateItem nextUpdate = new CustomDateItem(DatasetDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());// TODO what formItem should be used?
-        ViewTextItem updateFrequency = new ViewTextItem(DatasetDS.UPDATE_FREQUENCY, getConstants().contentMetadataUpdateFrequency());// TODO what formItem should be used?
-        ViewTextItem rightsHolder = new ViewTextItem(DatasetDS.RIGHTS_HOLDER, getConstants().contentMetadataRightsHolder());// TODO what formItem should be used?
-        ViewTextItem copyrightedDate = new ViewTextItem(DatasetDS.COPYRIGHTED_DATE, getConstants().contentMetadataCopyrightedDate());// TODO what formItem should be used?
-        ViewTextItem license = new ViewTextItem(DatasetDS.LICENSE, getConstants().contentMetadataLicense());// TODO what formItem should be used?
-        contentMetadataEditionForm.setFields(language, languages, description, keywords, spatialCoverage, spatialCoverageCodes, temporalCoverage, temporalCoverageCodes, type, format, nextUpdate,
-                updateFrequency, rightsHolder, copyrightedDate, license);
+        // contentMetadataEditionForm = new GroupDynamicForm(getConstants().datasetContentMetadata());
+        // ViewTextItem language = new ViewTextItem(DatasetDS.LANGUAGE, getConstants().contentMetadataLanguage()); // TODO edit?
+        // ViewTextItem languages = new ViewTextItem(DatasetDS.LANGUAGES, getConstants().contentMetadataLanguages()); // TODO if can be edited, what formItem should be used?
+        // MultiLanguageTextAreaItem description = new MultiLanguageTextAreaItem(DatasetDS.DESCRIPTION, getConstants().contentMetadataDescription());
+        // ViewTextItem keywords = new ViewTextItem(DatasetDS.KEYWORDS, getConstants().contentMetadataKeywords()); // TODO what formItem should be used?
+        // ViewTextItem spatialCoverage = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE, getConstants().contentMetadataSpatialCoverage()); // TODO what formItem should be used?
+        // ViewTextItem spatialCoverageCodes = new ViewTextItem(DatasetDS.SPATIAL_COVERAGE_CODES, getConstants().contentMetadataSpatialCoverageCodes()); // TODO what formItem should be used?
+        // ViewTextItem temporalCoverage = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().contentMetadataTemporalCoverage()); // TODO what formItem should be used?
+        // ViewTextItem temporalCoverageCodes = new ViewTextItem(DatasetDS.TEMPORAL_COVERAGE_CODES, getConstants().contentMetadataTemporalCoverageCodes()); // TODO what formItem should be used?
+        // ViewTextItem type = new ViewTextItem(DatasetDS.TYPE, getConstants().contentMetadataType());// TODO what formItem should be used?
+        // ViewTextItem format = new ViewTextItem(DatasetDS.FORMAT, getConstants().contentMetadataFormat());// TODO what formItem should be used?
+        // CustomDateItem nextUpdate = new CustomDateItem(DatasetDS.NEXT_UPDATE_DATE, getConstants().contentMetadataNextUpdate());// TODO what formItem should be used?
+        // ViewTextItem updateFrequency = new ViewTextItem(DatasetDS.UPDATE_FREQUENCY, getConstants().contentMetadataUpdateFrequency());// TODO what formItem should be used?
+        // ViewTextItem rightsHolder = new ViewTextItem(DatasetDS.RIGHTS_HOLDER, getConstants().contentMetadataRightsHolder());// TODO what formItem should be used?
+        // ViewTextItem copyrightedDate = new ViewTextItem(DatasetDS.COPYRIGHTED_DATE, getConstants().contentMetadataCopyrightedDate());// TODO what formItem should be used?
+        // ViewTextItem license = new ViewTextItem(DatasetDS.LICENSE, getConstants().contentMetadataLicense());// TODO what formItem should be used?
+        // contentMetadataEditionForm.setFields(language, languages, description, keywords, spatialCoverage, spatialCoverageCodes, temporalCoverage, temporalCoverageCodes, type, format, nextUpdate,
+        // updateFrequency, rightsHolder, copyrightedDate, license);
 
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
-        mainFormLayout.addEditionCanvas(versioningEditionForm);
-        mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
-        mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
+        mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
+        // mainFormLayout.addEditionCanvas(versioningEditionForm);
+        // mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
+        // mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
     }
 
-    private SearchExternalViewTextItem createRelatedAgencyItem(String name, String title, AgencyField agencyField) {
-        SearchExternalViewTextItem agencyItem = new SearchExternalViewTextItem(name, title);
-        agencyItem.setRequired(true);
-        agencyItem.getSearchIcon().addFormItemClickHandler(new SearchAgencyFormItemClickHandler(agencyField));
-        return agencyItem;
-    }
-
-    private SearchExternalListItem createRelatedMultiAgencyItem(String name, String title, AgencyField agencyField, boolean editionMode) {
-        SearchExternalListItem agencyItem = new SearchExternalListItem(name, title, editionMode);
-        if (editionMode) {
-            agencyItem.setRequired(false);
-            agencyItem.getSearchIcon().addFormItemClickHandler(new SearchMultiAgencyFormItemClickHandler(agencyField));
-        }
-        return agencyItem;
-    }
+    // private SearchExternalViewTextItem createRelatedAgencyItem(String name, String title, AgencyField agencyField) {
+    // SearchExternalViewTextItem agencyItem = new SearchExternalViewTextItem(name, title);
+    // agencyItem.setRequired(true);
+    // agencyItem.getSearchIcon().addFormItemClickHandler(new SearchAgencyFormItemClickHandler(agencyField));
+    // return agencyItem;
+    // }
+    //
+    // private SearchExternalListItem createRelatedMultiAgencyItem(String name, String title, AgencyField agencyField, boolean editionMode) {
+    // SearchExternalListItem agencyItem = new SearchExternalListItem(name, title, editionMode);
+    // if (editionMode) {
+    // agencyItem.setRequired(false);
+    // agencyItem.getSearchIcon().addFormItemClickHandler(new SearchMultiAgencyFormItemClickHandler(agencyField));
+    // }
+    // return agencyItem;
+    // }
 
     @Override
     public void setDataset(DatasetDto datasetDto) {
@@ -441,17 +439,20 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     @Override
     public void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result) {
-        if (searchAgencyWindow != null) {
-            searchAgencyWindow.setExternalItems(result.getAgenciesList());
-        }
-        if (searchMultiAgencyWindow != null) {
-            searchMultiAgencyWindow.setSourceExternalItems(result.getAgenciesList());
-        }
+        // if (searchAgencyWindow != null) {
+        // searchAgencyWindow.setExternalItems(result.getAgenciesList());
+        // }
+        // if (searchMultiAgencyWindow != null) {
+        // searchMultiAgencyWindow.setSourceExternalItems(result.getAgenciesList());
+        // }
     }
 
     public DatasetDto getDatasetDto() {
         // Identifiers form
         datasetDto = (DatasetDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetDto);
+
+        // Content descriptors form
+        datasetDto = contentDescriptorsEditionForm.getDatasetDto(datasetDto);
 
         // FIXME: add metadata
 
@@ -504,101 +505,102 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         this.uiHandlers = uiHandlers;
     }
 
-    private enum AgencyField {
-        AGENCY_CREATOR(DatasetDS.CREATOR), AGENCY_CONTRIBUTOR(DatasetDS.CONTRIBUTOR), AGENCY_PUBLISHER(DatasetDS.PUBLISHER), AGENCY_MEDIATOR(DatasetDS.MEDIATOR);
+    // private enum AgencyField {
+    // AGENCY_CREATOR(DatasetDS.CREATOR), AGENCY_CONTRIBUTOR(DatasetDS.CONTRIBUTOR), AGENCY_PUBLISHER(DatasetDS.PUBLISHER), AGENCY_MEDIATOR(DatasetDS.MEDIATOR);
+    //
+    // private String formFieldId;
+    //
+    // private AgencyField(String formFieldId) {
+    // this.formFieldId = formFieldId;
+    // }
+    //
+    // public String getFormFieldId() {
+    // return formFieldId;
+    // }
+    // }
 
-        private String formFieldId;
-
-        private AgencyField(String formFieldId) {
-            this.formFieldId = formFieldId;
-        }
-
-        public String getFormFieldId() {
-            return formFieldId;
-        }
-    }
-
-    private class SearchAgencyFormItemClickHandler implements FormItemClickHandler {
-
-        private AgencyField agencyField;
-
-        public SearchAgencyFormItemClickHandler(AgencyField agencyField) {
-            this.agencyField = agencyField;
-        }
-
-        @Override
-        public void onFormItemClick(FormItemIconClickEvent event) {
-            final int AGENCY_FIRST_RESULT = 0;
-            final int AGENCY_MAX_RESULTS = 16;
-
-            searchAgencyWindow = new SearchExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
-
-                @Override
-                public void retrieveResultSet(int firstResult, int maxResults) {
-                    uiHandlers.retrieveAgencies(firstResult, maxResults, null);
-                }
-            });
-            uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
-            searchAgencyWindow.setSearchAction(new SearchPaginatedAction() {
-
-                @Override
-                public void retrieveResultSet(int firstResult, int maxResults, String code) {
-                    uiHandlers.retrieveAgencies(firstResult, maxResults, code);
-                }
-            });
-            searchAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                @Override
-                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                    ExternalItemDto selectedAgency = searchAgencyWindow.getSelectedExternalItem();
-                    ((SearchExternalViewTextItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItem(selectedAgency);
-                    searchAgencyWindow.destroy();
-                }
-            });
-        }
-    }
-    private class SearchMultiAgencyFormItemClickHandler implements FormItemClickHandler {
-
-        private AgencyField agencyField;
-
-        public SearchMultiAgencyFormItemClickHandler(AgencyField agencyField) {
-            this.agencyField = agencyField;
-        }
-
-        @Override
-        public void onFormItemClick(FormItemIconClickEvent event) {
-            final int AGENCY_FIRST_RESULT = 0;
-            final int AGENCY_MAX_RESULTS = 16;
-
-            searchMultiAgencyWindow = new SearchMultipleExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
-
-                @Override
-                public void retrieveResultSet(int firstResult, int maxResults) {
-                    uiHandlers.retrieveAgencies(firstResult, maxResults, null);
-                }
-            });
-
-            List<ExternalItemDto> selectedAgencies = ((SearchExternalListItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).getSelectedExternalItems();
-            searchMultiAgencyWindow.setSelectedExternalItems(selectedAgencies);
-
-            uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
-            searchMultiAgencyWindow.setSearchAction(new SearchPaginatedAction() {
-
-                @Override
-                public void retrieveResultSet(int firstResult, int maxResults, String code) {
-                    uiHandlers.retrieveAgencies(firstResult, maxResults, code);
-                }
-            });
-            searchMultiAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                @Override
-                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                    List<ExternalItemDto> selectedAgencies = searchMultiAgencyWindow.getSelectedExternalItems();
-                    ((SearchExternalListItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItems(selectedAgencies);
-                    searchMultiAgencyWindow.hide();
-                    searchMultiAgencyWindow.destroy();
-                }
-            });
-        }
-    }
+    // private class SearchAgencyFormItemClickHandler implements FormItemClickHandler {
+    //
+    // private AgencyField agencyField;
+    //
+    // public SearchAgencyFormItemClickHandler(AgencyField agencyField) {
+    // this.agencyField = agencyField;
+    // }
+    //
+    // @Override
+    // public void onFormItemClick(FormItemIconClickEvent event) {
+    // final int AGENCY_FIRST_RESULT = 0;
+    // final int AGENCY_MAX_RESULTS = 16;
+    //
+    // searchAgencyWindow = new SearchExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
+    //
+    // @Override
+    // public void retrieveResultSet(int firstResult, int maxResults) {
+    // uiHandlers.retrieveAgencies(firstResult, maxResults, null);
+    // }
+    // });
+    // uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
+    // searchAgencyWindow.setSearchAction(new SearchPaginatedAction() {
+    //
+    // @Override
+    // public void retrieveResultSet(int firstResult, int maxResults, String code) {
+    // uiHandlers.retrieveAgencies(firstResult, maxResults, code);
+    // }
+    // });
+    // searchAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+    //
+    // @Override
+    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+    // ExternalItemDto selectedAgency = searchAgencyWindow.getSelectedExternalItem();
+    // ((SearchExternalViewTextItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItem(selectedAgency);
+    // searchAgencyWindow.destroy();
+    // }
+    // });
+    // }
+    // }
+    //
+    // private class SearchMultiAgencyFormItemClickHandler implements FormItemClickHandler {
+    //
+    // private AgencyField agencyField;
+    //
+    // public SearchMultiAgencyFormItemClickHandler(AgencyField agencyField) {
+    // this.agencyField = agencyField;
+    // }
+    //
+    // @Override
+    // public void onFormItemClick(FormItemIconClickEvent event) {
+    // final int AGENCY_FIRST_RESULT = 0;
+    // final int AGENCY_MAX_RESULTS = 16;
+    //
+    // searchMultiAgencyWindow = new SearchMultipleExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
+    //
+    // @Override
+    // public void retrieveResultSet(int firstResult, int maxResults) {
+    // uiHandlers.retrieveAgencies(firstResult, maxResults, null);
+    // }
+    // });
+    //
+    // List<ExternalItemDto> selectedAgencies = ((SearchExternalListItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).getSelectedExternalItems();
+    // searchMultiAgencyWindow.setSelectedExternalItems(selectedAgencies);
+    //
+    // uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
+    // searchMultiAgencyWindow.setSearchAction(new SearchPaginatedAction() {
+    //
+    // @Override
+    // public void retrieveResultSet(int firstResult, int maxResults, String code) {
+    // uiHandlers.retrieveAgencies(firstResult, maxResults, code);
+    // }
+    // });
+    // searchMultiAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+    //
+    // @Override
+    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+    // List<ExternalItemDto> selectedAgencies = searchMultiAgencyWindow.getSelectedExternalItems();
+    // ((SearchExternalListItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItems(selectedAgencies);
+    // searchMultiAgencyWindow.hide();
+    // searchMultiAgencyWindow.destroy();
+    // }
+    // });
+    // }
+    // }
 }
