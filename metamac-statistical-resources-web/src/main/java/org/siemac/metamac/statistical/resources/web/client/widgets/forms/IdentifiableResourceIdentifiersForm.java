@@ -23,7 +23,7 @@ public class IdentifiableResourceIdentifiersForm extends GroupDynamicForm {
         setFields(identifier, uri, urn);
     }
 
-    public void setIdentifiableResource(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
+    public void setIdentifiableStatisticalResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
         setValue(IdentifiableResourceDS.CODE, identifiableStatisticalResourceDto.getCode());
         setValue(IdentifiableResourceDS.URI, identifiableStatisticalResourceDto.getUri());
         setValue(IdentifiableResourceDS.URN, identifiableStatisticalResourceDto.getUrn());

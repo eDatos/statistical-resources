@@ -290,7 +290,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void setPublicationViewMode(PublicationDto collectionDto) {
         // Identifiers form
-        identifiersForm.setNameableResource(collectionDto);
+        identifiersForm.setNameableStatisticalResourceDto(collectionDto);
 
         // // Version form
         // versionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -344,7 +344,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void setPublicationEditionMode(PublicationDto collectionDto) {
         // Identifiers form
-        identifiersEditionForm.setNameableResource(collectionDto);
+        identifiersEditionForm.setNameableStatisticalResourceDto(collectionDto);
 
         // // Version form
         // versionEditionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());

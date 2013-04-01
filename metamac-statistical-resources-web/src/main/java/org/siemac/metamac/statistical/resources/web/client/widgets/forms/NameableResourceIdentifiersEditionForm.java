@@ -28,8 +28,8 @@ public class NameableResourceIdentifiersEditionForm extends IdentifiableResource
         setFields(fields);
     }
 
-    public void setNameableResource(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
-        setIdentifiableResource(nameableStatisticalResourceDto);
+    public void setNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
+        setIdentifiableStatisticalResourceDto(nameableStatisticalResourceDto);
         setValue(NameableResourceDS.TITLE, RecordUtils.getInternationalStringRecord(nameableStatisticalResourceDto.getTitle()));
     }
 

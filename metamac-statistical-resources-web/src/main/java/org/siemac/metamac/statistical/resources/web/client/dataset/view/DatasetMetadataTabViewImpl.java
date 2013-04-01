@@ -337,7 +337,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     private void setDatasetViewMode(DatasetDto datasetDto) {
         // Identifiers
-        identifiersForm.setNameableResource(datasetDto);
+        identifiersForm.setNameableStatisticalResourceDto(datasetDto);
 
         // FIXME: add rest of metadata
         // versioningForm.setValue(DatasetDS.VERSION_LOGIC, datasetDto.getVersionLogic());
@@ -388,7 +388,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     private void setDatasetEditionMode(DatasetDto datasetDto) {
         // Identifiers form
-        identifiersEditionForm.setNameableResource(datasetDto);
+        identifiersEditionForm.setNameableStatisticalResourceDto(datasetDto);
 
         // FIXME: add more metadatas
         // // Version form
