@@ -147,8 +147,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
     @Override
     public void createPublication(PublicationDto publicationDto) {
-        // publicationDto.setOperation(operation);
-        dispatcher.execute(new SavePublicationAction(publicationDto), new WaitingAsyncCallback<SavePublicationResult>() {
+        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallback<SavePublicationResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

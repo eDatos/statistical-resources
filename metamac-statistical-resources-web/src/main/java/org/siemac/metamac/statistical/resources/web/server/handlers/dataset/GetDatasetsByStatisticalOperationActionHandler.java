@@ -39,6 +39,8 @@ public class GetDatasetsByStatisticalOperationActionHandler extends SecurityActi
             criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
             criteria.getPaginator().setCountTotalResults(true);
 
+            // FIXME SET THE OPERATION!!
+
             MetamacCriteriaResult<DatasetDto> result = statisticalResourcesServiceFacade.findDatasetsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetDatasetsByStatisticalOperationResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {

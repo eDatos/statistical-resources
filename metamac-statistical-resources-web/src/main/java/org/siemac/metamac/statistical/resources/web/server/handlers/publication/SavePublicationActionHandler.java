@@ -2,18 +2,22 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.publication
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
+import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
 public class SavePublicationActionHandler extends SecurityActionHandler<SavePublicationAction, SavePublicationResult> {
+
+    @Autowired
+    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     public SavePublicationActionHandler() {
         super(SavePublicationAction.class);
@@ -22,17 +26,15 @@ public class SavePublicationActionHandler extends SecurityActionHandler<SavePubl
     @Override
     public SavePublicationResult executeSecurityAction(SavePublicationAction action) throws ActionException {
 
-        // FIXME: invoke core
-
-        PublicationDto collectionToSave = action.getPublicationDto();
-        PublicationDto collectionSaved = null;
+        PublicationDto publicationToSave = action.getPublicationDto();
+        PublicationDto publicationSaved = null;
         try {
-            if (collectionToSave.getId() == null) {
-                collectionSaved = MockServices.createPublication(ServiceContextHolder.getCurrentServiceContext(), collectionToSave);
+            if (publicationToSave.getId() == null) {
+                publicationSaved = statisticalResourcesServiceFacade.createPublication(ServiceContextHolder.getCurrentServiceContext(), publicationToSave, action.getStatisticalOperationDto());
             } else {
-                collectionSaved = MockServices.updatePublication(ServiceContextHolder.getCurrentServiceContext(), collectionToSave);
+                publicationSaved = statisticalResourcesServiceFacade.updatePublication(ServiceContextHolder.getCurrentServiceContext(), publicationToSave);
             }
-            return new SavePublicationResult(collectionSaved);
+            return new SavePublicationResult(publicationSaved);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

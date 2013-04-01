@@ -1,8 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -25,11 +25,9 @@ public class GetPublicationActionHandler extends SecurityActionHandler<GetPublic
 
     @Override
     public GetPublicationResult executeSecurityAction(GetPublicationAction action) throws ActionException {
-
-        // FIXME INVOKE CORE
-
         try {
-            return new GetPublicationResult(MockServices.retrievePublication(ServiceContextHolder.getCurrentServiceContext(), action.getUrn()));
+            PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getUrn());
+            return new GetPublicationResult(publicationDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

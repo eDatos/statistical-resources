@@ -152,7 +152,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     @Override
     public void savePublication(PublicationDto publicationDto) {
-        dispatcher.execute(new SavePublicationAction(publicationDto), new WaitingAsyncCallback<SavePublicationResult>() {
+        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallback<SavePublicationResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
