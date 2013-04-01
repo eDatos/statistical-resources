@@ -58,7 +58,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaStructure = new Type<RevealContentHandler<?>>();
 
     @ProxyCodeSplit
-    @NameToken(NameTokens.collectionPage)
+    @NameToken(NameTokens.publicationPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface PublicationProxy extends Proxy<PublicationPresenter>, Place {
     }
@@ -91,12 +91,12 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        String collectionCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(collectionCode)) {
+        String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionCode);
-            retrievePublication(collectionUrn);
+            String publicationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
+            retrievePublication(publicationUrn);
             getView().showMetadata();
         } else {
             StatisticalResourcesWeb.showErrorPage();
@@ -136,15 +136,15 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
     @Override
     public void goToPublicationMetadata() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.collectionPage);
-        hierarchy.add(new PlaceRequest(NameTokens.collectionMetadataPage));
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.publicationPage);
+        hierarchy.add(new PlaceRequest(NameTokens.publicationMetadataPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 
     @Override
     public void goToPublicationStructure() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.collectionPage);
-        hierarchy.add(new PlaceRequest(NameTokens.collectionStructurePage));
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.publicationPage);
+        hierarchy.add(new PlaceRequest(NameTokens.publicationStructurePage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 

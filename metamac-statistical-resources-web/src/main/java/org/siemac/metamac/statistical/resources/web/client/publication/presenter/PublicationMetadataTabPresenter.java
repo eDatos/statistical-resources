@@ -65,7 +65,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @ProxyCodeSplit
-    @NameToken(NameTokens.collectionMetadataPage)
+    @NameToken(NameTokens.publicationMetadataPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface PublicationMetadataTabProxy extends Proxy<PublicationMetadataTabPresenter>, Place {
     }
@@ -92,12 +92,12 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        String collectionCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(collectionCode)) {
+        String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, collectionCode);
-            retrievePublication(collectionUrn);
+            String publicationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
+            retrievePublication(publicationUrn);
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -151,8 +151,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @Override
-    public void savePublication(PublicationDto collectionDto) {
-        dispatcher.execute(new SavePublicationAction(collectionDto), new WaitingAsyncCallback<SavePublicationResult>() {
+    public void savePublication(PublicationDto publicationDto) {
+        dispatcher.execute(new SavePublicationAction(publicationDto), new WaitingAsyncCallback<SavePublicationResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

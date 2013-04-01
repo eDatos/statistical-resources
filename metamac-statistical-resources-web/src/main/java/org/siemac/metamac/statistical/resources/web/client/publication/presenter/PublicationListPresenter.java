@@ -72,7 +72,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
     public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
 
     @ProxyCodeSplit
-    @NameToken(NameTokens.collectionsListPage)
+    @NameToken(NameTokens.publicationsListPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface PublicationListProxy extends Proxy<PublicationListPresenter>, Place {
     }
@@ -89,8 +89,8 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
     }
 
     @Inject
-    public PublicationListPresenter(EventBus eventBus, PublicationListView collectionListView, PublicationListProxy collectionListProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, collectionListView, collectionListProxy);
+    public PublicationListPresenter(EventBus eventBus, PublicationListView publicationListView, PublicationListProxy publicationListProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
+        super(eventBus, publicationListView, publicationListProxy);
         this.placeManager = placeManager;
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
@@ -199,7 +199,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
     @Override
     public void goToPublication(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.collectionPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
         }
     }
 }

@@ -49,7 +49,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
     private VLayout                   panel;
 
     private SearchSectionStack        searchSectionStack;
-    private PaginatedCheckListGrid    collectionListGrid;
+    private PaginatedCheckListGrid    publicationListGrid;
 
     private ToolStripButton           newPublicationButton;
     private ToolStripButton           deletePublicationButton;
@@ -122,22 +122,22 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
         // Publication list
 
-        collectionListGrid = new PaginatedCheckListGrid(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS, new PaginatedAction() {
+        publicationListGrid = new PaginatedCheckListGrid(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 uiHandlers.retrievePublications(firstResult, maxResults, null);
             }
         });
-        collectionListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS);
-        collectionListGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
-        collectionListGrid.getListGrid().setDataSource(new PublicationDS());
-        collectionListGrid.getListGrid().setUseAllDataSourceFields(false);
-        collectionListGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+        publicationListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS);
+        publicationListGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        publicationListGrid.getListGrid().setDataSource(new PublicationDS());
+        publicationListGrid.getListGrid().setUseAllDataSourceFields(false);
+        publicationListGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
-                if (collectionListGrid.getListGrid().getSelectedRecords().length > 0) {
+                if (publicationListGrid.getListGrid().getSelectedRecords().length > 0) {
                     // Show delete button
                     showListGridDeleteButton();
                 } else {
@@ -146,7 +146,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
             }
         });
 
-        collectionListGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+        publicationListGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
@@ -161,11 +161,11 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(PublicationDS.TITLE, getConstants().collectionTitle());
         ListGridField status = new ListGridField(PublicationDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
-        collectionListGrid.getListGrid().setFields(fieldCode, fieldName, status);
+        publicationListGrid.getListGrid().setFields(fieldCode, fieldName, status);
 
         panel.addMember(toolStrip);
         panel.addMember(searchSectionStack);
-        panel.addMember(collectionListGrid);
+        panel.addMember(publicationListGrid);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
         for (PublicationDto scheme : collectionDtos) {
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
-        collectionListGrid.getListGrid().setData(records);
+        publicationListGrid.getListGrid().setData(records);
     }
 
     @Override
@@ -217,7 +217,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
     private List<String> getUrnsFromSelectedPublications() {
         List<String> urns = new ArrayList<String>();
-        for (ListGridRecord record : collectionListGrid.getListGrid().getSelectedRecords()) {
+        for (ListGridRecord record : publicationListGrid.getListGrid().getSelectedRecords()) {
             PublicationRecord collectionRecord = (PublicationRecord) record;
             urns.add(collectionRecord.getUrn());
         }

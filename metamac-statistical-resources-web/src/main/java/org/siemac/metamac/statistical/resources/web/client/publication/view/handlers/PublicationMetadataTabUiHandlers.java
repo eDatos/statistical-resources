@@ -9,7 +9,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 public interface PublicationMetadataTabUiHandlers extends UiHandlers {
 
     void retrieveAgencies(int firstResult, int maxResults, String queryText);
-    void savePublication(PublicationDto collectionDto);
+    void savePublication(PublicationDto publicationDto);
 
     // LIFECYCLE
 

@@ -8,7 +8,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class PublicationRecord extends ListGridRecord {
 
-    public PublicationRecord(Long id, String identifier, String name, String description, String status, String versionLogic, String urn, PublicationDto collectionDto) {
+    public PublicationRecord(Long id, String identifier, String name, String description, String status, String versionLogic, String urn, PublicationDto publicationDto) {
         setId(id);
         setIdentifier(identifier);
         setName(name);
@@ -16,7 +16,7 @@ public class PublicationRecord extends ListGridRecord {
         setProcStatus(status);
         setVersionLogic(versionLogic);
         setUrn(urn);
-        setPublicationDto(collectionDto);
+        setPublicationDto(publicationDto);
     }
 
     public void setId(Long id) {
@@ -47,8 +47,8 @@ public class PublicationRecord extends ListGridRecord {
         setAttribute(PublicationDS.URN, value);
     }
 
-    public void setPublicationDto(PublicationDto collectionDto) {
-        setAttribute(PublicationDS.DTO, collectionDto);
+    public void setPublicationDto(PublicationDto publicationDto) {
+        setAttribute(PublicationDS.DTO, publicationDto);
     }
 
     public Long getId() {

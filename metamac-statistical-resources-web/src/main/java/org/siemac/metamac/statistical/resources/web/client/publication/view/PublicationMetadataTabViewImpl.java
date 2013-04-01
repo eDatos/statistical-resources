@@ -63,7 +63,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     private SearchExternalItemWindow         searchAgencyWindow;
     private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private PublicationDto                   collectionDto;
+    private PublicationDto                   publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -116,28 +116,28 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToProductionValidation(collectionDto.getUrn(), collectionDto.getProcStatus());
+                uiHandlers.sendToProductionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToDiffusionValidation(collectionDto.getUrn(), collectionDto.getProcStatus());
+                uiHandlers.sendToDiffusionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.rejectValidation(collectionDto.getUrn(), collectionDto.getProcStatus());
+                uiHandlers.rejectValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.publish(collectionDto.getUrn(), collectionDto.getProcStatus());
+                uiHandlers.publish(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
@@ -150,7 +150,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (versionWindow.validateForm()) {
-                            uiHandlers.version(collectionDto.getUrn(), versionWindow.getSelectedVersion());
+                            uiHandlers.version(publicationDto.getUrn(), versionWindow.getSelectedVersion());
                             versionWindow.destroy();
                         }
                     }
@@ -416,7 +416,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     @Override
     public void setPublication(PublicationDto collectionDto) {
-        this.collectionDto = collectionDto;
+        this.publicationDto = collectionDto;
 
         mainFormLayout.updatePublishSection(collectionDto.getProcStatus());
         mainFormLayout.setViewMode();
@@ -437,8 +437,8 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private PublicationDto getPublicationDto() {
         // Identifiers form
-        collectionDto.setCode(identifiersEditionForm.getValueAsString(PublicationDS.CODE));
-        collectionDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(PublicationDS.TITLE));
+        publicationDto.setCode(identifiersEditionForm.getValueAsString(PublicationDS.CODE));
+        publicationDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(PublicationDS.TITLE));
 
         // // Version form
         // collectionDto.setRationale(versionEditionForm.getValueAsString(PublicationDS.RATIONALE));
@@ -480,7 +480,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         // collectionDto.getContentMetadata().setDescription((InternationalStringDto) contentMetadataEditionForm.getValue(PublicationDS.DESCRIPTION));
         // collectionDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(PublicationDS.NEXT_UPDATE_DATE));
 
-        return collectionDto;
+        return publicationDto;
     }
 
     @Override

@@ -43,12 +43,11 @@ public interface StatisticalResourcesWebGinjector extends Ginjector {
     AsyncProvider<DatasetPresenter> getDatasetPresenter();
     AsyncProvider<DatasetMetadataTabPresenter> getDatasetMetadataTabPresenter();
     AsyncProvider<DatasetDatasourcesTabPresenter> getDatasetDatasourcesTabPresenter();
-    AsyncProvider<PublicationListPresenter> getCollectionListPresenter();
-    AsyncProvider<PublicationPresenter> getCollectionPresenter();
-    AsyncProvider<PublicationMetadataTabPresenter> getCollectionMetadataTabPresenter();
-    AsyncProvider<PublicationStructureTabPresenter> getCollectionStructureTabPresenter();
+    AsyncProvider<PublicationListPresenter> getPublicationListPresenter();
+    AsyncProvider<PublicationPresenter> getPublicationPresenter();
+    AsyncProvider<PublicationMetadataTabPresenter> getPublicationMetadataTabPresenter();
+    AsyncProvider<PublicationStructureTabPresenter> getPublicationStructureTabPresenter();
 
     AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();
     AsyncProvider<UnauthorizedPagePresenter> getUnauthorizedPagePresenter();
-
 }

@@ -104,5 +104,4 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
     public void setUiHandlers(PublicationPresenter uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-
 }
