@@ -16,4 +16,8 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     public static final String LAST_UPDATE          = "sr-last-up";
     public static final String CONFORMS_TO          = "sr-conf";
     public static final String CONFORMS_TO_INTERNAL = "sr-conf-int";
+
+    // CLASS DESCRIPTORS
+    public static final String TYPE                 = "sr-type";
+    public static final String FORMAT               = "sr-format";
 }
