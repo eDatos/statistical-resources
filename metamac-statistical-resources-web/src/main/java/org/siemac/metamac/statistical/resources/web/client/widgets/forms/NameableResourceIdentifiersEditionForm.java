@@ -8,8 +8,6 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.NameableReso
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 
-import com.smartgwt.client.widgets.form.fields.FormItem;
-
 public class NameableResourceIdentifiersEditionForm extends IdentifiableResourceIdentifiersEditionForm {
 
     public NameableResourceIdentifiersEditionForm() {
@@ -17,10 +15,7 @@ public class NameableResourceIdentifiersEditionForm extends IdentifiableResource
         MultiLanguageTextItem title = new MultiLanguageTextItem(NameableResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         title.setRequired(true);
 
-        FormItem[] fields = new FormItem[getFields().length + 1];
-        System.arraycopy(getFields(), 0, fields, 0, getFields().length);
-        fields[fields.length - 1] = title;
-        setFields(fields);
+        addFields(title);
     }
 
     public void setNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
