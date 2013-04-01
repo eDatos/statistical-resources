@@ -13,6 +13,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Nameabl
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -25,21 +27,23 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends ViewImpl implements PublicationMetadataTabView {
 
-    private PublicationMetadataTabUiHandlers                 uiHandlers;
-    private VLayout                                          panel;
+    private PublicationMetadataTabUiHandlers                    uiHandlers;
+    private VLayout                                             panel;
 
-    private PublicationMainFormLayout                        mainFormLayout;
+    private PublicationMainFormLayout                           mainFormLayout;
 
-    private NameableResourceIdentifiersForm                  identifiersForm;
-    private StatisticalResourceContentDescriptorsForm        contentDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                   lifeCycleForm;
+    private NameableResourceIdentifiersForm                     identifiersForm;
+    private StatisticalResourceContentDescriptorsForm           contentDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                      lifeCycleForm;
+    private StatisticalResourceProductionDescriptorsForm        productionDescriptorsForm;
     // private GroupDynamicForm versionForm;
     // private GroupDynamicForm lifeCycleForm;
     // private GroupDynamicForm contentMetadataForm;
 
-    private NameableResourceIdentifiersEditionForm           identifiersEditionForm;
-    private StatisticalResourceContentDescriptorsEditionForm contentDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                   lifeCycleEditionForm;
+    private NameableResourceIdentifiersEditionForm              identifiersEditionForm;
+    private StatisticalResourceContentDescriptorsEditionForm    contentDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                      lifeCycleEditionForm;
+    private StatisticalResourceProductionDescriptorsEditionForm productionDescriptorsEditionForm;
     // private GroupDynamicForm versionEditionForm;
     // private GroupDynamicForm lifeCycleEditionForm;
     // private GroupDynamicForm contentMetadataEditionForm;
@@ -47,7 +51,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private PublicationDto                                   publicationDto;
+    private PublicationDto                                      publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -78,6 +82,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
                 lifeCycleForm.setTranslationsShowed(translationsShowed);
                 lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
 
+                productionDescriptorsForm.setTranslationsShowed(translationsShowed);
+                productionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
                 // versionForm.setTranslationsShowed(translationsShowed);
                 // versionEditionForm.setTranslationsShowed(translationsShowed);
                 //
@@ -95,7 +102,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
             @Override
             public void onClick(ClickEvent event) {
-                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false)) {
+                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)) {
                     uiHandlers.savePublication(getPublicationDto());
                 }
             }
@@ -155,6 +162,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         // Content descriptors form
         contentDescriptorsForm = new StatisticalResourceContentDescriptorsForm();
 
+        // Production descriptors
+        productionDescriptorsForm = new StatisticalResourceProductionDescriptorsForm();
+
         // Life cycle
         lifeCycleForm = new LifeCycleResourceLifeCycleForm();
 
@@ -209,6 +219,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         mainFormLayout.addViewCanvas(identifiersForm);
         mainFormLayout.addViewCanvas(contentDescriptorsForm);
+        mainFormLayout.addViewCanvas(productionDescriptorsForm);
         mainFormLayout.addViewCanvas(lifeCycleForm);
         // mainFormLayout.addViewCanvas(versionForm);
         // mainFormLayout.addViewCanvas(lifeCycleForm);
@@ -221,6 +232,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Content descriptors form
         contentDescriptorsEditionForm = new StatisticalResourceContentDescriptorsEditionForm();
+
+        // Production descriptors
+        productionDescriptorsEditionForm = new StatisticalResourceProductionDescriptorsEditionForm();
 
         // Life cycle
         lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
@@ -276,6 +290,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
         mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
+        mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
         mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
         // mainFormLayout.addEditionCanvas(versionEditionForm);
         // mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
@@ -307,6 +322,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Life cycle
         lifeCycleForm.setLifeCycleStatisticalResourceDto(publicationDto);
+
+        // Production descriptors
+        productionDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // // Version form
         // versionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -367,6 +385,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
+
+        // Production descriptors
+        productionDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // // Version form
         // versionEditionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -437,11 +458,14 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     }
 
     private PublicationDto getPublicationDto() {
-        // Identifiers form
+        // Identifiers
         publicationDto = (PublicationDto) identifiersEditionForm.getNameableStatisticalResourceDto(publicationDto);
 
-        // Content descriptors form
+        // Content descriptors
         publicationDto = (PublicationDto) contentDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Production descriptors
+        publicationDto = (PublicationDto) productionDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // // Version form
         // collectionDto.setRationale(versionEditionForm.getValueAsString(PublicationDS.RATIONALE));
