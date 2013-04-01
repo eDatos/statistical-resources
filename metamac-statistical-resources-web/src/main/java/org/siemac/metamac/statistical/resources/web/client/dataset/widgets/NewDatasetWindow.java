@@ -28,11 +28,11 @@ public class NewDatasetWindow extends CustomWindow {
         super(title);
         setAutoSize(true);
 
-        RequiredTextItem identifierItem = new RequiredTextItem(DatasetDS.CODE, getConstants().datasetIdentifier());
+        RequiredTextItem identifierItem = new RequiredTextItem(DatasetDS.CODE, getConstants().identifiableStatisticalResourceCode());
         identifierItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         identifierItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
-        RequiredTextItem nameItem = new RequiredTextItem(DatasetDS.TITLE, getConstants().datasetTitle());
+        RequiredTextItem nameItem = new RequiredTextItem(DatasetDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         nameItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
         CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().datasetCreate());
@@ -44,6 +44,7 @@ public class NewDatasetWindow extends CustomWindow {
         addItem(form);
         show();
     }
+
     public HasClickHandlers getSave() {
         return form.getItem(FIELD_SAVE);
     }
@@ -64,5 +65,4 @@ public class NewDatasetWindow extends CustomWindow {
     public void setUiHandlers(DatasetListUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-
 }

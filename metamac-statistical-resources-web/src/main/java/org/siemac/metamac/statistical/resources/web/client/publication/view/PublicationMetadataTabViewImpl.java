@@ -5,7 +5,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
@@ -14,9 +13,9 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.SearchExternalItemWindow;
 import org.siemac.metamac.web.common.client.widgets.SearchMultipleExternalItemWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -26,8 +25,6 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalListItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -45,25 +42,25 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends ViewImpl implements PublicationMetadataTabView {
 
-    private PublicationMetadataTabUiHandlers uiHandlers;
-    private VLayout                          panel;
+    private PublicationMetadataTabUiHandlers       uiHandlers;
+    private VLayout                                panel;
 
-    private PublicationMainFormLayout        mainFormLayout;
+    private PublicationMainFormLayout              mainFormLayout;
 
-    private GroupDynamicForm                 identifiersForm;
-    private GroupDynamicForm                 versionForm;
-    private GroupDynamicForm                 lifeCycleForm;
-    private GroupDynamicForm                 contentMetadataForm;
+    private NameableResourceIdentifiersForm        identifiersForm;
+    private GroupDynamicForm                       versionForm;
+    private GroupDynamicForm                       lifeCycleForm;
+    private GroupDynamicForm                       contentMetadataForm;
 
-    private GroupDynamicForm                 identifiersEditionForm;
-    private GroupDynamicForm                 versionEditionForm;
-    private GroupDynamicForm                 lifeCycleEditionForm;
-    private GroupDynamicForm                 contentMetadataEditionForm;
+    private NameableResourceIdentifiersEditionForm identifiersEditionForm;
+    private GroupDynamicForm                       versionEditionForm;
+    private GroupDynamicForm                       lifeCycleEditionForm;
+    private GroupDynamicForm                       contentMetadataEditionForm;
 
-    private SearchExternalItemWindow         searchAgencyWindow;
-    private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
+    private SearchExternalItemWindow               searchAgencyWindow;
+    private SearchMultipleExternalItemWindow       searchMultiAgencyWindow;
 
-    private PublicationDto                   publicationDto;
+    private PublicationDto                         publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -161,12 +158,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void createViewForm() {
         // Identifiers form
-        identifiersForm = new GroupDynamicForm(getConstants().collectionIdentifiers());
-        ViewTextItem identifier = new ViewTextItem(PublicationDS.CODE, getConstants().collectionIdentifier());
-        ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(PublicationDS.TITLE, getConstants().collectionTitle());
-        ViewTextItem uri = new ViewTextItem(PublicationDS.URI, getConstants().collectionUri());
-        ViewTextItem urn = new ViewTextItem(PublicationDS.URN, getConstants().collectionUrn());
-        identifiersForm.setFields(identifier, title, uri, urn);
+        identifiersForm = new NameableResourceIdentifiersForm();
 
         // Version form
         versionForm = new GroupDynamicForm(getConstants().versionableVersion());
@@ -223,14 +215,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     }
 
     private void createEditionForm() {
-        identifiersEditionForm = new GroupDynamicForm(getConstants().collectionIdentifiers());
-        RequiredTextItem identifier = new RequiredTextItem(PublicationDS.CODE, getConstants().collectionIdentifier());
-        identifier.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
-        MultiLanguageTextItem title = new MultiLanguageTextItem(PublicationDS.TITLE, getConstants().collectionTitle());
-        title.setRequired(true);
-        ViewTextItem uri = new ViewTextItem(PublicationDS.URI, getConstants().collectionUri());
-        ViewTextItem urn = new ViewTextItem(PublicationDS.URN, getConstants().collectionUrn());
-        identifiersEditionForm.setFields(identifier, title, uri, urn);
+        identifiersEditionForm = new NameableResourceIdentifiersEditionForm();
 
         // Version form
         versionEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
@@ -305,10 +290,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void setPublicationViewMode(PublicationDto collectionDto) {
         // Identifiers form
-        identifiersForm.setValue(PublicationDS.CODE, collectionDto.getCode());
-        identifiersForm.setValue(PublicationDS.TITLE, RecordUtils.getInternationalStringRecord(collectionDto.getTitle()));
-        identifiersForm.setValue(PublicationDS.URI, collectionDto.getUri());
-        identifiersForm.setValue(PublicationDS.URN, collectionDto.getUrn());
+        identifiersForm.setNameableResource(collectionDto);
 
         // // Version form
         // versionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -362,10 +344,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private void setPublicationEditionMode(PublicationDto collectionDto) {
         // Identifiers form
-        identifiersEditionForm.setValue(PublicationDS.CODE, collectionDto.getCode());
-        identifiersEditionForm.setValue(PublicationDS.TITLE, RecordUtils.getInternationalStringRecord(collectionDto.getTitle()));
-        identifiersEditionForm.setValue(PublicationDS.URI, collectionDto.getUri());
-        identifiersEditionForm.setValue(PublicationDS.URN, collectionDto.getUrn());
+        identifiersEditionForm.setNameableResource(collectionDto);
 
         // // Version form
         // versionEditionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -437,8 +416,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
     private PublicationDto getPublicationDto() {
         // Identifiers form
-        publicationDto.setCode(identifiersEditionForm.getValueAsString(PublicationDS.CODE));
-        publicationDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(PublicationDS.TITLE));
+        publicationDto = (PublicationDto) identifiersEditionForm.getNameableStatisticalResourceDto(publicationDto);
 
         // // Version form
         // collectionDto.setRationale(versionEditionForm.getValueAsString(PublicationDS.RATIONALE));

@@ -21,8 +21,8 @@ public class DatasetListGrid extends BaseCustomListGrid {
 
         this.setShowAllRecords(true);
 
-        ListGridField identifierDatasetField = new ListGridField(DatasetDS.CODE, getConstants().datasetIdentifier());
-        ListGridField titleDatasetField = new ListGridField(DatasetDS.TITLE, getConstants().datasetTitle());
+        ListGridField identifierDatasetField = new ListGridField(DatasetDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        ListGridField titleDatasetField = new ListGridField(DatasetDS.TITLE, getConstants().nameableStatisticalResourceTitle());
 
         // ToolTip
         identifierDatasetField.setShowHover(true);

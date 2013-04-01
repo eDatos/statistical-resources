@@ -47,9 +47,9 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
         operationsList.getListGrid().setDataSource(new OperationDS());
         operationsList.getListGrid().setUseAllDataSourceFields(false);
 
-        ListGridField fieldIdentifier = new ListGridField(OperationDS.IDENTIFIER, getConstants().datasetIdentifier());
+        ListGridField fieldIdentifier = new ListGridField(OperationDS.IDENTIFIER, getConstants().identifiableStatisticalResourceCode());
         fieldIdentifier.setAlign(Alignment.LEFT);
-        ListGridField fieldTitle = new ListGridField(OperationDS.TITLE, getConstants().datasetTitle());
+        ListGridField fieldTitle = new ListGridField(OperationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         operationsList.getListGrid().setFields(fieldIdentifier, fieldTitle);
 
         panel = new VLayout();

@@ -21,8 +21,8 @@ public class PublicationListGrid extends BaseCustomListGrid {
 
         this.setShowAllRecords(true);
 
-        ListGridField identifierField = new ListGridField(PublicationDS.CODE, getConstants().collectionIdentifier());
-        ListGridField titleField = new ListGridField(PublicationDS.TITLE, getConstants().collectionTitle());
+        ListGridField identifierField = new ListGridField(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        ListGridField titleField = new ListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
 
         // ToolTip
         identifierField.setShowHover(true);

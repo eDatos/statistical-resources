@@ -2,15 +2,10 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
@@ -18,11 +13,9 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
-import org.siemac.metamac.web.common.client.utils.DateUtils;
-import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.SearchExternalItemWindow;
 import org.siemac.metamac.web.common.client.widgets.SearchMultipleExternalItemWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -32,8 +25,6 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalListItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
@@ -50,26 +41,26 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetadataTabView {
 
-    private final int                        AGENCIES_MAX_RESULTS = 15;
+    private final int                              AGENCIES_MAX_RESULTS = 15;
 
-    private DatasetMetadataTabUiHandlers     uiHandlers;
-    private VLayout                          panel;
-    private DatasetMainFormLayout            mainFormLayout;
+    private DatasetMetadataTabUiHandlers           uiHandlers;
+    private VLayout                                panel;
+    private DatasetMainFormLayout                  mainFormLayout;
 
-    private GroupDynamicForm                 identifiersForm;
-    private GroupDynamicForm                 contentMetadataForm;
-    private GroupDynamicForm                 versioningForm;
-    private GroupDynamicForm                 lifeCycleForm;
+    private NameableResourceIdentifiersForm        identifiersForm;
+    private GroupDynamicForm                       contentMetadataForm;
+    private GroupDynamicForm                       versioningForm;
+    private GroupDynamicForm                       lifeCycleForm;
 
-    private GroupDynamicForm                 identifiersEditionForm;
-    private GroupDynamicForm                 contentMetadataEditionForm;
-    private GroupDynamicForm                 versioningEditionForm;
-    private GroupDynamicForm                 lifeCycleEditionForm;
+    private NameableResourceIdentifiersEditionForm identifiersEditionForm;
+    private GroupDynamicForm                       contentMetadataEditionForm;
+    private GroupDynamicForm                       versioningEditionForm;
+    private GroupDynamicForm                       lifeCycleEditionForm;
 
-    private SearchExternalItemWindow         searchAgencyWindow;
-    private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
+    private SearchExternalItemWindow               searchAgencyWindow;
+    private SearchMultipleExternalItemWindow       searchMultiAgencyWindow;
 
-    private DatasetDto                       datasetDto;
+    private DatasetDto                             datasetDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
@@ -198,12 +189,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     private void createViewForm() {
         // Identifiers Form
-        identifiersForm = new GroupDynamicForm(getConstants().datasetIdentifiers());
-        ViewTextItem identifier = new ViewTextItem(DatasetDS.CODE, getConstants().datasetIdentifier());
-        ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(DatasetDS.TITLE, getConstants().datasetTitle());
-        ViewTextItem uri = new ViewTextItem(DatasetDS.URI, getConstants().datasetUri());
-        ViewTextItem urn = new ViewTextItem(DatasetDS.URN, getConstants().datasetUrn());
-        identifiersForm.setFields(identifier, title, uri, urn);
+        identifiersForm = new NameableResourceIdentifiersForm();
 
         // version
         versioningForm = new GroupDynamicForm(getConstants().datasetVersioning());
@@ -262,14 +248,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     }
 
     private void createEditionForm() {
-        identifiersEditionForm = new GroupDynamicForm(getConstants().datasetIdentifiers());
-        RequiredTextItem identifier = new RequiredTextItem(DatasetDS.CODE, getConstants().datasetIdentifier());
-        identifier.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
-        MultiLanguageTextItem title = new MultiLanguageTextItem(DatasetDS.TITLE, getConstants().datasetTitle());
-        title.setRequired(true);
-        ViewTextItem uri = new ViewTextItem(DatasetDS.URI, getConstants().datasetUri());
-        ViewTextItem urn = new ViewTextItem(DatasetDS.URN, getConstants().datasetUrn());
-        identifiersEditionForm.setFields(identifier, title, uri, urn);
+        identifiersEditionForm = new NameableResourceIdentifiersEditionForm();
 
         // Version form
         versioningEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
@@ -358,10 +337,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     private void setDatasetViewMode(DatasetDto datasetDto) {
         // Identifiers
-        identifiersForm.setValue(DatasetDS.CODE, datasetDto.getCode());
-        identifiersForm.setValue(DatasetDS.URI, datasetDto.getUri());
-        identifiersForm.setValue(DatasetDS.URN, datasetDto.getUrn());
-        identifiersForm.setValue(DatasetDS.TITLE, RecordUtils.getInternationalStringRecord(datasetDto.getTitle()));
+        identifiersForm.setNameableResource(datasetDto);
 
         // FIXME: add rest of metadata
         // versioningForm.setValue(DatasetDS.VERSION_LOGIC, datasetDto.getVersionLogic());
@@ -412,10 +388,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     private void setDatasetEditionMode(DatasetDto datasetDto) {
         // Identifiers form
-        identifiersEditionForm.setValue(DatasetDS.CODE, datasetDto.getCode());
-        identifiersEditionForm.setValue(DatasetDS.TITLE, RecordUtils.getInternationalStringRecord(datasetDto.getTitle()));
-        identifiersEditionForm.setValue(DatasetDS.URI, datasetDto.getUri());
-        identifiersEditionForm.setValue(DatasetDS.URN, datasetDto.getUrn());
+        identifiersEditionForm.setNameableResource(datasetDto);
 
         // FIXME: add more metadatas
         // // Version form
@@ -478,8 +451,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     public DatasetDto getDatasetDto() {
         // Identifiers form
-        datasetDto.setCode(identifiersEditionForm.getValueAsString(DatasetDS.CODE));
-        datasetDto.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasetDS.TITLE));
+        datasetDto = (DatasetDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetDto);
 
         // FIXME: add metadata
 

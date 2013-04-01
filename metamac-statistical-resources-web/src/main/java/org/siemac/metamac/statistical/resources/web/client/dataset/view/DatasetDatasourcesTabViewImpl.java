@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
@@ -15,8 +14,6 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -130,9 +127,9 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             datasourcesList.getListGrid().setDataSource(new DatasourceDS());
             datasourcesList.getListGrid().setUseAllDataSourceFields(false);
 
-            ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().datasetIdentifier());
+            ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
             fieldCode.setAlign(Alignment.LEFT);
-            ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().datasetTitle());
+            ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
             datasourcesList.getListGrid().setFields(fieldCode, fieldName);
 
             // Panel conf

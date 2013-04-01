@@ -26,11 +26,11 @@ public class NewPublicationWindow extends CustomWindow {
         super(title);
         setAutoSize(true);
 
-        RequiredTextItem identifierItem = new RequiredTextItem(PublicationDS.CODE, getConstants().collectionIdentifier());
+        RequiredTextItem identifierItem = new RequiredTextItem(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
         identifierItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         identifierItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
-        RequiredTextItem nameItem = new RequiredTextItem(PublicationDS.TITLE, getConstants().collectionTitle());
+        RequiredTextItem nameItem = new RequiredTextItem(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         nameItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
         CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().collectionCreate());

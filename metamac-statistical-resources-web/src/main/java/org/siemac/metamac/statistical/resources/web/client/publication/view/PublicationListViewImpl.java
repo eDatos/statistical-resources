@@ -157,9 +157,9 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
             }
         });
 
-        ListGridField fieldCode = new ListGridField(PublicationDS.CODE, getConstants().collectionIdentifier());
+        ListGridField fieldCode = new ListGridField(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
         fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(PublicationDS.TITLE, getConstants().collectionTitle());
+        ListGridField fieldName = new ListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         ListGridField status = new ListGridField(PublicationDS.PROC_STATUS, getConstants().lifeCycleProcStatus());
         publicationListGrid.getListGrid().setFields(fieldCode, fieldName, status);
 

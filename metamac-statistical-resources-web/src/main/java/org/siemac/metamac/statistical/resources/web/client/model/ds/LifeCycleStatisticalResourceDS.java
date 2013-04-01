@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.model.ds;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 
+@Deprecated
 public class LifeCycleStatisticalResourceDS extends DataSource {
 
     // IDENTITY
