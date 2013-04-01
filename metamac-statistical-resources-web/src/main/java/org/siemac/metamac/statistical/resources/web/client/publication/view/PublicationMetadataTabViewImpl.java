@@ -9,6 +9,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.PublicationClassDescriptorsEditionForm;
@@ -39,6 +41,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     private StatisticalResourceProductionDescriptorsForm        productionDescriptorsForm;
     private PublicationClassDescriptorsForm                     classDescriptorsForm;
     private LifeCycleResourceLifeCycleForm                      lifeCycleForm;
+    private LifeCycleResourceVersionForm                        versionForm;
     // private GroupDynamicForm versionForm;
     // private GroupDynamicForm lifeCycleForm;
     // private GroupDynamicForm contentMetadataForm;
@@ -48,6 +51,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
     private StatisticalResourceProductionDescriptorsEditionForm productionDescriptorsEditionForm;
     private PublicationClassDescriptorsEditionForm              classDescriptorsEditionForm;
     private LifeCycleResourceLifeCycleForm                      lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                 versionEditionForm;
     // private GroupDynamicForm versionEditionForm;
     // private GroupDynamicForm lifeCycleEditionForm;
     // private GroupDynamicForm contentMetadataEditionForm;
@@ -92,6 +96,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
                 lifeCycleForm.setTranslationsShowed(translationsShowed);
                 lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
 
+                versionForm.setTranslationsShowed(translationsShowed);
+                versionEditionForm.setTranslationsShowed(translationsShowed);
+
                 // versionForm.setTranslationsShowed(translationsShowed);
                 // versionEditionForm.setTranslationsShowed(translationsShowed);
                 //
@@ -110,7 +117,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
             @Override
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
-                        && classDescriptorsEditionForm.validate(false)) {
+                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)) {
                     uiHandlers.savePublication(getPublicationDto());
                 }
             }
@@ -180,6 +187,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         // Life cycle
         lifeCycleForm = new LifeCycleResourceLifeCycleForm();
 
+        // Version
+        versionForm = new LifeCycleResourceVersionForm();
+
         // Version form
         // versionForm = new GroupDynamicForm(getConstants().versionableVersion());
         // ViewTextItem version = new ViewTextItem(PublicationDS.VERSION_LOGIC, getConstants().versionableVersion());
@@ -234,6 +244,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         mainFormLayout.addViewCanvas(productionDescriptorsForm);
         mainFormLayout.addViewCanvas(classDescriptorsForm);
         mainFormLayout.addViewCanvas(lifeCycleForm);
+        mainFormLayout.addViewCanvas(versionForm);
         // mainFormLayout.addViewCanvas(versionForm);
         // mainFormLayout.addViewCanvas(lifeCycleForm);
         // mainFormLayout.addViewCanvas(contentMetadataForm);
@@ -254,6 +265,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Life cycle
         lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
+
+        // Version
+        versionEditionForm = new LifeCycleResourceVersionEditionForm();
 
         // Version form
         // versionEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
@@ -309,6 +323,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
         mainFormLayout.addEditionCanvas(classDescriptorsEditionForm);
         mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
+        mainFormLayout.addEditionCanvas(versionEditionForm);
         // mainFormLayout.addEditionCanvas(versionEditionForm);
         // mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
         // mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
@@ -345,6 +360,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Production descriptors
         productionDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Version
+        versionForm.setLifeCycleStatisticalResourceDto(publicationDto);
 
         // // Version form
         // versionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -411,6 +429,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
+
+        // Version
+        versionEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
 
         // // Version form
         // versionEditionForm.setValue(PublicationDS.VERSION_LOGIC, collectionDto.getVersionLogic());
@@ -492,6 +513,9 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
         // Class descriptors
         publicationDto = classDescriptorsEditionForm.getPublicationDto(publicationDto);
+
+        // Version
+        publicationDto = (PublicationDto) versionEditionForm.getLifeCycleStatisticalResourceDto(publicationDto);
 
         // // Version form
         // collectionDto.setRationale(versionEditionForm.getValueAsString(PublicationDS.RATIONALE));
