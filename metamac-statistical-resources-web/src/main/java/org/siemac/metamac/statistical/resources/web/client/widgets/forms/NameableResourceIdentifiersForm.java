@@ -12,11 +12,6 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 public class NameableResourceIdentifiersForm extends IdentifiableResourceIdentifiersForm {
 
     public NameableResourceIdentifiersForm() {
-        this(getConstants().formIdentifiers());
-    }
-
-    public NameableResourceIdentifiersForm(String groupTitle) {
-        super(groupTitle);
 
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(NameableResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
 

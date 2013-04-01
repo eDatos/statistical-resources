@@ -10,11 +10,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 public class IdentifiableResourceIdentifiersForm extends GroupDynamicForm {
 
     public IdentifiableResourceIdentifiersForm() {
-        this(getConstants().formIdentifiers());
-    }
-
-    public IdentifiableResourceIdentifiersForm(String groupTitle) {
-        super(groupTitle);
+        super(getConstants().formIdentifiers());
 
         ViewTextItem identifier = new ViewTextItem(IdentifiableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
         ViewTextItem uri = new ViewTextItem(IdentifiableResourceDS.URI, getConstants().identifiableStatisticalResourceURI());

@@ -12,11 +12,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 public class IdentifiableResourceIdentifiersEditionForm extends GroupDynamicForm {
 
     public IdentifiableResourceIdentifiersEditionForm() {
-        this(getConstants().formIdentifiers());
-    }
-
-    public IdentifiableResourceIdentifiersEditionForm(String groupTitle) {
-        super(groupTitle);
+        super(getConstants().formIdentifiers());
 
         RequiredSelectItem identifier = new RequiredSelectItem(IdentifiableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
         identifier.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
