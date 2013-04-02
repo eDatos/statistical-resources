@@ -2,7 +2,10 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.PublicationDS;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
@@ -48,13 +51,37 @@ public class NewPublicationWindow extends CustomWindow {
     }
 
     public PublicationDto getNewPublicationDto() {
-        PublicationDto collectionDto = new PublicationDto();
-        collectionDto.setCode(form.getValueAsString(PublicationDS.CODE));
-        collectionDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(PublicationDS.TITLE)));
-        return collectionDto;
+        PublicationDto publicationDto = new PublicationDto();
+        publicationDto.setCode(form.getValueAsString(PublicationDS.CODE));
+        publicationDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(PublicationDS.TITLE)));
+
+        // FIXME Remove this mocks!! Languages and maintainer should be read from DATA
+        publicationDto.setLanguage(mockLanguage("es", "Español"));
+        publicationDto.getLanguages().add(mockLanguage("es", "Español"));
+        publicationDto.setMaintainer(mockMaintainer("es", "ISTAC"));
+
+        return publicationDto;
     }
 
     public boolean validateForm() {
         return form.validate();
+    }
+
+    private ExternalItemDto mockMaintainer(String locale, String label) {
+        InternationalStringDto title = mockInternationalString(locale, label);
+        return new ExternalItemDto("MAINTAINER-ISTAC", "FAKE-URI", "FAKE-URN", TypeExternalArtefactsEnum.AGENCY, title);
+    }
+
+    private ExternalItemDto mockLanguage(String locale, String label) {
+        return new ExternalItemDto("LANG_ES", "CODE-URI", "FAKE-URN", TypeExternalArtefactsEnum.CODE, mockInternationalString(locale, label));
+    }
+
+    private InternationalStringDto mockInternationalString(String locale, String label) {
+        InternationalStringDto title = new InternationalStringDto();
+        LocalisedStringDto localised = new LocalisedStringDto();
+        localised.setLabel(label);
+        localised.setLocale(locale);
+        title.addText(localised);
+        return title;
     }
 }
