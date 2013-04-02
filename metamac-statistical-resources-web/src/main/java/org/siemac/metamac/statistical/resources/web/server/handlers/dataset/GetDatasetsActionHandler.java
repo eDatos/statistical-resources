@@ -1,15 +1,15 @@
-package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
+package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -19,17 +19,17 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetPublicationsActionHandler extends SecurityActionHandler<GetPublicationsAction, GetPublicationsResult> {
+public class GetDatasetsActionHandler extends SecurityActionHandler<GetDatasetsAction, GetDatasetsResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
-    public GetPublicationsActionHandler() {
-        super(GetPublicationsAction.class);
+    public GetDatasetsActionHandler() {
+        super(GetDatasetsAction.class);
     }
 
     @Override
-    public GetPublicationsResult executeSecurityAction(GetPublicationsAction action) throws ActionException {
+    public GetDatasetsResult executeSecurityAction(GetDatasetsAction action) throws ActionException {
 
         MetamacCriteria criteria = new MetamacCriteria();
 
@@ -37,7 +37,7 @@ public class GetPublicationsActionHandler extends SecurityActionHandler<GetPubli
 
         // Criteria
         MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
-        restriction.getRestrictions().add(MetamacWebCriteriaUtils.getPublicationCriteriaRestriction(action.getCriteria()));
+        restriction.getRestrictions().add(MetamacWebCriteriaUtils.getDatasetCriteriaRestriction(action.getCriteria()));
         criteria.setRestriction(restriction);
 
         // Pagination
@@ -47,8 +47,8 @@ public class GetPublicationsActionHandler extends SecurityActionHandler<GetPubli
         criteria.getPaginator().setCountTotalResults(true);
 
         try {
-            MetamacCriteriaResult<PublicationDto> result = statisticalResourcesServiceFacade.findPublicationByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
-            return new GetPublicationsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
+            MetamacCriteriaResult<DatasetDto> result = statisticalResourcesServiceFacade.findDatasetsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            return new GetDatasetsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

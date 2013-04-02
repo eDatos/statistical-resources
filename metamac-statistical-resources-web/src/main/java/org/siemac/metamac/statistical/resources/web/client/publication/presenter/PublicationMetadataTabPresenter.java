@@ -18,10 +18,12 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
@@ -62,6 +64,9 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
         void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result);
         void setPublication(PublicationDto collectionDto);
+
+        void setPublicationsForReplaces(GetPublicationsResult result);
+        void setPublicationsForIsReplacedBy(GetPublicationsResult result);
     }
 
     @ProxyCodeSplit
@@ -249,5 +254,17 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
                 getView().setPublication(result.getPublicationDto());
             }
         });
+    }
+
+    @Override
+    public void retrievePublicationsForReplaces(int firstResult, int maxResults, PublicationWebCriteria criteria) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, PublicationWebCriteria criteria) {
+        // TODO Auto-generated method stub
+
     }
 }

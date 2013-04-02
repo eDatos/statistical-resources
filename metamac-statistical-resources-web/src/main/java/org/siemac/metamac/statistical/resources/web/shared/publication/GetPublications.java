@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.publication;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -12,23 +13,20 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetPublications {
 
     @In(1)
-    String               operationUrn;
+    int                    firstResult;
 
     @In(2)
-    int                  firstResult;
+    int                    maxResults;
 
     @In(3)
-    int                  maxResults;
-
-    @In(4)
-    String               publication;
+    PublicationWebCriteria criteria;
 
     @Out(1)
-    List<PublicationDto> publicationList;
+    List<PublicationDto>   publicationList;
 
     @Out(2)
-    Integer              firstResultOut;
+    Integer                firstResultOut;
 
     @Out(3)
-    Integer              totalResults;
+    Integer                totalResults;
 }

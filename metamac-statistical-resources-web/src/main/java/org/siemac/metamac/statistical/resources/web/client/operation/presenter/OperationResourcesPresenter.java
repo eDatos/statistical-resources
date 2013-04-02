@@ -21,8 +21,10 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
@@ -127,22 +129,30 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     }
 
     private void retrieveResourcesByStatisticalOperation(String urn) {
-        // DataSets
-        dispatcher.execute(new GetDatasetsByStatisticalOperationAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS),
-                new WaitingAsyncCallback<GetDatasetsByStatisticalOperationResult>() {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
-                    }
-                    @Override
-                    public void onWaitSuccess(GetDatasetsByStatisticalOperationResult result) {
-                        getView().setDatasets(result.getDatasetsList());
-                    }
-                });
+        // DATASETS
 
-        // Publications
-        dispatcher.execute(new GetPublicationsAction(urn, RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, null), new WaitingAsyncCallback<GetPublicationsResult>() {
+        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria();
+        datasetWebCriteria.setStatisticalOperationUrn(urn);
+
+        dispatcher.execute(new GetDatasetsAction(RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetDatasetsResult result) {
+                getView().setDatasets(result.getDatasetsList());
+            }
+        });
+
+        // PUBLICATIONS
+
+        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
+        publicationWebCriteria.setStatisticalOperationUrn(urn);
+
+        dispatcher.execute(new GetPublicationsAction(RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

@@ -3,29 +3,30 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetDatasetsByStatisticalOperation {
+public class GetDatasets {
 
     @In(1)
-    String           operationUrn;
+    int                firstResult;
 
     @In(2)
-    int              firstResult;
+    int                maxResults;
 
     @In(3)
-    int              maxResults;
+    DatasetWebCriteria criteria;
 
     @Out(1)
-    List<DatasetDto> datasetsList;
+    List<DatasetDto>   datasetsList;
 
     @Out(2)
-    Integer          pageNumber;
+    Integer            pageNumber;
 
     @Out(3)
-    Integer          totalResults;
+    Integer            totalResults;
 }

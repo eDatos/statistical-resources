@@ -17,10 +17,11 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
@@ -78,7 +79,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     public interface DatasetListView extends View, HasUiHandlers<DatasetListUiHandlers> {
 
-        void setDatasetPaginatedList(String operationUrn, GetDatasetsByStatisticalOperationResult datasetsPaginatedList);
+        void setDatasetPaginatedList(String operationUrn, GetDatasetsResult datasetsPaginatedList);
         void goToDatasetListLastPageAfterCreate();
     }
 
@@ -133,7 +134,9 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     @Override
     public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
         final String statisticalOperationUrn = operationUrn;
-        dispatcher.execute(new GetDatasetsByStatisticalOperationAction(operationUrn, firstResult, maxResults), new WaitingAsyncCallback<GetDatasetsByStatisticalOperationResult>() {
+        DatasetWebCriteria criteria = new DatasetWebCriteria();
+        criteria.setStatisticalOperationUrn(statisticalOperationUrn);
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -141,11 +144,10 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
             }
 
             @Override
-            public void onWaitSuccess(GetDatasetsByStatisticalOperationResult result) {
+            public void onWaitSuccess(GetDatasetsResult result) {
                 getView().setDatasetPaginatedList(statisticalOperationUrn, result);
             }
         });
-
     }
 
     @Override

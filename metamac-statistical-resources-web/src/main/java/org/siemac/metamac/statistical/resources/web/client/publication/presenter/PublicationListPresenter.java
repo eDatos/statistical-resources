@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
@@ -131,8 +132,12 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
         retrievePublications(operation != null ? operation.getUrn() : null, firstResult, maxResults, collection);
     }
 
-    private void retrievePublications(String operationUrn, int firstResult, int maxResults, String collection) {
-        dispatcher.execute(new GetPublicationsAction(operationUrn, firstResult, maxResults, collection), new WaitingAsyncCallback<GetPublicationsResult>() {
+    private void retrievePublications(String operationUrn, int firstResult, int maxResults, String criteria) {
+
+        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria(criteria);
+        publicationWebCriteria.setStatisticalOperationUrn(operationUrn);
+
+        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
