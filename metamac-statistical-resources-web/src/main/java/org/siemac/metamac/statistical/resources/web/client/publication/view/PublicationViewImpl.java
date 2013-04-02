@@ -72,6 +72,7 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
 
     @Override
     public void setPublication(PublicationDto collectionDto) {
+        // TODO Update the title label when the title is changed!!
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
         titleLabel.show();
     }

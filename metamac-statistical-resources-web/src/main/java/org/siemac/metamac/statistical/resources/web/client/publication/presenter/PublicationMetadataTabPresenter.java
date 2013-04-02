@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisti
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
@@ -58,7 +59,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     private DispatchAsync   dispatcher;
     private PlaceManager    placeManager;
 
-    private ExternalItemDto operation;    ;
+    private ExternalItemDto operation;
 
     public interface PublicationMetadataTabView extends View, HasUiHandlers<PublicationMetadataTabUiHandlers> {
 
@@ -258,13 +259,39 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     @Override
     public void retrievePublicationsForReplaces(int firstResult, int maxResults, PublicationWebCriteria criteria) {
-        // TODO Auto-generated method stub
 
+        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
+        // TODO Which is the condition to find the publications to fill REPLACES?
+
+        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetPublicationsResult result) {
+                getView().setPublicationsForReplaces(result);
+            }
+        });
     }
 
     @Override
     public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, PublicationWebCriteria criteria) {
-        // TODO Auto-generated method stub
 
+        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
+        // TODO Which is the condition to find the publications to fill IS_REPLACED_BY?
+
+        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetPublicationsResult result) {
+                getView().setPublicationsForIsReplacedBy(result);
+            }
+        });
     }
 }

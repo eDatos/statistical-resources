@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -76,6 +77,11 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         createEditionForm();
 
         panel.addMember(mainFormLayout);
+    }
+
+    @Override
+    public Widget asWidget() {
+        return panel;
     }
 
     private void bindMainFormLayoutEvents() {
@@ -383,8 +389,15 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     }
 
     @Override
-    public Widget asWidget() {
-        return panel;
+    public void setPublicationsForReplaces(GetPublicationsResult result) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setPublicationsForIsReplacedBy(GetPublicationsResult result) {
+        // TODO Auto-generated method stub
+
     }
 
     // private enum AgencyField {
