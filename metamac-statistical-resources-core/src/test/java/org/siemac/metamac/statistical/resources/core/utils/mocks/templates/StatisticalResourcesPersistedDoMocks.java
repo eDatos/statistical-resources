@@ -2,9 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
@@ -206,6 +204,4 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         lifeCycleResource.setTitle(mockInternationalString());
         lifeCycleResource.setDescription(mockInternationalString());
     }
-    
-    
 }
