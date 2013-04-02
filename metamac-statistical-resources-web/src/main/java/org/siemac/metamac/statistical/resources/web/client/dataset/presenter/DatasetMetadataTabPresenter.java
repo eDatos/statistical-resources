@@ -149,7 +149,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
     @Override
     public void saveDataset(DatasetDto datasetDto) {
-        dispatcher.execute(new SaveDatasetAction(datasetDto), new WaitingAsyncCallback<SaveDatasetResult>() {
+        dispatcher.execute(new SaveDatasetAction(datasetDto, datasetDto.getStatisticalOperation().getCode()), new WaitingAsyncCallback<SaveDatasetResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

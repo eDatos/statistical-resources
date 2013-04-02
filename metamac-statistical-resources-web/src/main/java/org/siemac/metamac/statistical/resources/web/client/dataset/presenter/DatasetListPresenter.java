@@ -150,8 +150,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     @Override
     public void createDataset(DatasetDto datasetDto) {
-        datasetDto.setStatisticalOperation(operation);
-        dispatcher.execute(new SaveDatasetAction(datasetDto), new WaitingAsyncCallback<SaveDatasetResult>() {
+        dispatcher.execute(new SaveDatasetAction(datasetDto, operation.getCode()), new WaitingAsyncCallback<SaveDatasetResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

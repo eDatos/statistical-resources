@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -15,6 +17,8 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
@@ -151,8 +155,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     public void saveDatasource(DatasourceDto datasourceDto) {
-        datasourceDto.setDatasetVersionUrn(dataset.getUrn());
-        dispatcher.execute(new SaveDatasourceAction(datasourceDto), new WaitingAsyncCallback<SaveDatasourceResult>() {
+        dispatcher.execute(new SaveDatasourceAction(dataset.getUrn(),datasourceDto), new WaitingAsyncCallback<SaveDatasourceResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -164,6 +167,24 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
                 retrieveDatasourcesByDataset(dataset.getUrn(), DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
             }
         });
+    }
+    
+    @Override
+    public void deleteDatasources(List<String> datasourcesUrns) {
+        dispatcher.execute(new DeleteDatasourceListAction(datasourcesUrns), new WaitingAsyncCallback<DeleteDatasourceListResult>() {
+            
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasourcesErrorDelete()), MessageTypeEnum.ERROR);
+            }
+            
+            @Override
+            public void onWaitSuccess(DeleteDatasourceListResult result) {
+                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getMessageList(getMessages().datasourcesDeleted()), MessageTypeEnum.SUCCESS);
+                retrieveDatasourcesByDataset(dataset.getUrn(), DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
+            }
+        });
+        
     }
 
     @Override

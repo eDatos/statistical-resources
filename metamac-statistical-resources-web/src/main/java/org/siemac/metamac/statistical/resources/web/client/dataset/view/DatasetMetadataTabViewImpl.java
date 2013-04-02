@@ -410,6 +410,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
     private void setDatasetViewMode(DatasetDto datasetDto) {
         // Identifiers
         identifiersForm.setNameableStatisticalResourceDto(datasetDto);
+        
+        //Content descriptors
+        contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Production descriptors
         productionDescriptorsForm.setDatasetDto(datasetDto);
@@ -476,6 +479,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
     private void setDatasetEditionMode(DatasetDto datasetDto) {
         // Identifiers form
         identifiersEditionForm.setNameableStatisticalResourceDto(datasetDto);
+        
+        // Content Descriptors
+        contentDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Production descriptors
         productionDescriptorsEditionForm.setDatasetDto(datasetDto);

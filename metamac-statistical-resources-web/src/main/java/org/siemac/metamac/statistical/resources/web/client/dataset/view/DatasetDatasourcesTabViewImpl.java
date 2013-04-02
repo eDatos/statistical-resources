@@ -3,15 +3,24 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
+import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.IdentifiableResourceIdentifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.IdentifiableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -35,6 +44,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
@@ -132,6 +142,16 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
             datasourcesList.getListGrid().setFields(fieldCode, fieldName);
 
+            deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
+            deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+            deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    uiHandlers.deleteDatasources(getUrnsFromSelected());
+                }
+            });
+            
             // Panel conf
             addMember(toolStrip);
             addMember(datasourcesList);
@@ -193,12 +213,22 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             datasourcesList.refreshPaginationInfo(result.getPageNumber(), result.getDatasourcesList().size(), result.getTotalResults());
         }
     }
+    
+    public List<String> getUrnsFromSelected() {
+        List<String> codes = new ArrayList<String>();
+        for (ListGridRecord record : datasourcesListPanel.datasourcesList.getListGrid().getSelectedRecords()) {
+            DatasourceRecord datasourceRecord = (DatasourceRecord) record;
+            codes.add(datasourceRecord.getUrn());
+        }
+        return codes;
+    }
 
     private class DatasourceFormPanel extends VLayout {
 
         private MainFormLayout   mainFormLayout;
-        private GroupDynamicForm identifiersForm;
-        private GroupDynamicForm identifiersEditionForm;
+        private DatasourceResourceIdentifiersForm identifiersForm;
+        private DatasourceResourceIdentifiersEditionForm identifiersEditionForm;
+        private DatasourceContentEditionForm contentEditionForm;
 
         private DatasourceDto    datasource;
 
@@ -238,40 +268,15 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
         }
 
         private void createViewForm() {
-            identifiersForm = new GroupDynamicForm(getConstants().datasourceIdentifiers());
-            ViewTextItem identifier = new ViewTextItem(DatasourceDS.CODE, getConstants().datasourceIdentifier());
-            ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(DatasourceDS.TITLE, getConstants().datasourceTitle());
-            ViewTextItem uri = new ViewTextItem(DatasourceDS.URI, getConstants().datasourceUri());
-            ViewTextItem urn = new ViewTextItem(DatasourceDS.URN, getConstants().datasourceUrn());
-            identifiersForm.setFields(identifier, title, uri, urn);
+            identifiersForm = new DatasourceResourceIdentifiersForm();
             mainFormLayout.addViewCanvas(identifiersForm);
         }
 
         private void createEditionForm() {
-            identifiersEditionForm = new GroupDynamicForm(getConstants().datasourceIdentifiers());
-            ViewTextItem identifierView = new ViewTextItem(DatasourceDS.CODE_VIEW, getConstants().datasourceIdentifier());
-            identifierView.setShowIfCondition(new FormItemIfFunction() {
-
-                @Override
-                public boolean execute(FormItem item, Object value, DynamicForm form) {
-                    return !isCreationMode();
-                }
-            });
-            RequiredTextItem identifier = new RequiredTextItem(DatasourceDS.CODE, getConstants().datasourceIdentifier());
-            identifier.setShowIfCondition(new FormItemIfFunction() {
-
-                @Override
-                public boolean execute(FormItem item, Object value, DynamicForm form) {
-                    return isCreationMode();
-                }
-            });
-            identifier.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
-            MultiLanguageTextItem title = new MultiLanguageTextItem(DatasourceDS.TITLE, getConstants().datasourceTitle());
-            title.setRequired(true);
-            ViewTextItem uri = new ViewTextItem(DatasourceDS.URI, getConstants().datasourceUri());
-            ViewTextItem urn = new ViewTextItem(DatasourceDS.URN, getConstants().datasourceUrn());
-            identifiersEditionForm.setFields(identifierView, identifier, title, uri, urn);
+            identifiersEditionForm = new DatasourceResourceIdentifiersEditionForm();
+            contentEditionForm = new DatasourceContentEditionForm();
             mainFormLayout.addEditionCanvas(identifiersEditionForm);
+            mainFormLayout.addEditionCanvas(contentEditionForm);
         }
 
         private void createDatasource() {
@@ -288,7 +293,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
 
         private void selectDatasource(DatasourceDto datasourceDto) {
             this.datasource = datasourceDto;
-            // FIXME: datasource title
             mainFormLayout.setTitleLabelContents(datasourceDto.getCode());
             mainFormLayout.setViewMode();
             fillViewForm(datasource);
@@ -298,25 +302,15 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
         }
 
         private void fillViewForm(DatasourceDto datasourceDto) {
-            identifiersForm.setValue(DatasourceDS.CODE, datasourceDto.getCode());
-            identifiersForm.setValue(DatasourceDS.URI, datasourceDto.getUri());
-            identifiersForm.setValue(DatasourceDS.URN, datasourceDto.getUrn());
-            // identifiersForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
+            identifiersForm.setDatasourceDto(datasourceDto);
         }
 
         private void fillEditionForm(DatasourceDto datasourceDto) {
-            identifiersEditionForm.setValue(DatasourceDS.CODE_VIEW, datasourceDto.getCode());
-            identifiersEditionForm.setValue(DatasourceDS.CODE, datasourceDto.getCode());
-            identifiersEditionForm.setValue(DatasourceDS.URI, datasourceDto.getUri());
-            identifiersEditionForm.setValue(DatasourceDS.URN, datasourceDto.getUrn());
-            // identifiersEditionForm.setValue(DatasourceDS.TITLE, RecordUtils.getInternationalStringRecord(datasourceDto.getTitle()));
+            identifiersEditionForm.setDatasourceDto(datasourceDto);
         }
 
         private DatasourceDto getDatasource() {
-            if (isCreationMode()) {
-                datasource.setCode(identifiersEditionForm.getValueAsString(DatasourceDS.CODE));
-            }
-            // datasource.setTitle((InternationalStringDto) identifiersEditionForm.getValue(DatasourceDS.TITLE));
+            datasource = identifiersEditionForm.getDatasourceDto(datasource);
             return datasource;
         }
 
