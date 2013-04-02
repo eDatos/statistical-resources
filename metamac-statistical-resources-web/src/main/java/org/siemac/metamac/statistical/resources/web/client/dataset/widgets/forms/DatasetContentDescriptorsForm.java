@@ -1,6 +1,7 @@
-package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
+package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
 
 public class DatasetContentDescriptorsForm extends StatisticalResourceContentDescriptorsForm {
 

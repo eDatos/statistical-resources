@@ -1,10 +1,11 @@
-package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
+package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 
-public class DatasetProductionDescriptorsEditionForm extends StatisticalResourceProductionDescriptorsEditionForm {
+public class DatasetContentDescriptorsEditionForm extends StatisticalResourceContentDescriptorsEditionForm {
 
-    public DatasetProductionDescriptorsEditionForm() {
+    public DatasetContentDescriptorsEditionForm() {
         // TODO add fields
     }
 
@@ -14,8 +15,8 @@ public class DatasetProductionDescriptorsEditionForm extends StatisticalResource
     }
 
     public DatasetDto getDatasetDto(DatasetDto datasetDto) {
+        // TODO set fields
         datasetDto = (DatasetDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
-        // TODO set dataset fields
         return datasetDto;
     }
 }

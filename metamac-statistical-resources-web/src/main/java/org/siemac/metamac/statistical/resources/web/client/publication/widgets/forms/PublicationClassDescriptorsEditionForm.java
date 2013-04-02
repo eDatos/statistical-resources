@@ -1,10 +1,11 @@
-package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
+package org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.PublicationDS;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceClassDescriptorsEditionForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 public class PublicationClassDescriptorsEditionForm extends StatisticalResourceClassDescriptorsEditionForm {
