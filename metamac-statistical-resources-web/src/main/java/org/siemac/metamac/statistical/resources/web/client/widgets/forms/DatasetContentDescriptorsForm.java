@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 public class DatasetContentDescriptorsForm extends StatisticalResourceContentDescriptorsForm {
 
     public DatasetContentDescriptorsForm() {
+        super();
         // TODO add fields
     }
 

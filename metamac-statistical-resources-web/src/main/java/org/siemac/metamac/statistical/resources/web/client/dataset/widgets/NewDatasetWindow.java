@@ -2,7 +2,10 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
@@ -28,10 +31,6 @@ public class NewDatasetWindow extends CustomWindow {
         super(title);
         setAutoSize(true);
 
-        RequiredTextItem identifierItem = new RequiredTextItem(DatasetDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        identifierItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
-        identifierItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-
         RequiredTextItem nameItem = new RequiredTextItem(DatasetDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         nameItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
@@ -39,7 +38,7 @@ public class NewDatasetWindow extends CustomWindow {
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(identifierItem, nameItem, saveItem);
+        form.setFields(nameItem, saveItem);
 
         addItem(form);
         show();
@@ -51,11 +50,34 @@ public class NewDatasetWindow extends CustomWindow {
 
     public DatasetDto getNewDatasetDto(String operationUrn) {
         DatasetDto datasetDto = new DatasetDto();
-        // FIXME: code can not be updated
-        // datasetDto.setCode(form.getValueAsString(DatasetDS.IDENTIFIER));
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
-        // datasetDto.setOperationUrn(operationUrn);
+        //FIXME: set language and maintainer from data
+        mockExternalItems(datasetDto);
         return datasetDto;
+    }
+    
+    private void mockExternalItems(DatasetDto dataset) {
+        dataset.setLanguage(mockLanguage("es", "Español"));
+        dataset.addLanguage(mockLanguage("es","Español"));
+        dataset.setMaintainer(mockMaintainer("es", "ISTAC"));
+    }
+    
+    private ExternalItemDto mockMaintainer(String locale, String label) {
+        InternationalStringDto title = mockInternationalString(locale, label);
+        return new ExternalItemDto("MAINTAINER-ISTAC","FAKE-URI","FAKE-URN",TypeExternalArtefactsEnum.AGENCY, title);
+    }
+    
+    private ExternalItemDto mockLanguage(String locale, String label) {
+        return new ExternalItemDto("LANG_ES","CODE-URI","FAKE-URN",TypeExternalArtefactsEnum.CODE, mockInternationalString(locale, label));
+    }
+    
+    private InternationalStringDto mockInternationalString(String locale, String label) {
+        InternationalStringDto title = new InternationalStringDto();
+        LocalisedStringDto localised = new LocalisedStringDto();
+        localised.setLabel(label);
+        localised.setLocale(locale);
+        title.addText(localised);
+        return title;
     }
 
     public boolean validateForm() {

@@ -3,11 +3,14 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.shared.ActionException;
@@ -15,6 +18,9 @@ import com.gwtplatform.dispatch.shared.ActionException;
 @Component
 public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<UpdateDatasetProcStatusAction, UpdateDatasetProcStatusResult> {
 
+    @Autowired
+    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+    
     public UpdateDatasetProcStatusActionHandler() {
         super(UpdateDatasetProcStatusAction.class);
     }
@@ -24,8 +30,8 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
         String urn = action.getUrn();
         StatisticalResourceProcStatusEnum procStatus = action.getNextProcStatus();
         try {
-            DatasetDto datasetDto = null;
-            if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
+
+            /*if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
                 datasetDto = MockServices.sendDatasetToProductionValidation(urn);
             } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
                 datasetDto = MockServices.sendDatasetToDiffusionValidation(urn);
@@ -43,7 +49,9 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
                 // datasetDto = MockServices.cancelProgrammedDatasetPublication(urn);
             } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
                 datasetDto = MockServices.publishDataset(urn);
-            }
+            }*/
+            DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(ServiceContextHolder.getCurrentServiceContext(), urn);
+            
             return new UpdateDatasetProcStatusResult(datasetDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

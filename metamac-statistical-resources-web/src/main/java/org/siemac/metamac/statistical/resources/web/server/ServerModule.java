@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.server;
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.agency.GetAgenciesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourceListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsByStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetPaginatedListActionHandler;
@@ -20,6 +21,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
@@ -78,6 +80,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(VersionDatasetAction.class, VersionDatasetActionHandler.class);
         bindHandler(GetDatasourcesByDatasetPaginatedListAction.class, GetDatasourcesByDatasetPaginatedListActionHandler.class);
         bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
+        bindHandler(DeleteDatasourceListAction.class, DeleteDatasourceListActionHandler.class);
 
         // COLLECTIONS
         bindHandler(GetPublicationsAction.class, GetPublicationsActionHandler.class);
