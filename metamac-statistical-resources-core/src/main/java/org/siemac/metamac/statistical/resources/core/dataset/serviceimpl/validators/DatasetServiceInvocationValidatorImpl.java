@@ -95,6 +95,13 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         }
 
         checkNewIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE, exceptions);
+        
+        //CODE
+        if (datasource.getIdentifiableStatisticalResource() != null) {
+            StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getIdentifiableStatisticalResource().getCode(), ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE__CODE, exceptions);
+            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(datasource.getIdentifiableStatisticalResource().getCode(), ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE__CODE, exceptions);
+        }
+        
         checkDatasource(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
 
         // Metadata that must be empty for new entities

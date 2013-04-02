@@ -224,8 +224,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     }
 
     private static void mockIdentifiableStatisticalResourceDto(IdentifiableStatisticalResourceDto resource) {
-        resource.setCode("resource-" + mockString(10));
-
         mockStatisticalResourceDto(resource);
     }
 

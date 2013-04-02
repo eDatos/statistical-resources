@@ -85,7 +85,6 @@ Application StatisticalResourcesDto {
 			//CONTENT DESCRIPTORS
 			- @InternationalStringDto subtitle;
 			- @InternationalStringDto titleAlternative;
-			- @InternationalStringDto description;
 			- @InternationalStringDto abstractLogic;
 			//keywords type??
 			
