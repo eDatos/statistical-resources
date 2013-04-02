@@ -20,4 +20,17 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     // CLASS DESCRIPTORS
     public static final String TYPE                 = "sr-type";
     public static final String FORMAT               = "sr-format";
+
+    // RESOURCE RELATION DESCRIPTORS
+    public static final String SOURCE               = "sr-source";
+    public static final String REPLACES             = "sr-replaces";
+    public static final String IS_REPLACED_BY       = "sr-is-rep-by";
+    public static final String REQUIRES             = "sr-requires";
+    public static final String IS_REQUIRED_BY       = "sr-is-req-by";
+    public static final String HAS_PART             = "sr-has-part";
+    public static final String IS_PART_OF           = "sr-is-part-of";
+    public static final String IS_REFERENCE_BY      = "sr-is-ref-by";
+    public static final String REFERENCES           = "sr-references";
+    public static final String IS_FORMAT_OF         = "sr-is-format-of";
+    public static final String HAS_FORMAT           = "sr-has-format";
 }
