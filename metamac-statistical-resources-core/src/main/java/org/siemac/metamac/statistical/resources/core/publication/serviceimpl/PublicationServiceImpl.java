@@ -181,10 +181,10 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     private synchronized Publication assignCodeAndSavePublicationVersion(Publication publication, PublicationVersion publicationVersion) throws MetamacException {
         String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateSiemacMetadataResource(publicationVersion.getSiemacMetadataStatisticalResource());
-        String[] creator = new String[]{publicationVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
+        String[] maintainer = new String[]{publicationVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
         publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
         publicationVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(creator, publicationVersion.getSiemacMetadataStatisticalResource().getCode()));
+                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publicationVersion.getSiemacMetadataStatisticalResource().getCode()));
 
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
