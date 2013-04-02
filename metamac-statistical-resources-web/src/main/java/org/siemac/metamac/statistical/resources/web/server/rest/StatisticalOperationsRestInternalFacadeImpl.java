@@ -72,12 +72,12 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     }
 
     private ExternalItemDto buildExternalItemDtoFromResource(Resource resource) {
-        return new ExternalItemDto(resource.getId(), resource.getSelfLink(), resource.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
+        return new ExternalItemDto(resource.getId(), resource.getSelfLink().getHref(), resource.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
                 DtoUtils.getInternationalStringDtoFromInternationalString(resource.getTitle()));
     }
 
     private ExternalItemDto buildExternalItemDtoFromOperation(Operation operation) {
-        return new ExternalItemDto(operation.getId(), operation.getSelfLink(), operation.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
+        return new ExternalItemDto(operation.getId(), operation.getSelfLink().getHref(), operation.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
                 DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));
     }
 
