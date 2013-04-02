@@ -20,6 +20,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_09_OPER_0001_CODE_000003_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_10_OPER_0002_CODE_000001_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_11_OPER_0002_CODE_000002_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
@@ -86,6 +87,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
@@ -729,7 +731,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({DATASET_VERSION_09_OPER_0001_CODE_000003_NAME, DATASET_VERSION_10_OPER_0002_CODE_000001_NAME, DATASET_VERSION_11_OPER_0002_CODE_000002_NAME,
             DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME})
-    public void testFindDatasetsByProcStatus() throws Exception {
+    public void testFindDatasetsByConditionByProcStatus() throws Exception {
         DatasetVersion dsOper1Code3 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_000003_NAME);
         DatasetVersion dsOper2Code1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_10_OPER_0002_CODE_000001_NAME);
         DatasetVersion dsOper2Code2 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_11_OPER_0002_CODE_000002_NAME);
@@ -764,6 +766,90 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             assertEquals(dsOper2Code3ProdVal.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
         }
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_09_OPER_0001_CODE_000003_NAME, DATASET_VERSION_10_OPER_0002_CODE_000001_NAME, DATASET_VERSION_11_OPER_0002_CODE_000002_NAME,
+            DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME, DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME, DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME})
+    public void testFindDatasetsByConditionByStatisticalOperationUrn() throws Exception {
+        DatasetVersion datasetOper2Code1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_10_OPER_0002_CODE_000001_NAME);
+        DatasetVersion datasetOper2Code2 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_11_OPER_0002_CODE_000002_NAME);
+        DatasetVersion datasetOper2CodeMax = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME);
+        DatasetVersion datasetOper2Code3 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME);
+        DatasetVersion datasetOper1Code3 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_000003_NAME);
+
+        // Find STATISTICAL_OPERATION
+        {
+            String statisticalOperationUrn = StatisticalResourcesDoMocks.mockStatisticalOperationUrn(DatasetVersionMockFactory.OPERATION_02_CODE);
+
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaStringPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+
+            MetamacCriteriaResult<DatasetDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(4, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            List<DatasetDto> results = pagedResults.getResults();
+            assertEquals(4, results.size());
+
+            assertEquals(datasetOper2Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
+            assertEquals(datasetOper2Code2.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
+            assertEquals(datasetOper2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(2).getUrn());
+            assertEquals(datasetOper2CodeMax.getSiemacMetadataStatisticalResource().getUrn(), results.get(3).getUrn());
+        }
+        {
+            String statisticalOperationUrn = StatisticalResourcesDoMocks.mockStatisticalOperationUrn(DatasetVersionMockFactory.OPERATION_01_CODE);
+
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaStringPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+
+            MetamacCriteriaResult<DatasetDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            List<DatasetDto> results = pagedResults.getResults();
+            assertEquals(1, results.size());
+
+            assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
+        }
+
+        {
+            String statisticalOperationUrn = URN_NOT_EXISTS;
+
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaStringPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+
+            MetamacCriteriaResult<DatasetDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(0, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            List<DatasetDto> results = pagedResults.getResults();
+            assertEquals(0, results.size());
+        }
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_09_OPER_0001_CODE_000003_NAME, DATASET_VERSION_10_OPER_0002_CODE_000001_NAME, DATASET_VERSION_11_OPER_0002_CODE_000002_NAME,
+            DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME, DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME, DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME})
+    public void testFindDatasetsByConditionOrderByStatisticalOperationUrn() throws Exception {
+        DatasetVersion datasetOper2Code3 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME);
+        DatasetVersion datasetOper1Code3 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_000003_NAME);
+
+        // FIND CODE
+        String code = "000003";
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.STATISTICAL_OPERATION_URN, OrderTypeEnum.ASC);
+        setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+        setCriteriaStringPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.CODE, OperationType.ILIKE, code);
+
+        MetamacCriteriaResult<DatasetDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetDto> results = pagedResults.getResults();
+        assertEquals(2, results.size());
+
+        assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
+        assertEquals(datasetOper2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
     }
 
     @Override
@@ -1013,6 +1099,93 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME, PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME, PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME,
+            PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME, PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME, PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME})
+    public void testFindPublicationsByConditionByStatisticalOperationUrn() throws Exception {
+        PublicationVersion publicationOperation1Code1 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME);
+        PublicationVersion publicationOperation1Code2 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME);
+        PublicationVersion publicationOperation1Code3 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME);
+        PublicationVersion publicationOperation2Code1 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME);
+        PublicationVersion publicationOperation2Code2 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME);
+        PublicationVersion publicationOperation2Code3 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME);
+        
+
+        // Find STATISTICAL_OPERATION
+        {
+            String statisticalOperationUrn = StatisticalResourcesDoMocks.mockStatisticalOperationUrn(DatasetVersionMockFactory.OPERATION_01_CODE);
+
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+
+            MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            List<PublicationDto> results = pagedResults.getResults();
+            assertEquals(3, results.size());
+
+            assertEquals(publicationOperation1Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
+            assertEquals(publicationOperation1Code2.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
+            assertEquals(publicationOperation1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(2).getUrn());
+        }
+        {
+            String statisticalOperationUrn = StatisticalResourcesDoMocks.mockStatisticalOperationUrn(DatasetVersionMockFactory.OPERATION_02_CODE);
+
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+
+            MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            List<PublicationDto> results = pagedResults.getResults();
+            assertEquals(3, results.size());
+
+            assertEquals(publicationOperation2Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
+            assertEquals(publicationOperation2Code2.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
+            assertEquals(publicationOperation2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(2).getUrn());
+        }
+
+        {
+            String statisticalOperationUrn = URN_NOT_EXISTS;
+
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+
+            MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(0, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            List<PublicationDto> results = pagedResults.getResults();
+            assertEquals(0, results.size());
+        }
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME, PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME, PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME,
+        PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME, PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME, PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME})
+    public void testFindPublicationByConditionOrderByStatisticalOperationUrn() throws Exception {
+        PublicationVersion publicationOperation1Code3 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME);
+        PublicationVersion publicationOperation2Code3 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME);
+
+        // FIND CODE
+        String code = "000003";
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.STATISTICAL_OPERATION_URN, OrderTypeEnum.ASC);
+        setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+        setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.CODE, OperationType.ILIKE, code);
+
+        MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationDto> results = pagedResults.getResults();
+        assertEquals(2, results.size());
+
+        assertEquals(publicationOperation1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
+        assertEquals(publicationOperation2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
+    }
+
     @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
@@ -1073,7 +1246,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn01);
         statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn02);
         statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn03);
-        
+
         int datasetVersions = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
 
         assertEquals(3, datasetVersions);
@@ -1109,7 +1282,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn01);
         statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn02);
         statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn03);
-        
+
         int datasetVersionsBefore = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
 
         statisticalResourcesServiceFacade.removeDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn02);

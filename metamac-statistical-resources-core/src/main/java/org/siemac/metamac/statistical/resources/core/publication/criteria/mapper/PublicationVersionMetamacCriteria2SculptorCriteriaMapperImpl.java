@@ -54,6 +54,8 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
                     return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case PROC_STATUS:
                     return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                case STATISTICAL_OPERATION_URN:
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -71,6 +73,8 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label();
                 case PROC_STATUS:
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus();
+                case STATISTICAL_OPERATION_URN:
+                    return PublicationVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }

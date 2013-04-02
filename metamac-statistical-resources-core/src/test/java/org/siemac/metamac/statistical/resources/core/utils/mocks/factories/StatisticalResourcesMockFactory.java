@@ -13,9 +13,9 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
 
     private static StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
 
-    protected static final String                       OPERATION_01_CODE = "C00025A";
-    protected static final String                       OPERATION_02_CODE = "C00025B";
-    protected static final String                       OPERATION_03_CODE = "C00025C";
+    public static final String                       OPERATION_01_CODE = "C00025A";
+    public static final String                       OPERATION_02_CODE = "C00025B";
+    public static final String                       OPERATION_03_CODE = "C00025C";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
         if (statisticalResourcesPersistedDoMocks == null) {

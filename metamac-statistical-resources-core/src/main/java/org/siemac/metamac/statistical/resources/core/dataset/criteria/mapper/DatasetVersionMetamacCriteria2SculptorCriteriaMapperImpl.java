@@ -54,6 +54,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case PROC_STATUS:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                case STATISTICAL_OPERATION_URN:    
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -69,6 +71,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().urn();
                 case TITLE:
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label();
+                case STATISTICAL_OPERATION_URN:
+                    return DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
