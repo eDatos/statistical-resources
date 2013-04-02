@@ -5,10 +5,10 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.utils.RelatedResourceUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class LifeCycleResourceLifeCycleForm extends GroupDynamicForm {
 
@@ -55,7 +55,7 @@ public class LifeCycleResourceLifeCycleForm extends GroupDynamicForm {
         setValue(LifeCycleResourceDS.EXTERNAL_PUBLICATION_USER, lifeCycleStatisticalResourceDto.getExternalPublicationUser());
         setValue(LifeCycleResourceDS.IS_EXTERNAL_PUBLICATION_FAILED, CommonWebUtils.getBooleanValueAsString(lifeCycleStatisticalResourceDto.getExternalPublicationFailed()));
         setValue(LifeCycleResourceDS.EXTERNAL_PUBLICATION_FAILED_DATE, lifeCycleStatisticalResourceDto.getExternalPublicationFailedDate());
-        setValue(LifeCycleResourceDS.REPLACES_VERSION, RelatedResourceUtils.getRelatedResourceName(lifeCycleStatisticalResourceDto.getReplacesVersion()));
-        setValue(LifeCycleResourceDS.IS_REPLACED_BY_VERSION, RelatedResourceUtils.getRelatedResourceName(lifeCycleStatisticalResourceDto.getIsReplacedByVersion()));
+        setValue(LifeCycleResourceDS.REPLACES_VERSION, RelatedResourceBaseUtils.getRelatedResourceName(lifeCycleStatisticalResourceDto.getReplacesVersion()));
+        setValue(LifeCycleResourceDS.IS_REPLACED_BY_VERSION, RelatedResourceBaseUtils.getRelatedResourceName(lifeCycleStatisticalResourceDto.getIsReplacedByVersion()));
     }
 }

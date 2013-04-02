@@ -15,10 +15,6 @@ public interface GlobalResources extends ClientBundleWithLookup {
     ImageResource info();
 
     @ImageOptions(repeatStyle = RepeatStyle.Both)
-    @Source("images/remove.png")
-    ImageResource remove();
-
-    @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/annotations.png")
     ImageResource annotations();
 

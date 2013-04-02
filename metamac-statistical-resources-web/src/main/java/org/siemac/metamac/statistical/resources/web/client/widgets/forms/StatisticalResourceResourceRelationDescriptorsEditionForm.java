@@ -4,10 +4,10 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
-import org.siemac.metamac.statistical.resources.web.client.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
+import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class StatisticalResourceResourceRelationDescriptorsEditionForm extends GroupDynamicForm {
 
@@ -31,8 +31,8 @@ public class StatisticalResourceResourceRelationDescriptorsEditionForm extends G
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
         // TODO SOURCE
-        setValue(StatisticalResourceDS.REPLACES, RelatedResourceUtils.getRelatedResourceName(siemacMetadataStatisticalResourceDto.getReplaces()));
-        setValue(StatisticalResourceDS.IS_REPLACED_BY, RelatedResourceUtils.getRelatedResourceName(siemacMetadataStatisticalResourceDto.getIsReplacedBy()));
+        setValue(StatisticalResourceDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(siemacMetadataStatisticalResourceDto.getReplaces()));
+        setValue(StatisticalResourceDS.IS_REPLACED_BY, RelatedResourceBaseUtils.getRelatedResourceName(siemacMetadataStatisticalResourceDto.getIsReplacedBy()));
         ((RelatedResourceListItem) getItem(StatisticalResourceDS.REQUIRES)).setRelatedResources(siemacMetadataStatisticalResourceDto.getRequires());
         ((RelatedResourceListItem) getItem(StatisticalResourceDS.IS_REQUIRED_BY)).setRelatedResources(siemacMetadataStatisticalResourceDto.getIsRequiredBy());
         ((RelatedResourceListItem) getItem(StatisticalResourceDS.HAS_PART)).setRelatedResources(siemacMetadataStatisticalResourceDto.getHasPart());
