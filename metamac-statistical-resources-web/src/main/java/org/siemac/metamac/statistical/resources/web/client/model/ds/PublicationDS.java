@@ -4,4 +4,7 @@ public class PublicationDS extends StatisticalResourceDS {
 
     // CLASS DESCRIPTORS
     public static final String FORMAT_EXTENT_RESOURCES = "pub-form-ext-res";
+
+    // DTO
+    public static final String DTO                     = "pub-dto";
 }

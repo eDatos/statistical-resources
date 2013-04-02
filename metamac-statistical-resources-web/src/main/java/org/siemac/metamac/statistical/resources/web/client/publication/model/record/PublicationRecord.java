@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.model.re
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.PublicationDS;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -40,7 +40,7 @@ public class PublicationRecord extends ListGridRecord {
     }
 
     public void setVersionLogic(String value) {
-        setAttribute(PublicationDS.VERSION_LOGIC, value);
+        setAttribute(PublicationDS.VERSION, value);
     }
 
     public void setUrn(String value) {

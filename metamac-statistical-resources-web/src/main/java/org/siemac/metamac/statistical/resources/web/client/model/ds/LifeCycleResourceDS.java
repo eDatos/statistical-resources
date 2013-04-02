@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.model.ds;
 
-public class LifeCycleResourceDS extends NameableResourceDS {
+public class LifeCycleResourceDS extends VersionableResourceDS {
 
     // CONTENT DESCRIPTORS
     public static final String DESCRIPTION                      = "lc-desc";
