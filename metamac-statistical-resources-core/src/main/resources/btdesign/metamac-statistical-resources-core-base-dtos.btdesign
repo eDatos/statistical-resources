@@ -8,14 +8,9 @@ Application StatisticalResourcesDto {
 	Module dtos {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto 
 		
-		DataTransferObject RelatedResourceDto extends @IdentityDto {
-			gap
-			
-			- @InternationalStringDto title nullable;
+		DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
 			- @TypeRelatedResourceEnum type required;
-			String code required;
 			String uri required;
-			String urn required;
 		}
 		
 		DataTransferObject VersionRationaleTypeDto extends @IdentityDto {
