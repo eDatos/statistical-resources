@@ -90,6 +90,12 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
+
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {

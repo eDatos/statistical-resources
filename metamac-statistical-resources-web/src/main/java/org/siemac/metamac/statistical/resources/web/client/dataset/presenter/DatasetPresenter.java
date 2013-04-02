@@ -90,7 +90,12 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     @Override
     public void prepareFromRequest(PlaceRequest request) {
-        super.prepareFromRequest(request);
+
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
 
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
