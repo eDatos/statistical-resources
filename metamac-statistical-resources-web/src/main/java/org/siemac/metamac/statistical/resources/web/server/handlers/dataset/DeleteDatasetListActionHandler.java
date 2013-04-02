@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -18,7 +17,7 @@ public class DeleteDatasetListActionHandler extends SecurityActionHandler<Delete
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     public DeleteDatasetListActionHandler() {
         super(DeleteDatasetListAction.class);
     }

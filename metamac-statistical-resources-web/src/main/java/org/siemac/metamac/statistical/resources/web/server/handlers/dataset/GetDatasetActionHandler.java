@@ -18,7 +18,7 @@ public class GetDatasetActionHandler extends SecurityActionHandler<GetDatasetAct
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     public GetDatasetActionHandler() {
         super(GetDatasetAction.class);
     }

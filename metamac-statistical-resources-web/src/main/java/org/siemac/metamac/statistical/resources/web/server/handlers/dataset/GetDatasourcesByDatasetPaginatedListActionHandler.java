@@ -20,12 +20,12 @@ public class GetDatasourcesByDatasetPaginatedListActionHandler extends SecurityA
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     public GetDatasourcesByDatasetPaginatedListActionHandler() {
         super(GetDatasourcesByDatasetPaginatedListAction.class);
     }
 
-    //FIXME: Pagination
+    // FIXME: Pagination
     @Override
     public GetDatasourcesByDatasetPaginatedListResult executeSecurityAction(GetDatasourcesByDatasetPaginatedListAction action) throws ActionException {
         try {
@@ -35,5 +35,4 @@ public class GetDatasourcesByDatasetPaginatedListActionHandler extends SecurityA
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
-
 }

@@ -17,7 +17,7 @@ public class DeleteDatasourceListActionHandler extends SecurityActionHandler<Del
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     public DeleteDatasourceListActionHandler() {
         super(DeleteDatasourceListAction.class);
     }

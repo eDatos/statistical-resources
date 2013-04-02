@@ -1,10 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
@@ -24,10 +20,10 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     @Autowired
-    StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
-    
+    StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
+
     public SaveDatasetActionHandler() {
         super(SaveDatasetAction.class);
     }
@@ -37,7 +33,7 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
         try {
             DatasetDto savedDataset = null;
             if (action.getDataset().getUuid() == null) {
-                ExternalItemDto statisticalOperation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getStatisticalOperationCode());            
+                ExternalItemDto statisticalOperation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getStatisticalOperationCode());
                 savedDataset = statisticalResourcesServiceFacade.createDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset(), statisticalOperation);
             } else {
                 savedDataset = statisticalResourcesServiceFacade.updateDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset());
@@ -47,6 +43,4 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
-    
-    
 }

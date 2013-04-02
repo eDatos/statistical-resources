@@ -23,7 +23,7 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
@@ -42,19 +42,17 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class PublicationListViewImpl extends ViewImpl implements PublicationListPresenter.PublicationListView {
+public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListUiHandlers> implements PublicationListPresenter.PublicationListView {
 
-    private PublicationListUiHandlers uiHandlers;
+    private VLayout                  panel;
 
-    private VLayout                   panel;
+    private SearchSectionStack       searchSectionStack;
+    private PaginatedCheckListGrid   publicationListGrid;
 
-    private SearchSectionStack        searchSectionStack;
-    private PaginatedCheckListGrid    publicationListGrid;
+    private ToolStripButton          newPublicationButton;
+    private ToolStripButton          deletePublicationButton;
 
-    private ToolStripButton           newPublicationButton;
-    private ToolStripButton           deletePublicationButton;
-
-    private DeleteConfirmationWindow  deleteConfirmationWindow;
+    private DeleteConfirmationWindow deleteConfirmationWindow;
 
     @Inject
     public PublicationListViewImpl() {
@@ -76,7 +74,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newPublicationWindow.validateForm()) {
-                            uiHandlers.createPublication(newPublicationWindow.getNewPublicationDto());
+                            getUiHandlers().createPublication(newPublicationWindow.getNewPublicationDto());
                             newPublicationWindow.destroy();
                         }
                     }
@@ -91,7 +89,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.deletePublication(getUrnsFromSelectedPublications());
+                getUiHandlers().deletePublication(getUrnsFromSelectedPublications());
                 deleteConfirmationWindow.hide();
             }
         });
@@ -116,7 +114,8 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                uiHandlers.retrievePublications(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
+                getUiHandlers().retrievePublications(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS,
+                        searchSectionStack.getSearchCriteria());
             }
         });
 
@@ -126,7 +125,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrievePublications(firstResult, maxResults, null);
+                getUiHandlers().retrievePublications(firstResult, maxResults, null);
             }
         });
         publicationListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS);
@@ -152,7 +151,7 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
             public void onRecordClick(RecordClickEvent event) {
                 if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
                     String urn = ((PublicationRecord) event.getRecord()).getAttribute(PublicationDS.URN);
-                    uiHandlers.goToPublication(urn);
+                    getUiHandlers().goToPublication(urn);
                 }
             }
         });
@@ -176,11 +175,6 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
         publicationListGrid.getListGrid().setData(records);
-    }
-
-    @Override
-    public void setUiHandlers(PublicationListUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
     }
 
     @Override
@@ -223,5 +217,4 @@ public class PublicationListViewImpl extends ViewImpl implements PublicationList
         }
         return urns;
     }
-
 }

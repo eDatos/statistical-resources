@@ -9,7 +9,7 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
@@ -19,16 +19,14 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
-public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.DatasetView {
+public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> implements DatasetPresenter.DatasetView {
 
-    private DatasetUiHandlers uiHandlers;
+    private VLayout    panel;
 
-    private VLayout           panel;
-
-    private TitleLabel        titleLabel;
-    private TabSet            tabSet;
-    private Tab               datasetMetadataTab;
-    private Tab               datasetDatasourcesTab;
+    private TitleLabel titleLabel;
+    private TabSet     tabSet;
+    private Tab        datasetMetadataTab;
+    private Tab        datasetDatasourcesTab;
 
     public DatasetViewImpl() {
         panel = new VLayout();
@@ -58,7 +56,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
 
             @Override
             public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.goToDatasetMetadata();
+                getUiHandlers().goToDatasetMetadata();
             }
         });
 
@@ -66,7 +64,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
 
             @Override
             public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.goToDatasetDatasources();
+                getUiHandlers().goToDatasetDatasources();
             }
         });
     }
@@ -80,7 +78,7 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     @Override
     public void showMetadata() {
         tabSet.selectTab(datasetMetadataTab);
-        uiHandlers.goToDatasetMetadata();
+        getUiHandlers().goToDatasetMetadata();
     }
 
     @Override
@@ -98,10 +96,4 @@ public class DatasetViewImpl extends ViewImpl implements DatasetPresenter.Datase
     public Widget asWidget() {
         return panel;
     }
-
-    @Override
-    public void setUiHandlers(DatasetUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
-    }
-
 }

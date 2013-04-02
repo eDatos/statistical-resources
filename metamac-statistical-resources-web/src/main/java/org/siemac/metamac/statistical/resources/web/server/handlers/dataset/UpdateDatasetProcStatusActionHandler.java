@@ -4,7 +4,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.server.MOCK.MockServices;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -20,7 +19,7 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     public UpdateDatasetProcStatusActionHandler() {
         super(UpdateDatasetProcStatusAction.class);
     }
@@ -31,27 +30,29 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
         StatisticalResourceProcStatusEnum procStatus = action.getNextProcStatus();
         try {
 
-            /*if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
-                datasetDto = MockServices.sendDatasetToProductionValidation(urn);
-            } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
-                datasetDto = MockServices.sendDatasetToDiffusionValidation(urn);
-            } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
-                StatisticalResourceProcStatusEnum currentProcStatus = action.getCurrentProcStatus();
-                if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(currentProcStatus)) {
-                    datasetDto = MockServices.rejectDatasetProductionValidation(urn);
-                } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(currentProcStatus)) {
-                    datasetDto = MockServices.rejectDatasetDiffusionValidation(urn);
-                }
-                // FIXME: the checkings bellow need the date of pending publication
-                // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
-                // datasetDto = MockServices.programDatasetPublication(urn);
-                // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
-                // datasetDto = MockServices.cancelProgrammedDatasetPublication(urn);
-            } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
-                datasetDto = MockServices.publishDataset(urn);
-            }*/
+            /*
+             * if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
+             * datasetDto = MockServices.sendDatasetToProductionValidation(urn);
+             * } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
+             * datasetDto = MockServices.sendDatasetToDiffusionValidation(urn);
+             * } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
+             * StatisticalResourceProcStatusEnum currentProcStatus = action.getCurrentProcStatus();
+             * if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(currentProcStatus)) {
+             * datasetDto = MockServices.rejectDatasetProductionValidation(urn);
+             * } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(currentProcStatus)) {
+             * datasetDto = MockServices.rejectDatasetDiffusionValidation(urn);
+             * }
+             * // FIXME: the checkings bellow need the date of pending publication
+             * // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(procStatus)) {
+             * // datasetDto = MockServices.programDatasetPublication(urn);
+             * // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(procStatus)) {
+             * // datasetDto = MockServices.cancelProgrammedDatasetPublication(urn);
+             * } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(procStatus)) {
+             * datasetDto = MockServices.publishDataset(urn);
+             * }
+             */
             DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(ServiceContextHolder.getCurrentServiceContext(), urn);
-            
+
             return new UpdateDatasetProcStatusResult(datasetDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

@@ -9,7 +9,6 @@ import java.util.List;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
@@ -19,30 +18,19 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.IdentifiableResourceIdentifiersEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.IdentifiableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FormItemIfFunction;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -53,15 +41,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDatasourcesTabView {
+public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDatasourcesTabUiHandlers> implements DatasetDatasourcesTabView {
 
-    private DatasetDatasourcesTabUiHandlers uiHandlers;
-    private VLayout                         panel;
+    private VLayout              panel;
 
-    private DatasourcesListPanel            datasourcesListPanel;
-    private DatasourceFormPanel             datasourceFormPanel;
+    private DatasourcesListPanel datasourcesListPanel;
+    private DatasourceFormPanel  datasourceFormPanel;
 
-    private String                          datasetUrn;
+    private String               datasetUrn;
 
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
@@ -91,11 +78,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
     @Override
     public Widget asWidget() {
         return panel;
-    }
-
-    @Override
-    public void setUiHandlers(DatasetDatasourcesTabUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
     }
 
     private class DatasourcesListPanel extends VLayout {
@@ -128,7 +110,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
 
                 @Override
                 public void retrieveResultSet(int firstResult, int maxResults) {
-                    uiHandlers.retrieveDatasourcesByDataset(datasetUrn, firstResult, maxResults);
+                    getUiHandlers().retrieveDatasourcesByDataset(datasetUrn, firstResult, maxResults);
                 }
             });
 
@@ -148,10 +130,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    uiHandlers.deleteDatasources(getUrnsFromSelected());
+                    getUiHandlers().deleteDatasources(getUrnsFromSelected());
                 }
             });
-            
+
             // Panel conf
             addMember(toolStrip);
             addMember(datasourcesList);
@@ -213,7 +195,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
             datasourcesList.refreshPaginationInfo(result.getPageNumber(), result.getDatasourcesList().size(), result.getTotalResults());
         }
     }
-    
+
     public List<String> getUrnsFromSelected() {
         List<String> codes = new ArrayList<String>();
         for (ListGridRecord record : datasourcesListPanel.datasourcesList.getListGrid().getSelectedRecords()) {
@@ -225,12 +207,12 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
 
     private class DatasourceFormPanel extends VLayout {
 
-        private MainFormLayout   mainFormLayout;
-        private DatasourceResourceIdentifiersForm identifiersForm;
+        private MainFormLayout                           mainFormLayout;
+        private DatasourceResourceIdentifiersForm        identifiersForm;
         private DatasourceResourceIdentifiersEditionForm identifiersEditionForm;
-        private DatasourceContentEditionForm contentEditionForm;
+        private DatasourceContentEditionForm             contentEditionForm;
 
-        private DatasourceDto    datasource;
+        private DatasourceDto                            datasource;
 
         public DatasourceFormPanel() {
             super();
@@ -252,7 +234,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewImpl implements DatasetDa
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    uiHandlers.saveDatasource(getDatasource());
+                    getUiHandlers().saveDatasource(getDatasource());
                 }
             });
 

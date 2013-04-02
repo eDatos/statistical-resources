@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsByStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -22,7 +22,7 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
@@ -39,9 +39,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class DatasetListViewImpl extends ViewImpl implements DatasetListPresenter.DatasetListView {
+public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
 
-    private DatasetListUiHandlers    uiHandlers;
     private VLayout                  panel;
 
     private ToolStripButton          newDatasetButton;
@@ -69,13 +68,13 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
             @Override
             public void onClick(ClickEvent event) {
                 newDatasetWindow = new NewDatasetWindow(getConstants().datasetCreate());
-                newDatasetWindow.setUiHandlers(uiHandlers);
+                newDatasetWindow.setUiHandlers(getUiHandlers());
                 newDatasetWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newDatasetWindow.validateForm()) {
-                            uiHandlers.createDataset(newDatasetWindow.getNewDatasetDto(operationUrn));
+                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetDto(operationUrn));
                             newDatasetWindow.destroy();
                         }
                     }
@@ -101,7 +100,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
+                getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
             }
         });
         datasetsList.getListGrid().setAutoFitMaxRecords(DatasetListPresenter.DATASET_LIST_MAX_RESULTS);
@@ -127,7 +126,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
             public void onRecordClick(RecordClickEvent event) {
                 if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
                     String urn = ((DatasetRecord) event.getRecord()).getAttribute(DatasetDS.URN);
-                    uiHandlers.goToDataset(urn);
+                    getUiHandlers().goToDataset(urn);
                 }
             }
         });
@@ -148,7 +147,7 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.deleteDatasets(getUrnsFromSelected());
+                getUiHandlers().deleteDatasets(getUrnsFromSelected());
             }
         });
     }
@@ -213,15 +212,9 @@ public class DatasetListViewImpl extends ViewImpl implements DatasetListPresente
         }
     }
 
-    @Override
-    public void setUiHandlers(DatasetListUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
-    }
-
     private void showListGridDeleteButton() {
         if (DatasetClientSecurityUtils.canDeleteDataset()) {
             deleteDatasetButton.show();
         }
     }
-
 }

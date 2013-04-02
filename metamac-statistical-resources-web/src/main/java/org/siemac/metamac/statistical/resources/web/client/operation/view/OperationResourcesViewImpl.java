@@ -15,7 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.P
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -24,15 +24,13 @@ import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class OperationResourcesViewImpl extends ViewImpl implements OperationResourcesPresenter.OperationResourcesView {
+public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationResourcesUiHandlers> implements OperationResourcesPresenter.OperationResourcesView {
 
-    private OperationResourcesUiHandlers uiHandlers;
+    private DatasetListGrid     datasetsListGrid;
+    private PublicationListGrid publicationsListGrid;
 
-    private DatasetListGrid              datasetsListGrid;
-    private PublicationListGrid          publicationsListGrid;
-
-    private VLayout                      panel;
-    private SectionStack                 sections;
+    private VLayout             panel;
+    private SectionStack        sections;
 
     @Inject
     public OperationResourcesViewImpl() {
@@ -48,7 +46,7 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 DatasetRecord record = (DatasetRecord) event.getRecord();
-                uiHandlers.goToDataset(record.getUrn());
+                getUiHandlers().goToDataset(record.getUrn());
             }
         });
 
@@ -64,7 +62,7 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 PublicationRecord record = (PublicationRecord) event.getRecord();
-                uiHandlers.goToPublication(record.getUrn());
+                getUiHandlers().goToPublication(record.getUrn());
             }
         });
 
@@ -90,11 +88,6 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     }
 
     @Override
-    public void setUiHandlers(OperationResourcesUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
-    }
-
-    @Override
     public void setPublications(List<PublicationDto> publicationDtos) {
         publicationsListGrid.setPublications(publicationDtos);
     }
@@ -103,5 +96,4 @@ public class OperationResourcesViewImpl extends ViewImpl implements OperationRes
     public void setDatasets(List<DatasetDto> datasetsDtos) {
         datasetsListGrid.setDatasets(datasetsDtos);
     }
-
 }

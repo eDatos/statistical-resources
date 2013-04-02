@@ -73,10 +73,9 @@ public class FileUploadServlet extends HttpServlet {
             // Process the uploaded items
             Iterator itr = items.iterator();
 
-            
             while (itr.hasNext()) {
                 FileItem item = (FileItem) itr.next();
-                File tempFile =  File.createTempFile("datasource-", ".dat");
+                File tempFile = File.createTempFile("datasource-", ".dat");
                 FileUtils.copyInputStreamToFile(item.getInputStream(), tempFile);
                 fileName = tempFile.getAbsolutePath();
             }

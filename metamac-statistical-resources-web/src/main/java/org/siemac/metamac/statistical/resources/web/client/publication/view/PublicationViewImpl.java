@@ -12,7 +12,7 @@ import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -21,16 +21,14 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
-public class PublicationViewImpl extends ViewImpl implements PublicationPresenter.PublicationView {
+public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandlers> implements PublicationPresenter.PublicationView {
 
-    private PublicationUiHandlers uiHandlers;
+    private VLayout    panel;
+    private TitleLabel titleLabel;
 
-    private VLayout               panel;
-    private TitleLabel            titleLabel;
-
-    private TabSet                tabSet;
-    private Tab                   collectionMetadataTab;
-    private Tab                   collectionStructureTab;
+    private TabSet     tabSet;
+    private Tab        collectionMetadataTab;
+    private Tab        collectionStructureTab;
 
     @Inject
     public PublicationViewImpl(PublicationMetadataTabView metadataView, PublicationStructureTabView structureView) {
@@ -60,14 +58,14 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
 
             @Override
             public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.goToPublicationMetadata();
+                getUiHandlers().goToPublicationMetadata();
             }
         });
         collectionStructureTab.addTabSelectedHandler(new TabSelectedHandler() {
 
             @Override
             public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.goToPublicationStructure();
+                getUiHandlers().goToPublicationStructure();
             }
         });
     }
@@ -81,7 +79,7 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
     @Override
     public void showMetadata() {
         tabSet.selectTab(collectionMetadataTab);
-        uiHandlers.goToPublicationMetadata();
+        getUiHandlers().goToPublicationMetadata();
     }
 
     @Override
@@ -98,10 +96,5 @@ public class PublicationViewImpl extends ViewImpl implements PublicationPresente
     @Override
     public Widget asWidget() {
         return panel;
-    }
-
-    @Override
-    public void setUiHandlers(PublicationPresenter uiHandlers) {
-        this.uiHandlers = uiHandlers;
     }
 }

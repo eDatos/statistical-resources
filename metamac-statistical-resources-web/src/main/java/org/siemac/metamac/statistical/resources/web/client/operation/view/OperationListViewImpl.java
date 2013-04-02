@@ -16,7 +16,7 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -24,12 +24,11 @@ import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class OperationListViewImpl extends ViewImpl implements OperationListPresenter.OperationListView {
+public class OperationListViewImpl extends ViewWithUiHandlers<OperationListUiHandlers> implements OperationListPresenter.OperationListView {
 
-    private OperationListUiHandlers uiHandlers;
-    private VLayout                 panel;
+    private VLayout           panel;
 
-    private PaginatedListGrid       operationsList;
+    private PaginatedListGrid operationsList;
 
     @Inject
     public OperationListViewImpl() {
@@ -39,7 +38,7 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                uiHandlers.retrieveOperations(firstResult, maxResults, null);
+                getUiHandlers().retrieveOperations(firstResult, maxResults, null);
             }
         });
         operationsList.getListGrid().setAutoFitMaxRecords(OperationListPresenter.OPERATION_LIST_MAX_RESULTS);
@@ -64,7 +63,7 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 String urn = ((OperationRecord) event.getRecord()).getAttribute(OperationDS.URN);
-                uiHandlers.goToOperation(urn);
+                getUiHandlers().goToOperation(urn);
             }
         });
     }
@@ -88,10 +87,5 @@ public class OperationListViewImpl extends ViewImpl implements OperationListPres
     @Override
     public Widget asWidget() {
         return panel;
-    }
-
-    @Override
-    public void setUiHandlers(OperationListUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
     }
 }

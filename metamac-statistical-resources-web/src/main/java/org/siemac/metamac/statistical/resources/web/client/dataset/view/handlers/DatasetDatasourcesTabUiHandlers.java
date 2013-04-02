@@ -11,7 +11,7 @@ public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
     void retrieveDatasourcesByDataset(String datasetUrn, int firstResult, int maxResults);
 
     void saveDatasource(DatasourceDto datasourceDto);
-    
+
     void deleteDatasources(List<String> datasourcesUrns);
-    
+
 }

@@ -68,7 +68,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         return StatisticalResourcesWeb.getConstants().breadcrumbCollection();
     }
 
-    public interface PublicationView extends View, HasUiHandlers<PublicationPresenter> {
+    public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {
 
         void setPublication(PublicationDto collectionDto);
         void showMetadata();
@@ -147,5 +147,4 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         hierarchy.add(new PlaceRequest(NameTokens.publicationStructurePage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
-
 }

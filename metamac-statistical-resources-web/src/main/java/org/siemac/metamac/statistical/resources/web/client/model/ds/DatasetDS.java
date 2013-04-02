@@ -15,4 +15,7 @@ public class DatasetDS extends StatisticalResourceDS {
     // CLASS DESCRIPTORS
     public static final String FORMAT_EXTENT_OBSERVATIONS = "ds-for-ext-obs";
     public static final String FORMAT_EXTENT_DIMENSIONS   = "ds-for-ext-dim";
+
+    // DTO
+    public static final String DTO                        = "ds-dto";
 }

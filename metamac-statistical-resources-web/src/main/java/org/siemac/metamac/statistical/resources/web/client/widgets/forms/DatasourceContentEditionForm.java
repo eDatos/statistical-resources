@@ -7,22 +7,18 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.shared.utils.SharedTokens;
 
-import com.google.gwt.user.client.ui.NamedFrame;
 import com.smartgwt.client.types.Encoding;
 import com.smartgwt.client.types.FormErrorOrientation;
 import com.smartgwt.client.types.FormMethod;
 import com.smartgwt.client.widgets.form.fields.UploadItem;
-import com.smartgwt.client.widgets.layout.VLayout;
-
 
 public class DatasourceContentEditionForm extends GroupDynamicForm {
+
     private static final String TARGET = "uploadTarget";
-    
 
     private CustomButtonItem    uploadButton;
     private UploadItem          uploadItem;
 
-    
     public DatasourceContentEditionForm() {
         super(getConstants().formContent());
         setErrorOrientation(FormErrorOrientation.LEFT);
@@ -37,22 +33,22 @@ public class DatasourceContentEditionForm extends GroupDynamicForm {
         setTitleSuffix(" ");
         setRequiredTitleSuffix(" ");
 
-//        // Initialize the hidden frame
-//        NamedFrame frame = new NamedFrame(TARGET);
-//        frame.setWidth("1px");
-//        frame.setHeight("1px");
-//        frame.setVisible(false);
+        // // Initialize the hidden frame
+        // NamedFrame frame = new NamedFrame(TARGET);
+        // frame.setWidth("1px");
+        // frame.setHeight("1px");
+        // frame.setVisible(false);
 
         setEncoding(Encoding.MULTIPART);
         setMethod(FormMethod.POST);
-      //  setTarget(TARGET);
+        // setTarget(TARGET);
 
         StringBuilder url = new StringBuilder();
         url.append(SharedTokens.FILE_UPLOAD_DIR_PATH);
         setAction(StatisticalResourcesWeb.getRelativeURL(url.toString()));
 
         uploadItem = new UploadItem("filename");
-        uploadItem.setTitle(getConstants().filename()); 
+        uploadItem.setTitle(getConstants().filename());
         uploadItem.setWidth(300);
         uploadItem.setRequired(true);
 
@@ -70,7 +66,7 @@ public class DatasourceContentEditionForm extends GroupDynamicForm {
 
         setFields(uploadItem, uploadButton);
     }
-    
+
     public void uploadComplete(String fileName) {
         System.out.println(fileName);
     }
@@ -80,16 +76,15 @@ public class DatasourceContentEditionForm extends GroupDynamicForm {
     }
 
     private native void initComplete(DatasourceContentEditionForm upload) /*-{
-                                                             $wnd.uploadComplete = function(fileName) {
-                                                             upload.@org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm::uploadComplete(Ljava/lang/String;)(fileName);
-                                                             };
-                                                             }-*/;
+                                                                          $wnd.uploadComplete = function(fileName) {
+                                                                          upload.@org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm::uploadComplete(Ljava/lang/String;)(fileName);
+                                                                          };
+                                                                          }-*/;
 
     private native void initUploadFailed(DatasourceContentEditionForm upload) /*-{
-                                                                 $wnd.uploadFailed = function(fileName) {
-                                                                 upload.@org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm::uploadFailed(Ljava/lang/String;)(fileName);
-                                                                 }
-                                                                 }-*/;
-    
+                                                                              $wnd.uploadFailed = function(fileName) {
+                                                                              upload.@org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm::uploadFailed(Ljava/lang/String;)(fileName);
+                                                                              }
+                                                                              }-*/;
 
 }

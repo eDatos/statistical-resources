@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.model.record
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.DatasetDS;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -40,7 +40,7 @@ public class DatasetRecord extends ListGridRecord {
     }
 
     public void setVersionLogic(String value) {
-        setAttribute(DatasetDS.VERSION_LOGIC, value);
+        setAttribute(DatasetDS.VERSION, value);
     }
 
     public void setUrn(String value) {
@@ -74,5 +74,4 @@ public class DatasetRecord extends ListGridRecord {
     public String getUrn() {
         return getAttributeAsString(DatasetDS.URN);
     }
-
 }

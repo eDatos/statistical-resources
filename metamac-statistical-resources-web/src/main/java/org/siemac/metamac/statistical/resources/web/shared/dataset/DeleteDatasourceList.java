@@ -9,6 +9,5 @@ import com.gwtplatform.dispatch.annotation.In;
 public class DeleteDatasourceList {
 
     @In(1)
-    List<String> urns; 
-
+    List<String> urns;
 }
