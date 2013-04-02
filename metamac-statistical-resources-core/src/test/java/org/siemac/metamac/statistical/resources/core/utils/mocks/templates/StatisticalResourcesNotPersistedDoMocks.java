@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
@@ -31,13 +32,13 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         query.setLifeCycleStatisticalResource(null);
         return query;
     }
-    
+
     public Query mockQueryWithSelectionNull(DatasetVersion datasetVersion) {
         Query query = mockQueryWithDatasetVersion(datasetVersion);
         query.getSelection().clear();
         return query;
     }
-    
+
     public Query mockQueryWithSelectionIncorrectDimensionNull(DatasetVersion datasetVersion) {
         Query query = mockQueryWithDatasetVersion(datasetVersion);
         QuerySelectionItem querySelectionItem = new QuerySelectionItem();
@@ -48,7 +49,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         query.addSelection(querySelectionItem);
         return query;
     }
-    
+
     public Query mockQueryWithSelectionIncorrectCodesNull(DatasetVersion datasetVersion) {
         Query query = mockQueryWithDatasetVersion(datasetVersion);
         QuerySelectionItem querySelectionItem = new QuerySelectionItem();
@@ -57,7 +58,6 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         query.addSelection(querySelectionItem);
         return query;
     }
-    
 
     // -----------------------------------------------------------------
     // DATASOURCE
@@ -81,7 +81,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     public DatasetVersion mockDatasetVersion() {
         DatasetVersion datasetVerion = mockDatasetVersion(null);
         datasetVerion.setDataset(null);
-        
+
         return datasetVerion;
     }
 
@@ -151,22 +151,26 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
         // NOTHING
-
     }
 
     @Override
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         // NOTHING
+    }
 
+    @Override
+    protected void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource) {
+        // NOTHING
     }
 
     @Override
     protected void setSpecialCasesQueryMock(Query query) {
         // NOTHING
     }
-    
+
     @Override
     protected void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality) {
         // NOTHING
     }
+
 }

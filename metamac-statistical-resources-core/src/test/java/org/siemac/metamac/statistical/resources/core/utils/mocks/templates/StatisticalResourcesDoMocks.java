@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -67,6 +68,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected Query mockQuery(DatasetVersion datasetVersion) {
         Query resource = new Query();
         resource.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
+        
+        // We can not set code in LifeCycle becasuse thera are some resources that have generated code
+        resource.getLifeCycleStatisticalResource().setCode("resource-" + mockString(10));
+        
         resource.setDatasetVersion(datasetVersion);
         resource.setType(QueryTypeEnum.FIXED);
 
@@ -101,6 +106,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected Datasource mockDatasource() {
         Datasource datasource = new Datasource();
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
+        
+        // TODO: ELiminar cuando el código del datasource se esté generando
+        // We can not set code in Identifiable becasuse thera are some resources that have generated code
+        datasource.getIdentifiableStatisticalResource().setCode("resource-" + mockString(10));
 
         return datasource;
     }
@@ -180,6 +189,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return chapter;
     }
     
+    // CUBE
+    public Cube mockCube() {
+        Cube cube = new Cube();
+        cube.setElementLevel(mockElementLevelForCube(cube));
+        cube.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        return cube;
+    }
+    
     // ELEMENT LEVEL
     private ElementLevel mockElementLevel() {
         PublicationVersion publicationVersion = mockPublicationVersion();
@@ -196,6 +213,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private ElementLevel mockElementLevelForChapter(Chapter chapter) {
         ElementLevel elementLevel = mockElementLevel();
         elementLevel.setChapter(chapter);
+        return elementLevel;
+    }
+    
+    private ElementLevel mockElementLevelForCube(Cube cube) {
+        ElementLevel elementLevel = mockElementLevel();
+        elementLevel.setCube(cube);
         return elementLevel;
     }
 
@@ -241,14 +264,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected static NameableStatisticalResource mockNameableStatisticalResorce() {
+    protected NameableStatisticalResource mockNameableStatisticalResorce() {
         NameableStatisticalResource nameableResource = new NameableStatisticalResource();
         mockNameableStatisticalResorce(nameableResource);
 
         return nameableResource;
     }
 
-    protected static NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
+    protected NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
         mockIdentifiableStatisticalResource(resource);
 
         resource.setTitle(mockInternationalString());
@@ -257,11 +280,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected static IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
+    protected IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
         mockStatisticalResource(resource);
 
-        resource.setCode("resource-" + mockString(10));
-
+        setSpecialCasesIdentifiableStatisticalResourceMock(resource);
         return resource;
     }
 
@@ -292,6 +314,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource);
 
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
+    
+    protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource);
 
     protected abstract void setSpecialCasesQueryMock(Query query);
 

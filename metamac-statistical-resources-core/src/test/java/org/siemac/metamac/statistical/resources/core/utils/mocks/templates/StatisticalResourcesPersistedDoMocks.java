@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -134,6 +135,11 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         resource.setVersionLogic("01.000");
         resource.setIsLastVersion(Boolean.FALSE);
     }
+    
+    @Override
+    protected void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource) {
+        resource.setCode("resource-" + mockString(10));
+    }
 
     @Override
     protected void setSpecialCasesQueryMock(Query query) {
@@ -204,4 +210,5 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         lifeCycleResource.setTitle(mockInternationalString());
         lifeCycleResource.setDescription(mockInternationalString());
     }
+
 }

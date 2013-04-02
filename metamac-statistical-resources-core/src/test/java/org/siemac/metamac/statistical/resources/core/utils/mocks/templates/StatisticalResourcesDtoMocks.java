@@ -40,7 +40,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTyp
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     private static final String URN_RELATED_RESOURCE_MOCK = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + mockString(10);
-    
+
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
@@ -49,18 +49,20 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         QueryDto queryDto = new QueryDto();
 
         mockNameableStatisticalResorceDto(queryDto);
+
+        // code is not setting in nameable becasuse some resources have generated code
+        queryDto.setCode(mockString(8));
+
         queryDto.setDatasetVersion(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
         queryDto.setType(QueryTypeEnum.FIXED);
-        
-        
+
         Map<String, Set<String>> selection = new HashMap<String, Set<String>>();
         selection.put("SEX", new HashSet<String>(Arrays.asList("FEMALE")));
         selection.put("REGION", new HashSet<String>(Arrays.asList("TENERIFE", "LA_GOMERA")));
-        queryDto.setSelection(selection );
+        queryDto.setSelection(selection);
 
         return queryDto;
     }
-    
 
     // -----------------------------------------------------------------
     // DATASOURCES
@@ -69,8 +71,13 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     public static DatasourceDto mockDatasourceDto() {
         DatasourceDto datasourceDto = new DatasourceDto();
 
-        datasourceDto.setDatasetVersionUrn(URN_RELATED_RESOURCE_MOCK);
         mockIdentifiableStatisticalResourceDto(datasourceDto);
+
+        // TODO: Esto debe eliminarse cuando el código pase a ser generado automáticamente
+        // code is not setting in nameable becasuse some resources have generated code
+        datasourceDto.setCode(mockString(8));
+
+        datasourceDto.setDatasetVersionUrn(URN_RELATED_RESOURCE_MOCK);
 
         return datasourceDto;
     }
@@ -115,7 +122,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         return datasetDto;
     }
-    
+
     // -----------------------------------------------------------------
     // PUBLICATIONS
     // -----------------------------------------------------------------
@@ -129,7 +136,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         return publicationDto;
     }
-    
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -179,6 +186,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         mockLifeCycleStatisticalResourceDto(siemacMetadataStatisticalResourceDto);
     }
+
     private static void mockLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
 
         lifeCycleStatisticalResourceDto.setCreationDate(new DateTime().toDate());
@@ -231,13 +239,11 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // resource.setOperation(mockExternalItemDto(URN_RELATED_RESOURCE_MOCK, TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
     }
 
-
     // RELATED RESOURCE DTOs
     public static RelatedResourceDto mockDatasetRelatedResorceItem() {
         return createRelatedResourceDtoMockFromDoMock(StatisticalResourcesDoMocks.mockDatasetVersionRelated());
     }
-    
-    
+
     // EXTERNAL ITEM DTOs
 
     public static ExternalItemDto mockStatisticalOperationItem() {
@@ -292,7 +298,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         itemDto.setVersion(Long.valueOf(0));
         return itemDto;
     }
-    
+
     private static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
         StatisticOfficialityDto dto = new StatisticOfficialityDto();
         dto.setIdentifier(officiality.getIdentifier());
@@ -301,10 +307,10 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         dto.setDescription(createInternationalStringDtoFromDo(officiality.getDescription()));
         return dto;
     }
-    
+
     private static InternationalStringDto createInternationalStringDtoFromDo(InternationalString intString) {
         InternationalStringDto dto = new InternationalStringDto();
-        
+
         dto.setId(intString.getId());
         for (LocalisedString loc : intString.getTexts()) {
             LocalisedStringDto locDto = new LocalisedStringDto();
@@ -323,5 +329,5 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     private static Date mockDate() {
         return mockDateTime().toDate();
     }
-    
+
 }
