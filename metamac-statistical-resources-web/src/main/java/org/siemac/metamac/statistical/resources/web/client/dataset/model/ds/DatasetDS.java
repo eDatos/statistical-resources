@@ -1,4 +1,6 @@
-package org.siemac.metamac.statistical.resources.web.client.model.ds;
+package org.siemac.metamac.statistical.resources.web.client.dataset.model.ds;
+
+import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
 
 public class DatasetDS extends StatisticalResourceDS {
 
