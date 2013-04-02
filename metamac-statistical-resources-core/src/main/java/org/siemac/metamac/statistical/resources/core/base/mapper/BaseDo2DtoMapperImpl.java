@@ -127,6 +127,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         nameableStatisticalResourceDoToDto(source, target);
 
         target.setVersionLogic(source.getVersionLogic());
+        target.setNextVersion(source.getNextVersion());
         target.setNextVersionDate(dateDoToDto(source.getNextVersionDate()));
         target.setVersionRationale(internationalStringDoToDto(source.getVersionRationale()));
         target.getVersionRationaleTypes().clear();
