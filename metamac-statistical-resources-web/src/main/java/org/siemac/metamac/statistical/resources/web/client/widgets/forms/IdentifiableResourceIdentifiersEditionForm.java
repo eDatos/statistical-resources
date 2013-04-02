@@ -4,9 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.IdentifiableResourceDS;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 public class IdentifiableResourceIdentifiersEditionForm extends GroupDynamicForm {
@@ -14,8 +12,7 @@ public class IdentifiableResourceIdentifiersEditionForm extends GroupDynamicForm
     public IdentifiableResourceIdentifiersEditionForm() {
         super(getConstants().formIdentifiers());
 
-        RequiredSelectItem identifier = new RequiredSelectItem(IdentifiableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        identifier.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
+        ViewTextItem identifier = new ViewTextItem(IdentifiableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
         ViewTextItem uri = new ViewTextItem(IdentifiableResourceDS.URI, getConstants().identifiableStatisticalResourceURI());
         ViewTextItem urn = new ViewTextItem(IdentifiableResourceDS.URN, getConstants().identifiableStatisticalResourceURN());
 
@@ -29,7 +26,6 @@ public class IdentifiableResourceIdentifiersEditionForm extends GroupDynamicForm
     }
 
     public IdentifiableStatisticalResourceDto getIdentifiableStatisticalResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
-        identifiableStatisticalResourceDto.setCode(getValueAsString(IdentifiableResourceDS.CODE));
         return identifiableStatisticalResourceDto;
     }
 }
