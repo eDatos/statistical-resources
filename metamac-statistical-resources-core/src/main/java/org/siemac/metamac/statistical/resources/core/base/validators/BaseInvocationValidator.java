@@ -87,11 +87,12 @@ public abstract class BaseInvocationValidator {
 
         // Metadata that must be filled for existing entities
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getUrn(), addParameter(metadataName, ServiceExceptionSingleParameters.URN), exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getCode(), addParameter(metadataName, ServiceExceptionSingleParameters.CODE), exceptions);
+        StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(resource.getCode(), addParameter(metadataName, ServiceExceptionSingleParameters.CODE), exceptions);
     }
 
     private static void checkIdentifiableStatisticalResource(IdentifiableStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
-    //    StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getCode(), addParameter(metadataName, ServiceExceptionSingleParameters.CODE), exceptions);
-    //    StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(resource.getCode(), addParameter(metadataName, ServiceExceptionSingleParameters.CODE), exceptions);
+        // NOTHING
     }
 
     // ------------------------------------------------------------------------------------
@@ -154,8 +155,7 @@ public abstract class BaseInvocationValidator {
     }
 
     private static void checkVersionableStatisticalResource(VersionableStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(resource.getVersionRationale(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE),
-                exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(resource.getVersionRationale(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE), exceptions);
     }
 
     // ------------------------------------------------------------------------------------
@@ -220,14 +220,12 @@ public abstract class BaseInvocationValidator {
     private static void checkSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(resource.getStatisticalOperationInstance(),
-                ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(resource.getStatisticalOperationInstance(), ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCE, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(resource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptions);
-        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR),
-                exceptions);
+        StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getMediator(), addParameter(metadataName, ServiceExceptionSingleParameters.MEDIATOR), exceptions);
     }
-    
+
 }

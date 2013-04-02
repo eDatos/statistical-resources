@@ -2,13 +2,11 @@ package org.siemac.metamac.statistical.resources.core.query.serviceimpl.validato
 
 import java.util.List;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
-import org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -61,10 +59,11 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         }
 
         checkNewLifeCycleStatisticalResource(query.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE, exceptions);
+        
         if (query.getLifeCycleStatisticalResource() != null) {
             // Check code
-            StatisticalResourcesValidationUtils.checkMetadataRequired(query.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParametersUtils.addParameter(ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE, ServiceExceptionSingleParameters.CODE), exceptions);
-            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(query.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParametersUtils.addParameter(ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE, ServiceExceptionSingleParameters.CODE), exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(query.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
+            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(query.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParameters.QUERY__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
         }
         checkQuery(query, exceptions);
 
