@@ -37,6 +37,16 @@
     </listener>
 
     <servlet>
+        <servlet-name>upload</servlet-name>
+        <servlet-class>org.siemac.metamac.statistical.resources.web.server.servlet.FileUploadServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>upload</servlet-name>
+        <url-pattern>/files/upload/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>dispatch</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>

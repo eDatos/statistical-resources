@@ -10,6 +10,9 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class SaveDatasource {
 
     @In(1)
+    String urnDataset;
+    
+    @In(2)
     DatasourceDto datasource;
 
     @Out(1)
