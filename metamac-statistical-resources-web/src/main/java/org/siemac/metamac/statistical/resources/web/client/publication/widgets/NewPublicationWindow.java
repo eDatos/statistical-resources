@@ -8,7 +8,6 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.PublicationDS;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
@@ -29,10 +28,6 @@ public class NewPublicationWindow extends CustomWindow {
         super(title);
         setAutoSize(true);
 
-        RequiredTextItem identifierItem = new RequiredTextItem(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        identifierItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
-        identifierItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-
         RequiredTextItem nameItem = new RequiredTextItem(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         nameItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
@@ -40,7 +35,7 @@ public class NewPublicationWindow extends CustomWindow {
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(identifierItem, nameItem, saveItem);
+        form.setFields(nameItem, saveItem);
 
         addItem(form);
         show();
@@ -52,7 +47,6 @@ public class NewPublicationWindow extends CustomWindow {
 
     public PublicationDto getNewPublicationDto() {
         PublicationDto publicationDto = new PublicationDto();
-        publicationDto.setCode(form.getValueAsString(PublicationDS.CODE));
         publicationDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(PublicationDS.TITLE)));
 
         // FIXME Remove this mocks!! Languages and maintainer should be read from DATA
