@@ -25,15 +25,14 @@ import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPag
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class PublicationMetadataTabViewImpl extends ViewImpl implements PublicationMetadataTabView {
+public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
-    private PublicationMetadataTabUiHandlers                          uiHandlers;
     private VLayout                                                   panel;
 
     private PublicationMainFormLayout                                 mainFormLayout;
@@ -125,7 +124,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
                         && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)) {
-                    uiHandlers.savePublication(getPublicationDto());
+                    getUiHandlers().savePublication(getPublicationDto());
                 }
             }
         });
@@ -135,28 +134,28 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToProductionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().sendToProductionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToDiffusionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().sendToDiffusionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.rejectValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().rejectValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.publish(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().publish(publicationDto.getUrn(), publicationDto.getProcStatus());
             }
         });
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
@@ -169,7 +168,7 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (versionWindow.validateForm()) {
-                            uiHandlers.version(publicationDto.getUrn(), versionWindow.getSelectedVersion());
+                            getUiHandlers().version(publicationDto.getUrn(), versionWindow.getSelectedVersion());
                             versionWindow.destroy();
                         }
                     }
@@ -381,11 +380,6 @@ public class PublicationMetadataTabViewImpl extends ViewImpl implements Publicat
         // collectionDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(PublicationDS.NEXT_UPDATE_DATE));
 
         return publicationDto;
-    }
-
-    @Override
-    public void setUiHandlers(PublicationMetadataTabUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
     }
 
     @Override

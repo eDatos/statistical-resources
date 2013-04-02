@@ -24,16 +24,15 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetadataTabView {
+public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetadataTabUiHandlers> implements DatasetMetadataTabView {
 
     // private final int AGENCIES_MAX_RESULTS = 15;
 
-    private DatasetMetadataTabUiHandlers                              uiHandlers;
     private VLayout                                                   panel;
     private DatasetMainFormLayout                                     mainFormLayout;
 
@@ -117,7 +116,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
                         && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)) {
-                    uiHandlers.saveDataset(getDatasetDto());
+                    getUiHandlers().saveDataset(getDatasetDto());
                 }
             }
         });
@@ -127,21 +126,21 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToProductionValidation(datasetDto.getUrn(), datasetDto.getProcStatus());
+                getUiHandlers().sendToProductionValidation(datasetDto.getUrn(), datasetDto.getProcStatus());
             }
         });
         mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToDiffusionValidation(datasetDto.getUrn(), datasetDto.getProcStatus());
+                getUiHandlers().sendToDiffusionValidation(datasetDto.getUrn(), datasetDto.getProcStatus());
             }
         });
         mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.rejectValidation(datasetDto.getUrn(), datasetDto.getProcStatus());
+                getUiHandlers().rejectValidation(datasetDto.getUrn(), datasetDto.getProcStatus());
             }
         });
         // FIXME: add clickhandler
@@ -180,7 +179,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.publish(datasetDto.getUrn(), datasetDto.getProcStatus());
+                getUiHandlers().publish(datasetDto.getUrn(), datasetDto.getProcStatus());
             }
         });
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
@@ -193,7 +192,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (versionWindow.validateForm()) {
-                            uiHandlers.version(datasetDto.getUrn(), versionWindow.getSelectedVersion());
+                            getUiHandlers().version(datasetDto.getUrn(), versionWindow.getSelectedVersion());
                             versionWindow.destroy();
                         }
                     }
@@ -615,11 +614,6 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     @Override
     public Widget asWidget() {
         return panel;
-    }
-
-    @Override
-    public void setUiHandlers(DatasetMetadataTabUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
     }
 
     // private enum AgencyField {
