@@ -19,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -31,26 +33,28 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
     // private final int AGENCIES_MAX_RESULTS = 15;
 
-    private DatasetMetadataTabUiHandlers            uiHandlers;
-    private VLayout                                 panel;
-    private DatasetMainFormLayout                   mainFormLayout;
+    private DatasetMetadataTabUiHandlers                              uiHandlers;
+    private VLayout                                                   panel;
+    private DatasetMainFormLayout                                     mainFormLayout;
 
-    private NameableResourceIdentifiersForm         identifiersForm;
-    private DatasetContentDescriptorsForm           contentDescriptorsForm;
-    private DatasetProductionDescriptorsForm        productionDescriptorsForm;
-    private DatasetClassDescriptorsForm             classDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm          lifeCycleForm;
-    private LifeCycleResourceVersionForm            versionForm;
+    private NameableResourceIdentifiersForm                           identifiersForm;
+    private DatasetContentDescriptorsForm                             contentDescriptorsForm;
+    private DatasetProductionDescriptorsForm                          productionDescriptorsForm;
+    private DatasetClassDescriptorsForm                               classDescriptorsForm;
+    private StatisticalResourceResourceRelationDescriptorsForm        resourceRelationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                            lifeCycleForm;
+    private LifeCycleResourceVersionForm                              versionForm;
     // private GroupDynamicForm contentMetadataForm;
     // private GroupDynamicForm versioningForm;
     // private GroupDynamicForm lifeCycleForm;
 
-    private NameableResourceIdentifiersEditionForm  identifiersEditionForm;
-    private DatasetContentDescriptorsEditionForm    contentDescriptorsEditionForm;
-    private DatasetProductionDescriptorsEditionForm productionDescriptorsEditionForm;
-    private DatasetClassDescriptorsEditionForm      classDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm          lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm     versionEditionForm;
+    private NameableResourceIdentifiersEditionForm                    identifiersEditionForm;
+    private DatasetContentDescriptorsEditionForm                      contentDescriptorsEditionForm;
+    private DatasetProductionDescriptorsEditionForm                   productionDescriptorsEditionForm;
+    private DatasetClassDescriptorsEditionForm                        classDescriptorsEditionForm;
+    private StatisticalResourceResourceRelationDescriptorsEditionForm resourceRelationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                            lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                       versionEditionForm;
     // private GroupDynamicForm contentMetadataEditionForm;
     // private GroupDynamicForm versioningEditionForm;
     // private GroupDynamicForm lifeCycleEditionForm;
@@ -58,7 +62,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private DatasetDto                              datasetDto;
+    private DatasetDto                                                datasetDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
@@ -91,6 +95,9 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
                 classDescriptorsForm.setTranslationsShowed(translationsShowed);
                 classDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 
+                resourceRelationDescriptorsForm.setTranslationsShowed(translationsShowed);
+                resourceRelationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
                 lifeCycleForm.setTranslationsShowed(translationsShowed);
                 lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
 
@@ -109,7 +116,7 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
             @Override
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
-                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)) {
+                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)) {
                     uiHandlers.saveDataset(getDatasetDto());
                 }
             }
@@ -206,21 +213,31 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     private void createViewForm() {
         // Identifiers Form
         identifiersForm = new NameableResourceIdentifiersForm();
+        mainFormLayout.addViewCanvas(identifiersForm);
 
         // Content descriptors form
         contentDescriptorsForm = new DatasetContentDescriptorsForm();
+        mainFormLayout.addViewCanvas(contentDescriptorsForm);
 
         // Production descriptors
         productionDescriptorsForm = new DatasetProductionDescriptorsForm();
+        mainFormLayout.addViewCanvas(productionDescriptorsForm);
 
         // Class descriptors
         classDescriptorsForm = new DatasetClassDescriptorsForm();
+        mainFormLayout.addViewCanvas(classDescriptorsForm);
+
+        // Resource relation descriptors
+        resourceRelationDescriptorsForm = new StatisticalResourceResourceRelationDescriptorsForm();
+        mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
 
         // Life cycle
         lifeCycleForm = new LifeCycleResourceLifeCycleForm();
+        mainFormLayout.addViewCanvas(lifeCycleForm);
 
         // Version
         versionForm = new LifeCycleResourceVersionForm();
+        mainFormLayout.addViewCanvas(versionForm);
 
         // version
         // versioningForm = new GroupDynamicForm(getConstants().datasetVersioning());
@@ -273,12 +290,6 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         // contentMetadataForm.setFields(language, languages, description, keywords, spatialCoverage, spatialCoverageCodes, temporalCoverage, temporalCoverageCodes, type, format, nextUpdate,
         // updateFrequency, rightsHolder, copyrightedDate, license);
 
-        mainFormLayout.addViewCanvas(identifiersForm);
-        mainFormLayout.addViewCanvas(contentDescriptorsForm);
-        mainFormLayout.addViewCanvas(productionDescriptorsForm);
-        mainFormLayout.addViewCanvas(classDescriptorsForm);
-        mainFormLayout.addViewCanvas(lifeCycleForm);
-        mainFormLayout.addViewCanvas(versionForm);
         // mainFormLayout.addViewCanvas(versioningForm);
         // mainFormLayout.addViewCanvas(lifeCycleForm);
         // mainFormLayout.addViewCanvas(contentMetadataForm);
@@ -287,21 +298,31 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
     private void createEditionForm() {
         // Identifiers form
         identifiersEditionForm = new NameableResourceIdentifiersEditionForm();
+        mainFormLayout.addEditionCanvas(identifiersEditionForm);
 
         // Content descriptors form
         contentDescriptorsEditionForm = new DatasetContentDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 
         // Production descriptors
         productionDescriptorsEditionForm = new DatasetProductionDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
 
         // Class descriptors
         classDescriptorsEditionForm = new DatasetClassDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(classDescriptorsEditionForm);
+
+        // Resource relation descriptors
+        resourceRelationDescriptorsEditionForm = new StatisticalResourceResourceRelationDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(resourceRelationDescriptorsEditionForm);
 
         // Life cycle
         lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
+        mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
 
         // Version
         versionEditionForm = new LifeCycleResourceVersionEditionForm();
+        mainFormLayout.addEditionCanvas(versionEditionForm);
 
         // Version form
         // versioningEditionForm = new GroupDynamicForm(getConstants().versionableVersion());
@@ -354,12 +375,6 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
         // contentMetadataEditionForm.setFields(language, languages, description, keywords, spatialCoverage, spatialCoverageCodes, temporalCoverage, temporalCoverageCodes, type, format, nextUpdate,
         // updateFrequency, rightsHolder, copyrightedDate, license);
 
-        mainFormLayout.addEditionCanvas(identifiersEditionForm);
-        mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
-        mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
-        mainFormLayout.addEditionCanvas(classDescriptorsEditionForm);
-        mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
-        mainFormLayout.addEditionCanvas(versionEditionForm);
         // mainFormLayout.addEditionCanvas(versioningEditionForm);
         // mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
         // mainFormLayout.addEditionCanvas(contentMetadataEditionForm);
@@ -402,6 +417,9 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
         // Class descriptors
         classDescriptorsForm.setDatasetDto(datasetDto);
+
+        // Resource relation descriptors
+        resourceRelationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Life cycle
         lifeCycleForm.setLifeCycleStatisticalResourceDto(datasetDto);
@@ -465,6 +483,9 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
         // Class descriptors
         classDescriptorsEditionForm.setDatasetDto(datasetDto);
+
+        // Resource relation descriptors
+        resourceRelationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(datasetDto);
@@ -543,6 +564,9 @@ public class DatasetMetadataTabViewImpl extends ViewImpl implements DatasetMetad
 
         // Class descriptors
         datasetDto = classDescriptorsEditionForm.getDatasetDto(datasetDto);
+
+        // Resource relation descriptors
+        datasetDto = (DatasetDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Version
         datasetDto = (DatasetDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetDto);
