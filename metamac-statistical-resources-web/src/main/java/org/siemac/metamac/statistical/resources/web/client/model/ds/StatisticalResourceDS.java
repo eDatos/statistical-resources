@@ -43,4 +43,8 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     // THEMATIC CONTENT CLASSIFIERS
     public static final String STATISTICAL_OPERATION          = "sr-ope";
     public static final String STATISTICAL_OPERATION_INSTANCE = "sr-ope-inst";
+
+    // LANGUAGES
+    public static final String LANGUAGE                       = "sr-lang";
+    public static final String LANGUAGES                      = "sr-langs";
 }

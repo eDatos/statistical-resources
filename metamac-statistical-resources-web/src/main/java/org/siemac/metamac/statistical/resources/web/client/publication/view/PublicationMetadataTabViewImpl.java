@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Nameabl
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
@@ -49,6 +51,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     private NameableResourceIdentifiersForm                          identifiersForm;
     private StatisticalResourceContentDescriptorsForm                contentDescriptorsForm;
     private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
+    private StatisticalResourceLanguageForm                          languageForm;
     private StatisticalResourceProductionDescriptorsForm             productionDescriptorsForm;
     private PublicationClassDescriptorsForm                          classDescriptorsForm;
     private StatisticalResourceResourceRelationDescriptorsForm       resourceRelationDescriptorsForm;
@@ -59,6 +62,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
     private StatisticalResourceContentDescriptorsEditionForm         contentDescriptorsEditionForm;
     private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
+    private StatisticalResourceLanguageEditionForm                   languageEditionForm;
     private StatisticalResourceProductionDescriptorsEditionForm      productionDescriptorsEditionForm;
     private PublicationClassDescriptorsEditionForm                   classDescriptorsEditionForm;
     private PublicationResourceRelationDescriptorsEditionForm        resourceRelationDescriptorsEditionForm;
@@ -111,6 +115,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
                 thematicContentClassifiersForm.setTranslationsShowed(translationsShowed);
                 thematicContentClassifiersEditionForm.setTranslationsShowed(translationsShowed);
 
+                languageForm.setTranslationsShowed(translationsShowed);
+                languageEditionForm.setTranslationsShowed(translationsShowed);
+
                 productionDescriptorsForm.setTranslationsShowed(translationsShowed);
                 productionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 
@@ -148,7 +155,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
                         && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
-                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false)) {
+                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)) {
                     getUiHandlers().savePublication(getPublicationDto());
                 }
             }
@@ -215,6 +222,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         thematicContentClassifiersForm = new StatisticalResourceThematicContentClassifiersForm();
         mainFormLayout.addViewCanvas(thematicContentClassifiersForm);
 
+        // Languages
+        languageForm = new StatisticalResourceLanguageForm();
+        mainFormLayout.addViewCanvas(languageForm);
+
         // Production descriptors
         productionDescriptorsForm = new StatisticalResourceProductionDescriptorsForm();
         mainFormLayout.addViewCanvas(productionDescriptorsForm);
@@ -252,6 +263,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Thematic content classifiers
         thematicContentClassifiersEditionForm = new StatisticalResourceThematicContentClassifiersEditionForm();
         mainFormLayout.addEditionCanvas(thematicContentClassifiersEditionForm);
+
+        // Languages
+        languageEditionForm = new StatisticalResourceLanguageEditionForm();
+        mainFormLayout.addEditionCanvas(languageEditionForm);
 
         // Production descriptors
         productionDescriptorsEditionForm = new StatisticalResourceProductionDescriptorsEditionForm();
@@ -304,6 +319,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Thematic content classifiers
         thematicContentClassifiersForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
+        // Languages
+        languageForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
         // Class descriptors
         classDescriptorsForm.setPublicationDto(publicationDto);
 
@@ -332,6 +350,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Thematic content classifiers
         thematicContentClassifiersEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Languages
+        languageEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Production descriptors
         productionDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
@@ -382,6 +403,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Thematic content classifiers
         publicationDto = (PublicationDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Language
+        publicationDto = (PublicationDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Production descriptors
         publicationDto = (PublicationDto) productionDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
