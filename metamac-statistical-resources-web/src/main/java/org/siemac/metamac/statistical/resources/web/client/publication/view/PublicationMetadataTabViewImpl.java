@@ -23,6 +23,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
@@ -38,36 +40,32 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
-    private VLayout                                             panel;
+    private VLayout                                              panel;
 
-    private PublicationMainFormLayout                           mainFormLayout;
+    private PublicationMainFormLayout                            mainFormLayout;
 
-    private NameableResourceIdentifiersForm                     identifiersForm;
-    private StatisticalResourceContentDescriptorsForm           contentDescriptorsForm;
-    private StatisticalResourceProductionDescriptorsForm        productionDescriptorsForm;
-    private PublicationClassDescriptorsForm                     classDescriptorsForm;
-    private StatisticalResourceResourceRelationDescriptorsForm  resourceRelationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                      lifeCycleForm;
-    private LifeCycleResourceVersionForm                        versionForm;
-    // private GroupDynamicForm versionForm;
-    // private GroupDynamicForm lifeCycleForm;
-    // private GroupDynamicForm contentMetadataForm;
+    private NameableResourceIdentifiersForm                      identifiersForm;
+    private StatisticalResourceContentDescriptorsForm            contentDescriptorsForm;
+    private StatisticalResourceProductionDescriptorsForm         productionDescriptorsForm;
+    private PublicationClassDescriptorsForm                      classDescriptorsForm;
+    private StatisticalResourceResourceRelationDescriptorsForm   resourceRelationDescriptorsForm;
+    private StatisticalResourcePublicationDescriptorsForm        publicationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                       lifeCycleForm;
+    private LifeCycleResourceVersionForm                         versionForm;
 
-    private NameableResourceIdentifiersEditionForm              identifiersEditionForm;
-    private StatisticalResourceContentDescriptorsEditionForm    contentDescriptorsEditionForm;
-    private StatisticalResourceProductionDescriptorsEditionForm productionDescriptorsEditionForm;
-    private PublicationClassDescriptorsEditionForm              classDescriptorsEditionForm;
-    private PublicationResourceRelationDescriptorsEditionForm   resourceRelationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                      lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                 versionEditionForm;
-    // private GroupDynamicForm versionEditionForm;
-    // private GroupDynamicForm lifeCycleEditionForm;
-    // private GroupDynamicForm contentMetadataEditionForm;
+    private NameableResourceIdentifiersEditionForm               identifiersEditionForm;
+    private StatisticalResourceContentDescriptorsEditionForm     contentDescriptorsEditionForm;
+    private StatisticalResourceProductionDescriptorsEditionForm  productionDescriptorsEditionForm;
+    private PublicationClassDescriptorsEditionForm               classDescriptorsEditionForm;
+    private PublicationResourceRelationDescriptorsEditionForm    resourceRelationDescriptorsEditionForm;
+    private StatisticalResourcePublicationDescriptorsEditionForm publicationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                       lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                  versionEditionForm;
 
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private PublicationDto                                      publicationDto;
+    private PublicationDto                                       publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -115,6 +113,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
                 resourceRelationDescriptorsForm.setTranslationsShowed(translationsShowed);
                 resourceRelationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 
+                publicationDescriptorsForm.setTranslationsShowed(translationsShowed);
+                publicationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
                 lifeCycleForm.setTranslationsShowed(translationsShowed);
                 lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
 
@@ -139,7 +140,8 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
             @Override
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
-                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)) {
+                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
+                        && publicationDescriptorsEditionForm.validate(false)) {
                     getUiHandlers().savePublication(getPublicationDto());
                 }
             }
@@ -214,6 +216,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         resourceRelationDescriptorsForm = new StatisticalResourceResourceRelationDescriptorsForm();
         mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
 
+        // Publication descriptors
+        publicationDescriptorsForm = new StatisticalResourcePublicationDescriptorsForm();
+        mainFormLayout.addViewCanvas(publicationDescriptorsForm);
+
         // Life cycle
         lifeCycleForm = new LifeCycleResourceLifeCycleForm();
         mainFormLayout.addViewCanvas(lifeCycleForm);
@@ -243,6 +249,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Resource relation descriptors
         resourceRelationDescriptorsEditionForm = new PublicationResourceRelationDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(resourceRelationDescriptorsEditionForm);
+
+        // Publication descriptors
+        publicationDescriptorsEditionForm = new StatisticalResourcePublicationDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(publicationDescriptorsEditionForm);
 
         // Life cycle
         lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
@@ -276,9 +286,6 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Content descriptors form
         contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
-        // Life cycle
-        lifeCycleForm.setLifeCycleStatisticalResourceDto(publicationDto);
-
         // Class descriptors
         classDescriptorsForm.setPublicationDto(publicationDto);
 
@@ -287,6 +294,12 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Production descriptors
         productionDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Publication descriptors
+        publicationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Life cycle
+        lifeCycleForm.setLifeCycleStatisticalResourceDto(publicationDto);
 
         // Version
         versionForm.setLifeCycleStatisticalResourceDto(publicationDto);
@@ -307,6 +320,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Resource relation descriptors
         resourceRelationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Publication descriptors
+        publicationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
@@ -351,6 +367,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Resource relation descriptors
         publicationDto = (PublicationDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+
+        // Publication descriptors
+        publicationDto = (PublicationDto) publicationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Version
         publicationDto = (PublicationDto) versionEditionForm.getLifeCycleStatisticalResourceDto(publicationDto);
