@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.utils;
+package org.siemac.metamac.statistical.resources.web.shared.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,9 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
-public class RelatedResourceUtils {
+public class RelatedResourceUtils extends RelatedResourceBaseUtils {
 
     // -------------------------------------------------------------------------------------------------------------
     // IDENTIFIABLE RESOURCE
