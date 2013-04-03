@@ -13,7 +13,7 @@ import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -30,7 +30,7 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
         // TODO may be editable
         ViewTextItem versionRationaleTypes = new ViewTextItem(VersionableResourceDS.VERSION_RATIONALE_TYPES, getConstants().versionableStatisticalResourceVersionRationaleTypes());
 
-        MultiLanguageTextItem versionRationale = new MultiLanguageTextItem(VersionableResourceDS.VERSION_RATIONALE, getConstants().versionableStatisticalResourceVersionRationale());
+        MultiLanguageTextAreaItem versionRationale = new MultiLanguageTextAreaItem(VersionableResourceDS.VERSION_RATIONALE, getConstants().versionableStatisticalResourceVersionRationale());
 
         ViewTextItem validFrom = new ViewTextItem(VersionableResourceDS.VALID_FROM, getConstants().versionableStatisticalResourceValidFrom());
 

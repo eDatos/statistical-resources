@@ -7,14 +7,14 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
 
 public class LifeCycleResourceContentDescriptorsEditionForm extends GroupDynamicForm {
 
     public LifeCycleResourceContentDescriptorsEditionForm() {
         super(getConstants().formContentDescriptors());
 
-        MultiLanguageTextItem description = new MultiLanguageTextItem(LifeCycleResourceDS.DESCRIPTION, getConstants().nameableStatisticalResourceDescription());
+        MultiLanguageTextAreaItem description = new MultiLanguageTextAreaItem(LifeCycleResourceDS.DESCRIPTION, getConstants().nameableStatisticalResourceDescription());
 
         setFields(description);
     }

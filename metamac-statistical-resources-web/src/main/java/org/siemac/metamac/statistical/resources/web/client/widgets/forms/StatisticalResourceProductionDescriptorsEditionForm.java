@@ -8,7 +8,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalR
 import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDynamicForm {
@@ -21,8 +21,9 @@ public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDy
         ViewTextItem contributor = new ViewTextItem(StatisticalResourceDS.CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourceContributor()); // TODO Should be editable
         ViewTextItem dateCreated = new ViewTextItem(StatisticalResourceDS.DATE_CREATED, getConstants().siemacMetadataStatisticalResourceDateCreated());
         ViewTextItem lastUpdate = new ViewTextItem(StatisticalResourceDS.LAST_UPDATE, getConstants().siemacMetadataStatisticalResourceLastUpdate());
-        MultiLanguageTextAreaItem conformsTo = new MultiLanguageTextAreaItem(StatisticalResourceDS.CONFORMS_TO, getConstants().siemacMetadataStatisticalResourceConformsTo());
-        MultiLanguageTextAreaItem conformsToInternal = new MultiLanguageTextAreaItem(StatisticalResourceDS.CONFORMS_TO_INTERNAL, getConstants().siemacMetadataStatisticalResourceConformsToInternal());
+        MultilanguageRichTextEditorItem conformsTo = new MultilanguageRichTextEditorItem(StatisticalResourceDS.CONFORMS_TO, getConstants().siemacMetadataStatisticalResourceConformsTo());
+        MultilanguageRichTextEditorItem conformsToInternal = new MultilanguageRichTextEditorItem(StatisticalResourceDS.CONFORMS_TO_INTERNAL, getConstants()
+                .siemacMetadataStatisticalResourceConformsToInternal());
 
         setFields(maintainer, creator, contributor, dateCreated, lastUpdate, conformsTo, conformsToInternal);
     }
