@@ -18,7 +18,6 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -46,11 +45,11 @@ public class BaseAsserts extends MetamacAsserts {
     // -----------------------------------------------------------------
     // VERSIONING ASSERTS: DO & DO
     // -----------------------------------------------------------------
-    
+
     public static void assertEqualsVersioningSiemacMetadata(SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next) {
         assertEqualsVersioningLifecycle(previous, next);
-        
-        //Not inherited
+
+        // Not inherited
         assertNull(next.getLastUpdate());
         assertNull(next.getNewnessUntilDate());
         assertNull(next.getReplaces());
@@ -58,34 +57,34 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(0, next.getHasPart().size());
         assertEquals(0, next.getIsPartOf().size());
         assertNull(next.getCopyrightedDate());
-        
-        //Inherited
+
+        // Inherited
         assertEqualsExternalItem(previous.getLanguage(), next.getLanguage());
         assertEqualsExternalItemCollection(previous.getLanguages(), next.getLanguages());
-        
+
         assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
         assertEqualsExternalItem(previous.getStatisticalOperationInstance(), next.getStatisticalOperationInstance());
-        
+
         assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
         assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
         assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
-        //TODO: keywords?
+        // TODO: keywords?
         assertEquals(previous.getType(), next.getType());
-        
+
         assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
         assertEqualsExternalItem(previous.getCreator(), next.getCreator());
         assertEqualsExternalItemCollection(previous.getContributor(), next.getContributor());
         assertEqualsDate(previous.getCreatedDate(), next.getCreatedDate());
         assertEqualsInternationalString(previous.getConformsTo(), next.getConformsTo());
         assertEqualsInternationalString(previous.getConformsToInternal(), next.getConformsToInternal());
-        
+
         assertEqualsExternalItemCollection(previous.getPublisher(), next.getPublisher());
         assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
         assertEqualsExternalItemCollection(previous.getMediator(), next.getMediator());
-        
+
         assertEqualsRelatedResourceCollection(previous.getRequires(), next.getRequires());
         assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
-        
+
         assertEqualsExternalItem(previous.getRightsHolder(), next.getRightsHolder());
         assertEqualsInternationalString(previous.getLicense(), next.getLicense());
         assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
@@ -94,12 +93,12 @@ public class BaseAsserts extends MetamacAsserts {
     private static void assertEqualsVersioningLifecycle(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
         assertEqualsVersioningVersionable(previous, next);
         assertEquals(StatisticalResourceProcStatusEnum.DRAFT, next.getProcStatus());
-        
+
         assertNotNull(next.getCreationDate());
         assertFalse(previous.getCreationDate().equals(next.getCreationDate()));
         assertNotNull(next.getCreationUser());
         assertFalse(previous.getCreationUser().equals(next.getCreationUser()));
-        
+
         assertNull(next.getProductionValidationDate());
         assertNull(next.getProductionValidationUser());
         assertNull(next.getDiffusionValidationDate());
@@ -115,36 +114,35 @@ public class BaseAsserts extends MetamacAsserts {
         assertNull(next.getReplacesVersion());
         assertNull(next.getIsReplacedByVersion());
     }
-    
+
     private static void assertEqualsVersioningVersionable(VersionableStatisticalResource previous, VersionableStatisticalResource next) {
         assertEqualsVersioningNameable(previous, next);
-        
+
         assertNotNull(next.getVersionLogic());
         assertFalse(previous.getVersionLogic().equals(next.getVersionLogic()));
-        
-        assertEquals(0,next.getVersionRationaleTypes().size());
+
+        assertEquals(0, next.getVersionRationaleTypes().size());
         assertNull(next.getVersionRationale());
         assertNull(next.getValidFrom());
         assertNull(next.getValidTo());
         assertNull(next.getNextVersion());
         assertNull(next.getNextVersionDate());
     }
-    
+
     private static void assertEqualsVersioningNameable(NameableStatisticalResource previous, NameableStatisticalResource next) {
         assertEqualsVersioningIdentifiable(previous, next);
-        
+
         assertEqualsInternationalString(previous.getTitle(), next.getTitle());
         assertEqualsInternationalString(previous.getDescription(), next.getDescription());
     }
-    
+
     private static void assertEqualsVersioningIdentifiable(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
         assertEquals(previous.getCode(), next.getCode());
         assertNotNull(next.getUrn());
         assertFalse(next.getUrn().equals(previous.getUrn()));
         assertNull(next.getUri());
     }
-    
-    
+
     // -----------------------------------------------------------------
     // MAIN HERITANCE: DO & DO
     // -----------------------------------------------------------------
@@ -421,7 +419,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
-    
+
     // -----------------------------------------------------------------
     // STATISTIC OFFICIALITY: DO & DTO
     // -----------------------------------------------------------------
@@ -435,7 +433,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsInternationalString(actual.getDescription(), expected.getDescription());
     }
-    
+
     // -----------------------------------------------------------------
     // VERSION RATIONALE TYPE: DO & DO
     // -----------------------------------------------------------------
@@ -446,7 +444,7 @@ public class BaseAsserts extends MetamacAsserts {
         }
         assertEquals(expected.getValue(), actual.getValue());
     }
-    
+
     public static void assertEqualsVersionRationaleTypeCollection(Collection<VersionRationaleType> expected, Collection<VersionRationaleType> actual) {
         assertEqualsNullability(expected, actual);
         if (expected == null) {
@@ -466,7 +464,7 @@ public class BaseAsserts extends MetamacAsserts {
             }
         }
     }
-    
+
     // -----------------------------------------------------------------
     // VERSION RATIONALE TYPE: DTO & DO
     // -----------------------------------------------------------------
@@ -477,7 +475,7 @@ public class BaseAsserts extends MetamacAsserts {
         }
         assertEquals(expected.getValue(), actual.getValue());
     }
-    
+
     public static void assertEqualsVersionRationaleTypeCollectionMapper(Collection<VersionRationaleType> entities, Collection<VersionRationaleTypeDto> dtos) {
 
         assertEqualsNullability(entities, dtos);
@@ -497,7 +495,7 @@ public class BaseAsserts extends MetamacAsserts {
             }
         }
     }
-    
+
     // -----------------------------------------------------------------
     // VERSION RATIONALE TYPE: DO & DTO
     // -----------------------------------------------------------------
@@ -566,7 +564,6 @@ public class BaseAsserts extends MetamacAsserts {
         }
 
         assertEquals(expected.getCode(), actual.getCode());
-        assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());
         assertEquals(expected.getType(), actual.getType());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
@@ -616,7 +613,6 @@ public class BaseAsserts extends MetamacAsserts {
         }
 
         assertEquals(entity.getCode(), dto.getCode());
-        assertEquals(entity.getUri(), dto.getUri());
         assertEquals(entity.getUrn(), dto.getUrn());
         assertEquals(entity.getType(), dto.getType());
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
@@ -686,7 +682,6 @@ public class BaseAsserts extends MetamacAsserts {
             }
         }
     }
-    
 
     public static void assertEqualsExternalItemList(List<ExternalItem> expected, List<ExternalItem> actual) {
         assertEqualsNullability(expected, actual);
@@ -756,10 +751,10 @@ public class BaseAsserts extends MetamacAsserts {
             assertNull(actual);
         }
     }
-    
+
     private static boolean messageParametersEquals(Serializable[] expected, Serializable[] actual) {
         if (expected != null && actual != null) {
-            for (Serializable expec: expected) {
+            for (Serializable expec : expected) {
                 boolean found = false;
                 for (Serializable act : actual) {
                     if (expec.equals(act)) {
@@ -775,8 +770,7 @@ public class BaseAsserts extends MetamacAsserts {
         }
         return true;
     }
-    
-    
+
     protected static void assertRelaxedEqualsObject(Object expected, Object actual) {
         if ((expected != null && actual == null) || (expected == null && actual != null)) {
             fail("The expected object and the actual are not equals");

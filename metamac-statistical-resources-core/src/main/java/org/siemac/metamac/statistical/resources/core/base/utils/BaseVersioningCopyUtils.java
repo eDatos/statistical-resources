@@ -22,25 +22,25 @@ public class BaseVersioningCopyUtils {
 
     public static void copySiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResource target) {
         copyLifeCycleStatisticalResource(source, target);
-        
-        //Languages
+
+        // Languages
         target.setLanguage(copyExternalItem(source.getLanguage()));
         target.getLanguages().clear();
         target.getLanguages().addAll(copyListExternalItem(source.getLanguages()));
-        
+
         // Theme content classifiers
         target.setStatisticalOperation(copyExternalItem(source.getStatisticalOperation()));
         target.setStatisticalOperationInstance(copyExternalItem(source.getStatisticalOperationInstance()));
-        
+
         // Content descriptors
         target.setSubtitle(copyInternationalString(source.getSubtitle()));
         target.setTitleAlternative(copyInternationalString(source.getTitleAlternative()));
         target.setAbstractLogic(copyInternationalString(source.getAbstractLogic()));
-        //TODO: KEYWORDS?
-        
+        // TODO: KEYWORDS?
+
         // Class descriptor
         target.setType(source.getType());
-        
+
         // Production descriptors
         target.setMaintainer(copyExternalItem(source.getMaintainer()));
         target.setCreator(copyExternalItem(source.getCreator()));
@@ -49,7 +49,7 @@ public class BaseVersioningCopyUtils {
         target.setCreatedDate(source.getCreatedDate());
         target.setConformsTo(copyInternationalString(source.getConformsTo()));
         target.setConformsToInternal(copyInternationalString(source.getConformsToInternal()));
-        
+
         // Publishing descriptors
         target.getPublisher().clear();
         target.getPublisher().addAll(copyListExternalItem(source.getPublisher()));
@@ -57,14 +57,14 @@ public class BaseVersioningCopyUtils {
         target.getPublisherContributor().addAll(copyListExternalItem(source.getPublisherContributor()));
         target.getMediator().clear();
         target.getMediator().addAll(copyListExternalItem(source.getMediator()));
-        
+
         // Resources relation descriptors
-        //TODO: requires and is required are inherited, but must be changed if a query is discontinued
+        // TODO: requires and is required are inherited, but must be changed if a query is discontinued
         target.getRequires().clear();
         target.getRequires().addAll(copyListRelatedResource(source.getRequires()));
         target.getIsRequiredBy().clear();
         target.getIsRequiredBy().addAll(copyListRelatedResource(source.getIsRequiredBy()));
-        
+
         // Intellectual ownership descriptors
         target.setRightsHolder(copyExternalItem(source.getRightsHolder()));
         target.setLicense(copyInternationalString(source.getLicense()));
@@ -153,25 +153,25 @@ public class BaseVersioningCopyUtils {
         }
         return target;
     }
-    
+
     // --------------------------------------------------------------------------
     // RELATED RESOURCES
     // --------------------------------------------------------------------------
-    
+
     public static RelatedResource copyRelatedResource(RelatedResource source) {
         if (source == null) {
             return null;
         }
-        RelatedResource target = new RelatedResource(source.getCode(), source.getUri(), source.getUrn(), source.getType());
+        RelatedResource target = new RelatedResource(source.getCode(), source.getUrn(), source.getType());
         target.setTitle(copyInternationalString(source.getTitle()));
         return target;
     }
-    
+
     public static List<RelatedResource> copyListRelatedResource(List<RelatedResource> source) {
         if (source.isEmpty()) {
             return new ArrayList<RelatedResource>();
         }
-        
+
         List<RelatedResource> target = new ArrayList<RelatedResource>();
         for (RelatedResource item : source) {
             target.add(copyRelatedResource(item));

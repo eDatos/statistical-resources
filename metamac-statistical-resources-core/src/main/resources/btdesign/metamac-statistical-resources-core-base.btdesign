@@ -20,7 +20,6 @@ Application BaseStatisticalResources {
 			Long id key;
 			
 			String code databaseColumn="CODE" required;
-			String uri databaseColumn="URI" required length="4000";
 			String urn databaseColumn="URN" required length="4000";
 			- @TypeRelatedResourceEnum type databaseColumn="TYPE" required;
 			- @InternationalString title cascade="all" databaseColumn="TITLE_FK" nullable;

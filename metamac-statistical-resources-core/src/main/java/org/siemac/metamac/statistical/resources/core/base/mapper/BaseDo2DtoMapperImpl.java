@@ -168,7 +168,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
 
         // Optimistic locking
         target.setOptimisticLockingVersion(source.getVersion());
-        
+
         // Identity
         // Don't set the identity attributes because we choose the ones of the lastest element of the hierarchy
 
@@ -220,16 +220,15 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.setCode(source.getCode());
         target.setTitle(internationalStringDoToDto(source.getTitle()));
         target.setType(source.getType());
-        target.setUri(source.getUri());
         target.setUrn(source.getUrn());
 
         return target;
     }
-    
+
     // ------------------------------------------------------------
     // VERSION RATIONALE TYPE
     // ------------------------------------------------------------
-    
+
     @Override
     public Collection<VersionRationaleTypeDto> versionRationaleTypeDoCollectionToDtoCollection(Collection<VersionRationaleType> source) {
         HashSet<VersionRationaleTypeDto> result = new HashSet<VersionRationaleTypeDto>();
@@ -238,7 +237,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         }
         return result;
     }
-    
+
     @Override
     public VersionRationaleTypeDto versionRationaleTypeDoToDto(VersionRationaleType source) {
         if (source == null) {
@@ -246,7 +245,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         }
         return new VersionRationaleTypeDto(source.getValue());
     }
-    
+
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
     // ------------------------------------------------------------

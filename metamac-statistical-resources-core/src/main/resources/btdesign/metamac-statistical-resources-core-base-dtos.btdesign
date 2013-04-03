@@ -10,7 +10,6 @@ Application StatisticalResourcesDto {
 		
 		DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
 			- @TypeRelatedResourceEnum type required;
-			String uri required;
 		}
 		
 		DataTransferObject VersionRationaleTypeDto extends @IdentityDto {

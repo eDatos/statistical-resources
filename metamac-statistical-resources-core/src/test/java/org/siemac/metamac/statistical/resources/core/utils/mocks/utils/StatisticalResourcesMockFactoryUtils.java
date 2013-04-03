@@ -12,7 +12,7 @@ public class StatisticalResourcesMockFactoryUtils {
 
     public static RelatedResource createRelatedResource(SiemacMetadataStatisticalResource resource, TypeRelatedResourceEnum type) {
         populateUriAndUrnIfEmpty(resource);
-        RelatedResource relatedResource = new RelatedResource(resource.getCode(), resource.getUri(), resource.getUrn(), type);
+        RelatedResource relatedResource = new RelatedResource(resource.getCode(), resource.getUrn(), type);
         relatedResource.setTitle(BaseVersioningCopyUtils.copyInternationalString(resource.getTitle()));
         return relatedResource;
     }

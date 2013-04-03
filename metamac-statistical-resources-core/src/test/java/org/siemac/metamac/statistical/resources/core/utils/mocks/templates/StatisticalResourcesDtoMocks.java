@@ -294,7 +294,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     }
 
     private static RelatedResourceDto createRelatedResourceDtoMockFromDoMock(RelatedResource item) {
-        RelatedResourceDto itemDto = new RelatedResourceDto(item.getCode(), item.getUri(), item.getUrn(), item.getType());
+        RelatedResourceDto itemDto = new RelatedResourceDto(item.getCode(), item.getUrn(), item.getType());
         itemDto.setVersion(Long.valueOf(0));
         return itemDto;
     }

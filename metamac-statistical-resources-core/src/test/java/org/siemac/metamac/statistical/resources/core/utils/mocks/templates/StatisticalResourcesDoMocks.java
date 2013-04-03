@@ -68,10 +68,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected Query mockQuery(DatasetVersion datasetVersion) {
         Query resource = new Query();
         resource.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
-        
+
         // We can not set code in LifeCycle becasuse thera are some resources that have generated code
         resource.getLifeCycleStatisticalResource().setCode("resource-" + mockString(10));
-        
+
         resource.setDatasetVersion(datasetVersion);
         resource.setType(QueryTypeEnum.FIXED);
 
@@ -106,7 +106,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected Datasource mockDatasource() {
         Datasource datasource = new Datasource();
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
-        
+
         // TODO: ELiminar cuando el código del datasource se esté generando
         // We can not set code in Identifiable becasuse thera are some resources that have generated code
         datasource.getIdentifiableStatisticalResource().setCode("resource-" + mockString(10));
@@ -179,8 +179,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract PublicationVersion mockPublicationVersion();
 
     protected abstract PublicationVersion mockPublicationVersion(Publication publication);
-    
-    
+
     // CHAPTER
     public Chapter mockChapter() {
         Chapter chapter = new Chapter();
@@ -188,7 +187,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         chapter.setNameableStatisticalResource(mockNameableStatisticalResorce());
         return chapter;
     }
-    
+
     // CUBE
     public Cube mockCube() {
         Cube cube = new Cube();
@@ -196,11 +195,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         cube.setNameableStatisticalResource(mockNameableStatisticalResorce());
         return cube;
     }
-    
+
     // ELEMENT LEVEL
     private ElementLevel mockElementLevel() {
         PublicationVersion publicationVersion = mockPublicationVersion();
-        
+
         ElementLevel elementLevel = new ElementLevel();
         elementLevel.setOrderInLevel(Long.valueOf(1));
         elementLevel.setPublicationVersion(publicationVersion);
@@ -209,13 +208,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         elementLevel.setCube(null);
         return elementLevel;
     }
-    
+
     private ElementLevel mockElementLevelForChapter(Chapter chapter) {
         ElementLevel elementLevel = mockElementLevel();
         elementLevel.setChapter(chapter);
         return elementLevel;
     }
-    
+
     private ElementLevel mockElementLevelForCube(Cube cube) {
         ElementLevel elementLevel = mockElementLevel();
         elementLevel.setCube(cube);
@@ -314,7 +313,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource);
 
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
-    
+
     protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource);
 
     protected abstract void setSpecialCasesQueryMock(Query query);
@@ -400,7 +399,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static ExternalItem mockOrganizationUnitExternalItem() {
-        ExternalItem item = new ExternalItem(ORGANIZATION_UNIT_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY); //FIXME: ORGANIZATION_UNIT 
+        ExternalItem item = new ExternalItem(ORGANIZATION_UNIT_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY); // FIXME: ORGANIZATION_UNIT
         item.setVersion(Long.valueOf(0));
         return item;
     }
@@ -490,13 +489,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public static RelatedResource mockDatasetVersionRelated() {
-        RelatedResource resource = new RelatedResource(DATASET_VERSION_MOCK, getUriMock(), mockDatasetVersionRelatedUrn(), TypeRelatedResourceEnum.DATASET_VERSION);
+        RelatedResource resource = new RelatedResource(DATASET_VERSION_MOCK, mockDatasetVersionRelatedUrn(), TypeRelatedResourceEnum.DATASET_VERSION);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }
 
     public static RelatedResource mockPublicationVersionRelated() {
-        RelatedResource resource = new RelatedResource(PUBLICATION_VERSION_MOCK, getUriMock(), mockPublicationVersionRelatedUrn(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+        RelatedResource resource = new RelatedResource(PUBLICATION_VERSION_MOCK, mockPublicationVersionRelatedUrn(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }

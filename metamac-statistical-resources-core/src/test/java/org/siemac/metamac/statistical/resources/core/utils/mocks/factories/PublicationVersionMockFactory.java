@@ -51,19 +51,19 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     public static final String        PUBLICATION_VERSION_12_DRAFT_NAME                               = "PUBLICATION_VERSION_12_DRAFT";
     private static PublicationVersion PUBLICATION_VERSION_12_DRAFT;
-    
+
     public static final String        PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME               = "PUBLICATION_VERSION_13_PRODUCTION_VALIDATION";
     private static PublicationVersion PUBLICATION_VERSION_13_PRODUCTION_VALIDATION;
-    
+
     public static final String        PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME                = "PUBLICATION_VERSION_14_DIFFUSION_VALIDATION";
     private static PublicationVersion PUBLICATION_VERSION_14_DIFFUSION_VALIDATION;
-    
+
     public static final String        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME                 = "PUBLICATION_VERSION_15_VALIDATION_REJECTED";
     private static PublicationVersion PUBLICATION_VERSION_15_VALIDATION_REJECTED;
-    
+
     public static final String        PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME                  = "PUBLICATION_VERSION_16_PUBLICATION_FAILED";
     private static PublicationVersion PUBLICATION_VERSION_16_PUBLICATION_FAILED;
-    
+
     public static final String        PUBLICATION_VERSION_17_PUBLISHED_NAME                           = "PUBLICATION_VERSION_17_PUBLISHED";
     private static PublicationVersion PUBLICATION_VERSION_17_PUBLISHED;
 
@@ -163,8 +163,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
     }
-    
-    
+
     public static PublicationVersion getPublicationVersion12Draft() {
         if (PUBLICATION_VERSION_12_DRAFT == null) {
             PUBLICATION_VERSION_12_DRAFT = createPublicationVersion();
@@ -172,8 +171,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_12_DRAFT;
     }
-    
-    
+
     public static PublicationVersion getPublicationVersion13ProductionValidation() {
         if (PUBLICATION_VERSION_13_PRODUCTION_VALIDATION == null) {
             PUBLICATION_VERSION_13_PRODUCTION_VALIDATION = createPublicationVersion();
@@ -181,8 +179,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_13_PRODUCTION_VALIDATION;
     }
-    
-    
+
     public static PublicationVersion getPublicationVersion14DiffusionValidation() {
         if (PUBLICATION_VERSION_14_DIFFUSION_VALIDATION == null) {
             PUBLICATION_VERSION_14_DIFFUSION_VALIDATION = createPublicationVersion();
@@ -190,8 +187,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_14_DIFFUSION_VALIDATION;
     }
-    
-    
+
     public static PublicationVersion getPublicationVersion15ValidationRejected() {
         if (PUBLICATION_VERSION_15_VALIDATION_REJECTED == null) {
             PUBLICATION_VERSION_15_VALIDATION_REJECTED = createPublicationVersion();
@@ -199,8 +195,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_15_VALIDATION_REJECTED;
     }
-    
-    
+
     public static PublicationVersion getPublicationVersion16PublicationFailed() {
         if (PUBLICATION_VERSION_16_PUBLICATION_FAILED == null) {
             PUBLICATION_VERSION_16_PUBLICATION_FAILED = createPublicationVersion();
@@ -208,8 +203,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_16_PUBLICATION_FAILED;
     }
-    
-    
+
     public static PublicationVersion getPublicationVersion17Published() {
         if (PUBLICATION_VERSION_17_PUBLISHED == null) {
             PUBLICATION_VERSION_17_PUBLISHED = createPublicationVersion();
@@ -223,7 +217,6 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         relatedResource.setCode(publicationVersion.getSiemacMetadataStatisticalResource().getCode());
         relatedResource.setTitle(publicationVersion.getSiemacMetadataStatisticalResource().getTitle());
         relatedResource.setUrn(publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
-        relatedResource.setUri(publicationVersion.getSiemacMetadataStatisticalResource().getUri());
         return relatedResource;
     }
 

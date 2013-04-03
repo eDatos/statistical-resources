@@ -48,16 +48,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
     @Autowired
-    private InternationalStringRepository internationalStringRepository;
+    private InternationalStringRepository  internationalStringRepository;
 
     @Autowired
-    private ExternalItemRepository        externalItemRepository;
+    private ExternalItemRepository         externalItemRepository;
 
     @Autowired
-    private RelatedResourceRepository     relatedResourceRepository;
-    
+    private RelatedResourceRepository      relatedResourceRepository;
+
     @Autowired
-    private VersionRationaleTypeRepository versionRationaleTypeRepository;    
+    private VersionRationaleTypeRepository versionRationaleTypeRepository;
 
     // ------------------------------------------------------------
     // BASE HIERARCHY
@@ -66,16 +66,17 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
     @Override
     public SiemacMetadataStatisticalResource siemacMetadataStatisticalResourceDtoToDo(SiemacMetadataStatisticalResourceDto source, SiemacMetadataStatisticalResource target, String metadataName)
             throws MetamacException {
-        
+
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
         // Only modifiable in creation
         if (target.getId() == null) {
-            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
+            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
+                    + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
         }
-        
-        //Always Modifiable
+
+        // Always Modifiable
         target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
         externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
         target.setStatisticalOperationInstance(externalItemDtoToDo(source.getStatisticalOperationInstance(), target.getStatisticalOperationInstance(), metadataName
@@ -128,19 +129,18 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Non modifiable: versionLogic, versionDate
 
         // Non modifiable in creation mode
-        
+
         // Attributes modifiable
         target.setNextVersion(source.getNextVersion());
-        
+
         if (StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.equals(target.getNextVersion())) {
             target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
         }
-        
+
         target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
-        
-        versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), 
-                addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
+
+        versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
         return target;
     }
 
@@ -181,7 +181,6 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Optimistic locking: Update "update date" attribute to force update to root entity, to increment "version" attribute
         target.setUpdateDate(new DateTime());
     }
-
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -331,10 +330,9 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         if (target == null) {
             // New
-            target = new RelatedResource(source.getCode(), source.getUri(), source.getUrn(), source.getType());
+            target = new RelatedResource(source.getCode(), source.getUrn(), source.getType());
         }
         target.setCode(source.getCode());
-        target.setUri(source.getUri());
         target.setUrn(source.getUrn());
         target.setType(source.getType());
         target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE)));
@@ -380,8 +378,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         return targets;
     }
-    
-    
+
     @Override
     public VersionRationaleType versionRationaleTypeDtoToDo(VersionRationaleTypeDto source, VersionRationaleType target, String metadataName) throws MetamacException {
         if (source == null) {
@@ -436,8 +433,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         return targets;
     }
-    
-    
+
     protected DateTime dateDtoToDo(Date source) {
         if (source == null) {
             return null;
