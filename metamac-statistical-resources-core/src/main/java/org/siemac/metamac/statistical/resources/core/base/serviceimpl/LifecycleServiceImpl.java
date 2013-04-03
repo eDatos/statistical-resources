@@ -34,6 +34,27 @@ public class LifecycleServiceImpl implements LifecycleService {
         checkLifeCycleMetadataSendToProductionValidation(resource, metadataName, exceptionItems);
     }
     
+    @Override
+    public void applySendToProductionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
+        resource.setProductionValidationDate(new DateTime());
+        resource.setProductionValidationUser(ctx.getUserId());
+        resource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+    }
+    
+    @Override
+    public void checkSendToDiffusionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
+    }
+    
+    @Override
+    public void applySendToDiffusionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
+        resource.setDiffusionValidationDate(new DateTime());
+        resource.setDiffusionValidationUser(ctx.getUserId());
+        resource.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+    }
+    
+    
     private void checkLifeCycleMetadataSendToProductionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         if (isFirstVersion(resource)) {
             if (!checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource)) {
@@ -53,29 +74,6 @@ public class LifecycleServiceImpl implements LifecycleService {
             return true;
         }
         return false;
-    }
-    
-    
-    
-
-    @Override
-    public void applySendToProductionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
-        resource.setProductionValidationDate(new DateTime());
-        resource.setProductionValidationUser(ctx.getUserId());
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
-    }
-    
-    @Override
-    public void checkSendToDiffusionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
-        checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
-    }
-    
-    @Override
-    public void applySendToDiffusionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
-        resource.setDiffusionValidationDate(new DateTime());
-        resource.setDiffusionValidationUser(ctx.getUserId());
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
     }
     
     /*

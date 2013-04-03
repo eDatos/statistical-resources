@@ -376,6 +376,42 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
     }
 
+    @Override
+    public DatasetDto sendToProductionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canSendToProductionValidation(ctx);
+
+        // Transform
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
+
+        // Send to production validation and retrieve
+        getDatasetLifecycleService().sendToProductionValidation(ctx, datasetVersion);
+        datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetDto.getUrn());
+
+        // Transform
+        datasetDto = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+
+        return datasetDto;
+    }
+
+    @Override
+    public DatasetDto sendToDiffusionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canSendToDiffusionValidation(ctx);
+
+        // Transform
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
+
+        // Send to production validation and retrieve
+        getDatasetLifecycleService().sendToDiffusionValidation(ctx, datasetVersion);
+        datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetDto.getUrn());
+
+        // Transform
+        datasetDto = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+
+        return datasetDto;
+    }
+
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------

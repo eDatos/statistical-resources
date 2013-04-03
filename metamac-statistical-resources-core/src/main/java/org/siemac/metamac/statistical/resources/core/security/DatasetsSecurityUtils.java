@@ -86,4 +86,16 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+
+    public static void canSendToProductionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canSendToProductionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canSendToDiffusionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canSendToDiffusionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 }

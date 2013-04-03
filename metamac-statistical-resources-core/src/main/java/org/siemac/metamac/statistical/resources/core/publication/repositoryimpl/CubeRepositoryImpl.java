@@ -1,10 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.publication.repositoryimpl;
 
-import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
-
-import org.springframework.stereotype.Repository;
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
+import org.siemac.metamac.statistical.resources.core.publication.domain.CubeProperties;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository implementation for Cube
@@ -16,9 +21,20 @@ public class CubeRepositoryImpl extends CubeRepositoryBase {
     }
 
     @Override
-    public Cube retrieveCubeByUrn(String urn) {
-        // TODO
-        throw new UnsupportedOperationException("retrieveCubeByUrn not implemented");
+    public Cube retrieveCubeByUrn(String urn) throws MetamacException {
+        // TODO: Limitar el número de resultados a uno para mejorar la eficiencia
+
+        List<ConditionalCriteria> condition = criteriaFor(Cube.class).withProperty(CubeProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
+        List<Cube> result = findByCondition(condition);
+
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.CUBE_NOT_FOUND, urn);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one cube with urn " + urn);
+        }
+
+        return result.get(0);
     }
 
     @Override

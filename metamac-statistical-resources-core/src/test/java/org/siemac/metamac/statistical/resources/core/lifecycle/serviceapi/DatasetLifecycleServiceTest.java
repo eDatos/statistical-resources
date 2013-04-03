@@ -1,11 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi;
 
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 
 import java.util.Arrays;
 
-import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -43,16 +43,22 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     
     @Override
     @Test
-    @MetamacMock(DATASET_VERSION_16_PRODUCTION_VALIDATION_READY_NAME)
+    @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendToProductionValidation() throws Exception {
-        
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_PRODUCTION_VALIDATION_READY_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
+        datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersion);
+    }
+    
+    @Test
+    @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
+    public void testSendToProductionValidationChangingSomeFieldsDontHaveEffect() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
+        datasetVersion.setStatisticOfficiality(null);
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersion);
     }
     
     @Test
     public void testSendToProductionValidationDatasetVersionRequired() throws Exception {
-        
         expectedMetamacException(new MetamacException (ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.DATASET_VERSION));
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), null);
     }
@@ -60,7 +66,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     @MetamacMock(DATASET_VERSION_15_DRAFT_BASIC_NAME)
     public void testSendToProductionValidationRequiredFields() throws Exception {
-
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_BASIC_NAME);
         
         expectedMetamacException(new MetamacException ( 
@@ -76,17 +81,24 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     
     @Override
     @Test
-    @MetamacMock(DATASET_VERSION_20_DIFFUSION_VALIDATION_READY_NAME)
+    @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendToDiffusionValidation() throws Exception {
-        
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_DIFFUSION_VALIDATION_READY_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
         
         datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersion);
     }
     
     @Test
+    @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+    public void testSendToDiffusionValidationChangingSomeFieldsDontHaveEffect() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
+        datasetVersion.setStatisticOfficiality(null);
+        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersion);
+    }
+    
+    
+    @Test
     public void testSendToDiffusionValidationDatasetVersionRequired() throws Exception {
-        
         expectedMetamacException(new MetamacException (ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.DATASET_VERSION));
         
         datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), null);
@@ -95,7 +107,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     @MetamacMock(DATASET_VERSION_15_DRAFT_BASIC_NAME)
     public void testSendToDiffusionValidationRequiredFields() throws Exception {
-        
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_BASIC_NAME);
         
         expectedMetamacException(new MetamacException ( 

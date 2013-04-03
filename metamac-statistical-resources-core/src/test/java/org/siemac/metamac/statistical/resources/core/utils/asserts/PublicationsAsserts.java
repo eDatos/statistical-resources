@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -86,6 +87,11 @@ public class PublicationsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertRelaxedEqualsChapter(Chapter expected, Chapter actual) {
+        assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+        assertRelaxedEqualsElementLevel(expected.getElementLevel(), actual.getElementLevel());
+    }
+    
+    public static void assertRelaxedEqualsCube(Cube expected, Cube actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
         assertRelaxedEqualsElementLevel(expected.getElementLevel(), actual.getElementLevel());
     }

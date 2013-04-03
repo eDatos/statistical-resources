@@ -112,6 +112,7 @@ public class DatasetsAsserts extends BaseAsserts {
 
         // Dataset attributes
 
+        // TODO: Las cosas comunes ponerlas fuera
         switch (mapperEnum) {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());

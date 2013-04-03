@@ -3,7 +3,7 @@ import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign
 Application LifecycleStatisticalResources {
 	basePackage=unused
 
-	Module core_facades {
+	Module domain_lifecycle {
 		basePackage=org.siemac.metamac.statistical.resources.core.lifecycle
 
 		// ----------------------------------------------------------------

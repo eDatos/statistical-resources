@@ -20,14 +20,10 @@ public class ChapterRepositoryImpl extends ChapterRepositoryBase {
     }
 
     public Chapter retrieveChapterByUrn(String urn) throws MetamacException {
-        // TODO: Limitar el número de resultados para mejorar la eficiencia
+        // TODO: Limitar el número de resultados a uno para mejorar la eficiencia
         
          List<ConditionalCriteria> condition = criteriaFor(Chapter.class).withProperty(ChapterProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
          List<Chapter> result = findByCondition(condition);
-
-//        Map<String, Object> parameters = new HashMap<String, Object>();
-//        parameters.put("urn", urn);
-//        List<Chapter> result = findByQuery("from Chapter c where c.nameableStatisticalResource.urn = :urn", parameters);
         
         if (result.size() == 0) {
             throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND, urn);

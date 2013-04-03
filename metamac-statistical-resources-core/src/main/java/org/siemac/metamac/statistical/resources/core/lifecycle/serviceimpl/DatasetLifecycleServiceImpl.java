@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl;
 
 import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkParameterRequired;
 import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 import java.util.ArrayList;
@@ -11,15 +10,12 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.base.serviceapi.SiemacLifecycleService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.validators.DatasetLifecycleServiceInvocationValidator;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.validators.DatasetLifecycleServiceInvocationValidatorBaseImpl;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.validators.DatasetLifecycleServiceInvocationValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

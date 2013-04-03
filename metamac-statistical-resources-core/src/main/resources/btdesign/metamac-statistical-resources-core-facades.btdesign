@@ -13,6 +13,8 @@ import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btd
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications-dtos.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-lifecycle.btdesign"
+
 Application FacadeStatisticalResources {
 	basePackage=unused
 
@@ -27,6 +29,7 @@ Application FacadeStatisticalResources {
 			> @QueryService
 			> @DatasetService
 			> @PublicationService
+			> @DatasetLifecycleService
 			
 			// QUERIES
 			"Retrieves a query scheme by URN"
@@ -71,6 +74,10 @@ Application FacadeStatisticalResources {
             List<@DatasetDto> retrieveDatasetVersions(String urn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetDto versioningDataset(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		"Send to production validation"
+    		@DatasetDto sendToProductionValidation(@DatasetDto datasetDto) throws MetamacException;
+    		"Send to diffusion validation"
+    		@DatasetDto sendToDiffusionValidation(@DatasetDto datasetDto) throws MetamacException;
     		
     		// PUBLICATIONS & PUBLICATION VERSION
 	   		"Creates publication"

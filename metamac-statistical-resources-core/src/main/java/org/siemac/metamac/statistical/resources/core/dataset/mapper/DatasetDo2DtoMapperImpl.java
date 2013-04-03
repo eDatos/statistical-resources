@@ -6,8 +6,10 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 
 @org.springframework.stereotype.Component("datasetDo2DtoMapper")
 public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
@@ -94,13 +96,36 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         target.setDateStart(dateDoToDto(source.getDateStart()));
         target.setDateEnd(dateDoToDto(source.getDateEnd()));
+        
         target.setRelatedDsd(externalItemDoToDto(source.getRelatedDsd()));
+        
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
         target.setFormatExtentObservations(source.getFormatExtentObservations());
+        
         target.setDateNextUpdate(dateDoToDto(source.getDateNextUpdate()));
         target.setUpdateFrequency(externalItemDoToDto(source.getUpdateFrequency()));
+        target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
         target.setBibliographicCitation(internationalStringDoToDto(source.getBibliographicCitation()));
 
+        return target;
+    }
+    
+    public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source) {
+        if (source == null) {
+            return null;
+        }
+        
+        StatisticOfficialityDto target = new StatisticOfficialityDto();
+        
+        // Identity
+        target.setId(source.getId());
+        target.setUuid(source.getUuid());
+        target.setVersion(source.getVersion());
+        
+        // Other
+        target.setIdentifier(source.getIdentifier());
+        target.setDescription(internationalStringDoToDto(source.getDescription()));
+        
         return target;
     }
 }

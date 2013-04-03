@@ -37,15 +37,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   ORGANIZATION_UNIT_MOCK              = "OrganizationUnitMock";
     private static final String   DATASET_VERSION_MOCK                = "DatasetVersionMock";
     private static final String   PUBLICATION_VERSION_MOCK            = "PublicationVersionMock";
-    private static final String   STATISTICAL_OPERATION_INSTANCE_MOCK = "StatisticalOperationInstanceMock";
-    private static final String   AGENCY_MOCK                         = "AgencyMock";
     private static final String   AGENCY_SCHEME_MOCK                  = "AgencySchemeMock";
     private static final String   CONCEPT_SCHEME_MOCK                 = "ConceptSchemeMock";
-    private static final String   CONCEPT_MOCK                        = "ConceptMock";
     private static final String   CODELIST_MOCK                       = "CodelistMock";
-    private static final String   CODE_MOCK                           = "CodeMock";
     private static final String   DSD_MOCK                            = "DsdMock";
-    private static final String   DIMENSION_MOCK                      = "DimensionMock";
 
     private static final String   URI_MOCK_PREFIX                     = "lorem/ipsum/dolor/sit/amet/";
     protected static final String USER_MOCK                           = "MockedUser";
@@ -374,7 +369,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public static ExternalItem mockStatisticalOperationItem() {
-        String code = mockStatisticalOperationCode();
+        String code = mockCode();
         ExternalItem item = new ExternalItem(code, getUriMock(), mockStatisticalOperationUrn(code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
         item.setVersion(Long.valueOf(0));
         return item;
@@ -387,101 +382,111 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static ExternalItem mockStatisticalOperationInstanceItem() {
-        ExternalItem item = new ExternalItem(STATISTICAL_OPERATION_INSTANCE_MOCK, getUriMock(), mockStatisticalOperationInstanceUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockStatisticalOperationInstanceUrn(code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockAgencyExternalItem() {
-        ExternalItem item = new ExternalItem(AGENCY_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockAgencyUrn(code), TypeExternalArtefactsEnum.AGENCY);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockOrganizationUnitExternalItem() {
-        ExternalItem item = new ExternalItem(ORGANIZATION_UNIT_MOCK, getUriMock(), mockAgencyUrn(), TypeExternalArtefactsEnum.AGENCY); // FIXME: ORGANIZATION_UNIT
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockAgencyUrn(code), TypeExternalArtefactsEnum.ORGANISATION_UNIT); 
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockConceptExternalItem() {
-        ExternalItem item = new ExternalItem(CONCEPT_MOCK, getUriMock(), mockConceptUrn(), TypeExternalArtefactsEnum.CONCEPT);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockConceptUrn(code), TypeExternalArtefactsEnum.CONCEPT);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockConceptSchemeExternalItem() {
-        ExternalItem item = new ExternalItem(CONCEPT_SCHEME_MOCK, getUriMock(), mockConceptSchemeUrn(), TypeExternalArtefactsEnum.CONCEPT_SCHEME);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockConceptSchemeUrn(code), TypeExternalArtefactsEnum.CONCEPT_SCHEME);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockCodeListSchemeExternalItem() {
-        ExternalItem item = new ExternalItem(CODELIST_MOCK, getUriMock(), mockCodeListUrn(), TypeExternalArtefactsEnum.CODELIST);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockCodeListUrn(code), TypeExternalArtefactsEnum.CODELIST);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockCodeExternalItem() {
-        ExternalItem item = new ExternalItem(CODE_MOCK, getUriMock(), mockCodeUrn(), TypeExternalArtefactsEnum.CODE);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockDsdExternalItem() {
-        ExternalItem item = new ExternalItem(DSD_MOCK, getUriMock(), mockDsdUrn(), TypeExternalArtefactsEnum.DATASTRUCTURE);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockDsdUrn(code), TypeExternalArtefactsEnum.DATASTRUCTURE);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
     public static ExternalItem mockDimensionExternalItem() {
-        ExternalItem item = new ExternalItem(DIMENSION_MOCK, getUriMock(), mockDimensionUrn(), TypeExternalArtefactsEnum.DIMENSION);
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockDimensionUrn(code), TypeExternalArtefactsEnum.DIMENSION);
         item.setVersion(Long.valueOf(0));
         return item;
     }
 
+    private static String mockCode() {
+        return mockString(8);
+    }
+    
     public static String mockStatisticalOperationUrn(String code) {
         return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(code);
     }
 
-    public static String mockStatisticalOperationCode() {
-        return mockString(8);
+
+    public static String mockStatisticalOperationInstanceUrn(String code) {
+        return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(code);
     }
 
-    public static String mockStatisticalOperationInstanceUrn() {
-        return GeneratorUrnUtils.generateSiemacStatisticalOperationUrn(STATISTICAL_OPERATION_INSTANCE_MOCK);
+    public static String mockAgencyUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxAgencyUrn(MAINTAINER_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, code);
     }
 
-    public static String mockAgencyUrn() {
-        return GeneratorUrnUtils.generateSdmxAgencyUrn(MAINTAINER_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, AGENCY_MOCK);
+    public static String mockOrganizationUnitUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxOrganisationUnitUrn(MAINTAINER_MOCK, ORGANIZATION_UNIT_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, code);
     }
 
-    public static String mockOrganizationUnitUrn() {
-        return GeneratorUrnUtils.generateSdmxOrganisationUnitUrn(MAINTAINER_MOCK, ORGANIZATION_UNIT_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, AGENCY_MOCK);
+    public static String mockConceptUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxConceptUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, code);
     }
 
-    public static String mockConceptUrn() {
-        return GeneratorUrnUtils.generateSdmxConceptUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, CONCEPT_MOCK);
+    public static String mockConceptSchemeUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxConceptSchemeUrn(MAINTAINER_MOCK, code, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
-    public static String mockConceptSchemeUrn() {
-        return GeneratorUrnUtils.generateSdmxConceptSchemeUrn(MAINTAINER_MOCK, CONCEPT_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
+    public static String mockCodeListUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxCodelistUrn(MAINTAINER_MOCK, code, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
-    public static String mockCodeListUrn() {
-        return GeneratorUrnUtils.generateSdmxCodelistUrn(MAINTAINER_MOCK, CODE_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
+    public static String mockCodeUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxCodeUrn(MAINTAINER_MOCK, CODELIST_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, code);
+    }
+    
+    public static String mockDsdUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxDatastructureUrn(MAINTAINER_MOCK, code, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
     }
 
-    public static String mockCodeUrn() {
-        return GeneratorUrnUtils.generateSdmxCodeUrn(MAINTAINER_MOCK, CODELIST_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, CODE_MOCK);
-    }
-
-    public static String mockDsdUrn() {
-        return GeneratorUrnUtils.generateSdmxDatastructureUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION);
-    }
-
-    public static String mockDimensionUrn() {
-        return GeneratorUrnUtils.generateSdmxDimensionUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_XX_YYY_INITIAL_VERSION, DIMENSION_MOCK);
+    public static String mockDimensionUrn(String code) {
+        return GeneratorUrnUtils.generateSdmxDimensionUrn(MAINTAINER_MOCK, DSD_MOCK, VersionUtil.PATTERN_XX_YYY_INITIAL_VERSION, code);
     }
 
     // -----------------------------------------------------------------

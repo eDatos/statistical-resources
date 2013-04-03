@@ -6,6 +6,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 
 import java.util.List;
@@ -64,6 +65,16 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
     public void testDatasetDoToDto() {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
+
+        DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
+
+        assertEqualsDatasetVersion(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME})
+    public void testDatasetDoToDtoWithStatisticOfficiality() {
+        DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
 
         DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
 
