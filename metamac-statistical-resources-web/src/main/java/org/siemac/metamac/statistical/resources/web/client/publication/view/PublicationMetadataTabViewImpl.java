@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Nameabl
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
@@ -44,36 +46,38 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
-    private VLayout                                                  panel;
+    private VLayout                                                       panel;
 
-    private PublicationMainFormLayout                                mainFormLayout;
+    private PublicationMainFormLayout                                     mainFormLayout;
 
-    private NameableResourceIdentifiersForm                          identifiersForm;
-    private StatisticalResourceContentDescriptorsForm                contentDescriptorsForm;
-    private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
-    private StatisticalResourceLanguageForm                          languageForm;
-    private StatisticalResourceProductionDescriptorsForm             productionDescriptorsForm;
-    private PublicationClassDescriptorsForm                          classDescriptorsForm;
-    private StatisticalResourceResourceRelationDescriptorsForm       resourceRelationDescriptorsForm;
-    private StatisticalResourcePublicationDescriptorsForm            publicationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
-    private LifeCycleResourceVersionForm                             versionForm;
+    private NameableResourceIdentifiersForm                               identifiersForm;
+    private StatisticalResourceContentDescriptorsForm                     contentDescriptorsForm;
+    private StatisticalResourceThematicContentClassifiersForm             thematicContentClassifiersForm;
+    private StatisticalResourceLanguageForm                               languageForm;
+    private StatisticalResourceProductionDescriptorsForm                  productionDescriptorsForm;
+    private PublicationClassDescriptorsForm                               classDescriptorsForm;
+    private StatisticalResourceResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
+    private StatisticalResourcePublicationDescriptorsForm                 publicationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                                lifeCycleForm;
+    private LifeCycleResourceVersionForm                                  versionForm;
+    private StatisticalResourceIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
-    private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
-    private StatisticalResourceContentDescriptorsEditionForm         contentDescriptorsEditionForm;
-    private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
-    private StatisticalResourceLanguageEditionForm                   languageEditionForm;
-    private StatisticalResourceProductionDescriptorsEditionForm      productionDescriptorsEditionForm;
-    private PublicationClassDescriptorsEditionForm                   classDescriptorsEditionForm;
-    private PublicationResourceRelationDescriptorsEditionForm        resourceRelationDescriptorsEditionForm;
-    private StatisticalResourcePublicationDescriptorsEditionForm     publicationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                      versionEditionForm;
+    private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
+    private StatisticalResourceContentDescriptorsEditionForm              contentDescriptorsEditionForm;
+    private StatisticalResourceThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
+    private StatisticalResourceLanguageEditionForm                        languageEditionForm;
+    private StatisticalResourceProductionDescriptorsEditionForm           productionDescriptorsEditionForm;
+    private PublicationClassDescriptorsEditionForm                        classDescriptorsEditionForm;
+    private PublicationResourceRelationDescriptorsEditionForm             resourceRelationDescriptorsEditionForm;
+    private StatisticalResourcePublicationDescriptorsEditionForm          publicationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                                lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                           versionEditionForm;
+    private StatisticalResourceIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private PublicationDto                                           publicationDto;
+    private PublicationDto                                                publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -136,14 +140,8 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
                 versionForm.setTranslationsShowed(translationsShowed);
                 versionEditionForm.setTranslationsShowed(translationsShowed);
 
-                // versionForm.setTranslationsShowed(translationsShowed);
-                // versionEditionForm.setTranslationsShowed(translationsShowed);
-                //
-                // lifeCycleForm.setTranslationsShowed(translationsShowed);
-                // lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
-                //
-                // contentMetadataForm.setTranslationsShowed(translationsShowed);
-                // contentMetadataEditionForm.setTranslationsShowed(translationsShowed);
+                intellectualPropertyDescriptorsForm.setTranslationsShowed(translationsShowed);
+                intellectualPropertyDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
             }
         });
 
@@ -155,7 +153,8 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
                         && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
-                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)) {
+                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)
+                        && intellectualPropertyDescriptorsEditionForm.validate(false)) {
                     getUiHandlers().savePublication(getPublicationDto());
                 }
             }
@@ -249,6 +248,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Version
         versionForm = new LifeCycleResourceVersionForm();
         mainFormLayout.addViewCanvas(versionForm);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsForm = new StatisticalResourceIntellectualPropertyDescriptorsForm();
+        mainFormLayout.addViewCanvas(intellectualPropertyDescriptorsForm);
     }
 
     private void createEditionForm() {
@@ -291,6 +294,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Version
         versionEditionForm = new LifeCycleResourceVersionEditionForm();
         mainFormLayout.addEditionCanvas(versionEditionForm);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsEditionForm = new StatisticalResourceIntellectualPropertyDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(intellectualPropertyDescriptorsEditionForm);
     }
 
     // private SearchExternalViewTextItem createRelatedAgencyItem(String name, String title, AgencyField agencyField) {
@@ -339,6 +346,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Version
         versionForm.setLifeCycleStatisticalResourceDto(publicationDto);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
     }
 
     private void setPublicationEditionMode(PublicationDto publicationDto) {
@@ -371,6 +381,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Version
         versionEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
     }
 
     @Override
@@ -422,45 +435,8 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Version
         publicationDto = (PublicationDto) versionEditionForm.getLifeCycleStatisticalResourceDto(publicationDto);
 
-        // // Version form
-        // collectionDto.setRationale(versionEditionForm.getValueAsString(PublicationDS.RATIONALE));
-        // String rationaleType = versionEditionForm.getValueAsString(PublicationDS.RATIONALE_TYPE);
-        // if (!StringUtils.isEmpty(rationaleType)) {
-        // collectionDto.setRationaleType(StatisticalResourceVersionRationaleTypeEnum.valueOf(rationaleType));
-        // }
-        //
-        // collectionDto.setNextVersionDate((Date) versionEditionForm.getValue(PublicationDS.NEXT_VERSION_DATE));
-        //
-        // // Life cycle form
-        //
-        // // Content metadata form
-        // if (collectionDto.getContentMetadata() == null) {
-        // collectionDto.setContentMetadata(new ContentMetadataDto());
-        // }
-        //
-        // ExternalItemDto creatorAgency = ((SearchExternalViewTextItem) lifeCycleEditionForm.getField(PublicationDS.CREATOR)).getExternalItem();
-        // collectionDto.setCreator(creatorAgency);
-        //
-        // // Life cycle form
-        // List<ExternalItemDto> contributorAgencies = ((SearchExternalListItem) lifeCycleEditionForm.getField(PublicationDS.CONTRIBUTOR)).getSelectedExternalItems();
-        // if (contributorAgencies != null) {
-        // collectionDto.getContributor().clear();
-        // collectionDto.getContributor().addAll(contributorAgencies);
-        // }
-        // List<ExternalItemDto> publisherAgencies = ((SearchExternalListItem) lifeCycleEditionForm.getField(PublicationDS.PUBLISHER)).getSelectedExternalItems();
-        // if (publisherAgencies != null) {
-        // collectionDto.getPublisher().clear();
-        // collectionDto.getPublisher().addAll(publisherAgencies);
-        // }
-        //
-        // List<ExternalItemDto> mediatorAgencies = ((SearchExternalListItem) lifeCycleEditionForm.getField(PublicationDS.MEDIATOR)).getSelectedExternalItems();
-        // if (mediatorAgencies != null) {
-        // collectionDto.getMediator().clear();
-        // collectionDto.getMediator().addAll(mediatorAgencies);
-        // }
-        //
-        // collectionDto.getContentMetadata().setDescription((InternationalStringDto) contentMetadataEditionForm.getValue(PublicationDS.DESCRIPTION));
-        // collectionDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(PublicationDS.NEXT_UPDATE_DATE));
+        // Intellectual property descriptors
+        publicationDto = (PublicationDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         return publicationDto;
     }

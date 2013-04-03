@@ -25,6 +25,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
@@ -44,35 +46,37 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
     // private final int AGENCIES_MAX_RESULTS = 15;
 
-    private VLayout                                                  panel;
-    private DatasetMainFormLayout                                    mainFormLayout;
+    private VLayout                                                       panel;
+    private DatasetMainFormLayout                                         mainFormLayout;
 
-    private NameableResourceIdentifiersForm                          identifiersForm;
-    private DatasetContentDescriptorsForm                            contentDescriptorsForm;
-    private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
-    private StatisticalResourceLanguageForm                          languageForm;
-    private DatasetProductionDescriptorsForm                         productionDescriptorsForm;
-    private DatasetClassDescriptorsForm                              classDescriptorsForm;
-    private StatisticalResourceResourceRelationDescriptorsForm       resourceRelationDescriptorsForm;
-    private DatasetPublicationDescriptorsForm                        publicationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
-    private LifeCycleResourceVersionForm                             versionForm;
+    private NameableResourceIdentifiersForm                               identifiersForm;
+    private DatasetContentDescriptorsForm                                 contentDescriptorsForm;
+    private StatisticalResourceThematicContentClassifiersForm             thematicContentClassifiersForm;
+    private StatisticalResourceLanguageForm                               languageForm;
+    private DatasetProductionDescriptorsForm                              productionDescriptorsForm;
+    private DatasetClassDescriptorsForm                                   classDescriptorsForm;
+    private StatisticalResourceResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
+    private DatasetPublicationDescriptorsForm                             publicationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                                lifeCycleForm;
+    private LifeCycleResourceVersionForm                                  versionForm;
+    private StatisticalResourceIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
-    private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
-    private DatasetContentDescriptorsEditionForm                     contentDescriptorsEditionForm;
-    private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
-    private StatisticalResourceLanguageEditionForm                   languageEditionForm;
-    private DatasetProductionDescriptorsEditionForm                  productionDescriptorsEditionForm;
-    private DatasetClassDescriptorsEditionForm                       classDescriptorsEditionForm;
-    private DatasetResourceRelationDescriptorsEditionForm            resourceRelationDescriptorsEditionForm;
-    private DatasetPublicationDescriptorsEditionForm                 publicationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                      versionEditionForm;
+    private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
+    private DatasetContentDescriptorsEditionForm                          contentDescriptorsEditionForm;
+    private StatisticalResourceThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
+    private StatisticalResourceLanguageEditionForm                        languageEditionForm;
+    private DatasetProductionDescriptorsEditionForm                       productionDescriptorsEditionForm;
+    private DatasetClassDescriptorsEditionForm                            classDescriptorsEditionForm;
+    private DatasetResourceRelationDescriptorsEditionForm                 resourceRelationDescriptorsEditionForm;
+    private DatasetPublicationDescriptorsEditionForm                      publicationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                                lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                           versionEditionForm;
+    private StatisticalResourceIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private DatasetDto                                               datasetDto;
+    private DatasetDto                                                    datasetDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
@@ -134,9 +138,8 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
                 versionForm.setTranslationsShowed(translationsShowed);
                 versionEditionForm.setTranslationsShowed(translationsShowed);
 
-                // versioningForm.setTranslationsShowed(translationsShowed);
-                // contentMetadataForm.setTranslationsShowed(translationsShowed);
-                // lifeCycleForm.setTranslationsShowed(translationsShowed);
+                intellectualPropertyDescriptorsForm.setTranslationsShowed(translationsShowed);
+                intellectualPropertyDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
             }
         });
 
@@ -147,7 +150,8 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
                         && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
-                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)) {
+                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)
+                        && intellectualPropertyDescriptorsEditionForm.validate(false)) {
                     getUiHandlers().saveDataset(getDatasetDto());
                 }
             }
@@ -281,6 +285,10 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Version
         versionForm = new LifeCycleResourceVersionForm();
         mainFormLayout.addViewCanvas(versionForm);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsForm = new StatisticalResourceIntellectualPropertyDescriptorsForm();
+        mainFormLayout.addViewCanvas(intellectualPropertyDescriptorsForm);
     }
 
     private void createEditionForm() {
@@ -323,6 +331,11 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Version
         versionEditionForm = new LifeCycleResourceVersionEditionForm();
         mainFormLayout.addEditionCanvas(versionEditionForm);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsEditionForm = new StatisticalResourceIntellectualPropertyDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(intellectualPropertyDescriptorsEditionForm);
+
     }
 
     // private SearchExternalViewTextItem createRelatedAgencyItem(String name, String title, AgencyField agencyField) {
@@ -384,6 +397,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Version
         versionForm.setLifeCycleStatisticalResourceDto(datasetDto);
 
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
+
     }
 
     private void setDatasetEditionMode(DatasetDto datasetDto) {
@@ -416,6 +432,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
         // Version
         versionEditionForm.setLifeCycleStatisticalResourceDto(datasetDto);
+
+        // Intellectual property descriptors
+        intellectualPropertyDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
     }
 
@@ -457,43 +476,8 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Version
         datasetDto = (DatasetDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetDto);
 
-        // FIXME: add metadata
-
-        // Version form
-        // String rationaleType = versioningEditionForm.getValueAsString(DatasetDS.RATIONALE_TYPE);
-        // if (!StringUtils.isEmpty(rationaleType)) {
-        // datasetDto.setRationaleType(StatisticalResourceVersionRationaleTypeEnum.valueOf(rationaleType));
-        // }
-        // datasetDto.setRationale(versioningEditionForm.getValueAsString(DatasetDS.RATIONALE));
-        // datasetDto.setNextVersionDate((Date) versioningEditionForm.getValue(DatasetDS.NEXT_VERSION_DATE));
-        //
-        // // Life cycle form
-        // ExternalItemDto creatorAgency = ((SearchExternalViewTextItem)lifeCycleEditionForm.getField(DatasetDS.CREATOR)).getExternalItem();
-        // datasetDto.setCreator(creatorAgency);
-        //
-        // List<ExternalItemDto> contributorAgencies = ((SearchExternalListItem)lifeCycleEditionForm.getField(DatasetDS.CONTRIBUTOR)).getSelectedExternalItems();
-        // if (contributorAgencies != null) {
-        // datasetDto.getContributor().clear();
-        // datasetDto.getContributor().addAll(contributorAgencies);
-        // }
-        // List<ExternalItemDto> publisherAgencies = ((SearchExternalListItem)lifeCycleEditionForm.getField(DatasetDS.PUBLISHER)).getSelectedExternalItems();
-        // if (publisherAgencies != null) {
-        // datasetDto.getPublisher().clear();
-        // datasetDto.getPublisher().addAll(publisherAgencies);
-        // }
-        //
-        // List<ExternalItemDto> mediatorAgencies = ((SearchExternalListItem)lifeCycleEditionForm.getField(DatasetDS.MEDIATOR)).getSelectedExternalItems();
-        // if (mediatorAgencies != null) {
-        // datasetDto.getMediator().clear();
-        // datasetDto.getMediator().addAll(mediatorAgencies);
-        // }
-        //
-        // // Content metadata form
-        // if (datasetDto.getContentMetadata() == null) {
-        // datasetDto.setContentMetadata(new ContentMetadataDto());
-        // }
-        // datasetDto.getContentMetadata().setDescription((InternationalStringDto) contentMetadataEditionForm.getValue(DatasetDS.DESCRIPTION));
-        // datasetDto.getContentMetadata().setNextUpdateDate((Date) contentMetadataEditionForm.getValue(DatasetDS.NEXT_UPDATE_DATE));
+        // Intellectual property descriptors
+        datasetDto = (DatasetDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         return datasetDto;
     }
