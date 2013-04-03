@@ -16,6 +16,8 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
@@ -46,22 +48,18 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
     private DatasetProductionDescriptorsForm                   productionDescriptorsForm;
     private DatasetClassDescriptorsForm                        classDescriptorsForm;
     private StatisticalResourceResourceRelationDescriptorsForm resourceRelationDescriptorsForm;
+    private DatasetPublicationDescriptorsForm                  publicationDescriptorsForm;
     private LifeCycleResourceLifeCycleForm                     lifeCycleForm;
     private LifeCycleResourceVersionForm                       versionForm;
-    // private GroupDynamicForm contentMetadataForm;
-    // private GroupDynamicForm versioningForm;
-    // private GroupDynamicForm lifeCycleForm;
 
     private NameableResourceIdentifiersEditionForm             identifiersEditionForm;
     private DatasetContentDescriptorsEditionForm               contentDescriptorsEditionForm;
     private DatasetProductionDescriptorsEditionForm            productionDescriptorsEditionForm;
     private DatasetClassDescriptorsEditionForm                 classDescriptorsEditionForm;
     private DatasetResourceRelationDescriptorsEditionForm      resourceRelationDescriptorsEditionForm;
+    private DatasetPublicationDescriptorsEditionForm           publicationDescriptorsEditionForm;
     private LifeCycleResourceLifeCycleForm                     lifeCycleEditionForm;
     private LifeCycleResourceVersionEditionForm                versionEditionForm;
-    // private GroupDynamicForm contentMetadataEditionForm;
-    // private GroupDynamicForm versioningEditionForm;
-    // private GroupDynamicForm lifeCycleEditionForm;
 
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
@@ -113,6 +111,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
                 resourceRelationDescriptorsForm.setTranslationsShowed(translationsShowed);
                 resourceRelationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 
+                publicationDescriptorsForm.setTranslationsShowed(translationsShowed);
+                publicationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
                 lifeCycleForm.setTranslationsShowed(translationsShowed);
                 lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
 
@@ -131,7 +132,8 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
             @Override
             public void onClick(ClickEvent event) {
                 if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
-                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)) {
+                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
+                        && publicationDescriptorsEditionForm.validate(false)) {
                     getUiHandlers().saveDataset(getDatasetDto());
                 }
             }
@@ -246,6 +248,10 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         resourceRelationDescriptorsForm = new StatisticalResourceResourceRelationDescriptorsForm();
         mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
 
+        // Publication descriptors
+        publicationDescriptorsForm = new DatasetPublicationDescriptorsForm();
+        mainFormLayout.addViewCanvas(publicationDescriptorsForm);
+
         // Life cycle
         lifeCycleForm = new LifeCycleResourceLifeCycleForm();
         mainFormLayout.addViewCanvas(lifeCycleForm);
@@ -275,6 +281,10 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Resource relation descriptors
         resourceRelationDescriptorsEditionForm = new DatasetResourceRelationDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(resourceRelationDescriptorsEditionForm);
+
+        // Publication descriptors
+        publicationDescriptorsEditionForm = new DatasetPublicationDescriptorsEditionForm();
+        mainFormLayout.addEditionCanvas(publicationDescriptorsEditionForm);
 
         // Life cycle
         lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
@@ -329,6 +339,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Resource relation descriptors
         resourceRelationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
+        // Publication descriptors
+        publicationDescriptorsForm.setDatasetDto(datasetDto);
+
         // Life cycle
         lifeCycleForm.setLifeCycleStatisticalResourceDto(datasetDto);
 
@@ -352,6 +365,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
         // Resource relation descriptors
         resourceRelationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
+
+        // Publication descriptors
+        publicationDescriptorsEditionForm.setDatasetDto(datasetDto);
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(datasetDto);
@@ -386,6 +402,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
         // Resource relation descriptors
         datasetDto = (DatasetDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+
+        // Publication descriptors
+        datasetDto = publicationDescriptorsEditionForm.getDatasetDto(datasetDto);
 
         // Version
         datasetDto = (DatasetDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetDto);

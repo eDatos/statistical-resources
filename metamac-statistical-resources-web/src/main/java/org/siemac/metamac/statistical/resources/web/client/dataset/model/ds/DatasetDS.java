@@ -18,6 +18,12 @@ public class DatasetDS extends StatisticalResourceDS {
     public static final String FORMAT_EXTENT_OBSERVATIONS = "ds-for-ext-obs";
     public static final String FORMAT_EXTENT_DIMENSIONS   = "ds-for-ext-dim";
 
+    // PUBLICATION DESCRIPTORS
+    public static final String DATE_NEXT_UPDATE           = "ds-date-next-up";
+    public static final String UPDATE_FRECUENCY           = "ds-up-freq";
+    public static final String STATISTIC_OFFICIALITY      = "ds-sta-off";
+    public static final String BIBLIOGRAPHIC_CITATION     = "ds-bib-cit";
+
     // DTO
     public static final String DTO                        = "ds-dto";
 }

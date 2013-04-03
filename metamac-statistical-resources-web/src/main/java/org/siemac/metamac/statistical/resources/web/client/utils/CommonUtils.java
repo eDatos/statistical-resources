@@ -9,9 +9,11 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
 
@@ -114,6 +116,17 @@ public class CommonUtils {
 
     public static String getStatisticalResourceNextVersionName(StatisticalResourceNextVersionEnum statisticalResourceNextVersionEnum) {
         return statisticalResourceNextVersionEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceNextVersionEnum() + statisticalResourceNextVersionEnum.name()) : null;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // STATISTIC OFFICIALITY
+    // -----------------------------------------------------------------------------------------
+
+    public static String getStatisticOfficialityName(StatisticOfficialityDto statisticOfficialityDto) {
+        if (statisticOfficialityDto != null) {
+            return CommonWebUtils.getElementName(statisticOfficialityDto.getIdentifier(), statisticOfficialityDto.getDescription());
+        }
+        return StringUtils.EMPTY;
     }
 
     // TODO: FORMAT WILL NOT BE USED in STAT REOSURCES
