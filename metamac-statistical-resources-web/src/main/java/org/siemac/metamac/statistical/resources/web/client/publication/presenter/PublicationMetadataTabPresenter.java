@@ -258,7 +258,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @Override
-    public void retrievePublicationsForReplaces(int firstResult, int maxResults, PublicationWebCriteria criteria) {
+    public void retrievePublicationsForReplaces(int firstResult, int maxResults, String criteria) {
 
         PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
         // TODO Which is the condition to find the publications to fill REPLACES?
@@ -277,7 +277,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @Override
-    public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, PublicationWebCriteria criteria) {
+    public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
 
         PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
         // TODO Which is the condition to find the publications to fill IS_REPLACED_BY?

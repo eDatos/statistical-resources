@@ -18,8 +18,11 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
@@ -62,6 +65,9 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
         void setDataset(DatasetDto datasetDto);
         void setAgenciesPaginatedList(GetAgenciesPaginatedListResult datasetsPaginatedList);
+
+        void setDatasetsForReplaces(GetDatasetsResult result);
+        void setDatasetsForIsReplacedBy(GetDatasetsResult result);
     }
 
     @ProxyCodeSplit
@@ -96,6 +102,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
+    }
+
+    @Override
+    protected void revealInParent() {
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaMetadata, this);
     }
 
     private void retrieveOperation(String urn) {
@@ -315,7 +326,40 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     }
 
     @Override
-    protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaMetadata, this);
+    public void retrieveDatasetsForReplaces(int firstResult, int maxResults, String criteria) {
+
+        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria();
+        // TODO Which is the condition to find the datasets to fill REPLACES?
+
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetDatasetsResult result) {
+                getView().setDatasetsForReplaces(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDatasetsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
+
+        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria();
+        // TODO Which is the condition to find the datasets to fill IS_REPLACED_BY?
+
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetDatasetsResult result) {
+                getView().setDatasetsForIsReplacedBy(result);
+            }
+        });
     }
 }

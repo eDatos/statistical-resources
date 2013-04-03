@@ -153,10 +153,10 @@ public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandler
     }
 
     @Override
-    public void setDatasetPaginatedList(String operationUrn, GetDatasetsResult datasetsPaginatedList) {
+    public void setDatasetPaginatedList(String operationUrn, GetDatasetsResult result) {
         setOperation(operationUrn);
-        setDatasetList(datasetsPaginatedList.getDatasetsList());
-        datasetsList.refreshPaginationInfo(datasetsPaginatedList.getPageNumber(), datasetsPaginatedList.getDatasetsList().size(), datasetsPaginatedList.getTotalResults());
+        setDatasetList(result.getDatasetDtos());
+        datasetsList.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetDtos().size(), result.getTotalResults());
     }
 
     @Override

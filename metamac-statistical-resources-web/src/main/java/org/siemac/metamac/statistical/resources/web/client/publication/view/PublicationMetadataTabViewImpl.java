@@ -2,6 +2,9 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.List;
+
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
@@ -9,6 +12,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
@@ -19,10 +23,10 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
+import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -34,28 +38,28 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
-    private VLayout                                                   panel;
+    private VLayout                                             panel;
 
-    private PublicationMainFormLayout                                 mainFormLayout;
+    private PublicationMainFormLayout                           mainFormLayout;
 
-    private NameableResourceIdentifiersForm                           identifiersForm;
-    private StatisticalResourceContentDescriptorsForm                 contentDescriptorsForm;
-    private StatisticalResourceProductionDescriptorsForm              productionDescriptorsForm;
-    private PublicationClassDescriptorsForm                           classDescriptorsForm;
-    private StatisticalResourceResourceRelationDescriptorsForm        resourceRelationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                            lifeCycleForm;
-    private LifeCycleResourceVersionForm                              versionForm;
+    private NameableResourceIdentifiersForm                     identifiersForm;
+    private StatisticalResourceContentDescriptorsForm           contentDescriptorsForm;
+    private StatisticalResourceProductionDescriptorsForm        productionDescriptorsForm;
+    private PublicationClassDescriptorsForm                     classDescriptorsForm;
+    private StatisticalResourceResourceRelationDescriptorsForm  resourceRelationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                      lifeCycleForm;
+    private LifeCycleResourceVersionForm                        versionForm;
     // private GroupDynamicForm versionForm;
     // private GroupDynamicForm lifeCycleForm;
     // private GroupDynamicForm contentMetadataForm;
 
-    private NameableResourceIdentifiersEditionForm                    identifiersEditionForm;
-    private StatisticalResourceContentDescriptorsEditionForm          contentDescriptorsEditionForm;
-    private StatisticalResourceProductionDescriptorsEditionForm       productionDescriptorsEditionForm;
-    private PublicationClassDescriptorsEditionForm                    classDescriptorsEditionForm;
-    private StatisticalResourceResourceRelationDescriptorsEditionForm resourceRelationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                            lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                       versionEditionForm;
+    private NameableResourceIdentifiersEditionForm              identifiersEditionForm;
+    private StatisticalResourceContentDescriptorsEditionForm    contentDescriptorsEditionForm;
+    private StatisticalResourceProductionDescriptorsEditionForm productionDescriptorsEditionForm;
+    private PublicationClassDescriptorsEditionForm              classDescriptorsEditionForm;
+    private PublicationResourceRelationDescriptorsEditionForm   resourceRelationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                      lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                 versionEditionForm;
     // private GroupDynamicForm versionEditionForm;
     // private GroupDynamicForm lifeCycleEditionForm;
     // private GroupDynamicForm contentMetadataEditionForm;
@@ -63,7 +67,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private PublicationDto                                            publicationDto;
+    private PublicationDto                                      publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -82,6 +86,12 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     @Override
     public Widget asWidget() {
         return panel;
+    }
+
+    @Override
+    public void setUiHandlers(PublicationMetadataTabUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
     }
 
     private void bindMainFormLayoutEvents() {
@@ -231,7 +241,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         mainFormLayout.addEditionCanvas(classDescriptorsEditionForm);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsEditionForm = new StatisticalResourceResourceRelationDescriptorsEditionForm();
+        resourceRelationDescriptorsEditionForm = new PublicationResourceRelationDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(resourceRelationDescriptorsEditionForm);
 
         // Life cycle
@@ -390,14 +400,14 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
     @Override
     public void setPublicationsForReplaces(GetPublicationsResult result) {
-        // TODO Auto-generated method stub
-
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationDtosAsRelatedResourceDtos(result.getPublicationDtos());
+        resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 
     @Override
     public void setPublicationsForIsReplacedBy(GetPublicationsResult result) {
-        // TODO Auto-generated method stub
-
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationDtosAsRelatedResourceDtos(result.getPublicationDtos());
+        resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 
     // private enum AgencyField {

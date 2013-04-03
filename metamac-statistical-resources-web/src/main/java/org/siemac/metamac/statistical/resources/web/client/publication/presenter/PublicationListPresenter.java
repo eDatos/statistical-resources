@@ -145,7 +145,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
             }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
-                getView().setPublicationPaginatedList(result.getPublicationList(), result.getFirstResultOut(), result.getTotalResults());
+                getView().setPublicationPaginatedList(result.getPublicationDtos(), result.getFirstResultOut(), result.getTotalResults());
             }
         });
     }

@@ -22,10 +22,10 @@ public class GetDatasets {
     DatasetWebCriteria criteria;
 
     @Out(1)
-    List<DatasetDto>   datasetsList;
+    List<DatasetDto>   datasetDtos;
 
     @Out(2)
-    Integer            pageNumber;
+    Integer            firstResultOut;
 
     @Out(3)
     Integer            totalResults;

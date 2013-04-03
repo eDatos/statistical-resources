@@ -22,7 +22,7 @@ public class GetPublications {
     PublicationWebCriteria criteria;
 
     @Out(1)
-    List<PublicationDto>   publicationList;
+    List<PublicationDto>   publicationDtos;
 
     @Out(2)
     Integer                firstResultOut;

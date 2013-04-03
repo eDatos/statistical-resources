@@ -8,4 +8,9 @@ public interface DatasetMetadataTabUiHandlers extends LifeCycleUiHandlers {
     void retrieveAgencies(int firstResult, int maxResults, String queryText);
     void retrieveDataset(String datasetIdentifier);
     void saveDataset(DatasetDto datasetDto);
+
+    // RELATED DATASETS
+
+    void retrieveDatasetsForReplaces(int firstResult, int maxResults, String criteria);
+    void retrieveDatasetsForIsReplacedBy(int firstResult, int maxResults, String criteria);
 }

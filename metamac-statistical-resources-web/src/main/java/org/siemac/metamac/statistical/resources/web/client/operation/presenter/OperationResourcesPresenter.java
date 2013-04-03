@@ -143,7 +143,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
-                getView().setDatasets(result.getDatasetsList());
+                getView().setDatasets(result.getDatasetDtos());
             }
         });
 
@@ -160,7 +160,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
-                getView().setPublications(result.getPublicationList());
+                getView().setPublications(result.getPublicationDtos());
             }
         });
     }

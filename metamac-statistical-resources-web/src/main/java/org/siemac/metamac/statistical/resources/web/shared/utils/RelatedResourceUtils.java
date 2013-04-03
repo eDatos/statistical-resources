@@ -3,9 +3,13 @@ package org.siemac.metamac.statistical.resources.web.shared.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class RelatedResourceUtils extends RelatedResourceBaseUtils {
@@ -22,12 +26,22 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     }
 
     // -------------------------------------------------------------------------------------------------------------
+    // NAMEABLE RESOURCE
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static RelatedResourceDto getNameableResourceDtoAsRelatedResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
+        RelatedResourceDto relatedResourceDto = getIdentifiableResourceDtoAsRelatedResourceDto(nameableStatisticalResourceDto);
+        relatedResourceDto.setTitle(nameableStatisticalResourceDto.getTitle());
+        return relatedResourceDto;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
     // PUBLICATIONS
     // -------------------------------------------------------------------------------------------------------------
 
     public static RelatedResourceDto getPublicationDtoAsRelatedResourceDto(PublicationDto publicationDto) {
-        RelatedResourceDto relatedResourceDto = getIdentifiableResourceDtoAsRelatedResourceDto(publicationDto);
-        relatedResourceDto.setTitle(publicationDto.getTitle());
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(publicationDto);
+        relatedResourceDto.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return relatedResourceDto;
     }
 
@@ -37,5 +51,42 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
             relatedResourceDtos.add(getPublicationDtoAsRelatedResourceDto(publicationDto));
         }
         return relatedResourceDtos;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+    // DATASETS
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static RelatedResourceDto getDatasetDtoAsRelatedResourceDto(DatasetDto datasetDto) {
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(datasetDto);
+        relatedResourceDto.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        return relatedResourceDto;
+    }
+
+    public static List<RelatedResourceDto> getDatasetDtosAsRelatedResourceDtos(List<DatasetDto> datasetDtos) {
+        List<RelatedResourceDto> relatedResourceDtos = new ArrayList<RelatedResourceDto>(datasetDtos.size());
+        for (DatasetDto datasetDto : datasetDtos) {
+            relatedResourceDtos.add(getDatasetDtoAsRelatedResourceDto(datasetDto));
+        }
+        return relatedResourceDtos;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+    // GENERIC RELATED RESOURCES
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static RelatedResourceDto createRelatedResourceDto(TypeRelatedResourceEnum type, String urn) {
+        RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
+        relatedResourceDto.setType(type);
+        relatedResourceDto.setUrn(urn);
+        return relatedResourceDto;
+    }
+
+    public static RelatedResourceDto createRelatedResourceDto(String urn) {
+        if (!StringUtils.isBlank(urn)) {
+            return createRelatedResourceDto(null, urn);
+        } else {
+            return null;
+        }
     }
 }
