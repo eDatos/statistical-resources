@@ -328,7 +328,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     @Override
     public void retrieveDatasetsForReplaces(int firstResult, int maxResults, String criteria) {
 
-        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria();
+        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria(criteria);
         // TODO Which is the condition to find the datasets to fill REPLACES?
 
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
@@ -347,7 +347,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     @Override
     public void retrieveDatasetsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
 
-        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria();
+        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria(criteria);
         // TODO Which is the condition to find the datasets to fill IS_REPLACED_BY?
 
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
