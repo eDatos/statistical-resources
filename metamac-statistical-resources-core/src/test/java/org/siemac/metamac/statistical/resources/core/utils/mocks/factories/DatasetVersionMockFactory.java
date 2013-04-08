@@ -65,8 +65,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME                            = "DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED";
     private static DatasetVersion DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
 
-    public static final String    DATASET_VERSION_15_DRAFT_BASIC_NAME                                          = "DATASET_VERSION_15_DRAFT_BASIC";
-    private static DatasetVersion DATASET_VERSION_15_DRAFT_BASIC;
+    public static final String    DATASET_VERSION_15_DRAFT_NOT_READY_NAME                                      = "DATASET_VERSION_15_DRAFT_NOT_READY";
+    private static DatasetVersion DATASET_VERSION_15_DRAFT_NOT_READY;
 
     public static final String    DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME                = "DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION";
     private static DatasetVersion DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION;
@@ -77,8 +77,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME               = "DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
     private static DatasetVersion DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
 
-    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_DRAFT_BASIC_NAME                    = "DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC";
-    private static DatasetVersion DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC;
+    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME                    = "DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY";
+    private static DatasetVersion DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY;
 
     public static final String    DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME = "DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
     private static DatasetVersion DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
@@ -257,12 +257,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion04.addDatasource(getDatasorce05BasicForDatasetVersion04());
     }
 
-    protected static DatasetVersion getDatasetVersion15DraftBasic() {
-        if (DATASET_VERSION_15_DRAFT_BASIC == null) {
-            DATASET_VERSION_15_DRAFT_BASIC = createDatasetVersion(1);
-            DATASET_VERSION_15_DRAFT_BASIC.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+    protected static DatasetVersion getDatasetVersion15DraftNotReady() {
+        if (DATASET_VERSION_15_DRAFT_NOT_READY == null) {
+            DATASET_VERSION_15_DRAFT_NOT_READY = createDatasetVersion(1);
+            DATASET_VERSION_15_DRAFT_NOT_READY.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         }
-        return DATASET_VERSION_15_DRAFT_BASIC;
+        return DATASET_VERSION_15_DRAFT_NOT_READY;
     }
 
     protected static DatasetVersion getDatasetVersion16DraftReadyForProductionValidation() {
@@ -294,12 +294,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
     }
 
-    protected static DatasetVersion getDatasetVersion19ProductionValidationBasic() {
-        if (DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC == null) {
-            DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC = createDatasetVersionEmpty();
-            prepareToDiffusionValidation(DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC);
+    protected static DatasetVersion getDatasetVersion19ProductionValidationNotReady() {
+        if (DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY == null) {
+            DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY = createDatasetVersionEmpty();
+            prepareToDiffusionValidation(DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY);
         }
-        return DATASET_VERSION_19_PRODUCTION_VALIDATION_BASIC;
+        return DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY;
     }
 
     protected static DatasetVersion getDatasetVersion20ProductionValidationReadyForDiffusionValidation() {

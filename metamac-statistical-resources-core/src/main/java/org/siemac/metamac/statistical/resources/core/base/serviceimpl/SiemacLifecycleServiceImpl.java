@@ -21,6 +21,10 @@ public class SiemacLifecycleServiceImpl implements SiemacLifecycleService {
     @Autowired
     private LifecycleService lifecycleService;
     
+    // ------------------------------------------------------------------------------------------------------
+    // >> PRODUCTION VALIDATION
+    // ------------------------------------------------------------------------------------------------------
+    
     @Override
     public void checkSendToProductionValidation(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleService.checkSendToProductionValidation(resource, metadataName, exceptionItems);
@@ -32,6 +36,10 @@ public class SiemacLifecycleServiceImpl implements SiemacLifecycleService {
         lifecycleService.applySendToProductionValidationActions(ctx, resource);
     }
     
+    // ------------------------------------------------------------------------------------------------------
+    // >> DIFFUSION VALIDATION
+    // ------------------------------------------------------------------------------------------------------
+    
     @Override
     public void checkSendToDiffusionValidation(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleService.checkSendToDiffusionValidation(resource, metadataName, exceptionItems);
@@ -42,6 +50,26 @@ public class SiemacLifecycleServiceImpl implements SiemacLifecycleService {
     public void applySendToDiffusionValidationActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {
         lifecycleService.applySendToDiffusionValidationActions(ctx, resource);
     }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VALIDATION REJECTED
+    // ------------------------------------------------------------------------------------------------------
+    
+    @Override
+    public void checkSendToValidationRejected(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        lifecycleService.checkSendToValidationRejected(resource, metadataName, exceptionItems);
+        checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
+        
+    }
+
+    @Override
+    public void applySendToValidationRejectedActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {
+        lifecycleService.applySendToValidationRejectedActions(ctx, resource);
+    }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> PROTECTED COMMON UTILS
+    // ------------------------------------------------------------------------------------------------------
     
     protected void checkSiemacMetadataAllActions(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         checkMetadataRequired(resource.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE), exceptionItems);
@@ -60,5 +88,4 @@ public class SiemacLifecycleServiceImpl implements SiemacLifecycleService {
         checkMetadataRequired(resource.getRightsHolder(), addParameter(metadataName, ServiceExceptionSingleParameters.RIGHTS_HOLDER), exceptionItems);
         checkMetadataRequired(resource.getLicense(), addParameter(metadataName, ServiceExceptionSingleParameters.LICENSE), exceptionItems);
     }
-    
 }

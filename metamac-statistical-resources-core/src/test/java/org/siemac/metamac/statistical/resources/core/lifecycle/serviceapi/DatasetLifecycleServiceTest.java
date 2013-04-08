@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi;
 
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 
@@ -64,9 +64,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     }
     
     @Test
-    @MetamacMock(DATASET_VERSION_15_DRAFT_BASIC_NAME)
+    @MetamacMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME)
     public void testSendToProductionValidationRequiredFields() throws Exception {
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_BASIC_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
         
         expectedMetamacException(new MetamacException ( 
                 Arrays.asList(
@@ -105,9 +105,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     }
     
     @Test
-    @MetamacMock(DATASET_VERSION_15_DRAFT_BASIC_NAME)
+    @MetamacMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME)
     public void testSendToDiffusionValidationRequiredFields() throws Exception {
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_BASIC_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
         
         expectedMetamacException(new MetamacException ( 
                 Arrays.asList(
