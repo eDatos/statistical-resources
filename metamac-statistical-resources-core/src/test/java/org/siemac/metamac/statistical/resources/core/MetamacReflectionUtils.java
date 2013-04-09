@@ -67,7 +67,7 @@ public class MetamacReflectionUtils {
     
     public static Long retrieveObjectId(Object object) {
         try {
-            Method method = object.getClass().getDeclaredMethod("getId");
+            Method method = object.getClass().getMethod("getId");
             method.setAccessible(true);
             Long objectId = (Long) method.invoke(object);
             return objectId;
