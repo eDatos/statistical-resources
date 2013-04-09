@@ -29,8 +29,10 @@ public abstract class MockFactory<EntityMock> {
             method.setAccessible(true);
             Object obj = method.invoke(this);
             return (EntityMock) obj;
-        } catch (Exception e) {
+        } catch (NoSuchMethodException e) {
             return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating mock "+id+" accesing to method "+methodName);
         }
     }
     

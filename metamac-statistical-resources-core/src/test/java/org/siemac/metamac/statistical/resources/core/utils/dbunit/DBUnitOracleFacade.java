@@ -14,10 +14,12 @@ import javax.sql.DataSource;
 
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
@@ -67,8 +69,8 @@ public class DBUnitOracleFacade implements DBUnitFacade {
 //            IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
            
             IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
-           /* ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);*/
+//            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+//            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
 
             // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
             initializeDatabase(dbUnitConnection);
@@ -99,9 +101,9 @@ public class DBUnitOracleFacade implements DBUnitFacade {
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
-            /*IDataSet dataSetReplacement = (new FlatXmlDataSetBuilder()).build(xmlDataFile);
-            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);*/
+//            IDataSet dataSetReplacement = (new FlatXmlDataSetBuilder()).build(xmlDataFile);
+//            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+//            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
             
             IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(),(new FlatXmlDataSetBuilder()).build(xmlDataFile));
 

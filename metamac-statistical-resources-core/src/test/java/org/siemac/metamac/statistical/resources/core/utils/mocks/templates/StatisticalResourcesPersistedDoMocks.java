@@ -16,32 +16,107 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
 
+    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
-    public Query mockQueryWithGeneratedDatasetVersion() {
-        Query query = mockQuery(mockDatasetVersion());
+    public Query mockQueryWithoutGeneratedQueryVersions() {
+        return mockQuery(false);
+    }
+    
+    public Query mockQueryWithGeneratedQueryVersions() {
+        return mockQuery(true);
+    }
+
+    private Query mockQuery(boolean withVersion) {
+        Query query = new Query();
+        
+        IdentifiableStatisticalResource identifiable = mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        query.setIdentifiableStatisticalResource(identifiable);
+        
+        if (withVersion) {
+            query.addVersion(mockQueryVersion(query,mockDatasetVersion()));
+        }
         return query;
     }
     
-    public Query mockQueryWithSelectionAndGeneratedDatasetVersion() {
-        Query query = mockQueryWithSelectionAndDatasetVersion(mockDatasetVersion());
-        return query;
+    // -----------------------------------------------------------------
+    // QUERY VERSION
+    // -----------------------------------------------------------------
+    @Override
+    public QueryVersion mockQueryVersion(DatasetVersion datasetVersion) {
+        return mockQueryVersion(null, datasetVersion);
     }
+    
+    public QueryVersion mockQueryVersion(Query query, DatasetVersion datasetVersion) {
+        QueryVersion queryVersion = new QueryVersion();
+
+        queryVersion.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
+        
+        if (query == null) {
+            query = mockQueryWithoutGeneratedQueryVersions();
+        }
+        
+        queryVersion.setQuery(query);
+        query.addVersion(queryVersion);
+        
+        //Mock code
+        queryVersion.getLifeCycleStatisticalResource().setCode(query.getIdentifiableStatisticalResource().getCode());
+        
+        if (datasetVersion != null) {
+            queryVersion.setDatasetVersion(datasetVersion);
+        } else {
+            throw new IllegalArgumentException("Can not create a Query with no datasetversion linked");
+        }
+        
+        if (datasetVersion.getSiemacMetadataStatisticalResource().getIsLastVersion()) {
+            queryVersion.setStatus(QueryStatusEnum.ACTIVE);
+        } else {
+            queryVersion.setStatus(QueryStatusEnum.DISCONTINUED);
+        }
+        
+        queryVersion.addSelection(mockQuerySelectionItem());
+        queryVersion.setType(QueryTypeEnum.FIXED);
+
+        return queryVersion;
+    }
+
     
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
     public Datasource mockDatasourceWithGeneratedDatasetVersion() {
         return mockDatasource(mockDatasetVersion());
+    }
+
+    // -----------------------------------------------------------------
+    // DATASET
+    // -----------------------------------------------------------------
+
+    public Dataset mockDatasetWithoutGeneratedDatasetVersions() {
+        return mockDataset(false);
+    }
+
+    public Dataset mockDatasetWithGeneratedDatasetVersions() {
+        return mockDataset(true);
+    }
+
+    private Dataset mockDataset(boolean withVersion) {
+        Dataset dataset = new Dataset();
+        if (withVersion) {
+            dataset.addVersion(mockDatasetVersion(dataset));
+        }
+        return dataset;
     }
 
     // -----------------------------------------------------------------
@@ -52,7 +127,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return mockDatasetVersion(null);
     }
     
-    @Override
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
 
@@ -142,9 +216,9 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     }
 
     @Override
-    protected void setSpecialCasesQueryMock(Query query) {
+    protected void setSpecialCasesQueryVersionMock(QueryVersion queryVersion) {
         // has to be discontinued because the related dataset is not final
-        query.setStatus(QueryStatusEnum.DISCONTINUED);
+        queryVersion.setStatus(QueryStatusEnum.DISCONTINUED);
     }
     
     @Override

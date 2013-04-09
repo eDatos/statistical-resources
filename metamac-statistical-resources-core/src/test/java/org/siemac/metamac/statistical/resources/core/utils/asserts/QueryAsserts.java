@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 public class QueryAsserts extends BaseAsserts {
 
@@ -20,7 +22,7 @@ public class QueryAsserts extends BaseAsserts {
     // QUERY: DO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsQuery(Query expected, Query actual) {
+    public static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual) {
         // TODO: Comprobar por qué este assert no es de lifeCycle en lugar de nameable
         assertEqualsNameableStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
@@ -29,7 +31,7 @@ public class QueryAsserts extends BaseAsserts {
         assertEqualsSelection(expected.getSelection(), actual.getSelection());
     }
     
-    private static void assertEqualsSelection(Set<QuerySelectionItem> expected, Set<QuerySelectionItem> actual) {
+    private static void assertEqualsSelection(List<QuerySelectionItem> expected, List<QuerySelectionItem> actual) {
         assertEqualsNullability(expected, actual);
         
         if (expected != null) {
@@ -38,7 +40,7 @@ public class QueryAsserts extends BaseAsserts {
                 boolean found = false;
                 for (QuerySelectionItem actualSelectionItem : actual) {
                     try {
-                        assertEqualsQuerySelectionItem(expectedSelectionItem, actualSelectionItem);
+                        assertEqualsQueryVersionSelectionItem(expectedSelectionItem, actualSelectionItem);
                         found = true;
                     } catch (AssertionError e) {
                         found = false;
@@ -53,7 +55,7 @@ public class QueryAsserts extends BaseAsserts {
 
     
     
-    private static void assertEqualsQuerySelectionItem(QuerySelectionItem expectedSelectionItem, QuerySelectionItem actualSelectionItem) {
+    private static void assertEqualsQueryVersionSelectionItem(QuerySelectionItem expectedSelectionItem, QuerySelectionItem actualSelectionItem) {
         assertEqualsNullability(expectedSelectionItem, actualSelectionItem);
         
         if (expectedSelectionItem != null) {
@@ -75,11 +77,11 @@ public class QueryAsserts extends BaseAsserts {
         
     }
 
-    public static void assertEqualsQueryCollection(Collection<Query> expected, Collection<Query> actual) {
+    public static void assertEqualsQueryVersionCollection(Collection<QueryVersion> expected, Collection<QueryVersion> actual) {
         if (expected != null) {
             assertNotNull(actual);
             assertEquals(expected.size(), actual.size());
-            for (Query q : expected) {
+            for (QueryVersion q : expected) {
                 if (!actual.contains(q)) {
                     fail("Found elements in expected collection, which are not contained in actual collection");
                 }
@@ -93,24 +95,47 @@ public class QueryAsserts extends BaseAsserts {
     // QUERY: DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsQuery(Query entity, QueryDto dto) {
-        assertEqualsQuery(entity, dto, MapperEnum.DO2DTO);
+    public static void assertEqualsQueryVersion(QueryVersion entity, QueryDto dto) {
+        assertEqualsQueryVersion(entity, dto, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsQuery(QueryDto dto, Query entity) {
-        assertEqualsQuery(entity, dto, MapperEnum.DTO2DO);
+    public static void assertEqualsQueryVersion(QueryDto dto, QueryVersion entity) {
+        assertEqualsQueryVersion(entity, dto, MapperEnum.DTO2DO);
     }
 
-    public static void assertEqualsQueryDoAndDtoCollection(Collection<Query> expected, Collection<QueryDto> actual) {
-        assertEqualsQueryCollection(expected, actual, MapperEnum.DO2DTO);
+    public static void assertEqualsQueryVersionDoAndDtoCollection(Collection<QueryVersion> expected, Collection<QueryDto> actual) {
+        assertEqualsQueryVersionCollection(expected, actual, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsQueryDtoAndDoCollection(Collection<QueryDto> expected, Collection<Query> actual) {
-        assertEqualsQueryCollection(actual, expected, MapperEnum.DTO2DO);
+    public static void assertEqualsQueryVersionDtoAndDoCollection(Collection<QueryDto> expected, Collection<QueryVersion> actual) {
+        assertEqualsQueryVersionCollection(actual, expected, MapperEnum.DTO2DO);
     }
-
     
-    private static void assertEqualsQuery(Query entity, QueryDto dto, MapperEnum mapperEnum) {
+    private static void assertEqualsQueryVersionCollection(Collection<QueryVersion> entities, Collection<QueryDto> dtos, MapperEnum mapperEnum) {
+        if (entities != null) {
+            assertNotNull(dtos);
+            assertEquals(entities.size(), dtos.size());
+            for (QueryVersion expectedItem : entities) {
+                boolean match = false;
+                for (QueryDto actualItem : dtos) {
+                    try {
+                        assertEqualsQueryVersion(expectedItem, actualItem, mapperEnum);
+                        match = true;
+                    } catch (AssertionError e) {
+                        continue;
+                    }
+                }
+
+                if (!match) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(dtos);
+        }
+    }
+
+    private static void assertEqualsQueryVersion(QueryVersion entity, QueryDto dto, MapperEnum mapperEnum) {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
             
@@ -124,7 +149,7 @@ public class QueryAsserts extends BaseAsserts {
             assertEquals(entity.getStatus(), dto.getStatus());
         }
         assertEqualsNameableStatisticalResource(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
-        assertEqualsDatasetVersionInQuery(entity, dto.getDatasetVersion());
+        assertEqualsDatasetVersionInQueryVersion(entity, dto.getDatasetVersion());
         
         assertNotNull(entity.getType());
         assertEquals(entity.getType(), dto.getType());
@@ -133,9 +158,10 @@ public class QueryAsserts extends BaseAsserts {
         
         assertEqualsSelection(entity.getSelection(), dto.getSelection(), mapperEnum);
     }
+
     
 
-    private static void assertEqualsSelection(Set<QuerySelectionItem> entitySelection, Map<String, Set<String>> dtoSelection, MapperEnum mapperEnum) {
+    private static void assertEqualsSelection(List<QuerySelectionItem> entitySelection, Map<String, Set<String>> dtoSelection, MapperEnum mapperEnum) {
         assertEqualsNullability(entitySelection, dtoSelection);
         
         if (entitySelection != null) {
@@ -157,34 +183,11 @@ public class QueryAsserts extends BaseAsserts {
         }
     }
 
-    private static void assertEqualsQueryCollection(Collection<Query> entities, Collection<QueryDto> dtos, MapperEnum mapperEnum) {
-        if (entities != null) {
-            assertNotNull(dtos);
-            assertEquals(entities.size(), dtos.size());
-            for (Query expectedItem : entities) {
-                boolean match = false;
-                for (QueryDto actualItem : dtos) {
-                    try {
-                        assertEqualsQuery(expectedItem, actualItem, mapperEnum);
-                        match = true;
-                    } catch (AssertionError e) {
-                        continue;
-                    }
-                }
-
-                if (!match) {
-                    fail("Found elements in expected collection, which are not contained in actual collection");
-                }
-            }
-        } else {
-            assertNull(dtos);
-        }
-    }
     
     // -----------------------------------------------------------------
     // DATASET VERSION: QUERY AND DATASETVERSION URN 
     // -----------------------------------------------------------------
-    private static void assertEqualsDatasetVersionInQuery(Query entity, String datasetVersionDtoUrn) {
+    private static void assertEqualsDatasetVersionInQueryVersion(QueryVersion entity, String datasetVersionDtoUrn) {
         String datasetVersionEntityUrn = null; 
             
         if (entity.getDatasetVersion() != null && entity.getDatasetVersion().getSiemacMetadataStatisticalResource() != null) {

@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
@@ -45,37 +46,24 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private static final String   URI_MOCK_PREFIX                     = "lorem/ipsum/dolor/sit/amet/";
     protected static final String USER_MOCK                           = "MockedUser";
 
+    
     // -----------------------------------------------------------------
-    // QUERY
+    // QUERY VERSION
     // -----------------------------------------------------------------
-    public Query mockQueryWithDatasetVersion(DatasetVersion datasetVersion) {
-        Query query = mockQuery(datasetVersion);
+    public abstract QueryVersion mockQueryVersion(DatasetVersion datasetVersion);
+    
+    
+    public QueryVersion mockQueryVersionWithGeneratedDatasetVersion() {
+        DatasetVersion datasetVersion = mockDatasetVersion();
+        QueryVersion query = mockQueryVersion(datasetVersion);
         return query;
     }
-
-    public Query mockQueryWithSelectionAndDatasetVersion(DatasetVersion datasetVersion) {
-        Query resource = mockQuery(datasetVersion);
-        resource.addSelection(mockQuerySelectionItem());
-
-        return resource;
+    
+    public QueryVersion mockQueryVersionWithDatasetVersion(DatasetVersion datasetVersion) {
+        return mockQueryVersion(datasetVersion);
     }
 
-    protected Query mockQuery(DatasetVersion datasetVersion) {
-        Query resource = new Query();
-        resource.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
-
-        // We can not set code in LifeCycle becasuse thera are some resources that have generated code
-        resource.getLifeCycleStatisticalResource().setCode("resource-" + mockString(10));
-
-        resource.setDatasetVersion(datasetVersion);
-        resource.setType(QueryTypeEnum.FIXED);
-
-        setSpecialCasesQueryMock(resource);
-
-        return resource;
-    }
-
-    private QuerySelectionItem mockQuerySelectionItem() {
+    protected QuerySelectionItem mockQuerySelectionItem() {
         QuerySelectionItem querySelectionItem = new QuerySelectionItem();
         querySelectionItem.setDimension("SEX");
         querySelectionItem.addCode(mockCodeItem());
@@ -109,33 +97,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return datasource;
     }
 
-    // -----------------------------------------------------------------
-    // DATASET
-    // -----------------------------------------------------------------
-
-    public Dataset mockDatasetWithoutGeneratedDatasetVersions() {
-        return mockDataset(false);
-    }
-
-    public Dataset mockDatasetWithGeneratedDatasetVersions() {
-        return mockDataset(true);
-    }
-
-    private Dataset mockDataset(boolean withVersion) {
-        Dataset dataset = new Dataset();
-        if (withVersion) {
-            dataset.addVersion(mockDatasetVersion(dataset));
-        }
-        return dataset;
-    }
 
     // -----------------------------------------------------------------
     // DATASET VERSION
     // -----------------------------------------------------------------
 
     public abstract DatasetVersion mockDatasetVersion();
-
-    public abstract DatasetVersion mockDatasetVersion(Dataset dataset);
 
     protected DatasetVersion mockDatasetVersionMetadata() {
         DatasetVersion datasetVersion = new DatasetVersion();
@@ -311,7 +278,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource);
 
-    protected abstract void setSpecialCasesQueryMock(Query query);
+    protected abstract void setSpecialCasesQueryVersionMock(QueryVersion query);
 
     protected abstract void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality);
 

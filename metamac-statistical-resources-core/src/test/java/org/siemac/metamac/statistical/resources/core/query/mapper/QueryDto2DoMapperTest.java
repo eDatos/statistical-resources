@@ -1,15 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
 import static org.junit.Assert.assertTrue;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
@@ -35,8 +35,8 @@ public class QueryDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testQueryDtoToDo() throws MetamacException {
         QueryDto expected = StatisticalResourcesDtoMocks.mockQueryDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
-        Query actual = queryDto2DoMapper.queryDtoToDo(expected);
-        assertEqualsQuery(expected, actual);
+        QueryVersion actual = queryDto2DoMapper.queryVersionDtoToDo(expected);
+        assertEqualsQueryVersion(expected, actual);
         assertTrue(expected.getDatasetVersion().equals(actual.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));
     }
 }
