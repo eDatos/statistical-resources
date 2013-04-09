@@ -1,5 +1,6 @@
 package  org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
@@ -232,22 +233,5 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     // ------------------------------------------------------------------------------------------------------
     // UTILS
     // ------------------------------------------------------------------------------------------------------
-    
-    private void prepareToProductionValidation(LifeCycleStatisticalResource resource) {
-        StatisticalResourcesPersistedDoMocks.prepareToProductionValidationLifecycleResource(resource);
-        resource.setCode("CODE");
-        resource.setUrn("URN");
-    }
-    
-    private void prepareToDiffusionValidation(LifeCycleStatisticalResource resource) {
-        prepareToProductionValidation(resource);
-        resource.setProductionValidationDate(new DateTime());
-        resource.setProductionValidationUser("PRODUCTION_VALIDATION_USER");
-    }
-    
-    private void prepareToValidationRejected(LifeCycleStatisticalResource resource) {
-        prepareToProductionValidation(resource);
-        resource.setProductionValidationDate(new DateTime());
-        resource.setProductionValidationUser("PRODUCTION_VALIDATION_USER");
-    }
+
 }

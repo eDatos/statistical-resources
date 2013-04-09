@@ -11,6 +11,11 @@ import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 
 public abstract class LifecycleInvocationValidatorBase<E> {
 
+    // ------------------------------------------------------------------------------------------------------
+    // >> PRODUCTION VALIDATION
+    // ------------------------------------------------------------------------------------------------------
+
+    
     public void checkSendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
@@ -21,6 +26,10 @@ public abstract class LifecycleInvocationValidatorBase<E> {
     
     protected abstract void checkSendToProductionValidationInternal(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions);
     
+    // ------------------------------------------------------------------------------------------------------
+    // >> DIFFUSION VALIDATION
+    // ------------------------------------------------------------------------------------------------------
+
     public void checkSendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
         
@@ -30,4 +39,19 @@ public abstract class LifecycleInvocationValidatorBase<E> {
     }
     
     protected abstract void checkSendToDiffusionValidationInternal(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions);
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VALIDATION REJECTED
+    // ------------------------------------------------------------------------------------------------------
+
+    
+    public void checkSendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+        
+        checkSendToValidationRejectedInternal(ctx,resource, exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    protected abstract void checkSendToValidationRejectedInternal(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions);
 }

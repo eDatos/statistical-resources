@@ -29,6 +29,7 @@ public class SiemacLifecycleChecker {
     
     public void applySendToProductionValidationActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {
         lifecycleService.applySendToProductionValidationActions(ctx, resource);
+        //FIXME: Computed fields based on data
     }
     
     // ------------------------------------------------------------------------------------------------------
@@ -51,7 +52,6 @@ public class SiemacLifecycleChecker {
     public void checkSendToValidationRejected(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleService.checkSendToValidationRejected(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
-        
     }
 
     public void applySendToValidationRejectedActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {

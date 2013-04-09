@@ -10,4 +10,6 @@ public interface LifecycleService<E extends Object> {
     
     public void sendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException;
     
+    public void sendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException;
+    
 }

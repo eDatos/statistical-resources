@@ -9,8 +9,8 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.serviceimpl.validators.PublicationServiceInvocationValidatorImpl;
 import org.springframework.stereotype.Component;
 
-@Component
-public class PublicationLifecycleServiceInvocationValidator extends LifecycleInvocationValidatorBase<PublicationVersion> {
+//FIXME @Component
+public abstract class PublicationLifecycleServiceInvocationValidator extends LifecycleInvocationValidatorBase<PublicationVersion> {
 
     @Override
     public void checkSendToProductionValidationInternal(ServiceContext ctx, PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) {

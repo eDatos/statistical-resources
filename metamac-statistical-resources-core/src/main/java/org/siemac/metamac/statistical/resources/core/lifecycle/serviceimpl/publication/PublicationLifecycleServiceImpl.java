@@ -16,8 +16,9 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("publicationLifecycleService")
-public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> implements LifecycleService<PublicationVersion>{
+//FIXME uncomment @service
+//@Service("publicationLifecycleService")
+public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> implements LifecycleService<PublicationVersion>{
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
@@ -38,7 +39,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
 
     @Override
     protected void checkSendToProductionValidationResource(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException{
-        //NOTHING
+       //FIXME: check possible fields to be checked
     }
     
     @Override
@@ -48,7 +49,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     
     @Override
     protected void applySendToProductionValidationResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-       // NOTHING
+        //FIXME: check possible fields to be checked
     }
     
     @Override
@@ -63,7 +64,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     
     @Override
     protected void checkSendToDiffusionValidationResource(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException{
-        //NOTHING
+        //FIXME: check possible fields to be checked
     }
     
     @Override
@@ -73,7 +74,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     
     @Override
     protected void applySendToDiffusionValidationResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-       // NOTHING
+        //FIXME: check possible fields to be checked
     }
     
     @Override

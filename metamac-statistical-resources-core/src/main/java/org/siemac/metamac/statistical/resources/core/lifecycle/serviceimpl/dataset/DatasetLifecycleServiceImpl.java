@@ -81,6 +81,32 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         siemacLifecycleChecker.applySendToDiffusionValidationActions(ctx,resource.getSiemacMetadataStatisticalResource());
     }
     
+    // ------------------------------------------------------------------------------------------------------
+    // >> VALIDATION REJECTED
+    // ------------------------------------------------------------------------------------------------------
+    
+    @Override
+    protected void checkSendToValidationRejectedResource(DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException{
+        //NOTHING
+    }
+    
+    @Override
+    protected void checkSendToValidationRejectedLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        siemacLifecycleChecker.checkSendToValidationRejected(resource.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+    }
+    
+    @Override
+    protected void applySendToValidationRejectedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+       // NOTHING
+    }
+    
+    @Override
+    protected void applySendToValidationRejectedLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+        siemacLifecycleChecker.applySendToValidationRejectedActions(ctx,resource.getSiemacMetadataStatisticalResource());
+    }
+    
+    
+    
     
     /* GENERAL ABSTRACT METHODS */
     @Override

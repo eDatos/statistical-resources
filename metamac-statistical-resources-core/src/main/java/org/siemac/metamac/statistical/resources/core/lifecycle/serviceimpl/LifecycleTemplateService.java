@@ -94,6 +94,48 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     protected abstract void checkSendToDiffusionValidationResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
     protected abstract void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
     protected abstract void applySendToDiffusionValidationResource(ServiceContext ctx, E resource) throws MetamacException;
+    
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VALIDATION REJECTED
+    // ------------------------------------------------------------------------------------------------------
+    
+    
+    @Override
+    public final void sendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
+        getInvocationValidator().checkSendToValidationRejected(ctx, resource);
+        
+        resource = retrieveResourceByResource(resource);
+        
+        checkSendToValidationRejected(resource);
+        
+        applySendToValidationRejected(ctx, resource);
+        
+        saveResource(resource);
+    }
+    
+    
+    public final void checkSendToValidationRejected(E resource) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+        
+        checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
+        
+        checkResourceMetadataAllActions(resource, exceptions);
+        checkSendToValidationRejectedResource(resource, exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public final void applySendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
+        applySendToValidationRejectedLinkedStatisticalResource(ctx, resource);
+        
+        applySendToValidationRejectedResource(ctx, resource);
+    }
+    
+    protected abstract void checkSendToValidationRejectedLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException ;
+    protected abstract void checkSendToValidationRejectedResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    protected abstract void applySendToValidationRejectedLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
+    protected abstract void applySendToValidationRejectedResource(ServiceContext ctx, E resource) throws MetamacException;
 
 
     
