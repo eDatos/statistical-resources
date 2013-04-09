@@ -11,7 +11,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,40 +48,40 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
             QueryCriteriaPropertyEnum propertyEnum = QueryCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case CODE:
-                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue());
                 case URN:
-                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().urn(), propertyRestriction.getStringValue());
                 case TITLE:
-                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case DESCRIPTION:
-                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
                 case STATUS:
-                    return new SculptorPropertyCriteria(QueryProperties.status(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue());
                 case PROC_STATUS:
-                    return new SculptorPropertyCriteria(QueryProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
 
         @Override
-        public Property<Query> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
+        public Property<QueryVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
             QueryCriteriaOrderEnum propertyOrderEnum = QueryCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
                 case CODE:
-                    return QueryProperties.lifeCycleStatisticalResource().code();
+                    return QueryVersionProperties.lifeCycleStatisticalResource().code();
                 case URN:
-                    return QueryProperties.lifeCycleStatisticalResource().urn();
+                    return QueryVersionProperties.lifeCycleStatisticalResource().urn();
                 case TITLE:
-                    return QueryProperties.lifeCycleStatisticalResource().title().texts().label();
+                    return QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
         }
 
         @Override
-        public Property<Query> retrievePropertyOrderDefault() throws MetamacException {
-            return QueryProperties.id();
+        public Property<QueryVersion> retrievePropertyOrderDefault() throws MetamacException {
+            return QueryVersionProperties.id();
         }
     }
 }

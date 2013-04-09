@@ -7,24 +7,24 @@ import java.util.List;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository implementation for Query
+ * Repository implementation for QueryVersion
  */
-@Repository("queryRepository")
-public class QueryRepositoryImpl extends QueryRepositoryBase {
-
-    public QueryRepositoryImpl() {
+@Repository("queryVersionRepository")
+public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
+    public QueryVersionRepositoryImpl() {
     }
 
-    public Query retrieveByUrn(String urn) throws MetamacException {
+    @Override
+    public QueryVersion retrieveByUrn(String urn) throws MetamacException {
         
-        List<ConditionalCriteria> condition = criteriaFor(Query.class).withProperty(QueryProperties.lifeCycleStatisticalResource().urn()).eq(urn).distinctRoot().build();
+        List<ConditionalCriteria> condition = criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().urn()).eq(urn).distinctRoot().build();
         
-        List<Query> result = findByCondition(condition);
+        List<QueryVersion> result = findByCondition(condition);
         
         if (result.size() == 0) {
             throw new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn);
@@ -35,4 +35,5 @@ public class QueryRepositoryImpl extends QueryRepositoryBase {
         
         return result.get(0);
     }
+    
 }

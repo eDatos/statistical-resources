@@ -96,19 +96,19 @@ Application DatasetsStatisticalResources {
 			
 			//Content descriptors
 			//temporal codes
-			- Bag<@ExternalItem> temporalCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMPORAL_COVERAGE";
+			- Bag<@ExternalItem> temporalCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMPORAL_COVERAGE" databaseColumn="TEMPORAL_COVERAGE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//geographic codes
-			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEOGRAPHIC_COVERAGE";
+			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEOGRAPHIC_COVERAGE" databaseColumn="GEOGRAPHIC_COVERAGE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//geographic granularities
-			- Bag<@ExternalItem> geographicGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_GRANULARITY";
+			- Bag<@ExternalItem> geographicGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_GRANULARITY" databaseColumn="GEOGRAPHIC_GRANULARITY_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//temporal granularities
-			- Bag<@ExternalItem> temporalGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMP_GRANULARITY";
+			- Bag<@ExternalItem> temporalGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMP_GRANULARITY" databaseColumn="TEMPORAL_GRANULARITY_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//First date which data refers to
 			DateTimeTZ dateStart nullable;
 			//Last date which data refers to
 			DateTimeTZ dateEnd nullable;
-			- Bag<@ExternalItem> statisticalUnit cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_STATISTICAL_UNIT";
-			- Bag<@ExternalItem> measures cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_MEASURES";
+			- Bag<@ExternalItem> statisticalUnit cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STATISTICAL_UNIT" databaseColumn="STATISTICAL_UNIT_FK" databaseJoinColumn="DATASET_VERSION_FK";
+			- Bag<@ExternalItem> measures cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_MEASURES" databaseColumn="MEASURE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			
 			//Production descriptor
 			//should be nullable?
@@ -158,7 +158,7 @@ Application DatasetsStatisticalResources {
     		
     		not auditable
     		String identifier;
-    		- @InternationalString description nullable cascade="all";
+    		- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
     		
     		Repository StatisticOfficialityRepository {
     			findById;

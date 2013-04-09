@@ -8,6 +8,8 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForUpdateResourceUtils;
@@ -15,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidat
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.query.serviceimpl.validators.QueryConstraintValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,123 +38,138 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     public QueryServiceImpl() {
     }
 
-    public Query retrieveQueryByUrn(ServiceContext ctx, String urn) throws MetamacException {
+    @Override
+    public QueryVersion retrieveQueryVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkRetrieveQueryByUrn(ctx, urn);
+        queryServiceInvocationValidator.checkRetrieveQueryVersionByUrn(ctx, urn);
 
         // Retrieve
-        Query query = getQueryRepository().retrieveByUrn(urn);
+        QueryVersion query = getQueryVersionRepository().retrieveByUrn(urn);
         return query;
     }
 
     @Override
-    public List<Query> retrieveQueries(ServiceContext ctx) throws MetamacException {
+    public List<QueryVersion> retrieveQueryVersions(ServiceContext ctx) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkRetrieveQueries(ctx);
+        queryServiceInvocationValidator.checkRetrieveQueryVersions(ctx);
 
         // Retrieve
-        List<Query> queries = getQueryRepository().findAll();
+        List<QueryVersion> queries = getQueryVersionRepository().findAll();
         return queries;
     }
 
     @Override
-    public PagedResult<Query> findQueriesByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+    public PagedResult<QueryVersion> findQueryVersionsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkFindQueriesByCondition(ctx, conditions, pagingParameter);
+        queryServiceInvocationValidator.checkFindQueryVersionsByCondition(ctx, conditions, pagingParameter);
 
         // Find
         conditions = CriteriaUtils.initConditions(conditions, Query.class);
         pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
 
-        PagedResult<Query> queryPagedResult = getQueryRepository().findByCondition(conditions, pagingParameter);
+        PagedResult<QueryVersion> queryPagedResult = getQueryVersionRepository().findByCondition(conditions, pagingParameter);
         return queryPagedResult;
 
     }
 
     @Override
-    public Query createQuery(ServiceContext ctx, Query query) throws MetamacException {
+    public QueryVersion createQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkCreateQuery(ctx, query);
+        queryServiceInvocationValidator.checkCreateQueryVersion(ctx, queryVersion);
 
+        Query query = createQueryResourceFromQueryVersion(queryVersion);
+        query = getQueryRepository().save(query);
+        
         // Fill metadata
-        fillMetadataForCreateQuery(ctx, query);
+        fillMetadataForCreateQueryVersion(ctx, queryVersion);
 
         // Checks
         // TODO: Comprobar si hay que hacer alguno más
         // TODO: Comprobar si pueden ser comunes al resto de artefactos
-        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getLifeCycleStatisticalResource());
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
 
-        // Save
-        query = getQueryRepository().save(query);
+        // Save version
+        queryVersion.setQuery(query);
+        queryVersion = getQueryVersionRepository().save(queryVersion);
 
-        return query;
+        return queryVersion;
     }
-
+    
     @Override
-    public Query updateQuery(ServiceContext ctx, Query query) throws MetamacException {
+    public QueryVersion updateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkUpdateQuery(ctx, query);
+        queryServiceInvocationValidator.checkUpdateQueryVersion(ctx, queryVersion);
 
         // Fill metadata
-        fillMetadataForUpdateQuery(query);
+        fillMetadataForUpdateQuery(queryVersion);
 
         // Check that could be update
         // TODO: Comprobar si hay que hacer alguno más
         // TODO: Comprobar si pueden ser comunes al resto de artefactos
-        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getLifeCycleStatisticalResource());
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
 
         // Repository operation
-        return getQueryRepository().save(query);
+        return getQueryVersionRepository().save(queryVersion);
 
     }
 
     @Override
-    public Query markQueryAsDiscontinued(ServiceContext ctx, Query query) throws MetamacException {
+    public QueryVersion markQueryVersionAsDiscontinued(ServiceContext ctx, QueryVersion query) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkMarkQueryAsDiscontinued(ctx, query);
+        queryServiceInvocationValidator.checkMarkQueryVersionAsDiscontinued(ctx, query);
 
         // Retrieve entity
-        query = retrieveQueryByUrn(ctx, query.getLifeCycleStatisticalResource().getUrn());
+        query = retrieveQueryVersionByUrn(ctx, query.getLifeCycleStatisticalResource().getUrn());
 
         // Check that query is pending_review
-        QueryConstraintValidator.checkQueryForMarkAsDiscontinued(query);
+        QueryConstraintValidator.checkQueryVersionForMarkAsDiscontinued(query);
 
         // Change status
         query.setStatus(QueryStatusEnum.DISCONTINUED);
 
-        return getQueryRepository().save(query);
+        return getQueryVersionRepository().save(query);
     }
 
     @Override
-    public void deleteQuery(ServiceContext ctx, String urn) throws MetamacException {
+    public void deleteQueryVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkDeleteQuery(ctx, urn);
+        queryServiceInvocationValidator.checkDeleteQueryVersion(ctx, urn);
 
         // Retrieve entity
-        Query query = retrieveQueryByUrn(ctx, urn);
+        QueryVersion queryVersion = retrieveQueryVersionByUrn(ctx, urn);
 
         // Check that query is pending_review
-        BaseValidator.checkStatisticalResourceCanBeDeleted(query.getLifeCycleStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeDeleted(queryVersion.getLifeCycleStatisticalResource());
 
         // Delete
-        getQueryRepository().delete(query);
+        getQueryVersionRepository().delete(queryVersion);
     }
 
-    private void fillMetadataForCreateQuery(ServiceContext ctx, Query query) {
-        FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(query.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY, ctx);
-        query.setStatus(determineQueryStatus(query));
+    private Query createQueryResourceFromQueryVersion(QueryVersion queryVersion) throws MetamacException {
+        Query query = new Query();
+        query.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        query.getIdentifiableStatisticalResource().setCode(queryVersion.getLifeCycleStatisticalResource().getCode());
+        query.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(queryVersion.getLifeCycleStatisticalResource().getCode()));
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
+        return query;
     }
 
-    private QueryStatusEnum determineQueryStatus(Query query) {
-        if (query.getDatasetVersion().getSiemacMetadataStatisticalResource().getIsLastVersion()) {
+    private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), ctx);
+        queryVersion.setStatus(determineQueryStatus(queryVersion));
+        queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion.getLifeCycleStatisticalResource().getVersionLogic()));
+    }
+
+    private QueryStatusEnum determineQueryStatus(QueryVersion queryVersion) {
+        if (queryVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getIsLastVersion()) {
             return QueryStatusEnum.ACTIVE;
         } else {
             return QueryStatusEnum.DISCONTINUED;
         }
     }
 
-    private void fillMetadataForUpdateQuery(Query query) {
-        query.setStatus(determineQueryStatus(query));
-        FillMetadataForUpdateResourceUtils.fillMetadataForUpdateLifeCycleResource(query.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY);
+    private void fillMetadataForUpdateQuery(QueryVersion queryVersion) {
+        queryVersion.setStatus(determineQueryStatus(queryVersion));
+        FillMetadataForUpdateResourceUtils.fillMetadataForUpdateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY);
     }
 }

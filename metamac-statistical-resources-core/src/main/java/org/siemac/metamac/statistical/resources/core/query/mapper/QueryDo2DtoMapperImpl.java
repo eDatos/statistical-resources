@@ -12,31 +12,32 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 @org.springframework.stereotype.Component("queryDo2DtoMapper")
 public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements QueryDo2DtoMapper {
 
 
     @Override
-    public QueryDto queryDoToDto(Query source) {
+    public QueryDto queryVersionDoToDto(QueryVersion source) {
         if (source == null) {
             return null;
         }
         QueryDto target = new QueryDto();
-        queryDoToDto(source, target);
+        queryVersionDoToDto(source, target);
         return target;
     }
     
     @Override
-    public List<QueryDto> queryDoListToDtoList(List<Query> sources) {
+    public List<QueryDto> queryVersionDoListToDtoList(List<QueryVersion> sources) {
         List<QueryDto> targets = new ArrayList<QueryDto>();
-        for (Query source : sources) {
-            targets.add(queryDoToDto(source));
+        for (QueryVersion source : sources) {
+            targets.add(queryVersionDoToDto(source));
         }
         return targets;
     }
 
-    private QueryDto queryDoToDto(Query source, QueryDto target) {
+    private QueryDto queryVersionDoToDto(QueryVersion source, QueryDto target) {
         if (source == null) {
             return null;
         }
@@ -70,7 +71,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         return target;
     }
 
-    private Map<String, Set<String>> selectionDo2Dto(Set<QuerySelectionItem> source, QueryDto target) {
+    private Map<String, Set<String>> selectionDo2Dto(List<QuerySelectionItem> source, QueryDto target) {
         Map<String, Set<String>> result = new HashMap<String, Set<String>>();
         for (QuerySelectionItem querySelectionItem : source) {
             Set<String> codesResult = new HashSet<String>();

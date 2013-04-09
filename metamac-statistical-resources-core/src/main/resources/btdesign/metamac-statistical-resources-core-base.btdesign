@@ -138,7 +138,7 @@ Application BaseStatisticalResources {
 			
 			//LANGUAGES
 			- @ExternalItem language nullable cascade="all" databaseColumn="LANGUAGE_FK";
-			- Bag<@ExternalItem> languages cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_SR_LANGUAGES";
+			- Bag<@ExternalItem> languages cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_LANGUAGES" databaseColumn="LANGUAGE_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//THEMATIC CONTENT CLASSIFIER
 			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
@@ -156,25 +156,25 @@ Application BaseStatisticalResources {
 			//PRODUCTION DESCRIPTORS
 			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
 			- @ExternalItem creator cascade="all" databaseColumn="CREATOR_FK" nullable;
-			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseColumn="CONTRIBUTOR_FK" databaseJoinTable="TB_SR_CONTRIBUTORS";
+			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseJoinTable="TB_EI_CONTRIBUTORS" databaseColumn="CONTRIBUTOR_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			DateTimeTZ resourceCreatedDate nullable;
 			DateTimeTZ lastUpdate nullable;
 			- @InternationalString conformsTo cascade="all" databaseColumn="CONFORMS_TO_FK" nullable;
 			- @InternationalString conformsToInternal cascade="all" databaseColumn="CONFORMS_TO_INTERNAL_FK" nullable;
 			
 			//PUBLISHING DESCRIPTORS
-			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseColumn="PUBLISHER_FK" databaseJoinTable="TB_SR_PUBLISHERS";
-			- Bag<@ExternalItem> publisherContributor cascade="all-delete-orphan" databaseColumn="PUBLISHER_FK" databaseJoinTable="TB_SR_PUB_CONTRIBUTORS";
-			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseColumn="MEDIATOR_FK" databaseJoinTable="TB_SR_MEDIATORS";
+			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" databaseJoinTable="TB_EI_PUBLISHERS" databaseColumn="PUBLISHER_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
+			- Bag<@ExternalItem> publisherContributor cascade="all-delete-orphan" databaseJoinTable="TB_EI_PUB_CONTRIBUTORS" databaseColumn="PUBLISHER_CONT_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
+			- Bag<@ExternalItem> mediator cascade="all-delete-orphan" databaseJoinTable="TB_EI_MEDIATORS" databaseColumn="MEDIATOR_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			DateTimeTZ newnessUntilDate nullable;
 			
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
 			- @RelatedResource isReplacedBy cascade="all" databaseColumn="IS_REPLACED_BY_FK" nullable;
-			- Bag<@RelatedResource> requires cascade="all-delete-orphan" databaseColumn="REQUIRES_FK" databaseJoinTable="TB_SR_REQUIRES";
-			- Bag<@RelatedResource> isRequiredBy cascade="all-delete-orphan" databaseColumn="IS_REQUIRED_BY_FK" databaseJoinTable="TB_SR_IS_REQUIRED_BY";
-			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseColumn="HAS_PART_FK" databaseJoinTable="TB_SR_HAS_PART";
-			- Bag<@RelatedResource> isPartOf cascade="all-delete-orphan" databaseColumn="IS_PART_OF_FK" databaseJoinTable="TB_SR_IS_PART_OF";
+			- Bag<@RelatedResource> requires cascade="all-delete-orphan" databaseJoinTable="TB_RR_REQUIRES" databaseColumn="REQUIRES_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
+			- Bag<@RelatedResource> isRequiredBy cascade="all-delete-orphan" databaseJoinTable="TB_RR_IS_REQUIRED_BY" databaseColumn="IS_REQUIRED_BY_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
+			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseJoinTable="TB_RR_HAS_PART"  databaseColumn="HAS_PART_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
+			- Bag<@RelatedResource> isPartOf cascade="all-delete-orphan" databaseJoinTable="TB_RR_IS_PART_OF" databaseColumn="IS_PART_OF_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//INTELLECTUAL PROPERTY DESCRIPTORS
 			- @ExternalItem rightsHolder cascade="all" databaseColumn="RIGHTS_HOLDER_FK" nullable;

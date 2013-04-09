@@ -1,8 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -32,7 +32,7 @@ import org.siemac.metamac.statistical.resources.core.publication.mapper.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QuerySculptorCriteria2MetamacCriteriaMapper;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
@@ -99,10 +99,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canRetrieveQueryByUrn(ctx);
 
         // Retrieve
-        Query query = getQueryService().retrieveQueryByUrn(ctx, urn);
+        QueryVersion queryVersion = getQueryService().retrieveQueryVersionByUrn(ctx, urn);
 
         // Transform
-        QueryDto queryDto = queryDo2DtoMapper.queryDoToDto(query);
+        QueryDto queryDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryDto;
     }
@@ -113,10 +113,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canRetrieveQueries(ctx);
 
         // Retrieve
-        List<Query> queries = getQueryService().retrieveQueries(ctx);
+        List<QueryVersion> queryVersions = getQueryService().retrieveQueryVersions(ctx);
 
         // Transform
-        List<QueryDto> queriesDto = queryDo2DtoMapper.queryDoListToDtoList(queries);
+        List<QueryDto> queriesDto = queryDo2DtoMapper.queryVersionDoListToDtoList(queryVersions);
 
         return queriesDto;
     }
@@ -127,13 +127,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canCreateQuery(ctx);
 
         // Transform
-        Query query = queryDto2DoMapper.queryDtoToDo(queryDto);
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryDto);
 
         // Create
-        query = getQueryService().createQuery(ctx, query);
+        queryVersion = getQueryService().createQueryVersion(ctx, queryVersion);
 
         // Transform to DTO
-        queryDto = queryDo2DtoMapper.queryDoToDto(query);
+        queryDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryDto;
     }
@@ -144,13 +144,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canUpdateQuery(ctx);
 
         // Transform
-        Query query = queryDto2DoMapper.queryDtoToDo(queryDto);
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryDto);
 
         // Update
-        query = getQueryService().updateQuery(ctx, query);
+        queryVersion = getQueryService().updateQueryVersion(ctx, queryVersion);
 
         // Transform to Dto
-        queryDto = queryDo2DtoMapper.queryDoToDto(query);
+        queryDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryDto;
     }
@@ -164,7 +164,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<Query> result = getQueryService().findQueriesByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<QueryVersion> result = getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
         MetamacCriteriaResult<QueryDto> metamacCriteriaResult = querySculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
@@ -178,13 +178,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canMarkQueryAsDiscontinued(ctx);
 
         // Transform
-        Query query = queryDto2DoMapper.queryDtoToDo(queryDto);
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryDto);
 
         // Update
-        query = getQueryService().markQueryAsDiscontinued(ctx, query);
+        queryVersion = getQueryService().markQueryVersionAsDiscontinued(ctx, queryVersion);
 
         // Transform
-        queryDto = queryDo2DtoMapper.queryDoToDto(query);
+        queryDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryDto;
     }
@@ -195,7 +195,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canDeleteQuery(ctx);
 
         // Delete
-        getQueryService().deleteQuery(ctx, urn);
+        getQueryService().deleteQueryVersion(ctx, urn);
     }
 
     // ------------------------------------------------------------------------
@@ -522,7 +522,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // not security
 
         // Service call
-        Set<DatasetVersion> datasetsVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn).getDatasets();
+        List<DatasetVersion> datasetsVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn).getDatasets();
 
         // Transform to Dto
         List<String> datasetVersionsUrn = datasetVersionSetDo2UrnList(datasetsVersion);
@@ -567,7 +567,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return findDatasetVersionForPublicationVersion(ctx, publicationVersionUrn);
     }
 
-    private List<String> datasetVersionSetDo2UrnList(Set<DatasetVersion> datasetsVersion) {
+    private List<String> datasetVersionSetDo2UrnList(Collection<DatasetVersion> datasetsVersion) {
         List<String> datasetVersionUrnList = new ArrayList<String>();
         for (DatasetVersion item : datasetsVersion) {
             datasetVersionUrnList.add(item.getSiemacMetadataStatisticalResource().getUrn());

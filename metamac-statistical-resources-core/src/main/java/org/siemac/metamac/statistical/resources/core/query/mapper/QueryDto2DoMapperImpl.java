@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,17 +19,18 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
-import org.siemac.metamac.statistical.resources.core.query.exception.QueryNotFoundException;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.exception.QueryVersionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("queryDto2DoMapper")
 public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements QueryDto2DoMapper {
 
     @Autowired
-    private QueryRepository              queryRepository;
+    private QueryVersionRepository       queryVersionRepository;
 
     @Autowired
     private DatasetVersionRepository     datasetVersionRepository;
@@ -36,31 +39,31 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     private QuerySelectionItemRepository querySelectionItemRepository;
 
     @Override
-    public Query queryDtoToDo(QueryDto source) throws MetamacException {
+    public QueryVersion queryVersionDtoToDo(QueryDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
 
         // If exists, retrieves existing entity. Otherwise, creates new entity.
-        Query target = null;
+        QueryVersion target = null;
         if (source.getId() == null) {
-            target = new Query();
+            target = new QueryVersion();
             target.setLifeCycleStatisticalResource(new LifeCycleStatisticalResource());
         } else {
             try {
-                target = queryRepository.findById(source.getId());
-            } catch (QueryNotFoundException e) {
+                target = queryVersionRepository.findById(source.getId());
+            } catch (QueryVersionNotFoundException e) {
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.QUERY_NOT_FOUND).withMessageParameters(source.getUrn())
                         .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
         }
 
-        queryDtoToDo(source, target);
+        queryVersionDtoToDo(source, target);
 
         return target;
     }
 
-    private Query queryDtoToDo(QueryDto source, Query target) throws MetamacException {
+    private QueryVersion queryVersionDtoToDo(QueryDto source, QueryVersion target) throws MetamacException {
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.QUERY).build();
         }
@@ -84,26 +87,26 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         target.setLatestDataNumber(source.getLatestDataNumber());
 
         // Selection
-        target.getSelection().addAll(querySelectionDto2Do(source.getSelection(), target.getSelection(), target, ServiceExceptionParameters.QUERY__SELECTION));
+        target.getSelection().addAll(querySelectionDto2Do(source.getSelection(), target.getSelection(), target, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
 
         return target;
     }
 
-    private Set<QuerySelectionItem> querySelectionDto2Do(Map<String, Set<String>> source, Set<QuerySelectionItem> target, Query queryTarget, String metadataName) {
+    private List<QuerySelectionItem> querySelectionDto2Do(Map<String, Set<String>> source, List<QuerySelectionItem> target, QueryVersion queryTarget, String metadataName) {
         if (source.isEmpty()) {
             if (!target.isEmpty()) {
                 // Delete old entities
                 deleteQuerySelectionItemList(target);
             }
-            return new HashSet<QuerySelectionItem>();
+            return new ArrayList<QuerySelectionItem>();
         }
         
         if (target.isEmpty()) {
-            target = new HashSet<QuerySelectionItem>();
+            target = new ArrayList<QuerySelectionItem>();
         }
 
         
-        Set<QuerySelectionItem> querySelectionItemEntities = querySelectionItemListDto2Do(source, target, queryTarget);
+        List<QuerySelectionItem> querySelectionItemEntities = querySelectionItemListDto2Do(source, target, queryTarget);
         target.clear();
         target.addAll(querySelectionItemEntities);
         
@@ -113,9 +116,9 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     }
 
 
-    private Set<QuerySelectionItem> querySelectionItemListDto2Do(Map<String, Set<String>> source, Set<QuerySelectionItem> targets, Query queryTarget) {
-        Set<QuerySelectionItem> targetsBefore = targets;
-        targets = new HashSet<QuerySelectionItem>();
+    private List<QuerySelectionItem> querySelectionItemListDto2Do(Map<String, Set<String>> source, List<QuerySelectionItem> targets, QueryVersion queryTarget) {
+        List<QuerySelectionItem> targetsBefore = targets;
+        targets = new ArrayList<QuerySelectionItem>();
         
         for (Map.Entry<String, Set<String>> sourceItem : source.entrySet()) {
             boolean existsBefore = false;
@@ -134,18 +137,18 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         return targets;
     }
 
-    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, Set<String>> sourceItem, Query queryTarget) {
+    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, Set<String>> sourceItem, QueryVersion queryTarget) {
         QuerySelectionItem target = new QuerySelectionItem();
         querySelectionItemDto2Do(sourceItem, target, queryTarget);
         return target;
     }
 
-    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, Set<String>> sourceItem, QuerySelectionItem targetItem, Query queryTarget) {
+    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, Set<String>> sourceItem, QuerySelectionItem targetItem, QueryVersion queryTarget) {
         targetItem.setQuery(queryTarget);
         targetItem.setDimension(sourceItem.getKey());
         
         // Set codes
-        Set<CodeItem> codeItemsBefore = targetItem.getCodes();
+        List<CodeItem> codeItemsBefore = targetItem.getCodes();
         targetItem.getCodes().clear();
         
         for (String value : sourceItem.getValue()) {
@@ -179,7 +182,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
 
 
-    private void deleteQuerySelectionItemList(Set<QuerySelectionItem> target) {
+    private void deleteQuerySelectionItemList(List<QuerySelectionItem> target) {
         for (QuerySelectionItem querySelectionItem : target) {
             querySelectionItemRepository.delete(querySelectionItem);
         }

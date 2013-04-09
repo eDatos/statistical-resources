@@ -1,8 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl;
 
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
-import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +8,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
-import org.siemac.metamac.statistical.resources.core.base.serviceapi.SiemacLifecycleService;
+import org.siemac.metamac.statistical.resources.core.base.lifecycle.LifecycleCommonMetadataChecker;
+import org.siemac.metamac.statistical.resources.core.base.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.validators.DatasetLifecycleServiceInvocationValidator;
@@ -26,7 +23,10 @@ import org.springframework.stereotype.Service;
 public class DatasetLifecycleServiceImpl extends DatasetLifecycleServiceImplBase {
     
     @Autowired
-    private SiemacLifecycleService siemacLifecycleService;
+    private SiemacLifecycleChecker siemacLifecycleService;
+    
+    @Autowired
+    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
     
     @Autowired
     private DatasetVersionRepository datasetVersionRepository; 
@@ -91,11 +91,8 @@ public class DatasetLifecycleServiceImpl extends DatasetLifecycleServiceImplBase
     
     /*------------------- COMMON ----------------------*/
     
-    private static void checkDatasetMetadataAllActions(DatasetVersion datasetVersion, String actualParameter, List<MetamacExceptionItem> exceptionItems) {
-        checkMetadataRequired(datasetVersion.getRelatedDsd(), addParameter(actualParameter, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
-        checkMetadataRequired(datasetVersion.getDateNextUpdate(), addParameter(actualParameter, ServiceExceptionSingleParameters.DATE_NEXT_UPDATE), exceptionItems);
-        checkMetadataRequired(datasetVersion.getUpdateFrequency(), addParameter(actualParameter, ServiceExceptionSingleParameters.UPDATE_FREQUENCY), exceptionItems);
-        checkMetadataRequired(datasetVersion.getStatisticOfficiality(), addParameter(actualParameter, ServiceExceptionSingleParameters.STATISTIC_OFFICIALITY), exceptionItems);
+    private void checkDatasetMetadataAllActions(DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, metadataName, exceptionItems);
     }
     
 }

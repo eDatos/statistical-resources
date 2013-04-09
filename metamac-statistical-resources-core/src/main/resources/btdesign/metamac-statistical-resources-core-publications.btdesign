@@ -76,7 +76,7 @@ Application PublicationsStatisticalResources {
 			
 			// TODO: PROVISIONAL. Esto debe eliminarse
 			"Related datasets"
-       		- Set<@DatasetVersion> datasets cascade="none";
+       		- Bag<@DatasetVersion> datasets cascade="none";
 			
 			Repository PublicationVersionRepository {
 				save;

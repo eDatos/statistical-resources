@@ -16,36 +16,32 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 public class FillMetadataForCreateResourceUtils {
     
     public static void fillMetadataForCretateSiemacResource(SiemacMetadataStatisticalResource resource, ExternalItem statisticalOperation, StatisticalResourceTypeEnum type, ServiceContext ctx) {
-        fillMetadataForCreateLifeCycleResource(resource, type, ctx);
+        fillMetadataForCreateLifeCycleResource(resource, ctx);
 
         resource.setStatisticalOperation(statisticalOperation);
         resource.setType(type);
     }
 
-    public static void fillMetadataForCreateLifeCycleResource(LifeCycleStatisticalResource resource, StatisticalResourceTypeEnum type, ServiceContext ctx) {
-        fillMetadataForCreateVersionableResource(resource, type);
+    public static void fillMetadataForCreateLifeCycleResource(LifeCycleStatisticalResource resource, ServiceContext ctx) {
+        fillMetadataForCreateVersionableResource(resource);
 
         resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
         resource.setCreatedDate(new DateTime());
         resource.setCreatedBy(ctx.getUserId());
     }
 
-    private static void fillMetadataForCreateVersionableResource(VersionableStatisticalResource resource, StatisticalResourceTypeEnum type) {
-        fillMetadataForCreateIdentifiableResource(resource, type);
+    private static void fillMetadataForCreateVersionableResource(VersionableStatisticalResource resource) {
+        fillMetadataForCreateIdentifiableResource(resource);
 
         resource.setVersionLogic("01.000");
+        resource.setIsLastVersion(true);
         resource.getVersionRationaleTypes().clear();
         resource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
     }
 
-    private static void fillMetadataForCreateIdentifiableResource(IdentifiableStatisticalResource resource, StatisticalResourceTypeEnum type) {
+    private static void fillMetadataForCreateIdentifiableResource(IdentifiableStatisticalResource resource) {
         resource.setUri(null);
-
-        // URN
-        if (StatisticalResourceTypeEnum.QUERY.equals(type)) {
-            resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(resource.getCode()));
-
-        }
+        // QUERY VERSIONS: URN is set in fillMetadataForCreateQuery
         // DATASETS AND PUBLICATIONS: CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block
     }
 }
