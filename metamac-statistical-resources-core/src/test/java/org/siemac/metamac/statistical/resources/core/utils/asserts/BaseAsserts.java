@@ -63,7 +63,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEqualsExternalItemCollection(previous.getLanguages(), next.getLanguages());
 
         assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
-        assertEqualsExternalItem(previous.getStatisticalOperationInstance(), next.getStatisticalOperationInstance());
+        assertEqualsExternalItemCollection(previous.getStatisticalOperationInstances(), next.getStatisticalOperationInstances());
 
         assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
         assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
@@ -152,7 +152,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEqualsExternalItemList(expected.getLanguages(), actual.getLanguages());
 
         assertEqualsExternalItem(expected.getStatisticalOperation(), actual.getStatisticalOperation());
-        assertEqualsExternalItem(expected.getStatisticalOperationInstance(), actual.getStatisticalOperationInstance());
+        assertEqualsExternalItemCollection(expected.getStatisticalOperationInstances(), actual.getStatisticalOperationInstances());
 
         assertEqualsInternationalString(expected.getSubtitle(), actual.getSubtitle());
         assertEqualsInternationalString(expected.getTitleAlternative(), actual.getTitleAlternative());
@@ -260,7 +260,7 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
 
                 assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation());
-                assertEqualsExternalItem(entity.getStatisticalOperationInstance(), dto.getStatisticalOperationInstance());
+                assertEqualsExternalItemCollectionMapper(entity.getStatisticalOperationInstances(), dto.getStatisticalOperationInstances());
 
                 assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
                 assertEqualsInternationalString(entity.getTitleAlternative(), dto.getTitleAlternative());
@@ -296,7 +296,7 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage());
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
 
-                assertEqualsExternalItem(entity.getStatisticalOperationInstance(), dto.getStatisticalOperationInstance());
+                assertEqualsExternalItemCollectionMapper(entity.getStatisticalOperationInstances(), dto.getStatisticalOperationInstances());
 
                 assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
                 assertEqualsInternationalString(entity.getTitleAlternative(), dto.getTitleAlternative());

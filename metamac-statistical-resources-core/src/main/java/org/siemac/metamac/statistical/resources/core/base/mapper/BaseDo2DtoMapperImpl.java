@@ -48,7 +48,8 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.getLanguages().addAll(externalItemDoCollectionToDtoCollection(source.getLanguages()));
 
         target.setStatisticalOperation(externalItemDoToDto(source.getStatisticalOperation()));
-        target.setStatisticalOperationInstance(externalItemDoToDto(source.getStatisticalOperationInstance()));
+        target.getStatisticalOperationInstances().clear();
+        target.getStatisticalOperationInstances().addAll(externalItemDoCollectionToDtoCollection(source.getStatisticalOperationInstances()));
 
         target.setSubtitle(internationalStringDoToDto(source.getSubtitle()));
         target.setTitleAlternative(internationalStringDoToDto(source.getTitleAlternative()));

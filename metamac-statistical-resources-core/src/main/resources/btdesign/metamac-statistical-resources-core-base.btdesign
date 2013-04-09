@@ -142,7 +142,7 @@ Application BaseStatisticalResources {
 			
 			//THEMATIC CONTENT CLASSIFIER
 			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
-			- @ExternalItem statisticalOperationInstance nullable cascade="all-delete-orphan" databaseColumn="STAT_OPERATION_INST_FK";
+			- Bag<@ExternalItem> statisticalOperationInstances cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STAT_OPER_INSTANCES" databaseColumn="STAT_OPERATION_INSTANCE_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//CONTENT DESCRIPTORS
 			- @InternationalString subtitle cascade="all" databaseColumn="SUBTITLE_FK" nullable;

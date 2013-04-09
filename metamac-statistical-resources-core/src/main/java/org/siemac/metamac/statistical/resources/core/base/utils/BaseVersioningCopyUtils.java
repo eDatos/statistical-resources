@@ -30,7 +30,8 @@ public class BaseVersioningCopyUtils {
 
         // Theme content classifiers
         target.setStatisticalOperation(copyExternalItem(source.getStatisticalOperation()));
-        target.setStatisticalOperationInstance(copyExternalItem(source.getStatisticalOperationInstance()));
+        target.getStatisticalOperationInstances().clear();
+        target.getStatisticalOperationInstances().addAll(copyListExternalItem(source.getStatisticalOperationInstances()));
 
         // Content descriptors
         target.setSubtitle(copyInternationalString(source.getSubtitle()));

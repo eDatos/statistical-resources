@@ -74,7 +74,7 @@ Application StatisticalResourcesDto {
 
 			//THEMATIC CONTENT CLASSIFIER
 			- @ExternalItemDto statisticalOperation;
-			- @ExternalItemDto statisticalOperationInstance;
+			- Bag<@ExternalItemDto> statisticalOperationInstances;
 			
 			//CONTENT DESCRIPTORS
 			- @InternationalStringDto subtitle;
