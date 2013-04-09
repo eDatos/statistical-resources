@@ -10,9 +10,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_WITH_SELECTION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_05_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_BASIC_PENDING_REVIEW_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_05_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.M
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,7 +55,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private QueryMockFactory                  queryMockFactory;
+    private QueryVersionMockFactory                  queryMockFactory;
 
     @Autowired
     private DatasourceMockFactory             datasourceMockFactory;
@@ -68,16 +68,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Test
     @Override
-    @MetamacMock({QUERY_01_WITH_SELECTION_NAME})
+    @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
     public void testUpdateQuery() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME)
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
         queryDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME)
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         queryDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
@@ -101,16 +101,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Test
-    @MetamacMock({QUERY_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
+    @MetamacMock({QUERY_VERSION_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetInQuery() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME)
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
         queryDtoSession01.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME).getSiemacMetadataStatisticalResource().getUrn());
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME)
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         queryDtoSession02.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
@@ -136,10 +136,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @SuppressWarnings("serial")
     @Test
-    @MetamacMock({QUERY_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
+    @MetamacMock({QUERY_VERSION_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateSelectionInQuery() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME)
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
         Map<String, Set<String>> selection = new HashMap<String, Set<String>>() {
@@ -151,7 +151,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         queryDtoSession01.setSelection(selection);
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_05_BASIC_NAME)
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         selection = new HashMap<String, Set<String>>() {
@@ -218,9 +218,9 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @SuppressWarnings("static-access")
     @Test
-    @MetamacMock({QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    @MetamacMock({QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
     public void testMarkQueryAsDiscontinuedAndUpdate() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // Retrieve query --> session 01
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
@@ -243,9 +243,9 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Test
-    @MetamacMock({QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    @MetamacMock({QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
     public void testMarkQueryAsDiscontinuedAndMarkQueryAsDiscontinued() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // Retrieve query --> session 01
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
@@ -268,9 +268,9 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @SuppressWarnings("static-access")
     @Test
-    @MetamacMock({QUERY_09_BASIC_PENDING_REVIEW_NAME})
+    @MetamacMock({QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
     public void testUpdateQueryAndMarkQueryAsDiscontinued() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // Retrieve query --> session 01
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);

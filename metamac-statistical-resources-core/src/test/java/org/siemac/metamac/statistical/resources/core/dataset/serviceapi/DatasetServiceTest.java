@@ -21,7 +21,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_02_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_WITH_SELECTION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.M
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -78,7 +78,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     private DatasetMockFactory                      datasetMockFactory;
 
     @Autowired
-    private QueryMockFactory                        queryMockFactory;
+    private QueryVersionMockFactory                        queryMockFactory;
 
     @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
@@ -449,11 +449,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Test
-    @MetamacMock({QUERY_01_WITH_SELECTION_NAME})
+    @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
     public void testDeleteDatasetVersionErrorQueryRelated() throws Exception {
         thrown.expect(PersistenceException.class);
         
-        String urnDatasetVersion = queryMockFactory.retrieveMock(QUERY_01_WITH_SELECTION_NAME).getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+        String urnDatasetVersion = queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
         datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urnDatasetVersion);
     }
 

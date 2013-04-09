@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,7 +26,7 @@ public class QueryStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
     
     @Test
     public void testCheckPossibleQueryStatus() throws Exception {
-        Query resource = statisticalResourcesPersistedDoMocks.mockQueryWithGeneratedDatasetVersion();
+        QueryVersion resource = statisticalResourcesPersistedDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
         resource.setStatus(QueryStatusEnum.DISCONTINUED);
         QueryStatusEnumUtils.checkPossibleQueryStatus(resource, QueryStatusEnum.DISCONTINUED, QueryStatusEnum.ACTIVE, QueryStatusEnum.PENDING_REVIEW);
     }
@@ -35,7 +36,7 @@ public class QueryStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
         String urn = "URN_DUMMY";
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DISCONTINUED, PENDING_REVIEW"));
 
-        Query resource = statisticalResourcesPersistedDoMocks.mockQueryWithGeneratedDatasetVersion();
+        QueryVersion resource = statisticalResourcesPersistedDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
         resource.setStatus(QueryStatusEnum.ACTIVE);
         resource.getLifeCycleStatisticalResource().setUrn(urn);
         
