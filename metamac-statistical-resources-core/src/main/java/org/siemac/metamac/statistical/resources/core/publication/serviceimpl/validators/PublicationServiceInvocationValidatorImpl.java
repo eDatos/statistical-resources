@@ -63,7 +63,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         StatisticalResourcesValidationUtils.checkMetadataEmpty(publicationVersion.getVersion(), ServiceExceptionParameters.PUBLICATION_VERSION__VERSION, exceptions);
     }
 
-    private static void checkExistingPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
+    public static void checkExistingPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersion, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
 
         if (publicationVersion == null) {
