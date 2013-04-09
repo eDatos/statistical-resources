@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -85,6 +86,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private PublicationVersionSculptorCriteria2MetamacCriteriaMapper publicationSculptorCriteria2MetamacCriteriaMapper;
+    
+    @Autowired
+    private LifecycleService<DatasetVersion> datasetLifecycleService;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -385,7 +389,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
 
         // Send to production validation and retrieve
-        getDatasetLifecycleService().sendToProductionValidation(ctx, datasetVersion);
+        datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion);
         datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetDto.getUrn());
 
         // Transform
@@ -403,7 +407,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
 
         // Send to production validation and retrieve
-        getDatasetLifecycleService().sendToDiffusionValidation(ctx, datasetVersion);
+        datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion);
         datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetDto.getUrn());
 
         // Transform
