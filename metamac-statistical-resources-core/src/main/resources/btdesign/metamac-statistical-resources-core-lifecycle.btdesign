@@ -10,9 +10,9 @@ Application LifecycleStatisticalResources {
 		// 							FACADE SERVICES
 		// ----------------------------------------------------------------  
 		
-		Service DatasetLifecycleService {
-			sendToProductionValidation(@DatasetVersion datasetVersion) throws MetamacException;
-			sendToDiffusionValidation(@DatasetVersion datasetVersion) throws MetamacException;
-		}  
+//		Service DatasetLifecycleService {
+//			sendToProductionValidation(@DatasetVersion datasetVersion) throws MetamacException;
+//			sendToDiffusionValidation(@DatasetVersion datasetVersion) throws MetamacException;
+//		}  
 	}
 }

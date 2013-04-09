@@ -23,6 +23,10 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
         }
         return statisticalResourcesPersistedDoMocks;
     }
+    
+    public void setStatisticalResourcesPersistedDoMocks(StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks) {
+        this.statisticalResourcesPersistedDoMocks = statisticalResourcesPersistedDoMocks;
+    }
 
     public EntityMock retrieveMock(String mockName) {
         return ObjectUtils.deepCopy((getMock(mockName)));

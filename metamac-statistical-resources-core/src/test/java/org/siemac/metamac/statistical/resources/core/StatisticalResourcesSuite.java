@@ -2,9 +2,6 @@ package org.siemac.metamac.statistical.resources.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.siemac.metamac.statistical.resources.core.base.lifecycle.LifecycleCommonMetadataCheckerTest;
-import org.siemac.metamac.statistical.resources.core.base.lifecycle.LifecycleServiceTest;
-import org.siemac.metamac.statistical.resources.core.base.lifecycle.SiemacLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
@@ -16,7 +13,11 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.DatasetLifecycleServiceTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCheckerTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataCheckerTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleCheckerTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceInvocationValidatorTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.ChapterRepositoryTest;
@@ -55,8 +56,9 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      ProcStatusEnumUtilsTest.class, 
                      QueryStatusEnumUtilsTest.class,
                      LifecycleCommonMetadataCheckerTest.class,
-                     LifecycleServiceTest.class,
-                     SiemacLifecycleServiceTest.class,
+                     LifecycleCheckerTest.class,
+                     SiemacLifecycleCheckerTest.class,
+                     DatasetLifecycleServiceInvocationValidatorTest.class,
                      DatasetLifecycleServiceTest.class})
 public class StatisticalResourcesSuite {
 }

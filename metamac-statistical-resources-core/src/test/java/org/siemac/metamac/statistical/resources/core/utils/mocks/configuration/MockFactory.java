@@ -32,7 +32,7 @@ public abstract class MockFactory<EntityMock> {
         } catch (NoSuchMethodException e) {
             return null;
         } catch (Exception e) {
-            throw new RuntimeException("Error creating mock "+id+" accesing to method "+methodName);
+            throw new RuntimeException("Error creating mock "+id+" accesing to method "+methodName,e);
         }
     }
     
