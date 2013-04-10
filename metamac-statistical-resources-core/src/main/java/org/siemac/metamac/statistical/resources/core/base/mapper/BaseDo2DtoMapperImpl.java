@@ -135,7 +135,6 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.getVersionRationaleTypes().addAll(versionRationaleTypeDoCollectionToDtoCollection(source.getVersionRationaleTypes()));
         target.setValidFrom(dateDoToDto(source.getValidFrom()));
         target.setValidTo(dateDoToDto(source.getValidTo()));
-        target.setIsLastVersion(source.getIsLastVersion());
     }
 
     @Override

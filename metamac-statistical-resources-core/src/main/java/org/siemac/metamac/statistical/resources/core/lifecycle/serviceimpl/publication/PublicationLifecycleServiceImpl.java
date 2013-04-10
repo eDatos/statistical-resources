@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 //FIXME uncomment @service
 //@Service("publicationLifecycleService")
-public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> implements LifecycleService<PublicationVersion>{
+public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> {
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;

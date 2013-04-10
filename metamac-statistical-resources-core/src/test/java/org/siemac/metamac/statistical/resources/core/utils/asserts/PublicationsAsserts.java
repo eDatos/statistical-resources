@@ -46,6 +46,14 @@ public class PublicationsAsserts extends BaseAsserts {
             assertEqualsPublicationVersion(expected, actual, false);
         }
     }
+    
+    public static void assertEqualsPublicationVersionNotChecksPublication(PublicationVersion expected, PublicationVersion actual) {
+        if ((expected != null && actual == null) || (expected == null && actual != null)) {
+            fail("The expected publicationVersion and the actual are not equals");
+        } else if (expected != null && actual != null) {
+            assertEqualsPublicationVersion(expected, actual, true);
+        }
+    }
 
     private static void assertEqualsPublicationVersion(PublicationVersion expected, PublicationVersion actual, boolean publicationChecked) {
         assertEquals(expected.getUuid(), actual.getUuid());

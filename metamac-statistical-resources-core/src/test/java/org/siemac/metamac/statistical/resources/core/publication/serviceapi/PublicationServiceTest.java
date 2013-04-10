@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionNotChecksPublication;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_01_BASIC_NAME;
@@ -87,9 +88,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
 
-        assertEqualsPublicationVersion(expected, actual);
+        assertEqualsPublicationVersionNotChecksPublication(expected, actual);
     }
 
     @Test
@@ -104,9 +105,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
 
-        assertEqualsPublicationVersion(expected, actual);
+        assertEqualsPublicationVersionNotChecksPublication(expected, actual);
     }
 
     @Test
@@ -121,8 +122,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4), actual.getSiemacMetadataStatisticalResource().getUrn());
-            assertEqualsPublicationVersion(expected, actual);
+            assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
@@ -131,8 +132,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
             assertEquals("01.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildPublicationUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5), actual.getSiemacMetadataStatisticalResource().getUrn());
-            assertEqualsPublicationVersion(expected, actual);
+            assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }
     }
 
@@ -328,18 +329,6 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testFindPublicationVersionsByCondition() throws Exception {
-        {
-            // Find by last version
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class)
-                    .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().isLastVersion()).eq(Boolean.TRUE)
-                    .orderBy(PublicationVersionProperties.siemacMetadataStatisticalResource().id()).ascending().build();
-
-            PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
-            PagedResult<PublicationVersion> publicationVersionPagedResult = publicationService.findPublicationVersionsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
-            assertEquals(1, publicationVersionPagedResult.getTotalRows());
-            assertEquals(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
-                    publicationVersionPagedResult.getValues().get(0).getSiemacMetadataStatisticalResource().getUrn());
-        }
 
         {
             // Find by version number
@@ -381,7 +370,6 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Validation
         PublicationVersion publicationVersionV1 = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), urnV1);
-        assertTrue(publicationVersionV1.getSiemacMetadataStatisticalResource().getIsLastVersion());
         assertNull(publicationVersionV1.getSiemacMetadataStatisticalResource().getIsReplacedBy());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, urnV2));
@@ -486,9 +474,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         assertEquals(previous.getFormatExtentResources(), next.getFormatExtentResources());
     }
 
-    private Object buildPublicationUrn(String maintainerCode, String operationCode, int datasetSequentialId) {
+    private Object buildPublicationVersionUrn(String maintainerCode, String operationCode, int datasetSequentialId, String versionNumber) {
         StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=");
-        strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId));
+        strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId)).append("(").append(versionNumber).append(")");
         return strBuilder.toString();
     }
 }

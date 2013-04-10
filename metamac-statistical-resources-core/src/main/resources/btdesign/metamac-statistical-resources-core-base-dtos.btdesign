@@ -41,7 +41,6 @@ Application StatisticalResourcesDto {
 			- @InternationalStringDto versionRationale;
 			JAVADATE validFrom;
 			JAVADATE validTo;
-			Boolean isLastVersion;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {

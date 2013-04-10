@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
@@ -50,7 +51,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create publication
         Publication publication = new Publication();
-        publication = getPublicationRepository().save(publication);
+        publication.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
 
         // Fill metadata
         fillMetadataForCreatePublicationVersion(publicationVersion, publication, statisticalOperation, ctx);
@@ -141,7 +142,6 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
             // Update previous version
             PublicationVersion previousPublicationVersion = getPublicationVersionRepository().retrieveByUrn(publicationVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getUrn());
-            previousPublicationVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
             previousPublicationVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
             getPublicationVersionRepository().save(previousPublicationVersion);
         }
@@ -151,16 +151,16 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     public PublicationVersion versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
         publicationServiceInvocationValidator.checkVersioningPublicationVersion(ctx, publicationVersionUrnToCopy, versionType);
         
-        //TODO: check only published datasets can be versioned
+        //TODO: check only published publications can be versioned
         
         PublicationVersion publicationVersionToCopy = retrievePublicationVersionByUrn(ctx, publicationVersionUrnToCopy);
         PublicationVersion publicationNewVersion = PublicationVersioningCopyUtils.copyPublicationVersion(publicationVersionToCopy);
         
         FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, publicationVersionToCopy.getSiemacMetadataStatisticalResource(), publicationNewVersion.getSiemacMetadataStatisticalResource(), versionType);
 
-        //DATASET URN
+        //PUBLICATION URN
         String[] creator = new String[]{publicationNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
-        publicationNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        publicationNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         
         //TODO: DATE_NEXT_UPDATE
         
@@ -182,9 +182,13 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     private synchronized Publication assignCodeAndSavePublicationVersion(Publication publication, PublicationVersion publicationVersion) throws MetamacException {
         String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateSiemacMetadataResource(publicationVersion.getSiemacMetadataStatisticalResource());
         String[] maintainer = new String[]{publicationVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
+        
+        //Fill code and urn for root and version
+        publication.getIdentifiableStatisticalResource().setCode(code);
+        publication.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publication.getIdentifiableStatisticalResource().getCode()));
+        
         publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publicationVersion.getSiemacMetadataStatisticalResource().getCode()));
+        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersion.getSiemacMetadataStatisticalResource().getCode(), publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
 
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());

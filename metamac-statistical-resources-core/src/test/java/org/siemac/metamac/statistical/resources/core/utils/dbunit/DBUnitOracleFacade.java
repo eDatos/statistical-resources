@@ -80,7 +80,7 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             databaseTester.setDataSet(dataset);
             databaseTester.onSetup();
         } catch (Exception e) {
-            log.error("Error in dbunit file " + xmlDataFile.getAbsolutePath());
+            log.error("Error in dbunit file " + xmlDataFile.getAbsolutePath(),e);
             throw e;
         } finally {
             dbUnitConnection.close();

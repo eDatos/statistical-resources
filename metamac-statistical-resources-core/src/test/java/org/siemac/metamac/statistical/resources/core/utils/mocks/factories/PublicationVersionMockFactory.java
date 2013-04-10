@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
@@ -91,6 +92,8 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(PUBLICATION_VERSION_03_VERSION);
             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            
             // Relations
             PUBLICATION_VERSION_03_FOR_PUBLICATION_03 = publicationVersion;
             PUBLICATION_VERSION_03_FOR_PUBLICATION_03.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
@@ -106,7 +109,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(PUBLICATION_VERSION_04_VERSION);
 
             // Last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
 
             // Relations
             PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION = publicationVersion;

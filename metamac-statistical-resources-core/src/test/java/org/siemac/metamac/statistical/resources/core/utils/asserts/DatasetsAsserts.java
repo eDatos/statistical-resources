@@ -43,6 +43,14 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEqualsDatasetVersion(expected, actual, false);
         }
     }
+    
+    public static void assertEqualsDatasetVersionNotChecksDataset(DatasetVersion expected, DatasetVersion actual) {
+        if ((expected != null && actual == null) || (expected == null && actual != null)) {
+            fail("The expected datasetVersion and the actual are not equals");
+        } else if (expected != null && actual != null) {
+            assertEqualsDatasetVersion(expected, actual, true);
+        }
+    }
 
     private static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual, boolean datasetChecked) {
         assertEquals(expected.getUuid(), actual.getUuid());

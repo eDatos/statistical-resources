@@ -224,7 +224,6 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getNextVersion(), actual.getNextVersion());
         assertEqualsVersionRationaleTypeCollection(expected.getVersionRationaleTypes(), actual.getVersionRationaleTypes());
         assertEqualsInternationalString(expected.getVersionRationale(), actual.getVersionRationale());
-        assertEquals(expected.getIsLastVersion(), actual.getIsLastVersion());
         assertEquals(expected.getValidFrom(), actual.getValidFrom());
         assertEquals(expected.getValidTo(), actual.getValidTo());
 
@@ -356,7 +355,6 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEqualsVersionRationaleTypeCollectionMapper(entity.getVersionRationaleTypes(), dto.getVersionRationaleTypes());
                 assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());
-                assertEquals(entity.getIsLastVersion(), dto.getIsLastVersion());
                 break;
             case DTO2DO:
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());

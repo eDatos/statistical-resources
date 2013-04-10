@@ -46,7 +46,8 @@ Application PublicationsStatisticalResources {
 			databaseTable="TB_PUBLICATIONS"
 			hint="idSequence=PUBLICATIONS"
 			!auditable
-
+			"Root publication will be identifiable to be referenced instead of referencing specific versions"
+			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
 			- Bag<@PublicationVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> publication orderby="id asc";
 			
@@ -62,7 +63,7 @@ Application PublicationsStatisticalResources {
 			hint="idSequence=PUBLICATIONS_VERSIONS"
 			!auditable
 
-			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			
 			// Format extent resources: Number of cubes that contains the collection
 			Integer formatExtentResources nullable;
@@ -85,7 +86,7 @@ Application PublicationsStatisticalResources {
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				@PublicationVersion retrieveByUrn(String urn) throws MetamacException;
-				@PublicationVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
+				@PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 			}
 		}

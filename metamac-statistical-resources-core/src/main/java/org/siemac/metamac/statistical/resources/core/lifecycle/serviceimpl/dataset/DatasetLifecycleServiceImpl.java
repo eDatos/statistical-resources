@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("datasetLifecycleService")
-public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> implements LifecycleService<DatasetVersion>{
+public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;

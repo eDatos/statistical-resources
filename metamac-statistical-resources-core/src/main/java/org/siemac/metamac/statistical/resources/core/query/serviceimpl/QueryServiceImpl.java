@@ -14,6 +14,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForUpdateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -30,10 +32,13 @@ import org.springframework.stereotype.Service;
 public class QueryServiceImpl extends QueryServiceImplBase {
 
     @Autowired
-    IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
+    private IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
     
     @Autowired
-    QueryServiceInvocationValidator queryServiceInvocationValidator;
+    private QueryServiceInvocationValidator queryServiceInvocationValidator;
+    
+    @Autowired
+    private DatasetVersionRepository datasetVersionRepository;   
 
     public QueryServiceImpl() {
     }
@@ -154,21 +159,21 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         return query;
     }
 
-    private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) {
+    private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), ctx);
         queryVersion.setStatus(determineQueryStatus(queryVersion));
         queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion.getLifeCycleStatisticalResource().getVersionLogic()));
     }
 
-    private QueryStatusEnum determineQueryStatus(QueryVersion queryVersion) {
-        if (queryVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getIsLastVersion()) {
+    private QueryStatusEnum determineQueryStatus(QueryVersion queryVersion) throws MetamacException {
+        if (datasetVersionRepository.isLastVersion(queryVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
             return QueryStatusEnum.ACTIVE;
         } else {
             return QueryStatusEnum.DISCONTINUED;
         }
     }
 
-    private void fillMetadataForUpdateQuery(QueryVersion queryVersion) {
+    private void fillMetadataForUpdateQuery(QueryVersion queryVersion) throws MetamacException {
         queryVersion.setStatus(determineQueryStatus(queryVersion));
         FillMetadataForUpdateResourceUtils.fillMetadataForUpdateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY);
     }

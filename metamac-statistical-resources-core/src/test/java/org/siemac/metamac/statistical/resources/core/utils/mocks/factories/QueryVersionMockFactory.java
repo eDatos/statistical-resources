@@ -114,7 +114,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     protected static QueryVersion getQueryVersion07BasicActive() {
         if (QUERY_VERSION_07_BASIC_ACTIVE == null) {
-            QUERY_VERSION_07_BASIC_ACTIVE = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion());
+            QUERY_VERSION_07_BASIC_ACTIVE = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion(), true);
             QUERY_VERSION_07_BASIC_ACTIVE.setStatus(QueryStatusEnum.ACTIVE);
         }
         return QUERY_VERSION_07_BASIC_ACTIVE;
@@ -122,7 +122,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     protected static QueryVersion getQueryVersion08BasicDiscontinued() {
         if (QUERY_VERSION_08_BASIC_DISCONTINUED == null) {
-            QUERY_VERSION_08_BASIC_DISCONTINUED = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion03ForDataset03());
+            QUERY_VERSION_08_BASIC_DISCONTINUED = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion03ForDataset03(), false);
             QUERY_VERSION_08_BASIC_DISCONTINUED.setStatus(QueryStatusEnum.DISCONTINUED);
         }
         return QUERY_VERSION_08_BASIC_DISCONTINUED;
@@ -130,7 +130,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     protected static QueryVersion getQueryVersion09BasicPendingReview() {
         if (QUERY_VERSION_09_BASIC_PENDING_REVIEW == null) {
-            QUERY_VERSION_09_BASIC_PENDING_REVIEW = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion03ForDataset03());
+            QUERY_VERSION_09_BASIC_PENDING_REVIEW = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion03ForDataset03(), true);
             QUERY_VERSION_09_BASIC_PENDING_REVIEW.setStatus(QueryStatusEnum.PENDING_REVIEW);
         }
         return QUERY_VERSION_09_BASIC_PENDING_REVIEW;
@@ -138,7 +138,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     public static QueryVersion getQueryVersion10ActiveLatestData5() {
         if (QUERY_VERSION_10_ACTIVE_LATEST_DATA_5 == null) {
-            QUERY_VERSION_10_ACTIVE_LATEST_DATA_5 = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion());
+            QUERY_VERSION_10_ACTIVE_LATEST_DATA_5 = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion(), true);
             QUERY_VERSION_10_ACTIVE_LATEST_DATA_5.setType(QueryTypeEnum.LATEST_DATA);
             QUERY_VERSION_10_ACTIVE_LATEST_DATA_5.setLatestDataNumber(Integer.valueOf(5));
         }
@@ -214,8 +214,8 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02;
     }
 
-    private static QueryVersion createQueryWithDatasetVersion(DatasetVersion datasetVersion) {
-        return getStatisticalResourcesPersistedDoMocks().mockQueryVersionWithDatasetVersion(datasetVersion);
+    private static QueryVersion createQueryWithDatasetVersion(DatasetVersion datasetVersion, boolean isLastDatasetVersion) {
+        return getStatisticalResourcesPersistedDoMocks().mockQueryVersionWithDatasetVersion(datasetVersion, isLastDatasetVersion);
     }
 
     private static QueryVersion createQueryWithGeneratedDatasetVersion() {

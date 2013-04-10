@@ -32,6 +32,8 @@ Application DatasetsStatisticalResources {
 			@DatasetVersion updateDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
 			"Retrieves dataset version by urn"
 			@DatasetVersion retrieveDatasetVersionByUrn(String datasetVersionUrn) throws MetamacException;
+			"Retrieves last dataset version by dataset urn"
+			@DatasetVersion retrieveLastDatasetVersionByDatasetUrn(String datasetUrn) throws MetamacException;
 			"Retrieves all datasets versions of one dataset"
 			List<@DatasetVersion> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
 			"Finds datasets by criteria"
@@ -76,6 +78,8 @@ Application DatasetsStatisticalResources {
 			hint="idSequence=DATASETS"
 			!auditable
 			
+			"Root dataset will be identifiable to be referenced instead of referencing specific versions"
+			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
 			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
 			
@@ -92,7 +96,7 @@ Application DatasetsStatisticalResources {
 			hint="idSequence=DATASETS_VERSIONS"
 			!auditable
 
-			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			
 			//Content descriptors
 			//temporal codes
@@ -146,8 +150,9 @@ Application DatasetsStatisticalResources {
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  
-				@DatasetVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException;
+				@DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException;
 				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
+				boolean isLastVersion(String datasetVersionUrn) throws MetamacException;
 			}
 		}
 		

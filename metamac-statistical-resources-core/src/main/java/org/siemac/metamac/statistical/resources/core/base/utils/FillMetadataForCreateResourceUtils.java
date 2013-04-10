@@ -34,7 +34,6 @@ public class FillMetadataForCreateResourceUtils {
         fillMetadataForCreateIdentifiableResource(resource);
 
         resource.setVersionLogic("01.000");
-        resource.setIsLastVersion(true);
         resource.getVersionRationaleTypes().clear();
         resource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
     }

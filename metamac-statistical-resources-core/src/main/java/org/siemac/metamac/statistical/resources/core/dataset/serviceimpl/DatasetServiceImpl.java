@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
@@ -137,7 +138,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Create dataset
         Dataset dataset = new Dataset();
-        dataset = getDatasetRepository().save(dataset);
+        dataset.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
 
         // Fill metadata
         fillMetadataForCreateDatasetVersion(ctx, datasetVersion, dataset, statisticalOperation);
@@ -173,6 +174,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Retrieve
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
+        return datasetVersion;
+    }
+    
+    @Override
+    public DatasetVersion retrieveLastDatasetVersionByDatasetUrn(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        // Validations
+        datasetServiceInvocationValidator.checkRetrieveLastDatasetVersionByDatasetUrn(ctx, datasetUrn);
+
+        // Retrieve
+        DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
         return datasetVersion;
     }
 
@@ -227,7 +238,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             getDatasetVersionRepository().delete(datasetVersion);
 
             // Update previous version
-            previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
             previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
             getDatasetVersionRepository().save(previousDatasetVersion);
         }
@@ -245,7 +255,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         //DATASET URN
         String[] creator = new String[]{datasetNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
-        datasetNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(creator, datasetNewVersion.getSiemacMetadataStatisticalResource().getCode(), datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        datasetNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, datasetNewVersion.getSiemacMetadataStatisticalResource().getCode(), datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         
         //TODO: DATE_NEXT_UPDATE
         
@@ -285,8 +295,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateSiemacMetadataResource(datasetVersion.getSiemacMetadataStatisticalResource());
         String[] maintainerCodes = new String[]{datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
         
+        dataset.getIdentifiableStatisticalResource().setCode(code);
+        dataset.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(maintainerCodes, dataset.getIdentifiableStatisticalResource().getCode()));
+        
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(maintainerCodes, datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(maintainerCodes, datasetVersion.getSiemacMetadataStatisticalResource().getCode(), datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());

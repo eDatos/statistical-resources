@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -41,23 +44,35 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     }
 
     @Override
-    public DatasetVersion retrieveLastVersion(Long statisticalResourceId) throws MetamacException {
+    @SuppressWarnings("unchecked")
+    public DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
-        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().id()).eq(statisticalResourceId)
-                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().isLastVersion()).eq(Boolean.TRUE).distinctRoot().build();
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
+                                                .withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn()).eq(datasetUrn)
+                                                .orderBy(CriteriaUtils.getDatetimedLeafProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().creationDate(), DatasetVersion.class)).descending()
+                                                .distinctRoot().build();
 
+        PagingParameter paging =  PagingParameter.rowAccess(0, 1);
         // Find
-        List<DatasetVersion> result = findByCondition(conditions);
+        PagedResult<DatasetVersion> result = findByCondition(conditions,paging);
 
         // Check for unique result and return
-        if (result.size() == 0) {
-            throw new MetamacException(ServiceExceptionType.DATASET_LAST_VERSION_NOT_FOUND, statisticalResourceId);
-        } else if (result.size() > 1) {
+        if (result.getRowCount() == 0) {
+            throw new MetamacException(ServiceExceptionType.DATASET_LAST_VERSION_NOT_FOUND, datasetUrn);
+        } else if (result.getTotalRows() > 1) {
             // Exists a database constraint that makes URN unique
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one last version found for dataset with id " + statisticalResourceId);
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one last version found for dataset with urn " + datasetUrn);
         }
 
-        return result.get(0);
+        return result.getValues().get(0);
+    }
+    
+    @Override
+    public boolean isLastVersion(String datasetVersionUrn) throws MetamacException {
+        DatasetVersion datasetVersion = retrieveByUrn(datasetVersionUrn);
+        DatasetVersion lastVersion = retrieveLastVersion(datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
+        
+        return lastVersion.getSiemacMetadataStatisticalResource().getUrn().equals(datasetVersionUrn);
     }
 
     @Override

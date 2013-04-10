@@ -78,8 +78,8 @@ Application QueriesStatisticalResources {
 			hint="idSequence=QUERIES"
 			!auditable
 			
+			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
-			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			- Bag<@QueryVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> query orderby="id asc";
 			Integer latestDataNumber nullable;
 			
@@ -97,7 +97,7 @@ Application QueriesStatisticalResources {
 			!auditable
 			
 			- @Query query not nullable cascade="none" databaseColumn="QUERY_FK" <-> versions;
-			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="LIFECYCLE_RESOURCE_FK" not nullable cascade="all";
 			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" not nullable;
 			- @QueryStatusEnum status not nullable;
 			- Bag<@QuerySelectionItem> selection inverse <-> query cascade="all-delete-orphan";

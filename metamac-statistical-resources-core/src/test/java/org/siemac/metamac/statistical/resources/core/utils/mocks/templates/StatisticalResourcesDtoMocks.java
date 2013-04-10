@@ -221,7 +221,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         versionableStatisticalResourceDto.setVersionRationale(mockInternationalStringDto());
 
         versionableStatisticalResourceDto.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
-        versionableStatisticalResourceDto.setIsLastVersion(true);
 
         mockNameableStatisticalResorceDto(versionableStatisticalResourceDto);
     }

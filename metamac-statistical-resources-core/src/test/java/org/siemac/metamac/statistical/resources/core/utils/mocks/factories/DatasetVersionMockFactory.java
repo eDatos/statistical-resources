@@ -107,6 +107,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_03_VERSION);
             datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
+            //not last version
+            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            
             // Relations
             DATASET_VERSION_03_FOR_DATASET_03 = datasetVersion;
             DATASET_VERSION_03_FOR_DATASET_03.setDataset(DatasetMockFactory.getDataset03With2DatasetVersions());
@@ -123,7 +126,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_04_VERSION);
 
             // Is last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
+            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
 
             // Relations
             DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION = datasetVersion;
@@ -167,8 +170,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             // Version 01.000
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_05_VERSION);
 
-            // Is last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setIsLastVersion(Boolean.TRUE);
 
             datasetVersion.getSiemacMetadataStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
             datasetVersion.getSiemacMetadataStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
@@ -343,7 +344,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         // Inherited fields that need customization based on Resource's type
         String code = buildDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(buildDatasetUrn(code, datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(buildDatasetVersionUrn(code, datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         datasetVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.DATASET);
     }
 
@@ -371,8 +372,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return datasetVersion;
     }
 
-    private static String buildDatasetUrn(String code, String version) {
-        return GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(new String[]{"maitainer"}, code, version);
+    private static String buildDatasetVersionUrn(String code, String version) {
+        return GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(new String[]{"maitainer"}, code, version);
     }
 
     private static String buildDatasetCode(String operationCode, int sequentialId) {

@@ -50,17 +50,17 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     // QUERY VERSION
     // -----------------------------------------------------------------
-    public abstract QueryVersion mockQueryVersion(DatasetVersion datasetVersion);
+    public abstract QueryVersion mockQueryVersion(DatasetVersion datasetVersion, boolean isDatasetLastVersion);
     
     
     public QueryVersion mockQueryVersionWithGeneratedDatasetVersion() {
         DatasetVersion datasetVersion = mockDatasetVersion();
-        QueryVersion query = mockQueryVersion(datasetVersion);
+        QueryVersion query = mockQueryVersion(datasetVersion,true);
         return query;
     }
     
-    public QueryVersion mockQueryVersionWithDatasetVersion(DatasetVersion datasetVersion) {
-        return mockQueryVersion(datasetVersion);
+    public QueryVersion mockQueryVersionWithDatasetVersion(DatasetVersion datasetVersion, boolean isDatasetLastVersion) {
+        return mockQueryVersion(datasetVersion, isDatasetLastVersion);
     }
 
     protected QuerySelectionItem mockQuerySelectionItem() {
@@ -123,6 +123,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private Publication mockPublication(boolean withVersion) {
         Publication publication = new Publication();
+        publication.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
         if (withVersion) {
             publication.addVersion(mockPublicationVersion(publication));
         }

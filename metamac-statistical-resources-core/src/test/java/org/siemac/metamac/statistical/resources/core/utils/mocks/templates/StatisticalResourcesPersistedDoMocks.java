@@ -45,7 +45,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         query.setIdentifiableStatisticalResource(identifiable);
         
         if (withVersion) {
-            query.addVersion(mockQueryVersion(query,mockDatasetVersion()));
+            query.addVersion(mockQueryVersion(query,mockDatasetVersion(),true));
         }
         return query;
     }
@@ -54,11 +54,11 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     // QUERY VERSION
     // -----------------------------------------------------------------
     @Override
-    public QueryVersion mockQueryVersion(DatasetVersion datasetVersion) {
-        return mockQueryVersion(null, datasetVersion);
+    public QueryVersion mockQueryVersion(DatasetVersion datasetVersion, boolean isDatasetLastVersion) {
+        return mockQueryVersion(null, datasetVersion, isDatasetLastVersion);
     }
     
-    public QueryVersion mockQueryVersion(Query query, DatasetVersion datasetVersion) {
+    public QueryVersion mockQueryVersion(Query query, DatasetVersion datasetVersion, boolean isDatasetLastVersion) {
         QueryVersion queryVersion = new QueryVersion();
 
         queryVersion.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
@@ -79,7 +79,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             throw new IllegalArgumentException("Can not create a Query with no datasetversion linked");
         }
         
-        if (datasetVersion.getSiemacMetadataStatisticalResource().getIsLastVersion()) {
+        if (isDatasetLastVersion) {
             queryVersion.setStatus(QueryStatusEnum.ACTIVE);
         } else {
             queryVersion.setStatus(QueryStatusEnum.DISCONTINUED);
@@ -113,6 +113,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     private Dataset mockDataset(boolean withVersion) {
         Dataset dataset = new Dataset();
+        dataset.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
         if (withVersion) {
             dataset.addVersion(mockDatasetVersion(dataset));
         }
@@ -207,7 +208,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         resource.setNextVersionDate(new DateTime());
         resource.setVersionLogic("01.000");
-        resource.setIsLastVersion(Boolean.FALSE);
     }
     
     @Override

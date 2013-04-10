@@ -74,7 +74,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         thrown.expect(HibernateSystemException.class);
 
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-        QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
 
         // Set attributes that normally sets THE service and can not be null in database
         queryVersion.setStatus(QueryStatusEnum.ACTIVE);
@@ -127,7 +127,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         thrown.expect(HibernateSystemException.class);
         
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-        QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
 
         // Set attributes that normally sets de service and can not be null in database
         queryVersion.setStatus(QueryStatusEnum.ACTIVE);
