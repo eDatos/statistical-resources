@@ -55,11 +55,9 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
 
             @Override
             public void onClick(ClickEvent event) {
-                /*
-                 * List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
-                 * operationHierarchy.add(new PlaceRequest(NameTokens.queriesListPage));
-                 * getPlaceManager().revealPlaceHierarchy(operationHierarchy);
-                 */
+                 List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
+                 operationHierarchy.add(new PlaceRequest(NameTokens.queriesListPage));
+                 getPlaceManager().revealPlaceHierarchy(operationHierarchy);
             }
         }));
     }

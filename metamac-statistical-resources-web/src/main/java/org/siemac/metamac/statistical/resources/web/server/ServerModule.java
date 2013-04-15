@@ -6,7 +6,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Dele
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourceListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetProcStatusActionHandler;
@@ -19,12 +19,16 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.DeleteQueriesActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueriesActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
@@ -37,6 +41,10 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryAction;
 import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetLoginPageUrlActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetNavigationBarUrlActionHandler;
@@ -78,7 +86,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDatasetsAction.class, GetDatasetsActionHandler.class);
         bindHandler(UpdateDatasetProcStatusAction.class, UpdateDatasetProcStatusActionHandler.class);
         bindHandler(VersionDatasetAction.class, VersionDatasetActionHandler.class);
-        bindHandler(GetDatasourcesByDatasetPaginatedListAction.class, GetDatasourcesByDatasetPaginatedListActionHandler.class);
+        bindHandler(GetDatasourcesByDatasetAction.class, GetDatasourcesByDatasetActionHandler.class);
         bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
         bindHandler(DeleteDatasourceListAction.class, DeleteDatasourceListActionHandler.class);
 
@@ -89,6 +97,12 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeletePublicationsAction.class, DeletePublicationsActionHandler.class);
         bindHandler(UpdatePublicationProcStatusAction.class, UpdatePublicationProcStatusActionHandler.class);
         bindHandler(VersionPublicationAction.class, VersionPublicationActionHandler.class);
+        
+        // QUERIES
+        bindHandler(GetQueriesAction.class, GetQueriesActionHandler.class);
+        bindHandler(SaveQueryAction.class, SaveQueryActionHandler.class);
+        bindHandler(GetQueryAction.class, GetQueryActionHandler.class);
+        bindHandler(DeleteQueriesAction.class, DeleteQueriesActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

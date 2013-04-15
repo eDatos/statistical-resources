@@ -9,23 +9,12 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetDatasourcesByDatasetPaginatedList {
+public class GetDatasourcesByDataset {
 
     @In(1)
     String              datasetUrn;
 
-    @In(2)
-    int                 firstResult;
-
-    @In(3)
-    int                 maxResults;
-
     @Out(1)
     List<DatasourceDto> datasourcesList;
 
-    @Out(2)
-    Integer             pageNumber;
-
-    @Out(3)
-    Integer             totalResults;
 }
