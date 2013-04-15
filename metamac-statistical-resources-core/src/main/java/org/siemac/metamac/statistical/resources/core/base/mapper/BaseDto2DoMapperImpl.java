@@ -21,6 +21,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
+import org.siemac.metamac.statistical.resources.core.base.checks.SiemacMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -41,6 +42,8 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -71,7 +74,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
         // Only modifiable in creation
-        if (target.getId() == null) {
+        if (SiemacMetadataEditionChecks.canStatisticalOperationBeEdited(target.getId())) {
             target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
                     + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
         }
@@ -85,8 +88,11 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
         target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
+        
+        if (SiemacMetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
+            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(),addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
+        }
 
-        // TODO: keywords
         target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
         target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR)));
         externalItemDtoListToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
@@ -132,7 +138,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Attributes modifiable
         target.setNextVersion(source.getNextVersion());
 
-        if (StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.equals(target.getNextVersion())) {
+        if (SiemacMetadataEditionChecks.canNextVersionDateBeEdited(target.getNextVersion())) {
             target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
         }
 

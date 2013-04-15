@@ -1,5 +1,8 @@
 package org.siemac.metamac.core.common.ent.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -43,5 +46,13 @@ public class InternationalString extends InternationalStringBase {
             return localisedString.getLabel();
         }
         return null;
+    }
+    
+    public Set<String> getLocales() {
+        Set<String> locales = new HashSet<String>();
+        for (LocalisedString localisedText : getTexts()) {
+            locales.add(localisedText.getLocale());
+        }
+        return locales;
     }
 }

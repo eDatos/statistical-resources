@@ -79,7 +79,7 @@ Application StatisticalResourcesDto {
 			- @InternationalStringDto subtitle;
 			- @InternationalStringDto titleAlternative;
 			- @InternationalStringDto abstractLogic;
-			//keywords type??
+			- @InternationalStringDto keywords;			
 			
 			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type;

@@ -3,6 +3,9 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
@@ -11,7 +14,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     @Autowired
     private DatasetVersionRepository datasetVersionRepository;
     
+    /*@Autowired
+    private SrmRestInternalService srmRestInternalService;*/
+    
    
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -38,7 +43,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToProductionValidationResource(DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException{
-        //NOTHING
+        //CHECK all dsd related info
     }
     
     @Override
@@ -48,9 +53,20 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     
     @Override
     protected void applySendToProductionValidationResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-       // NOTHING
+       //TODO: Compute fields
+       // Access Srm internal API and get information to fill:
+       //   GEOGRAPHIC_COVERAGE 
+       //   TEMPORAL_COVERAGE
+       //   MEASURES
+        
+       // Access data and compute:
+       //  DATE_START
+       //  DATE_END
+       //  FORMAT_EXTENT_OBSERVATIONS
+       //  FORMAT_EXTENT_DIMENSIONS
     }
     
+
     @Override
     protected void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         siemacLifecycleChecker.applySendToProductionValidationActions(ctx,resource.getSiemacMetadataStatisticalResource());
@@ -105,6 +121,36 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         siemacLifecycleChecker.applySendToValidationRejectedActions(ctx,resource.getSiemacMetadataStatisticalResource());
     }
     
+    private InternationalString buildBibliographicCitation(DatasetVersion resource) {
+        ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getRightsHolder();
+        String version = resource.getSiemacMetadataStatisticalResource().getVersionLogic();
+        InternationalString publisherName = resource.getSiemacMetadataStatisticalResource().getPublisher().get(0).getTitle();
+        //FIXME: GET PUBLIC URL
+        String publicUrl = "http://";
+        InternationalString bibliographicInternational = new InternationalString();
+        for (LocalisedString localisedTitle : resource.getSiemacMetadataStatisticalResource().getTitle().getTexts()) {
+            String locale = localisedTitle.getLocale();
+            
+            StringBuilder bibliographicCitation = new StringBuilder();
+            bibliographicCitation.append(rightsHolder.getCode()).append(" (").append("").append(") ");
+            bibliographicCitation.append(localisedTitle.getLabel()).append(" (v").append(version).append(") [dataset].");
+            bibliographicCitation.append(getLocalisedTextInLocaleOrAppDefault(publisherName, locale));
+            bibliographicCitation.append(" ").append(publicUrl);
+            
+            LocalisedString localised = new LocalisedString(locale,bibliographicCitation.toString());
+            bibliographicInternational.addText(localised);
+        }
+        return bibliographicInternational;
+    }
+    
+    private String getLocalisedTextInLocaleOrAppDefault(InternationalString internationaString, String locale) {
+        if (internationaString.getLocalisedLabel(locale) != null) {
+            return internationaString.getLocalisedLabel(locale);
+        } else {
+            //FIXME: Choose other locale
+            return internationaString.getLocalisedLabel(locale);
+        }
+    }
     
     
     

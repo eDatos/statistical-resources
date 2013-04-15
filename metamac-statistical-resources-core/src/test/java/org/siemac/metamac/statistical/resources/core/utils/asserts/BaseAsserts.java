@@ -68,7 +68,8 @@ public class BaseAsserts extends MetamacAsserts {
         assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
         assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
         assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
-        // TODO: keywords?
+        assertEqualsInternationalString(previous.getKeywords(), next.getKeywords());
+        
         assertEquals(previous.getType(), next.getType());
 
         assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
@@ -157,8 +158,7 @@ public class BaseAsserts extends MetamacAsserts {
         assertEqualsInternationalString(expected.getSubtitle(), actual.getSubtitle());
         assertEqualsInternationalString(expected.getTitleAlternative(), actual.getTitleAlternative());
         assertEqualsInternationalString(expected.getAbstractLogic(), actual.getAbstractLogic());
-
-        // TODO: keywords
+        assertEqualsInternationalString(expected.getKeywords(), actual.getKeywords());
 
         assertEquals(expected.getType(), actual.getType());
 
@@ -264,7 +264,7 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
                 assertEqualsInternationalString(entity.getTitleAlternative(), dto.getTitleAlternative());
                 assertEqualsInternationalString(entity.getAbstractLogic(), dto.getAbstractLogic());
-                // TODO: keywords
+                assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
 
                 assertEquals(dto.getType(), entity.getType());
 
@@ -300,7 +300,7 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
                 assertEqualsInternationalString(entity.getTitleAlternative(), dto.getTitleAlternative());
                 assertEqualsInternationalString(entity.getAbstractLogic(), dto.getAbstractLogic());
-                // TODO: keywords
+                assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
 
                 assertEqualsExternalItem(entity.getCreator(), dto.getCreator());
                 assertEqualsExternalItemCollectionMapper(entity.getContributor(), dto.getContributor());

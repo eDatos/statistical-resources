@@ -9,8 +9,10 @@ import static org.mockito.Mockito.verify;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejected;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -21,6 +23,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -82,11 +85,36 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         verify(lifecycleService,times(1)).applySendToProductionValidationActions(any(ServiceContext.class),any(LifeCycleStatisticalResource.class));
     }
     
+    @Test
+    public void testSiemacResourceApplySendToProductionValidationActionsKeywordsBuilding() throws Exception {
+        SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
+        prepareToProductionValidation(resource);
+        resource.setTitle(new InternationalString(new String[] {"es","en"}, new String[] {"Paro en España","Unemployment in Spain"}));
+        resource.setDescription(new InternationalString(new String[] {"es","en"}, new String[] {"Medido en miles", "Measured in thousands"}));
+        
+        siemacLifecycleServiceImpl.applySendToProductionValidationActions(getServiceContextAdministrador(),resource);
+        
+        asssertContainsKeywordsInLocale(resource,"es","Paro","España","Medido","miles");
+        asssertContainsKeywordsInLocale(resource,"en","Unemployment","Spain","Measured","thousands");
+        assertEquals(2,resource.getKeywords().getLocales().size());
+        
+        verify(lifecycleService,times(1)).applySendToProductionValidationActions(any(ServiceContext.class),any(LifeCycleStatisticalResource.class));
+    }
+    
+    private void asssertContainsKeywordsInLocale(SiemacMetadataStatisticalResource resource, String locale, String...keywords) {
+        assertNotNull(resource.getKeywords());
+        String localisedKeywords = resource.getKeywords().getLocalisedLabel(locale); 
+        assertNotNull(localisedKeywords);
+        List<String> actualKeywords = Arrays.asList(localisedKeywords.split("\\s"));
+        assertEquals(keywords.length, actualKeywords.size());
+        assertTrue(actualKeywords.containsAll(Arrays.asList(keywords)));
+    }
+    
 
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
-    
+
     @Test
     public void testSiemacResourceCheckSendToDiffusionValidationRequiredFields() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;

@@ -330,6 +330,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void prepareToLifecycleCommon(DatasetVersion datasetVersion) {
+        ExternalItem geoGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.addGeographicGranularity(geoGranularity);
+        
+        ExternalItem timeGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.addTemporalGranularity(timeGranularity);
+        
         ExternalItem dsd = StatisticalResourcesPersistedDoMocks.mockDsdExternalItem();
         datasetVersion.setRelatedDsd(dsd);
 

@@ -154,7 +154,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.setSubtitle(mockInternationalStringDto());
         siemacMetadataStatisticalResourceDto.setTitleAlternative(mockInternationalStringDto());
         siemacMetadataStatisticalResourceDto.setAbstractLogic(mockInternationalStringDto());
-        // TODO: KEYWORDS
+        siemacMetadataStatisticalResourceDto.setKeywords(mockInternationalStringDto());
         siemacMetadataStatisticalResourceDto.setType(type);
 
         siemacMetadataStatisticalResourceDto.setMaintainer(mockAgencyExternalItemDto());

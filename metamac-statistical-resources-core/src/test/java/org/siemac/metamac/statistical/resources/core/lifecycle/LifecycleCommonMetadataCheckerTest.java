@@ -168,6 +168,8 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         String baseMetadata = ServiceExceptionSingleParameters.DATASET_VERSION;
         expectedMetamacException(new MetamacException ( 
                 Arrays.asList(
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES),
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES),
                         new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD),
                         new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__DATE_NEXT_UPDATE),
                         new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY),

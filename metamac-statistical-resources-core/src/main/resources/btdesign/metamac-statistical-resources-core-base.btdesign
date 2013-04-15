@@ -147,7 +147,7 @@ Application BaseStatisticalResources {
 			- @InternationalString subtitle cascade="all" databaseColumn="SUBTITLE_FK" nullable;
 			- @InternationalString titleAlternative cascade="all" databaseColumn="TITLE_ALTERNATIVE_FK" nullable;
 			- @InternationalString abstractLogic cascade="all" databaseColumn="ABSTRACT_FK" nullable;
-			//keywords type??
+			- @InternationalString keywords cascade="all" databaseColumn="KEYWORDS_FK" nullable;
 			
 			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type nullable;

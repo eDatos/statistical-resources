@@ -3,9 +3,11 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.statistical.resources.core.base.checks.SiemacMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -110,13 +112,14 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         externalItemDtoListToDoList(source.getTemporalGranularities(), target.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES);
         externalItemDtoListToDoList(source.getStatisticalUnit(), target.getStatisticalUnit(), ServiceExceptionParameters.DATASET_VERSION__STATISTICAL_UNIT);
 
-        // TODO: when measures can be filled?
 
-        // TODO: when a dsd can be changed?
-        target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
+        if (target.getId() == null || DatasetMetadataEditionChecks.canDsdBeEdited(target.getSiemacMetadataStatisticalResource().getProcStatus())) {
+            target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
+        }
 
-        // TODO: how do i know if date_next_update can be updated?
-        //target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
+        if (DatasetMetadataEditionChecks.canDateNextUpdateBeEdited()) {
+            target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
+        }
         
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
         

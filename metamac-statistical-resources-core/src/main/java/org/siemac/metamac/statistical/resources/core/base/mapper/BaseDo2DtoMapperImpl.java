@@ -55,6 +55,7 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.setTitleAlternative(internationalStringDoToDto(source.getTitleAlternative()));
         target.setDescription(internationalStringDoToDto(source.getDescription()));
         target.setAbstractLogic(internationalStringDoToDto(source.getAbstractLogic()));
+        target.setKeywords(internationalStringDoToDto(source.getKeywords()));
 
         target.setType(source.getType());
 
