@@ -14,9 +14,9 @@ public class StatisticalResourceContentDescriptorsForm extends LifeCycleResource
         ViewMultiLanguageTextItem subtitle = new ViewMultiLanguageTextItem(StatisticalResourceDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
         ViewMultiLanguageTextItem titleAlternative = new ViewMultiLanguageTextItem(StatisticalResourceDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());
         ViewMultiLanguageTextItem abstractLogic = new ViewMultiLanguageTextItem(StatisticalResourceDS.ABSTRACT, getConstants().siemacMetadataStatisticalResourceAbstractLogic());
-        // TODO keywords
+        ViewMultiLanguageTextItem keywords = new ViewMultiLanguageTextItem(StatisticalResourceDS.KEYWORDS, getConstants().siemacMetadataStatisticalResourceKeywords());
 
-        addFields(subtitle, titleAlternative, abstractLogic);
+        addFields(subtitle, titleAlternative, abstractLogic, keywords);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
@@ -24,6 +24,6 @@ public class StatisticalResourceContentDescriptorsForm extends LifeCycleResource
         setValue(StatisticalResourceDS.SUBTITLE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getSubtitle()));
         setValue(StatisticalResourceDS.TITLE_ALTERNATIVE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getTitleAlternative()));
         setValue(StatisticalResourceDS.ABSTRACT, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getAbstractLogic()));
-        // TODO keywords
+        setValue(StatisticalResourceDS.KEYWORDS, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getKeywords()));
     }
 }

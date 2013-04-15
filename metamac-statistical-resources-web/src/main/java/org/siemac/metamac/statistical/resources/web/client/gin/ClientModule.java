@@ -30,6 +30,10 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.Publ
 import org.siemac.metamac.statistical.resources.web.client.publication.view.PublicationMetadataTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.PublicationStructureTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.PublicationViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
+import org.siemac.metamac.statistical.resources.web.client.query.view.QueryListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.query.view.QueryViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.ErrorPageViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.MainPageViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.UnauthorizedPageViewImpl;
@@ -79,6 +83,9 @@ public class ClientModule extends AbstractPresenterModule {
                 PublicationMetadataTabPresenter.PublicationMetadataTabProxy.class);
         bindPresenter(PublicationStructureTabPresenter.class, PublicationStructureTabPresenter.PublicationStructureTabView.class, PublicationStructureTabViewImpl.class,
                 PublicationStructureTabPresenter.PublicationStructureTabProxy.class);
+        
+        bindPresenter(QueryListPresenter.class, QueryListPresenter.QueryListView.class, QueryListViewImpl.class, QueryListPresenter.QueryListProxy.class);
+        bindPresenter(QueryPresenter.class, QueryPresenter.QueryView.class, QueryViewImpl.class, QueryPresenter.QueryProxy.class);
 
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);

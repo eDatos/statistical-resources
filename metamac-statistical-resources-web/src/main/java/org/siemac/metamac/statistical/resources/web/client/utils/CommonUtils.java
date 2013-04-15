@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
@@ -28,8 +29,18 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static String getProcStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        return lifeCycleStatisticalResourceDto != null
+        return lifeCycleStatisticalResourceDto != null && lifeCycleStatisticalResourceDto.getProcStatus() != null
                 ? getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName())
+                : null;
+    }
+    
+    // -----------------------------------------------------------------------------------------
+    // QUERY TYPE
+    // -----------------------------------------------------------------------------------------
+    
+    public static String getQueryTypeName(QueryDto queryDto) {
+        return queryDto != null && queryDto.getType() != null
+        ? getCoreMessages().getString(getCoreMessages().queryTypeEnum() + queryDto.getType().getName())
                 : null;
     }
 

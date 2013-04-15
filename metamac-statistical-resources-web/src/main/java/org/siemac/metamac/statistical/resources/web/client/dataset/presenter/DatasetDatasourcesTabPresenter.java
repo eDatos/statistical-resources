@@ -21,8 +21,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasou
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceResult;
 import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
@@ -63,7 +63,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
 
-        void setDatasourcesPaginatedList(String datasetUrn, GetDatasourcesByDatasetPaginatedListResult datasourcesPaginatedList);
+        void setDatasources(String datasetUrn, List<DatasourceDto> datasources);
         void setDatasource(DatasourceDto datasourceDto);
     }
 
@@ -140,15 +140,15 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     public void retrieveDatasourcesByDataset(final String datasetUrn, int firstResult, int maxResults) {
-        dispatcher.execute(new GetDatasourcesByDatasetPaginatedListAction(datasetUrn, firstResult, maxResults), new WaitingAsyncCallback<GetDatasourcesByDatasetPaginatedListResult>() {
+        dispatcher.execute(new GetDatasourcesByDatasetAction(datasetUrn), new WaitingAsyncCallback<GetDatasourcesByDatasetResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasourceErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetDatasourcesByDatasetPaginatedListResult result) {
-                getView().setDatasourcesPaginatedList(datasetUrn, result);
+            public void onWaitSuccess(GetDatasourcesByDatasetResult result) {
+                getView().setDatasources(datasetUrn, result.getDatasourcesList());
             }
         });
     }

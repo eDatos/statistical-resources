@@ -37,6 +37,15 @@ public class PlaceRequestUtils {
         }
         return null;
     }
+    
+    public static String getQueryParamFromUrl(PlaceManager placeManager) {
+        for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
+            if (NameTokens.queryPage.equals(request.getNameToken())) {
+                return request.getParameter(PlaceRequestParams.queryParam, null);
+            }
+        }
+        return null;
+    }
 
     public static boolean isNameTokenInPlaceHierarchy(PlaceManager placeManager, String nameToken) {
         for (PlaceRequest placeReq : placeManager.getCurrentPlaceHierarchy()) {

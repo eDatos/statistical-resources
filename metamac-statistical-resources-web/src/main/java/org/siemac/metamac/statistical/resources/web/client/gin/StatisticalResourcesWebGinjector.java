@@ -15,6 +15,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.presenter
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.AsyncProvider;
@@ -47,6 +49,8 @@ public interface StatisticalResourcesWebGinjector extends Ginjector {
     AsyncProvider<PublicationPresenter> getPublicationPresenter();
     AsyncProvider<PublicationMetadataTabPresenter> getPublicationMetadataTabPresenter();
     AsyncProvider<PublicationStructureTabPresenter> getPublicationStructureTabPresenter();
+    AsyncProvider<QueryListPresenter> getQueryListPresenter();
+    AsyncProvider<QueryPresenter> getQueryPresenter();
 
     AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();
     AsyncProvider<UnauthorizedPagePresenter> getUnauthorizedPagePresenter();

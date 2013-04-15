@@ -39,7 +39,6 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
 
     public DatasetDto getDatasetDto(DatasetDto datasetDto) {
         datasetDto = (DatasetDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
-        // TODO TEMPORAL_COVERAGE
         // TODO GEOGRAPHIC_GRANULARITY
         // TODO TEMPORAL_GRANULARITY
         // TODO STATISTICAL_UNIT

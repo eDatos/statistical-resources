@@ -18,10 +18,9 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersForm;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
+import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -65,26 +64,39 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     }
 
     @Override
-    public void setDatasourcesPaginatedList(String datasetUrn, GetDatasourcesByDatasetPaginatedListResult result) {
+    public void setDatasources(String datasetUrn, List<DatasourceDto> datasources) {
         this.datasetUrn = datasetUrn;
-        datasourcesListPanel.setDatasourcesPaginatedList(result);
+        datasourcesListPanel.setDatasourcesList(datasources);
     }
 
     @Override
     public void setDatasource(DatasourceDto datasourceDto) {
         datasourceFormPanel.selectDatasource(datasourceDto);
     }
+    
+    private void hideDetailView() {
+        datasourceFormPanel.hide();
+    }
 
     @Override
     public Widget asWidget() {
         return panel;
+    }
+    
+    public List<String> getUrnsFromSelected() {
+        List<String> codes = new ArrayList<String>();
+        for (ListGridRecord record : datasourcesListPanel.datasourcesList.getSelectedRecords()) {
+            DatasourceRecord datasourceRecord = (DatasourceRecord) record;
+            codes.add(datasourceRecord.getUrn());
+        }
+        return codes;
     }
 
     private class DatasourcesListPanel extends VLayout {
 
         private ToolStripButton          newDatasourceButton;
         private ToolStripButton          deleteDatasourceButton;
-        private PaginatedCheckListGrid   datasourcesList;
+        private CustomListGrid   datasourcesList;
 
         private DeleteConfirmationWindow deleteConfirmationWindow;
 
@@ -106,33 +118,21 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             // List
 
-            datasourcesList = new PaginatedCheckListGrid(DatasetDatasourcesTabPresenter.DATASOURCE_LIST_MAX_RESULTS, new PaginatedAction() {
-
-                @Override
-                public void retrieveResultSet(int firstResult, int maxResults) {
-                    getUiHandlers().retrieveDatasourcesByDataset(datasetUrn, firstResult, maxResults);
-                }
-            });
-
-            datasourcesList.getListGrid().setAutoFitMaxRecords(DatasetDatasourcesTabPresenter.DATASOURCE_LIST_MAX_RESULTS);
-            datasourcesList.getListGrid().setAutoFitData(Autofit.VERTICAL);
-            datasourcesList.getListGrid().setDataSource(new DatasourceDS());
-            datasourcesList.getListGrid().setUseAllDataSourceFields(false);
+            datasourcesList = new CustomListGrid();
+            datasourcesList.setAutoFitMaxRecords(DatasetDatasourcesTabPresenter.DATASOURCE_LIST_MAX_RESULTS);
+            datasourcesList.setAutoFitData(Autofit.VERTICAL);
+            datasourcesList.setDataSource(new DatasourceDS());
+            datasourcesList.setUseAllDataSourceFields(false);
+            
 
             ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
             fieldCode.setAlign(Alignment.LEFT);
             ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-            datasourcesList.getListGrid().setFields(fieldCode, fieldName);
+            datasourcesList.setFields(fieldCode, fieldName);
 
             deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
             deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
-            deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 
-                @Override
-                public void onClick(ClickEvent event) {
-                    getUiHandlers().deleteDatasources(getUrnsFromSelected());
-                }
-            });
 
             // Panel conf
             addMember(toolStrip);
@@ -141,11 +141,11 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private void bindEvents() {
-            datasourcesList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+            datasourcesList.addSelectionChangedHandler(new SelectionChangedHandler() {
 
                 @Override
                 public void onSelectionChanged(SelectionEvent event) {
-                    if (datasourcesList.getListGrid().getSelectedRecords().length > 0) {
+                    if (datasourcesList.getSelectedRecords().length > 0) {
                         showListGridDeleteButton();
                     } else {
                         deleteDatasourceButton.hide();
@@ -153,7 +153,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 }
             });
 
-            datasourcesList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+            datasourcesList.addRecordClickHandler(new RecordClickHandler() {
 
                 @Override
                 public void onRecordClick(RecordClickEvent event) {
@@ -177,6 +177,14 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                     deleteConfirmationWindow.show();
                 }
             });
+            deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().deleteDatasources(getUrnsFromSelected());
+                    hideDetailView();
+                }
+            });
         }
 
         private void showListGridDeleteButton() {
@@ -185,25 +193,17 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             }
         }
 
-        public void setDatasourcesPaginatedList(GetDatasourcesByDatasetPaginatedListResult result) {
-            DatasourceRecord[] records = new DatasourceRecord[result.getDatasourcesList().size()];
+        public void setDatasourcesList(List<DatasourceDto> datasources) {
+            DatasourceRecord[] records = new DatasourceRecord[datasources.size()];
             int index = 0;
-            for (DatasourceDto datasourceDto : result.getDatasourcesList()) {
+            for (DatasourceDto datasourceDto : datasources) {
                 records[index++] = StatisticalResourcesRecordUtils.getDatasourceRecord(datasourceDto);
             }
-            datasourcesList.getListGrid().setData(records);
-            datasourcesList.refreshPaginationInfo(result.getPageNumber(), result.getDatasourcesList().size(), result.getTotalResults());
+            datasourcesList.setData(records);
         }
     }
 
-    public List<String> getUrnsFromSelected() {
-        List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : datasourcesListPanel.datasourcesList.getListGrid().getSelectedRecords()) {
-            DatasourceRecord datasourceRecord = (DatasourceRecord) record;
-            codes.add(datasourceRecord.getUrn());
-        }
-        return codes;
-    }
+
 
     private class DatasourceFormPanel extends VLayout {
 
