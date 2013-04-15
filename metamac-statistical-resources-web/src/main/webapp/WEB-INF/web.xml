@@ -26,6 +26,11 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <!-- Application startup listener to validate the configuration properties -->
+    <listener>
+        <listener-class>org.siemac.metamac.statistical.resources.web.server.listener.StatisticalResourcesStartupListener</listener-class>
+    </listener>
+
     <!-- Enable Spring Request Context Holder -->
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
@@ -40,7 +45,7 @@
         <servlet-name>upload</servlet-name>
         <servlet-class>org.siemac.metamac.statistical.resources.web.server.servlet.FileUploadServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>upload</servlet-name>
         <url-pattern>/files/upload/*</url-pattern>
@@ -50,23 +55,23 @@
         <servlet-name>dispatch</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
-    
+
     <servlet>
         <servlet-name>remoteLogging</servlet-name>
         <servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>dispatch</servlet-name>
         <url-pattern>/dispatch/*</url-pattern>
     </servlet-mapping>
-    
+
     <!-- Remote logging -->
     <servlet-mapping>
         <servlet-name>remoteLogging</servlet-name>
         <url-pattern>/StatisticalResourcesWeb/remote_logging</url-pattern>
     </servlet-mapping>
-    
+
     <!-- ******************* Default page to serve ******************** -->
     <welcome-file-list>
         <welcome-file>StatisticalResourcesWeb.html</welcome-file>
