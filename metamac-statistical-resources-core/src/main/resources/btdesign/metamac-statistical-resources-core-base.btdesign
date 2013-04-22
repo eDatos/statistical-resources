@@ -1,4 +1,6 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
@@ -19,10 +21,10 @@ Application BaseStatisticalResources {
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
 			
-			String code databaseColumn="CODE" required;
-			String urn databaseColumn="URN" required length="4000";
 			- @TypeRelatedResourceEnum type databaseColumn="TYPE" required;
-			- @InternationalString title cascade="all" databaseColumn="TITLE_FK" nullable;
+			
+			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" cascade="none" nullable;
+			- @PublicationVersion publicationVersion databaseColumn="PUBLICATION_VERSION_FK" cascade="none" nullable;
     		
     		Repository RelatedResourceRepository {
 				findById;

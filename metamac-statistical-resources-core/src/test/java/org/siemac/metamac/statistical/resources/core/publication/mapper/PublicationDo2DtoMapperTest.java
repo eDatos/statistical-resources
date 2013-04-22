@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
@@ -39,7 +40,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock({PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME})
-    public void testPublicationDoToDto() {
+    public void testPublicationDoToDto() throws MetamacException {
         PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME);
         PublicationDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
         assertEqualsPublicationVersion(expected, actual);
@@ -47,7 +48,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME, PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME, PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME})
-    public void testPublicationDoListToDtoList() {
+    public void testPublicationDoListToDtoList() throws MetamacException {
         List<PublicationVersion> expected = new ArrayList<PublicationVersion>();
         expected.add(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME));
         expected.add(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_02_BASIC_NAME));

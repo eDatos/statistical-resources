@@ -27,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
@@ -560,12 +561,14 @@ public class BaseAsserts extends MetamacAsserts {
         if (expected == null) {
             return;
         }
-
-        assertEquals(expected.getCode(), actual.getCode());
-        assertEquals(expected.getUrn(), actual.getUrn());
+        
         assertEquals(expected.getType(), actual.getType());
-        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        Long actualResourceId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(actual);
+        Long expectedResourceId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(expected);
+        assertEqualsNullability(expectedResourceId, actualResourceId);
+        assertEquals(expectedResourceId, actualResourceId);
     }
+
 
     public static void assertEqualsRelatedResourceCollection(Collection<RelatedResource> expected, Collection<RelatedResource> actual) {
         assertEqualsNullability(expected, actual);
@@ -577,8 +580,12 @@ public class BaseAsserts extends MetamacAsserts {
         for (RelatedResource expec : expected) {
             boolean found = false;
             for (RelatedResource actualRes : actual) {
-                if (actualRes.getUrn().equals(expec.getUrn())) {
-                    found = true;
+                if (actualRes.getType().equals(expec.getType())) {
+                    Long actualResId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(actualRes);
+                    Long expecId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(expec);
+                    if (actualResId.equals(expecId)) {
+                        found = true;
+                    }
                 }
             }
             if (!found) {
@@ -610,10 +617,11 @@ public class BaseAsserts extends MetamacAsserts {
             return;
         }
 
-        assertEquals(entity.getCode(), dto.getCode());
-        assertEquals(entity.getUrn(), dto.getUrn());
         assertEquals(entity.getType(), dto.getType());
-        assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
+        Long id = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(entity);
+
+        assertEqualsNullability(id, dto.getRelatedId());
+        assertEquals(id, dto.getRelatedId());
     }
 
     public static void assertEqualsRelatedResourceCollectionMapper(Collection<RelatedResource> entities, Collection<RelatedResourceDto> dtos) {

@@ -16,7 +16,6 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -35,6 +34,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
@@ -171,10 +171,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.setNewnessUntilDate(mockDate());
 
         // TODO: mock Related resources
-
-        siemacMetadataStatisticalResourceDto.setReplaces(mockDatasetRelatedResorceItem());
         siemacMetadataStatisticalResourceDto.setReplacesVersion(null);
-        siemacMetadataStatisticalResourceDto.setIsReplacedBy(mockDatasetRelatedResorceItem());
         siemacMetadataStatisticalResourceDto.setIsReplacedByVersion(null);
         siemacMetadataStatisticalResourceDto.addRequire(null);
         siemacMetadataStatisticalResourceDto.addIsRequiredBy(null);
@@ -240,11 +237,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // resource.setOperation(mockExternalItemDto(URN_RELATED_RESOURCE_MOCK, TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
     }
 
-    // RELATED RESOURCE DTOs
-    public static RelatedResourceDto mockDatasetRelatedResorceItem() {
-        return createRelatedResourceDtoMockFromDoMock(StatisticalResourcesDoMocks.mockDatasetVersionRelated());
-    }
-
     // EXTERNAL ITEM DTOs
 
     public static ExternalItemDto mockStatisticalOperationItem() {
@@ -289,16 +281,20 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         return itemDto;
     }
 
-    public static RelatedResourceDto mockDatasetVersionRelatedDto() {
-        RelatedResourceDto resource = createRelatedResourceDtoMockFromDoMock(StatisticalResourcesDoMocks.mockDatasetVersionRelated());
+    public static RelatedResourceDto mockDatasetVersionRelatedDto(DatasetDto datasetVersion) {
+        RelatedResourceDto resource = new RelatedResourceDto();
+        resource.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        resource.setRelatedId(datasetVersion.getId());
+        populateRelatedResource(resource, datasetVersion);
         return resource;
     }
-
-    private static RelatedResourceDto createRelatedResourceDtoMockFromDoMock(RelatedResource item) {
-        RelatedResourceDto itemDto = new RelatedResourceDto(item.getCode(), item.getUrn(), item.getType());
-        itemDto.setVersion(Long.valueOf(0));
-        return itemDto;
+    
+    private static void populateRelatedResource(RelatedResourceDto relatedDto, NameableStatisticalResourceDto nameable) {
+        relatedDto.setCode(nameable.getCode());
+        relatedDto.setUrn(nameable.getUrn());
+        relatedDto.setTitle(nameable.getTitle());
     }
+
 
     private static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
         StatisticOfficialityDto dto = new StatisticOfficialityDto();

@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -29,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
@@ -73,7 +74,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     
     @Test
     @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME})
-    public void testDatasetDoToDtoWithStatisticOfficiality() {
+    public void testDatasetDoToDtoWithStatisticOfficiality() throws MetamacException {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
 
         DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);

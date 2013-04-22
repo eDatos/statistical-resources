@@ -36,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Publi
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -55,7 +56,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private QueryVersionMockFactory                  queryMockFactory;
+    private QueryVersionMockFactory           queryMockFactory;
 
     @Autowired
     private DatasourceMockFactory             datasourceMockFactory;
@@ -365,13 +366,13 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendToProductionValidation() throws Exception {
         // Retrieve dataset - session 1
-        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn());
+        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve dataset - session 2
-        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn());
+        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession02.getOptimisticLockingVersion());
 
         // Send to production validation - session 1 --> OK
@@ -396,14 +397,14 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Test
     @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendToDiffusionValidation() throws Exception {
-     // Retrieve dataset - session 1
-        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn());
+        // Retrieve dataset - session 1
+        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve dataset - session 2
-        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn());
+        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession02.getOptimisticLockingVersion());
 
         // Send to production validation - session 1 --> OK

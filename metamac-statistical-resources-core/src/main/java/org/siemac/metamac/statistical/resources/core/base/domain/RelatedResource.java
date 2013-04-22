@@ -16,7 +16,7 @@ public class RelatedResource extends RelatedResourceBase {
     protected RelatedResource() {
     }
 
-    public RelatedResource(String code, String urn, TypeRelatedResourceEnum type) {
-        super(code, urn, type);
+    public RelatedResource(TypeRelatedResourceEnum type) {
+        super(type);
     }
 }

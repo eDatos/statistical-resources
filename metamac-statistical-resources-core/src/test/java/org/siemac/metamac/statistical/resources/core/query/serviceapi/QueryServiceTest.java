@@ -54,6 +54,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +64,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class QueryServiceTest extends StatisticalResourcesBaseTest implements QueryServiceTestBase {
 
@@ -104,6 +105,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionSingleParameters.URN));
         queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), EMPTY);
     }
+    
 
     @Override
     @Test

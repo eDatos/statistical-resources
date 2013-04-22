@@ -7,7 +7,7 @@ import java.util.Set;
 public class EntityMetadata {
 
     private String                         tableName;
-    private Map<String, String>            properties;
+    private Map<String, Object>            properties;
 
     private Map<String, String>            relationsDBName;
 
@@ -19,7 +19,7 @@ public class EntityMetadata {
     private boolean                        isSingleTable;
 
     public EntityMetadata() {
-        properties = new HashMap<String, String>();
+        properties = new HashMap<String, Object>();
         relationsDBName = new HashMap<String, String>();
         inverseRelations = new HashMap<String, String>();
         joinTables = new HashMap<String, EntityMetadata.JoinTableMetadata>();
@@ -59,13 +59,17 @@ public class EntityMetadata {
 
     public void setColumnValue(String columnName, Object value) {
         if (value != null) {
-            properties.put(columnName, value.toString());
+            properties.put(columnName, value);
         } else {
             properties.put(columnName, null);
         }
     }
+    
+    public Object getColumnValue(String columnName) {
+        return properties.get(columnName);
+    }
 
-    public void setRelationValue(String relationName, String id) {
+    public void setRelationValue(String relationName, Long id) {
         String dbColumn = relationsDBName.get(relationName);
         setColumnValue(dbColumn, id);
     }
@@ -83,8 +87,8 @@ public class EntityMetadata {
         return discriminatorColumn != null;
     }
 
-    public String getId() {
-        return properties.get("ID");
+    public Long getId() {
+        return (Long)properties.get("ID");
     }
 
     public void setId(Long id) {
@@ -123,8 +127,9 @@ public class EntityMetadata {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<").append(tableName.toUpperCase()).append("\n");
         for (String propName : attributes) {
-            String value = properties.get(propName);
+            Object value = properties.get(propName);
             buffer.append(propName).append("=");
+            //FIXME: Get String representation for value
             if (value != null) {
                 buffer.append("\"").append(value).append("\"\n");
             } else {

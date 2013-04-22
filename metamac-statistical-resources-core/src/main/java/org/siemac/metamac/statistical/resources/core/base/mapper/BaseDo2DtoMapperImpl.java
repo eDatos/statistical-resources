@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -217,11 +218,15 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         if (source == null) {
             return null;
         }
+        Long resourceId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(source);
+        NameableStatisticalResource nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
         RelatedResourceDto target = new RelatedResourceDto();
-        target.setCode(source.getCode());
-        target.setTitle(internationalStringDoToDto(source.getTitle()));
+        target.setRelatedId(resourceId);
+        target.setCode(nameableResource.getCode());
+        target.setTitle(internationalStringDoToDto(nameableResource.getTitle()));
         target.setType(source.getType());
-        target.setUrn(source.getUrn());
+        target.setUrn(nameableResource.getUrn());
+        
 
         return target;
     }

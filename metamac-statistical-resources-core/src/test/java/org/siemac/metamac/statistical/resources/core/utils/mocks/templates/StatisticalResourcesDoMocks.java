@@ -461,14 +461,17 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // Related Resource
     // -----------------------------------------------------------------
 
-    public static RelatedResource mockDatasetVersionRelated() {
-        RelatedResource resource = new RelatedResource(DATASET_VERSION_MOCK, mockDatasetVersionRelatedUrn(), TypeRelatedResourceEnum.DATASET_VERSION);
+    public static RelatedResource mockDatasetVersionRelated(DatasetVersion datasetVersion) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.DATASET_VERSION);
+        resource.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        resource.setDatasetVersion(datasetVersion);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }
 
-    public static RelatedResource mockPublicationVersionRelated() {
-        RelatedResource resource = new RelatedResource(PUBLICATION_VERSION_MOCK, mockPublicationVersionRelatedUrn(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+    public static RelatedResource mockPublicationVersionRelated(PublicationVersion pubVersion) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.PUBLICATION_VERSION);
+        resource.setPublicationVersion(pubVersion);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }

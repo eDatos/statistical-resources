@@ -68,9 +68,9 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             
 //            IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
            
-            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
-//            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-//            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
+//            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
+            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
 
             // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
             initializeDatabase(dbUnitConnection);

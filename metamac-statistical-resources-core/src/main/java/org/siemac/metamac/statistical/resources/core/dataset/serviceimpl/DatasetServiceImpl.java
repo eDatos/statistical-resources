@@ -225,21 +225,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 
         // TODO: Comprobar si hay que eliminar relaciones a otros recursos
+        
 
         if (VersionUtil.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Dataset dataset = datasetVersion.getDataset();
             getDatasetRepository().delete(dataset);
         } else {
-            DatasetVersion previousDatasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getUrn());
-
             // Delete version
             Dataset dataset = datasetVersion.getDataset();
             dataset.getVersions().remove(datasetVersion);
             getDatasetVersionRepository().delete(datasetVersion);
-
-            // Update previous version
-            previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
-            getDatasetVersionRepository().save(previousDatasetVersion);
         }
     }
 

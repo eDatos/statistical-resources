@@ -216,10 +216,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     }
 
     private static RelatedResource createRelatedResourcePublicationVersion(PublicationVersion publicationVersion) {
-        RelatedResource relatedResource = StatisticalResourcesDoMocks.mockDatasetVersionRelated();
-        relatedResource.setCode(publicationVersion.getSiemacMetadataStatisticalResource().getCode());
-        relatedResource.setTitle(publicationVersion.getSiemacMetadataStatisticalResource().getTitle());
-        relatedResource.setUrn(publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        RelatedResource relatedResource = StatisticalResourcesDoMocks.mockPublicationVersionRelated(publicationVersion);
         return relatedResource;
     }
 

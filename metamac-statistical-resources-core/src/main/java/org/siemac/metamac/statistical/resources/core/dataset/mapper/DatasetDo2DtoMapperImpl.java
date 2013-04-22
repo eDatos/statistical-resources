@@ -110,6 +110,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         return target;
     }
     
+    @Override
     public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source) {
         if (source == null) {
             return null;

@@ -7,15 +7,12 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 
 public abstract class MockPersisterBase implements MockPersister {
 
+    @Override
     public final void persistMocks(String... ids) throws Exception {
         List<Object> mocks = locateMocks(ids);
 
-        List<Object> orderedMocks = sortMocksBasedOnDependencies(mocks);
-
-        persistMocks(orderedMocks);
+        persistMocks(mocks);
     }
-
-    protected abstract List<Object> sortMocksBasedOnDependencies(List<Object> mocks);
 
     protected abstract void persistMocks(List<Object> mocks) throws Exception;
 
@@ -54,4 +51,6 @@ public abstract class MockPersisterBase implements MockPersister {
         return beans;
     }
 
+    
+    
 }

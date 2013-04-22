@@ -33,6 +33,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleTypeRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasetVersionNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -41,10 +43,9 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.publication.exception.PublicationVersionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("baseDto2DoMapper")
@@ -61,6 +62,12 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
     @Autowired
     private VersionRationaleTypeRepository versionRationaleTypeRepository;
+
+    @Autowired
+    private PublicationVersionRepository   publicationVersionRepository;
+
+    @Autowired
+    private DatasetVersionRepository       datasetVersionRepository;
 
     // ------------------------------------------------------------
     // BASE HIERARCHY
@@ -82,15 +89,16 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         // Always Modifiable
         target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
         externalItemDtoListToDoList(source.getLanguages(), target.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
-        externalItemDtoListToDoList(source.getStatisticalOperationInstances(), target.getStatisticalOperationInstances(), addParameter(metadataName,ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES));
+        externalItemDtoListToDoList(source.getStatisticalOperationInstances(), target.getStatisticalOperationInstances(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES));
 
         target.setSubtitle(internationalStringDtoToDo(source.getSubtitle(), target.getSubtitle(), addParameter(metadataName, ServiceExceptionSingleParameters.SUBTITLE)));
         target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
         target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
-        
+
         if (SiemacMetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
-            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(),addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
+            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
         }
 
         target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
@@ -335,14 +343,32 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
 
         if (target == null) {
             // New
-            target = new RelatedResource(source.getCode(), source.getUrn(), source.getType());
+            target = new RelatedResource(source.getType());
         }
-        target.setCode(source.getCode());
-        target.setUrn(source.getUrn());
+        
         target.setType(source.getType());
-        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE)));
+        setCorrespondingResourceRelatedBasedOnType(target,source);
 
         return target;
+    }
+        
+        
+        
+    private void setCorrespondingResourceRelatedBasedOnType(RelatedResource target, RelatedResourceDto source) throws MetamacException {
+        try {
+            switch(source.getType()) {
+                case DATASET_VERSION:
+                    target.setDatasetVersion(datasetVersionRepository.findById(source.getRelatedId()));
+                    break;
+                case PUBLICATION_VERSION:
+                    target.setPublicationVersion(publicationVersionRepository.findById(source.getRelatedId()));
+                    break;
+            }
+        } catch (DatasetVersionNotFoundException e) {
+            throw new MetamacException(e,ServiceExceptionType.UNKNOWN, "Error retrieving dataset version with id "+source.getId());
+        } catch (PublicationVersionNotFoundException e) {
+            throw new MetamacException(e,ServiceExceptionType.UNKNOWN, "Error retrieving publication version with id "+source.getId());
+        }
     }
 
     @Override
@@ -353,7 +379,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         for (RelatedResourceDto source : sources) {
             boolean existsBefore = false;
             for (RelatedResource target : targetsBefore) {
-                if (source.getUrn().equals(target.getUrn())) {
+                if (relatedResourceDtoRepresentsSameAsEntity(source, target)) {
                     newTargets.add(relatedResourceDtoToDo(source, target, metadataName));
                     existsBefore = true;
                     break;
@@ -368,7 +394,7 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         for (RelatedResource oldTarget : targetsBefore) {
             boolean found = false;
             for (RelatedResource newTarget : newTargets) {
-                found = found || (oldTarget.getUrn().equals(newTarget.getUrn()));
+                found = found || relatedResourcesRepresentSameEntity(oldTarget, newTarget);
             }
             if (!found) {
                 // Delete
@@ -382,6 +408,37 @@ public class BaseDto2DoMapperImpl implements BaseDto2DoMapper {
         }
 
         return targets;
+    }
+    
+    private boolean relatedResourceDtoRepresentsSameAsEntity(RelatedResourceDto source, RelatedResource target) {
+        if (source.getType().equals(target.getType())) {
+            switch (source.getType()) {
+                case DATASET_VERSION:
+                    if (source.getRelatedId().equals(target.getDatasetVersion().getId()))
+                        return true;
+                    break;
+                case PUBLICATION_VERSION:
+                    if (source.getRelatedId().equals(target.getPublicationVersion().getId()))
+                        return true;
+                    break;
+            }
+        }
+        return false;
+    }
+    private boolean relatedResourcesRepresentSameEntity(RelatedResource source, RelatedResource target) {
+        if (source.getType().equals(target.getType())) {
+            switch (source.getType()) {
+                case DATASET_VERSION:
+                    if (source.getDatasetVersion().getId().equals(target.getDatasetVersion().getId()))
+                        return true;
+                    break;
+                case PUBLICATION_VERSION:
+                    if (source.getDatasetVersion().getId().equals(target.getPublicationVersion().getId()))
+                        return true;
+                    break;
+            }
+        }
+        return false;
     }
 
     @Override

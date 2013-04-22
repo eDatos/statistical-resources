@@ -163,8 +163,9 @@ public class BaseVersioningCopyUtils {
         if (source == null) {
             return null;
         }
-        RelatedResource target = new RelatedResource(source.getCode(), source.getUrn(), source.getType());
-        target.setTitle(copyInternationalString(source.getTitle()));
+        RelatedResource target = new RelatedResource(source.getType());
+        target.setDatasetVersion(source.getDatasetVersion());
+        target.setPublicationVersion(source.getPublicationVersion());
         return target;
     }
 

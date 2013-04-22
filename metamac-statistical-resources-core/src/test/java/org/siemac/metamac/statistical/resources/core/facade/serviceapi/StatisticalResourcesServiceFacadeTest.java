@@ -62,6 +62,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -75,6 +76,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
@@ -117,7 +119,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
@@ -149,6 +151,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // QUERIES
     // ------------------------------------------------------------------------
 
+    @BeforeClass
+    public static void beforeClass() {
+        System.out.println(ApplicationContextProvider.getApplicationContext());
+    }
+    
     @Override
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME})

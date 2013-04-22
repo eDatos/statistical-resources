@@ -139,11 +139,6 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             Publication publication = publicationVersion.getPublication();
             publication.getVersions().remove(publicationVersion);
             getPublicationVersionRepository().delete(publicationVersion);
-
-            // Update previous version
-            PublicationVersion previousPublicationVersion = getPublicationVersionRepository().retrieveByUrn(publicationVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getUrn());
-            previousPublicationVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
-            getPublicationVersionRepository().save(previousPublicationVersion);
         }
     }
 

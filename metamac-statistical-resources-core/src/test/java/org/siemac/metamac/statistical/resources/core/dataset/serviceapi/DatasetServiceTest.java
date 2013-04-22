@@ -52,6 +52,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Datas
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -62,7 +63,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
@@ -446,6 +447,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
+    @Rollback(true)
     public void testDeleteDatasetVersionErrorQueryRelated() throws Exception {
         thrown.expect(PersistenceException.class);
         

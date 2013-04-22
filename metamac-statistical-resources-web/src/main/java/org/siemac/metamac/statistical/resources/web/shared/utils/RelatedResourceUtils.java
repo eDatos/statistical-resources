@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.shared.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
@@ -20,7 +19,7 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
 
     public static RelatedResourceDto getIdentifiableResourceDtoAsRelatedResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
         RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
-        // TODO set the ID of the identifiableStatisticalResourceDto
+        relatedResourceDto.setRelatedId(identifiableStatisticalResourceDto.getId());
         relatedResourceDto.setCode(identifiableStatisticalResourceDto.getCode());
         relatedResourceDto.setUrn(identifiableStatisticalResourceDto.getUrn());
         return relatedResourceDto;
@@ -76,16 +75,12 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // GENERIC RELATED RESOURCES
     // -------------------------------------------------------------------------------------------------------------
 
-    public static RelatedResourceDto createRelatedResourceDto(TypeRelatedResourceEnum type, String urn) {
-        RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
-        relatedResourceDto.setType(type);
-        relatedResourceDto.setUrn(urn);
-        return relatedResourceDto;
-    }
-
-    public static RelatedResourceDto createRelatedResourceDto(String urn) {
-        if (!StringUtils.isBlank(urn)) {
-            return createRelatedResourceDto(null, urn);
+    public static RelatedResourceDto createRelatedResourceDto(TypeRelatedResourceEnum type, Long relatedId) {
+        if (relatedId != null) {
+            RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
+            relatedResourceDto.setType(type);
+            relatedResourceDto.setRelatedId(relatedId);
+            return relatedResourceDto;
         } else {
             return null;
         }
