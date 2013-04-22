@@ -20,6 +20,7 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
 
     public static RelatedResourceDto getIdentifiableResourceDtoAsRelatedResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
         RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
+        // TODO set the ID of the identifiableStatisticalResourceDto
         relatedResourceDto.setCode(identifiableStatisticalResourceDto.getCode());
         relatedResourceDto.setUrn(identifiableStatisticalResourceDto.getUrn());
         return relatedResourceDto;
