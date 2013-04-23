@@ -54,6 +54,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         throw new MetamacException(exceptionItems);
     }
     
+    
     @Test
     public void testCheckLifecycleCommonMetadataVersionRationaleRequiredIfMinorErrata() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;

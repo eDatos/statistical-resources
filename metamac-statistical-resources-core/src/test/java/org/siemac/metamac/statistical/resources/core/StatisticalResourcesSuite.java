@@ -29,9 +29,6 @@ import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMap
 import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 
-/**
- * Spring based transactional test with DbUnit support.
- */
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,

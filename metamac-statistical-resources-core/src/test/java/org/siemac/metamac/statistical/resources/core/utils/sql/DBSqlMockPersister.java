@@ -19,6 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.domain.AbstractDomainObject;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.utils.EntityMetadata;
+import org.siemac.metamac.core.common.utils.TableMetadata;
+import org.siemac.metamac.statistical.resources.core.utils.dbunit.DBUnitTableMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
 
     private static Logger logger  = LoggerFactory.getLogger(DBSqlMockPersister.class);
     private static List<String>   tableOrder;
+    private static List<String>   sequences;
+    private static boolean sequencesRestarted = false;
     
     private JdbcTemplate jdbcTemplate;
     private TransactionTemplate transactionTemplate;
@@ -50,7 +54,11 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
     @Override
     protected void persistMocks(List<Object> mocks) throws Exception {
 
-        final List<EntityMetadata> mocksMetadata = getMocksMetadata(mocks);
+        List<EntityMetadata> mocksMetadata = getMocksMetadata(mocks);
+        
+        final List<TableMetadata> tableMetadatas = transformEntityToTableMetadata(mocksMetadata);
+        
+        restartSequences();
         
         logger.info("Persisting mocks ...");
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -59,7 +67,7 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
                 disableReferentialConstraints();
                 try {
                     cleanDatabase();
-                    populateDatabase(mocksMetadata);
+                    populateDatabase(tableMetadatas);
                 } catch (Exception e) {
                     status.setRollbackOnly();
                     throw new RuntimeException("Error preparing mocks in database ",e);
@@ -71,6 +79,14 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         logger.info("Mocks persisted");
     }
     
+    private List<TableMetadata> transformEntityToTableMetadata(List<EntityMetadata> mocksMetadata) {
+        List<TableMetadata> transformList = new ArrayList<TableMetadata>();
+        for (EntityMetadata entity : mocksMetadata) {
+            transformList.add(new SqlTableMetadata(entity));
+        }
+        return transformList;
+    }
+    
     private void cleanDatabase() {
         List<String> tables = getTableOrder();
         String[] statements = new String[tables.size()];
@@ -79,12 +95,30 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
             statements[i++] = "Delete from "+tables.get(j);
         }
         jdbcTemplate.batchUpdate(statements);
+        
+
     }
     
-    private void populateDatabase(List<EntityMetadata> entityMetadatas) {
+    private void restartSequences() {
+        if (!sequencesRestarted) {
+            List<String> sequences = getSequencesToRestart();
+            if (sequences != null && sequences.size() > 0) {
+                String[] statements = new String[sequences.size()*2];
+                int i = 0;
+                for (String sequence : sequences) {
+                    statements[i++] = "drop sequence "+sequence;
+                    statements[i++] = "create sequence "+sequence+" START WITH 10000000";
+                }
+                jdbcTemplate.batchUpdate(statements);
+            }
+            sequencesRestarted = true;
+        }
+    }
+    
+    private void populateDatabase(List<TableMetadata> tableMetadatas) {
         List<String> statements = new ArrayList<String>();
-        for (EntityMetadata entityMetadata : entityMetadatas) {
-            String sqlStatement = buildSqlSentenceForEntity(entityMetadata); 
+        for (TableMetadata tableMetadata : tableMetadatas) {
+            String sqlStatement = buildSqlStatement(tableMetadata); 
             if (sqlStatement != null) {
                 statements.add(sqlStatement);
                 logger.debug("Statement: "+sqlStatement);
@@ -103,26 +137,19 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         jdbcTemplate.execute("SET CONSTRAINTS ALL IMMEDIATE");
     }
     
-    private String buildSqlSentenceForEntity(EntityMetadata metadata) {
+    
+    
+    private String buildSqlStatement(TableMetadata metadata) {
         StringBuilder builder = new StringBuilder();
-        
-        Map<String,String> columnValues = new HashMap<String,String>();        
-        for (String propName : metadata.getAllAttributesAndRelations()) {
-            Object value = metadata.getColumnValue(propName);
-            if (value != null) {
-                addColumnsForAttributes(columnValues, propName, value);
-            }
-        }
-        
-        List<String> columnNamesNotNull = new ArrayList<String>(columnValues.keySet());
-        if (columnNamesNotNull.size() > 0) {
+        List<String> columnNames = metadata.getColumnNames();
+        if (columnNames.size() > 0) {
             List<String> values = new ArrayList<String>();
-            for (String column : columnNamesNotNull) {
-                values.add(columnValues.get(column));
+            for (String columnName : columnNames) {
+                values.add(metadata.getColumnValue(columnName));
             }
             builder.append("INSERT INTO ").append(metadata.getTableName())
             .append("(")
-            .append(StringUtils.join(columnNamesNotNull,","))
+            .append(StringUtils.join(columnNames,","))
             .append(") VALUES")
             .append("(")
             .append(StringUtils.join(values,","))
@@ -134,30 +161,7 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
 
     
     
-    private void addColumnsForAttributes(Map<String, String> columnValues, String propName, Object value) {
-        if (value != null) {
-            if (value instanceof DateTime) {
-                DateTime datetime = (DateTime)value;
-                columnValues.put(propName, "TO_TIMESTAMP('"+datetime.toString("yyyy-MM-dd HH:mm:ss.SSS")+"','YYYY-MM-DD HH24:MI:SS.FF')");
-                columnValues.put(propName+"_TZ", "'"+datetime.getZone().toString()+"'");
-            } else if (value instanceof Number) {
-                columnValues.put(propName, ((Number)value).toString());
-            } else if (value instanceof Enum){
-                Method method = ReflectionUtils.findMethod(value.getClass(), "getValue");
-                if (method != null) {
-                    try {
-                        columnValues.put(propName, "'"+method.invoke(value)+"'");
-                    } catch (Exception e) {
-                        columnValues.put(propName, "'"+value.toString()+"'");
-                    }
-                } else {
-                    columnValues.put(propName, "'"+value.toString()+"'");
-                }
-            } else {
-                columnValues.put(propName, "'"+value.toString()+"'");
-            }
-        }
-    }
+
 
 
     private List<String> getTableOrder() {
@@ -174,6 +178,22 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         }
         return tableOrder;
     }
+    
+    protected List<String> getSequencesToRestart() {
+        if (sequences == null) {
+            try {
+                URL url = this.getClass().getResource("/dbunit/oracle.properties");
+                Properties prop = new Properties();
+                prop.load(new FileInputStream(url.getFile()));
+                String sequencesStr = prop.getProperty("sequences");
+                sequences = Arrays.asList(sequencesStr.split(","));
+            } catch (Exception e) {
+                throw new IllegalStateException("Error loading properties which all sequences are specified", e);
+            }
+        }
+        return sequences;
+    }
+
 
 
 }

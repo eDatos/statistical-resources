@@ -5,27 +5,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
 
-import org.joda.time.DateTime;
-import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.utils.EntityMetadata;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockPersisterBase;
+import org.siemac.metamac.core.common.utils.TableMetadata;
 import org.siemac.metamac.statistical.resources.core.utils.sql.DBMockPersisterBase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
 
 public class DBUnitMockPersister extends DBMockPersisterBase {
 
@@ -40,15 +33,24 @@ public class DBUnitMockPersister extends DBMockPersisterBase {
         List<EntityMetadata> mocksMetadata = getMocksMetadata(mocks);
 
         mocksMetadata = sortMocksMetadata(mocksMetadata);
+        
+        List<TableMetadata> tableMetadatas = transformEntityToTableMetadata(mocksMetadata);
 
-        Map<String, Set<String>> dynamicDtd = createDtdFromMetadatas(mocksMetadata);
+        Map<String, Set<String>> dynamicDtd = inferDtdFromTableMetadatas(tableMetadatas);
 
-        String filename = createDbUnitFile(mocksMetadata, dynamicDtd);
+        String filename = createDbUnitFile(tableMetadatas, dynamicDtd);
 
         URL url = this.getClass().getResource("/dbunit/EmptyDatabase.xml");
-        dbUnitFacade.cleanDatabase(new File(url.getPath()));
+        
+        dbUnitFacade.setUpDatabase(new File(url.getPath()), new File(filename));
+    }
 
-        dbUnitFacade.setUpDatabase(new File(filename));
+    private List<TableMetadata> transformEntityToTableMetadata(List<EntityMetadata> mocksMetadata) {
+        List<TableMetadata> transformList = new ArrayList<TableMetadata>();
+        for (EntityMetadata entity : mocksMetadata) {
+            transformList.add(new DBUnitTableMetadata(entity));
+        }
+        return transformList;
     }
 
     private List<EntityMetadata> sortMocksMetadata(List<EntityMetadata> mocksMetadatas) {
@@ -80,23 +82,39 @@ public class DBUnitMockPersister extends DBMockPersisterBase {
         return tableOrder;
     }
 
-    private Map<String, Set<String>> createDtdFromMetadatas(List<EntityMetadata> mocksMetadata) {
+//    private Map<String, Set<String>> createDtdFromMetadatas(List<EntityMetadata> mocksMetadata) {
+//        Map<String, Set<String>> dtdMap = new HashMap<String, Set<String>>();
+//        for (EntityMetadata metadata : mocksMetadata) {
+//            String tableName = metadata.getTableName();
+//            if (tableName != null) {
+//                Set<String> attributes = dtdMap.get(tableName);
+//                if (attributes == null) {
+//                    attributes = new HashSet<String>();
+//                }
+//                attributes.addAll(metadata.getAllAttributesAndRelations());
+//                dtdMap.put(tableName, attributes);
+//            }
+//        }
+//        return dtdMap;
+//    }
+    
+    private Map<String, Set<String>> inferDtdFromTableMetadatas(List<TableMetadata> tableMetadata) {
         Map<String, Set<String>> dtdMap = new HashMap<String, Set<String>>();
-        for (EntityMetadata metadata : mocksMetadata) {
+        for (TableMetadata metadata : tableMetadata) {
             String tableName = metadata.getTableName();
             if (tableName != null) {
                 Set<String> attributes = dtdMap.get(tableName);
                 if (attributes == null) {
                     attributes = new HashSet<String>();
                 }
-                attributes.addAll(metadata.getAllAttributesAndRelations());
+                attributes.addAll(metadata.getColumnNames());
                 dtdMap.put(tableName, attributes);
             }
         }
         return dtdMap;
     }
 
-    private String createDbUnitFile(List<EntityMetadata> entitiesMetadata, Map<String, Set<String>> dtdMap) {
+    private String createDbUnitFile(List<TableMetadata> metadatas, Map<String, Set<String>> dtdMap) {
         BufferedWriter writer = null;
         String filename = null;
         try {
@@ -105,8 +123,8 @@ public class DBUnitMockPersister extends DBMockPersisterBase {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
             writer.write("<?xml version='1.0' encoding='UTF-8'?>\n");
             writer.write("<dataset>\n");
-            for (EntityMetadata metadata : entitiesMetadata) {
-                writer.write(metadata.getXmlRepresentation(dtdMap.get(metadata.getTableName())));
+            for (TableMetadata metadata : metadatas) {
+                writer.write(getXmlRepresentation(metadata,dtdMap.get(metadata.getTableName())));
             }
             writer.write("</dataset>");
         } catch (Exception e) {
@@ -122,55 +140,21 @@ public class DBUnitMockPersister extends DBMockPersisterBase {
         }
         return filename;
     }
-
-    // private String createDbUnitDataSet(List<EntityMetadata> entitiesMetadata, Map<String, Set<String>> dtdMap) {
-    // Map<String, ITable> tableMetadatas = new HashMap<String, ITableMetaData>();
-    //
-    // List<ITable> tables = new ArrayList<ITable>();
-    // for (EntityMetadata entityMetadata : entitiesMetadata) {
-    // Set<String> entityAttributes = dtdMap.get(entityMetadata.getTableName());
-    //
-    // ITableMetaData tableMetadata = tableMetadatas.get(entityMetadata.getTableName());
-    // if (tableMetadata == null) {
-    // tableMetadata = createTableMetadataUsingAttrs(entityMetadata.getTableName(), entityAttributes);
-    // tableMetadatas.put(entityMetadata.getTableName(), tableMetadata);
-    // }
-    //
-    // tables.add(entityMetadata.getDbUnitTable(entityAttributes));
-    // }
-    //
-    // BufferedWriter writer = null;
-    // String filename = null;
-    // try {
-    // File file = File.createTempFile("dbunit-", ".tmp.xml");
-    // filename = file.getAbsolutePath();
-    // writer = new BufferedWriter(new FileWriter(file));
-    // writer.write("<dataset>\n");
-    // for (EntityMetadata metadata : entitiesMetadata) {
-    // writer.write(metadata.getXmlRepresentation(dtdMap.get(metadata.getTableName())));
-    // }
-    // writer.write("</dataset>");
-    // } catch (Exception e) {
-    // throw new RuntimeException("The generated DbUnit file could not be generated ", e);
-    // } finally {
-    // if (writer != null) {
-    // try {
-    // writer.close();
-    // } catch (Exception e) {
-    // // NOTHING
-    // }
-    // }
-    // }
-    // return filename;
-    // }
-    //
-    // private ITableMetaData createTableMetadataUsingAttrs(String tableName, Set<String> attributes) {
-    // Column[] columns = new Column[attributes.size()];
-    // List<String> attrs = new ArrayList<String>(attributes);
-    // for (int i = 0; i < attrs.size(); i++) {
-    // columns[i] = new Column(attrs.get(i), DataType.NVARCHAR);
-    // }
-    // return new DefaultTableMetaData(tableName, columns);
-    // }
-
+    
+    private String getXmlRepresentation(TableMetadata metadata, Set<String> attributes) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<").append(metadata.getTableName().toUpperCase()).append("\n");
+        for (String propName : attributes) {
+            String value = metadata.getColumnValue(propName);
+            buffer.append(propName).append("=");
+            if (value != null) {
+                buffer.append("\"").append(value).append("\"\n");
+            } else {
+                buffer.append("\"[NULL]\"\n");
+            }
+        }
+        buffer.append("/>\n");
+        return buffer.toString();
+    }
+   
 }

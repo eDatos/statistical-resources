@@ -31,7 +31,7 @@ public class EntityMetadata {
         return tableName;
     }
 
-    public Set<String> getAllAttributesAndRelations() {
+    public Set<String> getAllPropertiesAndRelations() {
         return properties.keySet();
     }
 
@@ -57,26 +57,26 @@ public class EntityMetadata {
         this.tableName = tableName;
     }
 
-    public void setColumnValue(String columnName, Object value) {
+    public void setPropertyValue(String propertyName, Object value) {
         if (value != null) {
-            properties.put(columnName, value);
+            properties.put(propertyName, value);
         } else {
-            properties.put(columnName, null);
+            properties.put(propertyName, null);
         }
     }
     
-    public Object getColumnValue(String columnName) {
-        return properties.get(columnName);
+    public Object getPropertyValue(String propertyName) {
+        return properties.get(propertyName);
     }
 
     public void setRelationValue(String relationName, Long id) {
         String dbColumn = relationsDBName.get(relationName);
-        setColumnValue(dbColumn, id);
+        setPropertyValue(dbColumn, id);
     }
 
-    public void addDiscriminatorColumn(String columnName) {
-        discriminatorColumn = columnName;
-        properties.put(columnName, null);
+    public void addDiscriminator(String propertyName) {
+        discriminatorColumn = propertyName;
+        properties.put(propertyName, null);
     }
 
     public void setDiscriminatorColumnValue(String value) {
@@ -92,7 +92,7 @@ public class EntityMetadata {
     }
 
     public void setId(Long id) {
-        setColumnValue("ID", id);
+        setPropertyValue("ID", id);
     }
     
     public void setSingleTable(boolean singleTable) {
@@ -155,8 +155,8 @@ public class EntityMetadata {
         public EntityMetadata generateEntityMetadata(Object joinColumnValue, Object inverseJoinColumnValue) {
             EntityMetadata metadata = new EntityMetadata();
             metadata.setTableName(tableName);
-            metadata.setColumnValue(joinColumnName, joinColumnValue);
-            metadata.setColumnValue(inverseJoinColumnName, inverseJoinColumnValue);
+            metadata.setPropertyValue(joinColumnName, joinColumnValue);
+            metadata.setPropertyValue(inverseJoinColumnName, inverseJoinColumnValue);
             return metadata;
         }
     }

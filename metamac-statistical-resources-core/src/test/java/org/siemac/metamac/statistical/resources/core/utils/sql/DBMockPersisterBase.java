@@ -266,6 +266,10 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
         }
     }
     
+
+    
+   
+    
     private class MapIdenticalKey {
 
         private List<Object>         mocks;

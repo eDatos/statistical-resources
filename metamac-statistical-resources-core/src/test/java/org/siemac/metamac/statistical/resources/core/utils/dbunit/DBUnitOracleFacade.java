@@ -11,9 +11,14 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.sql.DataSource;
+import javax.transaction.xa.XAException;
+
+import oracle.jdbc.driver.T4CXAConnection;
 
 import org.dbunit.DataSourceDatabaseTester;
+import org.dbunit.DefaultOperationListener;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
@@ -23,9 +28,16 @@ import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
+import org.dbunit.operation.TransactionOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 public class DBUnitOracleFacade implements DBUnitFacade {
 
@@ -33,25 +45,46 @@ public class DBUnitOracleFacade implements DBUnitFacade {
 
     DataSourceDatabaseTester    databaseTester = null;
 
-    @Autowired
-    DataSource                  dataSource;
+    private DataSource          dataSource;
+    private TransactionTemplate transactionTemplate;
 
     private static List<String> sequences;
     private static List<String> tableNames;
 
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+        transactionTemplate = new TransactionTemplate(transactionManager);
+    }
+    
     @Override
-    public void setUpDatabase(File xmlDataFile) throws Exception {
+    public void setUpDatabase(final File emptyDatabaseFile, final File xmlDataFile) throws Exception {
+        try {
+           transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+                @Override
+                protected void doInTransactionWithoutResult(TransactionStatus status) {
+                    try {
+                        cleanDatabase(emptyDatabaseFile);
+                        setUpDatabase(xmlDataFile);
+                    } catch (Exception e) {
+                        status.setRollbackOnly();
+                    }
+                }
+            });
+        } finally {
+            DataSourceUtils.getConnection(dataSource).close();
+        }
+    }
+
+    //  CAUTION: the connection must be closed outside
+    private void setUpDatabase(File xmlDataFile) throws Exception {
         // Setup database tester
         if (databaseTester == null) {
-            Connection connection = dataSource.getConnection();
-            try {
-                databaseTester = new OracleDataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
-            } finally {
-                connection.close();
-            }
+            Connection connection = DataSourceUtils.getConnection(dataSource);
+            databaseTester = new OracleDataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
+            databaseTester.setOperationListener(new TransactionalOperationListener());
         }
-        // Setup dbUnit connection
-        IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
             FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
@@ -61,67 +94,47 @@ public class DBUnitOracleFacade implements DBUnitFacade {
             dataSetReplacement.addReplacementObject("[null]", null);
             dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
 
-            /*
-             * ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-             * IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
-             */
-            
-//            IDataSet dataset = new ReplacementDataSet(dataSetReplacement);
-           
-//            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
-            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
 
-            // Sometimes DBUnit doesn't erase properly the contents of database (especially when there are related tables). So, we do it manually.
-            initializeDatabase(dbUnitConnection);
+            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), new ReplacementDataSet(dataSetReplacement));
 
             databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
             databaseTester.setTearDownOperation(DatabaseOperation.NONE);
             databaseTester.setDataSet(dataset);
             databaseTester.onSetup();
         } catch (Exception e) {
-            log.error("Error in dbunit file " + xmlDataFile.getAbsolutePath(),e);
+            log.error("Error in dbunit file " + xmlDataFile.getAbsolutePath(), e);
             throw e;
-        } finally {
-            dbUnitConnection.close();
         }
     }
 
-    @Override
+    // CAUTION: the connection must be closed outside
     public void cleanDatabase(File xmlDataFile) throws Exception {
+        initializeDatabase();
+        
         if (databaseTester == null) {
-            Connection connection = dataSource.getConnection();
-            try {
-                databaseTester = new OracleDataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
-            } finally {
-                connection.close();
-            }
+            Connection connection = DataSourceUtils.getConnection(dataSource);
+            databaseTester = new OracleDataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
+            databaseTester.setOperationListener(new TransactionalOperationListener());
         }
-        // Setup dbUnit connection
-        IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
-        try {
-            // Create dataset
-//            IDataSet dataSetReplacement = (new FlatXmlDataSetBuilder()).build(xmlDataFile);
-//            ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
-//            IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
-            
-            IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(),(new FlatXmlDataSetBuilder()).build(xmlDataFile));
 
+        IDataSet dataset = new FilteredDataSet(getTableNamesInsertOrder(), (new FlatXmlDataSetBuilder()).build(xmlDataFile));
+        try {
             databaseTester.setSetUpOperation(DatabaseOperation.DELETE_ALL);
             databaseTester.setTearDownOperation(DatabaseOperation.NONE);
             databaseTester.setDataSet(dataset);
             databaseTester.onSetup();
-        } finally {
-            dbUnitConnection.close();
+        } catch (Exception e) {
+            log.error("Error in dbunit file " + xmlDataFile.getAbsolutePath(), e);
+            throw e;
         }
     }
 
-    private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
+    private void initializeDatabase() throws Exception {
         // Restart sequences
         List<String> sequences = getSequencesToRestart();
         if (sequences != null) {
             for (String sequence : sequences) {
-                restartSequence(dbUnitConnection, sequence);
+                restartSequence(sequence);
             }
         }
     }
@@ -130,14 +143,14 @@ public class DBUnitOracleFacade implements DBUnitFacade {
      * Start the id sequence from a high value to avoid conflicts with test
      * data. You can define the sequence name with {@link #getSequenceName}.
      */
-    public static void restartSequence(IDatabaseConnection connection, String sequenceName) throws SQLException {
+    public void restartSequence(String sequenceName) throws SQLException {
         if (sequenceName == null) {
             return;
         }
         Connection conn = null;
         java.sql.Statement stmt = null;
         try {
-            conn = connection.getConnection();
+            conn = DataSourceUtils.getConnection(dataSource);
             stmt = conn.createStatement();
             stmt.execute("DROP SEQUENCE " + sequenceName);
             stmt.execute("CREATE SEQUENCE " + sequenceName + " START WITH 10000000");
@@ -192,24 +205,29 @@ public class DBUnitOracleFacade implements DBUnitFacade {
 
         @Override
         public IDatabaseConnection getConnection() throws Exception {
-            IDatabaseConnection connection = super.getConnection();
-
+            IDatabaseConnection connection = new DatabaseConnection(DataSourceUtils.getConnection(dataSource));
+            
             connection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new OracleDataTypeFactory());
-
-            /*
-             * connection.getConfig().setProperty(DatabaseConfig.PROPERTY_PRIMARY_KEY_FILTER, new IColumnFilter() {
-             * Map<String, String> tablePrimaryKeyMap = getTablePrimaryKeys();
-             * @Override
-             * public boolean accept(String tableName, Column column) {
-             * if (tablePrimaryKeyMap != null && tablePrimaryKeyMap.containsKey(tableName)) {
-             * return column.getColumnName().equals(tablePrimaryKeyMap.get(tableName));
-             * } else {
-             * return column.getColumnName().equalsIgnoreCase("id");
-             * }
-             * }
-             * });
-             */
+            connection.getConnection().prepareStatement("SET CONSTRAINTS ALL DEFERRED").execute();
             return connection;
         }
     }
+    
+    // Avoid to close connection at the end of the operation, this makes sense because we're going to execute operations
+    // inside transactions.
+    private class TransactionalOperationListener extends DefaultOperationListener {
+        
+        @Override
+        public void operationSetUpFinished(IDatabaseConnection connection) {
+            // LEAVE CONNECTION OPEN
+        }
+
+        @Override
+        public void operationTearDownFinished(IDatabaseConnection connection) {
+            // LEAVE CONNECTION OPEN
+        }
+        
+    }
+    
+  
 }
