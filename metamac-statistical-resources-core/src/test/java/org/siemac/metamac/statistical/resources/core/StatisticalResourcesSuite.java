@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.siemac.metamac.core.common.ent.repositoryimpl.InternationalStringRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
@@ -33,6 +34,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
 @RunWith(Suite.class)
 @Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,
                      StatisticalResourcesOptimisticLockingTest.class,
+                     InternationalStringRepositoryTest.class,
                      SiemacMetadataStatisticalResourceRepositoryTest.class,
                      IdentifiableStatisticalResourceRepositoryTest.class,
                      QueryVersionRepositoryTest.class, 

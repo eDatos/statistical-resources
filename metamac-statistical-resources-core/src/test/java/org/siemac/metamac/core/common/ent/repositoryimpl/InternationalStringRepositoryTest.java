@@ -1,24 +1,32 @@
 package org.siemac.metamac.core.common.ent.repositoryimpl;
 
-import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
-import static org.junit.Assert.fail;
-import org.junit.Test;
+import java.util.Arrays;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.ent.domain.InternationalStringRepository;
+import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
-public class InternationalStringRepositoryTest extends AbstractDbUnitJpaTests
-    implements InternationalStringRepositoryTestBase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@Transactional
+public class InternationalStringRepositoryTest extends StatisticalResourcesBaseTest implements InternationalStringRepositoryTestBase {
+    
     @Autowired
     protected InternationalStringRepository internationalStringRepository;
 
     @Override
-    @Test
+    @Test(expected=UnsupportedOperationException.class)
     public void testDeleteInternationalStringsEfficiently() throws Exception {
-        // TODO Auto-generated method stub
-        fail("testDeleteInternationalStringsEfficiently not implemented");
+        internationalStringRepository.deleteInternationalStringsEfficiently(Arrays.asList(1L));
     }
 }
