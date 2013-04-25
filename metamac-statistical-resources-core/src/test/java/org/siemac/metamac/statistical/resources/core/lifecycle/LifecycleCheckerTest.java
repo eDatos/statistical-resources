@@ -252,4 +252,47 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
             assertEquals(Boolean.FALSE, result);
         }
     }
+
+    @Test
+    public void testCheckOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny() throws Exception {
+        {
+            LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
+            resource.getVersionRationaleTypes().clear();
+            Boolean result = lifecycleService.checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource);
+            assertEquals(Boolean.TRUE, result);
+        }
+        {
+            LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
+            resource.getVersionRationaleTypes().clear();
+            resource.getVersionRationaleTypes().add(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
+            resource.getVersionRationaleTypes().add(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_CATEGORIES));
+            Boolean result = lifecycleService.checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource);
+            assertEquals(Boolean.FALSE, result);
+        }
+        {
+            for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType : StatisticalResourceVersionRationaleTypeEnum.values()) {
+                LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
+                resource.getVersionRationaleTypes().clear();
+                resource.getVersionRationaleTypes().add(new VersionRationaleType(versionRationaleType));
+                Boolean result = lifecycleService.checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource);
+                if (StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(versionRationaleType)) {
+                    assertEquals(Boolean.TRUE, result);
+                } else {
+                    assertEquals(Boolean.FALSE, result);
+                }
+            }
+        }
+        {
+            for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType01 : StatisticalResourceVersionRationaleTypeEnum.values()) {
+                for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType02 : StatisticalResourceVersionRationaleTypeEnum.values()) {
+                    LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
+                    resource.getVersionRationaleTypes().clear();
+                    resource.getVersionRationaleTypes().add(new VersionRationaleType(versionRationaleType01));
+                    resource.getVersionRationaleTypes().add(new VersionRationaleType(versionRationaleType02));
+                    Boolean result = lifecycleService.checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource);
+                    assertEquals(Boolean.FALSE, result);
+                }
+            }
+        }
+    }
 }
