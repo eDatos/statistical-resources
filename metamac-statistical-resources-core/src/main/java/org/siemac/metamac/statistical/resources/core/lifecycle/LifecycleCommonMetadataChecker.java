@@ -70,6 +70,6 @@ public class LifecycleCommonMetadataChecker {
     }
     
     public void checkPublicationVersionCommonMetadata(PublicationVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
-        //FIXME: IMPLEMENT!!
+        checkMetadataRequired(resource.getFormatExtentResources(), addParameter(metadataName, ServiceExceptionSingleParameters.FORMAT_EXTENT_RESOURCES), exceptionItems);
     }
 }
