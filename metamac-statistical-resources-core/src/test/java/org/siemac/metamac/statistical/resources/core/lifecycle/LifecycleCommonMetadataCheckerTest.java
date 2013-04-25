@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
 
 public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBaseTest {
@@ -179,6 +180,21 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        throw new MetamacException(exceptionItems);
+    }
+    
+    @Test
+    public void testPublicationVersionCommonMetadata() throws Exception {
+        PublicationVersion resource = new PublicationVersion();
+        
+        String baseMetadata = ServiceExceptionSingleParameters.PUBLICATION_VERSION;
+        expectedMetamacException(new MetamacException ( 
+                Arrays.asList(
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__FORMAT_EXTENT_RESOURCES)
+                        )));
+        
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 }
