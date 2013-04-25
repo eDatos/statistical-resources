@@ -54,11 +54,8 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static final String  QUERY_VERSION_14_VALIDATION_REJECTED_NAME       = "QUERY_VERSION_14_VALIDATION_REJECTED";
     private static QueryVersion QUERY_VERSION_14_VALIDATION_REJECTED;
 
-    public static final String  QUERY_VERSION_17_PUBLICATION_FAILED_NAME        = "QUERY_VERSION_17_PUBLICATION_FAILED";
-    private static QueryVersion QUERY_VERSION_17_PUBLICATION_FAILED;
-
-    public static final String  QUERY_VERSION_18_PUBLISHED_NAME                 = "QUERY_VERSION_18_PUBLISHED";
-    private static QueryVersion QUERY_VERSION_18_PUBLISHED;
+    public static final String  QUERY_VERSION_15_PUBLISHED_NAME                 = "QUERY_VERSION_15_PUBLISHED";
+    private static QueryVersion QUERY_VERSION_15_PUBLISHED;
 
     public static final String  QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME = "QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01";
     private static QueryVersion QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01;
@@ -177,21 +174,13 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_14_VALIDATION_REJECTED;
     }
 
-    protected static QueryVersion getQueryVersion17PublicationFailed() {
-        if (QUERY_VERSION_17_PUBLICATION_FAILED == null) {
-            QUERY_VERSION_17_PUBLICATION_FAILED = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_17_PUBLICATION_FAILED.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_FAILED);
-        }
-        return QUERY_VERSION_17_PUBLICATION_FAILED;
-    }
-
-    protected static QueryVersion getQueryVersion18Published() {
-        if (QUERY_VERSION_18_PUBLISHED == null) {
-            QUERY_VERSION_18_PUBLISHED = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_18_PUBLISHED.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+    protected static QueryVersion getQueryVersion15Published() {
+        if (QUERY_VERSION_15_PUBLISHED == null) {
+            QUERY_VERSION_15_PUBLISHED = createQueryWithGeneratedDatasetVersion();
+            QUERY_VERSION_15_PUBLISHED.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
         }
-        return QUERY_VERSION_18_PUBLISHED;
+        return QUERY_VERSION_15_PUBLISHED;
     }
 
     public static QueryVersion getQueryVersion19WithCodeAndUrnQuery01() {

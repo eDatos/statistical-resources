@@ -196,12 +196,8 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         lifeCycleStatisticalResourceDto.setDiffusionValidationUser(mockString(10));
         lifeCycleStatisticalResourceDto.setRejectValidationDate(new DateTime().toDate());
         lifeCycleStatisticalResourceDto.setRejectValidationUser(mockString(10));
-        lifeCycleStatisticalResourceDto.setInternalPublicationDate(new DateTime().toDate());
-        lifeCycleStatisticalResourceDto.setInternalPublicationUser(mockString(10));
-        lifeCycleStatisticalResourceDto.setExternalPublicationDate(new DateTime().toDate());
-        lifeCycleStatisticalResourceDto.setExternalPublicationUser(mockString(10));
-        lifeCycleStatisticalResourceDto.setExternalPublicationFailedDate(new DateTime().toDate());
-        lifeCycleStatisticalResourceDto.setExternalPublicationFailed(true);
+        lifeCycleStatisticalResourceDto.setPublicationDate(new DateTime().toDate());
+        lifeCycleStatisticalResourceDto.setPublicationUser(mockString(10));
 
         // Cant mock replacedByVersion and replacesVersion, we don't know the type of resource
 

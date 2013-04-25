@@ -20,29 +20,28 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LifecycleChecker {
-    
+
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    
     public void checkSendToProductionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DRAFT, StatisticalResourceProcStatusEnum.VALIDATION_REJECTED);
-        
+
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
-    
+
         checkLifeCycleMetadataSendToProductionValidation(resource, metadataName, exceptionItems);
     }
-    
+
     public void applySendToProductionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
         resource.setProductionValidationDate(new DateTime());
         resource.setProductionValidationUser(ctx.getUserId());
         resource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
     }
-    
+
     private void checkLifeCycleMetadataSendToProductionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         if (isFirstVersion(resource)) {
             if (!checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource)) {
@@ -50,23 +49,22 @@ public class LifecycleChecker {
             }
         }
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    
     public void checkSendToDiffusionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
-    
+
     public void applySendToDiffusionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
         resource.setDiffusionValidationDate(new DateTime());
         resource.setDiffusionValidationUser(ctx.getUserId());
         resource.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
@@ -83,14 +81,28 @@ public class LifecycleChecker {
     }
 
     // ------------------------------------------------------------------------------------------------------
+    // PUBLISHED
+    // ------------------------------------------------------------------------------------------------------
+
+    public void checkSendToPublished(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
+    }
+
+    public void applySendToPublishedActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
+        resource.setPublicationDate(new DateTime());
+        resource.setPublicationUser(ctx.getUserId());
+        resource.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+    }
+
+    // ------------------------------------------------------------------------------------------------------
     // PROTECTED COMMON METHODS
     // ------------------------------------------------------------------------------------------------------
 
-    
     protected boolean isFirstVersion(LifeCycleStatisticalResource resource) {
-        return VersionUtil.isInitialVersion(resource.getVersionLogic()); 
+        return VersionUtil.isInitialVersion(resource.getVersionLogic());
     }
-    
+
     protected boolean checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(LifeCycleStatisticalResource resource) {
         if (resource.getVersionRationaleTypes().size() == 1) {
             return StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(resource.getVersionRationaleTypes().get(0).getValue());
@@ -99,9 +111,9 @@ public class LifecycleChecker {
         }
         return false;
     }
-    
+
     /*
-     * This is a metadata core that should always be checked, this validations are always needed independently of the action  
+     * This is a metadata core that should always be checked, this validations are always needed independently of the action
      */
     protected void checkLifeCycleMetadataAllActions(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(resource, metadataName, exceptionItems);

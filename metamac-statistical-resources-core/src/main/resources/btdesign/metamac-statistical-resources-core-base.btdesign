@@ -120,14 +120,8 @@ Application BaseStatisticalResources {
 			String diffusionValidationUser nullable;
 			DateTimeTZ rejectValidationDate nullable;
 			String rejectValidationUser nullable;
-			DateTimeTZ internalPublicationDate nullable;
-			String internalPublicationUser nullable;
-			DateTimeTZ externalPublicationDate nullable;
-			String externalPublicationUser nullable;
-			
-			Boolean externalPublicationFailed nullable;
-			DateTimeTZ externalPublicationFailedDate nullable;
-			
+			DateTimeTZ publicationDate nullable;
+			String publicationUser nullable;
 				
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;

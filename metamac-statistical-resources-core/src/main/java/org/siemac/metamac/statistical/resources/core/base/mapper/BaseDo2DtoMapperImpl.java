@@ -112,11 +112,8 @@ public class BaseDo2DtoMapperImpl implements BaseDo2DtoMapper {
         target.setDiffusionValidationUser(source.getDiffusionValidationUser());
         target.setRejectValidationDate(dateDoToDto(source.getRejectValidationDate()));
         target.setRejectValidationUser(source.getRejectValidationUser());
-        target.setInternalPublicationDate(dateDoToDto(source.getInternalPublicationDate()));
-        target.setInternalPublicationUser(source.getInternalPublicationUser());
-        target.setExternalPublicationDate(dateDoToDto(source.getExternalPublicationDate()));
-        target.setExternalPublicationUser(source.getExternalPublicationUser());
-        target.setExternalPublicationFailedDate(dateDoToDto(source.getExternalPublicationFailedDate()));
+        target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
+        target.setPublicationUser(source.getPublicationUser());
 
         target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));

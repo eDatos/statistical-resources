@@ -63,11 +63,8 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String        PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME                 = "PUBLICATION_VERSION_15_VALIDATION_REJECTED";
     private static PublicationVersion PUBLICATION_VERSION_15_VALIDATION_REJECTED;
 
-    public static final String        PUBLICATION_VERSION_16_PUBLICATION_FAILED_NAME                  = "PUBLICATION_VERSION_16_PUBLICATION_FAILED";
-    private static PublicationVersion PUBLICATION_VERSION_16_PUBLICATION_FAILED;
-
-    public static final String        PUBLICATION_VERSION_17_PUBLISHED_NAME                           = "PUBLICATION_VERSION_17_PUBLISHED";
-    private static PublicationVersion PUBLICATION_VERSION_17_PUBLISHED;
+    public static final String        PUBLICATION_VERSION_16_PUBLISHED_NAME                           = "PUBLICATION_VERSION_16_PUBLISHED";
+    private static PublicationVersion PUBLICATION_VERSION_16_PUBLISHED;
 
     private static final String       PUBLICATION_VERSION_03_VERSION                                  = "001.000";
     private static final String       PUBLICATION_VERSION_04_VERSION                                  = "002.000";
@@ -200,20 +197,12 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_15_VALIDATION_REJECTED;
     }
 
-    public static PublicationVersion getPublicationVersion16PublicationFailed() {
-        if (PUBLICATION_VERSION_16_PUBLICATION_FAILED == null) {
-            PUBLICATION_VERSION_16_PUBLICATION_FAILED = createPublicationVersion();
-            PUBLICATION_VERSION_16_PUBLICATION_FAILED.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLICATION_FAILED);
+    public static PublicationVersion getPublicationVersion16Published() {
+        if (PUBLICATION_VERSION_16_PUBLISHED == null) {
+            PUBLICATION_VERSION_16_PUBLISHED = createPublicationVersion();
+            PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
         }
-        return PUBLICATION_VERSION_16_PUBLICATION_FAILED;
-    }
-
-    public static PublicationVersion getPublicationVersion17Published() {
-        if (PUBLICATION_VERSION_17_PUBLISHED == null) {
-            PUBLICATION_VERSION_17_PUBLISHED = createPublicationVersion();
-            PUBLICATION_VERSION_17_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
-        }
-        return PUBLICATION_VERSION_17_PUBLISHED;
+        return PUBLICATION_VERSION_16_PUBLISHED;
     }
 
     private static RelatedResource createRelatedResourcePublicationVersion(PublicationVersion publicationVersion) {

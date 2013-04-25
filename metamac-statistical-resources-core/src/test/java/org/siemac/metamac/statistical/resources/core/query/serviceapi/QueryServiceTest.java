@@ -1,8 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 
 import static org.junit.Assert.assertEquals;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
@@ -19,8 +19,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_14_VALIDATION_REJECTED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_17_PUBLICATION_FAILED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_18_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME;
 
@@ -54,7 +53,6 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,7 +73,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     private DatasetService                          datasetService;
 
     @Autowired
-    private QueryVersionMockFactory                        queryMockFactory;
+    private QueryVersionMockFactory                 queryMockFactory;
 
     @Autowired
     private DatasetVersionMockFactory               datasetVersionMockFactory;
@@ -96,7 +94,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
     public void testRetrieveQueryVersionByUrn() throws MetamacException {
-        QueryVersion actual = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), (queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)).getLifeCycleStatisticalResource().getUrn());
+        QueryVersion actual = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), (queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME))
+                .getLifeCycleStatisticalResource().getUrn());
         assertEqualsQueryVersion(queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME), actual);
     }
 
@@ -105,7 +104,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionSingleParameters.URN));
         queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), EMPTY);
     }
-    
 
     @Override
     @Test
@@ -131,7 +129,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         // Find code
         {
             String code = (queryMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME)).getLifeCycleStatisticalResource().getCode();
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().code()).eq(code).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().code()).eq(code)
+                    .build();
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<QueryVersion> queriesPagedResult = queryService.findQueryVersionsByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
 
@@ -159,8 +158,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         // Find title
         {
             String titleQueryVersion = (queryMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME)).getLifeCycleStatisticalResource().getTitle().getLocalisedLabel("es");
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label())
-                    .eq(titleQueryVersion).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
+                    .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label()).eq(titleQueryVersion).build();
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
             PagedResult<QueryVersion> queriesPagedResult = queryService.findQueryVersionsByCondition(getServiceContextAdministrador(), conditions, pagingParameter);
 
@@ -193,7 +192,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME})
     public void testCreateQueryVersionActive() throws Exception {
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), true);
+        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), true);
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected);
         assertEqualsQueryVersion(expected, actual);
         assertEquals(QueryStatusEnum.ACTIVE, actual.getStatus());
@@ -239,7 +239,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected);
         assertEqualsQueryVersion(expected, actual);
     }
-    
 
     @Test
     public void testCreateQueryVersionErrorDatasetVersionRequired() throws Exception {
@@ -248,12 +247,12 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(null, true);
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query);
     }
-    
+
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQueryVersionErrorSelectionRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
-        
+
         QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithSelectionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query);
     }
@@ -271,7 +270,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQueryVersionWithSelectionNull() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
-        
+
         QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithSelectionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected);
     }
@@ -326,7 +325,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         query.getLifeCycleStatisticalResource().setCode(duplicatedCode);
         queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
     }
-    
+
     @Test
     @MetamacMock(QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME)
     public void testUpdateQueryVersionErrorLatestDataNumberNull() throws Exception {
@@ -378,8 +377,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testUpdateQueryVersionDraftProcStatus() throws Exception {
         QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME);
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
@@ -387,10 +386,10 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
         assertEqualsQueryVersion(query, updatedQueryVersion);
     }
-    
+
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testUpdateQueryVersionProductionValidationProcStatus() throws Exception {
         QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME);
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
@@ -398,10 +397,10 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
         assertEqualsQueryVersion(query, updatedQueryVersion);
     }
-    
+
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testUpdateQueryVersionDiffusionValidationProcStatus() throws Exception {
         QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME);
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
@@ -409,10 +408,10 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
         assertEqualsQueryVersion(query, updatedQueryVersion);
     }
-    
+
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testUpdateQueryValidationRejectedProcStatus() throws Exception {
         QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_14_VALIDATION_REJECTED_NAME);
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
@@ -420,23 +419,12 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
         assertEqualsQueryVersion(query, updatedQueryVersion);
     }
-    
-    @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
-    public void testUpdateQueryVersionPublicationFailedProcStatus() throws Exception {
-        QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_17_PUBLICATION_FAILED_NAME);
-        query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
 
-        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
-        assertEqualsQueryVersion(query, updatedQueryVersion);
-    }
-    
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testUpdateQueryVersionPublishedProcStatus() throws Exception {
-        QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_18_PUBLISHED_NAME);
+        QueryVersion query = queryMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
 
         QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
@@ -566,8 +554,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusProductionValidation() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
@@ -576,8 +564,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusDifussionValidation() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
@@ -586,8 +574,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-        QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusValidationRejected() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
@@ -596,20 +584,10 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
-    public void testDeleteQueryVersionErrorInvalidProcStatusPublicationFailed() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_VERSION_17_PUBLICATION_FAILED_NAME).getLifeCycleStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
-
-        queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
-    }
-
-    @Test
-    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME, QUERY_VERSION_17_PUBLICATION_FAILED_NAME,
-            QUERY_VERSION_18_PUBLISHED_NAME})
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusPublished() throws Exception {
-        String urn = queryMockFactory.retrieveMock(QUERY_VERSION_18_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn();
+        String urn = queryMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);

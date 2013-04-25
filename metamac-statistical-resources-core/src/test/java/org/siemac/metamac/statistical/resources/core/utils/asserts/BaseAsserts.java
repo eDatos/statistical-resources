@@ -107,12 +107,8 @@ public class BaseAsserts extends MetamacAsserts {
         assertNull(next.getDiffusionValidationUser());
         assertNull(next.getRejectValidationDate());
         assertNull(next.getRejectValidationUser());
-        assertNull(next.getInternalPublicationDate());
-        assertNull(next.getInternalPublicationUser());
-        assertNull(next.getExternalPublicationDate());
-        assertNull(next.getExternalPublicationUser());
-        assertNull(next.getExternalPublicationFailed());
-        assertNull(next.getExternalPublicationFailedDate());
+        assertNull(next.getPublicationDate());
+        assertNull(next.getPublicationUser());
         assertNull(next.getReplacesVersion());
         assertNull(next.getIsReplacedByVersion());
     }
@@ -204,13 +200,8 @@ public class BaseAsserts extends MetamacAsserts {
         assertEquals(expected.getDiffusionValidationUser(), actual.getDiffusionValidationUser());
         assertEquals(expected.getRejectValidationDate(), actual.getRejectValidationDate());
         assertEquals(expected.getRejectValidationUser(), actual.getRejectValidationUser());
-        assertEquals(expected.getInternalPublicationDate(), actual.getInternalPublicationDate());
-        assertEquals(expected.getInternalPublicationUser(), actual.getInternalPublicationUser());
-        assertEquals(expected.getExternalPublicationDate(), actual.getExternalPublicationDate());
-        assertEquals(expected.getExternalPublicationUser(), actual.getExternalPublicationUser());
-
-        assertEquals(expected.getExternalPublicationFailed(), actual.getExternalPublicationFailed());
-        assertEquals(expected.getExternalPublicationFailedDate(), actual.getExternalPublicationFailedDate());
+        assertEquals(expected.getPublicationDate(), actual.getPublicationDate());
+        assertEquals(expected.getPublicationUser(), actual.getPublicationUser());
 
         assertEqualsRelatedResource(expected.getIsReplacedByVersion(), actual.getIsReplacedByVersion());
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
@@ -332,13 +323,8 @@ public class BaseAsserts extends MetamacAsserts {
                 assertEquals(entity.getDiffusionValidationUser(), dto.getDiffusionValidationUser());
                 assertEqualsDate(entity.getRejectValidationDate(), dto.getRejectValidationDate());
                 assertEquals(entity.getRejectValidationUser(), dto.getRejectValidationUser());
-                assertEqualsDate(entity.getInternalPublicationDate(), dto.getInternalPublicationDate());
-                assertEquals(entity.getInternalPublicationUser(), dto.getInternalPublicationUser());
-                assertEqualsDate(entity.getExternalPublicationDate(), dto.getExternalPublicationDate());
-                assertEquals(entity.getExternalPublicationUser(), dto.getExternalPublicationUser());
-
-                assertEquals(entity.getExternalPublicationFailed(), dto.getExternalPublicationFailed());
-                assertEqualsDate(entity.getExternalPublicationFailedDate(), dto.getExternalPublicationFailedDate());
+                assertEqualsDate(entity.getPublicationDate(), dto.getPublicationDate());
+                assertEquals(entity.getPublicationUser(), dto.getPublicationUser());
 
                 assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
                 assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
