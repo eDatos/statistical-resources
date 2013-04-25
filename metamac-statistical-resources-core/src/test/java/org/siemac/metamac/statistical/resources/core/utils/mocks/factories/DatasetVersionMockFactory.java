@@ -77,15 +77,15 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME               = "DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
     private static DatasetVersion DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
 
-    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME                    = "DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY";
+    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME                      = "DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY";
     private static DatasetVersion DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY;
 
     public static final String    DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME = "DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
     private static DatasetVersion DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
 
-    private static final String   DATASET_VERSION_03_VERSION                                                   = "01.000";
-    private static final String   DATASET_VERSION_04_VERSION                                                   = "02.000";
-    private static final String   DATASET_VERSION_05_VERSION                                                   = "01.000";
+    private static final String   DATASET_VERSION_03_VERSION                                                   = "001.000";
+    private static final String   DATASET_VERSION_04_VERSION                                                   = "002.000";
+    private static final String   DATASET_VERSION_05_VERSION                                                   = "001.000";
 
     protected static DatasetVersion getDatasetVersion01Basic() {
         if (DATASET_VERSION_01_BASIC == null) {
@@ -107,9 +107,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_03_VERSION);
             datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
 
-            //not last version
+            // not last version
             datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-            
+
             // Relations
             DATASET_VERSION_03_FOR_DATASET_03 = datasetVersion;
             DATASET_VERSION_03_FOR_DATASET_03.setDataset(DatasetMockFactory.getDataset03With2DatasetVersions());
@@ -122,7 +122,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         if (DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION == null) {
             DatasetVersion datasetVersion = createDatasetVersion(2);
 
-            // Version 02.000
+            // Version 002.000
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_04_VERSION);
 
             // Is last version
@@ -167,9 +167,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
             datasetVersion.setBibliographicCitation(StatisticalResourcesDoMocks.mockInternationalString("es", "biblio"));
 
-            // Version 01.000
+            // Version 001.000
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(DATASET_VERSION_05_VERSION);
-
 
             datasetVersion.getSiemacMetadataStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
             datasetVersion.getSiemacMetadataStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
@@ -332,10 +331,10 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static void prepareToLifecycleCommon(DatasetVersion datasetVersion) {
         ExternalItem geoGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
         datasetVersion.addGeographicGranularity(geoGranularity);
-        
+
         ExternalItem timeGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
         datasetVersion.addTemporalGranularity(timeGranularity);
-        
+
         ExternalItem dsd = StatisticalResourcesPersistedDoMocks.mockDsdExternalItem();
         datasetVersion.setRelatedDsd(dsd);
 

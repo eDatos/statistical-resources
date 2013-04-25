@@ -4,12 +4,12 @@ import static org.siemac.metamac.statistical.resources.core.base.error.utils.Ser
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
@@ -88,7 +88,7 @@ public class LifecycleChecker {
 
     
     protected boolean isFirstVersion(LifeCycleStatisticalResource resource) {
-        return !StringUtils.isEmpty(resource.getVersionLogic()) && "01.000".equals(resource.getVersionLogic());
+        return VersionUtil.isInitialVersion(resource.getVersionLogic()); 
     }
     
     protected boolean checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(LifeCycleStatisticalResource resource) {

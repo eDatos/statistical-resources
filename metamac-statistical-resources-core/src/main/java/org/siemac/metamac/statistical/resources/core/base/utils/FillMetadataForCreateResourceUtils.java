@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.core.base.utils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -33,7 +33,7 @@ public class FillMetadataForCreateResourceUtils {
     private static void fillMetadataForCreateVersionableResource(VersionableStatisticalResource resource) {
         fillMetadataForCreateIdentifiableResource(resource);
 
-        resource.setVersionLogic("01.000");
+        resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
         resource.getVersionRationaleTypes().clear();
         resource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
     }

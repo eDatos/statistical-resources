@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -207,7 +208,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     @Override
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         resource.setNextVersionDate(new DateTime());
-        resource.setVersionLogic("01.000");
+        resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
     }
     
     @Override
@@ -277,7 +278,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     }
     
     private static void prepareToLifecycleCommonLifeCycleResource(LifeCycleStatisticalResource lifeCycleResource) {
-        lifeCycleResource.setVersionLogic("02.000");
+        lifeCycleResource.setVersionLogic("002.000");
         lifeCycleResource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MINOR_DATA_UPDATE));
         lifeCycleResource.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
         
