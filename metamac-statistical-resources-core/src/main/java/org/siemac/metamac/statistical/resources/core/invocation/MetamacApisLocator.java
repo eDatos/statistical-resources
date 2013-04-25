@@ -7,7 +7,6 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.srm.rest.internal.v1_0.service.SrmRestInternalFacadeV10;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
-import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
