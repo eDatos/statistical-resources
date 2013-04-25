@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 
 
 public class FillMetadataForVersioningResourceUtils {
@@ -21,7 +21,7 @@ public class FillMetadataForVersioningResourceUtils {
     private static void fillMetadataForVersioningLifecycleResource(ServiceContext ctx, LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next, VersionTypeEnum versionType) {
         fillMetadataForVersioningVersionableResource(ctx, previous, next, versionType);
         
-        next.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        next.setProcStatus(ProcStatusEnum.DRAFT);
         next.setCreationDate(new DateTime());
         next.setCreationUser(ctx.getUserId());
     }

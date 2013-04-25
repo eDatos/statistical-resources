@@ -14,7 +14,7 @@ Application StatisticalResourcesDto {
 		}
 		
 		DataTransferObject VersionRationaleTypeDto extends @IdentityDto {
-			- @StatisticalResourceVersionRationaleTypeEnum value required;
+			- @VersionRationaleTypeEnum value required;
 		}
 		
 		
@@ -37,7 +37,7 @@ Application StatisticalResourcesDto {
 		DataTransferObject VersionableStatisticalResourceDto extends @NameableStatisticalResourceDto {
 			String versionLogic;
 			JAVADATE nextVersionDate;
-			- @StatisticalResourceNextVersionEnum nextVersion
+			- @NextVersionTypeEnum nextVersion
 			- List<@VersionRationaleTypeDto> versionRationaleTypes;
 			- @InternationalStringDto versionRationale;
 			JAVADATE validFrom;
@@ -45,7 +45,7 @@ Application StatisticalResourcesDto {
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
-			- @StatisticalResourceProcStatusEnum procStatus;
+			- @ProcStatusEnum procStatus;
 			
 			JAVADATE creationDate;
 			String creationUser;

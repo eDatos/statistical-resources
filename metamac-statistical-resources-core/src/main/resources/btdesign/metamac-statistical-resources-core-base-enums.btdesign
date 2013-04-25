@@ -6,7 +6,7 @@ Application StatisticalResourcesEnums {
 		basePackage=org.siemac.metamac.statistical.resources.core.enume
     	
     	"ProcStatus Enum is used to specify the valid states of the entities"
-    	enum StatisticalResourceProcStatusEnum {
+    	enum ProcStatusEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
@@ -28,7 +28,7 @@ Application StatisticalResourcesEnums {
     	}
     	
     	"Version Rationale Type Enum is used to specify all types of version rationale"
-    	enum StatisticalResourceVersionRationaleTypeEnum {
+    	enum VersionRationaleTypeEnum {
     		MAJOR_NEW_RESOURCE,
     		MAJOR_ESTIMATORS,
     		MAJOR_CATEGORIES,
@@ -43,7 +43,7 @@ Application StatisticalResourcesEnums {
     	
     	
     	"Next version enum"
-    	enum StatisticalResourceNextVersionEnum {
+    	enum NextVersionTypeEnum {
     		NO_UPDATES,
     		NON_SCHEDULED_UPDATE,
     		SCHEDULED_UPDATE

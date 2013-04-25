@@ -2,10 +2,9 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.springframework.stereotype.Component;
 
@@ -145,7 +144,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion11Draft() {
         if (QUERY_VERSION_11_DRAFT == null) {
             QUERY_VERSION_11_DRAFT = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_11_DRAFT.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+            QUERY_VERSION_11_DRAFT.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
         }
         return QUERY_VERSION_11_DRAFT;
     }
@@ -153,7 +152,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion12ProductionValidation() {
         if (QUERY_VERSION_12_PRODUCTION_VALIDATION == null) {
             QUERY_VERSION_12_PRODUCTION_VALIDATION = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_12_PRODUCTION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+            QUERY_VERSION_12_PRODUCTION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         }
         return QUERY_VERSION_12_PRODUCTION_VALIDATION;
     }
@@ -161,7 +160,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion13DifussionValidation() {
         if (QUERY_VERSION_13_DIFUSSION_VALIDATION == null) {
             QUERY_VERSION_13_DIFUSSION_VALIDATION = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_13_DIFUSSION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+            QUERY_VERSION_13_DIFUSSION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         }
         return QUERY_VERSION_13_DIFUSSION_VALIDATION;
     }
@@ -169,7 +168,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion14ValidationRejected() {
         if (QUERY_VERSION_14_VALIDATION_REJECTED == null) {
             QUERY_VERSION_14_VALIDATION_REJECTED = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_14_VALIDATION_REJECTED.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.VALIDATION_REJECTED);
+            QUERY_VERSION_14_VALIDATION_REJECTED.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
         }
         return QUERY_VERSION_14_VALIDATION_REJECTED;
     }
@@ -177,7 +176,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion15Published() {
         if (QUERY_VERSION_15_PUBLISHED == null) {
             QUERY_VERSION_15_PUBLISHED = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_15_PUBLISHED.getLifeCycleStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+            QUERY_VERSION_15_PUBLISHED.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
         }
         return QUERY_VERSION_15_PUBLISHED;

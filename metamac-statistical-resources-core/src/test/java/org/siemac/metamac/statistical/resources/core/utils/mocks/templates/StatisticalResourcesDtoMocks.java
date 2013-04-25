@@ -31,10 +31,10 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
@@ -210,10 +210,10 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         versionableStatisticalResourceDto.setValidFrom(new DateTime().toDate());
         versionableStatisticalResourceDto.setValidTo(new DateTime().toDate());
 
-        versionableStatisticalResourceDto.addVersionRationaleType(new VersionRationaleTypeDto(StatisticalResourceVersionRationaleTypeEnum.MINOR_OTHER));
+        versionableStatisticalResourceDto.addVersionRationaleType(new VersionRationaleTypeDto(VersionRationaleTypeEnum.MINOR_OTHER));
         versionableStatisticalResourceDto.setVersionRationale(mockInternationalStringDto());
 
-        versionableStatisticalResourceDto.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+        versionableStatisticalResourceDto.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
 
         mockNameableStatisticalResorceDto(versionableStatisticalResourceDto);
     }

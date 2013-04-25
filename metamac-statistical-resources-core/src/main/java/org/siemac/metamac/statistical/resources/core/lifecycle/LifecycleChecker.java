@@ -12,8 +12,8 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToProductionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DRAFT, StatisticalResourceProcStatusEnum.VALIDATION_REJECTED);
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
 
@@ -39,7 +39,7 @@ public class LifecycleChecker {
     public void applySendToProductionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
         resource.setProductionValidationDate(new DateTime());
         resource.setProductionValidationUser(ctx.getUserId());
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        resource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
     }
 
     private void checkLifeCycleMetadataSendToProductionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
@@ -55,14 +55,14 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToDiffusionValidation(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PRODUCTION_VALIDATION);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
 
     public void applySendToDiffusionValidationActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
         resource.setDiffusionValidationDate(new DateTime());
         resource.setDiffusionValidationUser(ctx.getUserId());
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        resource.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -70,14 +70,14 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToValidationRejected(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION, StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
 
     public void applySendToValidationRejectedActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
         resource.setRejectValidationDate(new DateTime());
         resource.setRejectValidationUser(ctx.getUserId());
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.VALIDATION_REJECTED);
+        resource.setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -85,14 +85,14 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToPublished(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DIFFUSION_VALIDATION);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
 
     public void applySendToPublishedActions(ServiceContext ctx, LifeCycleStatisticalResource resource) {
         resource.setPublicationDate(new DateTime());
         resource.setPublicationUser(ctx.getUserId());
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        resource.setProcStatus(ProcStatusEnum.PUBLISHED);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ public class LifecycleChecker {
 
     protected boolean checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(LifeCycleStatisticalResource resource) {
         if (resource.getVersionRationaleTypes().size() == 1) {
-            return StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(resource.getVersionRationaleTypes().get(0).getValue());
+            return VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(resource.getVersionRationaleTypes().get(0).getValue());
         } else if (resource.getVersionRationaleTypes().size() == 0) {
             return true;
         }

@@ -18,8 +18,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -60,13 +60,13 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadataVersionRationaleRequiredIfMinorErrata() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         
-        for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType2Test : StatisticalResourceVersionRationaleTypeEnum.values()) {
+        for (VersionRationaleTypeEnum versionRationaleType2Test : VersionRationaleTypeEnum.values()) {
             LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
             resource.addVersionRationaleType(new VersionRationaleType(versionRationaleType2Test));
             
             
             MetamacException expected = null;
-            if (versionRationaleType2Test.equals(StatisticalResourceVersionRationaleTypeEnum.MINOR_ERRATA)) {
+            if (versionRationaleType2Test.equals(VersionRationaleTypeEnum.MINOR_ERRATA)) {
                 expected = new MetamacException(
                         Arrays.asList(
                                 new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.CODE)),
@@ -102,14 +102,14 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadataNextVersionDateInvalidIfNotScheduledNextVersion() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         
-        for (StatisticalResourceNextVersionEnum nextVersion2Test : StatisticalResourceNextVersionEnum.values()) {
+        for (NextVersionTypeEnum nextVersion2Test : NextVersionTypeEnum.values()) {
             LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
             resource.setNextVersion(nextVersion2Test);
             resource.setNextVersionDate(new DateTime().plusDays(1));
             
             
             MetamacException expected = null;
-            if (!nextVersion2Test.equals(StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE)) {
+            if (!nextVersion2Test.equals(NextVersionTypeEnum.SCHEDULED_UPDATE)) {
                 expected = new MetamacException(
                         Arrays.asList(
                                 new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.CODE)),

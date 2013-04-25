@@ -38,8 +38,8 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 
 public class BaseAsserts extends MetamacAsserts {
 
@@ -94,7 +94,7 @@ public class BaseAsserts extends MetamacAsserts {
 
     private static void assertEqualsVersioningLifecycle(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
         assertEqualsVersioningVersionable(previous, next);
-        assertEquals(StatisticalResourceProcStatusEnum.DRAFT, next.getProcStatus());
+        assertEquals(ProcStatusEnum.DRAFT, next.getProcStatus());
 
         assertNotNull(next.getCreationDate());
         assertFalse(previous.getCreationDate().equals(next.getCreationDate()));
@@ -345,7 +345,7 @@ public class BaseAsserts extends MetamacAsserts {
                 break;
             case DTO2DO:
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());
-                if (StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.equals(entity.getNextVersionDate())) {
+                if (NextVersionTypeEnum.SCHEDULED_UPDATE.equals(entity.getNextVersionDate())) {
                     assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
                 }
                 assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());

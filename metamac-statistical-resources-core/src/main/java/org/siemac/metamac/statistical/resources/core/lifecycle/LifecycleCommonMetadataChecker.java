@@ -12,8 +12,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.springframework.stereotype.Component;
 
@@ -30,13 +30,13 @@ public class LifecycleCommonMetadataChecker {
         checkMetadataRequired(resource.getVersionLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_LOGIC), exceptionItems);
         checkMetadataRequired(resource.getVersionRationaleTypes(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES), exceptionItems);
         for (VersionRationaleType versionRationaleType : resource.getVersionRationaleTypes()) {
-            if (StatisticalResourceVersionRationaleTypeEnum.MINOR_ERRATA.equals(versionRationaleType.getValue())) {
+            if (VersionRationaleTypeEnum.MINOR_ERRATA.equals(versionRationaleType.getValue())) {
                 checkMetadataRequired(resource.getVersionRationale(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE), exceptionItems);
             }
         }
         
         checkMetadataRequired(resource.getNextVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.NEXT_VERSION), exceptionItems);
-        if (resource.getNextVersion() != null && !StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.equals(resource.getNextVersion())) {
+        if (resource.getNextVersion() != null && !NextVersionTypeEnum.SCHEDULED_UPDATE.equals(resource.getNextVersion())) {
             checkMetadataEmpty(resource.getNextVersionDate(),addParameter(metadataName, ServiceExceptionSingleParameters.NEXT_VERSION_DATE), exceptionItems);
         }
         checkMetadataRequired(resource.getProcStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.PROC_STATUS), exceptionItems);

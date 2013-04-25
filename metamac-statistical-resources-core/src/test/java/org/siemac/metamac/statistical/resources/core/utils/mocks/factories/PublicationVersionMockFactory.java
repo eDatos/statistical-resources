@@ -2,9 +2,8 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
@@ -88,7 +87,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
             PublicationVersion publicationVersion = createPublicationVersion();
             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(PUBLICATION_VERSION_03_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
             
@@ -168,7 +167,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static PublicationVersion getPublicationVersion12Draft() {
         if (PUBLICATION_VERSION_12_DRAFT == null) {
             PUBLICATION_VERSION_12_DRAFT = createPublicationVersion();
-            PUBLICATION_VERSION_12_DRAFT.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+            PUBLICATION_VERSION_12_DRAFT.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
         }
         return PUBLICATION_VERSION_12_DRAFT;
     }
@@ -176,7 +175,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static PublicationVersion getPublicationVersion13ProductionValidation() {
         if (PUBLICATION_VERSION_13_PRODUCTION_VALIDATION == null) {
             PUBLICATION_VERSION_13_PRODUCTION_VALIDATION = createPublicationVersion();
-            PUBLICATION_VERSION_13_PRODUCTION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+            PUBLICATION_VERSION_13_PRODUCTION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         }
         return PUBLICATION_VERSION_13_PRODUCTION_VALIDATION;
     }
@@ -184,7 +183,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static PublicationVersion getPublicationVersion14DiffusionValidation() {
         if (PUBLICATION_VERSION_14_DIFFUSION_VALIDATION == null) {
             PUBLICATION_VERSION_14_DIFFUSION_VALIDATION = createPublicationVersion();
-            PUBLICATION_VERSION_14_DIFFUSION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+            PUBLICATION_VERSION_14_DIFFUSION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         }
         return PUBLICATION_VERSION_14_DIFFUSION_VALIDATION;
     }
@@ -192,7 +191,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static PublicationVersion getPublicationVersion15ValidationRejected() {
         if (PUBLICATION_VERSION_15_VALIDATION_REJECTED == null) {
             PUBLICATION_VERSION_15_VALIDATION_REJECTED = createPublicationVersion();
-            PUBLICATION_VERSION_15_VALIDATION_REJECTED.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.VALIDATION_REJECTED);
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
         }
         return PUBLICATION_VERSION_15_VALIDATION_REJECTED;
     }
@@ -200,7 +199,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static PublicationVersion getPublicationVersion16Published() {
         if (PUBLICATION_VERSION_16_PUBLISHED == null) {
             PUBLICATION_VERSION_16_PUBLISHED = createPublicationVersion();
-            PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+            PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
         }
         return PUBLICATION_VERSION_16_PUBLISHED;
     }

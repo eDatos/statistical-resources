@@ -38,7 +38,7 @@ Application BaseStatisticalResources {
     		hint="idSequence=VERSION_RATIONALE_TYPE"
     		not auditable
     		
-    		- @StatisticalResourceVersionRationaleTypeEnum value required;
+    		- @VersionRationaleTypeEnum value required;
     		
     		Repository VersionRationaleTypeRepository {
 				findById;
@@ -103,14 +103,14 @@ Application BaseStatisticalResources {
 			DateTimeTZ validTo nullable;
 			- Bag<@VersionRationaleType> versionRationaleTypes cascade="all-delete-orphan" databaseJoinTable="TB_SR_VRATIONALE_TYPES";
 			- @InternationalString versionRationale nullable cascade="all" databaseColumn="VERSION_RATIONALE_FK";
-			- @StatisticalResourceNextVersionEnum nextVersion nullable;
+			- @NextVersionTypeEnum nextVersion nullable;
 		}
 
 		Entity LifeCycleStatisticalResource extends @VersionableStatisticalResource {
 			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="LIFE_CYCLE_RESOURCE"
 
-			- @StatisticalResourceProcStatusEnum procStatus nullable;
+			- @ProcStatusEnum procStatus nullable;
 			
 			DateTimeTZ creationDate nullable;
 			String creationUser nullable;

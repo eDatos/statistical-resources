@@ -9,9 +9,9 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 
 public class FillMetadataForCreateResourceUtils {
     
@@ -25,7 +25,7 @@ public class FillMetadataForCreateResourceUtils {
     public static void fillMetadataForCreateLifeCycleResource(LifeCycleStatisticalResource resource, ServiceContext ctx) {
         fillMetadataForCreateVersionableResource(resource);
 
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        resource.setProcStatus(ProcStatusEnum.DRAFT);
         resource.setCreatedDate(new DateTime());
         resource.setCreatedBy(ctx.getUserId());
     }
@@ -35,7 +35,7 @@ public class FillMetadataForCreateResourceUtils {
 
         resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
         resource.getVersionRationaleTypes().clear();
-        resource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
+        resource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
     }
 
     private static void fillMetadataForCreateIdentifiableResource(IdentifiableStatisticalResource resource) {

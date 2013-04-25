@@ -86,8 +86,8 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
@@ -126,7 +126,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private QueryVersionMockFactory                  queryMockFactory;
+    private QueryVersionMockFactory           queryMockFactory;
 
     @Autowired
     private DatasourceMockFactory             datasourceMockFactory;
@@ -154,7 +154,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public static void beforeClass() {
         System.out.println(ApplicationContextProvider.getApplicationContext());
     }
-    
+
     @Override
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME})
@@ -166,10 +166,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     @Test
-    @MetamacMock({QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME, QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME, QUERY_VERSION_01_WITH_SELECTION_NAME})
+    @MetamacMock({QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME, QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME,
+            QUERY_VERSION_01_WITH_SELECTION_NAME})
     public void testRetrieveQueries() throws Exception {
-        List<QueryVersion> expected = queryMockFactory.retrieveMocks(QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME, QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME,
-                QUERY_VERSION_01_WITH_SELECTION_NAME);
+        List<QueryVersion> expected = queryMockFactory.retrieveMocks(QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME,
+                QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME, QUERY_VERSION_01_WITH_SELECTION_NAME);
         List<QueryDto> actual = statisticalResourcesServiceFacade.retrieveQueries(getServiceContextAdministrador());
 
         assertEqualsQueryVersionDoAndDtoCollection(expected, actual);
@@ -629,7 +630,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         {
             DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
             datasetDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
-            datasetDto.setNextVersion(StatisticalResourceNextVersionEnum.NO_UPDATES);
+            datasetDto.setNextVersion(NextVersionTypeEnum.NO_UPDATES);
 
             DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
             assertNotNull(updatedDataset);
@@ -638,7 +639,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         {
             DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
             datasetDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
-            datasetDto.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+            datasetDto.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
 
             DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
             assertNotNull(updatedDataset);
@@ -647,7 +648,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         {
             DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
             datasetDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
-            datasetDto.setNextVersion(StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE);
+            datasetDto.setNextVersion(NextVersionTypeEnum.SCHEDULED_UPDATE);
 
             DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
             assertNotNull(updatedDataset);
@@ -764,7 +765,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, StatisticalResourceProcStatusEnum.DRAFT);
+            setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
 
             MetamacCriteriaResult<DatasetDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -779,7 +780,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, DatasetCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+            setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
 
             MetamacCriteriaResult<DatasetDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -893,7 +894,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         DatasetDto updatedDataset = statisticalResourcesServiceFacade.sendToProductionValidation(getServiceContextAdministrador(), datasetDto);
         assertNotNull(updatedDataset);
-        assertEquals(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION, updatedDataset.getProcStatus());
+        assertEquals(ProcStatusEnum.PRODUCTION_VALIDATION, updatedDataset.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), updatedDataset.getProductionValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDataset.getProductionValidationDate()));
     }
@@ -907,7 +908,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         DatasetDto updatedDataset = statisticalResourcesServiceFacade.sendToDiffusionValidation(getServiceContextAdministrador(), datasetDto);
         assertNotNull(updatedDataset);
-        assertEquals(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION, updatedDataset.getProcStatus());
+        assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, updatedDataset.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), updatedDataset.getDiffusionValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDataset.getDiffusionValidationDate()));
     }
@@ -979,7 +980,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
                     .getUrn());
             publicationDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
-            publicationDto.setNextVersion(StatisticalResourceNextVersionEnum.NO_UPDATES);
+            publicationDto.setNextVersion(NextVersionTypeEnum.NO_UPDATES);
 
             PublicationDto updatedPublicationDto = statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDto);
             assertNotNull(updatedPublicationDto);
@@ -989,7 +990,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
                     .getUrn());
             publicationDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
-            publicationDto.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+            publicationDto.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
 
             PublicationDto updatedPublicationDto = statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDto);
             assertNotNull(updatedPublicationDto);
@@ -999,7 +1000,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
                     .getUrn());
             publicationDto.setNextVersionDate(new DateTime().plusDays(1).toDate());
-            publicationDto.setNextVersion(StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE);
+            publicationDto.setNextVersion(NextVersionTypeEnum.SCHEDULED_UPDATE);
 
             PublicationDto updatedPublicationDto = statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDto);
             assertNotNull(updatedPublicationDto);
@@ -1124,8 +1125,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.PROC_STATUS, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setDisjunctionCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, StatisticalResourceProcStatusEnum.DRAFT,
-                    StatisticalResourceProcStatusEnum.VALIDATION_REJECTED);
+            setDisjunctionCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT,
+                    ProcStatusEnum.VALIDATION_REJECTED);
 
             MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -1139,7 +1140,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+            setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
 
             MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());

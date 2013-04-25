@@ -12,10 +12,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
@@ -181,7 +181,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     // -----------------------------------------------------------------
     // VERSION RATIONALE TYPE
     // -----------------------------------------------------------------
-    private static VersionRationaleType mockVersionRationaleType(StatisticalResourceVersionRationaleTypeEnum enumValue) {
+    private static VersionRationaleType mockVersionRationaleType(VersionRationaleTypeEnum enumValue) {
         return new VersionRationaleType(enumValue);
     }
     
@@ -200,7 +200,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        resource.setProcStatus(ProcStatusEnum.DRAFT);
         resource.setCreationDate(new DateTime());
         resource.setCreationUser(USER_MOCK);
     }
@@ -240,7 +240,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public static void prepareToProductionValidationLifecycleResource(LifeCycleStatisticalResource lifecycleResource) {
         prepareToLifecycleCommonLifeCycleResource(lifecycleResource);
         
-        lifecycleResource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        lifecycleResource.setProcStatus(ProcStatusEnum.DRAFT);
     }
     
     public static void prepareToDiffusionValidationSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
@@ -252,7 +252,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public static void prepareToDiffusionValidationLifecycleResource(LifeCycleStatisticalResource lifecycleResource) {
         prepareToLifecycleCommonLifeCycleResource(lifecycleResource);
         
-        lifecycleResource.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        lifecycleResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         lifecycleResource.setProductionValidationDate(new DateTime().minusDays(1));
         lifecycleResource.setProductionValidationUser("productionUser");
     }
@@ -279,8 +279,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     
     private static void prepareToLifecycleCommonLifeCycleResource(LifeCycleStatisticalResource lifeCycleResource) {
         lifeCycleResource.setVersionLogic("002.000");
-        lifeCycleResource.addVersionRationaleType(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MINOR_DATA_UPDATE));
-        lifeCycleResource.setNextVersion(StatisticalResourceNextVersionEnum.NON_SCHEDULED_UPDATE);
+        lifeCycleResource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_DATA_UPDATE));
+        lifeCycleResource.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
         
         lifeCycleResource.setTitle(mockInternationalString());
         lifeCycleResource.setDescription(mockInternationalString());

@@ -25,8 +25,8 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
@@ -49,7 +49,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testLifeCycleResourceCheckSendToProductionValidationProperCheckingCalls() throws Exception {
         LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        resource.setProcStatus(ProcStatusEnum.DRAFT);
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
@@ -67,10 +67,10 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testLifeCycleResourceCheckSendToProductionValidationIncorrectVersionRationaleType() throws Exception {
         LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
-        resource.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        resource.setProcStatus(ProcStatusEnum.DRAFT);
         resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
 
-        for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType2Test : StatisticalResourceVersionRationaleTypeEnum.values()) {
+        for (VersionRationaleTypeEnum versionRationaleType2Test : VersionRationaleTypeEnum.values()) {
             resource.getVersionRationaleTypes().clear();
             resource.addVersionRationaleType(new VersionRationaleType(versionRationaleType2Test));
 
@@ -79,7 +79,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
             lifecycleService.checkSendToProductionValidation(resource, baseMetadata, exceptionItems);
 
-            if (StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(versionRationaleType2Test)) {
+            if (VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(versionRationaleType2Test)) {
                 assertEquals(0, exceptionItems.size());
             } else {
                 MetamacException expected = new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(baseMetadata,
@@ -93,14 +93,14 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToProductionValidationProcStatus() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
-        String validStatus = StatisticalResourceProcStatusEnum.DRAFT.name() + ", " + StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.name();
+        String validStatus = ProcStatusEnum.DRAFT.name() + ", " + ProcStatusEnum.VALIDATION_REJECTED.name();
 
-        for (StatisticalResourceProcStatusEnum procStatus : StatisticalResourceProcStatusEnum.values()) {
+        for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
             prepareToProductionValidation(resource);
             resource.setProcStatus(procStatus);
 
-            if (StatisticalResourceProcStatusEnum.DRAFT.equals(procStatus) || StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
+            if (ProcStatusEnum.DRAFT.equals(procStatus) || ProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
                 lifecycleService.checkSendToProductionValidation(resource, baseMetadata, exceptionItems);
                 assertEquals(0, exceptionItems.size());
@@ -123,7 +123,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         lifecycleService.applySendToProductionValidationActions(getServiceContextAdministrador(), resource);
 
         assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource);
-        assertEquals(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION, resource.getProcStatus());
+        assertEquals(ProcStatusEnum.PRODUCTION_VALIDATION, resource.getProcStatus());
     }
 
     private void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(LifeCycleStatisticalResource resource) {
@@ -139,12 +139,12 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToDiffusionValidationProcStatus() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
-        for (StatisticalResourceProcStatusEnum procStatus : StatisticalResourceProcStatusEnum.values()) {
+        for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
             prepareToDiffusionValidation(resource);
             resource.setProcStatus(procStatus);
 
-            if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
+            if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
                 lifecycleService.checkSendToDiffusionValidation(resource, baseMetadata, exceptionItems);
                 assertEquals(0, exceptionItems.size());
@@ -168,7 +168,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         lifecycleService.applySendToDiffusionValidationActions(getServiceContextAdministrador(), resource);
 
         assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(resource);
-        assertEquals(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION, resource.getProcStatus());
+        assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, resource.getProcStatus());
 
     }
 
@@ -187,12 +187,12 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToValidationRejectedProcStatus() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
-        for (StatisticalResourceProcStatusEnum procStatus : StatisticalResourceProcStatusEnum.values()) {
+        for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
             prepareToValidationRejected(resource);
             resource.setProcStatus(procStatus);
 
-            if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
+            if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
                 lifecycleService.checkSendToValidationRejected(resource, baseMetadata, exceptionItems);
                 assertEquals(0, exceptionItems.size());
@@ -217,7 +217,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         lifecycleService.applySendToValidationRejectedActions(getServiceContextAdministrador(), resource);
 
         assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(resource);
-        assertEquals(StatisticalResourceProcStatusEnum.VALIDATION_REJECTED, resource.getProcStatus());
+        assertEquals(ProcStatusEnum.VALIDATION_REJECTED, resource.getProcStatus());
 
     }
 
@@ -264,18 +264,18 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         {
             LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
             resource.getVersionRationaleTypes().clear();
-            resource.getVersionRationaleTypes().add(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
-            resource.getVersionRationaleTypes().add(new VersionRationaleType(StatisticalResourceVersionRationaleTypeEnum.MAJOR_CATEGORIES));
+            resource.getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
+            resource.getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
             Boolean result = lifecycleService.checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource);
             assertEquals(Boolean.FALSE, result);
         }
         {
-            for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType : StatisticalResourceVersionRationaleTypeEnum.values()) {
+            for (VersionRationaleTypeEnum versionRationaleType : VersionRationaleTypeEnum.values()) {
                 LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
                 resource.getVersionRationaleTypes().clear();
                 resource.getVersionRationaleTypes().add(new VersionRationaleType(versionRationaleType));
                 Boolean result = lifecycleService.checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource);
-                if (StatisticalResourceVersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(versionRationaleType)) {
+                if (VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(versionRationaleType)) {
                     assertEquals(Boolean.TRUE, result);
                 } else {
                     assertEquals(Boolean.FALSE, result);
@@ -283,8 +283,8 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
             }
         }
         {
-            for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType01 : StatisticalResourceVersionRationaleTypeEnum.values()) {
-                for (StatisticalResourceVersionRationaleTypeEnum versionRationaleType02 : StatisticalResourceVersionRationaleTypeEnum.values()) {
+            for (VersionRationaleTypeEnum versionRationaleType01 : VersionRationaleTypeEnum.values()) {
+                for (VersionRationaleTypeEnum versionRationaleType02 : VersionRationaleTypeEnum.values()) {
                     LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
                     resource.getVersionRationaleTypes().clear();
                     resource.getVersionRationaleTypes().add(new VersionRationaleType(versionRationaleType01));
