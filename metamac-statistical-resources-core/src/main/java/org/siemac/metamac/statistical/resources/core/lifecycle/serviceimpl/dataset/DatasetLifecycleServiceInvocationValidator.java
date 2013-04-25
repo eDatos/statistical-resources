@@ -27,4 +27,10 @@ public class DatasetLifecycleServiceInvocationValidator extends LifecycleInvocat
     public void checkSendToValidationRejectedInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
         DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
+
+    @Override
+    protected void checkSendToPublishedInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
+        DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+        
+    }
 }
