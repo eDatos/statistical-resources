@@ -1,8 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.mapper;
 
 import static org.junit.Assert.assertTrue;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

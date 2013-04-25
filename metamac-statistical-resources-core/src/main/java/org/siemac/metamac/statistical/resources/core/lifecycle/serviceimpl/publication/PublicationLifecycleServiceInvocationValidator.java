@@ -7,7 +7,6 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.serviceimpl.validators.PublicationServiceInvocationValidatorImpl;
-import org.springframework.stereotype.Component;
 
 //FIXME @Component
 public abstract class PublicationLifecycleServiceInvocationValidator extends LifecycleInvocationValidatorBase<PublicationVersion> {

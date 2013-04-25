@@ -1,11 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.getPublicationVersion03ForPublication03;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.getPublicationVersion04ForPublication03AndLastVersion;
+
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.utils.StatisticalResourcesMockFactoryUtils;
 import org.springframework.stereotype.Component;
-
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.*;
 
 @Component
 public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publication> {

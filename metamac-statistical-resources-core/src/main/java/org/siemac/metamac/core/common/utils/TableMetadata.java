@@ -1,13 +1,9 @@
 package org.siemac.metamac.core.common.utils;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.DateTime;
-import org.springframework.util.ReflectionUtils;
 
 
 public abstract class TableMetadata {

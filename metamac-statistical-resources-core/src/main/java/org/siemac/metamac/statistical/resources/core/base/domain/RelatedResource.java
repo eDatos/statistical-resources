@@ -1,9 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.base.domain;
 
-import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 /**
  * Entity for store information about RelatedResources.

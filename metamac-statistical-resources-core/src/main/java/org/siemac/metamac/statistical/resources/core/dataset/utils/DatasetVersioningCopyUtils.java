@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.dataset.utils;
 
-import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.*;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyExternalItem;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyIdentifiableStatisticalResource;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyListExternalItem;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copySiemacMetadataStatisticalResource;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
