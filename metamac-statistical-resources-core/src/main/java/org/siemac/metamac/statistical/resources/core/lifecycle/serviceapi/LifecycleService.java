@@ -12,4 +12,6 @@ public interface LifecycleService<E extends Object> {
     
     public void sendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException;
     
+    public void sendToPublished(ServiceContext ctx, E resource) throws MetamacException;
+    
 }
