@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
@@ -318,40 +319,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
     }
 
-    private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
-        StatisticalResourcesPersistedDoMocks.prepareToDiffusionValidationSiemacResource(datasetVersion);
-        prepareToLifecycleCommon(datasetVersion);
-    }
-
-    private static void prepareToProductionValidation(DatasetVersion datasetVersion) {
-        StatisticalResourcesPersistedDoMocks.prepareToProductionValidationSiemacResource(datasetVersion);
-        prepareToLifecycleCommon(datasetVersion);
-    }
-
-    private static void prepareToLifecycleCommon(DatasetVersion datasetVersion) {
-        ExternalItem geoGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.addGeographicGranularity(geoGranularity);
-
-        ExternalItem timeGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.addTemporalGranularity(timeGranularity);
-
-        ExternalItem dsd = StatisticalResourcesPersistedDoMocks.mockDsdExternalItem();
-        datasetVersion.setRelatedDsd(dsd);
-
-        datasetVersion.setDateNextUpdate(new DateTime().plusDays(10));
-
-        ExternalItem codeUpdateFreq = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.setUpdateFrequency(codeUpdateFreq);
-
-        StatisticOfficiality officiality = getStatisticalResourcesPersistedDoMocks().mockStatisticOfficiality("officiality");
-        datasetVersion.setStatisticOfficiality(officiality);
-
-        // Inherited fields that need customization based on Resource's type
-        String code = buildDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
-        datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(buildDatasetVersionUrn(code, datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
-        datasetVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.DATASET);
-    }
 
     private static DatasetVersion createDatasetVersion(Integer sequentialId) {
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
@@ -385,4 +352,43 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return operationCode + String.format("%06d", sequentialId);
     }
 
+    // -----------------------------------------------------------------
+    // LIFE CYCLE PREPARATIONS
+    // -----------------------------------------------------------------
+
+    private static void prepareToProductionValidation(DatasetVersion datasetVersion) {
+        LifecycleTestUtils.prepareToProductionValidation(datasetVersion);
+        prepareToLifecycleCommonDatasetVersion(datasetVersion);
+    }
+    
+    private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
+        prepareToProductionValidation(datasetVersion);
+        LifecycleTestUtils.prepareToDiffusionValidation(datasetVersion);
+    }
+
+
+    private static void prepareToLifecycleCommonDatasetVersion(DatasetVersion datasetVersion) {
+        ExternalItem geoGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.addGeographicGranularity(geoGranularity);
+
+        ExternalItem timeGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.addTemporalGranularity(timeGranularity);
+
+        ExternalItem dsd = StatisticalResourcesPersistedDoMocks.mockDsdExternalItem();
+        datasetVersion.setRelatedDsd(dsd);
+
+        datasetVersion.setDateNextUpdate(new DateTime().plusDays(10));
+
+        ExternalItem codeUpdateFreq = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.setUpdateFrequency(codeUpdateFreq);
+
+        StatisticOfficiality officiality = getStatisticalResourcesPersistedDoMocks().mockStatisticOfficiality("officiality");
+        datasetVersion.setStatisticOfficiality(officiality);
+
+        // Inherited fields that need customization based on Resource's type
+        String code = buildDatasetCode(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
+        datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
+        datasetVersion.getSiemacMetadataStatisticalResource().setUrn(buildDatasetVersionUrn(code, datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        datasetVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.DATASET);
+    }
 }

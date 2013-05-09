@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResourcesDoMocks {
 
     @Autowired
-    StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
-
+    private StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
+    
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
