@@ -19,7 +19,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -51,7 +51,7 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     private void testInternationalStringDoToDto(InternationalString internationalString) throws Exception {
         InternationalStringDto result = commonDo2DtoMapper.internationalStringDoToDto(internationalString);
-        BaseAsserts.assertEqualsInternationalString(internationalString, result);
+        assertEqualsInternationalString(internationalString, result);
     }
 
     // ------------------------------------------------------------
@@ -89,12 +89,12 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     private void testExternalItemDtoToDo(ExternalItem externalItem) throws Exception {
         ExternalItemDto result = commonDo2DtoMapper.externalItemDoToDto(externalItem);
-        BaseAsserts.assertEqualsExternalItem(externalItem, result);
+        assertEqualsExternalItem(externalItem, result);
     }
 
     private void testExternalItemDoCollectionToDtoCollection(List<ExternalItem> entities) throws Exception {
         Collection<ExternalItemDto> result = commonDo2DtoMapper.externalItemDoCollectionToDtoCollection(entities);
-        BaseAsserts.assertEqualsExternalItemCollectionMapper(entities, result);
+        assertEqualsExternalItemCollectionMapper(entities, result);
 
     }
 
@@ -129,12 +129,12 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     private void testRelatedResourceDoToDto(RelatedResource relatedResource) throws Exception {
         RelatedResourceDto result = commonDo2DtoMapper.relatedResourceDoToDto(relatedResource);
-        BaseAsserts.assertEqualsRelatedResource(relatedResource, result);
+        assertEqualsRelatedResource(relatedResource, result);
     }
 
     private void testRelatedResourceDoCollectionToDtoCollection(List<RelatedResource> entities) throws Exception {
         Collection<RelatedResourceDto> result = commonDo2DtoMapper.relatedResourceDoCollectionToDtoCollection(entities);
-        BaseAsserts.assertEqualsRelatedResourceCollectionMapper(entities, result);
+        assertEqualsRelatedResourceCollectionMapper(entities, result);
 
     }
 
@@ -154,6 +154,6 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     private void testDateDoToDto(DateTime date) throws Exception {
         Date result = commonDo2DtoMapper.dateDoToDto(date);
-        BaseAsserts.assertEqualsDate(date, result);
+        assertEqualsDate(date, result);
     }
 }

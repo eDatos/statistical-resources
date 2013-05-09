@@ -1,9 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class LifecycleTestUtils {
@@ -13,10 +17,12 @@ public class LifecycleTestUtils {
     // ------------------------------------------------------------------------------------------------------
 
     public static void prepareToProductionValidation(HasSiemacMetadataStatisticalResource resource) {
-        StatisticalResourcesPersistedDoMocks.prepareToProductionValidationSiemacResource(resource);
+        prepareToProductionValidation((HasLifecycleStatisticalResource)resource);
     }
 
     public static void prepareToProductionValidation(HasLifecycleStatisticalResource resource) {
+        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        
         StatisticalResourcesPersistedDoMocks.prepareToProductionValidationLifecycleResource(resource);
     }
 
@@ -57,6 +63,7 @@ public class LifecycleTestUtils {
     public static void prepareToPublished(HasSiemacMetadataStatisticalResource resource) {
         prepareToProductionValidation(resource);
         prepareToDiffusionValidation(resource);
+        StatisticalResourcesPersistedDoMocks.prepareToPublishedSiemacResource(resource);
     }
 
     public static void prepareToPublished(HasLifecycleStatisticalResource resource) {
@@ -70,11 +77,19 @@ public class LifecycleTestUtils {
     
     public static void createPublished(HasSiemacMetadataStatisticalResource resource) {
         prepareToPublished(resource);
+        StatisticalResourcesPersistedDoMocks.createPublishedSiemacResource(resource);
     }
     
     public static void createPublished(HasLifecycleStatisticalResource resource) {
         prepareToPublished(resource);
-        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        
+        DateTime publicationDate = new DateTime();
+        resource.getLifeCycleStatisticalResource().setPublicationDate(publicationDate);
+        resource.getLifeCycleStatisticalResource().setValidFrom(publicationDate);
+        resource.getLifeCycleStatisticalResource().setPublicationUser("PUBLICATION_VALIDATION_USER");
     }
+    
+    
+
 
 }

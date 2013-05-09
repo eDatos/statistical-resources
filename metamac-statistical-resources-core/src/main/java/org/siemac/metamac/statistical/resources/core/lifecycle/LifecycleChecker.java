@@ -103,9 +103,12 @@ public class LifecycleChecker {
     }
 
     public void applySendToPublishedActions(ServiceContext ctx, HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousResource) throws MetamacException {
+        DateTime publicationDate = new DateTime();
+        
         // Actual version
-        resource.getLifeCycleStatisticalResource().setPublicationDate(new DateTime());
+        resource.getLifeCycleStatisticalResource().setPublicationDate(publicationDate);
         resource.getLifeCycleStatisticalResource().setPublicationUser(ctx.getUserId());
+        resource.getLifeCycleStatisticalResource().setValidFrom(publicationDate);
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
         // Previous version
@@ -121,6 +124,7 @@ public class LifecycleChecker {
         }
 
         previousResource.getLifeCycleStatisticalResource().setIsReplacedByVersion(replacedByVersionResource);
+        previousResource.getLifeCycleStatisticalResource().setValidTo(publicationDate);
     }
 
     // ------------------------------------------------------------------------------------------------------
