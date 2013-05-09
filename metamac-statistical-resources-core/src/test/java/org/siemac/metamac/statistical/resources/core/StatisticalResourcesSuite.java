@@ -5,6 +5,8 @@ import org.junit.runners.Suite;
 import org.siemac.metamac.core.common.ent.repositoryimpl.InternationalStringRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapperTest;
+import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
@@ -58,6 +60,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      LifecycleCheckerTest.class,
                      SiemacLifecycleCheckerTest.class,
                      DatasetLifecycleServiceInvocationValidatorTest.class,
-                     DatasetLifecycleServiceTest.class})
+                     DatasetLifecycleServiceTest.class,
+                     CommonDto2DoMapperTest.class,
+                     CommonDo2DtoMapperTest.class})
 public class StatisticalResourcesSuite {
 }

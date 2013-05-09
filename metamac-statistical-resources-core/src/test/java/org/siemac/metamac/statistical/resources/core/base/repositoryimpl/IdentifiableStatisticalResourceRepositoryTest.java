@@ -36,7 +36,7 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
     private IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
 
     @Autowired
-    private QueryVersionMockFactory                          queryMockFactory;
+    private QueryVersionMockFactory                   queryMockFactory;
 
     @Autowired
     private DatasetVersionMockFactory                 datasetVersionMockFactory;
@@ -49,7 +49,8 @@ public class IdentifiableStatisticalResourceRepositoryTest extends StatisticalRe
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME, DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testRetrieveByUrn() throws Exception {
         {
-            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
+            IdentifiableStatisticalResource actual = identifiableStatisticalResourceRepository.retrieveByUrn(queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
+                    .getLifeCycleStatisticalResource().getUrn());
             assertEqualsIdentifiableStatisticalResource(queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource(), actual);
         }
 

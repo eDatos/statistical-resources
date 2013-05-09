@@ -26,7 +26,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType CHAPTER_NOT_FOUND                                = create("exception.resources.chapter.not_found");
 
     // Cube
-    public static final CommonServiceExceptionType CUBE_NOT_FOUND                                = create("exception.resources.cube.not_found");
+    public static final CommonServiceExceptionType CUBE_NOT_FOUND                                   = create("exception.resources.cube.not_found");
 
     // Query
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                  = create("exception.resources.query.not_found");

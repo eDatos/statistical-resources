@@ -95,6 +95,7 @@ Application QueriesStatisticalResources {
 			databaseTable="TB_QUERIES_VERSIONS"
 			hint="idSequence=QUERIES_VERSIONS"
 			!auditable
+			gap
 			
 			- @Query query not nullable cascade="none" databaseColumn="QUERY_FK" <-> versions;
 			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="LIFECYCLE_RESOURCE_FK" not nullable cascade="all";

@@ -319,12 +319,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
-        StatisticalResourcesPersistedDoMocks.prepareToDiffusionValidationSiemacResource(datasetVersion.getSiemacMetadataStatisticalResource());
+        StatisticalResourcesPersistedDoMocks.prepareToDiffusionValidationSiemacResource(datasetVersion);
         prepareToLifecycleCommon(datasetVersion);
     }
 
     private static void prepareToProductionValidation(DatasetVersion datasetVersion) {
-        StatisticalResourcesPersistedDoMocks.prepareToProductionValidationSiemacResource(datasetVersion.getSiemacMetadataStatisticalResource());
+        StatisticalResourcesPersistedDoMocks.prepareToProductionValidationSiemacResource(datasetVersion);
         prepareToLifecycleCommon(datasetVersion);
     }
 

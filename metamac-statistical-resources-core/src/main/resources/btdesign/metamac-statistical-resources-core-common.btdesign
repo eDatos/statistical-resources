@@ -1,0 +1,36 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
+import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
+
+Application CommonStatisticalResources {
+	basePackage=unused
+
+	Module core_common {
+		basePackage=org.siemac.metamac.statistical.resources.core.common
+
+		"Entity for store information about RelatedResources."	
+    	Entity RelatedResource {
+    		gap
+    		
+    		databaseTable = "TB_RELATED_RESOURCES"
+    		hint="idSequence=RELATED_RESOURCES"
+    		not auditable
+    		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			- @TypeRelatedResourceEnum type databaseColumn="TYPE" required;
+			
+			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" cascade="none" nullable;
+			- @PublicationVersion publicationVersion databaseColumn="PUBLICATION_VERSION_FK" cascade="none" nullable;
+    		
+    		Repository RelatedResourceRepository {
+				findById;
+				delete;
+				findAll;
+			}
+    	}
+	}
+}

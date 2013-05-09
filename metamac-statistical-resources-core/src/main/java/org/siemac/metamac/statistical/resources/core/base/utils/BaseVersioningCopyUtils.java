@@ -1,23 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.base.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
 
-public class BaseVersioningCopyUtils {
+public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
 
     // --------------------------------------------------------------------------
-    // BASE HIERARCHY
+    // SIEMAC METADATA STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
     public static void copySiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResource target) {
@@ -72,16 +66,28 @@ public class BaseVersioningCopyUtils {
         target.setAccessRights(copyInternationalString(source.getAccessRights()));
     }
 
+    // --------------------------------------------------------------------------
+    // LIFE CYCLE STATISTICAL RESOURCE
+    // --------------------------------------------------------------------------
+
     private static void copyLifeCycleStatisticalResource(LifeCycleStatisticalResource source, LifeCycleStatisticalResource target) {
         copyVersionableStatisticalResource(source, target);
         // ALL lifecycle metadata are filled automatically
     }
+
+    // --------------------------------------------------------------------------
+    // VERSIONABLE STATISTICAL RESOURCE
+    // --------------------------------------------------------------------------
 
     private static void copyVersionableStatisticalResource(VersionableStatisticalResource source, VersionableStatisticalResource target) {
         copyNameableStatisticalResource(source, target);
 
         target.setNextVersion(source.getNextVersion());
     }
+
+    // --------------------------------------------------------------------------
+    // NAMEABLE STATISTICAL RESOURCE
+    // --------------------------------------------------------------------------
 
     private static void copyNameableStatisticalResource(NameableStatisticalResource source, NameableStatisticalResource target) {
         // TODO: ¿Se hereda el titulo?
@@ -91,6 +97,10 @@ public class BaseVersioningCopyUtils {
         copyIdentifiableStatisticalResource(source, target);
     }
 
+    // --------------------------------------------------------------------------
+    // IDENTIFIABLE METADATA STATISTICAL RESOURCE
+    // --------------------------------------------------------------------------
+
     public static void copyIdentifiableStatisticalResource(IdentifiableStatisticalResource source, IdentifiableStatisticalResource target) {
         // TODO: Is the code always the same?
         target.setCode(source.getCode());
@@ -98,86 +108,10 @@ public class BaseVersioningCopyUtils {
         copyStatisticalResource(source, target);
     }
 
+    // --------------------------------------------------------------------------
+    // STATISTICAL RESOURCE
+    // --------------------------------------------------------------------------
+
     private static void copyStatisticalResource(StatisticalResource source, StatisticalResource target) {
-    }
-
-    // --------------------------------------------------------------------------
-    // INTERNATIONAL STRINGS
-    // --------------------------------------------------------------------------
-
-    public static InternationalString copyInternationalString(InternationalString source) {
-        if (source == null) {
-            return null;
-        }
-        InternationalString target = new InternationalString();
-        for (LocalisedString sourceLocalisedString : source.getTexts()) {
-            LocalisedString targetLocalisedString = new LocalisedString();
-            targetLocalisedString.setLabel(sourceLocalisedString.getLabel());
-            targetLocalisedString.setLocale(sourceLocalisedString.getLocale());
-            target.addText(targetLocalisedString);
-        }
-        return target;
-    }
-
-    public static List<InternationalString> copyListInternationalString(List<InternationalString> source) {
-        if (source.isEmpty()) {
-            return null;
-        }
-
-        List<InternationalString> target = new ArrayList<InternationalString>();
-        for (InternationalString item : source) {
-            target.add(copyInternationalString(item));
-        }
-        return target;
-    }
-
-    // --------------------------------------------------------------------------
-    // EXTERNAL ITEMS
-    // --------------------------------------------------------------------------
-
-    public static ExternalItem copyExternalItem(ExternalItem source) {
-        if (source == null) {
-            return null;
-        }
-        ExternalItem target = new ExternalItem(source.getCode(), source.getUri(), source.getUrn(), source.getType());
-        return target;
-    }
-
-    public static List<ExternalItem> copyListExternalItem(List<ExternalItem> source) {
-        if (source.isEmpty()) {
-            return new ArrayList<ExternalItem>();
-        }
-
-        List<ExternalItem> target = new ArrayList<ExternalItem>();
-        for (ExternalItem item : source) {
-            target.add(copyExternalItem(item));
-        }
-        return target;
-    }
-
-    // --------------------------------------------------------------------------
-    // RELATED RESOURCES
-    // --------------------------------------------------------------------------
-
-    public static RelatedResource copyRelatedResource(RelatedResource source) {
-        if (source == null) {
-            return null;
-        }
-        RelatedResource target = new RelatedResource(source.getType());
-        target.setDatasetVersion(source.getDatasetVersion());
-        target.setPublicationVersion(source.getPublicationVersion());
-        return target;
-    }
-
-    public static List<RelatedResource> copyListRelatedResource(List<RelatedResource> source) {
-        if (source.isEmpty()) {
-            return new ArrayList<RelatedResource>();
-        }
-
-        List<RelatedResource> target = new ArrayList<RelatedResource>();
-        for (RelatedResource item : source) {
-            target.add(copyRelatedResource(item));
-        }
-        return target;
     }
 }

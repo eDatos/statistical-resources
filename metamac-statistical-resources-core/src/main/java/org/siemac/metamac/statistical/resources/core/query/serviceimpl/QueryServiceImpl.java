@@ -143,7 +143,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         QueryVersion queryVersion = retrieveQueryVersionByUrn(ctx, urn);
 
         // Check that query is pending_review
-        BaseValidator.checkStatisticalResourceCanBeDeleted(queryVersion.getLifeCycleStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeDeleted(queryVersion);
 
         // Delete
         getQueryVersionRepository().delete(queryVersion);

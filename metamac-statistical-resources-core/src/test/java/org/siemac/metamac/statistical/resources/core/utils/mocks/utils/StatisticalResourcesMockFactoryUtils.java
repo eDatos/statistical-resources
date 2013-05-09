@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.utils;
 
-import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;

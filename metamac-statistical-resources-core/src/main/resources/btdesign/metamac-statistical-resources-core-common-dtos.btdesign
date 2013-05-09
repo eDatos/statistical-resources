@@ -1,0 +1,16 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
+
+Application StatisticalResourcesDto {
+	basePackage=org.siemac.metamac.statistical.resources
+
+	Module common_dtos {
+		basePackage=org.siemac.metamac.statistical.resources.core.dto 
+		
+		DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
+			- @TypeRelatedResourceEnum type required;
+			Long relatedId required;
+		}
+	}
+}

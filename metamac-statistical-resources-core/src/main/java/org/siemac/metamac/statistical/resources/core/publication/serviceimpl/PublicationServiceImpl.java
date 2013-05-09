@@ -72,7 +72,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdatePublicationVersion(ctx, publicationVersion);
 
         // Check status
-        BaseValidator.checkStatisticalResourceCanBeEdited(publicationVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeEdited(publicationVersion);
 
         // TODO: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
@@ -125,7 +125,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
 
         // Check can be deleted
-        BaseValidator.checkStatisticalResourceCanBeDeleted(publicationVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeDeleted(publicationVersion);
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 

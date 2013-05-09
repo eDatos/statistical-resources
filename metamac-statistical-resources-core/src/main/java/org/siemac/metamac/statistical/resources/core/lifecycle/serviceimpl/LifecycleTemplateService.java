@@ -29,7 +29,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         saveResource(resource);
     }
 
-    public final void checkSendToProductionValidation(E resource) throws MetamacException {
+    protected final void checkSendToProductionValidation(E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToProductionValidationLinkedStatisticalResource(resource, exceptions);
@@ -40,7 +40,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public final void applySendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
+    protected final void applySendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
         applySendToProductionValidationLinkedStatisticalResource(ctx, resource);
 
         applySendToProductionValidationResource(ctx, resource);
@@ -71,7 +71,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         saveResource(resource);
     }
 
-    public final void checkSendToDiffusionValidation(E resource) throws MetamacException {
+    protected final void checkSendToDiffusionValidation(E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToDiffusionValidationLinkedStatisticalResource(resource, exceptions);
@@ -82,7 +82,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public final void applySendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
+    protected final void applySendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
         applySendToDiffusionValidationLinkedStatisticalResource(ctx, resource);
 
         applySendToDiffusionValidationResource(ctx, resource);
@@ -113,7 +113,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         saveResource(resource);
     }
 
-    public final void checkSendToValidationRejected(E resource) throws MetamacException {
+    protected final void checkSendToValidationRejected(E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
@@ -124,7 +124,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public final void applySendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
+    protected final void applySendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
         applySendToValidationRejectedLinkedStatisticalResource(ctx, resource);
 
         applySendToValidationRejectedResource(ctx, resource);
@@ -155,7 +155,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         saveResource(resource);
     }
 
-    public final void checkSendToPublished(E resource) throws MetamacException {
+    protected final void checkSendToPublished(E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToPublishedLinkedStatisticalResource(resource, exceptions);
@@ -166,7 +166,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public final void applySendToPublished(ServiceContext ctx, E resource) throws MetamacException {
+    protected final void applySendToPublished(ServiceContext ctx, E resource) throws MetamacException {
         applySendToPublishedLinkedStatisticalResource(ctx, resource);
 
         applySendToPublishedResource(ctx, resource);

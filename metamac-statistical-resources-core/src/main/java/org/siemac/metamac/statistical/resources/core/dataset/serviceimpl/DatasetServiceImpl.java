@@ -159,7 +159,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
 
         // Check status
-        BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion);
 
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
 
@@ -220,7 +220,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Check can be deleted
-        BaseValidator.checkStatisticalResourceCanBeDeleted(datasetVersion.getSiemacMetadataStatisticalResource());
+        BaseValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 

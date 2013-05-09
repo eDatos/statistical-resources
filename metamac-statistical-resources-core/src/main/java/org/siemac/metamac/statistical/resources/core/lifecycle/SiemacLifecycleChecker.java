@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,30 +30,30 @@ public class SiemacLifecycleChecker {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
     
-    public void checkSendToProductionValidation(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToProductionValidation(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleService.checkSendToProductionValidation(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
     
-    public void applySendToProductionValidationActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {
+    public void applySendToProductionValidationActions(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource) {
         lifecycleService.applySendToProductionValidationActions(ctx, resource);
         //FIXME: Computed fields based on data
-        resource.setKeywords(buildKeywords(resource));
+        resource.getSiemacMetadataStatisticalResource().setKeywords(buildKeywords(resource));
     }
     
-    private InternationalString buildKeywords(SiemacMetadataStatisticalResource resource) {
+    private InternationalString buildKeywords(HasSiemacMetadataStatisticalResource resource) {
         Set<String> locales = new HashSet<String>();
-        if (resource.getTitle() != null) {
-            locales.addAll(resource.getTitle().getLocales());
+        if (resource.getSiemacMetadataStatisticalResource().getTitle() != null) {
+            locales.addAll(resource.getSiemacMetadataStatisticalResource().getTitle().getLocales());
         }
-        if (resource.getDescription() != null) {
-            locales.addAll(resource.getDescription().getLocales());
+        if (resource.getSiemacMetadataStatisticalResource().getDescription() != null) {
+            locales.addAll(resource.getSiemacMetadataStatisticalResource().getDescription().getLocales());
         }
         InternationalString keywords = new InternationalString();
         for (String locale : locales) {
             Set<String> words = new HashSet<String>();
-            words.addAll(splitLocalisedText(resource.getTitle(), locale));
-            words.addAll(splitLocalisedText(resource.getDescription(), locale));
+            words.addAll(splitLocalisedText(resource.getSiemacMetadataStatisticalResource().getTitle(), locale));
+            words.addAll(splitLocalisedText(resource.getSiemacMetadataStatisticalResource().getDescription(), locale));
             words = filterKeywords(words);
             if (words.size() > 0) {
                 LocalisedString localisedText = new LocalisedString(locale,StringUtils.join(words, " "));
@@ -89,12 +89,12 @@ public class SiemacLifecycleChecker {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
     
-    public void checkSendToDiffusionValidation(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToDiffusionValidation(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleService.checkSendToDiffusionValidation(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
     
-    public void applySendToDiffusionValidationActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {
+    public void applySendToDiffusionValidationActions(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource) {
         lifecycleService.applySendToDiffusionValidationActions(ctx, resource);
     }
     
@@ -102,21 +102,35 @@ public class SiemacLifecycleChecker {
     // >> VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
     
-    public void checkSendToValidationRejected(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToValidationRejected(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleService.checkSendToValidationRejected(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
 
-    public void applySendToValidationRejectedActions(ServiceContext ctx, SiemacMetadataStatisticalResource resource) {
+    public void applySendToValidationRejectedActions(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource) {
         lifecycleService.applySendToValidationRejectedActions(ctx, resource);
         //FIXME: clear metadata computed in production validation and diffusion validation
+    }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> PUBLISHED
+    // ------------------------------------------------------------------------------------------------------
+    
+    public void checkSendToPublished(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        lifecycleService.checkSendToPublished(resource, metadataName, exceptionItems);
+        checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
+    }
+
+    public void applySendToPublished(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource, HasSiemacMetadataStatisticalResource previousResource) throws MetamacException {
+        lifecycleService.applySendToPublishedActions(ctx, resource, previousResource);
+        // Cumplimentar copyrigthed
     }
     
     // ------------------------------------------------------------------------------------------------------
     // >> PROTECTED COMMON UTILS
     // ------------------------------------------------------------------------------------------------------
     
-    private void checkSiemacMetadataAllActions(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    private void checkSiemacMetadataAllActions(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         lifecycleCommonMetadataChecker.checkSiemacCommonMetadata(resource, metadataName, exceptionItems);
     }
 }

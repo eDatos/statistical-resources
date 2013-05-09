@@ -8,9 +8,9 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
@@ -49,7 +49,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToProductionValidationLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        siemacLifecycleChecker.checkSendToProductionValidation(resource.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+        siemacLifecycleChecker.checkSendToProductionValidation(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToProductionValidationActions(ctx, resource.getSiemacMetadataStatisticalResource());
+        siemacLifecycleChecker.applySendToProductionValidationActions(ctx, resource);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToDiffusionValidationLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        siemacLifecycleChecker.checkSendToDiffusionValidation(resource.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+        siemacLifecycleChecker.checkSendToDiffusionValidation(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToDiffusionValidationActions(ctx, resource.getSiemacMetadataStatisticalResource());
+        siemacLifecycleChecker.applySendToDiffusionValidationActions(ctx, resource);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToValidationRejectedLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        siemacLifecycleChecker.checkSendToValidationRejected(resource.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+        siemacLifecycleChecker.checkSendToValidationRejected(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToValidationRejectedLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToValidationRejectedActions(ctx, resource.getSiemacMetadataStatisticalResource());
+        siemacLifecycleChecker.applySendToValidationRejectedActions(ctx, resource);
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {

@@ -1,3 +1,6 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-common.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-common-dtos.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
@@ -13,8 +16,7 @@ import "classpath:/btdesign/metamac-statistical-resources-core-publications.btde
 import "classpath:/btdesign/metamac-statistical-resources-core-publications-dtos.btdesign"
 
 import "classpath:/btdesign/metamac-statistical-resources-core-facades.btdesign"
-import "classpath:/btdesign/metamac-statistical-resources-core-lifecycle.btdesign"
 
 Application StatisticalResources {
-	basePackage=unused
+	basePackage=org.siemac.metamac.statistical.resources.core
 }

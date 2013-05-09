@@ -13,8 +13,6 @@ import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btd
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications-dtos.btdesign"
 
-import "classpath:/btdesign/metamac-statistical-resources-core-lifecycle.btdesign"
-
 Application FacadeStatisticalResources {
 	basePackage=unused
 

@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.base.error.utils;
+package org.siemac.metamac.statistical.resources.core.error.utils;
 
 
 public class ServiceExceptionParametersUtils {

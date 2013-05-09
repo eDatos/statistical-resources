@@ -1,7 +1,7 @@
-package org.siemac.metamac.statistical.resources.core.base.utils;
+package org.siemac.metamac.statistical.resources.core.common.utils;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 
 
 public class RelatedResourceUtils {

@@ -62,6 +62,7 @@ Application PublicationsStatisticalResources {
 			databaseTable="TB_PUBLICATIONS_VERSIONS"
 			hint="idSequence=PUBLICATIONS_VERSIONS"
 			!auditable
+			gap
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			

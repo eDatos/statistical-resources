@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
-import static org.siemac.metamac.statistical.resources.core.base.error.utils.ServiceExceptionParametersUtils.addParameter;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,14 +14,16 @@ import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.base.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
@@ -34,7 +38,8 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     
     @Test
     public void testCheckLifecycleCommonMetadata() throws Exception {
-        LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
+        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
+        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         expectedMetamacException(new MetamacException(
@@ -50,7 +55,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                 )));
         
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(mockedResource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
     
@@ -60,8 +65,10 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         
         for (VersionRationaleTypeEnum versionRationaleType2Test : VersionRationaleTypeEnum.values()) {
-            LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
-            resource.addVersionRationaleType(new VersionRationaleType(versionRationaleType2Test));
+            HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
+            when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
+            
+            mockedResource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(versionRationaleType2Test));
             
             
             MetamacException expected = null;
@@ -91,7 +98,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
             }
             
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(resource, baseMetadata, exceptionItems);
+            lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(mockedResource, baseMetadata, exceptionItems);
             MetamacException actual = new MetamacException(exceptionItems);
             MetamacAsserts.assertEqualsMetamacException(expected, actual);
         }
@@ -102,9 +109,11 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         
         for (NextVersionTypeEnum nextVersion2Test : NextVersionTypeEnum.values()) {
-            LifeCycleStatisticalResource resource = new LifeCycleStatisticalResource();
-            resource.setNextVersion(nextVersion2Test);
-            resource.setNextVersionDate(new DateTime().plusDays(1));
+            HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
+            when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
+            
+            mockedResource.getLifeCycleStatisticalResource().setNextVersion(nextVersion2Test);
+            mockedResource.getLifeCycleStatisticalResource().setNextVersionDate(new DateTime().plusDays(1));
             
             
             MetamacException expected = null;
@@ -134,7 +143,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
             }
             
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(resource, baseMetadata, exceptionItems);
+            lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(mockedResource, baseMetadata, exceptionItems);
             MetamacException actual = new MetamacException(exceptionItems);
             MetamacAsserts.assertEqualsMetamacException(expected, actual);
         }
@@ -142,7 +151,9 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     
     @Test
     public void testCheckSiemacResourceCommonMetadata() throws Exception {
-        SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
+        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
+        when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
+        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         expectedMetamacException(new MetamacException(Arrays.asList(
@@ -158,7 +169,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                 new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.LICENSE))
         )));
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkSiemacCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkSiemacCommonMetadata(mockedResource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
     

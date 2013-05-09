@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -231,59 +233,59 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     
     /* Lifecycle preparations */
     
-    public static void prepareToProductionValidationSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
-        prepareToProductionValidationLifecycleResource(siemacResource);
+    public static void prepareToProductionValidationSiemacResource(HasSiemacMetadataStatisticalResource resource) {
+        prepareToProductionValidationLifecycleResource(resource);
         
-        prepareToLifecycleCommonSiemacResource(siemacResource);
+        prepareToLifecycleCommonSiemacResource(resource);
     }
     
-    public static void prepareToProductionValidationLifecycleResource(LifeCycleStatisticalResource lifecycleResource) {
-        prepareToLifecycleCommonLifeCycleResource(lifecycleResource);
+    public static void prepareToProductionValidationLifecycleResource(HasLifecycleStatisticalResource resource) {
+        prepareToLifecycleCommonLifeCycleResource(resource);
         
-        lifecycleResource.setProcStatus(ProcStatusEnum.DRAFT);
+        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
     }
     
-    public static void prepareToDiffusionValidationSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
-        prepareToDiffusionValidationLifecycleResource(siemacResource);
+    public static void prepareToDiffusionValidationSiemacResource(HasSiemacMetadataStatisticalResource resource) {
+        prepareToDiffusionValidationLifecycleResource(resource);
         
-        prepareToLifecycleCommonSiemacResource(siemacResource);
+        prepareToLifecycleCommonSiemacResource(resource);
     }
     
-    public static void prepareToDiffusionValidationLifecycleResource(LifeCycleStatisticalResource lifecycleResource) {
-        prepareToLifecycleCommonLifeCycleResource(lifecycleResource);
+    public static void prepareToDiffusionValidationLifecycleResource(HasLifecycleStatisticalResource resource) {
+        prepareToLifecycleCommonLifeCycleResource(resource);
         
-        lifecycleResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-        lifecycleResource.setProductionValidationDate(new DateTime().minusDays(1));
-        lifecycleResource.setProductionValidationUser("productionUser");
+        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+        resource.getLifeCycleStatisticalResource().setProductionValidationDate(new DateTime().minusDays(1));
+        resource.getLifeCycleStatisticalResource().setProductionValidationUser("productionUser");
     }
     
     
-    public static void prepareToLifecycleCommonSiemacResource(SiemacMetadataStatisticalResource siemacResource) {
-        siemacResource.setLanguage(mockCodeExternalItem());
-        siemacResource.addLanguage(mockCodeExternalItem());
-        siemacResource.addLanguage(mockCodeExternalItem());
+    public static void prepareToLifecycleCommonSiemacResource(HasSiemacMetadataStatisticalResource resource) {
+        resource.getSiemacMetadataStatisticalResource().setLanguage(mockCodeExternalItem());
+        resource.getSiemacMetadataStatisticalResource().addLanguage(mockCodeExternalItem());
+        resource.getSiemacMetadataStatisticalResource().addLanguage(mockCodeExternalItem());
         
         ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem();
-        siemacResource.setStatisticalOperation(operation);
+        resource.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
         
-        siemacResource.setMaintainer(mockAgencyExternalItem());
-        siemacResource.setCreator(mockOrganizationUnitExternalItem());
-        siemacResource.setLastUpdate(new DateTime().minusMinutes(10));
+        resource.getSiemacMetadataStatisticalResource().setMaintainer(mockAgencyExternalItem());
+        resource.getSiemacMetadataStatisticalResource().setCreator(mockOrganizationUnitExternalItem());
+        resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime().minusMinutes(10));
         
-        siemacResource.addPublisher(mockOrganizationUnitExternalItem());
+        resource.getSiemacMetadataStatisticalResource().addPublisher(mockOrganizationUnitExternalItem());
         
-        siemacResource.setRightsHolder(mockOrganizationUnitExternalItem());
-        siemacResource.setLicense(mockInternationalString());
+        resource.getSiemacMetadataStatisticalResource().setRightsHolder(mockOrganizationUnitExternalItem());
+        resource.getSiemacMetadataStatisticalResource().setLicense(mockInternationalString());
         
     }
     
-    private static void prepareToLifecycleCommonLifeCycleResource(LifeCycleStatisticalResource lifeCycleResource) {
-        lifeCycleResource.setVersionLogic("002.000");
-        lifeCycleResource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_DATA_UPDATE));
-        lifeCycleResource.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+    private static void prepareToLifecycleCommonLifeCycleResource(HasLifecycleStatisticalResource resource) {
+        resource.getLifeCycleStatisticalResource().setVersionLogic("002.000");
+        resource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_DATA_UPDATE));
+        resource.getLifeCycleStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
         
-        lifeCycleResource.setTitle(mockInternationalString());
-        lifeCycleResource.setDescription(mockInternationalString());
+        resource.getLifeCycleStatisticalResource().setTitle(mockInternationalString());
+        resource.getLifeCycleStatisticalResource().setDescription(mockInternationalString());
     }
 
 }
