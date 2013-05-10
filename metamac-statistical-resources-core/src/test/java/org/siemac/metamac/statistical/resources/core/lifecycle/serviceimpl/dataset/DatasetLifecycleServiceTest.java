@@ -26,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
@@ -41,6 +42,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Mock
     private SiemacLifecycleChecker                     siemacLifecycleChecker;
+
+    @Mock
+    private SiemacLifecycleFiller                      siemacLifecycleFiller;
 
     @Mock
     private LifecycleCommonMetadataChecker             lifecycleCommonMetadataChecker;

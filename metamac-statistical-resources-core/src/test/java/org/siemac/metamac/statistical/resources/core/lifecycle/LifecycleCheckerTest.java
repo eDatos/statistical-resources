@@ -1,67 +1,46 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejected;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-import org.springframework.util.ReflectionUtils;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @InjectMocks
     private LifecycleChecker                        lifecycleChecker                        = new LifecycleChecker();
-
-    @InjectMocks
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = new StatisticalResourcesNotPersistedDoMocks();
-
+    
     @Mock
     private LifecycleCommonMetadataChecker          lifecycleCommonMetadataChecker;
-
-    private StatisticalResourcesPersistedDoMocks    statisticalResourcesPersistedDoMocks = new StatisticalResourcesPersistedDoMocks();
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        Field field = ReflectionUtils.findField(StatisticalResourcesNotPersistedDoMocks.class, "statisticalResourcesPersistedDoMocks");
-        field.setAccessible(true);
-        ReflectionUtils.setField(field, statisticalResourcesNotPersistedDoMocks, statisticalResourcesPersistedDoMocks);
-    }
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -77,7 +56,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
-        lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems);
+        lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems); 
 
         assertEquals(0, exceptionItems.size());
 
@@ -143,24 +122,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         }
     }
 
-    @Test
-    public void testLifeCycleResourceApplySendToProductionValidationActions() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToProductionValidation(mockedResource);
-
-        lifecycleChecker.applySendToProductionValidationActions(getServiceContextAdministrador(), mockedResource);
-
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(mockedResource);
-        assertEquals(ProcStatusEnum.PRODUCTION_VALIDATION, mockedResource.getLifeCycleStatisticalResource().getProcStatus());
-    }
-
-    private void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycleStatisticalResource resource) {
-        assertNotNull(resource.getLifeCycleStatisticalResource().getProductionValidationDate());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getProductionValidationUser());
-    }
-
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -190,27 +151,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
                 }
             }
         }
-    }
-
-    @Test
-    public void testLifeCycleResourceApplySendToDiffusionValidationActions() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToDiffusionValidation(mockedResource);
-
-        lifecycleChecker.applySendToDiffusionValidationActions(getServiceContextAdministrador(), mockedResource);
-
-        assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(mockedResource);
-        assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, mockedResource.getLifeCycleStatisticalResource().getProcStatus());
-
-    }
-
-    private void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycleStatisticalResource resource) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource);
-        assertNotNull(resource.getLifeCycleStatisticalResource().getDiffusionValidationDate());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getDiffusionValidationUser());
-
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -243,26 +183,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
                 }
             }
         }
-    }
-
-    @Test
-    public void testLifeCycleResourceApplySendToValidationRejectedActions() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToValidationRejected(mockedResource);
-
-        lifecycleChecker.applySendToValidationRejectedActions(getServiceContextAdministrador(), mockedResource);
-
-        assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(mockedResource);
-        assertEquals(ProcStatusEnum.VALIDATION_REJECTED, mockedResource.getLifeCycleStatisticalResource().getProcStatus());
-
-    }
-
-    private void assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(HasLifecycleStatisticalResource resource) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource);
-        assertNotNull(resource.getLifeCycleStatisticalResource().getRejectValidationDate());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getRejectValidationUser());
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -363,77 +283,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleChecker.checkSendToPublished(mockedResource, baseMetadata, exceptionItems);
         assertEquals(0, exceptionItems.size());
-    }
-
-    @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersion() throws Exception {
-        DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-        DatasetVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-
-        prepareToPublished(resource);
-        createPublished(previousResource);
-
-        lifecycleChecker.applySendToPublishedActions(getServiceContextAdministrador(), resource, previousResource);
-
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource);
-    }
-    
-    @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersion() throws Exception {
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-        PublicationVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-
-        prepareToPublished(resource);
-        createPublished(previousResource);
-
-        lifecycleChecker.applySendToPublishedActions(getServiceContextAdministrador(), resource, previousResource);
-
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource);
-    }
-
-    @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsError() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined resource type"));
-
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        HasLifecycleStatisticalResource mockedPreviousResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedPreviousResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToPublished(mockedResource);
-        createPublished(mockedPreviousResource);
-
-        lifecycleChecker.applySendToPublishedActions(getServiceContextAdministrador(), mockedResource, mockedPreviousResource);
-    }
-
-    private void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasSiemacMetadataStatisticalResource previousResource) {
-        
-        // Actual Resource
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource);
-        assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(resource);
-        assertNotNull(resource.getLifeCycleStatisticalResource().getPublicationDate());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getPublicationUser());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getValidFrom());
-        assertEquals(resource.getLifeCycleStatisticalResource().getPublicationDate(), resource.getLifeCycleStatisticalResource().getValidFrom());
-        assertEquals(ProcStatusEnum.PUBLISHED, resource.getLifeCycleStatisticalResource().getProcStatus());
-
-        if (previousResource != null) {
-            // Previous Resource
-            assertNotNullAutomaticallyFilledMetadataOldPublished(previousResource);
-            assertEquals(ProcStatusEnum.PUBLISHED, previousResource.getLifeCycleStatisticalResource().getProcStatus());
-            
-            // Common
-            assertEquals(resource.getLifeCycleStatisticalResource().getValidFrom(), previousResource.getLifeCycleStatisticalResource().getValidTo());
-        }
-    }
-    
-    private void assertNotNullAutomaticallyFilledMetadataOldPublished(HasLifecycleStatisticalResource previousResource) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(previousResource);
-        assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(previousResource);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(previousResource, null);
-        assertNotNull(previousResource.getLifeCycleStatisticalResource().getIsReplacedByVersion());
-        assertNotNull(previousResource.getLifeCycleStatisticalResource().getValidTo());
     }
 
     

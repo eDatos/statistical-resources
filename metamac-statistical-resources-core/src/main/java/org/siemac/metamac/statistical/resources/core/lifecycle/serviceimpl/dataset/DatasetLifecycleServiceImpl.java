@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private SiemacLifecycleChecker                     siemacLifecycleChecker;
+
+    @Autowired
+    private SiemacLifecycleFiller                      siemacLifecycleFiller;
 
     @Autowired
     private DatasetLifecycleServiceInvocationValidator datasetLifecycleServiceInvocationValidator;
@@ -69,7 +73,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToProductionValidationActions(ctx, resource);
+        siemacLifecycleFiller.applySendToProductionValidationActions(ctx, resource);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -93,7 +97,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToDiffusionValidationActions(ctx, resource);
+        siemacLifecycleFiller.applySendToDiffusionValidationActions(ctx, resource);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -117,7 +121,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToValidationRejectedLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToValidationRejectedActions(ctx, resource);
+        siemacLifecycleFiller.applySendToValidationRejectedActions(ctx, resource);
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {
@@ -158,10 +162,10 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     @Override
     protected void checkSendToPublishedResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented"); 
+        throw new UnsupportedOperationException("Not implemented");
 
     }
-    
+
     @Override
     protected void checkSendToPublishedLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         // TODO Auto-generated method stub

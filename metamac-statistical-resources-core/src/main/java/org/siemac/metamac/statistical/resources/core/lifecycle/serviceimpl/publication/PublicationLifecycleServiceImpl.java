@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -23,6 +24,9 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
 
     @Autowired
     private SiemacLifecycleChecker                         siemacLifecycleChecker;
+
+    @Autowired
+    private SiemacLifecycleFiller                          siemacLifecycleFiller;
 
     @Autowired
     private PublicationLifecycleServiceInvocationValidator publicationLifecycleServiceInvocationValidator;
@@ -51,7 +55,7 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
 
     @Override
     protected void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToProductionValidationActions(ctx, resource);
+        siemacLifecycleFiller.applySendToProductionValidationActions(ctx, resource);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -75,7 +79,7 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
 
     @Override
     protected void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        siemacLifecycleChecker.applySendToDiffusionValidationActions(ctx, resource);
+        siemacLifecycleFiller.applySendToDiffusionValidationActions(ctx, resource);
     }
 
     /* GENERAL ABSTRACT METHODS */

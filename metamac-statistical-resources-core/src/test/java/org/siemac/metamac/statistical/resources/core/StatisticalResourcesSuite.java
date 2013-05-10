@@ -18,7 +18,9 @@ import org.siemac.metamac.statistical.resources.core.facade.serviceapi.Statistic
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataCheckerTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFillerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleCheckerTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFillerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
@@ -59,6 +61,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      LifecycleCommonMetadataCheckerTest.class,
                      LifecycleCheckerTest.class,
                      SiemacLifecycleCheckerTest.class,
+                     LifecycleFillerTest.class,
+                     SiemacLifecycleFillerTest.class,
                      DatasetLifecycleServiceInvocationValidatorTest.class,
                      DatasetLifecycleServiceTest.class,
                      CommonDto2DoMapperTest.class,
