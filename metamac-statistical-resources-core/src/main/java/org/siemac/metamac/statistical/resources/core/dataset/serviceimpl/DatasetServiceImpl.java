@@ -163,7 +163,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
 
-        datasetVersion = getDatasetVersionRepository().save(datasetVersion);
+        if (datasetVersion.isRelatedDsdChanged()) {
+            datasetVersion.getDatasources().clear();
+        }
+        
+        datasetVersion = getDatasetVersionRepository().save(datasetVersion); 
         return datasetVersion;
     }
 

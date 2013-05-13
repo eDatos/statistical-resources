@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -27,11 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements DatasetDto2DoMapper {
 
     @Autowired
-    private DatasourceRepository     datasourceRepository;
+    private DatasourceRepository           datasourceRepository;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
-    
+    private DatasetVersionRepository       datasetVersionRepository;
+
     @Autowired
     private StatisticOfficialityRepository statisticOfficialityRepository;
 
@@ -88,8 +90,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             try {
                 target = datasetVersionRepository.findById(source.getId());
             } catch (DatasetVersionNotFoundException e) {
-                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASET_VERSION_NOT_FOUND)
-                        .withMessageParameters(source.getUrn()).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASET_VERSION_NOT_FOUND).withMessageParameters(source.getUrn())
+                        .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
             }
         }
 
@@ -111,23 +113,51 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         externalItemDtoListToDoList(source.getTemporalGranularities(), target.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES);
         externalItemDtoListToDoList(source.getStatisticalUnit(), target.getStatisticalUnit(), ServiceExceptionParameters.DATASET_VERSION__STATISTICAL_UNIT);
 
-
-        if (target.getId() == null || DatasetMetadataEditionChecks.canDsdBeEdited(target.getSiemacMetadataStatisticalResource().getProcStatus())) {
-            target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
+        target.setRelatedDsdChanged(false);
+        if (source.getRelatedDsd() != null && DatasetMetadataEditionChecks.canDsdBeEdited(target.getId(), target.getSiemacMetadataStatisticalResource().getProcStatus())) {
+            datasetVersionDtoRelatedDsdToDo(source, target);
         }
-
+            
         if (DatasetMetadataEditionChecks.canDateNextUpdateBeEdited()) {
             target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
         }
-        
+
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
-        
         target.setStatisticOfficiality(statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
         return target;
     }
 
-    public StatisticOfficiality statisticOfficialityDtoToDo(StatisticOfficialityDto source, StatisticOfficiality target, String metadataName) throws MetamacException{
+    //source.relatedDsd is supposed not to be null
+    private void datasetVersionDtoRelatedDsdToDo(DatasetDto source, DatasetVersion target) throws MetamacException {
+        if (target.getRelatedDsd() == null) {
+            target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
+        } else {
+            boolean changedDsd = false;
+            if (areDifferentDsd(target.getRelatedDsd(), source.getRelatedDsd())) {
+                if (DatasetMetadataEditionChecks.canDsdBeReplacedByAnyOtherDsd(target.getId(), target.getSiemacMetadataStatisticalResource().getVersionLogic(), target.getSiemacMetadataStatisticalResource().getProcStatus())) {
+                    changedDsd = true;
+                }
+            } else if (areSameDsdDifferentVersion(target.getRelatedDsd(), source.getRelatedDsd())) {
+                changedDsd = true;
+            }
+            target.setRelatedDsdChanged(changedDsd);
+            if (changedDsd) {
+                target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
+            }
+        }
+    }
+    
+    // Check if its the same dsd
+    private boolean areDifferentDsd(ExternalItem dsd, ExternalItemDto dsdDto) {
+        return !dsd.getCode().equals(dsdDto.getCode());
+    }
+    
+    private boolean areSameDsdDifferentVersion(ExternalItem dsd, ExternalItemDto dsdDto) {
+        return dsd.getCode().equals(dsdDto.getCode()) && !dsd.getUrn().equals(dsdDto.getUrn());
+    }
+
+    public StatisticOfficiality statisticOfficialityDtoToDo(StatisticOfficialityDto source, StatisticOfficiality target, String metadataName) throws MetamacException {
         if (source == null) {
             return null;
         }

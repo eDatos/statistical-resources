@@ -16,15 +16,5 @@ public class RelatedResourceUtils {
         return null;
     }
     
-    public static Long retrieveResourceIdLinkedToRelatedResource(RelatedResource source) {
-        switch (source.getType()) {
-            case DATASET_VERSION:
-                return source.getDatasetVersion() != null? source.getDatasetVersion().getId() : null;
-            case PUBLICATION_VERSION:
-                return source.getPublicationVersion() != null? source.getPublicationVersion().getId() : null;
-        }
-        return null;
-    }
-    
 
 }

@@ -10,6 +10,8 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 
 public class StatisticalResourcesValidationUtils extends ValidationUtils {
@@ -47,6 +49,19 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
      * @param exceptions
      */
     public static void checkMetadataRequired(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (isEmpty(parameter)) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
+        }
+    }
+    
+    /**
+     * Check for a required metadata and add an exception for a failed validation.
+     * 
+     * @param parameter
+     * @param parameterName
+     * @param exceptions
+     */
+    public static void checkMetadataRequired(RelatedResourceDto parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         }
@@ -158,8 +173,19 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (parameter == null) {
             return Boolean.TRUE;
         }
-
         return isEmpty(parameter.getCode()) || isEmpty(parameter.getUri()) || isEmpty(parameter.getUrn()) || isEmpty(parameter.getType());
+    }
+    
+    /**
+     * Check if a RelatedResourceDto is empty.
+     * @param parameter
+     * @return
+     */
+    private static Boolean isEmpty(RelatedResourceDto parameter) {
+        if (parameter == null) {
+            return Boolean.TRUE;
+        }
+        return isEmpty(parameter.getUrn()) || isEmpty(parameter.getType());
     }
     
     /**

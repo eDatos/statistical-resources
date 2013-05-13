@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.base.utils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -12,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStat
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class FillMetadataForCreateResourceUtils {
     
@@ -33,7 +33,7 @@ public class FillMetadataForCreateResourceUtils {
     private static void fillMetadataForCreateVersionableResource(VersionableStatisticalResource resource) {
         fillMetadataForCreateIdentifiableResource(resource);
 
-        resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
+        resource.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
         resource.getVersionRationaleTypes().clear();
         resource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
     }
