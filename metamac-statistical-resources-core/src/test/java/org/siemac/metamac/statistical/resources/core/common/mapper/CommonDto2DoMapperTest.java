@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.common.mapper;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.siemac.metamac.common.test.utils.MetamacMocks.mockExternalItemDtoComplete;
@@ -31,11 +30,16 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -57,6 +61,9 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     private RelatedResourceRepository     relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
     private DatasetVersionRepository      datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
     private PublicationVersionRepository  publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
+    
+    @Autowired
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
 
     @Autowired
     private CommonDto2DoMapper            commonDto2DoMapper;
@@ -148,6 +155,16 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         testExternalItemDtoToDo(externalItemDto, null);
         Mockito.verify(externalItemRepository, never()).delete(Mockito.any(ExternalItem.class));
+    }
+    
+    @Test
+    public void testExternalItemDtoToDoWithExistsUrnNullDtoAndNullDo() throws Exception {
+        // EXISTS, NULL
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, METADATA_NAME));
+        
+        ExternalItemDto externalItemDto = mockExternalItemDtoComplete(null, TypeExternalArtefactsEnum.AGENCY);
+        
+        testExternalItemDtoToDo(externalItemDto, null);
     }
 
     @Test
@@ -303,97 +320,223 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testRelatedResourceDtoToDoWithNullDtoAndNullDo() throws Exception {
-        // NULL, NULL
-        fail("TODO: Pendiente Robert");
+        testRelatedResourceDtoToDo(null, null);
+        Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
 
     @Test
     public void testRelatedResourceDtoToDoWithExistsDtoAndNullDo() throws Exception {
-        // EXISTS, NULL
-        fail("TODO: Pendiente Robert");
+        RelatedResource expected = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
+        DatasetVersion datasetVersion = expected.getDatasetVersion();
+        
+        Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn())).thenReturn(datasetVersion);
+        
+        RelatedResourceDto relatedResourceDto = StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersion);
+        
+        testRelatedResourceDtoToDo(expected, relatedResourceDto, null);
     }
+    
+    @Test
+    public void testRelatedResourceDtoToDoWithExistsUrnNullDtoAndNullDo() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, METADATA_NAME));
+        
+        RelatedResource expected = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
+        DatasetVersion datasetVersion = expected.getDatasetVersion();
+        
+        Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn())).thenReturn(datasetVersion);
+        
+        RelatedResourceDto relatedResourceDto = StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersion);
+        relatedResourceDto.setUrn(null);
+        
+        testRelatedResourceDtoToDo(expected, relatedResourceDto, null);
+    }
+    
 
     @Test
     public void testRelatedResourceDtoToDoWithNullDtoAndExistsDo() throws Exception {
-        // NULL, EXISTS
-        fail("TODO: Pendiente Robert");
+        RelatedResource target = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
+        
+        testRelatedResourceDtoToDo(null, target);
+        
+        Mockito.verify(relatedResourceRepository).delete(target);
     }
 
     @Test
     public void testRelatedResourceDtoToDoWithExistsDtoAndExistsDo() throws Exception {
-        // EXISTS, EXISTS
-        fail("TODO: Pendiente Robert");
+        RelatedResource target = createRelatedResourceLinkedToMockedDatasetVersion(URN_02);
+        RelatedResource expected = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
+        
+        RelatedResourceDto relatedResourceDto = StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(expected.getDatasetVersion());
+        
+        testRelatedResourceDtoToDo(expected, relatedResourceDto, target);
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithNullDtoListAndNullDoList() throws Exception {
-        // NULL, NULL
-        fail("TODO: Pendiente Robert");
+        // null, null
+       testRelatedResourceDtoListToDoList(null, null);
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithNullDtoListAndEmptyDoList() throws Exception {
-        // NULL, EMPTY
-        fail("TODO: Pendiente Robert");
+        // null, EMPTY
+        testRelatedResourceDtoListToDoList(null, new ArrayList<RelatedResource>());
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithEmptyDtoListAndNullDoList() throws Exception {
-        // EMPTY, NULL
-        fail("TODO: Pendiente Robert");
+        // EMPTY, null
+        testRelatedResourceDtoListToDoList(new ArrayList<RelatedResourceDto>(), null);
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithEmptyDtoListAndEmptyDoList() throws Exception {
         // EMPTY, EMPTY
-        fail("TODO: Pendiente Robert");
+        testRelatedResourceDtoListToDoList(new ArrayList<RelatedResourceDto>(), new ArrayList<RelatedResource>());
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithEmptyDtoListAndExistsDoList() throws Exception {
         // EMPTY, EXISTS
-        fail("TODO: Pendiente Robert");
+        List<RelatedResource> targets = new ArrayList<RelatedResource>();
+        targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        testRelatedResourceDtoListToDoList(new ArrayList<RelatedResourceDto>(), targets);
+        
+        for (RelatedResource resource : targets) {
+            Mockito.verify(relatedResourceRepository).delete(resource);
+        }
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithExistsDtoListAndEmptyDoList() throws Exception {
         // EXISTS, EMPTY
-        fail("TODO: Pendiente Robert");
+        List<RelatedResource> expected = new ArrayList<RelatedResource>();
+        expected.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        expected.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        testRelatedResourceDtoListToDoList(expected, sources, new ArrayList<RelatedResource>());
+        Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithSameElements() throws Exception {
         // EXISTS, EXISTS: Same elements
-        fail("TODO: Pendiente Robert");
-    }
-
-    @Test
-    public void testRelatedResourceDtoListToDoListWithMoreElementsInDtoList() throws Exception {
-        // EXISTS, EXISTS: More elements
-        fail("TODO: Pendiente Robert");
+        List<RelatedResource> target = new ArrayList<RelatedResource>();
+        target.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        target.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        testRelatedResourceDtoListToDoList(target, sources, target);
+        Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithLessElementsInDtoList() throws Exception {
         // EXISTS, EXISTS: Less elements
-        fail("TODO: Pendiente Robert");
+        
+        List<RelatedResource> targets = new ArrayList<RelatedResource>();
+        targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        RelatedResource deletedResource = targets.get(1); 
+        
+        List<RelatedResource> expected = new ArrayList<RelatedResource>();
+        expected.add(targets.get(0));
+        
+        List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        
+        testRelatedResourceDtoListToDoList(expected, sources, targets);
+        
+        Mockito.verify(relatedResourceRepository).delete(deletedResource);
+    }
+
+    @Test
+    public void testRelatedResourceDtoListToDoListWithMoreElementsInDtoList() throws Exception {
+        // EXISTS, EXISTS: More elements
+        RelatedResource newResource = createRelatedResourceLinkedToMockedDatasetVersion(URN_02);
+        
+        List<RelatedResource> targets = new ArrayList<RelatedResource>();
+        targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        
+        List<RelatedResource> expected = new ArrayList<RelatedResource>();
+        expected.add(targets.get(0));
+        expected.add(newResource);
+        
+        List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        testRelatedResourceDtoListToDoList(expected, sources, targets);
+        
+        Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithSameListSizeAndDifferentElements() throws Exception {
         // EXISTS, EXISTS: Different elements
-        fail("TODO: Pendiente Robert");
+        RelatedResource deletedResource = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
+        RelatedResource newResource = createRelatedResourceLinkedToMockedDatasetVersion(URN_02);
+        
+        List<RelatedResource> targets = new ArrayList<RelatedResource>();
+        targets.add(deletedResource);
+        
+        List<RelatedResource> expected = new ArrayList<RelatedResource>();
+        expected.add(newResource);
+        
+        List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
+        sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
+        
+        testRelatedResourceDtoListToDoList(expected, sources, targets);
+        
+        Mockito.verify(relatedResourceRepository).delete(deletedResource);
     }
 
     private void testRelatedResourceDtoToDo(RelatedResourceDto relatedResourceDto, RelatedResource relatedResource) throws Exception {
         RelatedResource result = commonDto2DoMapper.relatedResourceDtoToDo(relatedResourceDto, relatedResource, METADATA_NAME);
         BaseAsserts.assertEqualsRelatedResource(result, relatedResourceDto);
     }
+    
+    private void testRelatedResourceDtoToDo(RelatedResource expected, RelatedResourceDto relatedResourceDto, RelatedResource relatedResource) throws Exception {
+        RelatedResource result = commonDto2DoMapper.relatedResourceDtoToDo(relatedResourceDto, relatedResource, METADATA_NAME);
+        BaseAsserts.assertEqualsRelatedResource(expected, result);
+    }
 
     private void testRelatedResourceDtoListToDoList(List<RelatedResourceDto> dtos, List<RelatedResource> entities) throws Exception {
         List<RelatedResource> result = commonDto2DoMapper.relatedResourceDtoListToDoList(dtos, entities, METADATA_NAME);
         BaseAsserts.assertEqualsRelatedResourceCollectionMapper(result, dtos);
-
+    }
+    
+    private void testRelatedResourceDtoListToDoList(List<RelatedResource> expected, List<RelatedResourceDto> dtos, List<RelatedResource> entities) throws Exception {
+        List<RelatedResource> result = commonDto2DoMapper.relatedResourceDtoListToDoList(dtos, entities, METADATA_NAME);
+        BaseAsserts.assertEqualsRelatedResourceCollection(result, expected);
+    }
+    
+    
+    private RelatedResource createRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) throws MetamacException {
+        RelatedResource resource = statisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToMockedDatasetVersion(datasetVersionUrn);
+        
+        DatasetVersion datasetVersion = resource.getDatasetVersion();
+        Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersionUrn)).thenReturn(datasetVersion);
+        
+        return resource;
+    }
+    
+    
+    private RelatedResourceDto createSimpleRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) {
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setUrn(datasetVersionUrn);
+        target.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        return target;
     }
 
     // ------------------------------------------------------------

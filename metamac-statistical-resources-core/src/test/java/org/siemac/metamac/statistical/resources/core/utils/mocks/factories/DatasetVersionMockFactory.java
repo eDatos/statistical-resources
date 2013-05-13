@@ -83,6 +83,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME = "DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
     private static DatasetVersion DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
+    
+    public static final String    DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME = "DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED";
+    private static DatasetVersion DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
 
     private static final String   DATASET_VERSION_03_VERSION                                                   = "001.000";
     private static final String   DATASET_VERSION_04_VERSION                                                   = "002.000";
@@ -310,6 +313,14 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
     }
+    
+    protected static DatasetVersion getDatasetVersion21ProductionValidationReadyForValidationRejected() {
+        if (DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED == null) {
+            DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED = createDatasetVersionEmpty();
+            prepareToValidationRejected(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED);
+        }
+        return DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
+    }
 
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
@@ -364,6 +375,11 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
         prepareToProductionValidation(datasetVersion);
         LifecycleTestUtils.prepareToDiffusionValidation(datasetVersion);
+    }
+    
+    private static void prepareToValidationRejected(DatasetVersion datasetVersion) {
+        prepareToProductionValidation(datasetVersion);
+        LifecycleTestUtils.prepareToValidationRejected(datasetVersion);
     }
 
 

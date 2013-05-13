@@ -100,11 +100,13 @@ public class CommonAsserts extends MetamacAsserts {
             return;
         }
         
+        NameableStatisticalResource nameableResourceActual = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(actual);
+        NameableStatisticalResource nameableResourceExpec = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(expected);
+        
+        
         assertEquals(expected.getType(), actual.getType());
-        Long actualResourceId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(actual);
-        Long expectedResourceId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(expected);
-        assertEqualsNullability(expectedResourceId, actualResourceId);
-        assertEquals(expectedResourceId, actualResourceId);
+        assertEquals(expected.getId(), actual.getId());
+        BaseAsserts.assertEqualsNameableStatisticalResource(nameableResourceExpec, nameableResourceActual);
     }
 
 
@@ -119,9 +121,9 @@ public class CommonAsserts extends MetamacAsserts {
             boolean found = false;
             for (RelatedResource actualRes : actual) {
                 if (actualRes.getType().equals(expec.getType())) {
-                    Long actualResId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(actualRes);
-                    Long expecId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(expec);
-                    if (actualResId.equals(expecId)) {
+                    NameableStatisticalResource nameableResourceActual = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(actualRes);
+                    NameableStatisticalResource nameableResourceExpec = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(expec);
+                    if (nameableResourceExpec.getUrn().equals(nameableResourceActual.getUrn())) {
                         found = true;
                     }
                 }
@@ -155,19 +157,21 @@ public class CommonAsserts extends MetamacAsserts {
             return;
         }
 
+        NameableStatisticalResource nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(entity); 
         assertEquals(entity.getType(), dto.getType());
-        Long id = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(entity);
-
-        assertEqualsNullability(id, dto.getRelatedId());
-        assertEquals(id, dto.getRelatedId());
+        assertEquals(nameableResource.getCode(), dto.getCode());
+        assertEqualsInternationalString(nameableResource.getTitle(), dto.getTitle());
+        assertEquals(nameableResource.getUrn(), dto.getUrn());
     }
 
     public static void assertEqualsRelatedResourceCollectionMapper(Collection<RelatedResource> entities, Collection<RelatedResourceDto> dtos) {
-
-        assertEqualsNullability(entities, dtos);
         if (entities == null) {
-            assertNull(dtos);
+            entities = new ArrayList<RelatedResource>(); 
         }
+        if (dtos == null) {
+            dtos = new ArrayList<RelatedResourceDto>();
+        }
+
         assertEquals(entities.size(), dtos.size());
         for (RelatedResource entity : entities) {
             boolean found = false;

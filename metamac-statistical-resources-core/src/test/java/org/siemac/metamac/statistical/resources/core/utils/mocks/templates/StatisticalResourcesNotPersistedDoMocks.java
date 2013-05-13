@@ -1,13 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import org.mockito.Mockito;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -154,6 +158,16 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         PublicationVersion publicationVersion = mockPublicationVersion();
         publicationVersion.setSiemacMetadataStatisticalResource(null);
         return publicationVersion;
+    }
+    
+    public RelatedResource mockRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) throws MetamacException {
+        DatasetVersion previousDatasetVersion = statisticalResourcesPersistedDoMocks.mockDatasetVersion();
+        previousDatasetVersion.getSiemacMetadataStatisticalResource().setUrn(datasetVersionUrn);
+        
+        RelatedResource target = new RelatedResource();
+        target.setDatasetVersion(previousDatasetVersion);
+        target.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        return target;
     }
 
     // -----------------------------------------------------------------

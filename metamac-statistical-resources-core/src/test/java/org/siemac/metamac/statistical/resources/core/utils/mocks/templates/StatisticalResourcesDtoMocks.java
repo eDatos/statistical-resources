@@ -16,6 +16,7 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -277,21 +278,34 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         return itemDto;
     }
 
-    public static RelatedResourceDto mockDatasetVersionRelatedDto(DatasetDto datasetVersion) {
+    // RELATED RESOURCE DTOs
+
+    
+    public static RelatedResourceDto mockNotPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
-        resource.setType(TypeRelatedResourceEnum.DATASET_VERSION);
-        resource.setRelatedId(datasetVersion.getId());
-        populateRelatedResource(resource, datasetVersion);
+        populateNotPersistedRelatedResourceIdentifiable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
         return resource;
     }
     
-    private static void populateRelatedResource(RelatedResourceDto relatedDto, NameableStatisticalResourceDto nameable) {
-        relatedDto.setCode(nameable.getCode());
-        relatedDto.setUrn(nameable.getUrn());
-        relatedDto.setTitle(nameable.getTitle());
+    
+    private static void populateNotPersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
+        relatedDto.setUrn(identifiable.getUrn());
+        relatedDto.setType(type);
+    }
+    
+    private static void populatePersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResourceDto identifiableDto, TypeRelatedResourceEnum type) {
+        relatedDto.setUrn(identifiableDto.getUrn());
+        relatedDto.setType(type);
+        relatedDto.setCode(identifiableDto.getCode());
+    }
+    
+    private static void populatePersistedRelatedResourceNameable(RelatedResourceDto relatedDto, NameableStatisticalResourceDto nameableDto, TypeRelatedResourceEnum type) {
+        populatePersistedRelatedResourceIdentifiable(relatedDto, nameableDto, type);
+        relatedDto.setTitle(nameableDto.getTitle());
     }
 
-
+    // STATISTIC OFFICIALITY DTOs
+    
     private static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
         StatisticOfficialityDto dto = new StatisticOfficialityDto();
         dto.setIdentifier(officiality.getIdentifier());

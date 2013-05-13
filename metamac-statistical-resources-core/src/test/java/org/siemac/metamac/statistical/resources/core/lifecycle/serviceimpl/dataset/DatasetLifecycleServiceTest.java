@@ -6,7 +6,7 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 
@@ -71,6 +71,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         Mockito.validateMockitoUsage();
     }
 
+    @Override
     @Test
     public void testSendToProductionValidation() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
@@ -95,6 +96,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionChanged);
     }
 
+    @Override
     @Test
     public void testSendToDiffusionValidation() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
@@ -125,13 +127,30 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
                 Mockito.anyListOf(MetamacExceptionItem.class));
     }
 
+    @Override
     @Test
     public void testSendToValidationRejected() throws Exception {
-        fail("TODO: Pendiente Robert - not tested");
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME);
+        Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
+
+        datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion);
+    }
+    
+    @Test
+    public void testSendToValidationRejectedFail() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
+        Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
+        
+        datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion);
+        
+        Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(DatasetVersion.class), Mockito.anyString(),
+                Mockito.anyListOf(MetamacExceptionItem.class));
     }
 
+    @Override
     @Test
     public void testSendToPublished() throws Exception {
+        //FIXME: Do test
         thrown.expect(UnsupportedOperationException.class);
 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
