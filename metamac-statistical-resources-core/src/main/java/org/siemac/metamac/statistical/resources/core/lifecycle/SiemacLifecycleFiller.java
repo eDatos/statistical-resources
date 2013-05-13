@@ -10,7 +10,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +24,13 @@ public class SiemacLifecycleFiller {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
     
-    public void applySendToProductionValidationActions(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource) {
+    public void applySendToProductionValidationActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToProductionValidationActions(ctx, resource);
         //FIXME: Computed fields based on data
         resource.getSiemacMetadataStatisticalResource().setKeywords(buildKeywords(resource));
     }
     
-    private InternationalString buildKeywords(HasSiemacMetadataStatisticalResource resource) {
+    private InternationalString buildKeywords(HasSiemacMetadata resource) {
         Set<String> locales = new HashSet<String>();
         if (resource.getSiemacMetadataStatisticalResource().getTitle() != null) {
             locales.addAll(resource.getSiemacMetadataStatisticalResource().getTitle().getLocales());
@@ -78,7 +78,7 @@ public class SiemacLifecycleFiller {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToDiffusionValidationActions(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource) {
+    public void applySendToDiffusionValidationActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToDiffusionValidationActions(ctx, resource);
     }
     
@@ -86,7 +86,7 @@ public class SiemacLifecycleFiller {
     // >> VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
     
-    public void applySendToValidationRejectedActions(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource) {
+    public void applySendToValidationRejectedActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToValidationRejectedActions(ctx, resource);
         //FIXME: clear metadata computed in production validation and diffusion validation
     }
@@ -95,8 +95,8 @@ public class SiemacLifecycleFiller {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
     
-    public void applySendToPublished(ServiceContext ctx, HasSiemacMetadataStatisticalResource resource, HasSiemacMetadataStatisticalResource previousResource) throws MetamacException {
+    public void applySendToPublished(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
         lifecycleFiller.applySendToPublishedActions(ctx, resource, previousResource);
-        // Cumplimentar copyrigthed
+        resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom());
     }
 }

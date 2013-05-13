@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -15,11 +15,11 @@ public class LifecycleAsserts extends CommonAsserts {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public static void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycleStatisticalResource resource) {
+    public static void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycle resource) {
         assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycleStatisticalResource resource, boolean checkStatus) {
+    private static void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycle resource, boolean checkStatus) {
         assertNotNull(resource.getLifeCycleStatisticalResource().getProductionValidationDate());
         assertNotNull(resource.getLifeCycleStatisticalResource().getProductionValidationUser());
         if (checkStatus) {
@@ -31,11 +31,11 @@ public class LifecycleAsserts extends CommonAsserts {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public static void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycleStatisticalResource resource) {
+    public static void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycle resource) {
         assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(resource, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycleStatisticalResource resource, boolean checkStatus) {
+    private static void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycle resource, boolean checkStatus) {
         assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, false);
 
         assertNotNull(resource.getLifeCycleStatisticalResource().getDiffusionValidationDate());
@@ -50,11 +50,11 @@ public class LifecycleAsserts extends CommonAsserts {
     // >> VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
 
-    public static void assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(HasLifecycleStatisticalResource resource) {
+    public static void assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(HasLifecycle resource) {
         assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(resource, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(HasLifecycleStatisticalResource resource, boolean checkStatus) {
+    private static void assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(HasLifecycle resource, boolean checkStatus) {
         assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, false);
 
         assertNotNull(resource.getLifeCycleStatisticalResource().getRejectValidationDate());
@@ -69,11 +69,11 @@ public class LifecycleAsserts extends CommonAsserts {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion) {
+    public static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycle resource, HasLifecycle previousVersion) {
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousVersion, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion, boolean checkStatus) {
+    private static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycle resource, HasLifecycle previousVersion, boolean checkStatus) {
         assertNotNullAutomaticallyFilledMetadataForAPublishedResource(resource);
 
         if (previousVersion != null) {
@@ -86,7 +86,7 @@ public class LifecycleAsserts extends CommonAsserts {
         }
     }
 
-    private static void assertReplacesVersionCorrectlyFilled(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion) {
+    private static void assertReplacesVersionCorrectlyFilled(HasLifecycle resource, HasLifecycle previousVersion) {
         assertNotNull(resource.getLifeCycleStatisticalResource().getReplacesVersion());
         if (previousVersion instanceof DatasetVersion) {
             assertEquals(previousVersion.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getReplacesVersion().getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
@@ -97,7 +97,7 @@ public class LifecycleAsserts extends CommonAsserts {
         }
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataForAPublishedResource(HasLifecycleStatisticalResource resource) {
+    private static void assertNotNullAutomaticallyFilledMetadataForAPublishedResource(HasLifecycle resource) {
         assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, false);
         assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(resource, false);
         
@@ -109,7 +109,7 @@ public class LifecycleAsserts extends CommonAsserts {
 
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataOldPublished(HasLifecycleStatisticalResource previousResource) {
+    private static void assertNotNullAutomaticallyFilledMetadataOldPublished(HasLifecycle previousResource) {
         assertNotNullAutomaticallyFilledMetadataForAPublishedResource(previousResource);
         assertNotNull(previousResource.getLifeCycleStatisticalResource().getIsReplacedByVersion());
         assertNotNull(previousResource.getLifeCycleStatisticalResource().getValidTo());

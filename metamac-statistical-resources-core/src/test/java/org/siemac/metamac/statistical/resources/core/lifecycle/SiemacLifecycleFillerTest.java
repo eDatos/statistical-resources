@@ -4,14 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToDiffusionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToProductionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToDiffusionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToProductionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPublished;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,10 +25,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 
 /*
  * No spring context, we set the SUT (Software under test) dependencies with mocked objects. Unit testing style ;)
@@ -53,26 +51,17 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testSiemacResourceApplySendToProductionValidationActions() throws Exception {
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
-
-        prepareToProductionValidation(mockedResource);
+        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToProductionValidation();
 
         siemacLifecycleFiller.applySendToProductionValidationActions(getServiceContextAdministrador(), mockedResource);
 
         // No specific actions for siemac
-
-        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycleStatisticalResource.class));
+        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
     }
 
     @Test
     public void testSiemacResourceApplySendToProductionValidationActionsKeywordsBuilding() throws Exception {
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
-        
-        prepareToProductionValidation(mockedResource);
+        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToProductionValidation();
         mockedResource.getSiemacMetadataStatisticalResource().setTitle(new InternationalString(new String[]{"es", "en"}, new String[]{"Paro en España", "Unemployment in Spain"}));
         mockedResource.getSiemacMetadataStatisticalResource().setDescription(new InternationalString(new String[]{"es", "en"}, new String[]{"Medido en miles", "Measured in thousands"}));
 
@@ -82,10 +71,10 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
         asssertContainsKeywordsInLocale(mockedResource, "en", "Unemployment", "Spain", "Measured", "thousands");
         assertEquals(2, mockedResource.getSiemacMetadataStatisticalResource().getKeywords().getLocales().size());
 
-        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycleStatisticalResource.class));
+        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
     }
 
-    private void asssertContainsKeywordsInLocale(HasSiemacMetadataStatisticalResource resource, String locale, String... keywords) {
+    private void asssertContainsKeywordsInLocale(HasSiemacMetadata resource, String locale, String... keywords) {
         assertNotNull(resource.getSiemacMetadataStatisticalResource().getKeywords());
         String localisedKeywords = resource.getSiemacMetadataStatisticalResource().getKeywords().getLocalisedLabel(locale);
         assertNotNull(localisedKeywords);
@@ -100,17 +89,12 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testSiemacResourceApplySendToDiffusionValidationActions() throws Exception {
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
-        
-        prepareToDiffusionValidation(mockedResource);
+        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToDiffusionValidation();
 
         siemacLifecycleFiller.applySendToDiffusionValidationActions(getServiceContextAdministrador(), mockedResource);
 
         // No specific actions for siemac
-
-        verify(lifecycleFiller, times(1)).applySendToDiffusionValidationActions(any(ServiceContext.class), any(HasLifecycleStatisticalResource.class));
+        verify(lifecycleFiller, times(1)).applySendToDiffusionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -119,17 +103,29 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testSiemacResourceApplySendToValidationRejectedActions() throws Exception {
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
-        
-        prepareToValidationRejected(mockedResource);
+        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToValidationRejected();
 
         siemacLifecycleFiller.applySendToValidationRejectedActions(getServiceContextAdministrador(), mockedResource);
 
         // No specific actions for siemac
+        verify(lifecycleFiller, times(1)).applySendToValidationRejectedActions(any(ServiceContext.class), any(HasLifecycle.class));
+    }
+    
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> PUBLISHED
+    // ------------------------------------------------------------------------------------------------------
+    
+    @Test
+    public void testSiemacResourceApplySendToPublishedActions() throws Exception {
+        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToPublished();
+        HasSiemacMetadata previosMockedVersion = mockHasSiemacMetadataPublished();
 
-        verify(lifecycleFiller, times(1)).applySendToValidationRejectedActions(any(ServiceContext.class), any(HasLifecycleStatisticalResource.class));
+        siemacLifecycleFiller.applySendToPublished(getServiceContextAdministrador(), mockedResource, previosMockedVersion);
+
+        verify(lifecycleFiller, times(1)).applySendToPublishedActions(any(ServiceContext.class), any(HasLifecycle.class), any(HasLifecycle.class));
+        assertNotNull(mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
+        assertEquals(mockedResource.getLifeCycleStatisticalResource().getValidFrom(), mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
     }
 
 }

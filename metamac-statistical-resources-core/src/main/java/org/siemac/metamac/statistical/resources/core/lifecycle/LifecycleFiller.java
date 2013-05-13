@@ -4,7 +4,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -22,7 +22,7 @@ public class LifecycleFiller {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToProductionValidationActions(ServiceContext ctx, HasLifecycleStatisticalResource resource) {
+    public void applySendToProductionValidationActions(ServiceContext ctx, HasLifecycle resource) {
         resource.getLifeCycleStatisticalResource().setProductionValidationDate(new DateTime());
         resource.getLifeCycleStatisticalResource().setProductionValidationUser(ctx.getUserId());
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
@@ -32,7 +32,7 @@ public class LifecycleFiller {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToDiffusionValidationActions(ServiceContext ctx, HasLifecycleStatisticalResource resource) {
+    public void applySendToDiffusionValidationActions(ServiceContext ctx, HasLifecycle resource) {
         resource.getLifeCycleStatisticalResource().setDiffusionValidationDate(new DateTime());
         resource.getLifeCycleStatisticalResource().setDiffusionValidationUser(ctx.getUserId());
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
@@ -42,7 +42,7 @@ public class LifecycleFiller {
     // VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToValidationRejectedActions(ServiceContext ctx, HasLifecycleStatisticalResource resource) {
+    public void applySendToValidationRejectedActions(ServiceContext ctx, HasLifecycle resource) {
         resource.getLifeCycleStatisticalResource().setRejectValidationDate(new DateTime());
         resource.getLifeCycleStatisticalResource().setRejectValidationUser(ctx.getUserId());
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
@@ -52,7 +52,7 @@ public class LifecycleFiller {
     // PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToPublishedActions(ServiceContext ctx, HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion) throws MetamacException {
+    public void applySendToPublishedActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
         if (!StatisticalResourcesVersionUtils.isInitialVersion(resource) && ValidationUtils.isEmpty(previousVersion)) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
@@ -69,7 +69,7 @@ public class LifecycleFiller {
         applySendToPublishedActionsIfExistsPreviousVersion(resource, previousVersion, publicationDate);
     }
 
-    private void applySendToPublishedActionsIfExistsPreviousVersion(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion, DateTime publicationDate) throws MetamacException {
+    private void applySendToPublishedActionsIfExistsPreviousVersion(HasLifecycle resource, HasLifecycle previousVersion, DateTime publicationDate) throws MetamacException {
         if (previousVersion != null) {
             RelatedResource previousVersionRelatedResource = new RelatedResource();
             if (resource instanceof DatasetVersion) {

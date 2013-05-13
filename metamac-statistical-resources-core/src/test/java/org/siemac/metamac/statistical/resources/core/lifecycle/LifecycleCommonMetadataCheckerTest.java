@@ -14,8 +14,8 @@ import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -38,7 +38,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     
     @Test
     public void testCheckLifecycleCommonMetadata() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
+        HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
@@ -65,7 +65,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         
         for (VersionRationaleTypeEnum versionRationaleType2Test : VersionRationaleTypeEnum.values()) {
-            HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
+            HasLifecycle mockedResource = mock(HasLifecycle.class);
             when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
             
             mockedResource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(versionRationaleType2Test));
@@ -109,7 +109,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         
         for (NextVersionTypeEnum nextVersion2Test : NextVersionTypeEnum.values()) {
-            HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
+            HasLifecycle mockedResource = mock(HasLifecycle.class);
             when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
             
             mockedResource.getLifeCycleStatisticalResource().setNextVersion(nextVersion2Test);
@@ -151,7 +151,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     
     @Test
     public void testCheckSiemacResourceCommonMetadata() throws Exception {
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
+        HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
         when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         

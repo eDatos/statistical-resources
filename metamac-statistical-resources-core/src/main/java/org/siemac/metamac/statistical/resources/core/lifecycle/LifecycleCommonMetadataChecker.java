@@ -7,8 +7,8 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LifecycleCommonMetadataChecker {
 
-    public void checkLifecycleCommonMetadata(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    public void checkLifecycleCommonMetadata(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
         
         // IdentifiableResource
@@ -51,7 +51,7 @@ public class LifecycleCommonMetadataChecker {
         checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.PROC_STATUS), exceptionItems);
     }
     
-    public void checkSiemacCommonMetadata(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    public void checkSiemacCommonMetadata(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         SiemacMetadataStatisticalResource siemacMetadataStatisticalResource = resource.getSiemacMetadataStatisticalResource();
         
         checkMetadataRequired(siemacMetadataStatisticalResource.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE), exceptionItems);

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
@@ -33,8 +33,8 @@ public class VersionUtilsTest {
         assertEquals("002.000", StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("001.000"), VersionTypeEnum.MAJOR));
     }
     
-    private HasLifecycleStatisticalResource mockHasLifecycleWithVersion(final String version) {
-        return new HasLifecycleStatisticalResource() {
+    private HasLifecycle mockHasLifecycleWithVersion(final String version) {
+        return new HasLifecycle() {
             
             @Override
             public LifeCycleStatisticalResource getLifeCycleStatisticalResource() {

@@ -9,7 +9,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
@@ -32,7 +32,7 @@ public class LifecycleChecker {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToProductionValidation(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToProductionValidation(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
@@ -40,7 +40,7 @@ public class LifecycleChecker {
         checkLifeCycleMetadataSendToProductionValidation(resource, metadataName, exceptionItems);
     }
 
-    private void checkLifeCycleMetadataSendToProductionValidation(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    private void checkLifeCycleMetadataSendToProductionValidation(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         if (StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
             if (!checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource)) {
                 exceptionItems.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES)));
@@ -52,7 +52,7 @@ public class LifecycleChecker {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToDiffusionValidation(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToDiffusionValidation(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PRODUCTION_VALIDATION);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
@@ -61,7 +61,7 @@ public class LifecycleChecker {
     // VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToValidationRejected(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToValidationRejected(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
@@ -70,7 +70,7 @@ public class LifecycleChecker {
     // PUBLISHED 
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToPublished(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToPublished(HasLifecycle resource, HasLifecycle previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DIFFUSION_VALIDATION);
         
         if (!StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
@@ -89,7 +89,7 @@ public class LifecycleChecker {
     // PROTECTED COMMON METHODS
     // ------------------------------------------------------------------------------------------------------
 
-    protected boolean checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(HasLifecycleStatisticalResource resource) {
+    protected boolean checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(HasLifecycle resource) {
         if (resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().size() == 1) {
             return VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().get(0).getValue());
         } else if (resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().size() == 0) {
@@ -101,7 +101,7 @@ public class LifecycleChecker {
     /*
      * This is a metadata core that should always be checked, this validations are always needed independently of the action
      */
-    protected void checkLifeCycleMetadataAllActions(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    protected void checkLifeCycleMetadataAllActions(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         lifecycleCommonMetadataChecker.checkLifecycleCommonMetadata(resource, metadataName, exceptionItems);
     }
 }

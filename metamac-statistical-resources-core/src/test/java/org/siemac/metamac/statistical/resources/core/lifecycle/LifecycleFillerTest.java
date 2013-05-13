@@ -1,16 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToDiffusionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejected;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToDiffusionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToProductionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePublished;
 
 import java.lang.reflect.Field;
 
@@ -22,8 +22,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -55,13 +54,9 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplySendToProductionValidationActions() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToProductionValidation(mockedResource);
+        HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToProductionValidation();
 
         lifecycleFiller.applySendToProductionValidationActions(getServiceContextAdministrador(), mockedResource);
-
         assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(mockedResource);
         
     }
@@ -72,13 +67,9 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplySendToDiffusionValidationActions() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToDiffusionValidation(mockedResource);
+        HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToDiffusionValidation();
 
         lifecycleFiller.applySendToDiffusionValidationActions(getServiceContextAdministrador(), mockedResource);
-
         assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(mockedResource);
     }
 
@@ -89,13 +80,9 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplySendToValidationRejectedActions() throws Exception {
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToValidationRejected(mockedResource);
-
+        HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToValidationRejected();
+        
         lifecycleFiller.applySendToValidationRejectedActions(getServiceContextAdministrador(), mockedResource);
-
         assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(mockedResource);
     }
 
@@ -110,7 +97,6 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
-
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
     }
 
@@ -121,7 +107,6 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
-
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
     }
     
@@ -134,7 +119,6 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
-
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
     }
 
@@ -147,7 +131,6 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
-
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
     }
     
@@ -160,7 +143,6 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         createPublished(previousResource);
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, previousResource);
-
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource);
     }
 
@@ -173,22 +155,14 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         createPublished(previousResource);
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, previousResource);
-
         assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource);
     }
 
     @Test
     public void testLifeCycleResourceApplySendToPublishedActionsError() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined resource type"));
-
-        HasLifecycleStatisticalResource mockedResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        HasLifecycleStatisticalResource mockedPreviousResource = mock(HasLifecycleStatisticalResource.class);
-        when(mockedPreviousResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-
-        prepareToPublished(mockedResource);
-        createPublished(mockedPreviousResource);
+        HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
+        HasLifecycle mockedPreviousResource = mockHasLifecycleStatisticalResourcePublished();
 
         lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), mockedResource, mockedPreviousResource);
     }

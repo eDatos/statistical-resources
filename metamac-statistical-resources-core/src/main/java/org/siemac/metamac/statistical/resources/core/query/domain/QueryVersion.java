@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.core.query.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 
 /**
  * Entity representing QueryVersion.
@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleSta
  */
 @Entity
 @Table(name = "TB_QUERIES_VERSIONS")
-public class QueryVersion extends QueryVersionBase implements HasLifecycleStatisticalResource {
+public class QueryVersion extends QueryVersionBase implements HasLifecycle {
     private static final long serialVersionUID = 1L;
 
     public QueryVersion() {

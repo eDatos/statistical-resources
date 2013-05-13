@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class SiemacLifecycleChecker {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToProductionValidation(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToProductionValidation(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkSendToProductionValidation(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
@@ -30,7 +30,7 @@ public class SiemacLifecycleChecker {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToDiffusionValidation(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToDiffusionValidation(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkSendToDiffusionValidation(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
@@ -39,7 +39,7 @@ public class SiemacLifecycleChecker {
     // >> VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToValidationRejected(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToValidationRejected(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkSendToValidationRejected(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
@@ -48,7 +48,7 @@ public class SiemacLifecycleChecker {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToPublished(HasSiemacMetadataStatisticalResource resource, HasSiemacMetadataStatisticalResource previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToPublished(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
@@ -57,7 +57,7 @@ public class SiemacLifecycleChecker {
     // >> PROTECTED COMMON UTILS
     // ------------------------------------------------------------------------------------------------------
 
-    private void checkSiemacMetadataAllActions(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    private void checkSiemacMetadataAllActions(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         lifecycleCommonMetadataChecker.checkSiemacCommonMetadata(resource, metadataName, exceptionItems);
     }
 }

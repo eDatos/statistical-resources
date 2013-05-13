@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.core.publication.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 
 /**
@@ -15,7 +15,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
  */
 @Entity
 @Table(name = "TB_PUBLICATIONS_VERSIONS")
-public class PublicationVersion extends PublicationVersionBase implements HasSiemacMetadataStatisticalResource {
+public class PublicationVersion extends PublicationVersionBase implements HasSiemacMetadata {
     private static final long serialVersionUID = 1L;
 
     public PublicationVersion() {

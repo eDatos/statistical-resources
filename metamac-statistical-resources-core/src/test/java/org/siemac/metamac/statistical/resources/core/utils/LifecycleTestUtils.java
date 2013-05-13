@@ -2,8 +2,8 @@ package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -16,13 +16,13 @@ public class LifecycleTestUtils {
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
     
-    public static void prepareToProductionValidation(HasSiemacMetadataStatisticalResource resource) {
-        prepareToProductionValidation((HasLifecycleStatisticalResource)resource);
+    public static void prepareToProductionValidation(HasSiemacMetadata resource) {
+        prepareToProductionValidation((HasLifecycle)resource);
         
         prepareToLifecycleCommonSiemacResource(resource);
     }
 
-    public static void prepareToProductionValidation(HasLifecycleStatisticalResource resource) {
+    public static void prepareToProductionValidation(HasLifecycle resource) {
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
         
         prepareToLifecycleCommonLifeCycleResource(resource);
@@ -33,12 +33,12 @@ public class LifecycleTestUtils {
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
     
-    public static void prepareToDiffusionValidation(HasSiemacMetadataStatisticalResource resource) {
+    public static void prepareToDiffusionValidation(HasSiemacMetadata resource) {
         prepareToProductionValidation(resource);
-        prepareToDiffusionValidation((HasLifecycleStatisticalResource)resource);
+        prepareToDiffusionValidation((HasLifecycle)resource);
     }
     
-    public static void prepareToDiffusionValidation(HasLifecycleStatisticalResource resource) {
+    public static void prepareToDiffusionValidation(HasLifecycle resource) {
         prepareToProductionValidation(resource);
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         resource.getLifeCycleStatisticalResource().setProductionValidationDate(new DateTime());
@@ -50,12 +50,12 @@ public class LifecycleTestUtils {
     // >> VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
     
-    public static void prepareToValidationRejected(HasSiemacMetadataStatisticalResource resource) {
+    public static void prepareToValidationRejected(HasSiemacMetadata resource) {
         prepareToProductionValidation(resource);
-        prepareToValidationRejected((HasLifecycleStatisticalResource)resource);
+        prepareToValidationRejected((HasLifecycle)resource);
     }
     
-    public static void prepareToValidationRejected(HasLifecycleStatisticalResource resource) {
+    public static void prepareToValidationRejected(HasLifecycle resource) {
         prepareToProductionValidation(resource);
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         resource.getLifeCycleStatisticalResource().setProductionValidationDate(new DateTime());
@@ -66,13 +66,13 @@ public class LifecycleTestUtils {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
     
-    public static void prepareToPublished(HasSiemacMetadataStatisticalResource resource) {
+    public static void prepareToPublished(HasSiemacMetadata resource) {
         prepareToDiffusionValidation(resource);
         
-        prepareToPublished((HasLifecycleStatisticalResource)resource);
+        prepareToPublished((HasLifecycle)resource);
     }
     
-    public static void prepareToPublished(HasLifecycleStatisticalResource resource) {
+    public static void prepareToPublished(HasLifecycle resource) {
         prepareToDiffusionValidation(resource);
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         resource.getLifeCycleStatisticalResource().setDiffusionValidationDate(new DateTime());
@@ -80,12 +80,12 @@ public class LifecycleTestUtils {
         resource.getLifeCycleStatisticalResource().setValidFrom(new DateTime());
     }
     
-    public static void createPublished(HasSiemacMetadataStatisticalResource resource) {
+    public static void createPublished(HasSiemacMetadata resource) {
         prepareToPublished(resource);
-        createPublished((HasLifecycleStatisticalResource)resource);
+        createPublished((HasLifecycle)resource);
     }
     
-    public static void createPublished(HasLifecycleStatisticalResource resource) {
+    public static void createPublished(HasLifecycle resource) {
         prepareToPublished(resource);
         
         DateTime publicationDate = new DateTime();
@@ -96,7 +96,7 @@ public class LifecycleTestUtils {
     }
 
     
-    private static void prepareToLifecycleCommonSiemacResource(HasSiemacMetadataStatisticalResource resource) {
+    private static void prepareToLifecycleCommonSiemacResource(HasSiemacMetadata resource) {
         resource.getSiemacMetadataStatisticalResource().setLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
         resource.getSiemacMetadataStatisticalResource().getLanguages().clear();
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
@@ -117,7 +117,7 @@ public class LifecycleTestUtils {
 
     }
 
-    private static void prepareToLifecycleCommonLifeCycleResource(HasLifecycleStatisticalResource resource) {
+    private static void prepareToLifecycleCommonLifeCycleResource(HasLifecycle resource) {
         resource.getLifeCycleStatisticalResource().setVersionLogic("002.000");
         resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().clear();
         resource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_DATA_UPDATE));

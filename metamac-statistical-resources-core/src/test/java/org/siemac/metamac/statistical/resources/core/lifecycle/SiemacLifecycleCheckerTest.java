@@ -22,8 +22,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
@@ -59,7 +59,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
+        HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
 
@@ -68,8 +68,8 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         // NO specific checks for siemac
         Assert.assertEquals(0, exceptionItems.size());
 
-        verify(lifecycleService, times(1)).checkSendToProductionValidation(any(HasLifecycleStatisticalResource.class), anyString(), anyListOf(MetamacExceptionItem.class));
-        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadataStatisticalResource.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleService, times(1)).checkSendToProductionValidation(any(HasLifecycle.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
 
 
@@ -82,7 +82,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
+        HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
 
@@ -91,8 +91,8 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         // NO specific checks for siemac
         Assert.assertEquals(0, exceptionItems.size());
 
-        verify(lifecycleService, times(1)).checkSendToDiffusionValidation(any(HasLifecycleStatisticalResource.class), anyString(), anyListOf(MetamacExceptionItem.class));
-        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadataStatisticalResource.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleService, times(1)).checkSendToDiffusionValidation(any(HasLifecycle.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        HasSiemacMetadataStatisticalResource mockedResource = mock(HasSiemacMetadataStatisticalResource.class);
+        HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
         
@@ -115,8 +115,8 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         // NO specific checks for siemac
         Assert.assertEquals(0, exceptionItems.size());
 
-        verify(lifecycleService, times(1)).checkSendToValidationRejected(any(HasLifecycleStatisticalResource.class), anyString(), anyListOf(MetamacExceptionItem.class));
-        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadataStatisticalResource.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleService, times(1)).checkSendToValidationRejected(any(HasLifecycle.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
 
 }
