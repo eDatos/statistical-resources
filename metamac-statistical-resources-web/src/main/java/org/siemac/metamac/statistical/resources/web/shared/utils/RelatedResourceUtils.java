@@ -19,7 +19,6 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
 
     public static RelatedResourceDto getIdentifiableResourceDtoAsRelatedResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
         RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
-        relatedResourceDto.setRelatedId(identifiableStatisticalResourceDto.getId());
         relatedResourceDto.setCode(identifiableStatisticalResourceDto.getCode());
         relatedResourceDto.setUrn(identifiableStatisticalResourceDto.getUrn());
         return relatedResourceDto;
@@ -71,18 +70,4 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
         return relatedResourceDtos;
     }
 
-    // -------------------------------------------------------------------------------------------------------------
-    // GENERIC RELATED RESOURCES
-    // -------------------------------------------------------------------------------------------------------------
-
-    public static RelatedResourceDto createRelatedResourceDto(TypeRelatedResourceEnum type, Long relatedId) {
-        if (relatedId != null) {
-            RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
-            relatedResourceDto.setType(type);
-            relatedResourceDto.setRelatedId(relatedId);
-            return relatedResourceDto;
-        } else {
-            return null;
-        }
-    }
 }

@@ -11,8 +11,9 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Save
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.operation.GetStatisticalOperationsPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetDsdsPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationsActionHandler;
@@ -33,8 +34,9 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAc
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
@@ -75,6 +77,10 @@ public class ServerModule extends HandlerModule {
         // STATISTICAL OPERATIONS
         bindHandler(GetStatisticalOperationAction.class, GetStatisticalOperationActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
+        
+        //DSDs
+        bindHandler(GetDsdsPaginatedListAction.class, GetDsdsPaginatedListActionHandler.class);
+        
 
         // AGENCIES
         bindHandler(GetAgenciesPaginatedListAction.class, GetAgenciesPaginatedListActionHandler.class);

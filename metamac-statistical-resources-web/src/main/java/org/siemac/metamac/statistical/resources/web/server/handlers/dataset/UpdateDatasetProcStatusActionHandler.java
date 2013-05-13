@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
@@ -27,7 +27,7 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
     @Override
     public UpdateDatasetProcStatusResult executeSecurityAction(UpdateDatasetProcStatusAction action) throws ActionException {
         String urn = action.getUrn();
-        StatisticalResourceProcStatusEnum procStatus = action.getNextProcStatus();
+        ProcStatusEnum procStatus = action.getNextProcStatus();
         try {
 
             /*
