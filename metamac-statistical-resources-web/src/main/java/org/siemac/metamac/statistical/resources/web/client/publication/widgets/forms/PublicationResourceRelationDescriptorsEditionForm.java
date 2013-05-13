@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets.
 
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
@@ -15,12 +17,19 @@ public class PublicationResourceRelationDescriptorsEditionForm extends Statistic
     }
 
     @Override
-    public void retrieveResourcesForReplaces(int firstResult, int maxResults, String criteria) {
-        uiHandlers.retrievePublicationsForReplaces(firstResult, maxResults, criteria);
+    public void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        //FIXME: send criteria 
+        uiHandlers.retrievePublicationsForReplaces(firstResult, maxResults, criteria.getCriteria());
     }
 
     @Override
-    public void retrieveResourcesForIsReplacedBy(int firstResult, int maxResults, String criteria) {
-        uiHandlers.retrievePublicationsForIsReplacedBy(firstResult, maxResults, criteria);
+    public void retrieveResourcesForIsReplacedBy(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        //FIXME: send criteria 
+        uiHandlers.retrievePublicationsForIsReplacedBy(firstResult, maxResults, criteria != null? criteria.getCriteria() : null);
+    }
+    
+    @Override
+    public BaseUiHandlers getBaseUiHandlers() {
+        return uiHandlers;
     }
 }

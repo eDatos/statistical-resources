@@ -2,11 +2,12 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view.han
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-public interface PublicationMetadataTabUiHandlers extends UiHandlers {
+public interface PublicationMetadataTabUiHandlers extends BaseUiHandlers {
 
     void retrieveAgencies(int firstResult, int maxResults, String queryText);
     void savePublication(PublicationDto publicationDto);
@@ -18,9 +19,9 @@ public interface PublicationMetadataTabUiHandlers extends UiHandlers {
 
     // LIFECYCLE
 
-    void sendToProductionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
-    void sendToDiffusionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
-    void rejectValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
-    void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void sendToProductionValidation(String urn, ProcStatusEnum currentProcStatus);
+    void sendToDiffusionValidation(String urn, ProcStatusEnum currentProcStatus);
+    void rejectValidation(String urn, ProcStatusEnum currentProcStatus);
+    void publish(String urn, ProcStatusEnum currentProcStatus);
     void version(String urn, VersionTypeEnum versionType);
 }

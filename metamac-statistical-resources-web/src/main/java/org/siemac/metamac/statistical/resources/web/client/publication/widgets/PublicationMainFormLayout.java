@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
@@ -17,7 +17,7 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
     private MainFormLayoutButton              publish;
     private MainFormLayoutButton              versioning;
 
-    private StatisticalResourceProcStatusEnum status;
+    private ProcStatusEnum status;
 
     public PublicationMainFormLayout() {
         super();
@@ -58,7 +58,7 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         hideAllLifeCycleButtons();
     }
 
-    public void updatePublishSection(StatisticalResourceProcStatusEnum status) {
+    public void updatePublishSection(ProcStatusEnum status) {
         this.status = status;
     }
 
@@ -66,19 +66,17 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         // Hide all buttons
         hideAllLifeCycleButtons();
         // Show buttons depending on the status
-        if (StatisticalResourceProcStatusEnum.DRAFT.equals(status)) {
+        if (ProcStatusEnum.DRAFT.equals(status)) {
             showProductionValidationButton();
-        } else if (StatisticalResourceProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
+        } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
             showProductionValidationButton();
-        } else if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+        } else if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
             showDiffusionValidationButton();
             showRejectValidationButton();
-        } else if (StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
+        } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
             showRejectValidationButton();
             showPublishButton();
-        } else if (StatisticalResourceProcStatusEnum.PUBLICATION_FAILED.equals(status)) {
-            showPublishButton();
-        } else if (StatisticalResourceProcStatusEnum.PUBLISHED.equals(status)) {
+        } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
         }
     }

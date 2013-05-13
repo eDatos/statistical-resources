@@ -8,6 +8,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
@@ -20,8 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
@@ -31,7 +32,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.SavePubli
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.utils.UrnUtils;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.EventBus;

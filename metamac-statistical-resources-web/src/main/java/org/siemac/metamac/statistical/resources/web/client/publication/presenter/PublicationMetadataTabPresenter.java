@@ -3,12 +3,15 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -19,8 +22,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
@@ -33,7 +36,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPu
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.utils.UrnUtils;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.EventBus;
@@ -173,61 +175,57 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @Override
-    public void sendToProductionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus),
-                new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+    public void sendToProductionValidation(String urn, ProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()),
-                                MessageTypeEnum.ERROR);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToProductionValidation()), MessageTypeEnum.SUCCESS);
-                        getView().setPublication(result.getPublicationDto());
-                    }
-                });
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()),
+                        MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                getView().setPublication(result.getPublicationDto());
+            }
+        });
     }
 
     @Override
-    public void sendToDiffusionValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus),
-                new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+    public void sendToDiffusionValidation(String urn, ProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()),
-                                MessageTypeEnum.ERROR);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
-                        getView().setPublication(result.getPublicationDto());
-                    }
-                });
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                getView().setPublication(result.getPublicationDto());
+            }
+        });
     }
 
     @Override
-    public void rejectValidation(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.VALIDATION_REJECTED, currentProcStatus),
-                new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+    public void rejectValidation(String urn, ProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.VALIDATION_REJECTED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorRejectValidation()), MessageTypeEnum.ERROR);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                        ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceRejectValidation()), MessageTypeEnum.SUCCESS);
-                        getView().setPublication(result.getPublicationDto());
-                    }
-                });
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorRejectValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceRejectValidation()), MessageTypeEnum.SUCCESS);
+                getView().setPublication(result.getPublicationDto());
+            }
+        });
     }
 
     @Override
-    public void publish(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+    public void publish(String urn, ProcStatusEnum currentProcStatus) {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -294,4 +292,12 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
             }
         });
     }
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
+    }
+
 }

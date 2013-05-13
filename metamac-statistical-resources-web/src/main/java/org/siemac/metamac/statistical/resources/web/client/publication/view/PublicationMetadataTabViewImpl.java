@@ -102,6 +102,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     public void setUiHandlers(PublicationMetadataTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
     }
 
     private void bindMainFormLayoutEvents() {
