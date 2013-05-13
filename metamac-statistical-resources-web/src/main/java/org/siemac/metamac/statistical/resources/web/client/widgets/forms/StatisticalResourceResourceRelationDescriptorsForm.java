@@ -5,22 +5,25 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
-public class StatisticalResourceResourceRelationDescriptorsForm extends GroupDynamicForm {
+public class StatisticalResourceResourceRelationDescriptorsForm extends NavigationEnabledDynamicForm {
 
+    private BaseUiHandlers uiHandlers;
+    
     public StatisticalResourceResourceRelationDescriptorsForm() {
         super(getConstants().formResourceRelationDescriptors());
 
         // TODO SOURCE
         ViewTextItem replaces = new ViewTextItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
         ViewTextItem isReplacedBy = new ViewTextItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy());
-        RelatedResourceListItem requires = new RelatedResourceListItem(StatisticalResourceDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false);
-        RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(StatisticalResourceDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false);
-        RelatedResourceListItem hasPart = new RelatedResourceListItem(StatisticalResourceDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false);
-        RelatedResourceListItem isPartOf = new RelatedResourceListItem(StatisticalResourceDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false);
+        RelatedResourceListItem requires = new RelatedResourceListItem(StatisticalResourceDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false, getRecordNavigationHandler());
+        RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(StatisticalResourceDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false, getRecordNavigationHandler());
+        RelatedResourceListItem hasPart = new RelatedResourceListItem(StatisticalResourceDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
+        RelatedResourceListItem isPartOf = new RelatedResourceListItem(StatisticalResourceDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false, getRecordNavigationHandler());
         // TODO IS_REFERENCE_BY
         // TODO REFERENCES
         // TODO IS_FORMAT_OF
@@ -41,5 +44,16 @@ public class StatisticalResourceResourceRelationDescriptorsForm extends GroupDyn
         // TODO REFERENCES
         // TODO IS_FORMAT_OF
         // TODO HAS_FORMAT
+    }
+    
+    
+    
+    public void setUiHandlers(BaseUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers; 
+    }
+    
+    @Override
+    public BaseUiHandlers getBaseUiHandlers() {
+        return uiHandlers;
     }
 }

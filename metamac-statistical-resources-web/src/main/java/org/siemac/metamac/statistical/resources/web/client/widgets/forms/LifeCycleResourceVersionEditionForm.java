@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
@@ -62,7 +62,7 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
     public LifeCycleStatisticalResourceDto getLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         // TODO Version rationale types
         lifeCycleStatisticalResourceDto.setVersionRationale((InternationalStringDto) getValue(VersionableResourceDS.VERSION_RATIONALE));;
-        lifeCycleStatisticalResourceDto.setNextVersion(!StringUtils.isBlank(getValueAsString(VersionableResourceDS.NEXT_VERSION)) ? StatisticalResourceNextVersionEnum
+        lifeCycleStatisticalResourceDto.setNextVersion(!StringUtils.isBlank(getValueAsString(VersionableResourceDS.NEXT_VERSION)) ? NextVersionTypeEnum
                 .valueOf(getValueAsString(VersionableResourceDS.NEXT_VERSION)) : null);
         lifeCycleStatisticalResourceDto.setNextVersionDate(((CustomDateItem) getItem(VersionableResourceDS.DATE_NEXT_VERSION)).getValueAsDate());
         return lifeCycleStatisticalResourceDto;
@@ -75,7 +75,7 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 // Show item if the next version is SCHEDULED_UPDATE
                 String nextVersionValue = form.getValueAsString(VersionableResourceDS.NEXT_VERSION);
-                return StringUtils.equals(StatisticalResourceNextVersionEnum.SCHEDULED_UPDATE.toString(), nextVersionValue);
+                return StringUtils.equals(NextVersionTypeEnum.SCHEDULED_UPDATE.toString(), nextVersionValue);
             }
         };
     }
