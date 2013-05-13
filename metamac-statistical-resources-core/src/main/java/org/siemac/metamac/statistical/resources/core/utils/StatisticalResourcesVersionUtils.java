@@ -15,7 +15,7 @@ public class StatisticalResourcesVersionUtils {
     }
 
     public static Boolean isInitialVersion(HasLifecycleStatisticalResource hasLifecycleStatisticalResource) {
-        return VersionUtil.isInitialVersion(hasLifecycleStatisticalResource.getLifeCycleStatisticalResource().getVersionLogic());
+        return hasLifecycleStatisticalResource != null? VersionUtil.isInitialVersion(hasLifecycleStatisticalResource.getLifeCycleStatisticalResource().getVersionLogic()) : false;
     }
 
     /**
