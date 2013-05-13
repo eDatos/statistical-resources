@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.SingleSelectionModel;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
@@ -18,6 +20,8 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.InternationalStringRepository;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
@@ -26,8 +30,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasetVe
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.exception.PublicationVersionNotFoundException;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("commonDto2DoMapper")
@@ -128,10 +134,16 @@ public class CommonDto2DoMapperImpl implements CommonDto2DoMapper {
             return null;
         }
 
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        StatisticalResourcesValidationUtils.checkMetadataRequired(source, metadataName, exceptionItems);
+        ExceptionUtils.throwIfException(exceptionItems);
+        
         if (target == null) {
             target = new ExternalItem(source.getCode(), source.getUri(), source.getUrn(), source.getType(), internationalStringDtoToDo(source.getTitle(), null, metadataName),
                     source.getManagementAppUrl());
         }
+
+        
         target.setCode(source.getCode());
         target.setUri(source.getUri());
         target.setUrn(source.getUrn());
@@ -201,6 +213,10 @@ public class CommonDto2DoMapperImpl implements CommonDto2DoMapper {
             }
             return null;
         }
+        
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        StatisticalResourcesValidationUtils.checkMetadataRequired(source, metadataName, exceptionItems);
+        ExceptionUtils.throwIfException(exceptionItems);
 
         if (target == null) {
             // New
@@ -214,38 +230,38 @@ public class CommonDto2DoMapperImpl implements CommonDto2DoMapper {
     }
 
     private void setCorrespondingResourceRelatedBasedOnType(RelatedResource target, RelatedResourceDto source) throws MetamacException {
-        try {
-            switch (source.getType()) {
-                case DATASET_VERSION:
-                    target.setDatasetVersion(datasetVersionRepository.findById(source.getRelatedId()));
-                    break;
-                case PUBLICATION_VERSION:
-                    target.setPublicationVersion(publicationVersionRepository.findById(source.getRelatedId()));
-                    break;
-            }
-        } catch (DatasetVersionNotFoundException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving dataset version with id " + source.getId());
-        } catch (PublicationVersionNotFoundException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving publication version with id " + source.getId());
+        switch (source.getType()) {
+            case DATASET_VERSION:
+                target.setDatasetVersion(datasetVersionRepository.retrieveByUrn(source.getUrn()));
+                break;
+            case PUBLICATION_VERSION:
+                target.setPublicationVersion(publicationVersionRepository.retrieveByUrn(source.getUrn()));
+                break;
         }
     }
 
     @Override
     public List<RelatedResource> relatedResourceDtoListToDoList(List<RelatedResourceDto> sources, List<RelatedResource> targets, String metadataName) throws MetamacException {
+        if (targets == null) {
+            targets = new ArrayList<RelatedResource>();
+        }
+        
         List<RelatedResource> targetsBefore = targets;
         List<RelatedResource> newTargets = new ArrayList<RelatedResource>();
 
-        for (RelatedResourceDto source : sources) {
-            boolean existsBefore = false;
-            for (RelatedResource target : targetsBefore) {
-                if (relatedResourceDtoRepresentsSameAsEntity(source, target)) {
-                    newTargets.add(relatedResourceDtoToDo(source, target, metadataName));
-                    existsBefore = true;
-                    break;
+        if (sources != null) {
+            for (RelatedResourceDto source : sources) {
+                boolean existsBefore = false;
+                for (RelatedResource target : targetsBefore) {
+                    if (relatedResourceDtoRepresentsSameAsEntity(source, target)) {
+                        newTargets.add(relatedResourceDtoToDo(source, target, metadataName));
+                        existsBefore = true;
+                        break;
+                    }
                 }
-            }
-            if (!existsBefore) {
-                newTargets.add(relatedResourceDtoToDo(source, null, metadataName));
+                if (!existsBefore) {
+                    newTargets.add(relatedResourceDtoToDo(source, null, metadataName));
+                }
             }
         }
 
@@ -273,11 +289,11 @@ public class CommonDto2DoMapperImpl implements CommonDto2DoMapper {
         if (source.getType().equals(target.getType())) {
             switch (source.getType()) {
                 case DATASET_VERSION:
-                    if (source.getRelatedId().equals(target.getDatasetVersion().getId()))
+                    if (source.getUrn().equals(target.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()))
                         return true;
                     break;
                 case PUBLICATION_VERSION:
-                    if (source.getRelatedId().equals(target.getPublicationVersion().getId()))
+                    if (source.getUrn().equals(target.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()))
                         return true;
                     break;
             }
@@ -289,11 +305,11 @@ public class CommonDto2DoMapperImpl implements CommonDto2DoMapper {
         if (source.getType().equals(target.getType())) {
             switch (source.getType()) {
                 case DATASET_VERSION:
-                    if (source.getDatasetVersion().getId().equals(target.getDatasetVersion().getId()))
+                    if (source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()))
                         return true;
                     break;
                 case PUBLICATION_VERSION:
-                    if (source.getDatasetVersion().getId().equals(target.getPublicationVersion().getId()))
+                    if (source.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()))
                         return true;
                     break;
             }

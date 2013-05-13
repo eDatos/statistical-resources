@@ -48,8 +48,10 @@ public class CommonDo2DtoMapperImpl implements CommonDo2DtoMapper {
     @Override
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) {
         HashSet<RelatedResourceDto> result = new HashSet<RelatedResourceDto>();
-        for (RelatedResource resource : source) {
-            result.add(relatedResourceDoToDto(resource));
+        if (source != null) {
+            for (RelatedResource resource : source) {
+                result.add(relatedResourceDoToDto(resource));
+            }
         }
         return result;
     }
@@ -59,10 +61,8 @@ public class CommonDo2DtoMapperImpl implements CommonDo2DtoMapper {
         if (source == null) {
             return null;
         }
-        Long resourceId = RelatedResourceUtils.retrieveResourceIdLinkedToRelatedResource(source);
         NameableStatisticalResource nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
         RelatedResourceDto target = new RelatedResourceDto();
-        target.setRelatedId(resourceId);
         target.setCode(nameableResource.getCode());
         target.setTitle(internationalStringDoToDto(nameableResource.getTitle()));
         target.setType(source.getType());
