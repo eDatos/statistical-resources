@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 
@@ -69,6 +70,20 @@ public class PlaceRequestUtils {
         }
 
         return filteredHierarchy;
+    }
+    
+    public static List<PlaceRequest> buildAbsoluteResourcePlaceRequest(RelatedResourceDto relatedResourceDto) {
+        if (relatedResourceDto != null) {
+            switch (relatedResourceDto.getType()) {
+                case DATASET_VERSION:
+                    break;
+                case PUBLICATION_VERSION:
+                    break;
+            }
+        
+        }
+        //FIXME: se debe generar la ruta absoluta
+        return new ArrayList<PlaceRequest>();
     }
 
 }

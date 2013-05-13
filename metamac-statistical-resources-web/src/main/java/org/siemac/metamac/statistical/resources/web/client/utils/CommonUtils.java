@@ -11,9 +11,9 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceNextVersionEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceVersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -68,25 +68,25 @@ public class CommonUtils {
     // STATISTICAL RESOURCE VERSION RATIONALE TYPE
     // -----------------------------------------------------------------------------------------
 
-    public static LinkedHashMap<String, String> getStatisticalResourceVersionRationaleTypeHashMap() {
+    public static LinkedHashMap<String, String> getVersionRationaleTypeHashMap() {
         if (statisticalResourceVersionRationaleTypeHashMap == null) {
             statisticalResourceVersionRationaleTypeHashMap = new LinkedHashMap<String, String>();
             statisticalResourceVersionRationaleTypeHashMap.put(new String(), new String());
-            for (StatisticalResourceVersionRationaleTypeEnum v : StatisticalResourceVersionRationaleTypeEnum.values()) {
-                statisticalResourceVersionRationaleTypeHashMap.put(v.toString(), getStatisticalResourceVersionRationaleTypeName(v));
+            for (VersionRationaleTypeEnum v : VersionRationaleTypeEnum.values()) {
+                statisticalResourceVersionRationaleTypeHashMap.put(v.toString(), getVersionRationaleTypeName(v));
             }
         }
         return statisticalResourceVersionRationaleTypeHashMap;
     }
 
-    public static String getStatisticalResourceVersionRationaleTypeName(StatisticalResourceVersionRationaleTypeEnum versionRationaleType) {
+    public static String getVersionRationaleTypeName(VersionRationaleTypeEnum versionRationaleType) {
         return versionRationaleType != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceVersionRationaleTypeEnum() + versionRationaleType.name()) : null;
     }
 
     public static String getStatisticalResourceVersionRationaleTypeNames(List<VersionRationaleTypeDto> versionRationaleTypeDtos) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < versionRationaleTypeDtos.size(); i++) {
-            builder.append(i != 0 ? ",  " : StringUtils.EMPTY).append(getStatisticalResourceVersionRationaleTypeName(versionRationaleTypeDtos.get(i).getValue()));
+            builder.append(i != 0 ? ",  " : StringUtils.EMPTY).append(getVersionRationaleTypeName(versionRationaleTypeDtos.get(i).getValue()));
         }
         return builder.toString();
     }
@@ -118,14 +118,14 @@ public class CommonUtils {
         if (statisticalResourceNextVersionHashMap == null) {
             statisticalResourceNextVersionHashMap = new LinkedHashMap<String, String>();
             statisticalResourceNextVersionHashMap.put(new String(), new String());
-            for (StatisticalResourceNextVersionEnum s : StatisticalResourceNextVersionEnum.values()) {
+            for (NextVersionTypeEnum s : NextVersionTypeEnum.values()) {
                 statisticalResourceNextVersionHashMap.put(s.name(), getStatisticalResourceNextVersionName(s));
             }
         }
         return statisticalResourceNextVersionHashMap;
     }
 
-    public static String getStatisticalResourceNextVersionName(StatisticalResourceNextVersionEnum statisticalResourceNextVersionEnum) {
+    public static String getStatisticalResourceNextVersionName(NextVersionTypeEnum statisticalResourceNextVersionEnum) {
         return statisticalResourceNextVersionEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceNextVersionEnum() + statisticalResourceNextVersionEnum.name()) : null;
     }
 

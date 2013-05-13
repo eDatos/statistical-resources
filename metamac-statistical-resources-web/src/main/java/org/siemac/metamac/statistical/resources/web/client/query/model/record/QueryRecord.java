@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.model.record;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -64,7 +64,7 @@ public class QueryRecord extends ListGridRecord {
         return getAttribute(QueryDS.TITLE);
     }
 
-    public StatisticalResourceProcStatusEnum getProcStatus() {
+    public ProcStatusEnum getProcStatus() {
         return ((QueryDto) getAttributeAsObject(QueryDS.DTO)).getProcStatus();
     }
 
