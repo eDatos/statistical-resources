@@ -18,11 +18,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
@@ -99,7 +102,55 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     // ------------------------------------------------------------------------------------------------------
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
+    
+    @Test
+    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithoutPreviousVersion() throws Exception {
+        DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        prepareToPublished(resource);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
 
+        lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
+
+        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+    }
+
+    @Test
+    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviosVersion() throws Exception {
+        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        prepareToPublished(resource);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
+
+        lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
+
+        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+    }
+    
+    @Test
+    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithoutPreviousVersionErrorParameterRequired() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION));
+        
+        DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        prepareToPublished(resource);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
+
+        lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
+
+        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+    }
+
+    @Test
+    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviosVersionErrorParameterRequired() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION));
+        
+        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        prepareToPublished(resource);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
+
+        lifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), resource, null);
+
+        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+    }
+    
     @Test
     public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersion() throws Exception {
         DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();

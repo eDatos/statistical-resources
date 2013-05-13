@@ -48,8 +48,8 @@ public class SiemacLifecycleChecker {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToPublished(HasSiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        lifecycleChecker.checkSendToPublished(resource, metadataName, exceptionItems);
+    public void checkSendToPublished(HasSiemacMetadataStatisticalResource resource, HasSiemacMetadataStatisticalResource previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
     }
 

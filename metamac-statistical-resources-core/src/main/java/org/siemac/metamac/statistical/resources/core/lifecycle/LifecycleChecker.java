@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
 import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
+import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkParameterRequired;
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 import java.util.List;
@@ -8,13 +9,14 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +41,7 @@ public class LifecycleChecker {
     }
 
     private void checkLifeCycleMetadataSendToProductionValidation(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
-        if (isFirstVersion(resource)) {
+        if (StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
             if (!checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(resource)) {
                 exceptionItems.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES)));
             }
@@ -65,11 +67,16 @@ public class LifecycleChecker {
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // PUBLISHED
+    // PUBLISHED 
     // ------------------------------------------------------------------------------------------------------
 
-    public void checkSendToPublished(HasLifecycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    public void checkSendToPublished(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DIFFUSION_VALIDATION);
+        
+        if (!StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
+            checkParameterRequired(previousVersion, ServiceExceptionParameters.PREVIOUS_VERSION, exceptionItems);
+        }
+        
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
         checkMetadataRequired(resource.getLifeCycleStatisticalResource().getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM), exceptionItems);
 
@@ -81,10 +88,6 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
     // PROTECTED COMMON METHODS
     // ------------------------------------------------------------------------------------------------------
-
-    protected boolean isFirstVersion(HasLifecycleStatisticalResource resource) {
-        return VersionUtil.isInitialVersion(resource.getLifeCycleStatisticalResource().getVersionLogic());
-    }
 
     protected boolean checkOnlyCanHaveNewResourceAsVersionRationaleTypeIfAny(HasLifecycleStatisticalResource resource) {
         if (resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().size() == 1) {

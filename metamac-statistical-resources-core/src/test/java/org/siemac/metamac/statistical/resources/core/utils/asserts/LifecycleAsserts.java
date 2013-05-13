@@ -2,10 +2,12 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycleStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
 public class LifecycleAsserts extends CommonAsserts {
 
@@ -67,18 +69,31 @@ public class LifecycleAsserts extends CommonAsserts {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasSiemacMetadataStatisticalResource previousResource) {
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource, true);
+    public static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion) {
+        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousVersion, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasSiemacMetadataStatisticalResource previousResource, boolean checkStatus) {
+    private static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion, boolean checkStatus) {
         assertNotNullAutomaticallyFilledMetadataForAPublishedResource(resource);
 
-        if (previousResource != null) {
-            // Previous Resource
-            assertNotNullAutomaticallyFilledMetadataOldPublished(previousResource);
+        if (previousVersion != null) {
+            // Actual version
+            assertReplacesVersionCorrectlyFilled(resource, previousVersion);
+            // Previous version
+            assertNotNullAutomaticallyFilledMetadataOldPublished(previousVersion);
             // Common
-            assertEquals(resource.getLifeCycleStatisticalResource().getValidFrom(), previousResource.getLifeCycleStatisticalResource().getValidTo());
+            assertEquals(resource.getLifeCycleStatisticalResource().getValidFrom(), previousVersion.getLifeCycleStatisticalResource().getValidTo());
+        }
+    }
+
+    private static void assertReplacesVersionCorrectlyFilled(HasLifecycleStatisticalResource resource, HasLifecycleStatisticalResource previousVersion) {
+        assertNotNull(resource.getLifeCycleStatisticalResource().getReplacesVersion());
+        if (previousVersion instanceof DatasetVersion) {
+            assertEquals(previousVersion.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getReplacesVersion().getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        } else if (previousVersion instanceof PublicationVersion) {
+            assertEquals(previousVersion.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getReplacesVersion().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        } else {
+            fail("unknown resource type");
         }
     }
 
