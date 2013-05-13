@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
@@ -34,6 +35,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -100,6 +102,8 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
     public void setUiHandlers(DatasetMetadataTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
+        productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
     }
 
     private void bindMainFormLayoutEvents() {
@@ -492,6 +496,17 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
     public void setDatasetsForIsReplacedBy(GetDatasetsResult result) {
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetDtosAsRelatedResourceDtos(result.getDatasetDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
+    }
+    
+    @Override
+    public void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result) {
+        List<ExternalItemDto> externalItemsDtos = result.getDsdsList();
+        productionDescriptorsEditionForm.setExternalItemsForRelatedDsd(externalItemsDtos, result.getFirstResultOut(), externalItemsDtos.size(), result.getTotalResults());
+    }
+    
+    @Override
+    public void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
+        productionDescriptorsEditionForm.setStatisticalOperationsForRelatedDsd(results, defaultSelected, null);
     }
 
     // private enum AgencyField {

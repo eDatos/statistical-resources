@@ -18,7 +18,6 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersForm;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;

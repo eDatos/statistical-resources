@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;

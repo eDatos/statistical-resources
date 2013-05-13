@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.record;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -63,7 +63,7 @@ public class DatasetRecord extends ListGridRecord {
         return getAttribute(DatasetDS.TITLE);
     }
 
-    public StatisticalResourceProcStatusEnum getProcStatus() {
+    public ProcStatusEnum getProcStatus() {
         return ((DatasetDto) getAttributeAsObject(DatasetDS.DTO)).getProcStatus();
     }
 

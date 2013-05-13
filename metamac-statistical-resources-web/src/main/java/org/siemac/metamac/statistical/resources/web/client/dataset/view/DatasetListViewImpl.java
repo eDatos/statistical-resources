@@ -6,6 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
@@ -16,6 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDa
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -162,6 +164,17 @@ public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandler
     @Override
     public void goToDatasetListLastPageAfterCreate() {
         datasetsList.goToLastPageAfterCreate();
+    }
+    
+    @Override
+    public void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result) {
+        List<ExternalItemDto> externalItemsDtos = result.getDsdsList();
+        newDatasetWindow.setExternalItemsForRelatedDsd(externalItemsDtos, result.getFirstResultOut(), externalItemsDtos.size(), result.getTotalResults());
+    }
+    
+    @Override
+    public void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
+        newDatasetWindow.setStatisticalOperationsForRelatedDsd(results, defaultSelected);
     }
 
     private void setDatasetList(List<DatasetDto> datasetsDtos) {

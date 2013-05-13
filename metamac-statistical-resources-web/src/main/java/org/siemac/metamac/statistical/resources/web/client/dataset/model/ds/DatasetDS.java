@@ -26,6 +26,7 @@ public class DatasetDS extends StatisticalResourceDS {
 
     // PRODUCTION DESCRIPTORS
     public static final String RELATED_DSD                        = "ds-dsd";
+    public static final String RELATED_DSD_VIEW                        = "ds-dsd-view";
 
     // DTO
     public static final String DTO                        = "ds-dto";
