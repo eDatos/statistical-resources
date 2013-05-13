@@ -10,7 +10,6 @@ Application StatisticalResourcesDto {
 		
 		DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
 			- @TypeRelatedResourceEnum type required;
-			Long relatedId required;
 		}
 	}
 }

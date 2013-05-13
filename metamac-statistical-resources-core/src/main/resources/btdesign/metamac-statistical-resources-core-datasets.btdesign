@@ -116,8 +116,8 @@ Application DatasetsStatisticalResources {
 			- Bag<@ExternalItem> measures cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_MEASURES" databaseColumn="MEASURE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			
 			//Production descriptor
-			//should be nullable?
 			- @ExternalItem relatedDsd nullable cascade="all" databaseColumn="RELATED_DSD_FK"; 
+			boolean relatedDsdChanged transient;
 			
 			//Class descriptors
 			
