@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.shared.criteria;
 
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+
 public class StatisticalResourceWebCriteria extends MetamacWebCriteria {
 
     private static final long serialVersionUID = 1L;

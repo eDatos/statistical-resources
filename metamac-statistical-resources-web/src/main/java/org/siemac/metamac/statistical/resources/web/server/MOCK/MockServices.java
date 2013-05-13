@@ -21,15 +21,15 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
-import org.siemac.metamac.web.common.client.utils.UrnUtils;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.slf4j.Logger;
@@ -132,7 +132,7 @@ public class MockServices {
 
         // Life cycle
         datasetDto.setCreator(istacAgency);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
 
         // Content
         // ContentMetadataDto contentMetadata = new ContentMetadataDto();
@@ -249,7 +249,7 @@ public class MockServices {
 
         // Life cycle
         datasetDto.setCreator(istacAgency);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
 
         // Content
         // ContentMetadataDto contentMetadata = new ContentMetadataDto();
@@ -299,31 +299,31 @@ public class MockServices {
 
     public static DatasetDto sendDatasetToProductionValidation(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        datasetDto.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         return datasetDto;
     }
 
     public static DatasetDto sendDatasetToDiffusionValidation(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        datasetDto.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         return datasetDto;
     }
 
     public static DatasetDto rejectDatasetProductionValidation(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
         return datasetDto;
     }
 
     public static DatasetDto rejectDatasetDiffusionValidation(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
         return datasetDto;
     }
 
     public static DatasetDto publishDataset(String urn) throws MetamacException {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        datasetDto.setProcStatus(ProcStatusEnum.PUBLISHED);
         return datasetDto;
     }
 
@@ -331,7 +331,7 @@ public class MockServices {
         DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setId(Long.valueOf(collections.size() + 1));
         // datasetDto.setVersionLogic(VersionUtil.createNextVersionTag(datasetDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
-        datasetDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
         getDatasets().put(datasetDto.getUrn(), datasetDto);
         return datasetDto;
     }
@@ -499,7 +499,7 @@ public class MockServices {
 
         // Life cycle
         PublicationDto.setCreator(istacAgency);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        PublicationDto.setProcStatus(ProcStatusEnum.DRAFT);
 
         // Content
         // ContentMetadataDto contentMetadata = new ContentMetadataDto();
@@ -574,31 +574,31 @@ public class MockServices {
 
     public static PublicationDto sendCollectionToProductionValidation(String urn) throws MetamacException {
         PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION);
+        PublicationDto.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         return PublicationDto;
     }
 
     public static PublicationDto sendCollectionToDiffusionValidation(String urn) throws MetamacException {
         PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DIFFUSION_VALIDATION);
+        PublicationDto.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         return PublicationDto;
     }
 
     public static PublicationDto rejectCollectionProductionValidation(String urn) throws MetamacException {
         PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        PublicationDto.setProcStatus(ProcStatusEnum.DRAFT);
         return PublicationDto;
     }
 
     public static PublicationDto rejectCollectionDiffusionValidation(String urn) throws MetamacException {
         PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        PublicationDto.setProcStatus(ProcStatusEnum.DRAFT);
         return PublicationDto;
     }
 
     public static PublicationDto publishCollection(String urn) throws MetamacException {
         PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(StatisticalResourceProcStatusEnum.PUBLISHED);
+        PublicationDto.setProcStatus(ProcStatusEnum.PUBLISHED);
         return PublicationDto;
     }
 
@@ -606,7 +606,7 @@ public class MockServices {
         PublicationDto publicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
         publicationDto.setId(Long.valueOf(collections.size() + 1));
         // PublicationDto.setVersionLogic(VersionUtil.createNextVersionTag(PublicationDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
-        publicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        publicationDto.setProcStatus(ProcStatusEnum.DRAFT);
         getCollections().put(publicationDto.getUrn(), publicationDto);
         return publicationDto;
     }
@@ -659,7 +659,7 @@ public class MockServices {
         //
         // // Life cycle
         publicationDto.setCreator(istacAgency);
-        publicationDto.setProcStatus(StatisticalResourceProcStatusEnum.DRAFT);
+        publicationDto.setProcStatus(ProcStatusEnum.DRAFT);
         //
         // // Content
         // ContentMetadataDto contentMetadata = new ContentMetadataDto();
