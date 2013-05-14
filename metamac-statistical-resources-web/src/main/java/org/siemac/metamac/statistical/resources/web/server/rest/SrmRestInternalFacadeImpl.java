@@ -72,7 +72,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
             }
             
             if (StringUtils.isNotBlank(operationUrn)) {
-                String statOperCondition = fieldComparison(DataStructureCriteriaPropertyRestriction.STATISTICAL_OPERATION, ComparisonOperator.ILIKE, operationUrn);
+                String statOperCondition = fieldComparison(DataStructureCriteriaPropertyRestriction.STATISTICAL_OPERATION_URN, ComparisonOperator.ILIKE, operationUrn);
                 appendConditionToQuery(queryBuilder, statOperCondition);
             }
 

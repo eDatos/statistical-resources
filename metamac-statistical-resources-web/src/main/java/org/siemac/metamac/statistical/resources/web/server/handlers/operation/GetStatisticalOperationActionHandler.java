@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.operation;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationAction;
-import org.siemac.metamac.statistical.resources.web.shared.operation.GetStatisticalOperationResult;
-import org.siemac.metamac.web.common.client.utils.UrnUtils;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
