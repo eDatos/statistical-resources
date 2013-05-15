@@ -18,18 +18,18 @@ import org.springframework.stereotype.Component;
 public class SiemacLifecycleFiller {
 
     @Autowired
-    private LifecycleFiller               lifecycleFiller;
-    
+    private LifecycleFiller lifecycleFiller;
+
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
-    
+
     public void applySendToProductionValidationActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToProductionValidationActions(ctx, resource);
-        //FIXME: Computed fields based on data
+        // FIXME: Computed fields based on data
         resource.getSiemacMetadataStatisticalResource().setKeywords(buildKeywords(resource));
     }
-    
+
     private InternationalString buildKeywords(HasSiemacMetadata resource) {
         Set<String> locales = new HashSet<String>();
         if (resource.getSiemacMetadataStatisticalResource().getTitle() != null) {
@@ -45,7 +45,7 @@ public class SiemacLifecycleFiller {
             words.addAll(splitLocalisedText(resource.getSiemacMetadataStatisticalResource().getDescription(), locale));
             words = filterKeywords(words);
             if (words.size() > 0) {
-                LocalisedString localisedText = new LocalisedString(locale,StringUtils.join(words, " "));
+                LocalisedString localisedText = new LocalisedString(locale, StringUtils.join(words, " "));
                 keywords.addText(localisedText);
             }
         }
@@ -54,7 +54,7 @@ public class SiemacLifecycleFiller {
         }
         return null;
     }
-    
+
     private Collection<String> splitLocalisedText(InternationalString intString, String locale) {
         String text = intString.getLocalisedLabel(locale);
         Set<String> words = new HashSet<String>();
@@ -63,17 +63,17 @@ public class SiemacLifecycleFiller {
         }
         return words;
     }
-    
+
     private Set<String> filterKeywords(Set<String> words) {
         Set<String> filteredWords = new HashSet<String>();
-        for (String word: words) {
+        for (String word : words) {
             if (word.length() > 3) {
                 filteredWords.add(word);
             }
         }
         return filteredWords;
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -81,22 +81,24 @@ public class SiemacLifecycleFiller {
     public void applySendToDiffusionValidationActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToDiffusionValidationActions(ctx, resource);
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> VALIDATION REJECTED
     // ------------------------------------------------------------------------------------------------------
-    
+
     public void applySendToValidationRejectedActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToValidationRejectedActions(ctx, resource);
-        //FIXME: clear metadata computed in production validation and diffusion validation
+        // FIXME: clear metadata computed in production validation and diffusion validation
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
-    
+
     public void applySendToPublished(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
         lifecycleFiller.applySendToPublishedActions(ctx, resource, previousResource);
         resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom());
+
+        // TODO: Metadatos de relaciones entre recursos
     }
 }

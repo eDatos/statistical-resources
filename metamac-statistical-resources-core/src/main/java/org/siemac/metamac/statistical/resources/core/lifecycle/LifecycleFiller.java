@@ -67,6 +67,9 @@ public class LifecycleFiller {
 
         // Previous version
         applySendToPublishedActionsIfExistsPreviousVersion(resource, previousVersion, publicationDate);
+        
+        
+        // TODO: Metadatos de relaciones entre recursos
     }
 
     private void applySendToPublishedActionsIfExistsPreviousVersion(HasLifecycle resource, HasLifecycle previousVersion, DateTime publicationDate) throws MetamacException {

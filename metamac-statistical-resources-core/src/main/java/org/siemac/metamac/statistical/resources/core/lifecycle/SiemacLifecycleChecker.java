@@ -51,6 +51,8 @@ public class SiemacLifecycleChecker {
     public void checkSendToPublished(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
+
+        // TODO: Metadatos de relaciones entre recursos
     }
 
     // ------------------------------------------------------------------------------------------------------

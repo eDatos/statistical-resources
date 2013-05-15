@@ -67,22 +67,24 @@ public class LifecycleChecker {
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // PUBLISHED 
+    // PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToPublished(HasLifecycle resource, HasLifecycle previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DIFFUSION_VALIDATION);
-        
+
         if (!StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
             checkParameterRequired(previousVersion, ServiceExceptionParameters.PREVIOUS_VERSION, exceptionItems);
         }
-        
+
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
         checkMetadataRequired(resource.getLifeCycleStatisticalResource().getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM), exceptionItems);
 
         if (resource.getLifeCycleStatisticalResource().getValidFrom() != null && (resource.getLifeCycleStatisticalResource().getValidFrom().plusMinutes(PROCESSING_MINUTES_DELAY)).isBeforeNow()) {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM)));
         }
+
+        // TODO: Metadatos de relaciones entre recursos
     }
 
     // ------------------------------------------------------------------------------------------------------
