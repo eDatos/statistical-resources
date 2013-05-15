@@ -101,7 +101,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviosVersion() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviousVersion() throws Exception {
         PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
@@ -111,7 +111,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     }
     
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithoutPreviousVersionErrorParameterRequired() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithPreviousVersionErrorParameterRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION));
         
         DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
@@ -123,7 +123,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviosVersionErrorParameterRequired() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithPreviousVersionErrorParameterRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION));
         
         PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
@@ -135,7 +135,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     }
     
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersion() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithPreviousVersion() throws Exception {
         DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
         DatasetVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
 
@@ -147,7 +147,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersion() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithPreviousVersion() throws Exception {
         PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
         PublicationVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
 
@@ -159,7 +159,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsError() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedActionsErrorUndefinedResourceType() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined resource type"));
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         HasLifecycle mockedPreviousResource = mockHasLifecycleStatisticalResourcePublished();

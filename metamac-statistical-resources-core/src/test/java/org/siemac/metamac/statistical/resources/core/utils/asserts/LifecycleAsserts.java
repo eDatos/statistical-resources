@@ -88,10 +88,13 @@ public class LifecycleAsserts extends CommonAsserts {
 
     private static void assertReplacesVersionCorrectlyFilled(HasLifecycle resource, HasLifecycle previousVersion) {
         assertNotNull(resource.getLifeCycleStatisticalResource().getReplacesVersion());
+        assertNotNull(previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion());
         if (previousVersion instanceof DatasetVersion) {
             assertEquals(previousVersion.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getReplacesVersion().getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(resource.getLifeCycleStatisticalResource().getUrn(), previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion().getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
         } else if (previousVersion instanceof PublicationVersion) {
             assertEquals(previousVersion.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getReplacesVersion().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(resource.getLifeCycleStatisticalResource().getUrn(), previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         } else {
             fail("unknown resource type");
         }
