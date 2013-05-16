@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -20,27 +19,10 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
-import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
-import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
-import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 
 public class CommonAsserts extends MetamacAsserts {
 

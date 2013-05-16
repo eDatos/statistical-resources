@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.core.dataset.checks;
 
 import org.siemac.metamac.statistical.resources.core.base.checks.SiemacMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
 
 

@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
-import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
