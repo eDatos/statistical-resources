@@ -21,6 +21,7 @@ import org.siemac.metamac.web.common.shared.MockCASUserAction;
 import org.siemac.metamac.web.common.shared.MockCASUserResult;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
@@ -171,6 +172,7 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
         ginjector.getPlaceManager().revealCurrentPlace();
         // Inject global styles
         GWT.<GlobalResources> create(GlobalResources.class).css().ensureInjected();
+        Document.get().setTitle(getConstants().appTitle());
     }
 
     public void displayLoginView() {
