@@ -71,8 +71,11 @@ Application StatisticalResourcesDto {
 			- @InternationalStringDto subtitle;
 			- @InternationalStringDto titleAlternative;
 			- @InternationalStringDto abstractLogic;
-			- @InternationalStringDto keywords;			
-			
+			- @InternationalStringDto keywords;	
+
+			//COMMON METADATA
+			- @ExternalItemDto commonMetadata;
+
 			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type;
 			
@@ -100,9 +103,7 @@ Application StatisticalResourcesDto {
 			- Bag<@RelatedResourceDto> isPartOf;
 			
 			//INTELLECTUAL PROPERTY DESCRIPTORS
-			- @ExternalItemDto rightsHolder;
 			JAVADATE copyrightedDate;
-			- @InternationalStringDto license;
 			- @InternationalStringDto accessRights;
 		}
 	}

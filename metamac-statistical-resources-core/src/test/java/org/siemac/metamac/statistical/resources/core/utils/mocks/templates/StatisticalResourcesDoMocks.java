@@ -360,6 +360,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return item;
     }
 
+    public static ExternalItem mockCommonMetadataExternalItem() {
+        String code = mockCode();
+        ExternalItem item = new ExternalItem(code, getUriMock(), mockCommonConfigurationUrn(code), TypeExternalArtefactsEnum.CONFIGURATION); 
+        item.setVersion(Long.valueOf(0));
+        return item;
+    }
+    
     public static ExternalItem mockOrganizationUnitExternalItem() {
         String code = mockCode();
         ExternalItem item = new ExternalItem(code, getUriMock(), mockAgencyUrn(code), TypeExternalArtefactsEnum.ORGANISATION_UNIT); 
@@ -424,6 +431,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public static String mockAgencyUrn(String code) {
         return GeneratorUrnUtils.generateSdmxAgencyUrn(MAINTAINER_MOCK, AGENCY_SCHEME_MOCK, VersionUtil.PATTERN_X_Y_INITIAL_VERSION, code);
+    }
+    
+    public static String mockCommonConfigurationUrn(String code) {
+        return GeneratorUrnUtils.generateSiemacCommonMetadataUrn(code);
     }
 
     public static String mockOrganizationUnitUrn(String code) {

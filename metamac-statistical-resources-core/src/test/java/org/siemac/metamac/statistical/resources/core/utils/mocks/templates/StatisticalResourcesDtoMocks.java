@@ -179,9 +179,8 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.addHasPart(null);
         siemacMetadataStatisticalResourceDto.addIsPartOf(null);
 
-        siemacMetadataStatisticalResourceDto.setRightsHolder(mockOrganizationUnitExternalItemDto());
+        siemacMetadataStatisticalResourceDto.setCommonMetadata(mockCommonMetadataExternalItemDto());
         siemacMetadataStatisticalResourceDto.setCopyrightedDate(mockDate());
-        siemacMetadataStatisticalResourceDto.setLicense(mockInternationalStringDto());
         siemacMetadataStatisticalResourceDto.setAccessRights(mockInternationalStringDto());
 
         mockLifeCycleStatisticalResourceDto(siemacMetadataStatisticalResourceDto);
@@ -250,6 +249,10 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     public static ExternalItemDto mockOrganizationUnitExternalItemDto() {
         return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+    }
+    
+    public static ExternalItemDto mockCommonMetadataExternalItemDto() {
+        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockCommonMetadataExternalItem());
     }
 
     public static ExternalItemDto mockConceptExternalItemDto() {

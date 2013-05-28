@@ -264,9 +264,8 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
                 assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());
 
-                assertEqualsExternalItem(entity.getRightsHolder(), dto.getRightsHolder());
+                assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata());
                 assertEqualsDate(entity.getCopyrightedDate(), dto.getCopyrightedDate());
-                assertEqualsInternationalString(entity.getLicense(), dto.getLicense());
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
 
                 break;
@@ -289,8 +288,7 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResource(entity.getReplaces(), dto.getReplaces());
                 assertEqualsRelatedResource(entity.getIsReplacedBy(), dto.getIsReplacedBy());
 
-                assertEqualsExternalItem(entity.getRightsHolder(), dto.getRightsHolder());
-                assertEqualsInternationalString(entity.getLicense(), dto.getLicense());
+                assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata());
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
 
                 break;
