@@ -21,7 +21,10 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
@@ -70,6 +73,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
         void setPublicationsForReplaces(GetPublicationsResult result);
         void setPublicationsForIsReplacedBy(GetPublicationsResult result);
+        void setCommonConfigurations(GetCommonMetadataConfigurationsListResult result);
     }
 
     @ProxyCodeSplit
@@ -289,6 +293,22 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublicationsForIsReplacedBy(result);
+            }
+        });
+    }
+    
+    @Override
+    public void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria) {
+        dispatcher.execute(new GetCommonMetadataConfigurationsListAction(criteria), new WaitingAsyncCallback<GetCommonMetadataConfigurationsListResult>() {
+           
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().commonMetadataConfigurationsErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            
+            @Override
+            public void onWaitSuccess(GetCommonMetadataConfigurationsListResult result) {
+                getView().setCommonConfigurations(result);
             }
         });
     }

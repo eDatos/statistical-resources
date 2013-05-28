@@ -32,6 +32,11 @@
             <version>${metamac-statistical-operations.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.siemac.metamac.metamac-common-metadata</groupId>
+            <artifactId>metamac-common-metadata-rest-external-api</artifactId>
+            <version>${metamac-common-metadata.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-web-common</artifactId>
             <version>${metamac-web-common.version}</version>

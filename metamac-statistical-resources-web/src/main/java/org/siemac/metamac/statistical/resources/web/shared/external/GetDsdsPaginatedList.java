@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.shared.external;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;

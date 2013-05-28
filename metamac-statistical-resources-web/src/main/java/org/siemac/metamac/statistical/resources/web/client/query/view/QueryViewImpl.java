@@ -8,14 +8,14 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryIdentifiersCreationForm;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.QueryIdentifiersCreationForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.QueryProductionDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.QueryProductionDescriptorsForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 import com.google.gwt.user.client.ui.Widget;

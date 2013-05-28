@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
@@ -33,6 +34,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -77,6 +80,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
         void setDatasetsForIsReplacedBy(GetDatasetsResult result);
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
+        void setCommonConfigurations(GetCommonMetadataConfigurationsListResult result);
     }
 
     @ProxyCodeSplit
@@ -399,6 +403,22 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
                 getView().setDatasetsForIsReplacedBy(result);
+            }
+        });
+    }
+    
+    @Override
+    public void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria) {
+        dispatcher.execute(new GetCommonMetadataConfigurationsListAction(criteria), new WaitingAsyncCallback<GetCommonMetadataConfigurationsListResult>() {
+           
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().commonMetadataConfigurationsErrorRetrieveList()), MessageTypeEnum.ERROR);
+            }
+            
+            @Override
+            public void onWaitSuccess(GetCommonMetadataConfigurationsListResult result) {
+                getView().setCommonConfigurations(result);
             }
         });
     }

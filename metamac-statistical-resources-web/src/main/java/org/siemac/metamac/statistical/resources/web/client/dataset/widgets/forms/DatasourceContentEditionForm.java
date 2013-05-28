@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
+package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
@@ -77,13 +77,13 @@ public class DatasourceContentEditionForm extends GroupDynamicForm {
 
     private native void initComplete(DatasourceContentEditionForm upload) /*-{
                                                                           $wnd.uploadComplete = function(fileName) {
-                                                                          upload.@org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm::uploadComplete(Ljava/lang/String;)(fileName);
+                                                                          upload.@org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceContentEditionForm::uploadComplete(Ljava/lang/String;)(fileName);
                                                                           };
                                                                           }-*/;
 
     private native void initUploadFailed(DatasourceContentEditionForm upload) /*-{
                                                                               $wnd.uploadFailed = function(fileName) {
-                                                                              upload.@org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm::uploadFailed(Ljava/lang/String;)(fileName);
+                                                                              upload.@org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceContentEditionForm::uploadFailed(Ljava/lang/String;)(fileName);
                                                                               }
                                                                               }-*/;
 

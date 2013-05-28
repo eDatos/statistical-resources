@@ -14,10 +14,10 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.Dat
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceContentEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceResourceIdentifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceContentEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.DatasourceResourceIdentifiersForm;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;

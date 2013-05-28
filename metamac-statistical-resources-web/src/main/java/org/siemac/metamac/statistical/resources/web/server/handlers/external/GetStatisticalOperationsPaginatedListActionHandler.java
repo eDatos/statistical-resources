@@ -1,12 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.external;
 
-import java.util.List;
-
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,10 +22,8 @@ public class GetStatisticalOperationsPaginatedListActionHandler extends Security
 
     @Override
     public GetStatisticalOperationsPaginatedListResult executeSecurityAction(GetStatisticalOperationsPaginatedListAction action) throws ActionException {
-        int firstResult = 0;
-        int totalResults = 0;
-        List<ExternalItemDto> externalItemDtos = statisticalOperationsRestInternalFacade.findOperations(action.getFirstResult(), action.getMaxResults(), action.getOperation());
-        return new GetStatisticalOperationsPaginatedListResult(externalItemDtos, firstResult, totalResults);
+        ExternalItemsResult result = statisticalOperationsRestInternalFacade.findOperations(action.getFirstResult(), action.getMaxResults(), action.getOperation());
+        return new GetStatisticalOperationsPaginatedListResult(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
     }
 
 }

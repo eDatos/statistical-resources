@@ -18,6 +18,9 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     public static final String CONFORMS_TO                    = "sr-conf";
     public static final String CONFORMS_TO_INTERNAL           = "sr-conf-int";
 
+    public static final String COMMON_METADATA                = "sr-common-metadata";
+    public static final String COMMON_METADATA_VIEW           = "sr-common-metadata-view";
+
     // CLASS DESCRIPTORS
     public static final String TYPE                           = "sr-type";
     public static final String FORMAT                         = "sr-format";

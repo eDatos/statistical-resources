@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
+package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 

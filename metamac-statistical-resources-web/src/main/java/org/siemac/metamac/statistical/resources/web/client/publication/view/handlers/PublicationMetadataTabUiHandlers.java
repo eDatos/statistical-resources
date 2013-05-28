@@ -3,9 +3,8 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view.han
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
-
-import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface PublicationMetadataTabUiHandlers extends BaseUiHandlers {
 
@@ -16,6 +15,10 @@ public interface PublicationMetadataTabUiHandlers extends BaseUiHandlers {
 
     void retrievePublicationsForReplaces(int firstResult, int maxResults, String criteria);
     void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, String criteria);
+    
+    // COMMON METADATA
+    
+    void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria);
 
     // LIFECYCLE
 

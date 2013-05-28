@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalR
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -23,7 +24,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
 
         MultiLanguageTextItem subtitle = new MultiLanguageTextItem(StatisticalResourceDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
         MultiLanguageTextItem titleAlternative = new MultiLanguageTextItem(StatisticalResourceDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());
-        MultiLanguageTextAreaItem abstractLogic = new MultiLanguageTextAreaItem(StatisticalResourceDS.ABSTRACT, getConstants().siemacMetadataStatisticalResourceAbstractLogic());
+        MultilanguageRichTextEditorItem abstractLogic = new MultilanguageRichTextEditorItem(StatisticalResourceDS.ABSTRACT, getConstants().siemacMetadataStatisticalResourceAbstractLogic());
         keywordsView = new ViewMultiLanguageTextItem(StatisticalResourceDS.KEYWORDS_VIEW, getConstants().siemacMetadataStatisticalResourceKeywords());
         keywords = new MultiLanguageTextAreaItem(StatisticalResourceDS.KEYWORDS, getConstants().siemacMetadataStatisticalResourceKeywords());
         

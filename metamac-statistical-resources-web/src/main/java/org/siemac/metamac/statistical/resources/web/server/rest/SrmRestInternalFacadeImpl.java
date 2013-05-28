@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
+import static org.siemac.metamac.statistical.resources.web.server.rest.utils.RestCriteriaUtils.appendConditionToQuery;
+import static org.siemac.metamac.statistical.resources.web.server.rest.utils.RestCriteriaUtils.fieldComparison;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +15,10 @@ import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +30,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     
 
     @Override
-    public List<ExternalItemDto> findDsds(int firstResult, int maxResult, DsdWebCriteria criteria) {
+    public ExternalItemsResult findDsds(int firstResult, int maxResult, DsdWebCriteria criteria) {
         String query = buildQuery(criteria);
         
         DataStructures structures = srmRestInternalService.findDsds(firstResult, maxResult, query);
@@ -34,7 +39,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         for (Resource resource : structures.getDataStructures()) {
             dsdsExternalItems.add(buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.DATASTRUCTURE));
         }
-        return dsdsExternalItems;
+        return ExternalItemUtils.createExternalItemsResultFromListBase(structures, dsdsExternalItems);
     }
     
     private ExternalItemDto buildExternalItemDtoFromResource(Resource resource, TypeExternalArtefactsEnum type) {
@@ -83,19 +88,6 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         }
         return queryBuilder.toString();
     }
-    
-    private void appendConditionToQuery(StringBuilder queryBuilder, String condition) {
-        if (queryBuilder.length() > 0) {
-            queryBuilder.append(" ").append(LogicalOperator.AND.name()).append(" ");
-        }
-        queryBuilder.append(condition);
-    }
-    
-    private String fieldComparison(DataStructureCriteriaPropertyRestriction field, ComparisonOperator operator, Object value) {
-        StringBuilder conditionBuilder = new StringBuilder();
-        conditionBuilder.append(field)
-                        .append(" ").append(operator.name()).append(" ");
-        conditionBuilder.append("\"").append(value).append("\"");
-        return conditionBuilder.toString();
-    }
+
+   
 }

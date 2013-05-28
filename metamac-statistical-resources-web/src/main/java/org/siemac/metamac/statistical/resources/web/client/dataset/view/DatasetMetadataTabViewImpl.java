@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetClassDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetCommonMetadataEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetProductionDescriptorsEditionForm;
@@ -26,6 +27,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageEditionForm;
@@ -35,8 +38,10 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -53,6 +58,7 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
     private NameableResourceIdentifiersForm                               identifiersForm;
     private DatasetContentDescriptorsForm                                 contentDescriptorsForm;
+    private StatisticalResourceCommonMetadataForm                         commonMetadataForm;
     private StatisticalResourceThematicContentClassifiersForm             thematicContentClassifiersForm;
     private StatisticalResourceLanguageForm                               languageForm;
     private DatasetProductionDescriptorsForm                              productionDescriptorsForm;
@@ -65,6 +71,7 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
     private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
     private DatasetContentDescriptorsEditionForm                          contentDescriptorsEditionForm;
+    private DatasetCommonMetadataEditionForm                              commonMetadataEditionForm;
     private StatisticalResourceThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
     private StatisticalResourceLanguageEditionForm                        languageEditionForm;
     private DatasetProductionDescriptorsEditionForm                       productionDescriptorsEditionForm;
@@ -104,6 +111,8 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
         productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        commonMetadataEditionForm.setUiHandlers(uiHandlers);
+        commonMetadataForm.setBaseUiHandlers(uiHandlers);
     }
 
     private void bindMainFormLayoutEvents() {
@@ -117,6 +126,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
                 contentDescriptorsForm.setTranslationsShowed(translationsShowed);
                 contentDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+                
+                commonMetadataForm.setTranslationsShowed(translationsShowed);
+                commonMetadataEditionForm.setTranslationsShowed(translationsShowed);
 
                 thematicContentClassifiersForm.setTranslationsShowed(translationsShowed);
                 thematicContentClassifiersEditionForm.setTranslationsShowed(translationsShowed);
@@ -152,7 +164,7 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
             @Override
             public void onClick(ClickEvent event) {
-                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
+                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && commonMetadataEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
                         && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
                         && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)
                         && intellectualPropertyDescriptorsEditionForm.validate(false)) {
@@ -257,6 +269,10 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         // Content descriptors form
         contentDescriptorsForm = new DatasetContentDescriptorsForm();
         mainFormLayout.addViewCanvas(contentDescriptorsForm);
+        
+        // Common metadata form
+        commonMetadataForm = new StatisticalResourceCommonMetadataForm();
+        mainFormLayout.addViewCanvas(commonMetadataForm);
 
         // Thematic content classifiers
         thematicContentClassifiersForm = new StatisticalResourceThematicContentClassifiersForm();
@@ -304,6 +320,10 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
         contentDescriptorsEditionForm = new DatasetContentDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 
+        // Common metadata
+        commonMetadataEditionForm = new DatasetCommonMetadataEditionForm();
+        mainFormLayout.addEditionCanvas(commonMetadataEditionForm);
+        
         // Thematic content classifiers
         thematicContentClassifiersEditionForm = new StatisticalResourceThematicContentClassifiersEditionForm();
         mainFormLayout.addEditionCanvas(thematicContentClassifiersEditionForm);
@@ -376,6 +396,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
         // Content descriptors
         contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
+        
+        // Common metadata
+        commonMetadataForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Thematic content classifiers
         thematicContentClassifiersForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
@@ -412,6 +435,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
         // Content Descriptors
         contentDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
+        
+        // Common metadata
+        commonMetadataEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Thematic content classifiers
         thematicContentClassifiersEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
@@ -458,6 +484,9 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
 
         // Content descriptors form
         datasetDto = contentDescriptorsEditionForm.getDatasetDto(datasetDto);
+        
+        // Common metadata
+        datasetDto = (DatasetDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Thematic content classifiers
         datasetDto = (DatasetDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
@@ -507,6 +536,11 @@ public class DatasetMetadataTabViewImpl extends ViewWithUiHandlers<DatasetMetada
     @Override
     public void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
         productionDescriptorsEditionForm.setStatisticalOperationsForRelatedDsd(results, defaultSelected, null);
+    }
+    
+    @Override
+    public void setCommonConfigurations(GetCommonMetadataConfigurationsListResult result) {
+        commonMetadataEditionForm.setCommonConfigurationsList(result.getResults());
     }
 
     // private enum AgencyField {

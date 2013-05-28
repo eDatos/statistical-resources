@@ -15,9 +15,11 @@ import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Opera
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.constants.CommonSharedConstants;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,7 +44,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     }
 
     @Override
-    public List<ExternalItemDto> findOperations(int firstResult, int maxResult, String operation) throws MetamacWebException {
+    public ExternalItemsResult findOperations(int firstResult, int maxResult, String operation) throws MetamacWebException {
         try {
             String query = null;
             if (!StringUtils.isBlank(operation)) {
@@ -60,8 +62,10 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
                 ExternalItemDto externalItemDto = buildExternalItemDtoFromResource(resource);
                 externalItemDtos.add(externalItemDto);
             }
+            
+            ExternalItemsResult result = ExternalItemUtils.createExternalItemsResultFromListBase(findOperationsResult, externalItemDtos);
 
-            return externalItemDtos;
+            return result;
         } catch (ServerWebApplicationException e) {
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
                     org.siemac.metamac.rest.common.v1_0.domain.Exception.class);

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view.handler
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.LifeCycleUiHandlers;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
@@ -15,6 +16,9 @@ public interface DatasetMetadataTabUiHandlers extends LifeCycleUiHandlers, BaseU
     // DSD
     void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria);
     void retrieveStatisticalOperationsForDsdSelection();
+    
+    // COMMON METADATA
+    void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria);
     
     // RELATED DATASETS
     void retrieveDatasetsForReplaces(int firstResult, int maxResults, String criteria);

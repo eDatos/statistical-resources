@@ -849,8 +849,7 @@ public class MockServices {
     }
 
     private static List<ExternalItemDto> getOperationsList() throws MetamacWebException {
-        List<ExternalItemDto> externalItemDtos = getStatisticalOperationsRestInternalFacade().findOperations(0, Integer.MAX_VALUE, null);
-        return externalItemDtos;
+        return null;
     }
 
 }

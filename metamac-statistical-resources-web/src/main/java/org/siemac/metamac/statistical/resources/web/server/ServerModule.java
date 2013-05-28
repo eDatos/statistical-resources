@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Save
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetCommonMetadataConfigurationsListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetDsdsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationsPaginatedListActionHandler;
@@ -34,6 +35,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAc
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
@@ -80,7 +82,9 @@ public class ServerModule extends HandlerModule {
         
         //DSDs
         bindHandler(GetDsdsPaginatedListAction.class, GetDsdsPaginatedListActionHandler.class);
-        
+
+        // Common metadata
+        bindHandler(GetCommonMetadataConfigurationsListAction.class, GetCommonMetadataConfigurationsListActionHandler.class);
 
         // AGENCIES
         bindHandler(GetAgenciesPaginatedListAction.class, GetAgenciesPaginatedListActionHandler.class);
