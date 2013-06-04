@@ -16,13 +16,15 @@ public class ExternalItem extends ExternalItemBase {
 
     protected ExternalItem() {
     }
-    
+
     public ExternalItem(String code, String uri, String urn, TypeExternalArtefactsEnum type) {
-        super(code, uri, urn, type);
+        super(code, uri, type);
+        this.setUrn(urn);
     }
 
     public ExternalItem(String code, String uri, String urn, TypeExternalArtefactsEnum type, InternationalString title, String managementAppUrl) {
-        super(code, uri, urn, type);
+        super(code, uri, type);
+        this.setUrn(urn);
         this.setTitle(title);
         this.setManagementAppUrl(managementAppUrl);
     }
