@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import static org.junit.Assert.fail;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -7,16 +9,19 @@ import java.util.Set;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 
 public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
+     * 
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -26,7 +31,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         }
     }
-    
+
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -51,17 +56,25 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         }
-        
-        // TODO: Añadir aquí comprobación de según el tipo urn o urnInternal required o empty + TEST
-//        ValidationUtils.checkMetadataRequired(conceptSchemeVersion.getRelatedOperation(), ServiceExceptionParameters.CONCEPT_SCHEME_RELATED_OPERATION, exceptions);
-//        if (conceptSchemeVersion.getRelatedOperation() != null) {
-//            // urn in ExternalItems is optional, but it is required for statistical operation
-//            ValidationUtils.checkMetadataRequired(conceptSchemeVersion.getRelatedOperation().getUrn(), ServiceExceptionParameters.CONCEPT_SCHEME_RELATED_OPERATION, exceptions);
-//            ValidationUtils.checkMetadataEmpty(conceptSchemeVersion.getRelatedOperation().getUrnInternal(), ServiceExceptionParameters.CONCEPT_SCHEME_RELATED_OPERATION, exceptions);
-//        }
+
+        checkUrnExternalItemRequired(parameter, parameterName, exceptions);
     }
-    
-    
+
+    private static void checkUrnExternalItemRequired(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(parameter.getType())) {
+            checkMetadataRequired(parameter.getUrn(), parameterName, exceptions);
+            checkMetadataEmpty(parameter.getUrnInternal(), parameterName, exceptions);
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(parameter.getType())) {
+            checkMetadataRequired(parameter.getUrn(), parameterName, exceptions);
+            checkMetadataEmpty(parameter.getUrnInternal(), parameterName, exceptions);
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(parameter.getType())) {
+            checkMetadataRequired(parameter.getUrnInternal(), parameterName, exceptions);
+            checkMetadataOptionalIsValid(parameter.getUrn(), parameterName, exceptions);
+        } else {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.UNKNOWN, "Unknown type of ExternalItem"));
+        }
+    }
+
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -101,10 +114,12 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
         }
+        checkUrnExternalItemRequired(parameter, parameterName, exceptions);
     }
-    
+
     /**
      * Check if a metadata is valid
+     * 
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -113,7 +128,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (parameter == null) {
             return;
         }
-        
+
         // If it is not null, it must be complete
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
@@ -122,6 +137,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a collection metadata is valid.
+     * 
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -153,7 +169,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             }
         }
     }
-    
+
     /**
      * Check if an InternationalString is empty.
      */
@@ -174,6 +190,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if an ExternalItem is empty.
+     * 
      * @param parameter
      * @return
      */
@@ -183,9 +200,10 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         }
         return isEmpty(parameter.getCode()) || isEmpty(parameter.getUri()) || isEmpty(parameter.getType());
     }
-    
+
     /**
      * Check if a RelatedResourceDto is empty.
+     * 
      * @param parameter
      * @return
      */
@@ -195,9 +213,10 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         }
         return isEmpty(parameter.getUrn()) || isEmpty(parameter.getType());
     }
-    
+
     /**
      * Check if a Set<QuerySelectionItem> is empty
+     * 
      * @param parameter
      * @return
      */
@@ -205,18 +224,19 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (parameter == null || parameter.size() == 0) {
             return Boolean.TRUE;
         }
-        
+
         for (QuerySelectionItem querySelectionItem : parameter) {
             if (isEmpty(querySelectionItem)) {
                 return Boolean.TRUE;
             }
         }
-        
+
         return Boolean.FALSE;
     }
-    
+
     /**
      * Check if a QuerySelectionItem is empty
+     * 
      * @param parameter
      * @return
      */
@@ -224,7 +244,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (isEmpty(parameter.getDimension()) || isEmpty(parameter.getCodes())) {
             return Boolean.TRUE;
         }
-        
+
         return Boolean.FALSE;
     }
 }

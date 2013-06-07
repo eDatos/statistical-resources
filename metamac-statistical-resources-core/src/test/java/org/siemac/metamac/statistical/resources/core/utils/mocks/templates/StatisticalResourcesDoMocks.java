@@ -1,12 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import org.joda.time.DateTime;
+import static org.junit.Assert.fail;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -382,6 +384,17 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         ExternalItem item = new ExternalItem(code, CoreCommonConstants.API_LATEST_WITH_SLASHES + code, urn, urn + ":internal", type, mockInternationalString(), CoreCommonConstants.URL_SEPARATOR
                 + code);
         item.setVersion(Long.valueOf(0));
+        
+        if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type)) {
+            item.setUrnInternal(null);
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(type)) {
+            item.setUrnInternal(null);
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(type)) {
+            // nothing to do because urn and urnInternal are ok for SrmExternalItems 
+        } else {
+            fail("Unexpected type of ExternalItem:" + type);
+        }
+        
         return item;
     }
 
