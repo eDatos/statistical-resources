@@ -51,7 +51,16 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         }
+        
+        // TODO: Añadir aquí comprobación de según el tipo urn o urnInternal required o empty + TEST
+//        ValidationUtils.checkMetadataRequired(conceptSchemeVersion.getRelatedOperation(), ServiceExceptionParameters.CONCEPT_SCHEME_RELATED_OPERATION, exceptions);
+//        if (conceptSchemeVersion.getRelatedOperation() != null) {
+//            // urn in ExternalItems is optional, but it is required for statistical operation
+//            ValidationUtils.checkMetadataRequired(conceptSchemeVersion.getRelatedOperation().getUrn(), ServiceExceptionParameters.CONCEPT_SCHEME_RELATED_OPERATION, exceptions);
+//            ValidationUtils.checkMetadataEmpty(conceptSchemeVersion.getRelatedOperation().getUrnInternal(), ServiceExceptionParameters.CONCEPT_SCHEME_RELATED_OPERATION, exceptions);
+//        }
     }
+    
     
     /**
      * Check for a required metadata and add an exception for a failed validation.
@@ -172,7 +181,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (parameter == null) {
             return Boolean.TRUE;
         }
-        return isEmpty(parameter.getCode()) || isEmpty(parameter.getUri()) || isEmpty(parameter.getUrn()) || isEmpty(parameter.getType());
+        return isEmpty(parameter.getCode()) || isEmpty(parameter.getUri()) || isEmpty(parameter.getType());
     }
     
     /**

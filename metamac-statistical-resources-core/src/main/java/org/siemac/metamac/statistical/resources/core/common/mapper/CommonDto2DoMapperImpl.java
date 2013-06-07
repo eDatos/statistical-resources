@@ -192,7 +192,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
             for (ExternalItemDto source : sources) {
                 boolean existsBefore = false;
                 for (ExternalItem target : targetsBefore) {
-                    if (source.getUrn().equals(target.getUrn())) {
+                    if (source.getId() != null && target.getId().equals(source.getId())) {
                         newTargets.add(externalItemDtoToDo(source, target, metadataName));
                         existsBefore = true;
                         break;

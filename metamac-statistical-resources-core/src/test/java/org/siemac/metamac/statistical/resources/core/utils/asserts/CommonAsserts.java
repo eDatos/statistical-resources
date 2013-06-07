@@ -192,6 +192,7 @@ public class CommonAsserts extends MetamacAsserts {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());
+        assertEquals(expected.getUrnInternal(), actual.getUrnInternal());
         assertEquals(expected.getType(), actual.getType());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getManagementAppUrl(), actual.getManagementAppUrl());
@@ -208,7 +209,7 @@ public class CommonAsserts extends MetamacAsserts {
         for (ExternalItem expec : expected) {
             boolean found = false;
             for (ExternalItem actualItem : actual) {
-                if (actualItem.getUrn().equals(expec.getUrn())) {
+                if (actualItem.getUrn().equals(expec.getUrn()) || actualItem.getUrnInternal().equals(expec.getUrnInternal())) {
                     found = true;
                 }
             }

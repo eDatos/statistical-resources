@@ -154,7 +154,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
     }
     
     private boolean areSameDsdDifferentVersion(ExternalItem dsd, ExternalItemDto dsdDto) {
-        return dsd.getCode().equals(dsdDto.getCode()) && !dsd.getUrn().equals(dsdDto.getUrn());
+        return dsd.getCode().equals(dsdDto.getCode()) && !dsd.getUrnInternal().equals(dsdDto.getUrnInternal());
     }
 
     public StatisticOfficiality statisticOfficialityDtoToDo(StatisticOfficialityDto source, StatisticOfficiality target, String metadataName) throws MetamacException {
