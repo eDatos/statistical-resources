@@ -64,7 +64,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
-    public void testDatasetDoToDto() {
+    public void testDatasetDoToDto() throws MetamacException {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
 
         DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);

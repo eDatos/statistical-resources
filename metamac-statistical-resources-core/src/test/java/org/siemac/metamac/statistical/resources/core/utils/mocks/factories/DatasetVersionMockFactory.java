@@ -348,7 +348,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion createDatasetVersionInSpecificOperation(String operationCode, Integer sequentialId) {
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(null);
         datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(buildDatasetCode(operationCode, sequentialId));

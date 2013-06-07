@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -20,5 +21,5 @@ public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
     public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source);
     
     // Dataset
-    public DatasetDto datasetVersionDoToDto(DatasetVersion source);
+    public DatasetDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException;
 }

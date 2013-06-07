@@ -9,6 +9,8 @@
 	
 	<!-- STATIC configurations -->
   	<properties fileName="${environment.metamac.data}/statistical-resources/conf/static/resources.xml" config-optional="false" />
+    
+    <properties fileName="${environment.metamac.data}/common/conf/static/resources.xml" config-optional="false" />
     <properties fileName="${environment.metamac.data}/statistical-resources/conf/static/datasource.xml" config-optional="false" />
 
   </override>

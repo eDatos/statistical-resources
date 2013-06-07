@@ -234,10 +234,10 @@ public class BaseAsserts extends CommonAsserts {
     protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceDto dto, MapperEnum mapperEnum) {
         switch (mapperEnum) {
             case DO2DTO:
-                assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage());
+                assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
 
-                assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation());
+                assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalOperationInstances(), dto.getStatisticalOperationInstances());
 
                 assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
@@ -247,8 +247,8 @@ public class BaseAsserts extends CommonAsserts {
 
                 assertEquals(dto.getType(), entity.getType());
 
-                assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer());
-                assertEqualsExternalItem(entity.getCreator(), dto.getCreator());
+                assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer(), mapperEnum);
+                assertEqualsExternalItem(entity.getCreator(), dto.getCreator(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getContributor(), dto.getContributor());
                 assertEqualsDate(entity.getResourceCreatedDate(), dto.getResourceCreatedDate());
                 assertEqualsDate(entity.getLastUpdate(), dto.getLastUpdate());
@@ -264,13 +264,13 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
                 assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());
 
-                assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata());
+                assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata(), mapperEnum);
                 assertEqualsDate(entity.getCopyrightedDate(), dto.getCopyrightedDate());
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
 
                 break;
             case DTO2DO:
-                assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage());
+                assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
 
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalOperationInstances(), dto.getStatisticalOperationInstances());
@@ -280,7 +280,7 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsInternationalString(entity.getAbstractLogic(), dto.getAbstractLogic());
                 assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
 
-                assertEqualsExternalItem(entity.getCreator(), dto.getCreator());
+                assertEqualsExternalItem(entity.getCreator(), dto.getCreator(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getContributor(), dto.getContributor());
                 assertEqualsInternationalString(entity.getConformsTo(), dto.getConformsTo());
                 assertEqualsInternationalString(entity.getConformsToInternal(), dto.getConformsToInternal());
@@ -288,7 +288,7 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResource(entity.getReplaces(), dto.getReplaces());
                 assertEqualsRelatedResource(entity.getIsReplacedBy(), dto.getIsReplacedBy());
 
-                assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata());
+                assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata(), mapperEnum);
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
 
                 break;

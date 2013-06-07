@@ -139,8 +139,8 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEqualsDate(entity.getDateNextUpdate(), dto.getDateNextUpdate());
 
                 assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
-                assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd());
-                assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency());
+                assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd(), mapperEnum);
+                assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency(), mapperEnum);
                 assertEquals(entity.getFormatExtentDimensions(), dto.getFormatExtentDimensions());
                 assertEquals(entity.getFormatExtentObservations(), dto.getFormatExtentObservations());
 
@@ -148,8 +148,8 @@ public class DatasetsAsserts extends BaseAsserts {
                 break;
             case DTO2DO:
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalUnit(), dto.getStatisticalUnit());
-                assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd());
-                assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency());
+                assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd(), mapperEnum);
+                assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency(), mapperEnum);
                 assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
                 break;
         }

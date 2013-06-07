@@ -10,10 +10,8 @@ import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
@@ -150,7 +148,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // siemacMetadataStatisticalResourceDto.setStatisticalOperation(mockStatisticalOperationItem());
         
         siemacMetadataStatisticalResourceDto.getStatisticalOperationInstances().clear();
-        siemacMetadataStatisticalResourceDto.getStatisticalOperationInstances().add(mockStatisticalOperationInstanceItem());
+        siemacMetadataStatisticalResourceDto.getStatisticalOperationInstances().add(mockStatisticalOperationInstanceExternalItemDto());
 
         siemacMetadataStatisticalResourceDto.setSubtitle(mockInternationalStringDto());
         siemacMetadataStatisticalResourceDto.setTitleAlternative(mockInternationalStringDto());
@@ -233,53 +231,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // resource.setOperation(mockExternalItemDto(URN_RELATED_RESOURCE_MOCK, TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
     }
 
-    // EXTERNAL ITEM DTOs
-
-    public static ExternalItemDto mockStatisticalOperationItem() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockStatisticalOperationItem());
-    }
-
-    public static ExternalItemDto mockStatisticalOperationInstanceItem() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceItem());
-    }
-
-    public static ExternalItemDto mockAgencyExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockAgencyExternalItem());
-    }
-
-    public static ExternalItemDto mockOrganizationUnitExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
-    }
-    
-    public static ExternalItemDto mockCommonMetadataExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockCommonMetadataExternalItem());
-    }
-
-    public static ExternalItemDto mockConceptExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockConceptExternalItem());
-    }
-
-    public static ExternalItemDto mockConceptSchemeExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockConceptSchemeExternalItem());
-    }
-
-    public static ExternalItemDto mockCodeListSchemeExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockCodeListSchemeExternalItem());
-    }
-
-    public static ExternalItemDto mockCodeExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockCodeExternalItem());
-    }
-
-    public static ExternalItemDto mockDsdExternalItemDto() {
-        return createExternalItemDtoMockFromDoMock(StatisticalResourcesDoMocks.mockDsdExternalItem());
-    }
-
-    private static ExternalItemDto createExternalItemDtoMockFromDoMock(ExternalItem item) {
-        ExternalItemDto itemDto = new ExternalItemDto(item.getCode(), item.getUri(), item.getUrn(), item.getType());
-        itemDto.setVersion(Long.valueOf(0));
-        return itemDto;
-    }
 
     // RELATED RESOURCE DTOs
 

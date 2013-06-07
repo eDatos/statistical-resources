@@ -79,7 +79,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     public void testCreatePublicationVersion() throws Exception {
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
         PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
@@ -97,7 +97,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME);
         String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
 
         PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
@@ -114,7 +114,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         PublicationVersion publicationVersionOperation01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME);
         String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         {
-            ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+            ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
             PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
             PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
@@ -124,7 +124,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }
         {
-            ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+            ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
             PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
             PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
@@ -143,7 +143,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
                 .getStatisticalOperation().getUrn()));
 
         String operationCode = publicationVersionOperation01.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), statisticalResourcesNotPersistedDoMocks.mockPublicationVersion(), statisticalOperation);
     }
 
@@ -151,7 +151,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     public void testCreatePublicationVersionErrorParameterPublicationRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION));
 
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), null, statisticalOperation);
     }
 
@@ -159,7 +159,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     public void testCreatePublicationVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE));
 
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationItem();
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         PublicationVersion expected = statisticalResourcesNotPersistedDoMocks.mockPublicationVersionWithNullableSiemacStatisticalResource();
         publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
     }

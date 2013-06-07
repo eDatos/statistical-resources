@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.siemac.metamac.common.test.utils.MetamacAsserts.MapperEnum;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -106,7 +107,7 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     private void testExternalItemDtoToDo(ExternalItem externalItem) throws Exception {
         ExternalItemDto result = commonDo2DtoMapper.externalItemDoToDto(externalItem);
-        assertEqualsExternalItem(externalItem, result);
+        assertEqualsExternalItem(externalItem, result, MapperEnum.DTO2DO);
     }
 
     private void testExternalItemDoCollectionToDtoCollection(List<ExternalItem> entities) throws Exception {

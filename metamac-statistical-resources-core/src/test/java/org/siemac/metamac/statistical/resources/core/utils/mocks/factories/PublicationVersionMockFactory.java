@@ -218,7 +218,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     }
 
     private static PublicationVersion createPublicationVersionInOperation(String operationCode, int sequentialId) {
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem(operationCode);
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
         PublicationVersion publicationVersion = getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
         publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
         publicationVersion.getSiemacMetadataStatisticalResource().setCode(buildPublicationCode(operationCode, sequentialId));

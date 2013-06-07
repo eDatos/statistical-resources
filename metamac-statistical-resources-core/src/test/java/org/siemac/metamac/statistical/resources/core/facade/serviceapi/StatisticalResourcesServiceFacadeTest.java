@@ -559,7 +559,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testCreateDataset() throws Exception {
         StatisticOfficiality officiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
         DatasetDto datasetDto = StatisticalResourcesDtoMocks.mockDatasetDto(officiality);
-        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationItem();
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
 
         DatasetDto newDatasetDto = statisticalResourcesServiceFacade.createDataset(getServiceContextAdministrador(), datasetDto, statisticalOperation);
         assertNotNull(newDatasetDto);
@@ -613,7 +613,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         String originalStatisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
         DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationItem();
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
         datasetDto.setStatisticalOperation(statisticalOperation);
 
         DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDto);
@@ -917,7 +917,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     public void testCreatePublication() throws Exception {
         PublicationDto publicationDto = StatisticalResourcesDtoMocks.mockPublicationDto();
-        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationItem();
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
 
         PublicationDto newPublicationDto = statisticalResourcesServiceFacade.createPublication(getServiceContextAdministrador(), publicationDto, statisticalOperation);
         assertNotNull(newPublicationDto);
@@ -960,7 +960,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         PublicationDto publicationDto = statisticalResourcesServiceFacade
                 .retrievePublicationByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
-        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationItem();
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
         publicationDto.setStatisticalOperation(statisticalOperation);
 
         PublicationDto updatedPublication = statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDto);

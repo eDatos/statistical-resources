@@ -12,20 +12,24 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 @org.springframework.stereotype.Component("commonDo2DtoMapper")
-public class CommonDo2DtoMapperImpl implements CommonDo2DtoMapper {
+public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements CommonDo2DtoMapper {
 
     // ------------------------------------------------------------
     // EXTERNAL ITEM
     // ------------------------------------------------------------
 
     @Override
-    public Collection<ExternalItemDto> externalItemDoCollectionToDtoCollection(Collection<ExternalItem> source) {
+    public Collection<ExternalItemDto> externalItemDoCollectionToDtoCollection(Collection<ExternalItem> source) throws MetamacException {
         HashSet<ExternalItemDto> result = new HashSet<ExternalItemDto>();
 
         if (source != null) {
@@ -35,15 +39,54 @@ public class CommonDo2DtoMapperImpl implements CommonDo2DtoMapper {
         }
         return result;
     }
-
+    
     @Override
-    public ExternalItemDto externalItemDoToDto(ExternalItem source) {
+    public ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException {
+        ExternalItemDto target = externalItemDoToDtoWithoutUrls(source);
+        if (target != null) {
+            if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(source.getType())) {
+                target = commonMetadataExternalItemDoToDto(source, target);
+            } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(source.getType())) {
+                target = srmExternalItemDoToDto(source, target);
+            } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(source.getType())) {
+                target = statisticalOperationsExternalItemDoToDto(source, target);
+            } else {
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of externalItem not defined for externalItemDoToDto");
+            }
+        }
+
+        return target;
+    }
+
+    private ExternalItemDto externalItemDoToDtoWithoutUrls(ExternalItem source) {
         if (source == null) {
             return null;
         }
-        ExternalItemDto target = new ExternalItemDto(source.getCode(), source.getUri(), source.getUrn(), source.getType(), internationalStringDoToDto(source.getTitle()), source.getManagementAppUrl());
+
+        ExternalItemDto target = new ExternalItemDto(source.getCode(), source.getUri(), source.getUrn(), source.getUrnInternal(), source.getType(), internationalStringDoToDto(source.getTitle()),
+                source.getManagementAppUrl());
+        target.setId(source.getId());
         return target;
     }
+    
+    private ExternalItemDto commonMetadataExternalItemDoToDto(ExternalItem source, ExternalItemDto target) throws MetamacException {
+        target.setUri(commonMetadataExternalApiUrlDoToDto(source.getUri()));
+        target.setManagementAppUrl(commonMetadataInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
+        return target;
+    }
+
+    private ExternalItemDto srmExternalItemDoToDto(ExternalItem source, ExternalItemDto target) throws MetamacException {
+        target.setUri(srmInternalApiUrlDoToDto(source.getUri()));
+        target.setManagementAppUrl(srmInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
+        return target;
+    }
+    
+    private ExternalItemDto statisticalOperationsExternalItemDoToDto(ExternalItem source, ExternalItemDto target) throws MetamacException {
+        target.setUri(statisticalOperationsInternalApiUrlDoToDto(source.getUri()));
+        target.setManagementAppUrl(statisticalOperationsInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
+        return target;
+    }
+    
 
     @Override
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) {

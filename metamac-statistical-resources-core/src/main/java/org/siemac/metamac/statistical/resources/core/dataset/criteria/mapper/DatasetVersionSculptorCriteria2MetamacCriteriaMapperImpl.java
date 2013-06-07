@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.mapper.SculptorCriteria2MetamacCriteria;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
@@ -19,7 +20,7 @@ public class DatasetVersionSculptorCriteria2MetamacCriteriaMapperImpl implements
 
 
     @Override
-    public MetamacCriteriaResult<DatasetDto> pageResultToMetamacCriteriaResultDatasetVersion(PagedResult<DatasetVersion> source, Integer pageSize) {
+    public MetamacCriteriaResult<DatasetDto> pageResultToMetamacCriteriaResultDatasetVersion(PagedResult<DatasetVersion> source, Integer pageSize) throws MetamacException {
         MetamacCriteriaResult<DatasetDto> target = new MetamacCriteriaResult<DatasetDto>();
         target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
         if (source.getValues() != null) {

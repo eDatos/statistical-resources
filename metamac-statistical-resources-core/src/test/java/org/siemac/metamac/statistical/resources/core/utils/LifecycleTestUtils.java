@@ -102,7 +102,7 @@ public class LifecycleTestUtils {
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
 
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationItem();
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem();
         resource.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
 
         resource.getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesPersistedDoMocks.mockAgencyExternalItem());

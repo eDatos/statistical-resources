@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -53,7 +54,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
     }
 
     @Override
-    public DatasetDto datasetVersionDoToDto(DatasetVersion source) {
+    public DatasetDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -62,7 +63,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         return target;
     }
 
-    private DatasetDto datasetVersionDoToDto(DatasetVersion source, DatasetDto target) {
+    private DatasetDto datasetVersionDoToDto(DatasetVersion source, DatasetDto target) throws MetamacException {
         if (source == null) {
             return null;
         }

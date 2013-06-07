@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.siemac.metamac.core.common.constants.CoreCommonConstants.API_LATEST;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,13 +12,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
+import org.siemac.metamac.common.test.constants.ConfigurationMockConstants;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
@@ -229,19 +234,65 @@ public class CommonAsserts extends MetamacAsserts {
     // EXTERNAL ITEMS: DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsExternalItem(ExternalItem entity, ExternalItemDto dto) {
-
+    public static void assertEqualsExternalItem(ExternalItem entity, ExternalItemDto dto, MapperEnum mapperEnum) {
         assertEqualsNullability(entity, dto);
         if (entity == null) {
             return;
         }
 
+        String baseApi = null;
+        String baseWebApplication = null;
+
+        if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(dto.getType())) {
+            baseWebApplication = ConfigurationMockConstants.COMMON_METADATA_INTERNAL_WEB_APP_URL_BASE;
+            baseApi = ConfigurationMockConstants.COMMON_METADATA_EXTERNAL_API_URL_BASE;
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(dto.getType())) {
+            baseWebApplication = ConfigurationMockConstants.STATISTICAL_OPERATIONS_INTERNAL_WEB_APP_URL_BASE;
+            baseApi = ConfigurationMockConstants.STATISTICAL_OPERATIONS_INTERNAL_API_URL_BASE;
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(dto.getType())) {
+            baseWebApplication = ConfigurationMockConstants.SRM_INTERNAL_WEB_APP_URL_BASE;
+            baseApi = ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE;
+        } else {
+            fail("unexpected type of external item");
+        }
+
+        assertEqualsExternalItem(entity, dto, baseApi, baseWebApplication, mapperEnum);
+    }
+
+    private static void assertEqualsExternalItem(ExternalItem entity, ExternalItemDto dto, String baseApi, String baseWebApplication, MapperEnum mapperEnum) {
+        assertEqualsExternalItem(entity, dto);
+
+        assertEqualsNullability(entity.getUri(), dto.getUri());
+        if (entity.getUri() != null) {
+            if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+                assertEquals(baseApi + entity.getUri(), dto.getUri());
+            } else if (MapperEnum.DTO2DO.equals(mapperEnum)) {
+                String expectedDoUri = dto.getUri().replaceFirst(baseApi, StringUtils.EMPTY);
+                expectedDoUri = expectedDoUri.replaceFirst(RegularExpressionConstants.API_VERSION_REG_EXP, API_LATEST);
+                assertEquals(expectedDoUri, entity.getUri());
+            } else {
+                fail("Mapper unexpected: " + mapperEnum);
+            }
+        }
+
+        assertEqualsNullability(entity.getManagementAppUrl(), dto.getManagementAppUrl());
+        if (entity.getManagementAppUrl() != null) {
+            if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+                assertEquals(baseWebApplication + entity.getManagementAppUrl(), dto.getManagementAppUrl());
+            } else if (MapperEnum.DTO2DO.equals(mapperEnum)) {
+                assertEquals(dto.getManagementAppUrl().replaceFirst(baseWebApplication, StringUtils.EMPTY), entity.getManagementAppUrl());
+            } else {
+                fail("Mapper unexpected: " + mapperEnum);
+            }
+        }
+    }
+
+    private static void assertEqualsExternalItem(ExternalItem entity, ExternalItemDto dto) {
         assertEquals(entity.getCode(), dto.getCode());
-        assertEquals(entity.getUri(), dto.getUri());
         assertEquals(entity.getUrn(), dto.getUrn());
+        assertEquals(entity.getUrnInternal(), dto.getUrnInternal());
         assertEquals(entity.getType(), dto.getType());
         assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
-        assertEquals(entity.getManagementAppUrl(), dto.getManagementAppUrl());
     }
 
     public static void assertEqualsExternalItemCollectionMapper(Collection<ExternalItem> entities, Collection<ExternalItemDto> dtos) {

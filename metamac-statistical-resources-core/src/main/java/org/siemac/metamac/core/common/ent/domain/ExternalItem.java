@@ -17,14 +17,23 @@ public class ExternalItem extends ExternalItemBase {
     protected ExternalItem() {
     }
 
-    public ExternalItem(String code, String uri, String urn, TypeExternalArtefactsEnum type) {
+    public ExternalItem(String code, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type) {
         super(code, uri, type);
         this.setUrn(urn);
+        this.setUrnInternal(urnInternal);
     }
 
-    public ExternalItem(String code, String uri, String urn, TypeExternalArtefactsEnum type, InternationalString title, String managementAppUrl) {
+    public ExternalItem(String code, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type, InternationalString title) {
         super(code, uri, type);
         this.setUrn(urn);
+        this.setUrnInternal(urnInternal);
+        this.setTitle(title);
+    }
+
+    public ExternalItem(String code, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type, InternationalString title, String managementAppUrl) {
+        super(code, uri, type);
+        this.setUrn(urn);
+        this.setUrnInternal(urnInternal);
         this.setTitle(title);
         this.setManagementAppUrl(managementAppUrl);
     }

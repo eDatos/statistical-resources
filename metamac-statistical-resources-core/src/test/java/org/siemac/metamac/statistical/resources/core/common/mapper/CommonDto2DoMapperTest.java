@@ -18,7 +18,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.siemac.metamac.common.test.constants.ConfigurationMockConstants;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
+import org.siemac.metamac.common.test.utils.MetamacAsserts.MapperEnum;
+import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -51,21 +54,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String           URN_01                        = "lorem:ipsum:externalItem:mock:01";
-    private static final String           URN_02                        = "lorem:ipsum:externalItem:mock:02";
-    private static final String           METADATA_NAME                 = "LOREM_IPSUM";
+    private static final String                     URN_01                        = "lorem:ipsum:externalItem:mock:01";
+    private static final String                     URN_02                        = "lorem:ipsum:externalItem:mock:02";
+    private static final String                     METADATA_NAME                 = "LOREM_IPSUM";
 
-    private ExternalItemRepository        externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
-    private InternationalStringRepository internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
-    private RelatedResourceRepository     relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
-    private DatasetVersionRepository      datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
-    private PublicationVersionRepository  publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
-    
+    private ExternalItemRepository                  externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
+    private InternationalStringRepository           internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
+    private RelatedResourceRepository               relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
+    private DatasetVersionRepository                datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
+    private PublicationVersionRepository            publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
+
     @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
 
     @Autowired
-    private CommonDto2DoMapper            commonDto2DoMapper;
+    private CommonDto2DoMapper                      commonDto2DoMapper;
 
     @Before
     public void setRepositoriesToMapper() throws Exception {
@@ -155,14 +158,11 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         testExternalItemDtoToDo(externalItemDto, null);
         Mockito.verify(externalItemRepository, never()).delete(Mockito.any(ExternalItem.class));
     }
-    
+
     @Test
-    public void testExternalItemDtoToDoWithExistsUrnNullDtoAndNullDo() throws Exception {
+    public void testExternalItemDtoToDoWithExistsDtoAndNullDoAndDtoUrnNull() throws Exception {
         // EXISTS, NULL
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, METADATA_NAME));
-        
         ExternalItemDto externalItemDto = mockExternalItemDtoComplete(null, TypeExternalArtefactsEnum.AGENCY);
-        
         testExternalItemDtoToDo(externalItemDto, null);
     }
 
@@ -248,11 +248,15 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testExternalItemDtoListToDoListWithSameElements() throws Exception {
         // EXISTS, EXISTS: Same elements
         List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(new ExternalItemDto("CODE_01", "URI_01", "URN_01", TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(new ExternalItemDto("CODE_02", "URI_02", "URN_02", TypeExternalArtefactsEnum.CATEGORY));
+        dtos.add(new ExternalItemDto("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+                TypeExternalArtefactsEnum.AGENCY));
+        dtos.add(new ExternalItemDto("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+                TypeExternalArtefactsEnum.CATEGORY));
         List<ExternalItem> entities = new ArrayList<ExternalItem>();
-        entities.add(new ExternalItem("CODE_01", "URI_01", "URN_01", TypeExternalArtefactsEnum.AGENCY));
-        entities.add(new ExternalItem("CODE_02", "URI_02", "URN_02", TypeExternalArtefactsEnum.CATEGORY));
+        entities.add(new ExternalItem("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+                TypeExternalArtefactsEnum.AGENCY));
+        entities.add(new ExternalItem("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+                TypeExternalArtefactsEnum.CATEGORY));
 
         testExternalItemDtoListToDoList(dtos, entities);
         Mockito.verify(externalItemRepository, never()).delete(Mockito.any(ExternalItem.class));
@@ -262,12 +266,17 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testExternalItemDtoListToDoListWithMoreElementsInDtoList() throws Exception {
         // EXISTS, EXISTS: More elements
         List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(new ExternalItemDto("CODE_01", "URI_01", "URN_01", TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(new ExternalItemDto("CODE_02", "URI_02", "URN_02", TypeExternalArtefactsEnum.CATEGORY));
-        dtos.add(new ExternalItemDto("CODE_03", "URI_03", "URN_03", TypeExternalArtefactsEnum.CATEGORY));
+        dtos.add(new ExternalItemDto("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+                TypeExternalArtefactsEnum.AGENCY));
+        dtos.add(new ExternalItemDto("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+                TypeExternalArtefactsEnum.CATEGORY));
+        dtos.add(new ExternalItemDto("CODE_03", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_03", "URN_03", "URN_03_internal",
+                TypeExternalArtefactsEnum.CATEGORY));
         List<ExternalItem> entities = new ArrayList<ExternalItem>();
-        entities.add(new ExternalItem("CODE_01", "URI_01", "URN_01", TypeExternalArtefactsEnum.AGENCY));
-        entities.add(new ExternalItem("CODE_02", "URI_02", "URN_02", TypeExternalArtefactsEnum.CATEGORY));
+        entities.add(new ExternalItem("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+                TypeExternalArtefactsEnum.AGENCY));
+        entities.add(new ExternalItem("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+                TypeExternalArtefactsEnum.CATEGORY));
 
         testExternalItemDtoListToDoList(dtos, entities);
         Mockito.verify(externalItemRepository, never()).delete(Mockito.any(ExternalItem.class));
@@ -276,16 +285,8 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     public void testExternalItemDtoListToDoListWithLessElementsInDtoList() throws Exception {
         // EXISTS, EXISTS: Less elements
-        List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(new ExternalItemDto("CODE_01", "URI_01", "URN_01", TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(new ExternalItemDto("CODE_02", "URI_02", "URN_02", TypeExternalArtefactsEnum.CATEGORY));
-        List<ExternalItem> entities = new ArrayList<ExternalItem>();
-        entities.add(new ExternalItem("CODE_01", "URI_01", "URN_01", TypeExternalArtefactsEnum.AGENCY));
-        entities.add(new ExternalItem("CODE_02", "URI_02", "URN_02", TypeExternalArtefactsEnum.CATEGORY));
-        entities.add(new ExternalItem("CODE_03", "URI_03", "URN_03", TypeExternalArtefactsEnum.CATEGORY));
 
-        testExternalItemDtoListToDoList(dtos, entities);
-        Mockito.verify(externalItemRepository).delete(Mockito.any(ExternalItem.class));
+        // Can not execute this test, because can not set id in entity
     }
 
     @Test
@@ -304,7 +305,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     private void testExternalItemDtoToDo(ExternalItemDto externalItemDto, ExternalItem externalItem) throws Exception {
         ExternalItem result = commonDto2DoMapper.externalItemDtoToDo(externalItemDto, externalItem, METADATA_NAME);
-        BaseAsserts.assertEqualsExternalItem(result, externalItemDto);
+        BaseAsserts.assertEqualsExternalItem(result, externalItemDto, MapperEnum.DTO2DO);
     }
 
     private void testExternalItemDtoListToDoList(List<ExternalItemDto> dtos, List<ExternalItem> entities) throws Exception {
@@ -327,36 +328,35 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testRelatedResourceDtoToDoWithExistsDtoAndNullDo() throws Exception {
         RelatedResource expected = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
         DatasetVersion datasetVersion = expected.getDatasetVersion();
-        
+
         Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn())).thenReturn(datasetVersion);
-        
+
         RelatedResourceDto relatedResourceDto = StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersion);
-        
+
         testRelatedResourceDtoToDo(expected, relatedResourceDto, null);
     }
-    
+
     @Test
     public void testRelatedResourceDtoToDoWithExistsUrnNullDtoAndNullDo() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, METADATA_NAME));
-        
+
         RelatedResource expected = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
         DatasetVersion datasetVersion = expected.getDatasetVersion();
-        
+
         Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn())).thenReturn(datasetVersion);
-        
+
         RelatedResourceDto relatedResourceDto = StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersion);
         relatedResourceDto.setUrn(null);
-        
+
         testRelatedResourceDtoToDo(expected, relatedResourceDto, null);
     }
-    
 
     @Test
     public void testRelatedResourceDtoToDoWithNullDtoAndExistsDo() throws Exception {
         RelatedResource target = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
-        
+
         testRelatedResourceDtoToDo(null, target);
-        
+
         Mockito.verify(relatedResourceRepository).delete(target);
     }
 
@@ -364,16 +364,16 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testRelatedResourceDtoToDoWithExistsDtoAndExistsDo() throws Exception {
         RelatedResource target = createRelatedResourceLinkedToMockedDatasetVersion(URN_02);
         RelatedResource expected = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
-        
+
         RelatedResourceDto relatedResourceDto = StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(expected.getDatasetVersion());
-        
+
         testRelatedResourceDtoToDo(expected, relatedResourceDto, target);
     }
 
     @Test
     public void testRelatedResourceDtoListToDoListWithNullDtoListAndNullDoList() throws Exception {
         // null, null
-       testRelatedResourceDtoListToDoList(null, null);
+        testRelatedResourceDtoListToDoList(null, null);
     }
 
     @Test
@@ -400,9 +400,9 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         List<RelatedResource> targets = new ArrayList<RelatedResource>();
         targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         testRelatedResourceDtoListToDoList(new ArrayList<RelatedResourceDto>(), targets);
-        
+
         for (RelatedResource resource : targets) {
             Mockito.verify(relatedResourceRepository).delete(resource);
         }
@@ -414,11 +414,11 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         List<RelatedResource> expected = new ArrayList<RelatedResource>();
         expected.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         expected.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         testRelatedResourceDtoListToDoList(expected, sources, new ArrayList<RelatedResource>());
         Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
@@ -429,11 +429,11 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         List<RelatedResource> target = new ArrayList<RelatedResource>();
         target.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         target.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         testRelatedResourceDtoListToDoList(target, sources, target);
         Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
@@ -441,21 +441,21 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     public void testRelatedResourceDtoListToDoListWithLessElementsInDtoList() throws Exception {
         // EXISTS, EXISTS: Less elements
-        
+
         List<RelatedResource> targets = new ArrayList<RelatedResource>();
         targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
-        RelatedResource deletedResource = targets.get(1); 
-        
+
+        RelatedResource deletedResource = targets.get(1);
+
         List<RelatedResource> expected = new ArrayList<RelatedResource>();
         expected.add(targets.get(0));
-        
+
         List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
-        
+
         testRelatedResourceDtoListToDoList(expected, sources, targets);
-        
+
         Mockito.verify(relatedResourceRepository).delete(deletedResource);
     }
 
@@ -463,20 +463,20 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testRelatedResourceDtoListToDoListWithMoreElementsInDtoList() throws Exception {
         // EXISTS, EXISTS: More elements
         RelatedResource newResource = createRelatedResourceLinkedToMockedDatasetVersion(URN_02);
-        
+
         List<RelatedResource> targets = new ArrayList<RelatedResource>();
         targets.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
-        
+
         List<RelatedResource> expected = new ArrayList<RelatedResource>();
         expected.add(targets.get(0));
         expected.add(newResource);
-        
+
         List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         testRelatedResourceDtoListToDoList(expected, sources, targets);
-        
+
         Mockito.verify(relatedResourceRepository, never()).delete(Mockito.any(RelatedResource.class));
     }
 
@@ -485,18 +485,18 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         // EXISTS, EXISTS: Different elements
         RelatedResource deletedResource = createRelatedResourceLinkedToMockedDatasetVersion(URN_01);
         RelatedResource newResource = createRelatedResourceLinkedToMockedDatasetVersion(URN_02);
-        
+
         List<RelatedResource> targets = new ArrayList<RelatedResource>();
         targets.add(deletedResource);
-        
+
         List<RelatedResource> expected = new ArrayList<RelatedResource>();
         expected.add(newResource);
-        
+
         List<RelatedResourceDto> sources = new ArrayList<RelatedResourceDto>();
         sources.add(createSimpleRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         testRelatedResourceDtoListToDoList(expected, sources, targets);
-        
+
         Mockito.verify(relatedResourceRepository).delete(deletedResource);
     }
 
@@ -504,7 +504,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         RelatedResource result = commonDto2DoMapper.relatedResourceDtoToDo(relatedResourceDto, relatedResource, METADATA_NAME);
         BaseAsserts.assertEqualsRelatedResource(result, relatedResourceDto);
     }
-    
+
     private void testRelatedResourceDtoToDo(RelatedResource expected, RelatedResourceDto relatedResourceDto, RelatedResource relatedResource) throws Exception {
         RelatedResource result = commonDto2DoMapper.relatedResourceDtoToDo(relatedResourceDto, relatedResource, METADATA_NAME);
         BaseAsserts.assertEqualsRelatedResource(expected, result);
@@ -514,23 +514,21 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         List<RelatedResource> result = commonDto2DoMapper.relatedResourceDtoListToDoList(dtos, entities, METADATA_NAME);
         BaseAsserts.assertEqualsRelatedResourceCollectionMapper(result, dtos);
     }
-    
+
     private void testRelatedResourceDtoListToDoList(List<RelatedResource> expected, List<RelatedResourceDto> dtos, List<RelatedResource> entities) throws Exception {
         List<RelatedResource> result = commonDto2DoMapper.relatedResourceDtoListToDoList(dtos, entities, METADATA_NAME);
         BaseAsserts.assertEqualsRelatedResourceCollection(result, expected);
     }
-    
-    
+
     private RelatedResource createRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) throws MetamacException {
         RelatedResource resource = statisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToMockedDatasetVersion(datasetVersionUrn);
-        
+
         DatasetVersion datasetVersion = resource.getDatasetVersion();
         Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersionUrn)).thenReturn(datasetVersion);
-        
+
         return resource;
     }
-    
-    
+
     private RelatedResourceDto createSimpleRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) {
         RelatedResourceDto target = new RelatedResourceDto();
         target.setUrn(datasetVersionUrn);

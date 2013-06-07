@@ -17,18 +17,25 @@
         <context:exclude-filter type="regex" expression=".*web.*" />
     </context:component-scan>
 
+    <!-- Metamac environment configuration -->
+    <bean id="configurationService" class="org.siemac.metamac.core.common.conf.ConfigurationServiceImpl">
+        <property name="systemConfigurationFile">
+            <value>classpath:metamac/environment.xml</value>
+        </property>
+    </bean>
+    
     <!-- METAMAC-CORE-COMMON -->
     <import resource="classpath:/spring/logging-beans-advice.xml" />
     <import resource="classpath:/spring/general-beans-advice.xml" />
 
 
     <!-- import additional spring configuration files -->
-    
-    <!-- metamac-statistical-resources -->    
+
+    <!-- metamac-statistical-resources -->
     <import resource="classpath:/spring/statistical-resources/include/datasource.xml" />
     <import resource="classpath:/spring/statistical-resources/include/entity-manager-factory.xml" />
     <import resource="classpath:/spring/statistical-resources/include/interceptor.xml" />
-    <import resource="classpath:/spring/statistical-resources/include/more.xml" /> 
+    <import resource="classpath:/spring/statistical-resources/include/more.xml" />
 
 
 </beans>

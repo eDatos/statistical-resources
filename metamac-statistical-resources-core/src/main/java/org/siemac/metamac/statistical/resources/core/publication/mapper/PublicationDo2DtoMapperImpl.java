@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.publication.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements PublicationDo2DtoMapper {
 
     @Override
-    public PublicationDto publicationVersionDoToDto(PublicationVersion source) {
+    public PublicationDto publicationVersionDoToDto(PublicationVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -23,7 +24,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
     }
 
     @Override
-    public List<PublicationDto> publicationVersionDoListToDtoList(List<PublicationVersion> sources) {
+    public List<PublicationDto> publicationVersionDoListToDtoList(List<PublicationVersion> sources) throws MetamacException {
         List<PublicationDto> targets = new ArrayList<PublicationDto>();
         for (PublicationVersion source : sources) {
             targets.add(publicationVersionDoToDto(source));
@@ -31,7 +32,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         return targets;
     }
     
-    private PublicationDto publicationVersionDtoToDto(PublicationVersion source, PublicationDto target) {
+    private PublicationDto publicationVersionDtoToDto(PublicationVersion source, PublicationDto target) throws MetamacException {
         if (source == null) {
             return null;
         }

@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context-3.0.xsd   http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   http://www.springframework.org/schema/jee   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd   http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context-3.0.xsd   http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   http://www.springframework.org/schema/jee   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd   http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<!-- activates annotation-based bean configuration -->
-	<context:annotation-config />
+    <!-- activates annotation-based bean configuration -->
+    <context:annotation-config />
 
-	<!-- scans for @Components, @Repositories, @Services, ... -->
-	<context:component-scan base-package="org.siemac.metamac">
-		<context:exclude-filter type="regex" expression=".*web.*" />
-		<context:exclude-filter type="regex" expression=".*core.invocation.*" />
-	</context:component-scan>
+    <!-- scans for @Components, @Repositories, @Services, ... -->
+    <context:component-scan base-package="org.siemac.metamac">
+        <context:exclude-filter type="regex" expression=".*web.*" />
+        <context:exclude-filter type="regex" expression=".*core.invocation.*" />
+    </context:component-scan>
 
-	<bean id="springPropertyConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean id="springPropertyConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true" />
-		<property name="locations">
-			<list>
-				<value>classpath:/spring/spring-test-default.properties</value>
+        <property name="locations">
+            <list>
+                <value>classpath:/spring/spring-test-default.properties</value>
                 <value>classpath:/spring/spring-test-local.properties</value>
-			</list>
-		</property>
-	</bean>
+            </list>
+        </property>
+    </bean>
 
-	<!-- metamac-core-common -->
-	<import resource="classpath:/spring/logging-beans-advice.xml" />
-	<import resource="classpath:/spring/general-beans-advice.xml" />
+    <!-- Metamac environment configuration -->
+    <bean id="configurationService" class="org.siemac.metamac.core.common.conf.ConfigurationServiceImpl">
+        <property name="systemConfigurationFile">
+            <value>classpath:metamac/environment-test.xml</value>
+        </property>
+    </bean>
 
-	<!-- metamac-statistical-resources-core > src/main/resources -->
-	<import resource="classpath:/spring/statistical-resources/include/interceptor.xml" />
-	
-	<!-- metamac-statistical-resources-core > src/test/resources -->
-	<import resource="classpath:/spring/statistical-resources/include/datasource-test.xml" />
+    <!-- metamac-core-common -->
+    <import resource="classpath:/spring/logging-beans-advice.xml" />
+    <import resource="classpath:/spring/general-beans-advice.xml" />
+
+    <!-- metamac-statistical-resources-core > src/main/resources -->
+    <import resource="classpath:/spring/statistical-resources/include/interceptor.xml" />
+
+    <!-- metamac-statistical-resources-core > src/test/resources -->
+    <import resource="classpath:/spring/statistical-resources/include/datasource-test.xml" />
     <import resource="classpath:/spring/statistical-resources/include/interceptor-test.xml" />
-	<import resource="classpath:/spring/statistical-resources/include/more-test.xml" />
+    <import resource="classpath:/spring/statistical-resources/include/more-test.xml" />
 </beans>
