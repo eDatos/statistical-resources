@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.core.common.constants.CoreCommonConstants.API_LATEST;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -335,25 +334,6 @@ public class CommonAsserts extends MetamacAsserts {
         } else {
             assertNull(actual);
         }
-    }
-
-    private static boolean messageParametersEquals(Serializable[] expected, Serializable[] actual) {
-        if (expected != null && actual != null) {
-            for (Serializable expec : expected) {
-                boolean found = false;
-                for (Serializable act : actual) {
-                    if (expec.equals(act)) {
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    return false;
-                }
-            }
-        } else {
-            return expected == null && actual == null;
-        }
-        return true;
     }
 
     protected static void assertRelaxedEqualsObject(Object expected, Object actual) {
