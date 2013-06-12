@@ -34,20 +34,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements CommonDto2DoMapper {
 
     @Autowired
-    private InternationalStringRepository  internationalStringRepository;
+    private InternationalStringRepository internationalStringRepository;
 
     @Autowired
-    private ExternalItemRepository         externalItemRepository;
+    private ExternalItemRepository        externalItemRepository;
 
     @Autowired
-    private RelatedResourceRepository      relatedResourceRepository;
+    private RelatedResourceRepository     relatedResourceRepository;
 
     @Autowired
-    private PublicationVersionRepository   publicationVersionRepository;
+    private PublicationVersionRepository  publicationVersionRepository;
 
     @Autowired
-    private DatasetVersionRepository       datasetVersionRepository;
-
+    private DatasetVersionRepository      datasetVersionRepository;
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -75,6 +74,8 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(source.getTexts(), target.getTexts(), target);
         target.getTexts().clear();
         target.getTexts().addAll(localisedStringEntities);
+
+        checkExistsLocaleInDefaultLanguage(target.getTexts(), metadataName);
 
         return target;
     }
@@ -114,6 +115,20 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         return target;
     }
 
+    private void checkExistsLocaleInDefaultLanguage(Set<LocalisedString> targets, String metadataName) throws MetamacException {
+        boolean existsDefaultLanguage = false;
+        for (LocalisedString localisedString : targets) {
+            if (localisedString.getLocale().equals(configurationService.retrieveLanguageDefault())) {
+                existsDefaultLanguage = true;
+                break;
+            }
+        }
+
+        if (!existsDefaultLanguage) {
+            throw new MetamacException(ServiceExceptionType.METADATA_WITHOUT_DEFAULT_LANGUAGE, metadataName);
+        }
+    }
+
     // ------------------------------------------------------------
     // EXTERNAL ITEMS
     // ------------------------------------------------------------
@@ -136,7 +151,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
 
         return target;
     }
-    
+
     private ExternalItem externalItemDtoToDoWithoutUrls(ExternalItemDto source, ExternalItem target, String metadataName) throws MetamacException {
         if (source == null) {
             if (target != null) {
@@ -171,22 +186,21 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         target.setManagementAppUrl(srmInternalWebAppUrlDtoToDo(source.getManagementAppUrl()));
         return target;
     }
-    
+
     private ExternalItem statisticalOperationsExternalItemDtoToDo(ExternalItemDto source, ExternalItem target) throws MetamacException {
         target.setUri(statisticalOperationsInternalApiUrlDtoToDo(source.getUri()));
         target.setManagementAppUrl(statisticalOperationsInternalWebAppUrlDtoToDo(source.getManagementAppUrl()));
         return target;
     }
-    
+
     @Override
     public List<ExternalItem> externalItemDtoListToDoList(List<ExternalItemDto> sources, List<ExternalItem> targets, String metadataName) throws MetamacException {
         if (targets == null) {
             targets = new ArrayList<ExternalItem>();
         }
-        
+
         List<ExternalItem> targetsBefore = targets;
         List<ExternalItem> newTargets = new ArrayList<ExternalItem>();
-
 
         if (sources != null) {
             for (ExternalItemDto source : sources) {
@@ -237,7 +251,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
             }
             return null;
         }
-        
+
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         StatisticalResourcesValidationUtils.checkMetadataRequired(source, metadataName, exceptionItems);
         ExceptionUtils.throwIfException(exceptionItems);
@@ -269,7 +283,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         if (targets == null) {
             targets = new ArrayList<RelatedResource>();
         }
-        
+
         List<RelatedResource> targetsBefore = targets;
         List<RelatedResource> newTargets = new ArrayList<RelatedResource>();
 

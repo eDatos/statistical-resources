@@ -19,8 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.common.test.constants.ConfigurationMockConstants;
-import org.siemac.metamac.common.test.utils.MetamacMocks;
+import org.siemac.metamac.common.test.mock.ConfigurationServiceMockImpl;
 import org.siemac.metamac.common.test.utils.MetamacAsserts.MapperEnum;
+import org.siemac.metamac.common.test.utils.MetamacMocks;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
@@ -58,6 +60,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     private static final String                     URN_02                        = "lorem:ipsum:externalItem:mock:02";
     private static final String                     METADATA_NAME                 = "LOREM_IPSUM";
 
+    protected ConfigurationService                  configurationService          = new ConfigurationServiceMockImpl();
     private ExternalItemRepository                  externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
     private InternationalStringRepository           internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
     private RelatedResourceRepository               relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
@@ -72,6 +75,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Before
     public void setRepositoriesToMapper() throws Exception {
+        setFieldToBaseMapper("configurationService", configurationService);
         setRepositoryToMapper(externalItemRepository, "externalItemRepository");
         setRepositoryToMapper(internationalStringRepository, "internationalStringRepository");
         setRepositoryToMapper(relatedResourceRepository, "relatedResourceRepository");
@@ -83,6 +87,12 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         Field externalItemRepositoryField = commonDto2DoMapper.getClass().getDeclaredField(fieldName);
         externalItemRepositoryField.setAccessible(true);
         externalItemRepositoryField.set(commonDto2DoMapper, repository);
+    }
+
+    private void setFieldToBaseMapper(String fieldName, ConfigurationService fieldValue) throws Exception {
+        Field field = commonDto2DoMapper.getClass().getSuperclass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(commonDto2DoMapper, fieldValue);
     }
 
     @After
@@ -131,6 +141,20 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         internationalStringDto.getTexts().clear();
 
         testInternationalStringDtoToDo(internationalStringDto, null);
+        Mockito.verify(internationalStringRepository, never()).delete(Mockito.any(InternationalString.class));
+    }
+
+    @Test
+    public void testInternationalStringDto2DoWithDtoNullAndWithoutLocaleInDefaultLanguage() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_WITHOUT_DEFAULT_LANGUAGE, METADATA_NAME));
+        testInternationalStringDtoToDo(mockInternationalStringDto("rs", "text"), null);
+        Mockito.verify(internationalStringRepository, never()).delete(Mockito.any(InternationalString.class));
+    }
+
+    @Test
+    public void testInternationalStringDto2DoWithoutLocaleInDefaultLanguage() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_WITHOUT_DEFAULT_LANGUAGE, METADATA_NAME));
+        testInternationalStringDtoToDo(mockInternationalStringDto("rs", "text"), mockInternationalString(configurationService.retrieveLanguageDefault(), "texto"));
         Mockito.verify(internationalStringRepository, never()).delete(Mockito.any(InternationalString.class));
     }
 
