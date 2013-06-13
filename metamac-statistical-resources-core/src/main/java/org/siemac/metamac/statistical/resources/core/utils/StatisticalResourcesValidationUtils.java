@@ -111,8 +111,9 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         // if it is not null, it must be complete
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName));
+        } else {
+            checkUrnExternalItemRequired(parameter, parameterName, exceptions);
         }
-        checkUrnExternalItemRequired(parameter, parameterName, exceptions);
     }
 
     /**
