@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
-import static org.junit.Assert.fail;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -55,9 +53,9 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
     public static void checkMetadataRequired(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
+        } else {
+            checkUrnExternalItemRequired(parameter, parameterName, exceptions);
         }
-
-        checkUrnExternalItemRequired(parameter, parameterName, exceptions);
     }
 
     private static void checkUrnExternalItemRequired(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
