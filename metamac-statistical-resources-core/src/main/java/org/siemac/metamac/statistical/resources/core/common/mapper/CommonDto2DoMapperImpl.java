@@ -53,7 +53,10 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
     // ------------------------------------------------------------
     @Override
     public InternationalString internationalStringDtoToDo(InternationalStringDto source, InternationalString target, String metadataName) throws MetamacException {
+        // Check it is valid
+        checkInternationalStringDtoValid(source, metadataName);
 
+        // Transform
         if (source == null) {
             if (target != null) {
                 // Delete old entity
@@ -63,19 +66,17 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
             return null;
         }
 
-        if (target == null) {
-            target = new InternationalString();
-        }
-
         if (ValidationUtils.isEmpty(source)) {
             throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
+        }
+
+        if (target == null) {
+            target = new InternationalString();
         }
 
         Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(source.getTexts(), target.getTexts(), target);
         target.getTexts().clear();
         target.getTexts().addAll(localisedStringEntities);
-
-        checkExistsLocaleInDefaultLanguage(target.getTexts(), metadataName);
 
         return target;
     }
@@ -113,20 +114,6 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         target.setIsUnmodifiable(source.getIsUnmodifiable());
         target.setInternationalString(internationalStringTarget);
         return target;
-    }
-
-    private void checkExistsLocaleInDefaultLanguage(Set<LocalisedString> targets, String metadataName) throws MetamacException {
-        boolean existsDefaultLanguage = false;
-        for (LocalisedString localisedString : targets) {
-            if (localisedString.getLocale().equals(configurationService.retrieveLanguageDefault())) {
-                existsDefaultLanguage = true;
-                break;
-            }
-        }
-
-        if (!existsDefaultLanguage) {
-            throw new MetamacException(ServiceExceptionType.METADATA_WITHOUT_DEFAULT_LANGUAGE, metadataName);
-        }
     }
 
     // ------------------------------------------------------------
