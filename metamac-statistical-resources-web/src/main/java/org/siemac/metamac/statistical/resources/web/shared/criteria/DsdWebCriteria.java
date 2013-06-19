@@ -1,12 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.shared.criteria;
 
 
-public class DsdWebCriteria extends StatisticalResourceWebCriteria {
+public class DsdWebCriteria extends VersionableStatisticalResourceWebCriteria {
 
     
-    //This filter is used if only last version can be specified
     private String fixedDsdCode;
-    private boolean onlyLastVersion;
     
     /**
      * 
@@ -14,8 +12,8 @@ public class DsdWebCriteria extends StatisticalResourceWebCriteria {
     private static final long serialVersionUID = 5661810672873720214L;
 
     public DsdWebCriteria() {
+        super();
         fixedDsdCode = null;
-        onlyLastVersion = false;
     }
     
     public DsdWebCriteria(String criteria) {
@@ -28,14 +26,6 @@ public class DsdWebCriteria extends StatisticalResourceWebCriteria {
     
     public String getFixedDsdCode() {
         return fixedDsdCode;
-    }
-    
-    public void setOnlyLastVersion(boolean onlyLastVersion) {
-        this.onlyLastVersion = onlyLastVersion;
-    }
-    
-    public boolean isOnlyLastVersion() {
-        return onlyLastVersion;
     }
     
 }

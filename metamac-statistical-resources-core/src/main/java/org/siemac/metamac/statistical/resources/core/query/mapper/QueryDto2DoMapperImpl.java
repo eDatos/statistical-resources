@@ -70,8 +70,8 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         lifeCycleStatisticalResourceDtoToDo(source, target.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY);
 
         // DatasetVersion
-        if (source.getDatasetVersion() != null) {
-            DatasetVersion datasetVersionTarget = datasetVersionRepository.retrieveByUrn(source.getDatasetVersion());
+        if (source.getRelatedDatasetVersion() != null && source.getRelatedDatasetVersion().getUrn() != null) {
+            DatasetVersion datasetVersionTarget = datasetVersionRepository.retrieveByUrn(source.getRelatedDatasetVersion().getUrn());
             target.setDatasetVersion(datasetVersionTarget);
         }
 

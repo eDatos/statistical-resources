@@ -179,7 +179,50 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     protected abstract void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
 
     protected abstract void applySendToPublishedResource(ServiceContext ctx, E resource) throws MetamacException;
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+    
+    @Override
+    public final void versioning(ServiceContext ctx, E resource) throws MetamacException {
+        getInvocationValidator().checkVersioning(ctx, resource);
+        
+        resource = retrieveResourceByResource(resource);
+        
+        checkSendToPublished(resource);
+        
+        applySendToPublished(ctx, resource);
+        
+        saveResource(resource);
+    }
+    
+    protected final void checkVersioning(E resource) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+        
+        checkVersioningLinkedStatisticalResource(resource, exceptions);
+        
+        checkResourceMetadataAllActions(resource, exceptions);
+        checkVersioningResource(resource, exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    protected final void applyVersioning(ServiceContext ctx, E resource) throws MetamacException {
+        applyVersioningLinkedStatisticalResource(ctx, resource);
+        
+        applyVersioningResource(ctx, resource);
+    }
+    
+    protected abstract void checkVersioningLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    
+    protected abstract void checkVersioningResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    
+    protected abstract void applyVersioningLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
+    
+    protected abstract void applyVersioningResource(ServiceContext ctx, E resource) throws MetamacException;
 
+    
     // ------------------------------------------------------------------------------------------------------
     // GLOBAL ABSTRACT METHODS
     // ------------------------------------------------------------------------------------------------------

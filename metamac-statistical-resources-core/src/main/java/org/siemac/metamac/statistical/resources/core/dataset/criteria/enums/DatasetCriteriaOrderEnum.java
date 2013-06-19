@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.criteria.enums;
 
 public enum DatasetCriteriaOrderEnum {
 
-    CODE, URN, TITLE, STATISTICAL_OPERATION_URN;
+    CODE, URN, TITLE, LAST_VERSION, STATISTICAL_OPERATION_URN;
 
     public String value() {
         return name();

@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -235,6 +236,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             Dataset dataset = datasetVersion.getDataset();
             getDatasetRepository().delete(dataset);
         } else {
+            //Previous version
+            RelatedResource previousResource = datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
+            if (previousResource.getDatasetVersion() != null) {
+                DatasetVersion previousVersion = previousResource.getDatasetVersion();
+                previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+            }
             // Delete version
             Dataset dataset = datasetVersion.getDataset();
             dataset.getVersions().remove(datasetVersion);
@@ -257,6 +264,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, datasetNewVersion.getSiemacMetadataStatisticalResource().getCode(), datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         
         //TODO: DATE_NEXT_UPDATE
+        
+        //TODO: set lastVersion true and set lastVersion = false to previous lastVersion
         
         datasetNewVersion = getDatasetVersionRepository().save(datasetNewVersion);
         

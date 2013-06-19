@@ -8,7 +8,7 @@ public class QueryDS extends LifeCycleResourceDS {
     public static final String TYPE                = "query-type";
     public static final String DTO                 = "query-dto";
 
-    public static String       DATASET_VERSION_URN = "query-dataset-version-urn";
+    public static String       RELATED_DATASET_VERSION = "query-dataset-version";
 
     public QueryDS() {
         super();

@@ -1,12 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.client.presenter;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.widgets.BreadCrumbsPanel;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent.HideMessageHandler;
@@ -14,6 +12,7 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent.SetTitleHandler;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
+import org.siemac.metamac.web.common.client.widgets.BreadCrumbsPanel;
 import org.siemac.metamac.web.common.client.widgets.MasterHead;
 import org.siemac.metamac.web.common.shared.CloseSessionAction;
 import org.siemac.metamac.web.common.shared.CloseSessionResult;
@@ -66,10 +65,9 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         MasterHead getMasterHead();
 
         BreadCrumbsPanel getBreadCrumbsPanel();
-        void prepareBreadcrumbs(int size);
-        void addBreadcrumbs(String title, int index);
-
-        void showMessage(List<String> messages, MessageTypeEnum type);
+        void clearBreadcrumbs(int size, PlaceManager placeManager);
+        void setBreadcrumb(int index, String title);
+        void showMessage(Throwable throwable, String message, MessageTypeEnum type);
         void hideMessages();
         void setTitle(String title);
     }
@@ -110,15 +108,19 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
     protected void onReset() {
         super.onReset();
         hideMessages();
+        updateBreadcrumbs();
+    }
+    
+    private void updateBreadcrumbs() {
         int size = placeManager.getHierarchyDepth();
-        getView().prepareBreadcrumbs(size);
+        getView().clearBreadcrumbs(size, placeManager);
         for (int i = 0; i < size; ++i) {
             final int index = i;
             placeManager.getTitle(i, new SetPlaceTitleHandler() {
 
                 @Override
                 public void onSetPlaceTitle(String title) {
-                    getView().addBreadcrumbs(title, index);
+                    getView().setBreadcrumb(index, title);
                 }
             });
         }
@@ -152,7 +154,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
     @ProxyEvent
     @Override
     public void onShowMessage(ShowMessageEvent event) {
-        getView().showMessage(event.getMessages(), event.getMessageType());
+        getView().showMessage(event.getThrowable(), event.getMessage(), event.getMessageType());
     }
 
     @ProxyEvent

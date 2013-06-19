@@ -47,7 +47,7 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
         archive = new MainFormLayoutButton(getConstants().lifeCycleArchive(), GlobalResources.RESOURCE.archive().getURL());
 
-        toolStrip.addButton(productionValidation);
+        /*toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(pendingPublication);
         toolStrip.addButton(rejectValidation);
@@ -55,7 +55,7 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(cancelProgrammedPublication);
         toolStrip.addButton(publish);
         toolStrip.addButton(versioning);
-        toolStrip.addButton(archive);
+        toolStrip.addButton(archive);*/
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         // Hide all buttons
         hideAllLifeCycleButtons();
         // Show buttons depending on the status
-        if (ProcStatusEnum.DRAFT.equals(status)) {
+       /* if (ProcStatusEnum.DRAFT.equals(status)) {
             showProductionValidationButton();
         } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
             showProductionValidationButton();
@@ -98,7 +98,7 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
             showArchiveButton();
-        }
+        }*/
     }
 
     private void hideAllLifeCycleButtons() {

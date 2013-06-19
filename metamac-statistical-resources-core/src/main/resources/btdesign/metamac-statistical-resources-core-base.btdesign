@@ -100,7 +100,8 @@ Application BaseStatisticalResources {
 			String rejectValidationUser nullable;
 			DateTimeTZ publicationDate nullable;
 			String publicationUser nullable;
-				
+			Boolean lastVersion nullable;
+						
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
 		}

@@ -7,7 +7,9 @@ import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
+import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
+import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
@@ -31,163 +33,23 @@ import com.gwtplatform.mvp.client.DelayedBindRegistry;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StatisticalResourcesWeb extends MetamacEntryPoint {
+public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
-    private static Logger                                logger    = Logger.getLogger(StatisticalResourcesWeb.class.getName());
+    private static final boolean                         SECURITY_ENABLED = false;
+    private static Logger                                logger           = Logger.getLogger(StatisticalResourcesWeb.class.getName());
 
     private static MetamacPrincipal                      principal;
     private static StatisticalResourcesWebConstants      constants;
     private static StatisticalResourcesWebCoreMessages   coreMessages;
     private static StatisticalResourcesWebMessages       messages;
 
-    public static final StatisticalResourcesWebGinjector ginjector = GWT.create(StatisticalResourcesWebGinjector.class);
-
-    interface GlobalResources extends ClientBundle {
-
-        @NotStrict
-        @Source("StatisticalResourcesWebStyles.css")
-        CssResource css();
-    }
+    public static final StatisticalResourcesWebGinjector ginjector        = GWT.create(StatisticalResourcesWebGinjector.class);
 
     @Override
     public void onModuleLoad() {
         setUncaughtExceptionHandler();
-        ginjector.getDispatcher().execute(new GetNavigationBarUrlAction(), new WaitingAsyncCallback<GetNavigationBarUrlResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading toolbar");
-                loadNonSecuredApplication();
-            }
-
-            @Override
-            public void onWaitSuccess(GetNavigationBarUrlResult result) {
-                // Load scripts for navigation bar
-                if (result.getNavigationBarUrl() != null) {
-                    MetamacNavBar.loadScripts(result.getNavigationBarUrl());
-                } else {
-                    logger.log(Level.SEVERE, "Error loading toolbar");
-                }
-                loadNonSecuredApplication();
-            };
-        });
-
-    }
-
-    // TODO This method should be removed to use CAS authentication
-    // Application id should be the same than the one defined in org.siemac.metamac.statistical.operations.core.constants.StatisticalResourcesConstants.SECURITY_APPLICATION_ID
-    private void loadNonSecuredApplication() {
-        ginjector.getDispatcher().execute(new MockCASUserAction(StatisticalResourcesConstants.SECURITY_APPLICATION_ID), new WaitingAsyncCallback<MockCASUserResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error mocking CAS user");
-            }
-            @Override
-            public void onWaitSuccess(MockCASUserResult result) {
-                StatisticalResourcesWeb.principal = result.getMetamacPrincipal();
-
-                // Load edition languages
-                ginjector.getDispatcher().execute(new LoadConfigurationPropertiesAction(), new WaitingAsyncCallback<LoadConfigurationPropertiesResult>() {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        logger.log(Level.SEVERE, "Error loading edition languages");
-                        // If an error occurs while loading edition languages, enable SPANISH, ENGLISH and PORTUGUESE by default
-                        ApplicationEditionLanguages.setEditionLanguages(new String[]{ApplicationEditionLanguages.SPANISH, ApplicationEditionLanguages.ENGLISH, ApplicationEditionLanguages.PORTUGUESE});
-                        loadApplication();
-                    }
-                    @Override
-                    public void onWaitSuccess(LoadConfigurationPropertiesResult result) {
-                        ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
-                        loadApplication();
-                    }
-                });
-            }
-        });
-    }
-
-    // TODO Restore this method to use CAS authentication
-    // private void loadSecuredApplication() {
-    // String ticketParam = Window.Location.getParameter(TICKET);
-    // if (ticketParam != null) {
-    // UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-    // urlBuilder.removeParameter(TICKET);
-    // urlBuilder.setHash(Window.Location.getHash() + TICKET_HASH + ticketParam);
-    // String url = urlBuilder.buildString();
-    // Window.Location.replace(url);
-    // return;
-    // }
-    //
-    // String hash = Window.Location.getHash();
-    //
-    // String ticketHash = null;
-    // if (hash.contains(TICKET_HASH)) {
-    // ticketHash = hash.substring(hash.indexOf(TICKET_HASH) + TICKET_HASH.length(), hash.length());
-    // }
-    //
-    // if (ticketHash == null || ticketHash.length() == 0) {
-    // displayLoginView();
-    // } else {
-    // String serviceUrl = Window.Location.createUrlBuilder().buildString();
-    // ginjector.getDispatcher().execute(new ValidateTicketAction(ticketHash, serviceUrl), new WaitingAsyncCallback<ValidateTicketResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable arg0) {
-    // logger.log(Level.SEVERE, "Error validating ticket");
-    // }
-    // @Override
-    // public void onWaitSuccess(ValidateTicketResult result) {
-    // StatisticalResourcesWeb.principal = result.getMetamacPrincipal();
-    //
-    // String url = Window.Location.createUrlBuilder().setHash("").buildString();
-    // Window.Location.assign(url);
-    //
-    // // Load edition languages
-    // ginjector.getDispatcher().execute(new LoadConfigurationPropertiesAction(), new WaitingAsyncCallback<LoadConfigurationPropertiesResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable caught) {
-    // logger.log(Level.SEVERE, "Error loading edition languages");
-    // // If an error occurs while loading edition languages, enable SPANISH, ENGLISH and PORTUGUESE by default
-    // ApplicationEditionLanguages.setEditionLanguages(new String[]{ApplicationEditionLanguages.SPANISH, ApplicationEditionLanguages.ENGLISH,
-    // ApplicationEditionLanguages.PORTUGUESE});
-    // loadApplication();
-    // }
-    // @Override
-    // public void onWaitSuccess(LoadConfigurationPropertiesResult result) {
-    // ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
-    // loadApplication();
-    // }
-    // });
-    // }
-    // });
-    // }
-    // }
-
-    private void loadApplication() {
-        LoginAuthenticatedEvent.fire(ginjector.getEventBus(), StatisticalResourcesWeb.principal);
-        // This is required for GWT-Platform proxy's generator.
-        DelayedBindRegistry.bind(ginjector);
-        ginjector.getPlaceManager().revealCurrentPlace();
-        // Inject global styles
-        GWT.<GlobalResources> create(GlobalResources.class).css().ensureInjected();
-        Document.get().setTitle(getConstants().appTitle());
-    }
-
-    public void displayLoginView() {
-        String serviceUrl = Window.Location.createUrlBuilder().buildString();
-        ginjector.getDispatcher().execute(new GetLoginPageUrlAction(serviceUrl), new WaitingAsyncCallback<GetLoginPageUrlResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error getting login page URL");
-            }
-            @Override
-            public void onWaitSuccess(GetLoginPageUrlResult result) {
-                Window.Location.replace(result.getLoginPageUrl());
-            }
-        });
+        
+        prepareApplication(SECURITY_ENABLED);
     }
 
     public static MetamacPrincipal getCurrentUser() {
@@ -221,5 +83,30 @@ public class StatisticalResourcesWeb extends MetamacEntryPoint {
 
     public static void showErrorPage() {
         ginjector.getPlaceManager().revealErrorPlace(null);
+    }
+    
+    @Override
+    protected String getApplicationTitle() {
+        return getConstants().appTitle();
+    }
+    
+    @Override
+    protected MetamacPrincipal getPrincipal() {
+        return principal;
+    }
+    
+    @Override
+    protected void setPrincipal(MetamacPrincipal principal) {
+        this.principal = principal;
+    }
+    
+    @Override
+    protected String getSecurityApplicationId() {
+        return StatisticalResourcesConstants.SECURITY_APPLICATION_ID;
+    }
+    
+    @Override
+    protected MetamacWebGinjector getWebGinjector() {
+        return getResourcesWebGinjector();
     }
 }

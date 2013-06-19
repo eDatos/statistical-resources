@@ -86,7 +86,7 @@ public class CommonMetadataRestExternalFacadeImpl implements CommonMetadataRestE
         item.setUri(configuration.getSelfLink().getHref());
         item.setUrn(configuration.getUrn());
         item.setType(TypeExternalArtefactsEnum.CONFIGURATION);
-        item.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(configuration.getTitle()));
+        item.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(configuration.getName()));
         return item;
     }
 

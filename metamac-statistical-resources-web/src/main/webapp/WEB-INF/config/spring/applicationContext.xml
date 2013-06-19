@@ -25,8 +25,14 @@
     <bean class="com.gwtplatform.dispatch.server.spring.actionvalidator.DefaultActionValidator" />
 
     <!-- if proxy-target-class is false, error in actionHandlers beans (spring cannot find them) -->
-    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <aop:aspectj-autoproxy proxy-target-class="true" >
+    </aop:aspectj-autoproxy>
 
+    <!-- Component to translate exceptions in web, but in server side -->
+    <bean id="webTranslateExceptions" class="org.siemac.metamac.web.common.server.utils.WebTranslateExceptions">
+        <property name="bundleName" value="messages-statistical_resources-web"/>
+    </bean>
+    
     <!-- Logger aspect for logging exceptions thrown by actionHandlers -->
     <bean id="logAspect" class="org.siemac.metamac.web.common.server.aspects.ActionHandlerLoggerAspect" />
 

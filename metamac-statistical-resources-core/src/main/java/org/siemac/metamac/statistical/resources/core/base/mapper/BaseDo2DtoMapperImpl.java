@@ -15,10 +15,12 @@ import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoM
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 @org.springframework.stereotype.Component("baseDo2DtoMapper")
 public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements BaseDo2DtoMapper {
@@ -167,6 +169,20 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
     }
+    
+    // ------------------------------------------------------------
+    // RELATED RESOURCE
+    // ------------------------------------------------------------
+    @Override
+    public RelatedResourceDto lifecycleStatisticalResourceDoToRelatedResourceDto(LifeCycleStatisticalResource source, TypeRelatedResourceEnum type) {
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setCode(source.getCode());
+        target.setUrn(source.getUrn());
+        target.setTitle(internationalStringDoToDto(source.getTitle()));
+        target.setType(type);
+        return target;
+    }
+    
 
     // ------------------------------------------------------------
     // VERSION RATIONALE TYPE

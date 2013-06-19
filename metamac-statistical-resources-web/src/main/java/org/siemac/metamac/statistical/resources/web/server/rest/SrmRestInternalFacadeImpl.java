@@ -11,9 +11,9 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
-import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
@@ -36,15 +36,21 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         DataStructures structures = srmRestInternalService.findDsds(firstResult, maxResult, query);
         
         List<ExternalItemDto> dsdsExternalItems = new ArrayList<ExternalItemDto>(); 
-        for (Resource resource : structures.getDataStructures()) {
+        for (ResourceInternal resource : structures.getDataStructures()) {
             dsdsExternalItems.add(buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.DATASTRUCTURE));
         }
         return ExternalItemUtils.createExternalItemsResultFromListBase(structures, dsdsExternalItems);
     }
     
-    private ExternalItemDto buildExternalItemDtoFromResource(Resource resource, TypeExternalArtefactsEnum type) {
-        return new ExternalItemDto(resource.getId(), resource.getSelfLink().getHref(), resource.getUrn(), type,
-                DtoUtils.getInternationalStringDtoFromInternationalString(resource.getTitle()));
+    private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(resource.getId());
+        externalItemDto.setUri(resource.getSelfLink().getHref());
+        externalItemDto.setUrn(resource.getUrn());
+        externalItemDto.setUrnInternal(resource.getUrnInternal());
+        externalItemDto.setType(TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
+        return externalItemDto;
     }
 
     private String buildQuery(DsdWebCriteria webCriteria) {

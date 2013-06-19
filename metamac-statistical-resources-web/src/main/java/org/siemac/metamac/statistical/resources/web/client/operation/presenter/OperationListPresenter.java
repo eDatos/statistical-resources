@@ -84,7 +84,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(OperationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(OperationListPresenter.this, caught);
             }
 
             @Override

@@ -83,8 +83,6 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
             statements[i++] = "Delete from "+tables.get(j);
         }
         jdbcTemplate.batchUpdate(statements);
-        
-
     }
     
     private void restartSequences() {

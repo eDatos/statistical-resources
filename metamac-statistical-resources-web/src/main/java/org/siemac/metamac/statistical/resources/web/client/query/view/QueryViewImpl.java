@@ -2,7 +2,11 @@ package org.siemac.metamac.statistical.resources.web.client.query.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
@@ -16,6 +20,9 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -53,6 +60,12 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     public Widget asWidget() {
         return panel;
     }
+    
+    @Override
+    public void setUiHandlers(QueryUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        queryFormPanel.productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
+    }
 
     @Override
     public void setQueryDto(QueryDto queryDto) {
@@ -62,6 +75,17 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     @Override
     public void newQueryDto() {
         queryFormPanel.createQuery();
+    }
+    
+    @Override
+    public void setDatasetsForQuery(GetDatasetsResult result) {
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetDtosAsRelatedResourceDtos(result.getDatasetDtos());
+        queryFormPanel.productionDescriptorsEditionForm.setDatasetsForQuery(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
+    }
+    
+    @Override
+    public void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result) {
+        queryFormPanel.productionDescriptorsEditionForm.setStatisticalOperationsForDatasetSelection(result.getOperationsList());
     }
 
     @Override
@@ -226,7 +250,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             } else {
                 query = (QueryDto) identifiersEditionForm.getNameableStatisticalResourceDto(query);
             }
-            query = productionDescriptorsEditionForm.populateQueryDto(query);
+            query = productionDescriptorsEditionForm.getQueryDto(query);
             query = (QueryDto) versionEditionForm.getLifeCycleStatisticalResourceDto(query);
             return query;
         }

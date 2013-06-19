@@ -24,6 +24,8 @@ public class FillMetadataForVersioningResourceUtils {
         next.setProcStatus(ProcStatusEnum.DRAFT);
         next.setCreationDate(new DateTime());
         next.setCreationUser(ctx.getUserId());
+        previous.setLastVersion(false);
+        next.setLastVersion(true);
     }
     
 

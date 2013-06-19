@@ -22,8 +22,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -117,7 +116,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -132,14 +131,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         // DATASETS
 
-        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria();
+        VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria();
         datasetWebCriteria.setStatisticalOperationUrn(urn);
 
         dispatcher.execute(new GetDatasetsAction(RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
@@ -149,14 +148,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         // PUBLICATIONS
 
-        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
+        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
         publicationWebCriteria.setStatisticalOperationUrn(urn);
 
         dispatcher.execute(new GetPublicationsAction(RESOURCE_LIST_FIRST_RESULT, RESOURCE_LIST_MAX_RESULTS, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(OperationResourcesPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {

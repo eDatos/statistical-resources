@@ -22,7 +22,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -121,7 +121,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -137,7 +137,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
@@ -152,7 +152,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().agencyErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetAgenciesPaginatedListResult result) {
@@ -168,11 +168,11 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorSave()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(SavePublicationResult result) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().collectionSaved()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().collectionSaved());
                 getView().setPublication(result.getSavedPublication());
             }
         });
@@ -184,12 +184,12 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()),
-                        MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
+            
             @Override
             public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
                 getView().setPublication(result.getPublicationDto());
             }
         });
@@ -201,11 +201,11 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
                 getView().setPublication(result.getPublicationDto());
             }
         });
@@ -217,11 +217,11 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorRejectValidation()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceRejectValidation()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                 getView().setPublication(result.getPublicationDto());
             }
         });
@@ -233,11 +233,11 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorPublish()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourcePublish()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                 getView().setPublication(result.getPublicationDto());
             }
         });
@@ -249,11 +249,11 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorVersion()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(VersionPublicationResult result) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceVersion()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
                 getView().setPublication(result.getPublicationDto());
             }
         });
@@ -262,14 +262,14 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     @Override
     public void retrievePublicationsForReplaces(int firstResult, int maxResults, String criteria) {
 
-        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
+        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
         // TODO Which is the condition to find the publications to fill REPLACES?
 
         dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
@@ -281,14 +281,14 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     @Override
     public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
 
-        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria();
+        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
         // TODO Which is the condition to find the publications to fill IS_REPLACED_BY?
 
         dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
@@ -303,7 +303,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
            
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().commonMetadataConfigurationsErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
             }
             
             @Override

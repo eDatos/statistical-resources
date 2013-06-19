@@ -84,11 +84,11 @@ public class NewDatasetWindow extends CustomWindow {
 
     private ExternalItemDto mockMaintainer(String locale, String label) {
         InternationalStringDto title = mockInternationalString(locale, label);
-        return new ExternalItemDto("MAINTAINER-ISTAC", "FAKE-URI", "FAKE-URN", TypeExternalArtefactsEnum.AGENCY, title);
+        return new ExternalItemDto("MAINTAINER-ISTAC", "FAKE-URI", "FAKE-URN", "FAKE-URN", TypeExternalArtefactsEnum.AGENCY, title);
     }
 
     private ExternalItemDto mockLanguage(String locale, String label) {
-        return new ExternalItemDto("LANG_ES", "CODE-URI", "FAKE-URN", TypeExternalArtefactsEnum.CODE, mockInternationalString(locale, label));
+        return new ExternalItemDto("LANG_ES", "CODE-URI", "FAKE-URN","FAKE-URN", TypeExternalArtefactsEnum.CODE, mockInternationalString(locale, label));
     }
 
     private InternationalStringDto mockInternationalString(String locale, String label) {

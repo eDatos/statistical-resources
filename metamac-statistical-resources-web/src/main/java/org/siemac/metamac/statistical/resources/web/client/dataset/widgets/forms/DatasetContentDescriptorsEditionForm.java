@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemListItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -14,7 +15,7 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
         super();
 
         ExternalItemListItem geographicCoverage = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_COVERAGE, getConstants().datasetGeographicCoverage(), false);
-        ExternalItemListItem temporalCoverage = new ExternalItemListItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().datasetTemporalCoverage(), false); // TODO editable
+        ViewTextItem temporalCoverage = new ViewTextItem(DatasetDS.DATE_START, getConstants().datasetTemporalCoverage()); 
         ExternalItemListItem geographicGranularities = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_GRANULARITY, getConstants().datasetGeographicGranularities(), false); // TODO editable
         ExternalItemListItem temporalGranularities = new ExternalItemListItem(DatasetDS.TEMPORAL_GRANULARITY, getConstants().datasetTemporalGranularities(), false); // TODO editable
         ViewTextItem dateStart = new ViewTextItem(DatasetDS.DATE_START, getConstants().datasetDateStart());
@@ -28,11 +29,11 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
     public void setDatasetDto(DatasetDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_COVERAGE)).setExternalItems(datasetDto.getGeographicCoverage());
-        ((ExternalItemListItem) getItem(DatasetDS.TEMPORAL_COVERAGE)).setExternalItems(datasetDto.getTemporalCoverage());
+        setValue(DatasetDS.TEMPORAL_COVERAGE, CommonWebUtils.getStringListToString(datasetDto.getTemporalCoverage()));
         ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_GRANULARITY)).setExternalItems(datasetDto.getGeographicGranularities());
         ((ExternalItemListItem) getItem(DatasetDS.TEMPORAL_GRANULARITY)).setExternalItems(datasetDto.getTemporalGranularities());
-        setValue(DatasetDS.DATE_START, getConstants().datasetDateStart());
-        setValue(DatasetDS.DATE_END, getConstants().datasetDateEnd());
+        setValue(DatasetDS.DATE_START, datasetDto.getDateStart());
+        setValue(DatasetDS.DATE_END, datasetDto.getDateEnd());
         ((ExternalItemListItem) getItem(DatasetDS.STATISTICAL_UNIT)).setExternalItems(datasetDto.getStatisticalUnit());
         ((ExternalItemListItem) getItem(DatasetDS.MEASURES)).setExternalItems(datasetDto.getMeasures());
     }

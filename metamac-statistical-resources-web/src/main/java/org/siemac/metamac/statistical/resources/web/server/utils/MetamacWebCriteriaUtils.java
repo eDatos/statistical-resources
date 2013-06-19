@@ -8,8 +8,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 
 public class MetamacWebCriteriaUtils {
 
@@ -17,7 +16,7 @@ public class MetamacWebCriteriaUtils {
     // PUBLICATIONS
     // -------------------------------------------------------------------------------------------------------------
 
-    public static MetamacCriteriaRestriction getPublicationCriteriaRestriction(PublicationWebCriteria criteria) {
+    public static MetamacCriteriaRestriction getPublicationCriteriaRestriction(VersionableStatisticalResourceWebCriteria criteria) {
         MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
 
         if (criteria != null) {
@@ -38,6 +37,10 @@ public class MetamacWebCriteriaUtils {
                 conjunctionRestriction.getRestrictions().add(
                         new MetamacCriteriaPropertyRestriction(PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ));
             }
+            
+            if (criteria.isOnlyLastVersion()) {
+                
+            }
 
         }
         return conjunctionRestriction;
@@ -47,7 +50,7 @@ public class MetamacWebCriteriaUtils {
     // DATASETS
     // -------------------------------------------------------------------------------------------------------------
 
-    public static MetamacCriteriaRestriction getDatasetCriteriaRestriction(DatasetWebCriteria criteria) {
+    public static MetamacCriteriaRestriction getStatisticalResourceCriteriaRestriction(VersionableStatisticalResourceWebCriteria criteria) {
         MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
 
         if (criteria != null) {
@@ -67,6 +70,11 @@ public class MetamacWebCriteriaUtils {
             if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
                 conjunctionRestriction.getRestrictions().add(
                         new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ));
+            }
+            
+            if (criteria.isOnlyLastVersion()) {
+                conjunctionRestriction.getRestrictions().add(
+                        new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ));
             }
 
         }

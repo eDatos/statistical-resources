@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -46,7 +47,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         
         // DatasetVersion
         if (source.getDatasetVersion() != null) {
-            target.setDatasetVersion(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(source.getDatasetVersion().getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
         }
         
         // Status

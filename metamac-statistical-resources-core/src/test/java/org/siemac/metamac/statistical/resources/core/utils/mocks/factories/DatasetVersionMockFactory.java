@@ -4,6 +4,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
 
+import java.util.Arrays;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
@@ -131,6 +133,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             // Is last version
             datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            datasetVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
 
             // Relations
             DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION = datasetVersion;
@@ -148,8 +151,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
             datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
-            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
-            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            datasetVersion.setTemporalCoverageList(Arrays.asList("2010","2011"));
 
             datasetVersion.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
 

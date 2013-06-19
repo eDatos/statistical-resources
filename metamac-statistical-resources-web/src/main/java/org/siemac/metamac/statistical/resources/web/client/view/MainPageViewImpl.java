@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.AnimationEffect;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -154,21 +155,21 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     }
 
     @Override
-    public void prepareBreadcrumbs(int size) {
-        breadCrumbsPanel.clearBreadCrumbs(size);
+    public void clearBreadcrumbs(int size, PlaceManager placeManager) {
+        breadCrumbsPanel.clearBreadCrumbs(size, placeManager);
     }
 
     @Override
-    public void addBreadcrumbs(String title, int index) {
-        breadCrumbsPanel.addBreadCrumbs(title, index);
+    public void setBreadcrumb(int index, String title) {
+        breadCrumbsPanel.setBreadCrumbs(index, title);
     }
 
     @Override
-    public void showMessage(List<String> messages, MessageTypeEnum type) {
+    public void showMessage(Throwable throwable, String message, MessageTypeEnum type) {
         // Hide messages before showing the new ones
         hideMessages();
         if (MessageTypeEnum.SUCCESS.equals(type)) {
-            successMessagePanel.showMessage(messages);
+            successMessagePanel.showMessage(message);
             Timer timer = new Timer() {
 
                 @Override
@@ -178,7 +179,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
             };
             timer.schedule(6000);
         } else if (MessageTypeEnum.ERROR.equals(type)) {
-            errorMessagePanel.showMessage(messages);
+            errorMessagePanel.showMessage(throwable);
         }
     }
 

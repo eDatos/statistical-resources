@@ -257,7 +257,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             identifiersEditionForm = new DatasourceResourceIdentifiersEditionForm();
             contentEditionForm = new DatasourceContentEditionForm();
             mainFormLayout.addEditionCanvas(identifiersEditionForm);
-            mainFormLayout.addEditionCanvas(contentEditionForm);
+            //mainFormLayout.addEditionCanvas(contentEditionForm);
         }
 
         private void createDatasource() {

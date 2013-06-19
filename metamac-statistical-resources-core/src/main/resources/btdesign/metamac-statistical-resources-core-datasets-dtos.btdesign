@@ -10,7 +10,7 @@ Application DatasetsStatisticalResourcesDto {
 		// DATASET
 		DataTransferObject DatasetDto extends @SiemacMetadataStatisticalResourceDto {
 			//temporal codes
-			- Bag<@ExternalItemDto> temporalCoverage;
+			List<String> temporalCoverage;
 			//geographic codes
 			- Bag<@ExternalItemDto> geographicCoverage;
 			//geographic granularities

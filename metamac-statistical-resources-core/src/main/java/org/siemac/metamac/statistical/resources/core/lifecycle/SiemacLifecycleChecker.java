@@ -54,6 +54,17 @@ public class SiemacLifecycleChecker {
 
         // TODO: Metadatos de relaciones entre recursos
     }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+    
+    public void checkVersioning(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
+        checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
+        
+        // TODO: Metadatos de relaciones entre recursos
+    }
 
     // ------------------------------------------------------------------------------------------------------
     // >> PROTECTED COMMON UTILS

@@ -14,10 +14,13 @@ import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoM
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+
 
 public interface BaseDo2DtoMapper extends CommonDo2DtoMapper {
 
@@ -32,4 +35,5 @@ public interface BaseDo2DtoMapper extends CommonDo2DtoMapper {
     // Version rationale type
     public Collection<VersionRationaleTypeDto> versionRationaleTypeDoCollectionToDtoCollection(Collection<VersionRationaleType> source);
     public VersionRationaleTypeDto versionRationaleTypeDoToDto(VersionRationaleType source);
+    public RelatedResourceDto lifecycleStatisticalResourceDoToRelatedResourceDto(LifeCycleStatisticalResource source, TypeRelatedResourceEnum type);
 }

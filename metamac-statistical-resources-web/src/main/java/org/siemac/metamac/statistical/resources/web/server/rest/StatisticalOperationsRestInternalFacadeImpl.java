@@ -10,10 +10,10 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
-import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
@@ -58,7 +58,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
 
             Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset);
             List<ExternalItemDto> externalItemDtos = new ArrayList<ExternalItemDto>();
-            for (Resource resource : findOperationsResult.getOperations()) {
+            for (ResourceInternal resource : findOperationsResult.getOperations()) {
                 ExternalItemDto externalItemDto = buildExternalItemDtoFromResource(resource);
                 externalItemDtos.add(externalItemDto);
             }
@@ -75,13 +75,23 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         }
     }
 
-    private ExternalItemDto buildExternalItemDtoFromResource(Resource resource) {
-        return new ExternalItemDto(resource.getId(), resource.getSelfLink().getHref(), resource.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
-                DtoUtils.getInternationalStringDtoFromInternationalString(resource.getTitle()));
+    private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(resource.getId());
+        externalItemDto.setUri(resource.getSelfLink().getHref());
+        externalItemDto.setUrn(resource.getUrn());
+        externalItemDto.setType(TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
+        return externalItemDto;
     }
-
+    
     private ExternalItemDto buildExternalItemDtoFromOperation(Operation operation) {
-        return new ExternalItemDto(operation.getId(), operation.getSelfLink().getHref(), operation.getUrn(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION,
-                DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(operation.getId());
+        externalItemDto.setUri(operation.getSelfLink().getHref());
+        externalItemDto.setUrn(operation.getUrn());
+        externalItemDto.setType(TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
+        return externalItemDto;
     }
 }

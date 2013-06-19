@@ -113,7 +113,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -129,7 +129,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetDatasetResult result) {
@@ -144,8 +144,9 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasourceErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
             }
+            
             @Override
             public void onWaitSuccess(GetDatasourcesByDatasetResult result) {
                 getView().setDatasources(datasetUrn, result.getDatasourcesList());
@@ -159,7 +160,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasourceErrorSave()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(SaveDatasourceResult result) {
@@ -175,12 +176,12 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasourcesErrorDelete()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
             }
 
             @Override
             public void onWaitSuccess(DeleteDatasourceListResult result) {
-                ShowMessageEvent.fire(DatasetDatasourcesTabPresenter.this, ErrorUtils.getMessageList(getMessages().datasourcesDeleted()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesDeleted());
                 retrieveDatasourcesByDataset(dataset.getUrn(), DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
             }
         });

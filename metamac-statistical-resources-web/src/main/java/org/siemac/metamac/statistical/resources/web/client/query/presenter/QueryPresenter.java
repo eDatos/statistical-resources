@@ -1,7 +1,9 @@
-package org.siemac.metamac.statistical.resources.web.client.query.presenter;
+    package org.siemac.metamac.statistical.resources.web.client.query.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
+
+import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -10,10 +12,17 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryAction;
@@ -66,6 +75,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public interface QueryView extends View, HasUiHandlers<QueryUiHandlers> {
         void setQueryDto(QueryDto queryDto);
         void newQueryDto();
+        void setDatasetsForQuery(GetDatasetsResult result);
+        void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
     }
     
 
@@ -99,8 +110,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         dispatcher.execute(new GetQueryAction(urn), new WaitingAsyncCallback<GetQueryResult>() {
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(QueryPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().queryErrorRetrieve()), MessageTypeEnum.ERROR);
-                
+                ShowMessageEvent.fireErrorMessage(QueryPresenter.this, caught);
             }
             
             @Override
@@ -117,12 +127,12 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(QueryPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().queryErrorSave()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(QueryPresenter.this, caught);
             }
 
             @Override
             public void onWaitSuccess(SaveQueryResult result) {
-                ShowMessageEvent.fire(QueryPresenter.this, ErrorUtils.getMessageList(getMessages().querySaved()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().querySaved());
                 getView().setQueryDto(result.getSavedQuery());
                 updateUrlIfNeeded(result.getSavedQuery());
             }
@@ -130,9 +140,49 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             private void updateUrlIfNeeded(QueryDto query) {
                 String queryParam = placeManager.getCurrentPlaceRequest().getParameter(PlaceRequestParams.queryParam, null);
                 if (queryParam == null) {
-                    placeManager.revealRelativePlace(new PlaceRequest(NameTokens.queryPage).with(PlaceRequestParams.queryParam, query.getCode()), -1);
+                    String queryCodeWithVersion = query.getCode()+"("+query.getVersionLogic()+")";
+                    placeManager.revealRelativePlace(new PlaceRequest(NameTokens.queryPage).with(PlaceRequestParams.queryParam, queryCodeWithVersion), -1);
                 }
             }
         });
+    }
+    
+    @Override
+    public void retrieveDatasetsForQuery(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(QueryPresenter.this, caught);
+            }
+
+            @Override
+            public void onWaitSuccess(GetDatasetsResult result) {
+                getView().setDatasetsForQuery(result);
+            }
+            
+        });
+    }
+    
+    @Override
+    public void retrieveStatisticalOperationsForDatasetSelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallback<GetStatisticalOperationsPaginatedListResult>() {
+            
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(QueryPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForDatasetSelection(result);
+            }
+        });
+    }
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
     }
 }

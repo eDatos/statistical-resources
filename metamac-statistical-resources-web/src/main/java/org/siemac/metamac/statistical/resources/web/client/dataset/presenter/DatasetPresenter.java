@@ -115,7 +115,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(DatasetPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(DatasetPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -132,7 +132,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetPresenter.this, caught);
             }
 
             @Override

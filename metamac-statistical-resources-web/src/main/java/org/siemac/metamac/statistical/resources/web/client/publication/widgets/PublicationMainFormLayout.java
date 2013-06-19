@@ -39,11 +39,11 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
 
-        toolStrip.addButton(productionValidation);
+        /*toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(publish);
-        toolStrip.addButton(versioning);
+        toolStrip.addButton(versioning);*/
     }
 
     @Override
@@ -66,7 +66,7 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         // Hide all buttons
         hideAllLifeCycleButtons();
         // Show buttons depending on the status
-        if (ProcStatusEnum.DRAFT.equals(status)) {
+       /* if (ProcStatusEnum.DRAFT.equals(status)) {
             showProductionValidationButton();
         } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
             showProductionValidationButton();
@@ -78,7 +78,7 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
             showPublishButton();
         } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
-        }
+        }*/
     }
 
     private void hideAllLifeCycleButtons() {

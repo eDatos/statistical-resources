@@ -101,7 +101,7 @@ Application DatasetsStatisticalResources {
 			
 			//Content descriptors
 			//temporal codes
-			- Bag<@ExternalItem> temporalCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMPORAL_COVERAGE" databaseColumn="TEMPORAL_COVERAGE_FK" databaseJoinColumn="DATASET_VERSION_FK";
+			 Clob temporalCoverage nullable;
 			//geographic codes
 			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEOGRAPHIC_COVERAGE" databaseColumn="GEOGRAPHIC_COVERAGE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//geographic granularities

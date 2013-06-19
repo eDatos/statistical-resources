@@ -93,7 +93,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(PublicationStructureTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -109,11 +109,11 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationStructureTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
-                getView().setPublication(result.getPublicationDto());
+                getView().               setPublication(result.getPublicationDto());
             }
         });
     }

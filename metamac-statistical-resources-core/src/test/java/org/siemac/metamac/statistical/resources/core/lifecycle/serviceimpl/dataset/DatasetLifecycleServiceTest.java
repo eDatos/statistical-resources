@@ -18,12 +18,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
@@ -59,6 +62,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     protected DatasetService                           datasetService;
 
+    @Mock
+    private SrmRestInternalService                     srmRestInternalService;
+
     @Before
     public void setUp() {
         datasetVersionMockFactory = new DatasetVersionMockFactory();
@@ -74,6 +80,10 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Override
     @Test
     public void testSendToProductionValidation() throws Exception {
+        DataStructure emptyDsd = new DataStructure();
+        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
+        
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
 
@@ -87,6 +97,10 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Test
     public void testSendToProductionValidationChangingSomeFieldsDontHaveEffect() throws Exception {
+        DataStructure emptyDsd = new DataStructure();
+        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
+        
         DatasetVersion datasetVersionOriginal = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersionOriginal);
 

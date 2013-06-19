@@ -17,22 +17,18 @@ import org.siemac.metamac.statistical.resources.web.client.publication.presenter
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
+import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
-import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.Provider;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 @GinModules({DispatchAsyncModule.class, ClientModule.class})
-public interface StatisticalResourcesWebGinjector extends Ginjector {
-
-    PlaceManager getPlaceManager();
-    EventBus getEventBus();
-    DispatchAsync getDispatcher();
+public interface StatisticalResourcesWebGinjector extends MetamacWebGinjector {
 
     LoggedInGatekeeper getLoggedInGatekeeper();
 

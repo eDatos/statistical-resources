@@ -78,7 +78,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         // Other
         target.getTemporalCoverage().clear();
-        target.getTemporalCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getTemporalCoverage()));
+        target.getTemporalCoverage().addAll(source.getTemporalCoverageList());
 
         target.getGeographicCoverage().clear();
         target.getGeographicCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicCoverage()));

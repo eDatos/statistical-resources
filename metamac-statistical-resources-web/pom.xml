@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>METAMAC :: STATISTICAL :: RESOURCES :: WEB</name>
-
+ 
     <properties>
         <!-- Convenience property to set the GWT version -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
@@ -36,17 +36,17 @@
             <artifactId>metamac-common-metadata-rest-external-api</artifactId>
             <version>${metamac-common-metadata.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-web-common</artifactId>
-            <version>${metamac-web-common.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-rest-common</artifactId>
             <version>${metamac-rest-common.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-web-common</artifactId>
+            <version>${metamac-web-common.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>

@@ -15,6 +15,7 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -52,7 +53,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // code is not setting in nameable becasuse some resources have generated code
         queryDto.setCode(mockString(8));
 
-        queryDto.setDatasetVersion(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        queryDto.setRelatedDatasetVersion(mockPersistedRelatedResourceDatasetVersionDto(datasetVersion));
         queryDto.setType(QueryTypeEnum.FIXED);
 
         Map<String, Set<String>> selection = new HashMap<String, Set<String>>();
@@ -95,8 +96,8 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
         datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
-        datasetDto.addTemporalCoverage(mockCodeExternalItemDto());
-        datasetDto.addTemporalCoverage(mockCodeExternalItemDto());
+        datasetDto.getTemporalCoverage().add("2010");
+        datasetDto.getTemporalCoverage().add("2011");
 
         datasetDto.setDateStart(mockDate());
         datasetDto.setDateEnd(mockDate());
@@ -241,21 +242,27 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         return resource;
     }
     
+    public static RelatedResourceDto mockPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
+        RelatedResourceDto resource = new RelatedResourceDto();
+        populatePersistedRelatedResourceNameable(resource,datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+        return resource;
+    }
+    
     
     private static void populateNotPersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
         relatedDto.setUrn(identifiable.getUrn());
         relatedDto.setType(type);
     }
     
-    private static void populatePersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResourceDto identifiableDto, TypeRelatedResourceEnum type) {
-        relatedDto.setUrn(identifiableDto.getUrn());
+    private static void populatePersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
+        relatedDto.setUrn(identifiable.getUrn());
         relatedDto.setType(type);
-        relatedDto.setCode(identifiableDto.getCode());
+        relatedDto.setCode(identifiable.getCode());
     }
     
-    private static void populatePersistedRelatedResourceNameable(RelatedResourceDto relatedDto, NameableStatisticalResourceDto nameableDto, TypeRelatedResourceEnum type) {
-        populatePersistedRelatedResourceIdentifiable(relatedDto, nameableDto, type);
-        relatedDto.setTitle(nameableDto.getTitle());
+    private static void populatePersistedRelatedResourceNameable(RelatedResourceDto relatedDto, NameableStatisticalResource nameable, TypeRelatedResourceEnum type) {
+        populatePersistedRelatedResourceIdentifiable(relatedDto, nameable, type);
+        relatedDto.setTitle(createInternationalStringDtoFromDo(nameable.getTitle()));
     }
 
     // STATISTIC OFFICIALITY DTOs

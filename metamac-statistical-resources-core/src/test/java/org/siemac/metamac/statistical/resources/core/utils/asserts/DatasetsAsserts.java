@@ -84,7 +84,7 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEqualsExternalItem(expected.getRelatedDsd(), actual.getRelatedDsd());
         assertEqualsExternalItemList(expected.getGeographicCoverage(), actual.getGeographicCoverage());
         assertEqualsExternalItemList(expected.getGeographicGranularities(), actual.getGeographicGranularities());
-        assertEqualsExternalItemList(expected.getTemporalCoverage(), actual.getTemporalCoverage());
+        assertEquals(expected.getTemporalCoverage(), actual.getTemporalCoverage());
         assertEqualsExternalItemList(expected.getTemporalGranularities(), actual.getTemporalGranularities());
         assertEqualsExternalItemList(expected.getMeasures(), actual.getMeasures());
         assertEqualsExternalItemList(expected.getStatisticalUnit(), actual.getStatisticalUnit());
@@ -128,7 +128,7 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEquals(entity.getVersion(), dto.getVersion());
 
                 assertEqualsExternalItemCollectionMapper(entity.getGeographicCoverage(), dto.getGeographicCoverage());
-                assertEqualsExternalItemCollectionMapper(entity.getTemporalCoverage(), dto.getTemporalCoverage());
+                assertEquals(entity.getTemporalCoverageList(), dto.getTemporalCoverage());
                 assertEqualsExternalItemCollectionMapper(entity.getTemporalGranularities(), dto.getTemporalGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getGeographicGranularities(), dto.getGeographicGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalUnit(), dto.getStatisticalUnit());

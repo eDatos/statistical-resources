@@ -35,6 +35,8 @@ public class SqlTableMetadata extends TableMetadata {
                 } else {
                     columnValues.put(propName, "'"+value.toString()+"'");
                 }
+            } else if (value instanceof Boolean) {
+                columnValues.put(propName, (Boolean)value ? "1" : "0");
             } else {
                 columnValues.put(propName, "'"+value.toString()+"'");
             }

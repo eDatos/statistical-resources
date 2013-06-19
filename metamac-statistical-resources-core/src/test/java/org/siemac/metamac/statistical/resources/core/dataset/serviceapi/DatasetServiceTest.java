@@ -474,7 +474,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         // Non inherited fields
         assertEquals(0, next.getGeographicCoverage().size());
-        assertEquals(0, next.getTemporalCoverage().size());
+        assertEquals(0, next.getTemporalCoverageList().size());
         assertNull(next.getDateStart());
         assertNull(next.getDateEnd());
         assertEquals(0, next.getMeasures().size());

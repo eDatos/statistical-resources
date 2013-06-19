@@ -22,8 +22,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
@@ -128,7 +128,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -145,7 +145,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().agencyErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetAgenciesPaginatedListResult result) {
@@ -161,7 +161,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
 
             @Override
@@ -177,7 +177,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorSave()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
 
             @Override
@@ -194,12 +194,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToProductionValidation()),
-                                MessageTypeEnum.ERROR);
+                        ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
                     }
                     @Override
                     public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-                        ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setDataset(result.getDatasetDto());
                     }
                 });
@@ -212,12 +211,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToDiffusionValidation()),
-                                MessageTypeEnum.ERROR);
+                        ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
                     }
                     @Override
                     public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-                        ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setDataset(result.getDatasetDto());
                     }
                 });
@@ -229,11 +227,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorRejectValidation()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceRejectValidation()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                 getView().setDataset(result.getDatasetDto());
             }
         });
@@ -296,11 +294,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorPublish()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourcePublish()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                 getView().setDataset(result.getDatasetDto());
             }
         });
@@ -328,11 +326,11 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorVersion()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(VersionDatasetResult result) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceVersion()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
                 getView().setDataset(result.getDatasetDto());
             }
         });
@@ -341,14 +339,14 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     @Override
     public void retrieveDatasetsForReplaces(int firstResult, int maxResults, String criteria) {
 
-        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria(criteria);
+        VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         // TODO Which is the condition to find the datasets to fill REPLACES?
 
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
@@ -363,7 +361,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().dsdErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetDsdsPaginatedListResult result) {
@@ -378,8 +376,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
             
             @Override
             public void onWaitFailure(Throwable caught) {
-                //FIXME mensaje:
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
@@ -391,14 +388,14 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     @Override
     public void retrieveDatasetsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
 
-        DatasetWebCriteria datasetWebCriteria = new DatasetWebCriteria(criteria);
+        VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         // TODO Which is the condition to find the datasets to fill IS_REPLACED_BY?
 
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
@@ -413,8 +410,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
            
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().commonMetadataConfigurationsErrorRetrieveList()), MessageTypeEnum.ERROR);
-            }
+                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);            }
             
             @Override
             public void onWaitSuccess(GetCommonMetadataConfigurationsListResult result) {

@@ -18,8 +18,8 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
@@ -126,7 +126,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -140,13 +140,13 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
     @Override
     public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
         final String statisticalOperationUrn = operationUrn;
-        DatasetWebCriteria criteria = new DatasetWebCriteria();
+        VersionableStatisticalResourceWebCriteria criteria = new VersionableStatisticalResourceWebCriteria();
         criteria.setStatisticalOperationUrn(statisticalOperationUrn);
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
             }
 
             @Override
@@ -162,12 +162,12 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorSave()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
             }
 
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getMessageList(getMessages().datasetSaved()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
                 retrieveDatasetsByStatisticalOperation(operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
                 getView().goToDatasetListLastPageAfterCreate();
             }
@@ -180,12 +180,12 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorDelete()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
             }
 
             @Override
             public void onWaitSuccess(DeleteDatasetListResult result) {
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getMessageList(getMessages().datasetDeleted()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
                 retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
             }
         });
@@ -197,7 +197,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().dsdErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetDsdsPaginatedListResult result) {
@@ -212,8 +212,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
             
             @Override
             public void onWaitFailure(Throwable caught) {
-                //FIXME mensaje:
-                ShowMessageEvent.fire(DatasetListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().datasetErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {

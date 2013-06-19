@@ -103,7 +103,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(QueryListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().queryErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(QueryListPresenter.this, caught);
             }
 
             @Override
@@ -120,12 +120,12 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(QueryListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().queryErrorDelete()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(QueryListPresenter.this, caught);
             }
 
             @Override
             public void onWaitSuccess(DeleteQueriesResult result) {
-                ShowMessageEvent.fire(QueryListPresenter.this, ErrorUtils.getMessageList(getMessages().queryDeleted()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());  
                 retrieveQueries(QUERY_LIST_FIRST_RESULT, QUERY_LIST_MAX_RESULTS);
             }
         });

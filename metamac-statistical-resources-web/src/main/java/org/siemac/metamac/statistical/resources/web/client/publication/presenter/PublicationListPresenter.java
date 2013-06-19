@@ -20,7 +20,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
@@ -134,14 +134,14 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
     private void retrievePublications(String operationUrn, int firstResult, int maxResults, String criteria) {
 
-        PublicationWebCriteria publicationWebCriteria = new PublicationWebCriteria(criteria);
+        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         publicationWebCriteria.setStatisticalOperationUrn(operationUrn);
 
         dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieveList()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
@@ -156,7 +156,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorCreate()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(SavePublicationResult result) {
@@ -172,12 +172,12 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorDelete()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
             }
 
             @Override
             public void onWaitSuccess(DeletePublicationsResult result) {
-                ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getMessageList(getMessages().collectionDeleted()), MessageTypeEnum.SUCCESS);
+                ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().collectionDeleted());
                 retrievePublications(PublicationListPresenter.this.operation.getUrn(), PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
             };
         });
@@ -189,7 +189,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(PublicationListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {

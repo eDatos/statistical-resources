@@ -94,7 +94,7 @@ public class MockServices {
     private static ExternalItemDto createAgency(String code, String title_es, String title_en) {
         String uri = AGENCY_URI_PREFIX + code;
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SDMX_CLASS_AGENCY_PREFIX, code);
-        ExternalItemDto agency = new ExternalItemDto(code, uri, urn, TypeExternalArtefactsEnum.AGENCY, createInternationalString(title_es, title_en));
+        ExternalItemDto agency = new ExternalItemDto(code, uri, urn, urn, TypeExternalArtefactsEnum.AGENCY, createInternationalString(title_es, title_en));
         agencies.put(agency.getUrn(), agency);
         return agency;
     }

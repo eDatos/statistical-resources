@@ -4,8 +4,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion05ForDataset04;
 
+import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -56,9 +58,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         dataset.addVersion(dsV2);
         dsV2.setDataset(dataset);
 
-        // Needs urns
-      /*  dsV1.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(dsV2));
-        dsV2.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesMockFactoryUtils.createRelatedResource(dsV1));*/
+        dsV2.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(dsV1));
     }
 
     protected static Dataset getDataset04With1DatasetVersions() {

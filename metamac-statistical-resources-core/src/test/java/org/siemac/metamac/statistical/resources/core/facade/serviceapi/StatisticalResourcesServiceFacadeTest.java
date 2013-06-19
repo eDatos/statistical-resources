@@ -61,9 +61,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
@@ -76,6 +80,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
@@ -90,6 +95,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -146,14 +152,21 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Autowired
     private CodeItemRepository                codeItemRepository;
 
+    @Autowired
+    private SrmRestInternalService            srmRestInternalService;
+    
+    
+    @Before
+    public void onBeforeTest() {
+        DataStructure emptyDsd = new DataStructure();
+        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
+    }
+    
     // ------------------------------------------------------------------------
     // QUERIES
     // ------------------------------------------------------------------------
-
-    @BeforeClass
-    public static void beforeClass() {
-        System.out.println(ApplicationContextProvider.getApplicationContext());
-    }
 
     @Override
     @Test
@@ -889,6 +902,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendToProductionValidation() throws Exception {
+        DataStructure emptyDsd = new DataStructure();
+        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
+        
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionUrn);
 

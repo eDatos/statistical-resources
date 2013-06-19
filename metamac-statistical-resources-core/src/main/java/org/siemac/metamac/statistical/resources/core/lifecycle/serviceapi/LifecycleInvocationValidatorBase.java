@@ -65,4 +65,18 @@ public abstract class LifecycleInvocationValidatorBase<E> {
     }
 
     protected abstract void checkSendToPublishedInternal(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions);
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+
+    public void checkVersioning(ServiceContext ctx, E resource) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        checkVersioningInternal(ctx, resource, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    protected abstract void checkVersioningInternal(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions);
 }

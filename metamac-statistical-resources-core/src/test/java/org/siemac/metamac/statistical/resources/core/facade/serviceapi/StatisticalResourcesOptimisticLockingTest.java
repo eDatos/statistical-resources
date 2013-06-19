@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
@@ -107,17 +108,20 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
-        queryDtoSession01.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        
+        DatasetVersion datasetVersion06 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME);
+        queryDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion06));
 
         // Retrieve query - session 2
         QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
-        queryDtoSession02.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        DatasetVersion datasetVersion01 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        queryDtoSession02.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion01));
 
         // Update query - session 1 --> OK
         QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession01);
-        assertEquals(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME).getSiemacMetadataStatisticalResource().getUrn(), queryDtoSession1AfterUpdate01.getDatasetVersion());
+        assertEquals(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME).getSiemacMetadataStatisticalResource().getUrn(), queryDtoSession1AfterUpdate01.getRelatedDatasetVersion().getUrn());
         assertTrue(queryDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Update query - session 2 --> FAIL

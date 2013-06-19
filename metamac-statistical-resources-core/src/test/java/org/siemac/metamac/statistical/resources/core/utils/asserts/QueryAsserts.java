@@ -10,10 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dbunit.dataset.DataSetException;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+
 
 public class QueryAsserts extends BaseAsserts {
 
@@ -148,7 +153,7 @@ public class QueryAsserts extends BaseAsserts {
             assertEquals(entity.getStatus(), dto.getStatus());
         }
         assertEqualsNameableStatisticalResource(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
-        assertEqualsDatasetVersionInQueryVersion(entity, dto.getDatasetVersion());
+        assertEqualsRelatedDatasetVersionInQueryVersion(entity, dto.getRelatedDatasetVersion());
         
         assertNotNull(entity.getType());
         assertEquals(entity.getType(), dto.getType());
@@ -186,13 +191,21 @@ public class QueryAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
     // DATASET VERSION: QUERY AND DATASETVERSION URN 
     // -----------------------------------------------------------------
-    private static void assertEqualsDatasetVersionInQueryVersion(QueryVersion entity, String datasetVersionDtoUrn) {
+    private static void assertEqualsRelatedDatasetVersionInQueryVersion(QueryVersion entity, RelatedResourceDto relatedDataset) {
         String datasetVersionEntityUrn = null; 
-            
+        String datasetVersionEntityCode = null; 
+        InternationalString datasetVersionEntityTitle = null; 
+        
         if (entity.getDatasetVersion() != null && entity.getDatasetVersion().getSiemacMetadataStatisticalResource() != null) {
             datasetVersionEntityUrn = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+            datasetVersionEntityTitle = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getTitle();
+            datasetVersionEntityCode = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getCode();
         }
         
-        assertEquals(datasetVersionEntityUrn, datasetVersionDtoUrn);
+        assertEquals(datasetVersionEntityUrn, relatedDataset.getUrn());
+        assertEquals(TypeRelatedResourceEnum.DATASET_VERSION, relatedDataset.getType());
+        assertEquals(datasetVersionEntityCode, relatedDataset.getCode());
+        assertEqualsInternationalString(datasetVersionEntityTitle, relatedDataset.getTitle());
+        
     }
 }

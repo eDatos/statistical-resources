@@ -115,7 +115,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
                 @Override
                 public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(PublicationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().operationErrorRetrieve()), MessageTypeEnum.ERROR);
+                    ShowMessageEvent.fireErrorMessage(PublicationPresenter.this, caught);
                 }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
@@ -131,7 +131,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(PublicationPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().collectionErrorRetrieve()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(PublicationPresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
