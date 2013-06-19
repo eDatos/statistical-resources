@@ -35,7 +35,7 @@ import com.gwtplatform.mvp.client.DelayedBindRegistry;
  */
 public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
-    private static final boolean                         SECURITY_ENABLED = false;
+    private static final boolean                         SECURITY_ENABLED = true;
     private static Logger                                logger           = Logger.getLogger(StatisticalResourcesWeb.class.getName());
 
     private static MetamacPrincipal                      principal;
