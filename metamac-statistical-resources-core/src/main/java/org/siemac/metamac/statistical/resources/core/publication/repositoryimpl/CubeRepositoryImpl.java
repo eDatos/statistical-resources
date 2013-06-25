@@ -4,6 +4,8 @@ import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCrit
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -22,8 +24,6 @@ public class CubeRepositoryImpl extends CubeRepositoryBase {
 
     @Override
     public Cube retrieveCubeByUrn(String urn) throws MetamacException {
-        // TODO: Limitar el número de resultados a uno para mejorar la eficiencia
-
         List<ConditionalCriteria> condition = criteriaFor(Cube.class).withProperty(CubeProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
         List<Cube> result = findByCondition(condition);
 
@@ -38,32 +38,29 @@ public class CubeRepositoryImpl extends CubeRepositoryBase {
     }
 
     @Override
-    public Cube retrieveCubePublishedByCode(String code) {
-        // TODO
-        throw new UnsupportedOperationException("retrieveCubePublishedByCode not implemented");
+    public Boolean existAnyCubeInPublication(String publicationCode, String publicationVersionNumber) throws MetamacException {
+        List<ConditionalCriteria> conditions = criteriaFor(Cube.class).withProperty(CubeProperties.elementLevel().publicationVersion().publication().identifiableStatisticalResource().code())
+        .eq(publicationCode).and().withProperty(CubeProperties.elementLevel().publicationVersion().siemacMetadataStatisticalResource().versionLogic()).eq(publicationVersionNumber).build();
+
+        List<Cube> result = findByCondition(conditions);
+        return !result.isEmpty();
     }
 
     @Override
-    public Boolean existAnyCube(String publicationCode, String publicationVersionNumber) {
-        // TODO
-        throw new UnsupportedOperationException("existAnyCube not implemented");
+    @SuppressWarnings("unchecked")
+    public List<String> findDatasetsLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException {
+        Query query = getEntityManager().createQuery("select distinct(cube.dataset.identifiableStatisticalResource.urn) from Cube cube where cube.elementLevel.publicationVersion.siemacMetadataStatisticalResource.urn = :urn");
+        query.setParameter("urn", publicationVersionUrn);
+        List<String> result = query.getResultList();
+        return result;
     }
 
     @Override
-    public List<String> findDatasetsLinkedWithPublicationVersion(Long publicationVersionId) {
-        // TODO
-        throw new UnsupportedOperationException("findDatasetsLinkedWithPublicationVersion not implemented");
-    }
-
-    @Override
-    public Cube retrieveCubeInPublishedPublication(String publicationCode, String cubeCode) {
-        // TODO
-        throw new UnsupportedOperationException("retrieveCubeInPublishedPublication not implemented");
-    }
-
-    @Override
-    public List<Cube> findCubesInPublishedPublication(String publicationCode) {
-        // TODO
-        throw new UnsupportedOperationException("findCubesInPublishedPublication not implemented");
+    @SuppressWarnings("unchecked")
+    public List<String> findQueriesLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException {
+        Query query = getEntityManager().createQuery("select distinct(cube.query.identifiableStatisticalResource.urn) from Cube cube where cube.elementLevel.publicationVersion.siemacMetadataStatisticalResource.urn = :urn");
+        query.setParameter("urn", publicationVersionUrn);
+        List<String> result = query.getResultList();
+        return result;
     }
 }

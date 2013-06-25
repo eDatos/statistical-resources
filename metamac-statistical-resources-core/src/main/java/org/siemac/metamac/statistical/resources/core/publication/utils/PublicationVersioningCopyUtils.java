@@ -21,12 +21,12 @@ public class PublicationVersioningCopyUtils {
      * Copy values from a {@link PublicationVersion}
      */
     public static void copyPublicationVersion(PublicationVersion source, PublicationVersion target) {
+        // Metadata
         copySiemacMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target.getSiemacMetadataStatisticalResource());
-
         target.setFormatExtentResources(source.getFormatExtentResources());
-        
         target.setPublication(source.getPublication());
-        
+
+        // Structure
         //TODO: añadir jerarquia
     }
 }

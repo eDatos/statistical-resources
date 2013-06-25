@@ -1,7 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
-import org.joda.time.DateTime;
 import static org.junit.Assert.fail;
+
+import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -16,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -27,6 +29,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
@@ -130,45 +133,122 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     // CHAPTER
     public Chapter mockChapter() {
+        return mockChapter(mockElementLevel());
+    }
+    
+    public Chapter mockChapter(ElementLevel elementLevel) {
         Chapter chapter = new Chapter();
-        chapter.setElementLevel(mockElementLevelForChapter(chapter));
+        
+        // Element level
+        chapter.setElementLevel(elementLevel);
+        elementLevel.setChapter(chapter);
+        
+        // Metadata
         chapter.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        
         return chapter;
     }
 
     // CUBE
     public Cube mockCube() {
+        return mockCube(mockElementLevel());
+    }
+    
+    public Cube mockCube(ElementLevel elementLevel) {
         Cube cube = new Cube();
-        cube.setElementLevel(mockElementLevelForCube(cube));
+        
+        // Element level
+        cube.setElementLevel(elementLevel);
+        elementLevel.setCube(cube);
+        
+        // Metadata
         cube.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        return cube;
+    }
+    
+    public Cube mockDatasetCube(Dataset dataset) {
+        Cube cube = mockCube();
+        cube.setDataset(dataset);
+        return cube;
+    }
+    
+    public Cube mockQueryCube(Query query) {
+        Cube cube = mockCube();
+        cube.setQuery(query);
         return cube;
     }
 
     // ELEMENT LEVEL
-    private ElementLevel mockElementLevel() {
-        PublicationVersion publicationVersion = mockPublicationVersion();
+    public ElementLevel mockElementLevel() {
+        return mockElementLevel(null, null);
+    }
 
+    public ElementLevel mockElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = new ElementLevel();
+        
         elementLevel.setOrderInLevel(Long.valueOf(1));
+
+        if (publicationVersion == null) {
+            publicationVersion = mockPublicationVersion();
+        }
+
+        // Relation with publicationVersion
         elementLevel.setPublicationVersion(publicationVersion);
-        elementLevel.setPublicationVersionFirstLevel(publicationVersion);
-        elementLevel.setChapter(null);
-        elementLevel.setCube(null);
+        publicationVersion.addChildrenAllLevel(elementLevel);
+
+        if (parentElementLevel == null) {
+            elementLevel.setPublicationVersionFirstLevel(publicationVersion);
+            publicationVersion.addChildrenFirstLevel(elementLevel);
+        } else {
+            elementLevel.setParent(parentElementLevel);
+            parentElementLevel.addChildren(elementLevel);
+        }
+        
         return elementLevel;
     }
 
-    private ElementLevel mockElementLevelForChapter(Chapter chapter) {
-        ElementLevel elementLevel = mockElementLevel();
-        elementLevel.setChapter(chapter);
+    public ElementLevel mockChapterElementLevel(PublicationVersion publicationVersion) {
+        return mockChapterElementLevel(publicationVersion, null);
+    }
+    
+    public ElementLevel mockChapterElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
+        ElementLevel elementLevel = mockElementLevel(publicationVersion, parentElementLevel);
+
+        // Chapter relation
+        elementLevel.setChapter(mockChapter(elementLevel));
+        
         return elementLevel;
     }
+ 
+    public ElementLevel mockDatasetCubeElementLevel(PublicationVersion publicationVersion, Dataset dataset) {
+        ElementLevel elementLevel = mockDatasetCubeElementLevel(publicationVersion, dataset, null);
+        return elementLevel;
+    }
+    
+    public ElementLevel mockDatasetCubeElementLevel(PublicationVersion publicationVersion, Dataset dataset, ElementLevel parentElementLevel) {
+        ElementLevel elementLevel = mockCubeElementLevel(publicationVersion, parentElementLevel, mockDatasetCube(dataset));
+        return elementLevel;
+    }
+    
+    public ElementLevel mockQueryCubeElementLevel(PublicationVersion publicationVersion, Query query) {
+        return mockQueryCubeElementLevel(publicationVersion, query, null);
+    }
+    
+    public ElementLevel mockQueryCubeElementLevel(PublicationVersion publicationVersion, Query query, ElementLevel parentElementLevel) {
+        ElementLevel elementLevel = mockCubeElementLevel(publicationVersion, parentElementLevel, mockQueryCube(query));
+        return elementLevel;
+    }
+    
+    private ElementLevel mockCubeElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel, Cube cube) {
+        ElementLevel elementLevel = mockElementLevel(publicationVersion, parentElementLevel);
 
-    private ElementLevel mockElementLevelForCube(Cube cube) {
-        ElementLevel elementLevel = mockElementLevel();
+        // Cube relation
         elementLevel.setCube(cube);
+        cube.setElementLevel(elementLevel);
+        
         return elementLevel;
     }
-
+    
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------

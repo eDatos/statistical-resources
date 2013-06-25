@@ -3,6 +3,8 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesi
 
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
+
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
@@ -119,6 +121,7 @@ Application PublicationsStatisticalResources {
 			"Provides access to ElementLevel"
             Repository ElementLevelRepository {
             	findByCondition;
+            	findByCondition(PagingParameter pagingParameter);
             	@ElementLevel save(@ElementLevel entity);
             	delete;
             }
@@ -138,6 +141,7 @@ Application PublicationsStatisticalResources {
 			"Provides access to Dimension"
             Repository ChapterRepository {
             	findByCondition;
+            	findByCondition(PagingParameter pagingParameter);
             	findAll;
             	@Chapter save(@Chapter entity);
             	@Chapter retrieveChapterByUrn(String urn) throws MetamacException;
@@ -156,22 +160,25 @@ Application PublicationsStatisticalResources {
 			// Relations
             "Element level"
             - @ElementLevel elementLevel cascade="none" not nullable inverse <-> cube;
-        	// "Dataset"
-			// - @Dataset dataset cascade="none" not nullable databaseColumn="DATASET_FK" <-> indicatorsInstances;
+        	"Dataset"
+			- @Dataset dataset cascade="none" nullable databaseColumn="DATASET_FK";
+			"Query"
+			- @Query query cascade="none" nullable databaseColumn="QUERY_FK";
             
 			"Provides access to Cube"
             Repository CubeRepository {
             	@Cube save(@Cube entity);
             	findByCondition;
-            	@Cube retrieveCubeByUrn(String urn) throws MetamacException;
-            	@Cube retrieveCubePublishedByCode(String code) throws MetamacException;
-            	Boolean existAnyCube(String publicationCode, String publicationVersionNumber) throws MetamacException;
             	findByCondition(PagingParameter pagingParameter) throws MetamacException;
-            	List<String> findDatasetsLinkedWithPublicationVersion(Long publicationVersionId) throws MetamacException;
+            	@Cube retrieveCubeByUrn(String urn) throws MetamacException;
+            	// @Cube retrieveCubePublishedByCode(String code) throws MetamacException;
+            	Boolean existAnyCubeInPublication(String publicationCode, String publicationVersionNumber) throws MetamacException;
+            	List<String> findDatasetsLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException;
+            	List<String> findQueriesLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException;
             	// List<String> findPublicationPublishedWithDataset(String datasetCode) throws MetamacException;
             	// List<String> findCubesInPublishedPublicationWithDataset(String datasetCode) throws MetamacException;
-            	@Cube retrieveCubeInPublishedPublication(String publicationCode, String cubeCode) throws MetamacException;
-            	List<@Cube> findCubesInPublishedPublication(String publicationCode) throws MetamacException;
+            	// @Cube retrieveCubeInPublishedPublication(String publicationCode, String cubeCode) throws MetamacException;
+            	// List<@Cube> findCubesInPublishedPublication(String publicationCode) throws MetamacException;
             }
         }         		
 	}

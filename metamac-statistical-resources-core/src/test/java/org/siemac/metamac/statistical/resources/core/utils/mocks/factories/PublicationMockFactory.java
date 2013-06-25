@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.getPublicationVersion03ForPublication03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.getPublicationVersion04ForPublication03AndLastVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.getPublicationVersion17WithStructureForPublicationVersion04;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion;
 
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -18,6 +20,9 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
 
     public static final String PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME = "PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS";
     private static Publication PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS;
+    
+    public static final String PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME = "PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS";
+    private static Publication PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS;
 
     protected static Publication getPublication01Basic() {
         if (PUBLICATION_01_BASIC == null) {
@@ -43,10 +48,32 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         }
         return PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS;
     }
+    
+    protected static Publication getPublication04StructuredWith2PublicationVersions() {
+        if (PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS == null) {
+            Publication publication = createPublication();
+            
+            // Relations
+            PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS = publication;
+            setPublication04Versions(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS);
+        }
+        return PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS;
+    }
 
     private static void setPublication03Versions(Publication publication) {
         PublicationVersion publicationV1 = getPublicationVersion03ForPublication03();
         PublicationVersion publicationV2 = getPublicationVersion04ForPublication03AndLastVersion();
+
+        publication.addVersion(publicationV1);
+        publicationV1.setPublication(publication);
+
+        publication.addVersion(publicationV2);
+        publicationV2.setPublication(publication);
+    }
+    
+    private static void setPublication04Versions(Publication publication) {
+        PublicationVersion publicationV1 = getPublicationVersion17WithStructureForPublicationVersion04();
+        PublicationVersion publicationV2 = getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion();
 
         publication.addVersion(publicationV1);
         publicationV1.setPublication(publication);

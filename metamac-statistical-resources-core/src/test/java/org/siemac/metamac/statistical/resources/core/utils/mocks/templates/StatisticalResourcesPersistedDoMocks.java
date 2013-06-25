@@ -87,6 +87,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return queryVersion;
     }
 
+    
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -114,6 +115,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         }
         return dataset;
     }
+    
 
     // -----------------------------------------------------------------
     // DATASET VERSION
@@ -171,7 +173,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     // STATISTICAL OFFICIALITY
     // -----------------------------------------------------------------
 
-
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -212,6 +213,4 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality) {
         officiality.setVersion(0L);
     }
-
-
 }

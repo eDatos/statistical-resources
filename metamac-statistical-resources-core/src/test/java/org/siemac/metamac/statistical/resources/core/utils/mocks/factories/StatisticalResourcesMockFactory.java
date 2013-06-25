@@ -13,9 +13,12 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
 
     private static StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
 
-    public static final String                       OPERATION_01_CODE = "C00025A";
-    public static final String                       OPERATION_02_CODE = "C00025B";
-    public static final String                       OPERATION_03_CODE = "C00025C";
+    public static final String                          OPERATION_01_CODE = "C00025A";
+    public static final String                          OPERATION_02_CODE = "C00025B";
+    public static final String                          OPERATION_03_CODE = "C00025C";
+
+    public static final String                          INIT_VERSION      = "001.000";
+    public static final String                          SECOND_VERSION    = "002.000";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
         if (statisticalResourcesPersistedDoMocks == null) {
@@ -23,7 +26,7 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
         }
         return statisticalResourcesPersistedDoMocks;
     }
-    
+
     public void setStatisticalResourcesPersistedDoMocks(StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks) {
         StatisticalResourcesMockFactory.statisticalResourcesPersistedDoMocks = statisticalResourcesPersistedDoMocks;
     }
