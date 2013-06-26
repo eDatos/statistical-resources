@@ -27,6 +27,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME;
 
 import java.util.List;
 
@@ -48,6 +51,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
@@ -742,11 +746,82 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     }
     
 
+    @SuppressWarnings("static-access")
     @Override
     @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
     public void testUpdateChapter() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        publicationService.updateChapter(getServiceContextAdministrador(), statisticalResourcesNotPersistedDoMocks.mockChapter());
+        Chapter expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getChildrenFirstLevel().get(0).getChapter();
+        expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        
+        Chapter actual = publicationService.updateChapter(getServiceContextAdministrador(), expected);
+        
+        assertRelaxedEqualsChapter(expected, actual);
+        CommonAsserts.assertEqualsInternationalString(expected.getNameableStatisticalResource().getTitle(), actual.getNameableStatisticalResource().getTitle());
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testUpdateChapterErrorParameterRequiredChapter() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CHAPTER));
+        publicationService.updateChapter(getServiceContextAdministrador(), null);
+    }
+
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testUpdateChapterStatusDraft() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME);
+        Chapter expected = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
+        expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        
+        publicationService.updateChapter(getServiceContextAdministrador(), expected);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION_NAME})
+    public void testUpdateChapterStatusProductionValidation() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION_NAME);
+        Chapter expected = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
+        expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        
+        publicationService.updateChapter(getServiceContextAdministrador(), expected);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME})
+    public void testUpdateChapterStatusDiffusionValidation() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME);
+        Chapter expected = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
+        expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        
+        publicationService.updateChapter(getServiceContextAdministrador(), expected);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME})
+    public void testUpdateChapterStatusValidationRejected() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME);
+        Chapter expected = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
+        expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        
+        publicationService.updateChapter(getServiceContextAdministrador(), expected);
+    }
+    
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testUpdateChapterStatusPublished() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+        
+        Chapter expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME).getChildrenFirstLevel().get(0).getChapter();
+        expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        
+        publicationService.updateChapter(getServiceContextAdministrador(), expected);
     }
 
     @Override

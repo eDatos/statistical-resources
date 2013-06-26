@@ -75,6 +75,14 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String        PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME = "PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION";
     private static PublicationVersion PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION;
 
+    public static final String        PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION_NAME                       = "PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION";
+    private static PublicationVersion PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION;
+
+    public static final String        PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME                        = "PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION";
+    private static PublicationVersion PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION;
+
+    public static final String        PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME                         = "PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED";
+    private static PublicationVersion PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED;
 
     protected static PublicationVersion getPublicationVersion01Basic() {
         if (PUBLICATION_VERSION_01_BASIC == null) {
@@ -282,6 +290,81 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
         }
         return PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION;
+    }
+
+    protected static PublicationVersion getPublicationVersion19WithStructureProductionValidation() {
+        if (PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION == null) {
+            // General metadata
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+
+            // Structure
+            // Chapter 01
+            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
+            elementLevel01.setOrderInLevel(Long.valueOf(1));
+            // Chapter 02
+            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
+            elementLevel02.setOrderInLevel(Long.valueOf(2));
+            // --> Chapter 02.01
+            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
+            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
+            
+            PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION = publicationVersion;
+        }
+
+        return PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION;
+    }
+
+    protected static PublicationVersion getPublicationVersion20WithStructureDiffusionValidation() {
+        if (PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION == null) {
+            // General metadata
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+
+            // Structure
+            // Chapter 01
+            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
+            elementLevel01.setOrderInLevel(Long.valueOf(1));
+            // Chapter 02
+            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
+            elementLevel02.setOrderInLevel(Long.valueOf(2));
+            // --> Chapter 02.01
+            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
+            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
+            
+            PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION = publicationVersion;
+        }
+
+        return PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION;
+    }
+
+    protected static PublicationVersion getPublicationVersion21WithStructureValidationRejected() {
+        if (PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED == null) {
+            // General metadata
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
+
+            // Structure
+            // Chapter 01
+            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
+            elementLevel01.setOrderInLevel(Long.valueOf(1));
+            // Chapter 02
+            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
+            elementLevel02.setOrderInLevel(Long.valueOf(2));
+            // --> Chapter 02.01
+            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
+            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
+            
+            PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED = publicationVersion;
+        }
+
+        return PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED;
     }
 
     private static PublicationVersion createPublicationVersion() {

@@ -207,8 +207,13 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public Chapter updateChapter(ServiceContext ctx, Chapter chapter) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkUpdateChapter(ctx, chapter);
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        
+        // Save
+        return getChapterRepository().save(chapter);
     }
 
     @Override
