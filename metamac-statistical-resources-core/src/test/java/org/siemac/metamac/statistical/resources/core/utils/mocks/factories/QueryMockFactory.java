@@ -8,9 +8,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     public static final String  QUERY_01_SIMPLE_NAME                                 = "QUERY_01_SIMPLE";
     private static Query QUERY_01_SIMPLE;
-
   
-
     protected static Query getQuery01Simple() {
         if (QUERY_01_SIMPLE == null) {
             QUERY_01_SIMPLE = createQuery();

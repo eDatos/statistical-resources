@@ -123,56 +123,56 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
     }
 
-    public static PublicationVersion getPublicationVersion05Operation0001Code000001() {
+    protected static PublicationVersion getPublicationVersion05Operation0001Code000001() {
         if (PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001 == null) {
             PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001 = createPublicationVersionInOperation(OPERATION_01_CODE, 1);
         }
         return PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001;
     }
 
-    public static PublicationVersion getPublicationVersion06Operation0001Code000002() {
+    protected static PublicationVersion getPublicationVersion06Operation0001Code000002() {
         if (PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002 == null) {
             PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002 = createPublicationVersionInOperation(OPERATION_01_CODE, 2);
         }
         return PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002;
     }
 
-    public static PublicationVersion getPublicationVersion07Operation0001Code000003() {
+    protected static PublicationVersion getPublicationVersion07Operation0001Code000003() {
         if (PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003 == null) {
             PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003 = createPublicationVersionInOperation(OPERATION_01_CODE, 3);
         }
         return PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003;
     }
 
-    public static PublicationVersion getPublicationVersion08Operation0002Code000001() {
+    protected static PublicationVersion getPublicationVersion08Operation0002Code000001() {
         if (PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001 == null) {
             PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001 = createPublicationVersionInOperation(OPERATION_02_CODE, 1);
         }
         return PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001;
     }
 
-    public static PublicationVersion getPublicationVersion09Operation0002Code000002() {
+    protected static PublicationVersion getPublicationVersion09Operation0002Code000002() {
         if (PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002 == null) {
             PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002 = createPublicationVersionInOperation(OPERATION_02_CODE, 2);
         }
         return PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002;
     }
 
-    public static PublicationVersion getPublicationVersion10Operation0002Code000003() {
+    protected static PublicationVersion getPublicationVersion10Operation0002Code000003() {
         if (PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003 == null) {
             PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003 = createPublicationVersionInOperation(OPERATION_02_CODE, 3);
         }
         return PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003;
     }
 
-    public static PublicationVersion getPublicationVersion11Operation0002CodeMax() {
+    protected static PublicationVersion getPublicationVersion11Operation0002CodeMax() {
         if (PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX == null) {
             PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX = createPublicationVersionInOperation(OPERATION_01_CODE, 999999);
         }
         return PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
     }
 
-    public static PublicationVersion getPublicationVersion12Draft() {
+    protected static PublicationVersion getPublicationVersion12Draft() {
         if (PUBLICATION_VERSION_12_DRAFT == null) {
             PUBLICATION_VERSION_12_DRAFT = createPublicationVersion();
             PUBLICATION_VERSION_12_DRAFT.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
@@ -180,7 +180,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_12_DRAFT;
     }
 
-    public static PublicationVersion getPublicationVersion13ProductionValidation() {
+    protected static PublicationVersion getPublicationVersion13ProductionValidation() {
         if (PUBLICATION_VERSION_13_PRODUCTION_VALIDATION == null) {
             PUBLICATION_VERSION_13_PRODUCTION_VALIDATION = createPublicationVersion();
             PUBLICATION_VERSION_13_PRODUCTION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
@@ -188,7 +188,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_13_PRODUCTION_VALIDATION;
     }
 
-    public static PublicationVersion getPublicationVersion14DiffusionValidation() {
+    protected static PublicationVersion getPublicationVersion14DiffusionValidation() {
         if (PUBLICATION_VERSION_14_DIFFUSION_VALIDATION == null) {
             PUBLICATION_VERSION_14_DIFFUSION_VALIDATION = createPublicationVersion();
             PUBLICATION_VERSION_14_DIFFUSION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
@@ -196,7 +196,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_14_DIFFUSION_VALIDATION;
     }
 
-    public static PublicationVersion getPublicationVersion15ValidationRejected() {
+    protected static PublicationVersion getPublicationVersion15ValidationRejected() {
         if (PUBLICATION_VERSION_15_VALIDATION_REJECTED == null) {
             PUBLICATION_VERSION_15_VALIDATION_REJECTED = createPublicationVersion();
             PUBLICATION_VERSION_15_VALIDATION_REJECTED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
@@ -204,7 +204,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_15_VALIDATION_REJECTED;
     }
 
-    public static PublicationVersion getPublicationVersion16Published() {
+    protected static PublicationVersion getPublicationVersion16Published() {
         if (PUBLICATION_VERSION_16_PUBLISHED == null) {
             PUBLICATION_VERSION_16_PUBLISHED = createPublicationVersion();
             PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
@@ -212,7 +212,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_16_PUBLISHED;
     }
 
-    public static PublicationVersion getPublicationVersion17WithStructureForPublicationVersion04() {
+    protected static PublicationVersion getPublicationVersion17WithStructureForPublicationVersion04() {
         if (PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04 == null) {
 
             // General metadata
@@ -224,31 +224,31 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             // Structure
             // Chapter 01
             ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(0));
+            elementLevel01.setOrderInLevel(Long.valueOf(1));
             // --> Chapter 01.01
             ElementLevel elementLevel01_01 = createChapterElementLevel(publicationVersion, elementLevel01);
-            elementLevel01_01.setOrderInLevel(Long.valueOf(0));
+            elementLevel01_01.setOrderInLevel(Long.valueOf(1));
             // ----> Cube 01.01.01
             ElementLevel elementLevel01_01_01 = createDatasetCubeElementLevel(publicationVersion, getDataset03With2DatasetVersions(), elementLevel01_01);
-            elementLevel01_01_01.setOrderInLevel(Long.valueOf(0));
+            elementLevel01_01_01.setOrderInLevel(Long.valueOf(1));
             // --> Chapter 01.02
             ElementLevel elementLevel01_02 = createChapterElementLevel(publicationVersion, elementLevel01);
-            elementLevel01_02.setOrderInLevel(Long.valueOf(1));
+            elementLevel01_02.setOrderInLevel(Long.valueOf(2));
             // ----> Cube 01.02.01
             ElementLevel elementLevel01_02_01 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple(), elementLevel01_02);
-            elementLevel01_02_01.setOrderInLevel(Long.valueOf(0));
+            elementLevel01_02_01.setOrderInLevel(Long.valueOf(1));
             // --> Cube 01.03
             ElementLevel elementLevel01_03 = createDatasetCubeElementLevel(publicationVersion, getDataset01Basic(), elementLevel01);
-            elementLevel01_03.setOrderInLevel(Long.valueOf(2));
+            elementLevel01_03.setOrderInLevel(Long.valueOf(3));
             // Chapter 02
             ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(1));
+            elementLevel02.setOrderInLevel(Long.valueOf(2));
             // --> Cube 02.01
             ElementLevel elementLevel02_01 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple(), elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(0));
+            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
             // Cube 03
             ElementLevel elementLevel03 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple());
-            elementLevel03.setOrderInLevel(Long.valueOf(2));
+            elementLevel03.setOrderInLevel(Long.valueOf(3));
 
             // Relations
             PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04 = publicationVersion;
@@ -257,7 +257,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04;
     }
 
-    public static PublicationVersion getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion() {
+    protected static PublicationVersion getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion() {
         if (PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION == null) {
 
             // General metadata
@@ -269,13 +269,13 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             // Structure
             // Chapter 01
             ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(0));
+            elementLevel01.setOrderInLevel(Long.valueOf(1));
             // Chapter 02
             ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(1));
+            elementLevel02.setOrderInLevel(Long.valueOf(2));
             // --> Chapter 02.01
             ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(0));
+            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
 
             // Relations
             PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION = publicationVersion;

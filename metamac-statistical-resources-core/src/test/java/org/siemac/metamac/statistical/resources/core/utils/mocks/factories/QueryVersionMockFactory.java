@@ -132,7 +132,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_09_BASIC_PENDING_REVIEW;
     }
 
-    public static QueryVersion getQueryVersion10ActiveLatestData5() {
+    protected static QueryVersion getQueryVersion10ActiveLatestData5() {
         if (QUERY_VERSION_10_ACTIVE_LATEST_DATA_5 == null) {
             QUERY_VERSION_10_ACTIVE_LATEST_DATA_5 = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion(), true);
             QUERY_VERSION_10_ACTIVE_LATEST_DATA_5.setType(QueryTypeEnum.LATEST_DATA);
@@ -182,7 +182,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_15_PUBLISHED;
     }
 
-    public static QueryVersion getQueryVersion19WithCodeAndUrnQuery01() {
+    protected static QueryVersion getQueryVersion19WithCodeAndUrnQuery01() {
         if (QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01 == null) {
             String queryCode = "QUERY01";
             QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01 = createQueryWithGeneratedDatasetVersion();
@@ -192,7 +192,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01;
     }
 
-    public static QueryVersion getQueryVersion20WithCodeAndUrnQuery02() {
+    protected static QueryVersion getQueryVersion20WithCodeAndUrnQuery02() {
         if (QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02 == null) {
             String queryCode = "QUERY02";
             QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02 = createQueryWithGeneratedDatasetVersion();
