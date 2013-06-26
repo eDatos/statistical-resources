@@ -94,6 +94,37 @@ public class PublicationsAsserts extends BaseAsserts {
     // PUBLICATION HIERARCHY: DO & DO
     // -----------------------------------------------------------------
 
+    public static void assertFilledMetadataForChaptersInAllLevels(Chapter chapter) {
+        assertFilledMetadataForAllElementLevels(chapter.getElementLevel());
+        assertNotNull(chapter.getNameableStatisticalResource().getUrn());
+        assertNotNull(chapter.getNameableStatisticalResource().getCode());
+        assertNull(chapter.getNameableStatisticalResource().getUri());
+    }
+    
+    public static void assertFilledMetadataForChaptersInFirstLevel(Chapter chapter) {
+        assertFilledMetadataForFirstLevelElementLevels(chapter.getElementLevel());
+    }
+    
+    public static void assertFilledMetadataForChaptersInNoFirstLevel(Chapter chapter) {
+        assertFilledMetadataForNoFirstLevelElementLevels(chapter.getElementLevel());
+    }
+
+    private static void assertFilledMetadataForAllElementLevels(ElementLevel elementLevel) {
+        assertNotNull(elementLevel.getOrderInLevel());
+        assertNotNull(elementLevel.getPublicationVersion());
+    }
+    
+    private static void assertFilledMetadataForFirstLevelElementLevels(ElementLevel elementLevel) {
+        assertNotNull(elementLevel.getPublicationVersionFirstLevel());
+        assertNull(elementLevel.getParent());
+    }
+    
+    private static void assertFilledMetadataForNoFirstLevelElementLevels(ElementLevel elementLevel) {
+        assertNull(elementLevel.getPublicationVersionFirstLevel());
+        assertNotNull(elementLevel.getParent());
+    }
+    
+    
     public static void assertRelaxedEqualsChapter(Chapter expected, Chapter actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
         assertRelaxedEqualsElementLevel(expected.getElementLevel(), actual.getElementLevel());
@@ -111,8 +142,8 @@ public class PublicationsAsserts extends BaseAsserts {
         assertRelaxedEqualsObject(expected.getPublicationVersion(), actual.getPublicationVersion());
         assertRelaxedEqualsObject(expected.getPublicationVersionFirstLevel(), actual.getPublicationVersionFirstLevel());
         assertEquals(expected.getOrderInLevel(), actual.getOrderInLevel());
-        assertRelaxedEqualsObject(expected.getCube(), actual.getCube());
-        assertRelaxedEqualsObject(expected.getChapter(), actual.getChapter());
+        
+        // It's not necessary check cube or chapter because this method is always called from an assert of one of these two elements
     }
     
     // -----------------------------------------------------------------

@@ -7,6 +7,10 @@ import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionNotChecksPublication;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForChaptersInAllLevels;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForChaptersInFirstLevel;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForChaptersInNoFirstLevel;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
@@ -21,6 +25,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME;
 
 import java.util.List;
 
@@ -37,6 +43,8 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
@@ -48,7 +56,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -71,6 +83,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
 
+    @Autowired
+    private final PlatformTransactionManager        transactionManager = null;
+
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------
@@ -86,7 +101,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(
+                buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1, expected.getSiemacMetadataStatisticalResource()
+                        .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersionNotChecksPublication(expected, actual);
     }
@@ -103,7 +120,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         PublicationVersion actual = publicationService.createPublicationVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(
+                buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource()
+                        .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersionNotChecksPublication(expected, actual);
     }
@@ -120,7 +139,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(
+                    buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource()
+                            .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }
         {
@@ -130,7 +151,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(
+                    buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, expected.getSiemacMetadataStatisticalResource()
+                            .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }
     }
@@ -431,8 +454,8 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     public void testVersioningPublicationVersion() throws Exception {
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLISHED_NAME);
 
-        PublicationVersion publicationNewVersion = publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
-                VersionTypeEnum.MINOR);
+        PublicationVersion publicationNewVersion = publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
+                .getUrn(), VersionTypeEnum.MINOR);
         assertNotNull(publicationNewVersion);
         assertFalse(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewPublicationVersionCreated(publicationVersion, publicationNewVersion);
@@ -442,7 +465,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
 
         // TODO: Añadir la jerarquia
-        
+
         // Non inherited fields
 
         // Inherited
@@ -453,5 +476,336 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=");
         strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId)).append("(").append(versionNumber).append(")");
         return strBuilder.toString();
+    }
+
+    // ------------------------------------------------------------------------
+    // CHAPTERS
+    // ------------------------------------------------------------------------
+
+    @Override
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapter() throws Exception {
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        Chapter actual = publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn(), expected);
+
+        assertRelaxedEqualsChapter(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterInFirstLevel() throws Exception {
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        Chapter actual = publicationService.createChapter(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                expected);
+
+        assertFilledMetadataForChaptersInAllLevels(actual);
+        assertFilledMetadataForChaptersInFirstLevel(actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterInNoFirstLevel() throws Exception {
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapterInParentElementLevel(publicationVersionMockFactory
+                .retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getChildrenFirstLevel().get(0));
+        Chapter actual = publicationService.createChapter(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                expected);
+
+        assertFilledMetadataForChaptersInAllLevels(actual);
+        assertFilledMetadataForChaptersInNoFirstLevel(actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterWithOrderFirst() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        // Create chapter
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(1));
+        Chapter actual = publicationService.createChapter(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                expected);
+
+        // Finish transaction
+        transactionManager.commit(status);
+
+        // Retrieve children and check orderInLevel
+        List<ElementLevel> actualChildren = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn())
+                .getChildrenFirstLevel();
+
+        assertEquals(actualChildren.get(0).getId(), actual.getElementLevel().getId());
+
+        assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInLevel());
+        assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInLevel());
+        assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInLevel());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterWithOrderLast() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        // Create chapter
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(3));
+        Chapter actual = publicationService.createChapter(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                expected);
+
+        // Finish transaction
+        transactionManager.commit(status);
+
+        // Retrieve children and check orderInLevel
+        List<ElementLevel> actualChildren = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn())
+                .getChildrenFirstLevel();
+
+        assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInLevel());
+        assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInLevel());
+        assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInLevel());
+
+        assertEquals(actualChildren.get(2).getId(), actual.getElementLevel().getId());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterWithOrderMiddle() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        // Create chapter
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(2));
+        Chapter actual = publicationService.createChapter(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(),
+                expected);
+
+        // Finish transaction
+        transactionManager.commit(status);
+
+        // Retrieve children and check orderInLevel
+        List<ElementLevel> actualChildren = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn())
+                .getChildrenFirstLevel();
+
+        assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInLevel());
+        assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInLevel());
+        assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInLevel());
+
+        assertEquals(actualChildren.get(1).getId(), actual.getElementLevel().getId());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapterErrorParameterRequiredPublicationVersionUrn() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION_URN));
+        publicationService.createChapter(getServiceContextAdministrador(), null, statisticalResourcesNotPersistedDoMocks.mockChapter());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapterErrorParameterRequiredChapter() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CHAPTER));
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn(), null);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapterErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(-1));
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn(), expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapterErrorMetadataIncorrectOrderInLevelMaxValue() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setOrderInLevel(Long.MAX_VALUE);
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn(), expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapterErrorMetadataRequiredOrderInLevel() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setOrderInLevel(null);
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn(), expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testCreateChapterErrorMetadataRequiredPublicationVersion() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PUBLICATION_VERSION));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expected.getElementLevel().setPublicationVersion(null);
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn(), expected);
+    }
+
+    @Test
+    public void testCreateChapterErrorPublicationVersionNotExists() throws Exception {
+        String publicationVersionUrn = URN_NOT_EXISTS;
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, publicationVersionUrn));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME})
+    public void testCreateChapterStatusPublicationVersionDraft() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, statisticalResourcesNotPersistedDoMocks.mockChapter());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME})
+    public void testCreateChapterStatusPublicationVersionProductionValidation() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, statisticalResourcesNotPersistedDoMocks.mockChapter());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME})
+    public void testCreateChapterStatusPublicationVersionDiffusionValidation() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, statisticalResourcesNotPersistedDoMocks.mockChapter());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME})
+    public void testCreateChapterStatusPublicationVersionValidationRejected() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, statisticalResourcesNotPersistedDoMocks.mockChapter());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testCreateChapterStatusPublicationVersionPublished() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn,
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterStatusPublicationErrorParentNotExists() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        Chapter parentChapter = statisticalResourcesNotPersistedDoMocks.mockChapter();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentChapter.getNameableStatisticalResource().getUrn(), publicationVersionUrn));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapterInParentElementLevel(parentChapter.getElementLevel());
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+    
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testCreateChapterStatusPublicationErrorParentNotExistsInPublicationVersion() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        Chapter parentChapter = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME).getChildrenFirstLevel().get(0).getChapter();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentChapter.getNameableStatisticalResource().getUrn(), publicationVersionUrn));
+
+        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapterInParentElementLevel(parentChapter.getElementLevel());
+        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+    
+
+    @Override
+    @Test
+    public void testUpdateChapter() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.updateChapter(getServiceContextAdministrador(), statisticalResourcesNotPersistedDoMocks.mockChapter());
+    }
+
+    @Override
+    @Test
+    public void testUpdateChapterLocation() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.updateChapterLocation(getServiceContextAdministrador(), null, null, null);
+    }
+
+    @Override
+    @Test
+    public void testRetrieveChapter() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.retrieveChapter(getServiceContextAdministrador(), null);
+    }
+
+    @Override
+    @Test
+    public void testDeleteChapter() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.deleteChapter(getServiceContextAdministrador(), null);
+    }
+
+    // ------------------------------------------------------------------------
+    // CUBES
+    // ------------------------------------------------------------------------
+
+    @Override
+    @Test
+    public void testCreateCube() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.createCube(getServiceContextAdministrador(), null, null);
+    }
+
+    @Override
+    @Test
+    public void testUpdateCube() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.updateCube(getServiceContextAdministrador(), null);
+    }
+
+    @Override
+    @Test
+    public void testUpdateCubeLocation() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), null, null, null);
+    }
+
+    @Override
+    @Test
+    public void testRetrieveCube() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.retrieveCube(getServiceContextAdministrador(), null);
+    }
+
+    @Override
+    @Test
+    public void testDeleteCube() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        publicationService.deleteCube(getServiceContextAdministrador(), null);
     }
 }

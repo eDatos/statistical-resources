@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -12,11 +13,29 @@ import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 
 public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
+    /**
+     * Check for a required metadata and add an exception for a failed validation.
+     * 
+     * @param parameter
+     * @param parameterName
+     * @param exceptions
+     */
+    public static void checkMetadataRequired(ElementLevel parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        isEmpty(parameter, parameterName, exceptions);
+        
+        if (parameter.getOrderInLevel() != null && parameter.getOrderInLevel() < 0) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(parameterName, ServiceExceptionParameters.ORDER_IN_LEVEL)));
+        }
+    }
+    
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -245,5 +264,21 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         }
 
         return Boolean.FALSE;
+    }
+    
+    /**
+     * Check if a ElementLevel is empty
+     * 
+     * @param parameter
+     * @return
+     */
+    private static void isEmpty(ElementLevel parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (isEmpty(parameter.getPublicationVersion())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(parameterName, ServiceExceptionSingleParameters.PUBLICATION_VERSION)));
+        }
+        
+        if (isEmpty(parameter.getOrderInLevel())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(parameterName, ServiceExceptionSingleParameters.ORDER_IN_LEVEL)));
+        }
     }
 }

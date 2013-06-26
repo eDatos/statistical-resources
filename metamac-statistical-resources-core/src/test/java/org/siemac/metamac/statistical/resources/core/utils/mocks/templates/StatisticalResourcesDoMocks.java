@@ -136,6 +136,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return mockChapter(mockElementLevel());
     }
     
+    public Chapter mockChapterInParentElementLevel(ElementLevel parentElementLevel) {
+        Chapter chapter = mockChapter(mockElementLevel());
+        chapter.getElementLevel().setParent(parentElementLevel);
+        return chapter;
+    }
+    
     public Chapter mockChapter(ElementLevel elementLevel) {
         Chapter chapter = new Chapter();
         

@@ -8,17 +8,25 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
 public class PublicationServiceInvocationValidatorImpl extends BaseInvocationValidator {
 
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS
+    // ------------------------------------------------------------------------
+
     public static void checkCreatePublicationVersion(PublicationVersion publicationVersion, ExternalItem statisticalOperation, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkNewPublicationVersion(publicationVersion, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__STATISTICAL_OPERATION,
+                exceptions);
     }
 
     public static void checkUpdatePublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -81,5 +89,120 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
     private static void checkPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getUuid(), ServiceExceptionParameters.PUBLICATION_VERSION__UUID, exceptions);
+    }
+
+    // ------------------------------------------------------------------------
+    // CHAPTERS
+    // ------------------------------------------------------------------------
+
+    public static void checkCreateChapter(String publicationVersionUrn, Chapter chapter, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        checkNewChapter(chapter, exceptions);
+    }
+
+    public static void checkUpdateChapter(Chapter chapter, List<MetamacExceptionItem> exceptions) {
+        checkExistingChapter(chapter, exceptions);
+    }
+
+    public static void checkUpdateChapterLocation(String chapterUrn, String parentChapterUrn, Long orderInLevel, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(chapterUrn, ServiceExceptionParameters.CHAPTER_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(parentChapterUrn, ServiceExceptionParameters.PARENT_CHAPTER_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(orderInLevel, ServiceExceptionParameters.ORDER_IN_LEVEL, exceptions);
+    }
+
+    public static void checkRetrieveChapter(String chapterUrn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(chapterUrn, ServiceExceptionParameters.CHAPTER_URN, exceptions);
+    }
+
+    public static void checkDeleteChapter(String chapterUrn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(chapterUrn, ServiceExceptionParameters.CHAPTER_URN, exceptions);
+    }
+
+    private static void checkNewChapter(Chapter chapter, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(chapter, ServiceExceptionParameters.CHAPTER, exceptions);
+
+        if (chapter == null) {
+            return;
+        }
+
+        checkChapter(chapter, exceptions);
+        checkNewNameableStatisticalResource(chapter.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER__NAMEABLE_STATISTICAL_RESOURCE, exceptions);
+
+        // Metadata that must be empty for new entities
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(chapter.getId(), ServiceExceptionParameters.CHAPTER__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(chapter.getVersion(), ServiceExceptionParameters.CHAPTER__VERSION, exceptions);
+    }
+
+    private static void checkExistingChapter(Chapter chapter, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(chapter, ServiceExceptionParameters.CHAPTER, exceptions);
+
+        if (chapter == null) {
+            return;
+        }
+        
+        checkChapter(chapter, exceptions);
+        checkExistingNameableStatisticalResource(chapter.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER, exceptions);
+
+        // Metadata that must be filled for existing entities
+        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getId(), ServiceExceptionParameters.CHAPTER__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getVersion(), ServiceExceptionParameters.CHAPTER__VERSION, exceptions);
+    }
+
+    private static void checkChapter(Chapter chapter, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getElementLevel(), ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL, exceptions);
+    }
+
+    // ------------------------------------------------------------------------
+    // CUBES
+    // ------------------------------------------------------------------------
+
+    public static void checkCreateCube(String publicationVersionUrn, Cube cube, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(cube, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        checkNewCube(cube, exceptions);
+
+    }
+
+    public static void checkUpdateCube(Cube cube, List<MetamacExceptionItem> exceptions) {
+        checkExistingCube(cube, exceptions);
+    }
+
+    public static void checkUpdateCubeLocation(String cubeUrn, String parentChapterUrn, Long orderInLevel, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(cubeUrn, ServiceExceptionParameters.CUBE_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(parentChapterUrn, ServiceExceptionParameters.PARENT_CHAPTER_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(orderInLevel, ServiceExceptionParameters.ORDER_IN_LEVEL, exceptions);
+    }
+
+    public static void checkRetrieveCube(String cubeUrn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(cubeUrn, ServiceExceptionParameters.CUBE_URN, exceptions);
+    }
+
+    public static void checkDeleteCube(String cubeUrn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(cubeUrn, ServiceExceptionParameters.CUBE_URN, exceptions);
+    }
+    
+    private static void checkNewCube(Cube cube, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(cube, ServiceExceptionParameters.CUBE, exceptions);
+
+        if (cube == null) {
+            return;
+        }
+        
+        checkCube(cube, exceptions);
+        checkNewNameableStatisticalResource(cube.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE, exceptions);
+    }
+    
+    private static void checkExistingCube(Cube cube, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(cube, ServiceExceptionParameters.CUBE, exceptions);
+
+        if (cube == null) {
+            return;
+        }
+        
+        checkCube(cube, exceptions);
+        checkExistingNameableStatisticalResource(cube.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE, exceptions);
+    }
+    
+    private static void checkCube(Cube cube, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL, exceptions);
     }
 }

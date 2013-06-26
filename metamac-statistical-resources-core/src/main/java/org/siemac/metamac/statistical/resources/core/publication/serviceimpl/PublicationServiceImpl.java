@@ -1,7 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceimpl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -19,6 +22,11 @@ import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForC
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
@@ -40,6 +48,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
     PublicationServiceInvocationValidator     publicationServiceInvocationValidator;
+
+    private static int                        CODE_MAX_LENGTH = 10;
 
     public PublicationServiceImpl() {
     }
@@ -145,23 +155,112 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     @Override
     public PublicationVersion versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
         publicationServiceInvocationValidator.checkVersioningPublicationVersion(ctx, publicationVersionUrnToCopy, versionType);
-        
-        //TODO: check only published publications can be versioned
-        
+
+        // TODO: check only published publications can be versioned
+
         PublicationVersion publicationVersionToCopy = retrievePublicationVersionByUrn(ctx, publicationVersionUrnToCopy);
         PublicationVersion publicationNewVersion = PublicationVersioningCopyUtils.copyPublicationVersion(publicationVersionToCopy);
-        
-        FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, publicationVersionToCopy.getSiemacMetadataStatisticalResource(), publicationNewVersion.getSiemacMetadataStatisticalResource(), versionType);
 
-        //PUBLICATION URN
+        FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, publicationVersionToCopy.getSiemacMetadataStatisticalResource(),
+                publicationNewVersion.getSiemacMetadataStatisticalResource(), versionType);
+
+        // PUBLICATION URN
         String[] creator = new String[]{publicationNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
-        publicationNewVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
-        
-        //TODO: DATE_NEXT_UPDATE
-        
+        publicationNewVersion.getSiemacMetadataStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion
+                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
+
+        // TODO: DATE_NEXT_UPDATE
+
         publicationNewVersion = getPublicationVersionRepository().save(publicationNewVersion);
-        
+
         return publicationNewVersion;
+    }
+
+    // ------------------------------------------------------------------------
+    // CHAPTERS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public Chapter createChapter(ServiceContext ctx, String publicationVersionUrn, Chapter chapter) throws MetamacException {
+        // Validations
+        publicationServiceInvocationValidator.checkCreateChapter(ctx, publicationVersionUrn, chapter);
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+
+        // Fill metadata for create chapter
+        fillMetadataForCreateChapter(ctx, chapter);
+
+        // Create element level
+        ElementLevel elementLevel = createChapterElementLevel(ctx, publicationVersion, chapter);
+
+        return elementLevel.getChapter();
+    }
+
+    private Chapter fillMetadataForCreateChapter(ServiceContext ctx, Chapter chapter) {
+        String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
+        chapter.getNameableStatisticalResource().setCode(code);
+        chapter.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionChapterUrn(code));
+
+        return chapter;
+    }
+
+    @Override
+    public Chapter updateChapter(ServiceContext ctx, Chapter chapter) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Chapter updateChapterLocation(ServiceContext ctx, String chapterUrn, String parentChapterUrn, Long orderInLevel) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Chapter retrieveChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void deleteChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    // ------------------------------------------------------------------------
+    // CUBES
+    // ------------------------------------------------------------------------
+
+    @Override
+    public Cube createCube(ServiceContext ctx, String publicationVersionUrn, Cube cube) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Cube updateCube(ServiceContext ctx, Cube cube) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Cube updateCubeLocation(ServiceContext ctx, String cubeUrn, String parentChapterUrn, Long orderInLevel) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Cube retrieveCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void deleteCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     // ------------------------------------------------------------------------
@@ -177,13 +276,16 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     private synchronized Publication assignCodeAndSavePublicationVersion(Publication publication, PublicationVersion publicationVersion) throws MetamacException {
         String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateSiemacMetadataResource(publicationVersion.getSiemacMetadataStatisticalResource());
         String[] maintainer = new String[]{publicationVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
-        
-        //Fill code and urn for root and version
+
+        // Fill code and urn for root and version
         publication.getIdentifiableStatisticalResource().setCode(code);
-        publication.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publication.getIdentifiableStatisticalResource().getCode()));
-        
+        publication.getIdentifiableStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publication.getIdentifiableStatisticalResource().getCode()));
+
         publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersion.getSiemacMetadataStatisticalResource().getCode(), publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersion.getSiemacMetadataStatisticalResource().getCode(), publicationVersion
+                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
 
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
@@ -193,4 +295,109 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return getPublicationRepository().save(publicationVersion.getPublication());
     }
 
+    private ElementLevel createChapterElementLevel(ServiceContext ctx, PublicationVersion publicationVersion, Chapter chapter) throws MetamacException {
+        ElementLevel elementLevel = chapter.getElementLevel();
+        elementLevel = createElementLevel(ctx, publicationVersion, elementLevel);
+        return elementLevel;
+    }
+
+    /**
+     * Create element level: chapter or cube
+     */
+    private ElementLevel createElementLevel(ServiceContext ctx, PublicationVersion publicationVersion, ElementLevel elementLevel) throws MetamacException {
+        if (elementLevel.getParent() == null) {
+            elementLevel = addToFirstLevelInPublicationVersion(ctx, publicationVersion, elementLevel);
+        } else {
+            elementLevel = addToParentLevel(ctx, publicationVersion, elementLevel);
+        }
+        return elementLevel;
+    }
+
+    private ElementLevel addToFirstLevelInPublicationVersion(ServiceContext ctx, PublicationVersion publicationVersion, ElementLevel elementLevel) throws MetamacException {
+        // Create element level
+        elementLevel.setParent(null);
+        elementLevel.setPublicationVersion(publicationVersion);
+        elementLevel.setPublicationVersionFirstLevel(publicationVersion);
+        elementLevel = getElementLevelRepository().save(elementLevel);
+
+        // Update publicationVersion adding element
+        publicationVersion.addChildrenFirstLevel(elementLevel);
+        publicationVersion.addChildrenAllLevel(elementLevel);
+        publicationVersion = getPublicationVersionRepository().save(publicationVersion);
+
+        // Check order and update order of other elements in this level
+        updatePublicationVersionElementsOrdersInLevelAddingElement(ctx, publicationVersion.getChildrenFirstLevel(), elementLevel);
+        return elementLevel;
+    }
+
+    private ElementLevel addToParentLevel(ServiceContext ctx, PublicationVersion publicationVersion, ElementLevel elementLevel) throws MetamacException {
+        ElementLevel elementLevelParent = elementLevel.getParent();
+
+        // Check chapter parent belongs to publication version
+        String publicationVersionUrnOfParentChapter = elementLevelParent.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn();
+        if (!publicationVersion.getSiemacMetadataStatisticalResource().getUrn().equals(publicationVersionUrnOfParentChapter)) {
+            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, elementLevelParent.getChapter().getNameableStatisticalResource().getUrn(), publicationVersion
+                    .getSiemacMetadataStatisticalResource().getUrn());
+        }
+
+        // Create element level in chapter
+        elementLevel.setPublicationVersionFirstLevel(null);
+        elementLevel.setPublicationVersion(publicationVersion);
+        elementLevel.setParent(elementLevelParent);
+        elementLevel = getElementLevelRepository().save(elementLevel);
+
+        // Update parent level adding element
+        elementLevelParent.addChildren(elementLevel);
+        elementLevelParent = updateElementLevel(elementLevelParent);
+
+        // Update order of other elements in this level
+        updatePublicationVersionElementsOrdersInLevelAddingElement(ctx, elementLevelParent.getChildren(), elementLevel);
+
+        // Update indicators system adding element to all children
+        publicationVersion.addChildrenAllLevel(elementLevel);
+        publicationVersion = getPublicationVersionRepository().save(publicationVersion);
+
+        return elementLevel;
+    }
+
+    private void updatePublicationVersionElementsOrdersInLevelAddingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToAdd) throws MetamacException {
+
+        // Create a set with all possibles orders. At the end of this method, this set must be empty
+        Set<Long> orders = new HashSet<Long>();
+        for (int i = 1; i <= elementsAtLevel.size(); i++) {
+            orders.add(Long.valueOf(i));
+        }
+
+        // Update orders
+        for (ElementLevel elementInLevel : elementsAtLevel) {
+            // it is possible that element is already added to parent and order is already set
+            if (elementInLevel.getElementUuid().equals(elementToAdd.getElementUuid())) {
+                // nothing
+            } else {
+                // Update order
+                if (elementInLevel.getOrderInLevel() >= elementToAdd.getOrderInLevel()) {
+                    elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() + 1);
+                    updateElementLevel(elementInLevel);
+                }
+            }
+
+            boolean removed = orders.remove(elementInLevel.getOrderInLevel());
+            if (!removed) {
+                break; // order incorrect
+            }
+        }
+
+        // Checks orders
+        if (!orders.isEmpty()) {
+            if (elementToAdd.isChapter()) {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+            } else {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+            }
+        }
+    }
+
+    private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
+        return getElementLevelRepository().save(elementLevel);
+    }
 }
