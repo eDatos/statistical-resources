@@ -258,8 +258,26 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public Cube createCube(ServiceContext ctx, String publicationVersionUrn, Cube cube) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkCreateCube(ctx, publicationVersionUrn, cube);
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+
+        // Fill metadata for create chapter
+        fillMetadataForCreateCube(ctx, cube);
+
+        // Create element level
+        ElementLevel elementLevel = createCubeElementLevel(ctx, publicationVersion, cube);
+        
+        return elementLevel.getCube();
+    }
+    
+    private Cube fillMetadataForCreateCube(ServiceContext ctx, Cube cube) {
+        String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
+        cube.getNameableStatisticalResource().setCode(code);
+        cube.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
+
+        return cube;
     }
 
     @Override
@@ -320,6 +338,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     private ElementLevel createChapterElementLevel(ServiceContext ctx, PublicationVersion publicationVersion, Chapter chapter) throws MetamacException {
         ElementLevel elementLevel = chapter.getElementLevel();
+        elementLevel = createElementLevel(ctx, publicationVersion, elementLevel);
+        return elementLevel;
+    }
+    
+    private ElementLevel createCubeElementLevel(ServiceContext ctx, PublicationVersion publicationVersion, Cube cube) throws MetamacException {
+        ElementLevel elementLevel = cube.getElementLevel();
         elementLevel = createElementLevel(ctx, publicationVersion, elementLevel);
         return elementLevel;
     }

@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -156,7 +157,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     // ------------------------------------------------------------------------
 
     public static void checkCreateCube(String publicationVersionUrn, Cube cube, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(cube, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
         checkNewCube(cube, exceptions);
 
     }
@@ -203,5 +204,18 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     
     private static void checkCube(Cube cube, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL, exceptions);
+        if (cube.getDataset() != null && cube.getQuery() != null) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
+        } else if (cube.getDataset() == null && cube.getQuery() == null) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
+        }
+        
+        if (cube.getDataset() != null) {
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getDataset().getIdentifiableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+        }
+        
+        if (cube.getQuery() != null) {
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getQuery().getIdentifiableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+        }
     }
 }

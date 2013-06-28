@@ -10,7 +10,12 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Public
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForChaptersInAllLevels;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForChaptersInFirstLevel;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForChaptersInNoFirstLevel;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForCubesInAllLevels;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForCubesInFirstLevel;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertFilledMetadataForCubesInNoFirstLevel;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsChapter;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsCube;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
@@ -31,6 +36,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
 
 import java.util.List;
 
@@ -44,18 +50,23 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -83,10 +94,16 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     private PublicationVersionMockFactory           publicationVersionMockFactory;
 
     @Autowired
-    private PublicationService                      publicationService;
+    private DatasetMockFactory                      datasetMockFactory;
+
+    @Autowired
+    private QueryMockFactory                        queryMockFactory;
 
     @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+
+    @Autowired
+    private PublicationService                      publicationService;
 
     @Autowired
     private final PlatformTransactionManager        transactionManager = null;
@@ -1273,7 +1290,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         ElementLevel updatedElementLevel_02_01 = updatedElementLevel_02.getChildren().get(0);
         ElementLevel updatedElementLevel_03 = updatedPublicationVersion.getChildrenFirstLevel().get(2);
         ElementLevel updatedElementLevel_04 = updatedPublicationVersion.getChildrenFirstLevel().get(3);
-        
+
         assertEquals(elementLevel_01.getUuid(), updatedElementLevel_01.getUuid());
         assertEquals(elementLevel_01_02.getUuid(), updatedElementLevel_01_01.getUuid());
         assertEquals(elementLevel_01_02_01.getUuid(), updatedElementLevel_01_01_01.getUuid());
@@ -1333,10 +1350,10 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME)
     public void testDeleteChapterStatusPublished() throws Exception {
-        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME); 
-        String chapterUrn = publicationVersion.getChildrenFirstLevel().get(0).getChapter()
-                .getNameableStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME);
+        String chapterUrn = publicationVersion.getChildrenFirstLevel().get(0).getChapter().getNameableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
         publicationService.deleteChapter(getServiceContextAdministrador(), chapterUrn);
     }
 
@@ -1346,9 +1363,365 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Override
     @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testCreateCube() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        publicationService.createCube(getServiceContextAdministrador(), null, null);
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+
+        assertRelaxedEqualsCube(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testCreateCubeDataset() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+
+        assertRelaxedEqualsCube(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testCreateCubeQuery() throws Exception {
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+
+        assertRelaxedEqualsCube(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testCreateCubeErrorParameterRequiredPublicationVersionUrn() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION_URN));
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
+        publicationService.createCube(getServiceContextAdministrador(), null, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataUnexpectedDatasetOrQuery() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
+        expected.setQuery(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataRequiredDatasetOrQuery() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
+        expected.setQuery(null);
+        expected.setDataset(null);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataRequiredDatasetUrn() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
+        expected.getDataset().getIdentifiableStatisticalResource().setUrn(null);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataRequiredQueryUrn() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getQuery().getIdentifiableStatisticalResource().setUrn(null);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorPublicationVersionNotExists() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, URN_NOT_EXISTS));
+
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        publicationService.createCube(getServiceContextAdministrador(), URN_NOT_EXISTS, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeInFirstLevel() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(null);
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+
+        assertFilledMetadataForCubesInAllLevels(actual);
+        assertFilledMetadataForCubesInFirstLevel(actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeInNoFirstLevel() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(publicationVersion.getChildrenFirstLevel().get(2));
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(1));
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
+
+        assertFilledMetadataForCubesInAllLevels(actual);
+        assertFilledMetadataForCubesInNoFirstLevel(actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeWithOrderFirst() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        // Create cube
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(publicationVersion.getChildrenFirstLevel().get(0));
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(1));
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
+
+        // Finish transaction
+        transactionManager.commit(status);
+
+        // Retrieve children and check orderInLevel
+        List<ElementLevel> actualChildren = publicationService
+                .retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                        publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn()).getChildrenFirstLevel()
+                .get(0).getChildren();
+
+        assertEquals(actualChildren.get(0).getId(), actual.getElementLevel().getId());
+
+        assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInLevel());
+        assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInLevel());
+        assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInLevel());
+        assertEquals(Long.valueOf(4), actualChildren.get(3).getOrderInLevel());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeWithOrderLast() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        // Create cube
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(publicationVersion.getChildrenFirstLevel().get(0));
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(4));
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
+
+        // Finish transaction
+        transactionManager.commit(status);
+
+        // Retrieve children and check orderInLevel
+        List<ElementLevel> actualChildren = publicationService
+                .retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                        publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn()).getChildrenFirstLevel()
+                .get(0).getChildren();
+
+        assertEquals(actualChildren.get(3).getId(), actual.getElementLevel().getId());
+
+        assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInLevel());
+        assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInLevel());
+        assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInLevel());
+        assertEquals(Long.valueOf(4), actualChildren.get(3).getOrderInLevel());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeWithOrderMiddle() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        // Create cube
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(publicationVersion.getChildrenFirstLevel().get(0));
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(2));
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
+
+        // Finish transaction
+        transactionManager.commit(status);
+
+        // Retrieve children and check orderInLevel
+        List<ElementLevel> actualChildren = publicationService
+                .retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                        publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn()).getChildrenFirstLevel()
+                .get(0).getChildren();
+
+        assertEquals(actualChildren.get(1).getId(), actual.getElementLevel().getId());
+
+        assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInLevel());
+        assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInLevel());
+        assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInLevel());
+        assertEquals(Long.valueOf(4), actualChildren.get(3).getOrderInLevel());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setOrderInLevel(Long.valueOf(-1));
+
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataIncorrectOrderInLevelMaxValue() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setOrderInLevel(Long.MAX_VALUE);
+
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataRequiredOrderInLevel() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setOrderInLevel(null);
+
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeErrorMetadataRequiredPublicationVersion() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__PUBLICATION_VERSION));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setPublicationVersion(null);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationVersionDraft() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationVersionProductionValidation() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationVersionDiffusionValidation() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationVersionValidationRejected() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_16_PUBLISHED_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationVersionPublished() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn,
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationErrorParentNotExists() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        ElementLevel parentElementLevel = statisticalResourcesNotPersistedDoMocks.mockChapter().getElementLevel();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentElementLevel.getChapter().getNameableStatisticalResource().getUrn(), publicationVersionUrn));
+
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(parentElementLevel);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateCubeStatusPublicationErrorParentNotExistsInPublicationVersion() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        ElementLevel parentElementLevel = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME).getChildrenFirstLevel().get(0);
+        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentElementLevel.getChapter().getNameableStatisticalResource().getUrn(), publicationVersionUrn));
+
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
+        expected.getElementLevel().setParent(parentElementLevel);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
     }
 
     @Override

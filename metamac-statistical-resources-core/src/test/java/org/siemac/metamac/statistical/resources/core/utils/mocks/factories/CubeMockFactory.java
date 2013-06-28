@@ -37,6 +37,6 @@ public class CubeMockFactory extends StatisticalResourcesMockFactory<Cube> {
     }
 
     private static Cube createCube() {
-        return getStatisticalResourcesPersistedDoMocks().mockCube();
+        return getStatisticalResourcesPersistedDoMocks().mockQueryCube(getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersions());
     }
 }

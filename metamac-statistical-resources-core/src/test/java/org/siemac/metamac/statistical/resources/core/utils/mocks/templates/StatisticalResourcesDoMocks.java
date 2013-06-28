@@ -156,11 +156,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     // CUBE
-    public Cube mockCube() {
+    private Cube mockCube() {
         return mockCube(mockElementLevel());
     }
     
-    public Cube mockCube(ElementLevel elementLevel) {
+    private Cube mockCube(ElementLevel elementLevel) {
         Cube cube = new Cube();
         
         // Element level
@@ -185,11 +185,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     // ELEMENT LEVEL
-    public ElementLevel mockElementLevel() {
+    private ElementLevel mockElementLevel() {
         return mockElementLevel(null, null);
     }
 
-    public ElementLevel mockElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
+    private ElementLevel mockElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = new ElementLevel();
         
         elementLevel.setOrderInLevel(Long.valueOf(1));
