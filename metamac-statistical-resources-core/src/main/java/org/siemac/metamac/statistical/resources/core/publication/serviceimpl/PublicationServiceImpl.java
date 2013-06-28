@@ -226,7 +226,6 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         elementLevel = updateElementLevelLocation(ctx, elementLevel, parentChapterUrn, orderInLevel);
 
         return elementLevel.getChapter();
-
     }
 
     @Override
@@ -293,8 +292,14 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public Cube updateCubeLocation(ServiceContext ctx, String cubeUrn, String parentChapterUrn, Long orderInLevel) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkUpdateCubeLocation(ctx, cubeUrn, parentChapterUrn, orderInLevel);
+
+        // Update location
+        ElementLevel elementLevel = retrieveCube(ctx, cubeUrn).getElementLevel();
+        elementLevel = updateElementLevelLocation(ctx, elementLevel, parentChapterUrn, orderInLevel);
+
+        return elementLevel.getCube();
     }
 
     @Override
@@ -466,9 +471,15 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         Long orderInLevelBefore = elementLevel.getOrderInLevel();
         elementLevel.setOrderInLevel(orderInLevel);
 
-        // Check target parent is not children of this dimension (only when element is a dimension)
-        if (targetParentChapterUrn != null && elementLevel.getChapter() != null) {
-            checkChapterIsNotChildren(ctx, elementLevel.getChapter(), targetParentChapterUrn);
+        // Check if target parent is in publicationVersion
+        if (targetParentChapterUrn != null) {
+            Chapter targetParentChapter = retrieveChapter(ctx, targetParentChapterUrn);
+            checkIfParentChapterIsInTheSamePublicationVersion(elementLevel, targetParentChapter);
+
+            // Check target parent is not children of this dimension (only when element is a dimension)
+            if (elementLevel.getChapter() != null) {
+                checkChapterIsNotChildren(ctx, elementLevel.getChapter(), targetParentChapter);
+            }
         }
 
         // Set actual parent
@@ -541,20 +552,11 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     /**
      * We can not move a chapter to its child
      */
-    private void checkChapterIsNotChildren(ServiceContext ctx, Chapter chapter, String targetParentChapterUrn) throws MetamacException {
-        Chapter chapterTarget = retrieveChapter(ctx, targetParentChapterUrn);
-
-        // Check if chapter is in the publicationVersion
-        if (!chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()
-                .equals(chapterTarget.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
-            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, chapterTarget.getNameableStatisticalResource().getUrn(), chapter.getElementLevel()
-                    .getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
-        }
-
+    private void checkChapterIsNotChildren(ServiceContext ctx, Chapter chapter, Chapter parentChapter) throws MetamacException {
         // Set parent
         Chapter chapterParent = null;
-        if (chapterTarget.getElementLevel().getParent() != null) {
-            chapterParent = chapterTarget.getElementLevel().getParent().getChapter();
+        if (parentChapter.getElementLevel().getParent() != null) {
+            chapterParent = parentChapter.getElementLevel().getParent().getChapter();
         }
 
         while (chapterParent != null) {
@@ -562,6 +564,15 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PARENT);
             }
             chapterParent = chapterParent.getElementLevel().getParent().getChapter();
+        }
+    }
+
+    private void checkIfParentChapterIsInTheSamePublicationVersion(ElementLevel elementLevel, Chapter parentChapter) throws MetamacException {
+        // Check if chapter is in the publicationVersion
+        if (!elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()
+                .equals(parentChapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
+            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentChapter.getNameableStatisticalResource().getUrn(), elementLevel.getPublicationVersion()
+                    .getSiemacMetadataStatisticalResource().getUrn());
         }
     }
 

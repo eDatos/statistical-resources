@@ -168,7 +168,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
     public static void checkUpdateCubeLocation(String cubeUrn, String parentChapterUrn, Long orderInLevel, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(cubeUrn, ServiceExceptionParameters.CUBE_URN, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(parentChapterUrn, ServiceExceptionParameters.PARENT_CHAPTER_URN, exceptions);
+        // PARENT_CHAPTER_URN can be null if we want to move de chapter to the first level
         StatisticalResourcesValidationUtils.checkParameterRequired(orderInLevel, ServiceExceptionParameters.ORDER_IN_LEVEL, exceptions);
     }
 

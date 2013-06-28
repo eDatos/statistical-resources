@@ -1751,7 +1751,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CUBE));
         publicationService.updateCube(getServiceContextAdministrador(), null);
     }
-    
+
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
@@ -1762,7 +1762,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         publicationService.updateCube(getServiceContextAdministrador(), expected);
     }
-    
+
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME})
@@ -1773,7 +1773,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         publicationService.updateCube(getServiceContextAdministrador(), expected);
     }
-    
+
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME})
@@ -1784,7 +1784,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         publicationService.updateCube(getServiceContextAdministrador(), expected);
     }
-    
+
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME})
@@ -1795,26 +1795,271 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         publicationService.updateCube(getServiceContextAdministrador(), expected);
     }
-    
+
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME})
     public void testUpdateCubeStatusPublicationVersionPublished() throws Exception {
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME);
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
-        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+
         Cube expected = publicationVersion.getChildrenFirstLevel().get(3).getCube();
         expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
         publicationService.updateCube(getServiceContextAdministrador(), expected);
     }
 
-    
-    
     @Override
     @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testUpdateCubeLocation() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        publicationService.updateCubeLocation(getServiceContextAdministrador(), null, null, null);
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        Cube updatedCube = publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(1));
+
+        assertEquals(Long.valueOf(4), cube.getElementLevel().getOrderInLevel());
+        assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testUpdateCubeLocationStatusPublicationVersionDraft() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME)
+    public void testUpdateCubeLocationStatusPublicationVersionProductionValidation() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME);
+
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME)
+    public void testUpdateCubeLocationStatusPublicationVersionDiffusionValidation() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME);
+
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME)
+    public void testUpdateCubeLocationStatusValidationRejected() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME);
+
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME)
+    public void testUpdateCubeLocationStatusPublicationVersionPublished() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testUpdateCubeLocationActualWithoutParentTargetWithParent() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+        Chapter parentChapter = publicationVersion.getChildrenFirstLevel().get(2).getChapter();
+        assertNull(cube.getElementLevel().getParent());
+        assertEquals(4, publicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, publicationVersion.getChildrenAllLevels().size());
+
+        // Update location
+        Cube updatedCube = publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), parentChapter.getNameableStatisticalResource()
+                .getUrn(), Long.valueOf(1));
+
+        // Check updatedChapter
+        assertNotNull(updatedCube.getElementLevel().getParent());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
+
+        // Commit
+        transactionManager.commit(status);
+
+        // Validate structure
+        PublicationVersion updatedPublicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
+                .getUrn());
+        assertEquals(3, updatedPublicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, updatedPublicationVersion.getChildrenAllLevels().size());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testUpdateCubeLocationActualWithParentTargetWithoutParent() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(1).getChildren().get(0).getCube();
+        Chapter initParentChapter = publicationVersion.getChildrenFirstLevel().get(1).getChapter();
+
+        assertNotNull(cube.getElementLevel().getParent());
+        assertEquals(4, publicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, publicationVersion.getChildrenAllLevels().size());
+        assertEquals(1, initParentChapter.getElementLevel().getChildren().size());
+
+        // Update location
+        Cube updatedCube = publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), null, Long.valueOf(5));
+
+        // Check updatedChapter
+        assertNull(updatedCube.getElementLevel().getParent());
+        assertEquals(Long.valueOf(5), updatedCube.getElementLevel().getOrderInLevel());
+
+        // Commit
+        transactionManager.commit(status);
+
+        // Validate structure
+        PublicationVersion updatedPublicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
+                .getUrn());
+        assertEquals(5, updatedPublicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, updatedPublicationVersion.getChildrenAllLevels().size());
+
+        assertEquals(cube.getNameableStatisticalResource().getUrn(), updatedPublicationVersion.getChildrenFirstLevel().get(4).getCube().getNameableStatisticalResource().getUrn());
+
+        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedPublicationVersion.getChildrenFirstLevel().get(1).getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(0, updatedPublicationVersion.getChildrenFirstLevel().get(1).getChildren().size());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testUpdateCubeLocationChangingParent() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(1).getChildren().get(0).getCube();
+        Chapter initParentChapter = publicationVersion.getChildrenFirstLevel().get(1).getChapter();
+        Chapter parentChapter = publicationVersion.getChildrenFirstLevel().get(2).getChapter();
+
+        assertNotNull(cube.getElementLevel().getParent());
+        assertEquals(4, publicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, publicationVersion.getChildrenAllLevels().size());
+        assertEquals(1, initParentChapter.getElementLevel().getChildren().size());
+        assertEquals(0, parentChapter.getElementLevel().getChildren().size());
+
+        // Update location
+        Cube updatedCube = publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), parentChapter.getNameableStatisticalResource()
+                .getUrn(), Long.valueOf(1));
+
+        // Check updatedChapter
+        assertNotNull(updatedCube.getElementLevel().getParent());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
+
+        // Commit
+        transactionManager.commit(status);
+
+        // Validate structure
+        PublicationVersion updatedPublicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
+                .getUrn());
+        assertEquals(4, updatedPublicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, updatedPublicationVersion.getChildrenAllLevels().size());
+
+        assertEquals(cube.getNameableStatisticalResource().getUrn(), updatedPublicationVersion.getChildrenFirstLevel().get(2).getChildren().get(0).getCube().getNameableStatisticalResource().getUrn());
+
+        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedPublicationVersion.getChildrenFirstLevel().get(1).getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(0, updatedPublicationVersion.getChildrenFirstLevel().get(1).getChildren().size());
+        assertEquals(1, updatedPublicationVersion.getChildrenFirstLevel().get(2).getChildren().size());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testUpdateCubeLocationChangingOrderInSameParent() throws Exception {
+        // Create transaction
+        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
+
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Cube cube = publicationVersion.getChildrenFirstLevel().get(0).getChildren().get(2).getCube();
+        Chapter initParentChapter = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
+
+        assertNotNull(cube.getElementLevel().getParent());
+        assertEquals(4, publicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, publicationVersion.getChildrenAllLevels().size());
+        assertEquals(3, initParentChapter.getElementLevel().getChildren().size());
+        assertEquals(Long.valueOf(3), cube.getElementLevel().getOrderInLevel());
+
+        // Update location
+        Cube updatedCube = publicationService.updateCubeLocation(getServiceContextAdministrador(), cube.getNameableStatisticalResource().getUrn(), initParentChapter.getNameableStatisticalResource()
+                .getUrn(), Long.valueOf(1));
+
+        // Check updatedChapter
+        assertNotNull(updatedCube.getElementLevel().getParent());
+        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
+
+        // Commit
+        transactionManager.commit(status);
+
+        // Validate structure
+        PublicationVersion updatedPublicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
+                .getUrn());
+        assertEquals(4, updatedPublicationVersion.getChildrenFirstLevel().size());
+        assertEquals(10, updatedPublicationVersion.getChildrenAllLevels().size());
+
+        assertEquals(cube.getNameableStatisticalResource().getUrn(), updatedPublicationVersion.getChildrenFirstLevel().get(0).getChildren().get(0).getCube().getNameableStatisticalResource().getUrn());
+
+        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedPublicationVersion.getChildrenFirstLevel().get(0).getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(3, updatedPublicationVersion.getChildrenFirstLevel().get(0).getChildren().size());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testUpdateCubeLocationErrorParentNotExists() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND, URN_NOT_EXISTS));
+
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        String cubeUrn = publicationVersion.getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource().getUrn();
+
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cubeUrn, URN_NOT_EXISTS, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testUpdateCubeLocationErrorParentNotExistsInPublicationVersion() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        String parentChapterUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME).getChildrenFirstLevel().get(0)
+                .getChapter().getNameableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentChapterUrn, publicationVersionUrn));
+
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cubeUrn, parentChapterUrn, Long.valueOf(1));
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testUpdateCubeLocationErrorOrderIncorrect() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        publicationService.updateCubeLocation(getServiceContextAdministrador(), cubeUrn, null, Long.MAX_VALUE);
     }
 
     @Override
