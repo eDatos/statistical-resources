@@ -1239,10 +1239,10 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         ElementLevel elementLevel_01_01 = elementLevel_01.getChildren().get(0);
         ElementLevel elementLevel_01_01_01 = elementLevel_01_01.getChildren().get(0);
         ElementLevel elementLevel_01_02 = elementLevel_01.getChildren().get(1);
-        ElementLevel elementLevel_01_02_01 = elementLevel_01_02.getChildren().get(1);
+        ElementLevel elementLevel_01_02_01 = elementLevel_01_02.getChildren().get(0);
         ElementLevel elementLevel_01_03 = elementLevel_01.getChildren().get(2);
         ElementLevel elementLevel_02 = publicationVersion.getChildrenFirstLevel().get(1);
-        ElementLevel elementLevel_02_01 = elementLevel_01.getChildren().get(0);
+        ElementLevel elementLevel_02_01 = elementLevel_02.getChildren().get(0);
         ElementLevel elementLevel_03 = publicationVersion.getChildrenFirstLevel().get(2);
         ElementLevel elementLevel_04 = publicationVersion.getChildrenFirstLevel().get(3);
 
@@ -1270,7 +1270,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         ElementLevel updatedElementLevel_01_01_01 = updatedElementLevel_01_01.getChildren().get(0);
         ElementLevel updatedElementLevel_01_02 = updatedElementLevel_01.getChildren().get(1);
         ElementLevel updatedElementLevel_02 = updatedPublicationVersion.getChildrenFirstLevel().get(1);
-        ElementLevel updatedElementLevel_02_01 = updatedElementLevel_01.getChildren().get(0);
+        ElementLevel updatedElementLevel_02_01 = updatedElementLevel_02.getChildren().get(0);
         ElementLevel updatedElementLevel_03 = updatedPublicationVersion.getChildrenFirstLevel().get(2);
         ElementLevel updatedElementLevel_04 = updatedPublicationVersion.getChildrenFirstLevel().get(3);
         
@@ -1333,8 +1333,10 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME)
     public void testDeleteChapterStatusPublished() throws Exception {
-        String chapterUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME).getChildrenFirstLevel().get(0).getChapter()
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME); 
+        String chapterUrn = publicationVersion.getChildrenFirstLevel().get(0).getChapter()
                 .getNameableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
         publicationService.deleteChapter(getServiceContextAdministrador(), chapterUrn);
     }
 
