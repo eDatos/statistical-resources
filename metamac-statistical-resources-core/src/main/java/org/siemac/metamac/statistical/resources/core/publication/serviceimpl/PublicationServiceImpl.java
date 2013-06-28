@@ -268,10 +268,10 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create element level
         ElementLevel elementLevel = createCubeElementLevel(ctx, publicationVersion, cube);
-        
+
         return elementLevel.getCube();
     }
-    
+
     private Cube fillMetadataForCreateCube(ServiceContext ctx, Cube cube) {
         String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
         cube.getNameableStatisticalResource().setCode(code);
@@ -282,8 +282,13 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public Cube updateCube(ServiceContext ctx, Cube cube) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkUpdateCube(ctx, cube);
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, cube.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+
+        // Save
+        return getCubeRepository().save(cube);
     }
 
     @Override
@@ -294,8 +299,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public Cube retrieveCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkRetrieveCube(ctx, cubeUrn);
+
+        // Retrieve
+        Cube cube = getCubeRepository().retrieveCubeByUrn(cubeUrn);
+        return cube;
     }
 
     @Override
@@ -341,7 +350,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         elementLevel = createElementLevel(ctx, publicationVersion, elementLevel);
         return elementLevel;
     }
-    
+
     private ElementLevel createCubeElementLevel(ServiceContext ctx, PublicationVersion publicationVersion, Cube cube) throws MetamacException {
         ElementLevel elementLevel = cube.getElementLevel();
         elementLevel = createElementLevel(ctx, publicationVersion, elementLevel);
@@ -603,7 +612,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Check indicators system proc status
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
-        
+
         // Update orders of other elements in level
         List<ElementLevel> elementsAtLevel = null;
         if (elementLevel.getParent() == null) {

@@ -1740,9 +1740,25 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Override
     @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, QUERY_01_SIMPLE_NAME})
     public void testRetrieveCube() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
+        Cube expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(3).getCube();
+        Cube actual = publicationService.retrieveCube(getServiceContextAdministrador(), expected.getNameableStatisticalResource().getUrn());
+        assertRelaxedEqualsCube(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, QUERY_01_SIMPLE_NAME})
+    public void testRetrieveCubeErrorParameterRequiredCubeUrn() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CUBE_URN));
         publicationService.retrieveCube(getServiceContextAdministrador(), null);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, QUERY_01_SIMPLE_NAME})
+    public void testRetrieveCubeErrorCubeNotExists() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CUBE_NOT_FOUND, URN_NOT_EXISTS));
+        publicationService.retrieveCube(getServiceContextAdministrador(), URN_NOT_EXISTS);
     }
 
     @Override
