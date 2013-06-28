@@ -1,3 +1,4 @@
+
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
@@ -6,21 +7,48 @@ Application PublicationsStatisticalResourcesDto {
 	basePackage=unused
 
 	Module dtos_publications {
-		basePackage=org.siemac.metamac.statistical.resources.core.dto.publication 
-		
+		basePackage=org.siemac.metamac.statistical.resources.core.dto.publication
+
 		// COLLECTION
 		DataTransferObject PublicationDto extends @SiemacMetadataStatisticalResourceDto {
-			- @PublicationStructureHierarchyDto structure;
-			
 			Integer formatExtentResources;
 		}
-		
-		DataTransferObject PublicationStructureHierarchyDto extends @IdentityDto {
-			- @PublicationStructureHierarchyTypeEnum type;
-			- @InternationalStringDto text;
-			String url;
-			String urn;
-			- List<@PublicationStructureHierarchyDto> children;
+
+		"Dto for structure of publication"
+		DataTransferObject PublicationStructureDto extends @IdentityDto {
+			- List<@ElementLevelDto> elements;
 		}
+
+		"Dto for element of level. Can be a chapter or a cube"
+		DataTransferObject ElementLevelDto {
+			gap
+
+			- @ChapterDto chapter;
+			- @CubeDto cube;
+			"Subelements (only when this element is a dimension)"
+			- List<@ElementLevelDto> subelements;
+		}
+
+		"Dto for chapter"
+		DataTransferObject ChapterDto extends @NameableStatisticalResourceDto {
+			"Order in level"
+			Long orderInLevel;
+			"Parent dimension"
+			String parentUuid;
+		}
+		
+		"Dto for indicator instance"
+	   	DataTransferObject CubeDto extends @NameableStatisticalResourceDto {
+			"Dataset"
+			String datasetUrn;
+			"Query"
+			String queryUrn;
+			
+            "Order in level"
+			Long orderInLevel;
+			"Parent dimension"
+			String parentUuid;
+	    }
 	}
+
 }

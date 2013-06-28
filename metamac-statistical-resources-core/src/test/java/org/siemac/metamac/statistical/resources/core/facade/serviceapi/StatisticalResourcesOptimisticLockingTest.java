@@ -558,22 +558,4 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testVersioningPublication() throws Exception {
         // no optimistic locking in this operation
     }
-
-    @Override
-    public void testFindDatasetVersionForPublicationVersion() throws Exception {
-        // TODO Este metodo debe ser eliminado cuando la jerarquia este bien hecha
-
-    }
-
-    @Override
-    public void testAddDatasetVersionToPublicationVersion() throws Exception {
-        // TODO Este metodo debe ser eliminado cuando la jerarquia este bien hecha
-
-    }
-
-    @Override
-    public void testRemoveDatasetVersionToPublicationVersion() throws Exception {
-        // TODO Este metodo debe ser eliminado cuando la jerarquia este bien hecha
-
-    }
 }

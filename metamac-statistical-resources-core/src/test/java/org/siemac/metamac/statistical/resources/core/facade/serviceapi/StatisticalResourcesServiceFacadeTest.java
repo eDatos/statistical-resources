@@ -1300,65 +1300,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newVersion);
     }
 
-    @Override
-    @Test
-    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
-    // TODO: Este metodo debe ser eliminado cuando la jerarquia este bien hecho
-    // TODO: Este test no es unitario pero no importa porque es provisional
-    public void testFindDatasetVersionForPublicationVersion() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn01 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn02 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_02_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn03 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getSiemacMetadataStatisticalResource().getUrn();
-
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn01);
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn02);
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn03);
-
-        int datasetVersions = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
-
-        assertEquals(3, datasetVersions);
-    }
-
-    @Override
-    @Test
-    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
-    // TODO: Este metodo debe ser eliminado cuando la jerarquia este bien hecho
-    public void testAddDatasetVersionToPublicationVersion() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-
-        int datasetVersionsBefore = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
-
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn);
-
-        int datasetVersionsAfter = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
-        assertEquals(datasetVersionsBefore + 1, datasetVersionsAfter);
-    }
-
-    @Override
-    @Test
-    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
-    // TODO: Este metodo debe ser eliminado cuando la jerarquia este bien hecho
-    // TODO: Este test no es unitario pero no importa porque es provisional
-    public void testRemoveDatasetVersionToPublicationVersion() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn01 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn02 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_02_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        String datasetVersionUrn03 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getSiemacMetadataStatisticalResource().getUrn();
-
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn01);
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn02);
-        statisticalResourcesServiceFacade.addDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn03);
-
-        int datasetVersionsBefore = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
-
-        statisticalResourcesServiceFacade.removeDatasetVersionToPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn, datasetVersionUrn02);
-
-        int datasetVersionsAfter = statisticalResourcesServiceFacade.findDatasetVersionForPublicationVersion(getServiceContextAdministrador(), publicationVersionUrn).size();
-        assertEquals(datasetVersionsBefore - 1, datasetVersionsAfter);
-    }
-
     // ------------------------------------------------------------
     // CRITERIA UTILS
     // ------------------------------------------------------------

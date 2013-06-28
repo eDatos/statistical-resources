@@ -95,10 +95,6 @@ Application PublicationsStatisticalResources {
 			"Association to elements in the first level of the publication"
 			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> publicationVersionFirstLevel;
 			
-			// TODO: PROVISIONAL. Esto debe eliminarse
-			"Related datasets"
-       		- Bag<@DatasetVersion> datasets cascade="none";
-			
 			Repository PublicationVersionRepository {
 				save;
 				delete;
@@ -188,14 +184,9 @@ Application PublicationsStatisticalResources {
             	findByCondition;
             	findByCondition(PagingParameter pagingParameter) throws MetamacException;
             	@Cube retrieveCubeByUrn(String urn) throws MetamacException;
-            	// @Cube retrieveCubePublishedByCode(String code) throws MetamacException;
             	Boolean existAnyCubeInPublication(String publicationCode, String publicationVersionNumber) throws MetamacException;
             	List<String> findDatasetsLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException;
             	List<String> findQueriesLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException;
-            	// List<String> findPublicationPublishedWithDataset(String datasetCode) throws MetamacException;
-            	// List<String> findCubesInPublishedPublicationWithDataset(String datasetCode) throws MetamacException;
-            	// @Cube retrieveCubeInPublishedPublication(String publicationCode, String cubeCode) throws MetamacException;
-            	// List<@Cube> findCubesInPublishedPublication(String publicationCode) throws MetamacException;
             }
         }         		
 	}
