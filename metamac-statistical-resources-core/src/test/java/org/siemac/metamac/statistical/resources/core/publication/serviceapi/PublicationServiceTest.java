@@ -1376,12 +1376,12 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         assertRelaxedEqualsCube(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testCreateCubeErrorMetadataUnexpectedChildren() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__CHILDREN));
-        
+
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Cube expected = statisticalResourcesNotPersistedDoMocks.mockDatasetCube(dataset);
@@ -1756,13 +1756,13 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         assertRelaxedEqualsCube(expected, actual);
         CommonAsserts.assertEqualsInternationalString(expected.getNameableStatisticalResource().getTitle(), actual.getNameableStatisticalResource().getTitle());
     }
-    
+
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
     public void testUpdateCubeErrorMetadataUnexpectedChildren() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__CHILDREN));
-        
+
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
         Cube expected = publicationVersion.getChildrenFirstLevel().get(3).getCube();
         expected.getNameableStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
@@ -2112,8 +2112,81 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Override
     @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testDeleteCube() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CUBE_NOT_FOUND, cubeUrn));
+
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+        publicationService.retrieveCube(getServiceContextAdministrador(), cubeUrn);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testDeleteCubeNoFirstLevel() throws Exception {
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(1).getChildren().get(0).getCube()
+                .getNameableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CUBE_NOT_FOUND, cubeUrn));
+
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+        publicationService.retrieveCube(getServiceContextAdministrador(), cubeUrn);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testDeleteCubeErrorParameterRequired() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CUBE_URN));
         publicationService.deleteCube(getServiceContextAdministrador(), null);
     }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testDeleteCubeErrorCubeNotExists() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CUBE_NOT_FOUND, URN_NOT_EXISTS));
+        publicationService.deleteCube(getServiceContextAdministrador(), URN_NOT_EXISTS);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testDeleteCubeStatusPublicationVersionDraft() throws Exception {
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME)
+    public void testDeleteCubeStatusPublicationVersionProductionValidation() throws Exception {
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME)
+    public void testDeleteCubeStatusPublicationVersionDiffusionValidation() throws Exception {
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME)
+    public void testDeleteCubeStatusPublicationVersionValidationRejected() throws Exception {
+        String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME)
+    public void testDeleteCubeStatusPublicationVersionPublished() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME);
+        String cubeUrn = publicationVersion.getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
+                .getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+        publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
+    }
+
 }

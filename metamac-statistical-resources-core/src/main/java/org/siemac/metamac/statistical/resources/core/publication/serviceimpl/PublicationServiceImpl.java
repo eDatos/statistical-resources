@@ -314,8 +314,14 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Override
     public void deleteCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkDeleteCube(ctx, cubeUrn);
+
+        // Retrieve
+        ElementLevel elementLevel = retrieveCube(ctx, cubeUrn).getElementLevel();
+
+        // Delete
+        deleteElementLevel(ctx, elementLevel);
     }
 
     // ------------------------------------------------------------------------
