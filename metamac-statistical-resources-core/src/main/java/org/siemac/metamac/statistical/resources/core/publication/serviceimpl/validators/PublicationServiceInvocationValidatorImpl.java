@@ -8,7 +8,6 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
@@ -106,7 +105,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
     public static void checkUpdateChapterLocation(String chapterUrn, String parentChapterUrn, Long orderInLevel, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(chapterUrn, ServiceExceptionParameters.CHAPTER_URN, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(parentChapterUrn, ServiceExceptionParameters.PARENT_CHAPTER_URN, exceptions);
+        // PARENT_CHAPTER_URN can be null if we want to move de chapter to the first level
         StatisticalResourcesValidationUtils.checkParameterRequired(orderInLevel, ServiceExceptionParameters.ORDER_IN_LEVEL, exceptions);
     }
 

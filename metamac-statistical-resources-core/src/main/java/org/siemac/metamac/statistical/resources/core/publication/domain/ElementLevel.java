@@ -2,12 +2,13 @@ package org.siemac.metamac.statistical.resources.core.publication.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * Publication level
  */
 @Entity
-@Table(name = "TB_ELEMENTS_LEVELS")
+@Table(name = "TB_ELEMENTS_LEVELS", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORDER_IN_LEVEL", "PUBLICATION_VERSION_FIRST_FK", "PARENT_FK"})})
 public class ElementLevel extends ElementLevelBase {
 
     private static final long serialVersionUID = 1L;

@@ -211,27 +211,45 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdateChapter(ctx, chapter);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
-        
+
         // Save
         return getChapterRepository().save(chapter);
     }
 
     @Override
     public Chapter updateChapterLocation(ServiceContext ctx, String chapterUrn, String parentChapterUrn, Long orderInLevel) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkUpdateChapterLocation(ctx, chapterUrn, parentChapterUrn, orderInLevel);
+
+        // Update location
+        ElementLevel elementLevel = retrieveChapter(ctx, chapterUrn).getElementLevel();
+        elementLevel = updateElementLevelLocation(ctx, elementLevel, parentChapterUrn, orderInLevel);
+
+        return elementLevel.getChapter();
+
     }
 
     @Override
     public Chapter retrieveChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkRetrieveChapter(ctx, chapterUrn);
+
+        // Retrieve
+        Chapter chapter = getChapterRepository().retrieveChapterByUrn(chapterUrn);
+        return chapter;
+
     }
 
     @Override
     public void deleteChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // Validations
+        publicationServiceInvocationValidator.checkDeleteChapter(ctx, chapterUrn);
+
+        // Retrieve
+        ElementLevel elementLevel = retrieveChapter(ctx, chapterUrn).getElementLevel();
+
+        // Delete
+        deleteElementLevel(ctx, elementLevel);
     }
 
     // ------------------------------------------------------------------------
@@ -404,5 +422,175 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
         return getElementLevelRepository().save(elementLevel);
+    }
+
+    private ElementLevel updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String targetParentChapterUrn, Long orderInLevel) throws MetamacException {
+        // Check indicators system proc status
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+
+        // Change order
+        Long orderInLevelBefore = elementLevel.getOrderInLevel();
+        elementLevel.setOrderInLevel(orderInLevel);
+
+        // Check target parent is not children of this dimension (only when element is a dimension)
+        if (targetParentChapterUrn != null && elementLevel.getChapter() != null) {
+            checkChapterIsNotChildren(ctx, elementLevel.getChapter(), targetParentChapterUrn);
+        }
+
+        // Set actual parent
+        String actualParentChapterUrn = null;
+        if (elementLevel.getParent() != null) {
+            actualParentChapterUrn = elementLevel.getParent().getChapter().getNameableStatisticalResource().getUrn();
+        }
+
+        // Check if it's necessary update parent and order or only order
+        if ((actualParentChapterUrn == null && targetParentChapterUrn != null) || (actualParentChapterUrn != null && targetParentChapterUrn == null)
+                || (actualParentChapterUrn != null && targetParentChapterUrn != null && !targetParentChapterUrn.equals(actualParentChapterUrn))) {
+            elementLevel = updateParentAndOrder(ctx, elementLevel, targetParentChapterUrn, publicationVersion, orderInLevelBefore);
+        } else {
+            elementLevel = updateOnlyOrder(ctx, elementLevel, orderInLevelBefore);
+        }
+
+        return elementLevel;
+    }
+
+    private ElementLevel updateOnlyOrder(ServiceContext ctx, ElementLevel elementLevel, Long orderInLevelBefore) throws MetamacException {
+        // Same parent, only changes order. Check order is correct and update orders
+        List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel.getPublicationVersionFirstLevel().getChildrenFirstLevel();
+        updatePublicationVersionElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
+        elementLevel = updateElementLevel(elementLevel);
+        return elementLevel;
+    }
+
+    private ElementLevel updateParentAndOrder(ServiceContext ctx, ElementLevel elementLevel, String targetParentChapterUrn, PublicationVersion publicationVersion, Long orderInLevelBefore)
+            throws MetamacException {
+        ElementLevel parentActual = elementLevel.getParent() != null ? elementLevel.getParent() : null;
+        ElementLevel parentTarget = targetParentChapterUrn != null ? retrieveChapter(ctx, targetParentChapterUrn).getElementLevel() : null;
+
+        // Update actual parent dimension or indicators system version, removing dimension
+        if (parentActual != null) {
+            // Update order of other dimensions
+            elementLevel.setParent(null);
+            updatePublicationVersionElementsOrdersInLevelRemovingElement(ctx, parentActual.getChildren(), elementLevel, orderInLevelBefore);
+        } else {
+            // Update order of other dimensions
+            elementLevel.setPublicationVersionFirstLevel(null);
+            updatePublicationVersionElementsOrdersInLevelRemovingElement(ctx, publicationVersion.getChildrenFirstLevel(), elementLevel, orderInLevelBefore);
+        }
+
+        // Update target parent, adding dimension
+        List<ElementLevel> elementsInLevel = null;
+        if (parentTarget == null) {
+            publicationVersion.addChildrenFirstLevel(elementLevel);
+            publicationVersion = getPublicationVersionRepository().save(publicationVersion);
+            elementsInLevel = publicationVersion.getChildrenFirstLevel();
+        } else {
+            parentTarget.addChildren(elementLevel);
+            updateElementLevel(parentTarget);
+            elementsInLevel = parentTarget.getChildren();
+        }
+        // Check order is correct and update orders
+        updatePublicationVersionElementsOrdersInLevelAddingElement(ctx, elementsInLevel, elementLevel);
+
+        // Update dimension, changing parent
+        if (parentTarget == null) {
+            elementLevel.setPublicationVersionFirstLevel(publicationVersion);
+            elementLevel.setParent(null);
+        } else {
+            elementLevel.setPublicationVersionFirstLevel(null);
+            elementLevel.setParent(parentTarget);
+        }
+        elementLevel = updateElementLevel(elementLevel);
+        return elementLevel;
+    }
+
+    /**
+     * We can not move a chapter to its child
+     */
+    private void checkChapterIsNotChildren(ServiceContext ctx, Chapter chapter, String targetParentChapterUrn) throws MetamacException {
+        Chapter chapterTarget = retrieveChapter(ctx, targetParentChapterUrn);
+
+        // Check if chapter is in the publicationVersion
+        if (!chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()
+                .equals(chapterTarget.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
+            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, chapterTarget.getNameableStatisticalResource().getUrn(), chapter.getElementLevel()
+                    .getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        }
+
+        // Set parent
+        Chapter chapterParent = null;
+        if (chapterTarget.getElementLevel().getParent() != null) {
+            chapterParent = chapterTarget.getElementLevel().getParent().getChapter();
+        }
+
+        while (chapterParent != null) {
+            if (chapterParent.getNameableStatisticalResource().getUrn().equals(chapter.getNameableStatisticalResource().getUrn())) {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PARENT);
+            }
+            chapterParent = chapterParent.getElementLevel().getParent().getChapter();
+        }
+    }
+
+    private void updatePublicationVersionElementsOrdersInLevelRemovingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToRemove, Long orderBeforeUpdate)
+            throws MetamacException {
+        for (ElementLevel elementInLevel : elementsAtLevel) {
+            if (elementInLevel.getElementUuid().equals(elementToRemove.getElementUuid())) {
+                // nothing
+            } else if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
+                elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() - 1);
+                updateElementLevel(elementInLevel);
+            }
+        }
+    }
+
+    private void updatePublicationVersionElementsOrdersInLevelChangingOrder(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToChangeOrder, Long orderBeforeUpdate,
+            Long orderAfterUpdate) throws MetamacException {
+
+        // Checks orders
+        if (orderAfterUpdate > elementsAtLevel.size()) {
+            if (elementToChangeOrder.isChapter()) {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+            } else {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+            }
+        }
+
+        // Update orders
+        for (ElementLevel elementAtLevel : elementsAtLevel) {
+            if (elementAtLevel.getElementUuid().equals(elementToChangeOrder.getElementUuid())) {
+                continue;
+            }
+            if (orderAfterUpdate < orderBeforeUpdate) {
+                if (elementAtLevel.getOrderInLevel() >= orderAfterUpdate && elementAtLevel.getOrderInLevel() < orderBeforeUpdate) {
+                    elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() + 1);
+                    updateElementLevel(elementAtLevel);
+                }
+            } else if (orderAfterUpdate > orderBeforeUpdate) {
+                if (elementAtLevel.getOrderInLevel() > orderBeforeUpdate && elementAtLevel.getOrderInLevel() <= orderAfterUpdate) {
+                    elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() - 1);
+                    updateElementLevel(elementAtLevel);
+                }
+            }
+        }
+    }
+
+    private void deleteElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+        // Check indicators system proc status
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        
+        // Update orders of other elements in level
+        List<ElementLevel> elementsAtLevel = null;
+        if (elementLevel.getParent() == null) {
+            elementsAtLevel = publicationVersion.getChildrenFirstLevel();
+        } else {
+            elementsAtLevel = elementLevel.getParent().getChildren();
+        }
+        elementsAtLevel.remove(elementLevel);
+        updatePublicationVersionElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, elementLevel, elementLevel.getOrderInLevel());
+
+        // Delete
+        getElementLevelRepository().delete(elementLevel);
     }
 }
