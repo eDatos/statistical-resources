@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>METAMAC :: STATISTICAL :: RESOURCES :: WEB</name>
- 
+
     <properties>
         <!-- Convenience property to set the GWT version -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
@@ -91,6 +91,10 @@
             <artifactId>gwtp-all</artifactId>
             <version>${gwtp.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>com.gwtplatform</groupId>
+                    <artifactId>gwtp-crawler-service</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-core</artifactId>
