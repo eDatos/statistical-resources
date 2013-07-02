@@ -51,6 +51,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.arte.statistic</groupId>
+            <artifactId>statistic-parser</artifactId>
+            <version>${statistic-parser.version}</version>
+        </dependency>
+
         <!-- Add dependency to JMS when consumers are used, deployment.type=ear -->
         <!-- <dependency> -->
         <!-- <groupId>javax.jms</groupId> -->
