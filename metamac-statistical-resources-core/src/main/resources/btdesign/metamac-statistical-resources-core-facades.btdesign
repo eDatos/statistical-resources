@@ -92,6 +92,32 @@ Application FacadeStatisticalResources {
             List<@PublicationDto> retrievePublicationVersions(String urn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationDto versioningPublication(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		"Retrieves publication version structure: chapter and cubes by levels."
+	    	@PublicationStructureDto retrievePublicationStructure(String publicationUrn) throws MetamacException;
+	    	
+	    	// CHAPTERS
+	    	"Creates a chapter"
+	    	@ChapterDto createChapter(String publicationUrn, @ChapterDto chapterDto) throws MetamacException;
+	    	"Updates chapter metadata"
+	    	@ChapterDto updateChapter(@ChapterDto chapterDto) throws MetamacException;
+	    	"Updates chapter location"
+	    	@ChapterDto updateChapterLocation(String chapterUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException;
+	    	"Retrieves chapter"
+	    	@ChapterDto retrieveChapter(String chapterUrn) throws MetamacException;
+	    	"Deletes chapter"
+	    	deleteChapter(String chapterUrn) throws MetamacException;
+	    	
+	    	// CUBES
+	    	"Creates a cube"
+	    	@CubeDto createCube(String publicationUrn, @CubeDto cubeDto) throws MetamacException;
+	    	"Updates cube metadata"
+	    	@CubeDto updateCube(@CubeDto cubeDto) throws MetamacException;
+	    	"Updates cube location"
+	    	@CubeDto updateCubeLocation(String cubeUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException;
+	    	"Retrieves cube"
+	    	@CubeDto retrieveCube(String cubeUrn) throws MetamacException;
+	    	"Deletes cube"
+	    	deleteCube(String cubeUrn) throws MetamacException;
 		}  
 	}
 }

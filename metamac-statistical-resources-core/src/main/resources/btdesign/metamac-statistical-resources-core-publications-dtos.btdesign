@@ -9,14 +9,14 @@ Application PublicationsStatisticalResourcesDto {
 	Module dtos_publications {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.publication
 
-		// COLLECTION
 		DataTransferObject PublicationDto extends @SiemacMetadataStatisticalResourceDto {
 			Integer formatExtentResources;
 		}
 
 		"Dto for structure of publication"
-		DataTransferObject PublicationStructureDto extends @IdentityDto {
+		DataTransferObject PublicationStructureDto {
 			- List<@ElementLevelDto> elements;
+			String publicationUrn;
 		}
 
 		"Dto for element of level. Can be a chapter or a cube"

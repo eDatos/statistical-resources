@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -289,9 +290,18 @@ public class PublicationsAsserts extends BaseAsserts {
     }
 
     private static void assertRelaxedEqualsElementLevel(ElementLevelDto expected, ElementLevel actual) {
-        assertEquals(expected.getSubelements().size(), actual.getChildren().size());
+        assertRelaxedEqualsElementLevelCollection(actual.getChildren(), expected.getSubelements());
         
         assertRelaxedEqualsObject(expected.getChapter(), actual.getChapter());
         assertRelaxedEqualsObject(expected.getCube(), actual.getCube());
+    }
+    
+    public static void assertEqualsPublicationStructure(PublicationVersion expected, PublicationStructureDto actual) {
+        assertEquals(expected.getSiemacMetadataStatisticalResource().getUrn(), actual.getPublicationUrn());
+        assertEqualsChildren(expected.getChildrenFirstLevel(), actual.getElements());
+    }
+
+    private static void assertEqualsChildren(List<ElementLevel> expected, List<ElementLevelDto> actual) {
+        assertRelaxedEqualsElementLevelCollection(expected, actual);
     }
 }

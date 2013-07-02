@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -21,12 +20,18 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2Dt
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionSculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapper;
@@ -515,4 +520,166 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
     }
 
+    @Override
+    public PublicationStructureDto retrievePublicationStructure(ServiceContext ctx, String publicationUrn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canRetrievePublicationStructure(ctx);
+
+        // Retrieve
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
+        List<ElementLevel> elementsLevelFirstLevel = publicationVersion.getChildrenFirstLevel();
+
+        // Build structure
+        PublicationStructureDto publicationStructureDto = new PublicationStructureDto();
+        publicationStructureDto.setPublicationUrn(publicationUrn);
+        if (!elementsLevelFirstLevel.isEmpty()) {
+            publicationStructureDto.getElements().addAll(publicationDo2DtoMapper.elementsLevelDoListToDtoList(elementsLevelFirstLevel));
+        }
+
+        return publicationStructureDto;
+    }
+
+    // ------------------------------------------------------------------------
+    // CHAPTERS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public ChapterDto createChapter(ServiceContext ctx, String publicationUrn, ChapterDto chapterDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canCreateChapter(ctx);
+
+        // Transform
+        Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
+
+        // Create
+        chapter = getPublicationService().createChapter(ctx, publicationUrn, chapter);
+
+        // Transform to dto
+        chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        return chapterDto;
+    }
+
+    @Override
+    public ChapterDto updateChapter(ServiceContext ctx, ChapterDto chapterDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canUpdateChapter(ctx);
+
+        // Transform
+        Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
+
+        // Update
+        chapter = getPublicationService().updateChapter(ctx, chapter);
+
+        // Transform
+        chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        return chapterDto;
+    }
+
+    @Override
+    public ChapterDto updateChapterLocation(ServiceContext ctx, String chapterUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canUpdateChapterLocation(ctx);
+
+        // Update
+        Chapter chapter = getPublicationService().updateChapterLocation(ctx, chapterUrn, parentTargetUrn, orderInLevel);
+
+        // Transform to dto
+        ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        return chapterDto;
+    }
+
+    @Override
+    public ChapterDto retrieveChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canRetrieveChapter(ctx);
+
+        // Retrieve
+        Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
+
+        // Transform
+        ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        return chapterDto;
+    }
+
+    @Override
+    public void deleteChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canDeleteChapter(ctx);
+
+        // Delete
+        getPublicationService().deleteChapter(ctx, chapterUrn);
+    }
+
+    // ------------------------------------------------------------------------
+    // CUBES
+    // ------------------------------------------------------------------------
+
+    @Override
+    public CubeDto createCube(ServiceContext ctx, String publicationUrn, CubeDto cubeDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canCreateCube(ctx);
+
+        // Transform
+        Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
+
+        // Create
+        cube = getPublicationService().createCube(ctx, publicationUrn, cube);
+
+        // Transform
+        cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        return cubeDto;
+
+    }
+
+    @Override
+    public CubeDto updateCube(ServiceContext ctx, CubeDto cubeDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canUpdateCube(ctx);
+
+        // Transform
+        Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
+
+        // Update
+        cube = getPublicationService().updateCube(ctx, cube);
+
+        // Transform
+        cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        return cubeDto;
+    }
+
+    @Override
+    public CubeDto updateCubeLocation(ServiceContext ctx, String cubeUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canUpdateCubeLocation(ctx);
+
+        // Update
+        Cube cube = getPublicationService().updateCubeLocation(ctx, cubeUrn, parentTargetUrn, orderInLevel);
+
+        // Transform
+        CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        return cubeDto;
+    }
+
+    @Override
+    public CubeDto retrieveCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // Security 
+        PublicationsSecurityUtils.canRetrieveCube(ctx);
+        
+        // Retrieve
+        Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
+        
+        // Transform
+        CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        return cubeDto;
+        
+    }
+
+    @Override
+    public void deleteCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canDeleteCube(ctx);
+        
+        // Delete
+        getPublicationService().deleteCube(ctx, cubeUrn);
+    }
 }

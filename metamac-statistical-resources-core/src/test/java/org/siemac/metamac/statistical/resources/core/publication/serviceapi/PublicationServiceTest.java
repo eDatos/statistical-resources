@@ -650,7 +650,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCreateChapterErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
 
         Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
         expected.getElementLevel().setOrderInLevel(Long.valueOf(-1));
@@ -676,17 +676,6 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
         expected.getElementLevel().setOrderInLevel(null);
-        publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
-                .getUrn(), expected);
-    }
-
-    @Test
-    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
-    public void testCreateChapterErrorMetadataRequiredPublicationVersion() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PUBLICATION_VERSION));
-
-        Chapter expected = statisticalResourcesNotPersistedDoMocks.mockChapter();
-        expected.getElementLevel().setPublicationVersion(null);
         publicationService.createChapter(getServiceContextAdministrador(), publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource()
                 .getUrn(), expected);
     }
@@ -1612,7 +1601,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
 
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
@@ -1645,18 +1634,6 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
         expected.getElementLevel().setOrderInLevel(null);
 
-        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
-    }
-
-    @Test
-    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
-    public void testCreateCubeErrorMetadataRequiredPublicationVersion() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__PUBLICATION_VERSION));
-
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-        Cube expected = statisticalResourcesNotPersistedDoMocks.mockQueryCube(query);
-        expected.getElementLevel().setPublicationVersion(null);
         publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
     }
 

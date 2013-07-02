@@ -9,9 +9,16 @@ import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsIn
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsChapter;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsCube;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationStructure;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionDoAndDtoCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory.CHAPTER_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
@@ -43,6 +50,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_03_BASIC_ORDERED_02_NAME;
@@ -62,10 +70,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -79,7 +85,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
@@ -89,7 +94,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -98,6 +106,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
@@ -105,6 +115,9 @@ import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemReposi
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
@@ -112,6 +125,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Query
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -147,6 +161,15 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     private PublicationVersionMockFactory     publicationVersionMockFactory;
 
     @Autowired
+    private ChapterMockFactory                chapterMockFactory;
+
+    @Autowired
+    private CubeMockFactory                   cubeMockFactory;
+
+    @Autowired
+    private DatasetMockFactory                datasetMockFactory;
+
+    @Autowired
     private QuerySelectionItemRepository      querySelectionItemRepository;
 
     @Autowired
@@ -154,16 +177,15 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
-    
-    
+
     @Before
     public void onBeforeTest() {
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
-        
+
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
     }
-    
+
     // ------------------------------------------------------------------------
     // QUERIES
     // ------------------------------------------------------------------------
@@ -288,7 +310,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         statisticalResourcesServiceFacade.deleteQuery(getServiceContextAdministrador(), urn);
         statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
-
     }
 
     @Override
@@ -905,7 +926,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
-        
+
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionUrn);
 
@@ -1142,8 +1163,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.PROC_STATUS, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setDisjunctionCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT,
-                    ProcStatusEnum.VALIDATION_REJECTED);
+            setDisjunctionCriteriaEnumPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
             MetamacCriteriaResult<PublicationDto> pagedResults = statisticalResourcesServiceFacade.findPublicationByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -1298,6 +1318,135 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         PublicationDto newVersion = statisticalResourcesServiceFacade.versioningPublication(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
                 VersionTypeEnum.MINOR);
         assertNotNull(newVersion);
+    }
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testRetrievePublicationStructure() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        PublicationStructureDto publicationStructureDto = statisticalResourcesServiceFacade.retrievePublicationStructure(getServiceContextAdministrador(), publicationVersion
+                .getSiemacMetadataStatisticalResource().getUrn());
+        assertEqualsPublicationStructure(publicationVersion, publicationStructureDto);
+    }
+
+    // ------------------------------------------------------------
+    // CHAPTER
+    // ------------------------------------------------------------
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testCreateChapter() throws Exception {
+        String publicationUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        ChapterDto expected = StatisticalResourcesDtoMocks.mockChapterDto();
+        ChapterDto actual = statisticalResourcesServiceFacade.createChapter(getServiceContextAdministrador(), publicationUrn, expected);
+        assertNotNull(actual);
+        assertNotNull(actual.getUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testUpdateChapter() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        ChapterDto expected = statisticalResourcesServiceFacade.retrieveChapter(getServiceContextAdministrador(), publicationVersion.getChildrenFirstLevel().get(0).getChapter()
+                .getNameableStatisticalResource().getUrn());
+        expected.setTitle(StatisticalResourcesNotPersistedDoMocks.mockInternationalStringDto());
+        ChapterDto actual = statisticalResourcesServiceFacade.updateChapter(getServiceContextAdministrador(), expected);
+        assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testUpdateChapterLocation() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        String chapterUrn = publicationVersion.getChildrenFirstLevel().get(0).getChapter().getNameableStatisticalResource().getUrn();
+        String parentChapterUrn = publicationVersion.getChildrenFirstLevel().get(1).getChapter().getNameableStatisticalResource().getUrn();
+        ChapterDto chapterDto = statisticalResourcesServiceFacade.updateChapterLocation(getServiceContextAdministrador(), chapterUrn, parentChapterUrn, Long.valueOf(1));
+        assertEquals(Long.valueOf(1), chapterDto.getOrderInLevel());
+        assertEquals(parentChapterUrn, chapterDto.getParentChapterUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testRetrieveChapter() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Chapter expected = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
+        ChapterDto actual = statisticalResourcesServiceFacade.retrieveChapter(getServiceContextAdministrador(), expected.getNameableStatisticalResource().getUrn());
+        assertEqualsChapter(expected, actual);
+    }
+
+    @Override
+    @Test
+    @MetamacMock(CHAPTER_01_BASIC_NAME)
+    public void testDeleteChapter() throws Exception {
+        String urn = chapterMockFactory.retrieveMock(CHAPTER_01_BASIC_NAME).getNameableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND, urn));
+
+        statisticalResourcesServiceFacade.deleteChapter(getServiceContextAdministrador(), urn);
+        statisticalResourcesServiceFacade.retrieveChapter(getServiceContextAdministrador(), urn);
+    }
+
+    // ------------------------------------------------------------
+    // CUBES
+    // ------------------------------------------------------------
+
+    @Override
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_01_BASIC_NAME})
+    public void testCreateCube() throws Exception {
+        String publicationUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        String datasetUrn = datasetMockFactory.retrieveMock(DATASET_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
+        CubeDto expected = StatisticalResourcesDtoMocks.mockDatasetCubeDto(datasetUrn);
+        CubeDto actual = statisticalResourcesServiceFacade.createCube(getServiceContextAdministrador(), publicationUrn, expected);
+        assertNotNull(actual);
+        assertNotNull(actual.getUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(CUBE_01_BASIC_NAME)
+    public void testUpdateCube() throws Exception {
+        String cubeUrn = cubeMockFactory.retrieveMock(CUBE_01_BASIC_NAME).getNameableStatisticalResource().getUrn();
+        CubeDto expected = statisticalResourcesServiceFacade.retrieveCube(getServiceContextAdministrador(), cubeUrn);
+        expected.setTitle(StatisticalResourcesNotPersistedDoMocks.mockInternationalStringDto());
+        CubeDto actual = statisticalResourcesServiceFacade.updateCube(getServiceContextAdministrador(), expected);
+        assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
+    public void testUpdateCubeLocation() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        String cubeUrn = publicationVersion.getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource().getUrn();
+        String parentChapterUrn = publicationVersion.getChildrenFirstLevel().get(2).getChapter().getNameableStatisticalResource().getUrn();
+        CubeDto cubeDto = statisticalResourcesServiceFacade.updateCubeLocation(getServiceContextAdministrador(), cubeUrn, parentChapterUrn, Long.valueOf(1));
+        assertEquals(Long.valueOf(1), cubeDto.getOrderInLevel());
+        assertEquals(parentChapterUrn, cubeDto.getParentChapterUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock({CUBE_01_BASIC_NAME, CUBE_02_BASIC_NAME})
+    public void testRetrieveCube() throws Exception {
+        Cube expected = cubeMockFactory.retrieveMock(CUBE_01_BASIC_NAME);
+        CubeDto actual = statisticalResourcesServiceFacade.retrieveCube(getServiceContextAdministrador(), expected.getNameableStatisticalResource().getUrn());
+        assertEqualsCube(expected, actual);
+    }
+
+    @Override
+    @Test
+    @MetamacMock(CUBE_01_BASIC_NAME)
+    public void testDeleteCube() throws Exception {
+        String urn = cubeMockFactory.retrieveMock(CUBE_01_BASIC_NAME).getNameableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CUBE_NOT_FOUND, urn));
+
+        statisticalResourcesServiceFacade.deleteCube(getServiceContextAdministrador(), urn);
+        statisticalResourcesServiceFacade.retrieveCube(getServiceContextAdministrador(), urn);
     }
 
     // ------------------------------------------------------------
