@@ -102,26 +102,26 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Test
     @Override
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
-    public void testUpdateQuery() throws Exception {
+    public void testUpdateQueryVersion() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
         queryDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         queryDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Update query - session 1 --> OK
-        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession01);
+        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession01);
         assertTrue(queryDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Update query - session 2 --> FAIL
         try {
-            statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession02);
+            statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -129,7 +129,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update query - session 1 --> OK
         queryDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
+        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
         assertTrue(queryDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
@@ -138,7 +138,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock({QUERY_VERSION_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateSelectionInQuery() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
         Map<String, Set<String>> selection = new HashMap<String, Set<String>>() {
@@ -150,7 +150,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         queryDtoSession01.setSelection(selection);
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         selection = new HashMap<String, Set<String>>() {
@@ -162,14 +162,14 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         queryDtoSession02.setSelection(selection);
 
         // Update query - session 1 --> OK
-        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession01);
+        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession01);
         assertEquals(1, queryDtoSession01.getSelection().size());
         assertEquals(new HashSet<String>(Arrays.asList("A", "B")), queryDtoSession1AfterUpdate01.getSelection().get("DIM_SESSION1"));
         assertTrue(queryDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Update query - session 2 --> FAIL
         try {
-            statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession02);
+            statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -177,7 +177,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update query - session 1 --> OK
         queryDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
+        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
         assertTrue(queryDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
@@ -185,7 +185,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock({QUERY_VERSION_05_BASIC_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetInQuery() throws Exception {
         // Retrieve query - session 1
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
 
@@ -193,21 +193,21 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         queryDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion06));
 
         // Retrieve query - session 2
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
         DatasetVersion datasetVersion01 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         queryDtoSession02.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion01));
 
         // Update query - session 1 --> OK
-        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession01);
+        QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession01);
         assertEquals(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME).getSiemacMetadataStatisticalResource().getUrn(), queryDtoSession1AfterUpdate01
                 .getRelatedDatasetVersion().getUrn());
         assertTrue(queryDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Update query - session 2 --> FAIL
         try {
-            statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession02);
+            statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -215,13 +215,13 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update query - session 1 --> OK
         queryDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
+        QueryDto queryDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession1AfterUpdate01);
         assertTrue(queryDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
     @Override
     @Test
-    public void testMarkQueryAsDiscontinued() throws Exception {
+    public void testMarkQueryVersionAsDiscontinued() throws Exception {
         // no optimistic locking in this operation
         // Instead we have:
         // - testUpdateQueryAndMarkQueryAsDiscontinued
@@ -231,23 +231,23 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
-    public void testMarkQueryAsDiscontinuedAndUpdate() throws Exception {
+    public void testMarkQueryVersionAsDiscontinuedAndUpdate() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // Retrieve query --> session 01
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
 
         // Retrieve query --> session 02
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
         queryDtoSession02.setTitle(new StatisticalResourcesDtoMocks().mockInternationalStringDto());
 
         // Mark as discontinued --> session 01 --> OK
-        QueryDto queryDtoSession01AfterUpdate01 = statisticalResourcesServiceFacade.markQueryAsDiscontinued(getServiceContextAdministrador(), queryDtoSession01);
+        QueryDto queryDtoSession01AfterUpdate01 = statisticalResourcesServiceFacade.markQueryVersionAsDiscontinued(getServiceContextAdministrador(), queryDtoSession01);
         assertTrue(queryDtoSession01AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Update query --> session 02 --> fail - optimistic locking
         try {
-            statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession02);
+            statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -256,22 +256,22 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Test
     @MetamacMock({QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
-    public void testMarkQueryAsDiscontinuedAndMarkQueryAsDiscontinued() throws Exception {
+    public void testMarkQueryVersionAsDiscontinuedAndMarkQueryAsDiscontinued() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // Retrieve query --> session 01
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
 
         // Retrieve query --> session 02
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
 
         // Mark as discontinued --> session 01 --> OK
-        QueryDto queryDtoSession01AfterUpdate01 = statisticalResourcesServiceFacade.markQueryAsDiscontinued(getServiceContextAdministrador(), queryDtoSession01);
+        QueryDto queryDtoSession01AfterUpdate01 = statisticalResourcesServiceFacade.markQueryVersionAsDiscontinued(getServiceContextAdministrador(), queryDtoSession01);
         assertTrue(queryDtoSession01AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Mark as discontinued --> session 02 --> fail
         try {
-            statisticalResourcesServiceFacade.markQueryAsDiscontinued(getServiceContextAdministrador(), queryDtoSession02);
+            statisticalResourcesServiceFacade.markQueryVersionAsDiscontinued(getServiceContextAdministrador(), queryDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -281,23 +281,23 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @SuppressWarnings("static-access")
     @Test
     @MetamacMock({QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
-    public void testUpdateQueryAndMarkQueryAsDiscontinued() throws Exception {
+    public void testUpdateQueryVersionAndMarkQueryAsDiscontinued() throws Exception {
         String urn = queryMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // Retrieve query --> session 01
-        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
         queryDtoSession01.setTitle(new StatisticalResourcesDtoMocks().mockInternationalStringDto());
 
         // Retrieve query --> session 02
-        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryByUrn(getServiceContextAdministrador(), urn);
+        QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
 
         // Update query --> session 01 --> OK
-        QueryDto queryDtoSession01AfterUpdate01 = statisticalResourcesServiceFacade.updateQuery(getServiceContextAdministrador(), queryDtoSession01);
+        QueryDto queryDtoSession01AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession01);
         assertTrue(queryDtoSession01AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Mark as discontinued --> session 02 --> fail
         try {
-            statisticalResourcesServiceFacade.markQueryAsDiscontinued(getServiceContextAdministrador(), queryDtoSession02);
+            statisticalResourcesServiceFacade.markQueryVersionAsDiscontinued(getServiceContextAdministrador(), queryDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -349,26 +349,26 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_01_BASIC_NAME)
-    public void testUpdatePublication() throws Exception {
+    public void testUpdatePublicationVersion() throws Exception {
         // Retrieve publication - session 1
-        PublicationDto publicationDtoSession01 = statisticalResourcesServiceFacade.retrievePublicationByUrn(getServiceContextAdministrador(),
+        PublicationDto publicationDtoSession01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
                 publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), publicationDtoSession01.getOptimisticLockingVersion());
         publicationDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Retrieve publication - session 2
-        PublicationDto publicationDtoSession02 = statisticalResourcesServiceFacade.retrievePublicationByUrn(getServiceContextAdministrador(),
+        PublicationDto publicationDtoSession02 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
                 publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), publicationDtoSession02.getOptimisticLockingVersion());
         publicationDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Update publication - session 1 --> OK
-        PublicationDto publicationDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDtoSession01);
+        PublicationDto publicationDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDtoSession01);
         assertTrue(publicationDtoSession1AfterUpdate01.getOptimisticLockingVersion() > publicationDtoSession01.getOptimisticLockingVersion());
 
         // Update publication - session 2 --> FAIL
         try {
-            statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDtoSession02);
+            statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -376,7 +376,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update publication - session 1 --> OK
         publicationDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        PublicationDto publicationDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updatePublication(getServiceContextAdministrador(), publicationDtoSession1AfterUpdate01);
+        PublicationDto publicationDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDtoSession1AfterUpdate01);
         assertTrue(publicationDtoSession1AfterUpdate02.getOptimisticLockingVersion() > publicationDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
@@ -387,26 +387,26 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_01_BASIC_NAME)
-    public void testUpdateDataset() throws Exception {
+    public void testUpdateDatasetVersion() throws Exception {
         // Retrieve dataset - session 1
-        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
+        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession01.getOptimisticLockingVersion());
         datasetDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Retrieve dataset - session 2
-        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
+        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession02.getOptimisticLockingVersion());
         datasetDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Update dataset - session 1 --> OK
-        DatasetDto datasetDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDtoSession01);
+        DatasetDto datasetDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession01);
         assertTrue(datasetDtoSession1AfterUpdate01.getOptimisticLockingVersion() > datasetDtoSession01.getOptimisticLockingVersion());
 
         // Update dataset - session 2 --> FAIL
         try {
-            statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDtoSession02);
+            statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession02);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
@@ -414,7 +414,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update dataset - session 1 --> OK
         datasetDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
+        DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
         assertTrue(datasetDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
@@ -427,12 +427,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendToProductionValidation() throws Exception {
         // Retrieve dataset - session 1
-        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve dataset - session 2
-        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession02.getOptimisticLockingVersion());
 
@@ -450,7 +450,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update dataset - session 1 --> OK
         datasetDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
+        DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
         assertTrue(datasetDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
 
@@ -459,12 +459,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendToDiffusionValidation() throws Exception {
         // Retrieve dataset - session 1
-        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve dataset - session 2
-        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetByUrn(getServiceContextAdministrador(),
+        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession02.getOptimisticLockingVersion());
 
@@ -482,7 +482,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update dataset - session 1 --> OK
         datasetDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDataset(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
+        DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
         assertTrue(datasetDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetDtoSession1AfterUpdate01.getOptimisticLockingVersion());
 
     }
@@ -568,22 +568,22 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     // ------------------------------------------------------------
 
     @Override
-    public void testRetrieveQueryByUrn() throws Exception {
+    public void testRetrieveQueryVersionByUrn() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testRetrieveQueries() throws Exception {
+    public void testRetrieveQueriesVersions() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testCreateQuery() throws Exception {
+    public void testCreateQueryVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testFindQueriesByCondition() throws Exception {
+    public void testFindQueriesVersionsByCondition() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -608,22 +608,22 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testCreateDataset() throws Exception {
+    public void testCreateDatasetVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testDeleteDataset() throws Exception {
+    public void testDeleteDatasetVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testFindDatasetsByCondition() throws Exception {
+    public void testFindDatasetsVersionsByCondition() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testRetrieveDatasetByUrn() throws Exception {
+    public void testRetrieveDatasetVersionByUrn() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -633,32 +633,32 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testVersioningDataset() throws Exception {
+    public void testVersioningDatasetVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testDeleteQuery() throws Exception {
+    public void testDeleteQueryVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testCreatePublication() throws Exception {
+    public void testCreatePublicationVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testDeletePublication() throws Exception {
+    public void testDeletePublicationVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testFindPublicationByCondition() throws Exception {
+    public void testFindPublicationVersionByCondition() throws Exception {
         // no optimistic locking in this operation
     }
 
     @Override
-    public void testRetrievePublicationByUrn() throws Exception {
+    public void testRetrievePublicationVersionByUrn() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -668,7 +668,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testVersioningPublication() throws Exception {
+    public void testVersioningPublicationVersion() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -713,7 +713,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testRetrievePublicationStructure() throws Exception {
+    public void testRetrievePublicationVersionStructure() throws Exception {
         // no optimistic locking in this operation
     }
 }

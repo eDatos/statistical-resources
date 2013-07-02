@@ -31,19 +31,19 @@ Application FacadeStatisticalResources {
 			
 			// QUERIES
 			"Retrieves a query scheme by URN"
-            @QueryDto retrieveQueryByUrn(String urn) throws MetamacException;
+            @QueryDto retrieveQueryVersionByUrn(String urn) throws MetamacException;
             "Retrieve queries"
-            List<@QueryDto> retrieveQueries() throws MetamacException;
+            List<@QueryDto> retrieveQueriesVersions() throws MetamacException;
             "Create a query"
-            @QueryDto createQuery(@QueryDto queryDto) throws MetamacException;
+            @QueryDto createQueryVersion(@QueryDto queryDto) throws MetamacException;
             "Update a query"
-            @QueryDto updateQuery(@QueryDto queryDto) throws MetamacException;
+            @QueryDto updateQueryVersion(@QueryDto queryDto) throws MetamacException;
             "Find queries by criteria"
-    		MetamacCriteriaResult<@QueryDto> findQueriesByCondition(MetamacCriteria criteria)  throws MetamacException;
+    		MetamacCriteriaResult<@QueryDto> findQueriesVersionsByCondition(MetamacCriteria criteria)  throws MetamacException;
     		"Mark query as discontinued because the data is not going to be updated"
-            @QueryDto markQueryAsDiscontinued(@QueryDto queryDto) throws MetamacException;
+            @QueryDto markQueryVersionAsDiscontinued(@QueryDto queryDto) throws MetamacException;
             "Delete query"
-            deleteQuery(String urn) throws MetamacException;
+            deleteQueryVersion(String urn) throws MetamacException;
     		 			
 			// DATASOURCES
 			"Creates a datasource"
@@ -59,19 +59,19 @@ Application FacadeStatisticalResources {
 	    	
 	    	// DATASETS & DATASET VERSION
 	   		"Creates dataset"
-	   		@DatasetDto createDataset(@DatasetDto datasetDto, @ExternalItemDto statisticalOperation) throws MetamacException;
+	   		@DatasetDto createDatasetVersion(@DatasetDto datasetDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates dataset"
-            @DatasetDto updateDataset(@DatasetDto datasetDto) throws MetamacException;
+            @DatasetDto updateDatasetVersion(@DatasetDto datasetDto) throws MetamacException;
             "Deletes dataset"
-            deleteDataset(String urn) throws MetamacException;
+            deleteDatasetVersion(String urn) throws MetamacException;
             "Finds datasets by criteria"
-            MetamacCriteriaResult<@DatasetDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException;
+            MetamacCriteriaResult<@DatasetDto> findDatasetsVersionsByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a dataset by URN"
-            @DatasetDto retrieveDatasetByUrn(String urn) throws MetamacException;
+            @DatasetDto retrieveDatasetVersionByUrn(String urn) throws MetamacException;
             "Retrieves all dataset versions"
-            List<@DatasetDto> retrieveDatasetVersions(String urn) throws MetamacException;
+            List<@DatasetDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
-    		@DatasetDto versioningDataset(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		@DatasetDto versioningDatasetVersion(String urnDatasetVersionToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		"Send to production validation"
     		@DatasetDto sendToProductionValidation(@DatasetDto datasetDto) throws MetamacException;
     		"Send to diffusion validation"
@@ -79,25 +79,25 @@ Application FacadeStatisticalResources {
     		
     		// PUBLICATIONS & PUBLICATION VERSION
 	   		"Creates publication"
-	   		@PublicationDto createPublication(@PublicationDto publicationDto, @ExternalItemDto statisticalOperation) throws MetamacException;
+	   		@PublicationDto createPublicationVersion(@PublicationDto publicationDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates publication"
-            @PublicationDto updatePublication(@PublicationDto publicationDto) throws MetamacException;
+            @PublicationDto updatePublicationVersion(@PublicationDto publicationDto) throws MetamacException;
             "Deletes publication"
-            deletePublication(String urn) throws MetamacException;
+            deletePublicationVersion(String urn) throws MetamacException;
             "Finds publications by criteria"
-            MetamacCriteriaResult<@PublicationDto> findPublicationByCondition(MetamacCriteria criteria) throws MetamacException;
+            MetamacCriteriaResult<@PublicationDto> findPublicationVersionByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a publication by URN"
-            @PublicationDto retrievePublicationByUrn(String urn) throws MetamacException;
+            @PublicationDto retrievePublicationVersionByUrn(String urn) throws MetamacException;
             "Retrieves all publication versions"
-            List<@PublicationDto> retrievePublicationVersions(String urn) throws MetamacException;
+            List<@PublicationDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
-    		@PublicationDto versioningPublication(String urnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		@PublicationDto versioningPublicationVersion(String publicationVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieves publication version structure: chapter and cubes by levels."
-	    	@PublicationStructureDto retrievePublicationStructure(String publicationUrn) throws MetamacException;
+	    	@PublicationStructureDto retrievePublicationVersionStructure(String publicationVersionUrn) throws MetamacException;
 	    	
 	    	// CHAPTERS
 	    	"Creates a chapter"
-	    	@ChapterDto createChapter(String publicationUrn, @ChapterDto chapterDto) throws MetamacException;
+	    	@ChapterDto createChapter(String publicationVersionUrn, @ChapterDto chapterDto) throws MetamacException;
 	    	"Updates chapter metadata"
 	    	@ChapterDto updateChapter(@ChapterDto chapterDto) throws MetamacException;
 	    	"Updates chapter location"
@@ -109,7 +109,7 @@ Application FacadeStatisticalResources {
 	    	
 	    	// CUBES
 	    	"Creates a cube"
-	    	@CubeDto createCube(String publicationUrn, @CubeDto cubeDto) throws MetamacException;
+	    	@CubeDto createCube(String publicationVersionUrn, @CubeDto cubeDto) throws MetamacException;
 	    	"Updates cube metadata"
 	    	@CubeDto updateCube(@CubeDto cubeDto) throws MetamacException;
 	    	"Updates cube location"
