@@ -925,7 +925,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedChapter.getElementLevel().getParent());
-        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(1), updatedChapter.getElementLevel().getOrderInLevel());
 
         // Commit
@@ -959,7 +959,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedChapter.getElementLevel().getParent());
-        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(1), updatedChapter.getElementLevel().getOrderInLevel());
 
         // Commit
@@ -1045,7 +1045,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedChapter.getElementLevel().getParent());
-        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(1), updatedChapter.getElementLevel().getOrderInLevel());
 
         // Commit
@@ -1089,7 +1089,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedChapter.getElementLevel().getParent());
-        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedChapter.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(2), updatedChapter.getElementLevel().getOrderInLevel());
 
         // Commit
@@ -1915,7 +1915,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedCube.getElementLevel().getParent());
-        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
 
         // Commit
@@ -1992,7 +1992,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedCube.getElementLevel().getParent());
-        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(parentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
 
         // Commit
@@ -2035,7 +2035,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Check updatedChapter
         assertNotNull(updatedCube.getElementLevel().getParent());
-        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParent().getChapter().getNameableStatisticalResource().getUrn());
+        assertEquals(initParentChapter.getNameableStatisticalResource().getUrn(), updatedCube.getElementLevel().getParentUrn());
         assertEquals(Long.valueOf(1), updatedCube.getElementLevel().getOrderInLevel());
 
         // Commit

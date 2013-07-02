@@ -139,7 +139,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         if (chapter == null) {
             return;
         }
-        
+
         checkChapter(chapter, exceptions);
         checkExistingNameableStatisticalResource(chapter.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER, exceptions);
 
@@ -179,29 +179,29 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     public static void checkDeleteCube(String cubeUrn, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(cubeUrn, ServiceExceptionParameters.CUBE_URN, exceptions);
     }
-    
+
     private static void checkNewCube(Cube cube, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(cube, ServiceExceptionParameters.CUBE, exceptions);
 
         if (cube == null) {
             return;
         }
-        
+
         checkCube(cube, exceptions);
         checkNewNameableStatisticalResource(cube.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE, exceptions);
     }
-    
+
     private static void checkExistingCube(Cube cube, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(cube, ServiceExceptionParameters.CUBE, exceptions);
 
         if (cube == null) {
             return;
         }
-        
+
         checkCube(cube, exceptions);
         checkExistingNameableStatisticalResource(cube.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE, exceptions);
     }
-    
+
     private static void checkCube(Cube cube, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL, exceptions);
         if (cube.getDataset() != null && cube.getQuery() != null) {
@@ -209,15 +209,15 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         } else if (cube.getDataset() == null && cube.getQuery() == null) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
         }
-        
+
         if (cube.getDataset() != null) {
-            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getDataset().getIdentifiableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getDatasetUrn(), ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
         }
-        
+
         if (cube.getQuery() != null) {
-            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getQuery().getIdentifiableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getQueryUrn(), ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
         }
-        
+
         StatisticalResourcesValidationUtils.checkMetadataEmpty(cube.getElementLevel().getChildren(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__CHILDREN, exceptions);
     }
 }

@@ -489,10 +489,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         }
 
         // Set actual parent
-        String actualParentChapterUrn = null;
-        if (elementLevel.getParent() != null) {
-            actualParentChapterUrn = elementLevel.getParent().getChapter().getNameableStatisticalResource().getUrn();
-        }
+        String actualParentChapterUrn = elementLevel.getParentUrn();
 
         // Check if it's necessary update parent and order or only order
         if ((actualParentChapterUrn == null && targetParentChapterUrn != null) || (actualParentChapterUrn != null && targetParentChapterUrn == null)

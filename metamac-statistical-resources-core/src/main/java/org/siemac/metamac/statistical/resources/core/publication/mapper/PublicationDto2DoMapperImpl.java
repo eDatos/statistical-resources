@@ -183,10 +183,8 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
                     exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getUrn(), target.getNameableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__NAMEABLE_STATISTICAL_RESOURCE__URN,
                     exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getQueryUrn(), target.getQuery().getIdentifiableStatisticalResource().getUrn(),
-                    ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getDatasetUrn(), target.getDataset().getIdentifiableStatisticalResource().getUrn(),
-                    ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getQueryUrn(), target.getQueryUrn(), ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getDatasetUrn(), target.getDatasetUrn(), ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 
