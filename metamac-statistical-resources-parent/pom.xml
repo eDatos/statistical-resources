@@ -41,5 +41,6 @@
         <metamac-web-common.version>1.6.1-SNAPSHOT</metamac-web-common.version>
         <metamac-statistical-operations.version>1.4.1-SNAPSHOT</metamac-statistical-operations.version>
         <metamac-common-metadata.version>1.1.1-SNAPSHOT</metamac-common-metadata.version>
+        <statistic-parser.version>1.0.5-SNAPSHOT</statistic-parser.version>
     </properties>
 </project>
