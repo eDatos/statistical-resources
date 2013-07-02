@@ -84,9 +84,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Check status
         BaseValidator.checkStatisticalResourceCanBeEdited(publicationVersion);
 
-        // TODO: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
+        // TODO RI: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
-        // TODO: Si el codigo ha cambiado debemos actualizar la URN
+        // TODO RI: Si el codigo ha cambiado debemos actualizar la URN
 
         publicationVersion = getPublicationVersionRepository().save(publicationVersion);
         return publicationVersion;
@@ -139,7 +139,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 
-        // TODO: Comprobar si hay que eliminar relaciones a otros recursos
+        // TODO RI: Comprobar si hay que eliminar relaciones a otros recursos
 
         if (VersionUtil.isInitialVersion(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Publication publication = publicationVersion.getPublication();
@@ -156,7 +156,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     public PublicationVersion versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
         publicationServiceInvocationValidator.checkVersioningPublicationVersion(ctx, publicationVersionUrnToCopy, versionType);
 
-        // TODO: check only published publications can be versioned
+        // TODO RI: check only published publications can be versioned
 
         PublicationVersion publicationVersionToCopy = retrievePublicationVersionByUrn(ctx, publicationVersionUrnToCopy);
         PublicationVersion publicationNewVersion = PublicationVersioningCopyUtils.copyPublicationVersion(publicationVersionToCopy);
@@ -170,7 +170,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
                 GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion
                         .getSiemacMetadataStatisticalResource().getVersionLogic()));
 
-        // TODO: DATE_NEXT_UPDATE
+        // TODO RI: DATE_NEXT_UPDATE
 
         publicationNewVersion = getPublicationVersionRepository().save(publicationNewVersion);
 

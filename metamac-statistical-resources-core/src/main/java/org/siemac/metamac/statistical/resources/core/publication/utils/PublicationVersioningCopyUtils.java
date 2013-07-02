@@ -27,6 +27,6 @@ public class PublicationVersioningCopyUtils {
         target.setPublication(source.getPublication());
 
         // Structure
-        //TODO: añadir jerarquia
+        //TODO RI: añadir jerarquia
     }
 }

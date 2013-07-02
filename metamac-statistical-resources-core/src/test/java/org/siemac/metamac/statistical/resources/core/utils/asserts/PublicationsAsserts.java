@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -18,8 +19,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
 public class PublicationsAsserts extends BaseAsserts {
-
-    // TODO: EN todos los assertEquals hay que meter la estructura de la publicacion
 
     // -----------------------------------------------------------------
     // PUBLICATION: DO & DO
@@ -62,7 +61,8 @@ public class PublicationsAsserts extends BaseAsserts {
         assertEqualsSiemacMetadataStatisticalResource(expected.getSiemacMetadataStatisticalResource(), actual.getSiemacMetadataStatisticalResource());
         assertEqualsPublicationVersionMetadata(expected, actual);
 
-        // TODO: HAy que añadir assertEquals de children y children firstLevel
+        assertEqualsRelaxedElementLevelCollection(expected.getChildrenFirstLevel(), actual.getChildrenAllLevels());
+        assertEqualsRelaxedElementLevelCollection(expected.getChildrenAllLevels(), actual.getChildrenAllLevels());
 
         if (!publicationChecked) {
             assertEqualsPublication(expected.getPublication(), actual.getPublication());
@@ -157,6 +157,20 @@ public class PublicationsAsserts extends BaseAsserts {
         assertEquals(expected.getOrderInLevel(), actual.getOrderInLevel());
 
         // It's not necessary check cube or chapter because this method is always called from an assert of one of these two elements
+    }
+    
+    private static void assertEqualsRelaxedElementLevelCollection(List<ElementLevel> expected, List<ElementLevel> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (ElementLevel expectedItem : expected) {
+                if (!actual.contains(expectedItem)) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
     }
 
     // -----------------------------------------------------------------

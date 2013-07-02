@@ -490,8 +490,6 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     private static void checkNewPublicationVersionCreated(PublicationVersion previous, PublicationVersion next) {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
 
-        // TODO: Añadir la jerarquia
-
         // Non inherited fields
 
         // Inherited
