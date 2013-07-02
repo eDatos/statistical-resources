@@ -34,20 +34,22 @@ Application PublicationsStatisticalResourcesDto {
 			"Order in level"
 			Long orderInLevel;
 			"Parent dimension"
-			String parentUuid;
+			String parentChapterUrn;
 		}
 		
 		"Dto for indicator instance"
 	   	DataTransferObject CubeDto extends @NameableStatisticalResourceDto {
 			"Dataset"
 			String datasetUrn;
+			
 			"Query"
 			String queryUrn;
 			
             "Order in level"
 			Long orderInLevel;
-			"Parent dimension"
-			String parentUuid;
+			
+			"Parent chapter"
+			String parentChapterUrn;
 	    }
 	}
 

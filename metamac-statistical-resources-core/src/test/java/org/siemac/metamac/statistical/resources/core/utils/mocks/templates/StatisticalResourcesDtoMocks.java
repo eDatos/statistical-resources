@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalR
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
@@ -135,6 +137,56 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         mockSiemacMetadataStatisticalResource(publicationDto, StatisticalResourceTypeEnum.COLLECTION);
 
         return publicationDto;
+    }
+    
+    public static ChapterDto mockChapterDto() {
+        ChapterDto chapterDto = mockChapterDtoWithParent(null);
+        
+        return chapterDto;
+    }
+    
+    public static ChapterDto mockChapterDtoWithParent(String parentChapterUrn) {
+        ChapterDto chapterDto = new ChapterDto();
+        
+        chapterDto.setOrderInLevel(Long.valueOf(2));
+        chapterDto.setParentChapterUrn(parentChapterUrn);
+        
+        mockNameableStatisticalResorceDto(chapterDto);
+        
+        return chapterDto;
+    }
+    
+    public static CubeDto mockDatasetCubeDto(String datasetUrn) {
+        CubeDto cubeDto = mockCubeDto(null, datasetUrn, null);
+        return cubeDto;
+    }
+    
+    public static CubeDto mockDatasetCubeDtoWithParent(String parentChapterUrn, String datasetUrn) {
+        CubeDto cubeDto = mockCubeDto(parentChapterUrn, datasetUrn, null);
+        return cubeDto;
+    }
+    
+    public static CubeDto mockQueryCubeDto(String queryUrn) {
+        CubeDto cubeDto = mockCubeDto(null, null, queryUrn);
+        return cubeDto;
+    }
+    
+    public static CubeDto mockQueryCubeDtoWithParent(String parentChapterUrn, String queryUrn) {
+        CubeDto cubeDto = mockCubeDto(parentChapterUrn, null, queryUrn);
+        return cubeDto;
+    }
+    
+    private static CubeDto mockCubeDto(String parentChapterUrn, String datasetUrn, String queryUrn) {
+        CubeDto cubeDto = new CubeDto();
+        
+        cubeDto.setDatasetUrn(datasetUrn);
+        cubeDto.setQueryUrn(queryUrn);
+        cubeDto.setOrderInLevel(Long.valueOf(2));
+        cubeDto.setParentChapterUrn(parentChapterUrn);
+        
+        mockNameableStatisticalResorceDto(cubeDto);
+        
+        return cubeDto;
     }
 
     // -----------------------------------------------------------------

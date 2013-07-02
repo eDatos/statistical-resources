@@ -14,4 +14,12 @@ public class Cube extends CubeBase {
 
     public Cube() {
     }
+    
+    public String getDatasetUrn() {
+        return super.getDataset() != null ? super.getDataset().getIdentifiableStatisticalResource().getUrn() : null;
+    }
+    
+    public String getQueryUrn() {
+        return super.getQuery() != null ? super.getQuery().getIdentifiableStatisticalResource().getUrn() : null;
+    }
 }

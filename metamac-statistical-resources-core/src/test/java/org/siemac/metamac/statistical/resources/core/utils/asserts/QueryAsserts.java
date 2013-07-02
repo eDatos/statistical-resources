@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.dbunit.dataset.DataSetException;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
@@ -26,6 +26,20 @@ public class QueryAsserts extends BaseAsserts {
     // QUERY: DO & DO
     // -----------------------------------------------------------------
 
+    public static void assertEqualsQuery(Query expected, Query actual) {
+        assertEquals(expected.getUuid(), actual.getUuid());
+        assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
+        assertEquals(expected.getLatestDataNumber(), actual.getLatestDataNumber());
+        
+        if (expected.getVersions() != null) {
+            assertNotNull(actual.getVersions());
+            assertEquals(expected.getVersions().size(), actual.getVersions().size());
+            assertEqualsQueryVersionCollection(expected.getVersions(), actual.getVersions());
+        } else {
+            assertEquals(null, actual);
+        }
+    }
+    
     public static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual) {
         // TODO: Comprobar por qué este assert no es de lifeCycle en lugar de nameable
         assertEqualsNameableStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());

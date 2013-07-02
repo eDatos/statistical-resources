@@ -87,6 +87,7 @@ Application DatasetsStatisticalResources {
 				findByCondition;
 				save;
 				delete;
+				@Dataset retrieveByUrn(String urn) throws MetamacException;
 			}
 		}
 		

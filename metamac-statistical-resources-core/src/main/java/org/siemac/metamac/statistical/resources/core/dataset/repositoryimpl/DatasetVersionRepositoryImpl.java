@@ -89,7 +89,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             throw new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, statisticalResourceId, versionLogic);
         } else if (result.size() > 1) {
             // Exists a database constraint that makes URN unique
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset with id " + statisticalResourceId + " and versionLogic " + versionLogic + " found");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset version with id " + statisticalResourceId + " and versionLogic " + versionLogic + " found");
         }
         return result.get(0);
     }

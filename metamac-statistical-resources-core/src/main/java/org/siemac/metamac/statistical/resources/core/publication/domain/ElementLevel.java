@@ -33,8 +33,8 @@ public class ElementLevel extends ElementLevelBase {
     /**
      * If exists, retrieves uuid of parent chapter
      */
-    public String getParentUuid() {
-        return super.getParent() != null ? super.getParent().getChapter().getUuid() : null;
+    public String getParentUrn() {
+        return super.getParent() != null ? super.getParent().getChapter().getNameableStatisticalResource().getUrn() : null;
     }
 
     public String getElementUuid() {

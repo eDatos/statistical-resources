@@ -16,24 +16,25 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("queryVersionRepository")
 public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
+
     public QueryVersionRepositoryImpl() {
     }
 
     @Override
     public QueryVersion retrieveByUrn(String urn) throws MetamacException {
-        
+
         List<ConditionalCriteria> condition = criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().urn()).eq(urn).distinctRoot().build();
-        
+
         List<QueryVersion> result = findByCondition(condition);
-        
+
         if (result.size() == 0) {
             throw new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn);
         } else if (result.size() > 1) {
             // Exists a database constraint that makes URN unique
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one query with urn " + urn);
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one query version with urn " + urn);
         }
-        
+
         return result.get(0);
     }
-    
+
 }

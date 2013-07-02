@@ -22,6 +22,7 @@ public class DatasetsAsserts extends BaseAsserts {
 
     public static void assertEqualsDataset(Dataset expected, Dataset actual) {
         assertEquals(expected.getUuid(), actual.getUuid());
+        assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
 
         if (expected.getVersions() != null) {
             assertNotNull(actual.getVersions());

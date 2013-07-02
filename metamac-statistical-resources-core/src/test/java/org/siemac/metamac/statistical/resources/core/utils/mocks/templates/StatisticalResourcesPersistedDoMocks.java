@@ -14,6 +14,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -168,7 +170,24 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return publicationVersion;
     }
+    
+    public Chapter mockChapterWithParent() {
+        return mockChapterInParentElementLevel(mockChapterElementLevel(mockPublicationVersion()));
+    }
 
+    
+    public Cube mockDatasetCubeWithParent(Dataset mockDatasetWithGeneratedDatasetVersions) {
+        Cube cube = mockDatasetCube(mockDatasetWithGeneratedDatasetVersions);
+        cube.getElementLevel().setParent(mockChapter().getElementLevel());
+        return cube;
+    }
+    
+    public Cube mockQueryCubeWithParent(Query mockQueryWithGeneratedQueryVersions) {
+        Cube cube = mockQueryCube(mockQueryWithGeneratedQueryVersions);
+        cube.getElementLevel().setParent(mockChapter().getElementLevel());
+        return cube;
+    }
+    
     // -----------------------------------------------------------------
     // STATISTICAL OFFICIALITY
     // -----------------------------------------------------------------

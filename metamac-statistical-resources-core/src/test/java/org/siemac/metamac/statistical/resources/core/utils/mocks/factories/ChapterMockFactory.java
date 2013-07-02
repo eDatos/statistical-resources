@@ -6,14 +6,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChapterMockFactory extends StatisticalResourcesMockFactory<Chapter> {
 
-    public static final String CHAPTER_01_BASIC_NAME = "CHAPTER_01_BASIC";
+    public static final String CHAPTER_01_BASIC_NAME       = "CHAPTER_01_BASIC";
     private static Chapter     CHAPTER_01_BASIC;
 
-    public static final String CHAPTER_02_BASIC_NAME = "CHAPTER_02_BASIC";
+    public static final String CHAPTER_02_BASIC_NAME       = "CHAPTER_02_BASIC";
     private static Chapter     CHAPTER_02_BASIC;
 
-    public static final String CHAPTER_03_BASIC_NAME = "CHAPTER_03_BASIC";
+    public static final String CHAPTER_03_BASIC_NAME       = "CHAPTER_03_BASIC";
     private static Chapter     CHAPTER_03_BASIC;
+
+    public static final String CHAPTER_04_WITH_PARENT_NAME = "CHAPTER_04_WITH_PARENT";
+    private static Chapter     CHAPTER_04_WITH_PARENT;
 
     protected static Chapter getChapter01Basic() {
         if (CHAPTER_01_BASIC == null) {
@@ -36,7 +39,18 @@ public class ChapterMockFactory extends StatisticalResourcesMockFactory<Chapter>
         return CHAPTER_03_BASIC;
     }
 
+    protected static Chapter getChapter04WithParent() {
+        if (CHAPTER_04_WITH_PARENT == null) {
+            CHAPTER_04_WITH_PARENT = createChapterWithParent();
+        }
+        return CHAPTER_04_WITH_PARENT;
+    }
+
     private static Chapter createChapter() {
         return getStatisticalResourcesPersistedDoMocks().mockChapter();
+    }
+
+    private static Chapter createChapterWithParent() {
+        return getStatisticalResourcesPersistedDoMocks().mockChapterWithParent();
     }
 }

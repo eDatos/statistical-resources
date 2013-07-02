@@ -88,6 +88,7 @@ Application QueriesStatisticalResources {
 				findByCondition;
 				save;
 				delete;
+				@Query retrieveByUrn(String urn) throws MetamacException;
 			}
 		}
 		

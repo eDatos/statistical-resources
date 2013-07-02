@@ -41,5 +41,4 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // LISTS
     public static final CommonServiceExceptionType STATISTIC_OFFICIALITY_NOT_FOUND                  = create("exception.resources.statistic_officiality.not_found");
-
 }
