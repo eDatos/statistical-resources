@@ -50,8 +50,13 @@ import java.util.concurrent.ConcurrentHashMap;
  *         limitations under the License.
  */
 public class DeepEquals {
+    @SuppressWarnings("rawtypes")
     private static final Map<Class, Boolean> _customEquals = new ConcurrentHashMap<Class, Boolean>();
+    
+    @SuppressWarnings("rawtypes")
     private static final Map<Class, Boolean> _customHash = new ConcurrentHashMap<Class, Boolean>();
+    
+    @SuppressWarnings("rawtypes")
     private static final Map<Class, Collection<Field>> _reflectedFields = new ConcurrentHashMap<Class, Collection<Field>>();
     
     private static class DualKey
@@ -115,6 +120,7 @@ public class DeepEquals {
      * or via the respectively encountered overridden .equals() methods during
      * traversal.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static boolean deepEquals(Object a, Object b)
     {
         Set visited = new HashSet<DualKey>();
@@ -247,6 +253,7 @@ public class DeepEquals {
      * @param visited Set of objects already compared (prevents cycles)
      * @return true if the two arrays are the same length and contain deeply equivalent items.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static boolean compareArrays(Object array1, Object array2, LinkedList stack, Set visited)
     {
         // Same instance check already performed...
@@ -277,6 +284,7 @@ public class DeepEquals {
      * value of 'true' indicates that the Collections may be equal, and the sets
      * items will be added to the Stack for further comparison.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static boolean compareOrderedCollection(Collection col1, Collection col2, LinkedList stack, Set visited)
     {
         // Same instance check already performed...
@@ -316,6 +324,7 @@ public class DeepEquals {
      * value of 'true' indicates that the Collections may be equal, and the sets
      * items will be added to the Stack for further comparison.
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static boolean compareUnorderedCollection(Collection col1, Collection col2, LinkedList stack, Set visited)
     {
         // Same instance check already performed...
@@ -358,6 +367,7 @@ public class DeepEquals {
      * @return false if the Maps are for certain not equals.  'true' indicates that 'on the surface' the maps
      * are equal, however, it will place the contents of the Maps on the stack for further comparisons.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static boolean compareSortedMap(SortedMap map1, SortedMap map2, LinkedList stack, Set visited)
     {
         // Same instance check already performed...
@@ -401,6 +411,7 @@ public class DeepEquals {
      * @return false if the Maps are for certain not equals.  'true' indicates that 'on the surface' the maps
      * are equal, however, it will place the contents of the Maps on the stack for further comparisons.
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static boolean compareUnorderedMap(Map map1, Map map2, LinkedList stack, Set visited)
     {
         // Same instance check already performed...
@@ -449,6 +460,7 @@ public class DeepEquals {
      * @return true, if the passed in Class has a .equals() method somewhere between
      * itself and just below Object in it's inheritance.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static boolean hasCustomEquals(Class c)
     {        
         Class origClass = c;
@@ -488,6 +500,7 @@ public class DeepEquals {
      * @param obj Object who hashCode is desired.
      * @return the 'deep' hashCode value for the passed in object.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static int deepHashCode(Object obj)
     {
         Set visited = new HashSet();
@@ -555,6 +568,7 @@ public class DeepEquals {
      * @return true, if the passed in Class has a .hashCode() method somewhere between
      * itself and just below Object in it's inheritance.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static boolean hasCustomHashCode(Class c)
     {   
         Class origClass = c;
@@ -588,6 +602,7 @@ public class DeepEquals {
      * makes field traversal on a class faster as it does not need to
      * continually process known fields like primitives.
      */
+    @SuppressWarnings("rawtypes")
     public static Collection<Field> getDeepDeclaredFields(Class c)
     {
         if (_reflectedFields.containsKey(c))
