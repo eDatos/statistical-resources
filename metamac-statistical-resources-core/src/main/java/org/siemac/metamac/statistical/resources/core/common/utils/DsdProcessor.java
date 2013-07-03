@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.DimensionTypeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodededTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
