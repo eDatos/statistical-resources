@@ -322,8 +322,8 @@ public class BaseAsserts extends CommonAsserts {
             case DO2DTO:
                 assertEquals(entity.getVersionLogic(), dto.getVersionLogic());
                 assertEqualsDate(entity.getNextVersionDate(), dto.getNextVersionDate());
-                assertEquals(entity.getValidFrom(), dto.getValidFrom());
-                assertEquals(entity.getValidTo(), dto.getValidTo());
+                assertEqualsDate(entity.getValidFrom(), dto.getValidFrom());
+                assertEqualsDate(entity.getValidTo(), dto.getValidTo());
                 assertEqualsVersionRationaleTypeCollectionMapper(entity.getVersionRationaleTypes(), dto.getVersionRationaleTypes());
                 assertEqualsInternationalString(entity.getVersionRationale(), dto.getVersionRationale());
                 assertEquals(entity.getNextVersion(), dto.getNextVersion());

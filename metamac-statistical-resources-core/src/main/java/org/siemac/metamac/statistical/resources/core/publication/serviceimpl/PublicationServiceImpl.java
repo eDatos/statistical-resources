@@ -103,6 +103,26 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     }
 
     @Override
+    public PublicationVersion retrieveLatestPublicationVersionByPublicationUrn(ServiceContext ctx, String publicationUrn) throws MetamacException {
+        // Validations
+        publicationServiceInvocationValidator.checkRetrieveLatestPublicationVersionByPublicationUrn(ctx, publicationUrn);
+
+        // Retrieve
+        PublicationVersion publicationVersion = getPublicationVersionRepository().retrieveLastVersion(publicationUrn);
+        return publicationVersion;
+    }
+
+    @Override
+    public PublicationVersion retrieveLatestPublishedPublicationVersionByPublicationUrn(ServiceContext ctx, String publicationUrn) throws MetamacException {
+        // Validations
+        publicationServiceInvocationValidator.checkRetrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
+
+        // Retrieve
+        PublicationVersion publicationVersion = getPublicationVersionRepository().retrieveLastPublishedVersion(publicationUrn);
+        return publicationVersion;
+    }
+
+    @Override
     public List<PublicationVersion> retrievePublicationVersions(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkRetrievePublicationVersions(ctx, publicationVersionUrn);

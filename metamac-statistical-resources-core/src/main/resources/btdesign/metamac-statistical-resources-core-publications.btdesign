@@ -32,6 +32,10 @@ Application PublicationsStatisticalResources {
 			@PublicationVersion updatePublicationVersion(@PublicationVersion publicationVersion) throws MetamacException;
 			"Retrieves publication version by urn"
 			@PublicationVersion retrievePublicationVersionByUrn(String publicationVersionUrn) throws MetamacException;
+			"Retrieves latets publication version by publication urn"
+			@PublicationVersion retrieveLatestPublicationVersionByPublicationUrn(String publicationUrn) throws MetamacException;
+			"Retrieve latest published publicationVersion providing publicationUrn"
+    		@PublicationVersion retrieveLatestPublishedPublicationVersionByPublicationUrn(String publicationUrn) throws MetamacException;
 			"Retrieves all publications versions of one publication"
 			List<@PublicationVersion> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
 			"Finds publications by criteria"
@@ -103,6 +107,7 @@ Application PublicationsStatisticalResources {
 				findByCondition(PagingParameter pagingParameter);
 				@PublicationVersion retrieveByUrn(String urn) throws MetamacException;
 				@PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException;
+				@PublicationVersion retrieveLastPublishedVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 			}
 		}

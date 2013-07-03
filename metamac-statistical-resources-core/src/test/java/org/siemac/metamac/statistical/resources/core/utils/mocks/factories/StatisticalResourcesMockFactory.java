@@ -19,6 +19,7 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
 
     public static final String                          INIT_VERSION      = "001.000";
     public static final String                          SECOND_VERSION    = "002.000";
+    public static final String                          THIRD_VERSION     = "003.000";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
         if (statisticalResourcesPersistedDoMocks == null) {

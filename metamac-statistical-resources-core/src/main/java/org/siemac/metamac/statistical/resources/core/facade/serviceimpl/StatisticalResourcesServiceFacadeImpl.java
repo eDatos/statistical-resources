@@ -417,6 +417,32 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return datasetDto;
     }
 
+    @Override
+    public DatasetDto retrieveLatestDatasetVersion(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canRetrieveLatestDatasetVersion(ctx);
+
+        // Retrieve
+        DatasetVersion dataset = getDatasetService().retrieveLatestDatasetVersionByDatasetUrn(ctx, datasetUrn);
+
+        // Transform
+        DatasetDto datasetDto = datasetDo2DtoMapper.datasetVersionDoToDto(dataset);
+        return datasetDto;
+    }
+
+    @Override
+    public DatasetDto retrieveLatestPublishedDatasetVersion(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canRetrieveLatestPublishedDatasetVersion(ctx);
+
+        // Retrieve
+        DatasetVersion dataset = getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
+
+        // Transform
+        DatasetDto datasetDto = datasetDo2DtoMapper.datasetVersionDoToDto(dataset);
+        return datasetDto;
+    }
+
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------
@@ -492,6 +518,32 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+    }
+
+    @Override
+    public PublicationDto retrieveLatestPublicationVersion(ServiceContext ctx, String publicationUrn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canRetrieveLatestPublicationVersion(ctx);
+
+        // Retrieve
+        PublicationVersion publication = getPublicationService().retrieveLatestPublicationVersionByPublicationUrn(ctx, publicationUrn);
+
+        // Transform
+        PublicationDto publicationDto = publicationDo2DtoMapper.publicationVersionDoToDto(publication);
+        return publicationDto;
+    }
+
+    @Override
+    public PublicationDto retrieveLatestPublishedPublicationVersion(ServiceContext ctx, String publicationUrn) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canRetrieveLatestPublishedPublicationVersion(ctx);
+
+        // Retrieve
+        PublicationVersion publication = getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
+
+        // Transform
+        PublicationDto publicationDto = publicationDo2DtoMapper.publicationVersionDoToDto(publication);
+        return publicationDto;
     }
 
     @Override
@@ -662,23 +714,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CubeDto retrieveCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
-        // Security 
+        // Security
         PublicationsSecurityUtils.canRetrieveCube(ctx);
-        
+
         // Retrieve
         Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
-        
+
         // Transform
         CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
         return cubeDto;
-        
+
     }
 
     @Override
     public void deleteCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canDeleteCube(ctx);
-        
+
         // Delete
         getPublicationService().deleteCube(ctx, cubeUrn);
     }

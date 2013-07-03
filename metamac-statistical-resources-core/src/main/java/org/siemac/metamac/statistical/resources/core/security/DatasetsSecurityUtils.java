@@ -98,4 +98,16 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+
+    public static void canRetrieveLatestDatasetVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveLatestDatasetVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveLatestPublishedDatasetVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveLatestPublishedDatasetVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 }

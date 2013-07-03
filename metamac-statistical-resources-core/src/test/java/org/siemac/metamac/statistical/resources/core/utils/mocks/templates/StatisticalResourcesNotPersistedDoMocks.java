@@ -175,6 +175,13 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         target.setType(TypeRelatedResourceEnum.DATASET_VERSION);
         return target;
     }
+    
+    public static RelatedResource mockRelatedResourceLinkedToPublicationVersion(PublicationVersion linkedPublicationVersion) {
+        RelatedResource target = new RelatedResource();
+        target.setPublicationVersion(linkedPublicationVersion);
+        target.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
+        return target;
+    }
 
     // -----------------------------------------------------------------
     // BASE HIERARCHY

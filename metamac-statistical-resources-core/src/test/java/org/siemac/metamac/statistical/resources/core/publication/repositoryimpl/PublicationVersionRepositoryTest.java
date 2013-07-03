@@ -3,9 +3,17 @@ package org.siemac.metamac.statistical.resources.core.publication.repositoryimpl
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_12_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +61,6 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, URN_NOT_EXISTS));
-
         publicationVersionRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
 
@@ -63,6 +70,61 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     public void testRetrieveLastVersion() throws Exception {
         PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(publicationMockFactory.retrieveMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME).getIdentifiableStatisticalResource().getUrn());
         assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME})
+    public void testRetrieveLastVersionWithAllVersionsPublished() throws Exception {
+        String publicationUrn = publicationMockFactory.retrieveMock(PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME).getIdentifiableStatisticalResource().getUrn();
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(publicationUrn);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    public void testRetrieveLastVersionWithLatestVersionNoVisible() throws Exception {
+        String publicationUrn = publicationMockFactory.retrieveMock(PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastVersion(publicationUrn);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+
+    @Override
+    @Test
+    @MetamacMock({PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
+    public void testRetrieveLastPublishedVersion() throws Exception {
+        String publicationUrn = publicationMockFactory.retrieveMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME).getIdentifiableStatisticalResource().getUrn();
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastPublishedVersion(publicationUrn);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
+    public void testRetrieveLastPublishedVersionWithAllVersionsPublished() throws Exception {
+        String publicationUrn = publicationMockFactory.retrieveMock(PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME).getIdentifiableStatisticalResource().getUrn();
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastPublishedVersion(publicationUrn);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_VERSION_12_DRAFT_NAME})
+    public void testRetrieveLastPublishedVersionWithoutVersionsPublished() throws Exception {
+        String publicationUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getPublication().getIdentifiableStatisticalResource().getUrn();
+        PublicationVersion expected = null;
+        PublicationVersion actual = publicationVersionRepository.retrieveLastPublishedVersion(publicationUrn);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock({PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    public void testRetrieveLastPublishedVersionWithLatestVersionNoVisible() throws Exception {
+        String publicationUrn = publicationMockFactory.retrieveMock(PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME);
+        PublicationVersion actual = publicationVersionRepository.retrieveLastPublishedVersion(publicationUrn);
+        assertEqualsPublicationVersion(expected, actual);
     }
 
     @Override

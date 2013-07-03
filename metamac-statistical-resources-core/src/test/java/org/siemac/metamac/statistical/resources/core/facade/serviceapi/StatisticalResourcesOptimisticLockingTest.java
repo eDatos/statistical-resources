@@ -389,14 +389,14 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock(DATASET_VERSION_01_BASIC_NAME)
     public void testUpdateDatasetVersion() throws Exception {
         // Retrieve dataset - session 1
-        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn());
+        DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession01.getOptimisticLockingVersion());
         datasetDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
         // Retrieve dataset - session 2
-        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn());
+        DatasetDto datasetDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetDtoSession02.getOptimisticLockingVersion());
         datasetDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
 
@@ -714,6 +714,26 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testRetrievePublicationVersionStructure() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestDatasetVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestPublishedDatasetVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestPublicationVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestPublishedPublicationVersion() throws Exception {
         // no optimistic locking in this operation
     }
 }

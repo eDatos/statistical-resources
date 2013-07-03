@@ -40,6 +40,18 @@ public class PublicationsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+    
+    public static void canRetrieveLatestPublicationVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveLatestPublishedPublicationVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublishedPublicationVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 
     public static void canRetrievePublicationVersions(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canRetrievePublicationVersions(getMetamacPrincipal(ctx))) {

@@ -57,12 +57,12 @@ public class LifecycleFiller {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
         
-        DateTime publicationDate = new DateTime();
+        DateTime publicationDate = resource.getLifeCycleStatisticalResource().getValidFrom();
         
         // Actual version
-        resource.getLifeCycleStatisticalResource().setPublicationDate(publicationDate);
+        // We don't need to fill validFrom because is required for publish
+        resource.getLifeCycleStatisticalResource().setPublicationDate(new DateTime());
         resource.getLifeCycleStatisticalResource().setPublicationUser(ctx.getUserId());
-        resource.getLifeCycleStatisticalResource().setValidFrom(publicationDate);
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
         // Previous version
