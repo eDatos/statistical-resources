@@ -31,6 +31,10 @@ Application QueriesStatisticalResources {
             @QueryVersion markQueryVersionAsDiscontinued(@QueryVersion query) throws MetamacException;
             "Delete query"
             deleteQueryVersion(String urn) throws MetamacException;
+            "Retrieves last query version by query urn"
+			@QueryVersion retrieveLatestQueryVersionByQueryUrn(String queryUrn) throws MetamacException;
+			"Retrieve latest published queryVersion providing queryUrn"
+    		@QueryVersion retrieveLatestPublishedQueryVersionByQueryUrn(String queryUrn) throws MetamacException;
 		}  
 
 
@@ -116,6 +120,8 @@ Application QueriesStatisticalResources {
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@QueryVersion retrieveByUrn(String urn) throws MetamacException;
+				@QueryVersion retrieveLastVersion(String queryUrn) throws MetamacException;
+				@QueryVersion retrieveLastPublishedVersion(String queryUrn) throws MetamacException;
 			}
 		}
 	}

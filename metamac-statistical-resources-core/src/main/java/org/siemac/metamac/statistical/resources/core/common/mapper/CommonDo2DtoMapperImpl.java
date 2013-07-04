@@ -89,7 +89,7 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
     
 
     @Override
-    public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) {
+    public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) throws MetamacException {
         HashSet<RelatedResourceDto> result = new HashSet<RelatedResourceDto>();
         if (source != null) {
             for (RelatedResource resource : source) {
@@ -100,7 +100,7 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
     }
 
     @Override
-    public RelatedResourceDto relatedResourceDoToDto(RelatedResource source) {
+    public RelatedResourceDto relatedResourceDoToDto(RelatedResource source) throws MetamacException {
         if (source == null) {
             return null;
         }

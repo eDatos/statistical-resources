@@ -492,7 +492,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         checkNewDatasetVersionCreated(datasetVersion, datasetNewVersion);
     }
 
-    private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) {
+    private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
 
         // Non inherited fields

@@ -88,7 +88,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setAccessRights(internationalStringDoToDto(source.getAccessRights()));
     }
     @Override
-    public void lifeCycleStatisticalResourceDoToDto(LifeCycleStatisticalResource source, LifeCycleStatisticalResourceDto target) {
+    public void lifeCycleStatisticalResourceDoToDto(LifeCycleStatisticalResource source, LifeCycleStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
             return;
         }

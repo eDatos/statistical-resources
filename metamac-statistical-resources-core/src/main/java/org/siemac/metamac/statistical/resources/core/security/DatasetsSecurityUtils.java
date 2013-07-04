@@ -51,25 +51,25 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canUpdateDataset(ServiceContext ctx) throws MetamacException {
+    public static void canUpdateDatasetVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canUpdateDataset(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
-    public static void canDeleteDataset(ServiceContext ctx) throws MetamacException {
+    public static void canDeleteDatasetVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canDeleteDataset(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
-    public static void canFindDatasetsByCondition(ServiceContext ctx) throws MetamacException {
+    public static void canFindDatasetsVersionsByCondition(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canFindDatasetsByCondition(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
-    public static void canRetrieveDatasetByUrn(ServiceContext ctx) throws MetamacException {
+    public static void canRetrieveDatasetVersionByUrn(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canRetrieveDatasetByUrn(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }

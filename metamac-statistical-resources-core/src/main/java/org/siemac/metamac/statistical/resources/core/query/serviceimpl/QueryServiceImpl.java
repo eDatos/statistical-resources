@@ -32,12 +32,12 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     @Autowired
     private IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
-    
+
     @Autowired
-    private QueryServiceInvocationValidator queryServiceInvocationValidator;
-    
+    private QueryServiceInvocationValidator           queryServiceInvocationValidator;
+
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;   
+    private DatasetVersionRepository                  datasetVersionRepository;
 
     public QueryServiceImpl() {
     }
@@ -83,7 +83,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
         Query query = createQueryResourceFromQueryVersion(queryVersion);
         query = getQueryRepository().save(query);
-        
+
         // Fill metadata
         fillMetadataForCreateQueryVersion(ctx, queryVersion);
 
@@ -98,7 +98,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
         return queryVersion;
     }
-    
+
     @Override
     public QueryVersion updateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
@@ -161,7 +161,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), ctx);
         queryVersion.setStatus(determineQueryStatus(queryVersion));
-        queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion.getLifeCycleStatisticalResource().getVersionLogic()));
+        queryVersion.getLifeCycleStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion.getLifeCycleStatisticalResource()
+                        .getVersionLogic()));
     }
 
     private QueryStatusEnum determineQueryStatus(QueryVersion queryVersion) throws MetamacException {
@@ -175,5 +177,25 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private void fillMetadataForUpdateQuery(QueryVersion queryVersion) throws MetamacException {
         queryVersion.setStatus(determineQueryStatus(queryVersion));
         FillMetadataForUpdateResourceUtils.fillMetadataForUpdateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY);
+    }
+
+    @Override
+    public QueryVersion retrieveLatestQueryVersionByQueryUrn(ServiceContext ctx, String queryUrn) throws MetamacException {
+        // Validations
+        queryServiceInvocationValidator.checkRetrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);
+
+        // Retrieve
+        QueryVersion queryVersion = getQueryVersionRepository().retrieveLastVersion(queryUrn);
+        return queryVersion;
+    }
+
+    @Override
+    public QueryVersion retrieveLatestPublishedQueryVersionByQueryUrn(ServiceContext ctx, String queryUrn) throws MetamacException {
+        // Validations
+        queryServiceInvocationValidator.checkRetrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
+
+        // Retrieve
+        QueryVersion queryVersion = getQueryVersionRepository().retrieveLastPublishedVersion(queryUrn);
+        return queryVersion;
     }
 }

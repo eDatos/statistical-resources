@@ -23,6 +23,14 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     public static void checkRetrieveQueryVersionByUrn(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
+    
+    public static void checkRetrieveLatestQueryVersionByQueryUrn(String queryUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(queryUrn, ServiceExceptionParameters.QUERY_URN, exceptions);
+    }
+    
+    public static void checkRetrieveLatestPublishedQueryVersionByQueryUrn(String queryUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(queryUrn, ServiceExceptionParameters.QUERY_URN, exceptions);
+    }
 
     public static void checkRetrieveQueryVersions(List<MetamacExceptionItem> exceptions) throws MetamacException {
         // NOTHING

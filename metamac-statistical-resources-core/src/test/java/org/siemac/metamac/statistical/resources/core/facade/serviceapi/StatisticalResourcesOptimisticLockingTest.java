@@ -578,7 +578,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testCreateQueryVersion() throws Exception {
+    public void testCreateQuery() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -608,7 +608,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testCreateDatasetVersion() throws Exception {
+    public void testCreateDataset() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -643,7 +643,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testCreatePublicationVersion() throws Exception {
+    public void testCreatePublication() throws Exception {
         // no optimistic locking in this operation
     }
 
@@ -735,5 +735,15 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     public void testRetrieveLatestPublishedPublicationVersion() throws Exception {
         // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestQueryVersion() throws Exception {
+     // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestPublishedQueryVersion() throws Exception {
+        /// no optimistic locking in this operation
     }
 }

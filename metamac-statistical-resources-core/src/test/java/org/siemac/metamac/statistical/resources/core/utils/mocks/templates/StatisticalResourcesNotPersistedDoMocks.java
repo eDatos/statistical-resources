@@ -182,6 +182,13 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         target.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return target;
     }
+    
+    public static RelatedResource mockRelatedResourceLinkedToQueryVersion(QueryVersion linkedQueryVersion) {
+        RelatedResource target = new RelatedResource();
+        target.setQueryVersion(linkedQueryVersion);
+        target.setType(TypeRelatedResourceEnum.QUERY_VERSION);
+        return target;
+    }
 
     // -----------------------------------------------------------------
     // BASE HIERARCHY

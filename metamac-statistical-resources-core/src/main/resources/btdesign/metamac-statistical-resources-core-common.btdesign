@@ -1,6 +1,7 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
@@ -25,6 +26,7 @@ Application CommonStatisticalResources {
 			
 			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" cascade="none" nullable;
 			- @PublicationVersion publicationVersion databaseColumn="PUBLICATION_VERSION_FK" cascade="none" nullable;
+			- @QueryVersion queryVersion databaseColumn="QUERY_VERSION_FK" cascade="none" nullable; 
     		
     		Repository RelatedResourceRepository {
 				findById;

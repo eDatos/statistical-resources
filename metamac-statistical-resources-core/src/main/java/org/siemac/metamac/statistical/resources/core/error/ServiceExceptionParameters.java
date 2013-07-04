@@ -19,4 +19,6 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String ORDER_IN_LEVEL                  = "orderInLevel";
     public static final String CUBE_URN                        = "cubeUrn";
 
+    public static final String QUERY_URN                       = "queryUrn";
+
 }

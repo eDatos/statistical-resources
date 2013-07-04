@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import java.util.Collection;
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -37,7 +38,7 @@ public class DatasetsAsserts extends BaseAsserts {
     // DATASET VERSION: DO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual) {
+    public static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual) throws MetamacException {
         if ((expected != null && actual == null) || (expected == null && actual != null)) {
             fail("The expected datasetVersion and the actual are not equals");
         } else if (expected != null && actual != null) {
@@ -45,7 +46,7 @@ public class DatasetsAsserts extends BaseAsserts {
         }
     }
     
-    public static void assertEqualsDatasetVersionNotChecksDataset(DatasetVersion expected, DatasetVersion actual) {
+    public static void assertEqualsDatasetVersionNotChecksDataset(DatasetVersion expected, DatasetVersion actual) throws MetamacException {
         if ((expected != null && actual == null) || (expected == null && actual != null)) {
             fail("The expected datasetVersion and the actual are not equals");
         } else if (expected != null && actual != null) {
@@ -53,7 +54,7 @@ public class DatasetsAsserts extends BaseAsserts {
         }
     }
 
-    private static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual, boolean datasetChecked) {
+    private static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual, boolean datasetChecked) throws MetamacException {
         assertEquals(expected.getUuid(), actual.getUuid());
 
         assertEqualsSiemacMetadataStatisticalResource(expected.getSiemacMetadataStatisticalResource(), actual.getSiemacMetadataStatisticalResource());
@@ -108,15 +109,15 @@ public class DatasetsAsserts extends BaseAsserts {
     // DATASET VERSION: DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsDatasetVersion(DatasetVersion entity, DatasetDto dto) {
+    public static void assertEqualsDatasetVersion(DatasetVersion entity, DatasetDto dto) throws MetamacException {
         assertEqualsDatasetVersion(dto, entity, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsDatasetVersion(DatasetDto dto, DatasetVersion entity) {
+    public static void assertEqualsDatasetVersion(DatasetDto dto, DatasetVersion entity) throws MetamacException {
         assertEqualsDatasetVersion(dto, entity, MapperEnum.DTO2DO);
     }
 
-    private static void assertEqualsDatasetVersion(DatasetDto dto, DatasetVersion entity, MapperEnum mapperEnum) {
+    private static void assertEqualsDatasetVersion(DatasetDto dto, DatasetVersion entity, MapperEnum mapperEnum) throws MetamacException {
         assertEqualsSiemacMetadataStatisticalResource(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
 
         // Dataset attributes
@@ -159,7 +160,7 @@ public class DatasetsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
     // DATASOURCE: DO & DO
     // -----------------------------------------------------------------
-    public static void assertEqualsDatasource(Datasource expected, Datasource actual) {
+    public static void assertEqualsDatasource(Datasource expected, Datasource actual) throws MetamacException {
         assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
         assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
     }

@@ -1,66 +1,92 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<QueryVersion> {
 
-    public static final String  QUERY_VERSION_01_WITH_SELECTION_NAME            = "QUERY_VERSION_01_WITH_SELECTION";
+    public static final String  QUERY_VERSION_01_WITH_SELECTION_NAME                       = "QUERY_VERSION_01_WITH_SELECTION";
     private static QueryVersion QUERY_VERSION_01_WITH_SELECTION;
 
-    public static final String  QUERY_VERSION_02_BASIC_ORDERED_01_NAME          = "QUERY_VERSION_02_BASIC_ORDERED_01";
+    public static final String  QUERY_VERSION_02_BASIC_ORDERED_01_NAME                     = "QUERY_VERSION_02_BASIC_ORDERED_01";
     private static QueryVersion QUERY_VERSION_02_BASIC_ORDERED_01;
 
-    public static final String  QUERY_VERSION_03_BASIC_ORDERED_02_NAME          = "QUERY_VERSION_03_BASIC_ORDERED_02";
+    public static final String  QUERY_VERSION_03_BASIC_ORDERED_02_NAME                     = "QUERY_VERSION_03_BASIC_ORDERED_02";
     private static QueryVersion QUERY_VERSION_03_BASIC_ORDERED_02;
 
-    public static final String  QUERY_VERSION_04_BASIC_ORDERED_03_NAME          = "QUERY_VERSION_04_BASIC_ORDERED_03";
+    public static final String  QUERY_VERSION_04_BASIC_ORDERED_03_NAME                     = "QUERY_VERSION_04_BASIC_ORDERED_03";
     private static QueryVersion QUERY_VERSION_04_BASIC_ORDERED_03;
 
-    public static final String  QUERY_VERSION_05_BASIC_NAME                     = "QUERY_VERSION_05_BASIC";
+    public static final String  QUERY_VERSION_05_BASIC_NAME                                = "QUERY_VERSION_05_BASIC";
     private static QueryVersion QUERY_VERSION_05_BASIC;
 
-    public static final String  QUERY_VERSION_06_BASIC_ACTIVE_NAME              = "QUERY_VERSION_06_BASIC_ACTIVE";
+    public static final String  QUERY_VERSION_06_BASIC_ACTIVE_NAME                         = "QUERY_VERSION_06_BASIC_ACTIVE";
     private static QueryVersion QUERY_VERSION_06_BASIC_ACTIVE;
 
-    public static final String  QUERY_VERSION_07_BASIC_ACTIVE_NAME              = "QUERY_VERSION_07_BASIC_ACTIVE";
+    public static final String  QUERY_VERSION_07_BASIC_ACTIVE_NAME                         = "QUERY_VERSION_07_BASIC_ACTIVE";
     private static QueryVersion QUERY_VERSION_07_BASIC_ACTIVE;
 
-    public static final String  QUERY_VERSION_08_BASIC_DISCONTINUED_NAME        = "QUERY_VERSION_08_BASIC_DISCONTINUED";
+    public static final String  QUERY_VERSION_08_BASIC_DISCONTINUED_NAME                   = "QUERY_VERSION_08_BASIC_DISCONTINUED";
     private static QueryVersion QUERY_VERSION_08_BASIC_DISCONTINUED;
 
-    public static final String  QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME      = "QUERY_VERSION_09_BASIC_PENDING_REVIEW";
+    public static final String  QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME                 = "QUERY_VERSION_09_BASIC_PENDING_REVIEW";
     private static QueryVersion QUERY_VERSION_09_BASIC_PENDING_REVIEW;
 
-    public static final String  QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME      = "QUERY_VERSION_10_ACTIVE_LATEST_DATA_5";
+    public static final String  QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME                 = "QUERY_VERSION_10_ACTIVE_LATEST_DATA_5";
     private static QueryVersion QUERY_VERSION_10_ACTIVE_LATEST_DATA_5;
 
-    public static final String  QUERY_VERSION_11_DRAFT_NAME                     = "QUERY_VERSION_11_DRAFT";
+    public static final String  QUERY_VERSION_11_DRAFT_NAME                                = "QUERY_VERSION_11_DRAFT";
     private static QueryVersion QUERY_VERSION_11_DRAFT;
 
-    public static final String  QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME     = "QUERY_VERSION_12_PRODUCTION_VALIDATION";
+    public static final String  QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME                = "QUERY_VERSION_12_PRODUCTION_VALIDATION";
     private static QueryVersion QUERY_VERSION_12_PRODUCTION_VALIDATION;
 
-    public static final String  QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME      = "QUERY_VERSION_13_DIFUSSION_VALIDATION";
+    public static final String  QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME                 = "QUERY_VERSION_13_DIFUSSION_VALIDATION";
     private static QueryVersion QUERY_VERSION_13_DIFUSSION_VALIDATION;
 
-    public static final String  QUERY_VERSION_14_VALIDATION_REJECTED_NAME       = "QUERY_VERSION_14_VALIDATION_REJECTED";
+    public static final String  QUERY_VERSION_14_VALIDATION_REJECTED_NAME                  = "QUERY_VERSION_14_VALIDATION_REJECTED";
     private static QueryVersion QUERY_VERSION_14_VALIDATION_REJECTED;
 
-    public static final String  QUERY_VERSION_15_PUBLISHED_NAME                 = "QUERY_VERSION_15_PUBLISHED";
+    public static final String  QUERY_VERSION_15_PUBLISHED_NAME                            = "QUERY_VERSION_15_PUBLISHED";
     private static QueryVersion QUERY_VERSION_15_PUBLISHED;
 
-    public static final String  QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME = "QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01";
+    public static final String  QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME            = "QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01";
     private static QueryVersion QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01;
 
-    public static final String  QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME = "QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02";
+    public static final String  QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME            = "QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02";
     private static QueryVersion QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02;
+
+    public static final String  QUERY_VERSION_21_FOR_QUERY_03_NAME                         = "QUERY_VERSION_21_FOR_QUERY_03";
+    private static QueryVersion QUERY_VERSION_21_FOR_QUERY_03;
+
+    public static final String  QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME        = "QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION";
+    private static QueryVersion QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION;
+
+    public static final String  QUERY_VERSION_23_FOR_QUERY_04_NAME                         = "QUERY_VERSION_23_FOR_QUERY_04";
+    private static QueryVersion QUERY_VERSION_23_FOR_QUERY_04;
+
+    public static final String  QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05_NAME            = "QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05";
+    private static QueryVersion QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05;
+
+    public static final String  QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05_NAME            = "QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05";
+    private static QueryVersion QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05;
+
+    public static final String  QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05_NAME            = "QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05";
+    private static QueryVersion QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05;
+
+    public static final String  QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME            = "QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06";
+    private static QueryVersion QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06;
+
+    public static final String  QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME = "QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06";
+    private static QueryVersion QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06;
 
     protected static QueryVersion getQueryVersion01WithSelection() {
         if (QUERY_VERSION_01_WITH_SELECTION == null) {
@@ -200,6 +226,164 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
             QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(queryCode));
         }
         return QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02;
+    }
+
+    protected static QueryVersion getQueryVersion20ForQuery03() {
+        if (QUERY_VERSION_21_FOR_QUERY_03 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(INIT_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // not last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+
+            // Relations
+            QUERY_VERSION_21_FOR_QUERY_03 = queryVersion;
+            QUERY_VERSION_21_FOR_QUERY_03.setQuery(QueryMockFactory.getQuery03With2QueryVersions());
+        }
+        return QUERY_VERSION_21_FOR_QUERY_03;
+    }
+
+    protected static QueryVersion getQueryVersion21ForQuery03() {
+        if (QUERY_VERSION_21_FOR_QUERY_03 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(INIT_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // not last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+
+            // Relations
+            QUERY_VERSION_21_FOR_QUERY_03 = queryVersion;
+            QUERY_VERSION_21_FOR_QUERY_03.setQuery(QueryMockFactory.getQuery03With2QueryVersions());
+        }
+        return QUERY_VERSION_21_FOR_QUERY_03;
+    }
+    
+    
+    protected static QueryVersion getQueryVersion22ForQuery03AndLastVersion() {
+        if (QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+
+            // Version 002.000
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(SECOND_VERSION);
+
+            // Is last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            queryVersion.getLifeCycleStatisticalResource().setLastVersion(true);
+
+            // Relations
+            QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION = queryVersion;
+            QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION.setQuery(QueryMockFactory.getQuery03With2QueryVersions());
+        }
+        return QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION;
+    }
+
+    protected static QueryVersion getQueryVersion23ForQuery04() {
+        if (QUERY_VERSION_23_FOR_QUERY_04 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+
+            // Version 001.000
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(INIT_VERSION);
+
+            queryVersion.getLifeCycleStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
+            queryVersion.getLifeCycleStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
+            queryVersion.getLifeCycleStatisticalResource().setLastUpdatedBy(StatisticalResourcesDoMocks.mockString(10));
+            queryVersion.getLifeCycleStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
+
+            // Relations
+            QUERY_VERSION_23_FOR_QUERY_04 = queryVersion;
+            QUERY_VERSION_23_FOR_QUERY_04.setQuery(QueryMockFactory.getQuery04With1QueryVersions());
+        }
+        return QUERY_VERSION_23_FOR_QUERY_04;
+    }
+
+    protected static QueryVersion getQueryVersion24V1PublishedForQuery05() {
+        if (QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(INIT_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // not last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(3));
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(3));
+
+            // Relations
+            QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05 = queryVersion;
+            QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05.setQuery(QueryMockFactory.getQuery05WithMultiplePublishedVersions());
+        }
+        return QUERY_VERSION_24_V1_PUBLISHED_FOR_QUERY_05;
+    }
+
+    protected static QueryVersion getQueryVersion25V2PublishedForQuery05() {
+        if (QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(SECOND_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // not last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+
+            // Relations
+            QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05 = queryVersion;
+            QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05.setQuery(QueryMockFactory.getQuery05WithMultiplePublishedVersions());
+        }
+        return QUERY_VERSION_25_V2_PUBLISHED_FOR_QUERY_05;
+    }
+
+    protected static QueryVersion getQueryVersion26V3PublishedForQuery05() {
+        if (QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(THIRD_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+
+            // Relations
+            QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05 = queryVersion;
+            QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05.setQuery(QueryMockFactory.getQuery05WithMultiplePublishedVersions());
+        }
+        return QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05;
+    }
+
+    protected static QueryVersion getQueryVersion27V1PublishedForQuery06() {
+        if (QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(INIT_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+
+            // Relations
+            QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06 = queryVersion;
+            QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06.setQuery(QueryMockFactory.getQuery06WithMultiplePublishedVersionsAndLatestNoVisible());
+        }
+        return QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06;
+    }
+
+    protected static QueryVersion getQueryVersion28V2PublishedNoVisibleForQuery06() {
+        if (QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06 == null) {
+            QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+            queryVersion.getLifeCycleStatisticalResource().setVersionLogic(SECOND_VERSION);
+            queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+
+            // last version
+            queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime());
+            queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+
+            // Relations
+            QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06 = queryVersion;
+            QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06.setQuery(QueryMockFactory.getQuery06WithMultiplePublishedVersionsAndLatestNoVisible());
+        }
+        return QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06;
+
     }
 
     private static QueryVersion createQueryWithDatasetVersion(DatasetVersion datasetVersion, boolean isLastDatasetVersion) {

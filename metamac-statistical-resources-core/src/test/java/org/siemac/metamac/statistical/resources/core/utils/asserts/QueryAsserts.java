@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -40,12 +41,25 @@ public class QueryAsserts extends BaseAsserts {
         }
     }
     
-    public static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual) {
+    public static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual) throws MetamacException {
+        if ((expected != null && actual == null) || (expected == null && actual != null)) {
+            fail("The expected queryVersion and the actual are not equals");
+        } else if (expected != null && actual != null) {
+            assertEqualsQueryVersion(expected, actual, false);
+        }
+    }
+    
+    private static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual, boolean queryChecked) throws MetamacException {
+        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsLifeCycleStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getLatestDataNumber(), actual.getLatestDataNumber());
         assertEqualsSelection(expected.getSelection(), actual.getSelection());
+        
+        if (!queryChecked) {
+            assertEqualsQuery(expected.getQuery(), actual.getQuery());
+        }
     }
     
     private static void assertEqualsSelection(List<QuerySelectionItem> expected, List<QuerySelectionItem> actual) {

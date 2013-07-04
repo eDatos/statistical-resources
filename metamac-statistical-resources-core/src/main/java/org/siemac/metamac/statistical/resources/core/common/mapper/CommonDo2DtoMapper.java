@@ -20,8 +20,8 @@ public interface CommonDo2DtoMapper extends BaseDo2DtoMapper {
     public ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException;
 
     // Related resource
-    public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source);
-    public RelatedResourceDto relatedResourceDoToDto(RelatedResource source);
+    public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) throws MetamacException;
+    public RelatedResourceDto relatedResourceDoToDto(RelatedResource source) throws MetamacException;
     
     // International String
     public InternationalStringDto internationalStringDoToDto(InternationalString source);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -19,7 +20,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
 
     @Override
-    public QueryDto queryVersionDoToDto(QueryVersion source) {
+    public QueryDto queryVersionDoToDto(QueryVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -29,7 +30,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
     }
     
     @Override
-    public List<QueryDto> queryVersionDoListToDtoList(List<QueryVersion> sources) {
+    public List<QueryDto> queryVersionDoListToDtoList(List<QueryVersion> sources) throws MetamacException {
         List<QueryDto> targets = new ArrayList<QueryDto>();
         for (QueryVersion source : sources) {
             targets.add(queryVersionDoToDto(source));
@@ -37,7 +38,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         return targets;
     }
 
-    private QueryDto queryVersionDoToDto(QueryVersion source, QueryDto target) {
+    private QueryDto queryVersionDoToDto(QueryVersion source, QueryDto target) throws MetamacException {
         if (source == null) {
             return null;
         }

@@ -101,7 +101,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryDto retrieveQueryVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canRetrieveQueryByUrn(ctx);
+        QueriesSecurityUtils.canRetrieveQueryVersionByUrn(ctx);
 
         // Retrieve
         QueryVersion queryVersion = getQueryService().retrieveQueryVersionByUrn(ctx, urn);
@@ -111,11 +111,37 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return queryDto;
     }
+    
+    @Override
+    public QueryDto retrieveLatestQueryVersion(ServiceContext ctx, String queryUrn) throws MetamacException {
+     // Security
+        QueriesSecurityUtils.canRetrieveLatestQueryVersion(ctx);
+
+        // Retrieve
+        QueryVersion query = getQueryService().retrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);
+
+        // Transform
+        QueryDto queryDto = queryDo2DtoMapper.queryVersionDoToDto(query);
+        return queryDto;
+    }
+
+    @Override
+    public QueryDto retrieveLatestPublishedQueryVersion(ServiceContext ctx, String queryUrn) throws MetamacException {
+     // Security
+        QueriesSecurityUtils.canRetrieveLatestPublishedQueryVersion(ctx);
+
+        // Retrieve
+        QueryVersion query = getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
+
+        // Transform
+        QueryDto queryDto = queryDo2DtoMapper.queryVersionDoToDto(query);
+        return queryDto;
+    }
 
     @Override
     public List<QueryDto> retrieveQueriesVersions(ServiceContext ctx) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canRetrieveQueries(ctx);
+        QueriesSecurityUtils.canRetrieveQueriesVersions(ctx);
 
         // Retrieve
         List<QueryVersion> queryVersions = getQueryService().retrieveQueryVersions(ctx);
@@ -127,7 +153,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public QueryDto createQueryVersion(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
+    public QueryDto createQuery(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
         // Security
         QueriesSecurityUtils.canCreateQuery(ctx);
 
@@ -146,7 +172,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryDto updateQueryVersion(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canUpdateQuery(ctx);
+        QueriesSecurityUtils.canUpdateQueryVersion(ctx);
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryDto);
@@ -163,7 +189,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public MetamacCriteriaResult<QueryDto> findQueriesVersionsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canFindQueriesByCondition(ctx);
+        QueriesSecurityUtils.canFindQueriesVersionsByCondition(ctx);
 
         // Transform
         SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
@@ -180,7 +206,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryDto markQueryVersionAsDiscontinued(ServiceContext ctx, QueryDto queryDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canMarkQueryAsDiscontinued(ctx);
+        QueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(ctx);
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryDto);
@@ -197,7 +223,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteQueryVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canDeleteQuery(ctx);
+        QueriesSecurityUtils.canDeleteQueryVersion(ctx);
 
         // Delete
         getQueryService().deleteQueryVersion(ctx, urn);
@@ -283,7 +309,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     // ------------------------------------------------------------------------
 
     @Override
-    public DatasetDto createDatasetVersion(ServiceContext ctx, DatasetDto datasetDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
+    public DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canCreateDataset(ctx);
 
@@ -303,7 +329,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetDto updateDatasetVersion(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canUpdateDataset(ctx);
+        DatasetsSecurityUtils.canUpdateDatasetVersion(ctx);
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
@@ -318,7 +344,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteDatasetVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canDeleteDataset(ctx);
+        DatasetsSecurityUtils.canDeleteDatasetVersion(ctx);
 
         // Delete
         getDatasetService().deleteDatasetVersion(ctx, urn);
@@ -327,7 +353,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public MetamacCriteriaResult<DatasetDto> findDatasetsVersionsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canFindDatasetsByCondition(ctx);
+        DatasetsSecurityUtils.canFindDatasetsVersionsByCondition(ctx);
 
         // Transform
         SculptorCriteria sculptorCriteria = datasetMetamacCriteria2SculptorCriteriaMapper.getDatasetVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
@@ -344,7 +370,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetDto retrieveDatasetVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canRetrieveDatasetByUrn(ctx);
+        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx);
 
         // Retrieve
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
@@ -448,7 +474,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     // ------------------------------------------------------------------------
 
     @Override
-    public PublicationDto createPublicationVersion(ServiceContext ctx, PublicationDto publicationDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
+    public PublicationDto createPublication(ServiceContext ctx, PublicationDto publicationDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canCreatePublication(ctx);
 
@@ -468,7 +494,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationDto updatePublicationVersion(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canUpdatePublication(ctx);
+        PublicationsSecurityUtils.canUpdatePublicationVersion(ctx);
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
@@ -483,7 +509,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deletePublicationVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canDeletePublication(ctx);
+        PublicationsSecurityUtils.canDeletePublicationVersion(ctx);
 
         // Delete
         getPublicationService().deletePublicationVersion(ctx, urn);
@@ -493,7 +519,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public MetamacCriteriaResult<PublicationDto> findPublicationVersionByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canFindPublicationsByCondition(ctx);
+        PublicationsSecurityUtils.canFindPublicationsVersionsByCondition(ctx);
 
         // Transform
         SculptorCriteria sculptorCriteria = publicationMetamacCriteria2SculptorCriteriaMapper.getPublicationVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
@@ -511,7 +537,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationDto retrievePublicationVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canRetrievePublicationByUrn(ctx);
+        PublicationsSecurityUtils.canRetrievePublicationVersionByUrn(ctx);
 
         // Retrieve
         PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, urn);
@@ -575,7 +601,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationStructureDto retrievePublicationVersionStructure(ServiceContext ctx, String publicationUrn) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canRetrievePublicationStructure(ctx);
+        PublicationsSecurityUtils.canRetrievePublicationVersionStructure(ctx);
 
         // Retrieve
         PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);

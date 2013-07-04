@@ -517,7 +517,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         checkNewPublicationVersionCreated(publicationVersion, publicationNewVersion);
     }
 
-    private static void checkNewPublicationVersionCreated(PublicationVersion previous, PublicationVersion next) {
+    private static void checkNewPublicationVersionCreated(PublicationVersion previous, PublicationVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
 
         // Non inherited fields

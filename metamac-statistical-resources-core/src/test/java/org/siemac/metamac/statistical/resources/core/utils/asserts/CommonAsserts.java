@@ -22,6 +22,7 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
@@ -79,7 +80,7 @@ public class CommonAsserts extends MetamacAsserts {
     // RELATED RESOURCE: DO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsRelatedResource(RelatedResource expected, RelatedResource actual) {
+    public static void assertEqualsRelatedResource(RelatedResource expected, RelatedResource actual) throws MetamacException {
 
         assertEqualsNullability(expected, actual);
         if (expected == null) {
@@ -96,7 +97,7 @@ public class CommonAsserts extends MetamacAsserts {
     }
 
 
-    public static void assertEqualsRelatedResourceCollection(Collection<RelatedResource> expected, Collection<RelatedResource> actual) {
+    public static void assertEqualsRelatedResourceCollection(Collection<RelatedResource> expected, Collection<RelatedResource> actual) throws MetamacException {
         assertEqualsNullability(expected, actual);
         if (expected == null) {
             return;
@@ -120,7 +121,7 @@ public class CommonAsserts extends MetamacAsserts {
         }
     }
 
-    public static void assertEqualsRelatedResourceList(List<RelatedResource> expected, List<RelatedResource> actual) {
+    public static void assertEqualsRelatedResourceList(List<RelatedResource> expected, List<RelatedResource> actual) throws MetamacException {
         assertEqualsNullability(expected, actual);
         if (expected == null) {
             return;
@@ -136,7 +137,7 @@ public class CommonAsserts extends MetamacAsserts {
     // RELATED RESOURCES : DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsRelatedResource(RelatedResource entity, RelatedResourceDto dto) {
+    public static void assertEqualsRelatedResource(RelatedResource entity, RelatedResourceDto dto) throws MetamacException {
 
         assertEqualsNullability(entity, dto);
         if (entity == null) {
@@ -150,7 +151,7 @@ public class CommonAsserts extends MetamacAsserts {
         assertEquals(nameableResource.getUrn(), dto.getUrn());
     }
 
-    public static void assertEqualsRelatedResourceCollectionMapper(Collection<RelatedResource> entities, Collection<RelatedResourceDto> dtos) {
+    public static void assertEqualsRelatedResourceCollectionMapper(Collection<RelatedResource> entities, Collection<RelatedResourceDto> dtos) throws MetamacException {
         if (entities == null) {
             entities = new ArrayList<RelatedResource>(); 
         }

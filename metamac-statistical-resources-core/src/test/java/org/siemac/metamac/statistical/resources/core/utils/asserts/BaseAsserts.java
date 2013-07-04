@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.Assert;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -34,7 +35,7 @@ public class BaseAsserts extends CommonAsserts {
     // VERSIONING ASSERTS: DO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsVersioningSiemacMetadata(SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next) {
+    public static void assertEqualsVersioningSiemacMetadata(SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next) throws MetamacException {
         assertEqualsVersioningLifecycle(previous, next);
 
         // Not inherited
@@ -132,7 +133,7 @@ public class BaseAsserts extends CommonAsserts {
     // MAIN HERITANCE: DO & DO
     // -----------------------------------------------------------------
 
-    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource expected, SiemacMetadataStatisticalResource actual) {
+    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource expected, SiemacMetadataStatisticalResource actual) throws MetamacException {
         assertEqualsExternalItem(expected.getLanguage(), actual.getLanguage());
         assertEqualsExternalItemList(expected.getLanguages(), actual.getLanguages());
 
@@ -176,7 +177,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsLifeCycleStatisticalResource(expected, actual);
     }
 
-    protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource expected, LifeCycleStatisticalResource actual) {
+    protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource expected, LifeCycleStatisticalResource actual) throws MetamacException {
         assertEquals(expected.getProcStatus(), actual.getProcStatus());
 
         assertEquals(expected.getCreationDate(), actual.getCreationDate());
@@ -231,7 +232,7 @@ public class BaseAsserts extends CommonAsserts {
     // MAIN HERITANCE: DTO & DO
     // -----------------------------------------------------------------
 
-    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceDto dto, MapperEnum mapperEnum) {
+    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceDto dto, MapperEnum mapperEnum) throws MetamacException {
         switch (mapperEnum) {
             case DO2DTO:
                 assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
@@ -295,7 +296,7 @@ public class BaseAsserts extends CommonAsserts {
         }
         assertEqualsLifeCycleStatisticalResource(entity, dto, mapperEnum);
     }
-    protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource entity, LifeCycleStatisticalResourceDto dto, MapperEnum mapperEnum) {
+    protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource entity, LifeCycleStatisticalResourceDto dto, MapperEnum mapperEnum) throws MetamacException {
         switch (mapperEnum) {
             case DO2DTO:
                 assertEquals(entity.getProcStatus(), dto.getProcStatus());

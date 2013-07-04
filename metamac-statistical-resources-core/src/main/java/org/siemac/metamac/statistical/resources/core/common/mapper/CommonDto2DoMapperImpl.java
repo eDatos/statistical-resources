@@ -27,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,6 +48,9 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
 
     @Autowired
     private DatasetVersionRepository      datasetVersionRepository;
+
+    @Autowired
+    private QueryVersionRepository        queryVersionRepository;
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -262,6 +266,8 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
             case PUBLICATION_VERSION:
                 target.setPublicationVersion(publicationVersionRepository.retrieveByUrn(source.getUrn()));
                 break;
+            case QUERY_VERSION:
+                target.setQueryVersion(queryVersionRepository.retrieveByUrn(source.getUrn()));
         }
     }
 
@@ -314,12 +320,19 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         if (source.getType().equals(target.getType())) {
             switch (source.getType()) {
                 case DATASET_VERSION:
-                    if (source.getUrn().equals(target.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()))
+                    if (source.getUrn().equals(target.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                         return true;
+                    }
                     break;
                 case PUBLICATION_VERSION:
-                    if (source.getUrn().equals(target.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()))
+                    if (source.getUrn().equals(target.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                         return true;
+                    }
+                    break;
+                case QUERY_VERSION:
+                    if (source.getUrn().equals(target.getQueryVersion().getLifeCycleStatisticalResource().getUrn())) {
+                        return true;
+                    }
                     break;
             }
         }
@@ -330,12 +343,19 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         if (source.getType().equals(target.getType())) {
             switch (source.getType()) {
                 case DATASET_VERSION:
-                    if (source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()))
+                    if (source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                         return true;
+                    }
                     break;
                 case PUBLICATION_VERSION:
-                    if (source.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()))
+                    if (source.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                         return true;
+                    }
+                    break;
+                case QUERY_VERSION:
+                    if (source.getQueryVersion().getLifeCycleStatisticalResource().getUrn().equals(target.getQueryVersion().getLifeCycleStatisticalResource().getUrn())) {
+                        return true;
+                    }
                     break;
             }
         }

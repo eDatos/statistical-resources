@@ -17,25 +17,25 @@ public class PublicationsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canUpdatePublication(ServiceContext ctx) throws MetamacException {
+    public static void canUpdatePublicationVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canUpdatePublication(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
-    public static void canDeletePublication(ServiceContext ctx) throws MetamacException {
+    public static void canDeletePublicationVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canDeletePublication(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
-    public static void canFindPublicationsByCondition(ServiceContext ctx) throws MetamacException {
+    public static void canFindPublicationsVersionsByCondition(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canFindPublicationsByCondition(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
-    public static void canRetrievePublicationByUrn(ServiceContext ctx) throws MetamacException {
+    public static void canRetrievePublicationVersionByUrn(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canRetrievePublicationByUrn(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
@@ -65,7 +65,7 @@ public class PublicationsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canRetrievePublicationStructure(ServiceContext ctx) throws MetamacException {
+    public static void canRetrievePublicationVersionStructure(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canRetrievePublicationStructure(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
