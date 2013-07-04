@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -59,7 +60,13 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
     @Override
     public void startDatasetCreation(DataContainer dataContainer) {
-        // TODO Auto-generated method stub
+
+        // Create DatasetRepository
+        DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
+        datasetRepositoryDto.setDatasetId(UUID.randomUUID().toString());
+        for (ComponentInfo componentInfo : retrieveDimensionsInfo()) {
+            datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
+        }
 
     }
 
