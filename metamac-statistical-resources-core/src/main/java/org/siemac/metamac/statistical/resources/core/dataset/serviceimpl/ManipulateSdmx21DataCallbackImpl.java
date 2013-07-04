@@ -67,6 +67,8 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         for (ComponentInfo componentInfo : retrieveDimensionsInfo()) {
             datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
         }
+        // datasetRepositoryDto.setMaxAttributesObservation(retrieveMaxAttributesInObservationLevel(attributeDescriptorDto)); // Max Attributes Observation
+        // datasetRepositoryDto.setLanguages(Arrays.asList("es", "en"));
 
     }
 
