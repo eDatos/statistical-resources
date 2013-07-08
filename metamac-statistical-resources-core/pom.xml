@@ -61,6 +61,7 @@
             <groupId>com.arte.statistic</groupId>
             <artifactId>statistic-dataset-repository</artifactId>
             <version>${statistic-dataset-repository.version}</version>
+            <classifier>client</classifier>
         </dependency>
 
         <!-- Add dependency to JMS when consumers are used, deployment.type=ear -->
