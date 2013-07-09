@@ -22,6 +22,7 @@
         <module>metamac-statistical-resources-parent</module>
         <module>metamac-statistical-resources-core</module>
         <module>metamac-statistical-resources-rest-external-api</module>
+        <module>metamac-statistical-resources-rest-external-impl</module>
         <module>metamac-statistical-resources-web</module>
     </modules>
 
