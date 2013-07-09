@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+    targetNamespace="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" 
+    xmlns:tns="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
+    xmlns:common="http://www.siemac.org/metamac/rest/common/v1.0/domain">
+
+    <xs:import namespace="http://www.siemac.org/metamac/rest/common/v1.0/domain" schemaLocation="metamac-rest-api:metamac-rest-common-domain-v1.0.xsd" />
+
+    <xs:complexType name="Dataset">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" />
+            <xs:element name="urn" type="xs:string" />
+            <xs:element name="selfLink" type="common:ResourceLink" />
+            <xs:element name="parentLink" type="common:ResourceLink" />
+            <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="name" type="common:InternationalString" />
+        </xs:sequence>
+        <xs:attribute name="kind" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <!-- Elements -->
+    <xs:element name="dataset" type="tns:Dataset" />
+</xs:schema>
