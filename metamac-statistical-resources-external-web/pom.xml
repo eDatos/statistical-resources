@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+        <artifactId>metamac-statistical-resources-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../metamac-statistical-resources-parent/pom.xml</relativePath>
+    </parent> 
+
+    <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+    <artifactId>metamac-statistical-resources-external-web</artifactId>
+    <packaging>war</packaging>
+    <name>METAMAC :: STATISTICAL RESOURCES :: EXTERNAL WEB</name>
+    <description>METAMAC :: STATISTICAL RESOURCES :: EXTERNAL WEB</description>
+
+    <properties>
+        <!-- Convenience property to set the GWT version -->
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+            <artifactId>metamac-statistical-resources-core</artifactId>
+            <version>${project.version}</version>
+            <classifier>client</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+            <artifactId>metamac-statistical-resources-rest-external-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${icu4j.version}</version>
+        </dependency>    
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>${urlrewritefilter.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>delete-previous-docs</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${basedir}/src/main/webapp/docs/api" includeemptydirs="true" />
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>delete-enunciate-temporal</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${basedir}/target/enunciate-scratch" includeemptydirs="true" />
+                                <delete dir="${basedir}/target/enunciate" includeemptydirs="true" />
+                            </target>
+                        </configuration>
+                    </execution>                    
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.enunciate</groupId>
+                <artifactId>maven-enunciate-plugin</artifactId>
+                <version>${enunciate.version}</version>
+                <configuration>
+                    <configFile>etc/enunciate/enunciate.xml</configFile>  
+                    <docsDir>${basedir}/src/main/webapp/docs/api</docsDir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>docs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>    
+</project>
