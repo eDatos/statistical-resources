@@ -8,4 +8,10 @@
   <entry key="metamac.statistical.resources.db.username">RELLENAR_USUARIO</entry>
   <entry key="metamac.statistical.resources.db.password">RELLENAR_PASSWORD</entry>
   <entry key="metamac.statistical.resources.db.dialect">org.siemac.metamac.hibernate.dialect.Oracle10gDialectMetamac</entry>
+  
+  <entry key="metamac.statistical.resources.repo.db.url">jdbc:oracle:thin:@RELLENAR_HOST:RELLENAR_PUERTO:XE</entry>
+  <entry key="metamac.statistical.resources.repo.db.driverName">oracle.jdbc.OracleDriver</entry>
+  <entry key="metamac.statistical.resources.repo.db.username">RELLENAR_USUARIO</entry>
+  <entry key="metamac.statistical.resources.repo.db.password">RELLENAR_PASSWORD</entry>
+  <entry key="metamac.statistical.resources.repo.db.dialect">org.siemac.metamac.hibernate.dialect.Oracle10gDialectMetamac</entry>
 </properties>

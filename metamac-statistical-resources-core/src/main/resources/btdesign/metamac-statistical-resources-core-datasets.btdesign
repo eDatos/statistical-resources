@@ -17,8 +17,10 @@ Application DatasetsStatisticalResources {
 			> @DatasourceRepository
 			> @DatasetRepository
 			> @DatasetVersionRepository
+			> @CodeDimensionRepository
 			
 			// Datasources
+			
 			@Datasource createDatasource(String datasetVersionUrn, @Datasource datasource) throws MetamacException;
 	    	@Datasource updateDatasource(@Datasource datasource) throws MetamacException;
 	    	@Datasource retrieveDatasourceByUrn(String urn) throws MetamacException;
@@ -26,6 +28,7 @@ Application DatasetsStatisticalResources {
 	    	List<@Datasource> retrieveDatasourcesByDatasetVersion(String datasetVersionUrn) throws MetamacException;
 	    	
 	    	// Datasets
+	    	
 	    	"Creates dataset version"
 			@DatasetVersion createDatasetVersion(@DatasetVersion datasetVersion, @ExternalItem statisticalOperation) throws MetamacException;
 			"Updates dataset version"
@@ -44,6 +47,13 @@ Application DatasetsStatisticalResources {
     		deleteDatasetVersion(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersion versioningDatasetVersion(String datasetVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		
+    		//Data related actions
+    		
+    		"Retrieve Dataset version dimensions ids"
+    		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
+    		"Retrieve the coverage for a given dimension"
+    		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
 		}  
 
 
@@ -54,10 +64,13 @@ Application DatasetsStatisticalResources {
 		Entity Datasource {
 			databaseTable="TB_DATASOURCES"
 			hint="idSequence=DATASOURCES"
-			!auditable
+			not auditable
 
 
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+			
+			"Value of nect update metadata if the source of datasource is a px"
+			DateTimeTZ dateNextUpdate nullable;
 			
 			// Relations
             "Dataset version"
@@ -103,10 +116,15 @@ Application DatasetsStatisticalResources {
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			
 			//Content descriptors
-			//temporal codes
-			 Clob temporalCoverage nullable;
-			//geographic codes
-			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEOGRAPHIC_COVERAGE" databaseColumn="GEOGRAPHIC_COVERAGE_FK" databaseJoinColumn="DATASET_VERSION_FK";
+			
+			// Dimension or attribute id marked as geographic
+			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_COVERAGE" databaseColumn="GEO_CODE_FK" databaseJoinColumn="DATASET_VERSION_FK";
+			// Dimension or attribute id marked as temporal
+			- Bag<@TemporalCode> temporalCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_TEMP_COVERAGE" databaseColumn="TEMP_CODE_FK" databaseJoinColumn="DATASET_VERSION_FK";
+			// Dimension or attribute id marked as measure
+			- Bag<@ExternalItem> measureCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_MEASURE_COVERAGE" databaseColumn="MEASURE_CODES_FK" databaseJoinColumn="DATASET_VERSION_FK";
+			// Dimensions coverages
+			- Bag<@CodeDimension> coverages cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 			//geographic granularities
 			- Bag<@ExternalItem> geographicGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_GRANULARITY" databaseColumn="GEOGRAPHIC_GRANULARITY_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//temporal granularities
@@ -116,11 +134,11 @@ Application DatasetsStatisticalResources {
 			//Last date which data refers to
 			DateTimeTZ dateEnd nullable;
 			- Bag<@ExternalItem> statisticalUnit cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STATISTICAL_UNIT" databaseColumn="STATISTICAL_UNIT_FK" databaseJoinColumn="DATASET_VERSION_FK";
-			- Bag<@ExternalItem> measures cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_MEASURES" databaseColumn="MEASURE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			
 			//Production descriptor
 			- @ExternalItem relatedDsd nullable cascade="all" databaseColumn="RELATED_DSD_FK"; 
 			boolean relatedDsdChanged transient;
+			String datasetRepositoryId nullable;
 			
 			//Class descriptors
 			
@@ -158,6 +176,7 @@ Application DatasetsStatisticalResources {
 				@DatasetVersion retrieveLastPublishedVersion(String datasetUrn) throws MetamacException;
 				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 				boolean isLastVersion(String datasetVersionUrn) throws MetamacException;
+				List<String> retrieveDimensionsIds(@DatasetVersion datasetVersion) throws MetamacException;
 			}
 		}
 		
@@ -165,8 +184,8 @@ Application DatasetsStatisticalResources {
     	Entity StatisticOfficiality {
     		databaseTable="TB_LIS_STAT_OFFICIALITY"
     		hint="idSequence=STAT_OFFICIALITY"
+    		!auditable
     		
-    		not auditable
     		String identifier;
     		- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
     		
@@ -174,6 +193,36 @@ Application DatasetsStatisticalResources {
     			findById;
     			findAll;
     		}
+    	}
+
+    	Entity CodeDimension {
+    		databaseTable="TB_CODE_DIMENSIONS"
+    		hint="idSequence=CODE_DIMENSIONS"
+    		!auditable
+    		gap
+    		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+    		String dsdComponentId;
+    		String identifier;
+    		String title length="4000";
+    		- @DatasetVersion datasetVersion cascade="none" fetch="lazy" not nullable databaseColumn="DATASET_VERSION_FK" <-> coverages;
+    		
+    		Repository CodeDimensionRepository {
+    			findByQuery;
+    			List<@CodeDimension> findCodesForDatasetVersionByDimensionId(long datasetVersionId, String dimensionId) throws MetamacException;	
+    		}
+    	}
+    	
+    	Entity TemporalCode {
+    		databaseTable="TB_TEMP_CODES"
+    		hint="idSequence=TEMP_CODES"
+    		!auditable
+    		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+    		String identifier;
+    		String title length="4000";
     	}
 	}
 }

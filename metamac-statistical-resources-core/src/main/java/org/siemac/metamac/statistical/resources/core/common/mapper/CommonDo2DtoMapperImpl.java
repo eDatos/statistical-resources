@@ -18,12 +18,42 @@ import org.siemac.metamac.core.common.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 @org.springframework.stereotype.Component("commonDo2DtoMapper")
 public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements CommonDo2DtoMapper {
 
+    
+    
+    // ------------------------------------------------------------
+    // TEMPORAL CODE
+    // ------------------------------------------------------------
+    
+    @Override
+    public Collection<TemporalCodeDto> temporalCodeDoCollectionToDtoCollection(Collection<TemporalCode> source) throws MetamacException {
+        HashSet<TemporalCodeDto> result = new HashSet<TemporalCodeDto>();
+        
+        if (source != null) {
+            for (TemporalCode temporalCode : source) {
+                result.add(temporalCodeDoToDto(temporalCode));
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    public TemporalCodeDto temporalCodeDoToDto(TemporalCode source) throws MetamacException {
+        TemporalCodeDto target = new TemporalCodeDto();
+        target.setIdentifier(source.getIdentifier());
+        target.setTitle(source.getTitle());
+       
+        return target;
+    }
+    
+    
     // ------------------------------------------------------------
     // EXTERNAL ITEM
     // ------------------------------------------------------------

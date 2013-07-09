@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -35,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
+    public static final String DEFAULT_DATA_LOCALE = "es";
     protected static final String USER_MOCK                = "MockedUser";
 
     // -----------------------------------------------------------------
@@ -62,6 +64,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private CodeItem mockCodeItem() {
         CodeItem code = new CodeItem();
         code.setCode(mockString(6));
+        code.setTitle(mockString(6));
         return code;
     }
 
@@ -511,5 +514,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public static String mockPublicationVersionRelatedUrn() {
         // TODO: change when publication version urn can be generated with generatorUrnUtils
         return "TODO:mock";
+    }
+    
+    // -----------------------------------------------------------------
+    // Temporal code
+    // -----------------------------------------------------------------
+    public static TemporalCode mockTemporalCode() {
+        return mockTemporalCode(mockString(10), mockString(20));
+    }
+    
+    public static TemporalCode mockTemporalCode(String identifier, String title) {
+        TemporalCode code = new TemporalCode();
+        code.setIdentifier(identifier);
+        code.setTitle(title);
+        return code;
     }
 }

@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -90,7 +91,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         return target;
     }
 
-    private List<QuerySelectionItem> querySelectionDto2Do(Map<String, Set<String>> source, List<QuerySelectionItem> target, QueryVersion queryTarget, String metadataName) {
+    private List<QuerySelectionItem> querySelectionDto2Do(Map<String, List<CodeItemDto>> source, List<QuerySelectionItem> target, QueryVersion queryTarget, String metadataName) {
         if (source.isEmpty()) {
             if (!target.isEmpty()) {
                 // Delete old entities
@@ -114,11 +115,11 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     }
 
 
-    private List<QuerySelectionItem> querySelectionItemListDto2Do(Map<String, Set<String>> source, List<QuerySelectionItem> targets, QueryVersion queryTarget) {
+    private List<QuerySelectionItem> querySelectionItemListDto2Do(Map<String, List<CodeItemDto>> source, List<QuerySelectionItem> targets, QueryVersion queryTarget) {
         List<QuerySelectionItem> targetsBefore = targets;
         targets = new ArrayList<QuerySelectionItem>();
         
-        for (Map.Entry<String, Set<String>> sourceItem : source.entrySet()) {
+        for (Map.Entry<String, List<CodeItemDto>> sourceItem : source.entrySet()) {
             boolean existsBefore = false;
             for (QuerySelectionItem targetItem : targetsBefore) {
                 if (sourceItem.getKey().equals(targetItem.getDimension())) {
@@ -135,13 +136,13 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         return targets;
     }
 
-    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, Set<String>> sourceItem, QueryVersion queryTarget) {
+    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, List<CodeItemDto>> sourceItem, QueryVersion queryTarget) {
         QuerySelectionItem target = new QuerySelectionItem();
         querySelectionItemDto2Do(sourceItem, target, queryTarget);
         return target;
     }
 
-    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, Set<String>> sourceItem, QuerySelectionItem targetItem, QueryVersion queryTarget) {
+    private QuerySelectionItem querySelectionItemDto2Do(Entry<String, List<CodeItemDto>> sourceItem, QuerySelectionItem targetItem, QueryVersion queryTarget) {
         targetItem.setQuery(queryTarget);
         targetItem.setDimension(sourceItem.getKey());
         
@@ -149,7 +150,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         List<CodeItem> codeItemsBefore = targetItem.getCodes();
         targetItem.getCodes().clear();
         
-        for (String value : sourceItem.getValue()) {
+        for (CodeItemDto value : sourceItem.getValue()) {
             boolean existsBefore = false;
             for (CodeItem codeItem : codeItemsBefore) {
                 if (value.equals(codeItem.getCode())) {
@@ -166,14 +167,15 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         return targetItem;
     }
 
-    private CodeItem codeItemDto2Do(String value, QuerySelectionItem targetItem) {
+    private CodeItem codeItemDto2Do(CodeItemDto value, QuerySelectionItem targetItem) {
         CodeItem target = new CodeItem();
         codeItemDto2Do(value, target, targetItem);
         return target;
     }
 
-    private CodeItem codeItemDto2Do(String value, CodeItem target, QuerySelectionItem targetItem) {
-        target.setCode(value);
+    private CodeItem codeItemDto2Do(CodeItemDto source, CodeItem target, QuerySelectionItem targetItem) {
+        target.setCode(source.getCode());
+        target.setTitle(source.getTitle());
         target.setQuerySelectionItem(targetItem);
         return target;
     }

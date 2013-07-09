@@ -30,22 +30,4 @@ public class DatasetVersion extends DatasetVersionBase implements HasSiemacMetad
         return getSiemacMetadataStatisticalResource();
     }
     
-    public List<String> getTemporalCoverageList() {
-        List<String> codes = new ArrayList<String>();
-        if (!StringUtils.isEmpty(getTemporalCoverage())) {
-            String[] timeCodes = getTemporalCoverage().split("#");
-            for (String code : timeCodes) {
-                codes.add(code);
-            }
-        }
-        return codes;
-    }
-    
-    public void setTemporalCoverageList(List<String> codes) {
-        if (codes != null && codes.size() > 0) {
-            setTemporalCoverage(StringUtils.join(codes,"#"));
-        } else {
-            setTemporalCoverage(null);
-        }
-    }
 }

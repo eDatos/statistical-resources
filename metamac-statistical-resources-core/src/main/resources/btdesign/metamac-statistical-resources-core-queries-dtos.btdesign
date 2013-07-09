@@ -17,7 +17,17 @@ Application QueriesStatisticalResourcesDto {
 			- @QueryTypeEnum type;
 			Integer latestDataNumber;
 			QuerySelection selection;
-			
+		}
+		
+		DataTransferObject SelectionItemDto {
+			String dimensionId;
+			- List<CodeItemDto> codes;
+		}
+		
+		//CODES
+		DataTransferObject CodeItemDto {
+			String code required;
+			String title required;
 		}
 	}
 }

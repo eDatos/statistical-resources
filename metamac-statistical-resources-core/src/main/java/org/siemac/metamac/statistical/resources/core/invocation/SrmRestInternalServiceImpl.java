@@ -6,6 +6,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelis
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,17 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveConcept(agencyId, schemeId, version, conceptId);
     }
     
+    @Override
+    public Concepts findConcepts(String conceptSchemeUrn, int firstResult, int maxResult, String query) {
+        String limit = String.valueOf(maxResult);
+        String offset = String.valueOf(firstResult);
+        String[] params = UrnUtils.splitUrnItemScheme(conceptSchemeUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+        return restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyId, resourceId, version, query, null, limit, offset);
+    }
+    
     /*
      * Code lists
      */
@@ -88,5 +100,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String version = params[2];
         return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, query, null, limit, offset);
     }
+    
+
     
 }

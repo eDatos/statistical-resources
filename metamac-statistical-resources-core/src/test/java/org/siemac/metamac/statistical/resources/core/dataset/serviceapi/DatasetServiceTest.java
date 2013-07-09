@@ -31,6 +31,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -491,16 +492,29 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewDatasetVersionCreated(datasetVersion, datasetNewVersion);
     }
+    
+    @Override
+    public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
+        Assert.fail("Unimplemented");
+        
+    }
+    
+    @Override
+    public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
+        Assert.fail("Unimplemented");
+    }
+    
+    
 
     private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
 
         // Non inherited fields
         assertEquals(0, next.getGeographicCoverage().size());
-        assertEquals(0, next.getTemporalCoverageList().size());
+        assertEquals(0, next.getTemporalCoverage().size());
+        assertEquals(0, next.getMeasureCoverage().size());
         assertNull(next.getDateStart());
         assertNull(next.getDateEnd());
-        assertEquals(0, next.getMeasures().size());
         assertNull(next.getDateNextUpdate());
         assertNull(next.getBibliographicCitation());
 

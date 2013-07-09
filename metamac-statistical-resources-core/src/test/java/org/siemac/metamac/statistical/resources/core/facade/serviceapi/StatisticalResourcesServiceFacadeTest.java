@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDay;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
@@ -13,6 +14,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Public
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsCube;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationStructure;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuerySelection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionDoAndDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory.CHAPTER_01_BASIC_NAME;
@@ -68,7 +70,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -76,7 +77,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
@@ -88,7 +93,10 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
@@ -101,6 +109,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -117,6 +126,8 @@ import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryC
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.DsRepositoryMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
@@ -137,16 +148,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 /**
  * Spring based transactional test with DbUnit support.
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml",
+                                    "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
+    
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
@@ -188,6 +206,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
+
+    @Autowired
+    private DatasetRepositoriesServiceFacade  statisticsDatasetRepositoriesServiceFacade;
 
     @Before
     public void onBeforeTest() {
@@ -284,8 +305,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
                 queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
 
         expectedQuery.getSelection().remove("SEX");
-        expectedQuery.getSelection().put("DIM1", new HashSet<String>(Arrays.asList("A", "B", "C")));
-        expectedQuery.getSelection().put("DIM2", new HashSet<String>(Arrays.asList("D", "E")));
+        expectedQuery.getSelection().put("DIM1", Arrays.asList(
+                new CodeItemDto("A","A"),
+                new CodeItemDto("B","B"),
+                new CodeItemDto("C","C")));
+        expectedQuery.getSelection().put("DIM2", Arrays.asList(
+                new CodeItemDto("D","D"),
+                new CodeItemDto("E","E")));
 
         // Service operation
         QueryDto actualQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), expectedQuery);
@@ -297,11 +323,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(querySelectionItemsBefore - 1 + 2, querySelectionItemsAfter);
         assertEquals(codeItemsBefore - 1 + 5, codeItemsAfter);
         assertNotNull(actualQuery);
-        assertTrue(actualQuery.getSelection().get("DIM1").contains("A"));
-        assertTrue(actualQuery.getSelection().get("DIM1").contains("B"));
-        assertTrue(actualQuery.getSelection().get("DIM1").contains("C"));
-        assertTrue(actualQuery.getSelection().get("DIM2").contains("D"));
-        assertTrue(actualQuery.getSelection().get("DIM2").contains("E"));
+        assertEqualsQuerySelection(expectedQuery.getSelection(), actualQuery.getSelection());
     }
 
     @Test
@@ -972,9 +994,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendToProductionValidation() throws Exception {
-        DataStructure emptyDsd = new DataStructure();
-        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
-        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
+        mockDsdAndatasetRepositoryForProductionValidation();
 
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
@@ -1000,6 +1020,16 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDataset.getDiffusionValidationDate()));
     }
 
+    @Override
+    public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
+        fail("testRetrieveCoverageForDatasetVersionDimension not implemented");
+    }
+    
+    @Override
+    public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
+        fail("testRetrieveCoverageForDatasetVersionDimension not implemented");
+    }
+    
     @Override
     @Test
     public void testCreatePublication() throws Exception {
@@ -1564,4 +1594,30 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         propertyRestriction.setStringValue(stringValue);
         metamacCriteria.setRestriction(propertyRestriction);
     }
+    
+    private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
+        List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
+        
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("GEO_DIM", "code-01", "code-02", "code-03"));
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("TIME_PERIOD", "2010", "2011", "2012"));
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("MEAS_DIM", "concept-01", "concept-02", "concept-03"));
+        Mockito.when(statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(Mockito.anyString())).thenReturn(dimensionsCodes);
+        
+        DatasetRepositoryDto datasetRepoDto = DsRepositoryMockUtils.mockDatasetRepository("dsrepo-01", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM");
+        Mockito.when(statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(Mockito.anyString())).thenReturn(datasetRepoDto);
+
+        //Mock codelist and concept Scheme
+        
+        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:uuid:codelist-01", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
+        
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:uuid:cshm-01", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
+        
+        //Create a datastructure with dimensions marked as measure temporal and spatial
+        
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:uuid:dsd-urn", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
+    }
+        
 }

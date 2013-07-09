@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 
 @org.springframework.stereotype.Component("datasetDo2DtoMapper")
 public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
@@ -77,11 +79,14 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setVersion(source.getVersion());
 
         // Other
-        target.getTemporalCoverage().clear();
-        target.getTemporalCoverage().addAll(source.getTemporalCoverageList());
-
         target.getGeographicCoverage().clear();
         target.getGeographicCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicCoverage()));
+        
+        target.getTemporalCoverage().clear();
+        target.getTemporalCoverage().addAll(temporalCodeDoCollectionToDtoCollection(source.getTemporalCoverage()));
+        
+        target.getMeasureCoverage().clear();
+        target.getMeasureCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getMeasureCoverage()));
 
         target.getGeographicGranularities().clear();
         target.getGeographicGranularities().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicGranularities()));
@@ -91,9 +96,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         target.getStatisticalUnit().clear();
         target.getStatisticalUnit().addAll(externalItemDoCollectionToDtoCollection(source.getStatisticalUnit()));
-
-        target.getMeasures().clear();
-        target.getMeasures().addAll(externalItemDoCollectionToDtoCollection(source.getMeasures()));
 
         target.setDateStart(dateDoToDto(source.getDateStart()));
         target.setDateEnd(dateDoToDto(source.getDateEnd()));
@@ -129,5 +131,25 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setDescription(internationalStringDoToDto(source.getDescription()));
         
         return target;
+    }
+    
+    @Override
+    public CodeItemDto codeDimensionDoToCodeItemDto(CodeDimension source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        CodeItemDto dto = new CodeItemDto();
+        dto.setCode(source.getIdentifier());
+        dto.setTitle(source.getTitle());
+        return dto;
+    }
+    
+    @Override
+    public List<CodeItemDto> codeDimensionDoListToCodeItemDtoList(List<CodeDimension> sources) throws MetamacException {
+        List<CodeItemDto> targets = new ArrayList<CodeItemDto>();
+        for (CodeDimension source : sources) {
+            targets.add(codeDimensionDoToCodeItemDto(source));
+        }
+        return targets;
     }
 }

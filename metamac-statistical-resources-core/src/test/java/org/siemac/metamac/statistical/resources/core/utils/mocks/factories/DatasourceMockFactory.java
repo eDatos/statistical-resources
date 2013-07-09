@@ -20,6 +20,7 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
 
     public static final String DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04_NAME = "DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04";
     private static Datasource  DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
+    
 
     protected static Datasource getDatasource01Basic() {
         if (DATASOURCE_01_BASIC == null) {
@@ -58,7 +59,13 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
         }
         return DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
     }
-
+    
+    protected static Datasource generateSimpleDatasource(){
+        return createDatasource();
+    }
+    
+    
+    
     private static Datasource createDatasource() {
         return getStatisticalResourcesPersistedDoMocks().mockDatasourceWithGeneratedDatasetVersion();
     }

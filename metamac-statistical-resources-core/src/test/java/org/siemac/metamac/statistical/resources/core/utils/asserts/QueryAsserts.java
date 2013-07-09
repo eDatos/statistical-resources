@@ -13,6 +13,7 @@ import java.util.Set;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -133,6 +134,14 @@ public class QueryAsserts extends BaseAsserts {
     public static void assertEqualsQueryVersion(QueryDto dto, QueryVersion entity) {
         assertEqualsQueryVersion(entity, dto, MapperEnum.DTO2DO);
     }
+    
+    public static void assertEqualsQuerySelection(Map<String, List<CodeItemDto>> dtos, List<QuerySelectionItem> entities) {
+        assertEqualsSelection(entities, dtos, MapperEnum.DTO2DO);
+    }
+    
+    public static void assertEqualsQuerySelection(List<QuerySelectionItem> entities, Map<String, List<CodeItemDto>> dtos) {
+        assertEqualsSelection(entities, dtos, MapperEnum.DO2DTO);
+    }
 
     public static void assertEqualsQueryVersionDoAndDtoCollection(Collection<QueryVersion> expected, Collection<QueryDto> actual) {
         assertEqualsQueryVersionCollection(expected, actual, MapperEnum.DO2DTO);
@@ -192,25 +201,71 @@ public class QueryAsserts extends BaseAsserts {
 
     
 
-    private static void assertEqualsSelection(List<QuerySelectionItem> entitySelection, Map<String, Set<String>> dtoSelection, MapperEnum mapperEnum) {
+    private static void assertEqualsSelection(List<QuerySelectionItem> entitySelection, Map<String, List<CodeItemDto>> dtoSelection, MapperEnum mapperEnum) {
         assertEqualsNullability(entitySelection, dtoSelection);
         
         if (entitySelection != null) {
             assertEquals(entitySelection.size(), dtoSelection.size());
             for (QuerySelectionItem entitySelectionItem : entitySelection) {
-                Set<String> dtoSelectionItem = dtoSelection.get(entitySelectionItem.getDimension());
+                List<CodeItemDto> dtoSelectionItem = dtoSelection.get(entitySelectionItem.getDimension());
                 if (dtoSelectionItem == null) {
                     fail("Dimensions found in entity.getSelection, thar are not in actual dto.getSelection");
                 } else {
                     assertEquals(entitySelectionItem.getCodes().size(), dtoSelectionItem.size());
                     
                     for (CodeItem entityCodeItem : entitySelectionItem.getCodes()) {
-                        if (!dtoSelectionItem.contains(entityCodeItem.getCode())) {
+                        boolean found = false;
+                        for (CodeItemDto dtoCodeItem : dtoSelectionItem) {
+                            if (entityCodeItem.getCode().equals(dtoCodeItem.getCode())) {
+                                assertEquals(entityCodeItem.getTitle(), dtoCodeItem.getTitle());
+                                found = true;
+                            }
+                        }
+                        if (!found) {
                             fail("Codes found in a dimension of entity.getSelection that are not in the respective dimension of dto.getSelection");
                         }
                     }
                 }
             }
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // QUERY: DTO & DTO
+    // -----------------------------------------------------------------
+
+    
+    public static void assertEqualsQuerySelection(Map<String, List<CodeItemDto>> expected, Map<String, List<CodeItemDto>> actual) {
+        assertEqualsNullability(expected, actual);
+        
+        if (expected != null) {
+            assertEquals(expected.size(), actual.size());
+            for (String dimId : expected.keySet()) {
+                List<CodeItemDto> expectedCodes = expected.get(dimId);
+                List<CodeItemDto> actualCodes = actual.get(dimId);
+                assertEqualsCodeItemDtoCollection(expectedCodes, actualCodes);
+            }
+        }
+    }
+
+    public static void assertEqualsCodeItemDtoCollection(List<CodeItemDto> expected, List<CodeItemDto> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (int i = 0; i < expected.size(); i++) {
+                assertEqualsCodeItemDto(expected.get(i), actual.get(i));
+            }
+        } else {
+            assertNull(actual);
+        }
+    }
+    
+    
+    private static void assertEqualsCodeItemDto(CodeItemDto expected, CodeItemDto actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected != null) {
+            assertEquals(expected.getCode(), actual.getCode());
+            assertEquals(expected.getTitle(), actual.getTitle());
         }
     }
 

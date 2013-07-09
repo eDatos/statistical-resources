@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.joda.time.DateTime;
@@ -32,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -58,9 +59,12 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         queryDto.setRelatedDatasetVersion(mockPersistedRelatedResourceDatasetVersionDto(datasetVersion));
         queryDto.setType(QueryTypeEnum.FIXED);
 
-        Map<String, Set<String>> selection = new HashMap<String, Set<String>>();
-        selection.put("SEX", new HashSet<String>(Arrays.asList("FEMALE")));
-        selection.put("REGION", new HashSet<String>(Arrays.asList("TENERIFE", "LA_GOMERA")));
+        Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();
+        selection.put("SEX", Arrays.asList(new CodeItemDto("FEMALE", "Female")));
+        selection.put("REGION", Arrays.asList(
+                new CodeItemDto("TENERIFE", "Tenerife"),
+                new CodeItemDto("LA_GOMERA", "La gomera")
+                ));
         queryDto.setSelection(selection);
 
         return queryDto;
@@ -93,22 +97,15 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
         datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
-        datasetDto.addGeographicCoverage(mockCodeExternalItemDto());
-        datasetDto.addGeographicCoverage(mockCodeExternalItemDto());
-
+        
         datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
         datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
-        datasetDto.getTemporalCoverage().add("2010");
-        datasetDto.getTemporalCoverage().add("2011");
 
         datasetDto.setDateStart(mockDate());
         datasetDto.setDateEnd(mockDate());
 
         datasetDto.addStatisticalUnit(mockConceptExternalItemDto());
         datasetDto.addStatisticalUnit(mockConceptExternalItemDto());
-
-        datasetDto.addMeasure(mockConceptExternalItemDto());
-        datasetDto.addMeasure(mockConceptExternalItemDto());
 
         datasetDto.setRelatedDsd(mockDsdExternalItemDto());
 
@@ -349,5 +346,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     private static Date mockDate() {
         return mockDateTime().toDate();
     }
+
 
 }

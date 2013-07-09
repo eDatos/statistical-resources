@@ -11,7 +11,9 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.mapper.BaseDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 
 public interface CommonDo2DtoMapper extends BaseDo2DtoMapper {
 
@@ -26,7 +28,12 @@ public interface CommonDo2DtoMapper extends BaseDo2DtoMapper {
     // International String
     public InternationalStringDto internationalStringDoToDto(InternationalString source);
 
+    // Temporal code
+    public Collection<TemporalCodeDto> temporalCodeDoCollectionToDtoCollection(Collection<TemporalCode> source) throws MetamacException;
+    public TemporalCodeDto temporalCodeDoToDto(TemporalCode source) throws MetamacException;
+    
     // Other types
     public Date dateDoToDto(DateTime source);
+    
 
 }

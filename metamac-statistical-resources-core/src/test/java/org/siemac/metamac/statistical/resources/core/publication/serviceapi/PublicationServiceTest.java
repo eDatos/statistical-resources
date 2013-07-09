@@ -72,6 +72,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Publi
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -109,6 +110,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     private PublicationService                      publicationService;
 
     @Autowired
+    @Qualifier("txManager")
     private final PlatformTransactionManager        transactionManager = null;
 
     // ------------------------------------------------------------------------

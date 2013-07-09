@@ -51,6 +51,8 @@ Application QueriesStatisticalResources {
 			"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
 			String code;
+			String title length="4000";
+			
 			- @QuerySelectionItem querySelectionItem not nullable cascade="none" databaseColumn="QUERY_SELECTION_ITEM_FK" <-> codes;
 			
 			Repository CodeItemRepository {

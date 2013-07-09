@@ -12,6 +12,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASET_VERSION_NOT_FOUND                        = create("exception.resources.dataset.version_not_found");
     public static final CommonServiceExceptionType DATASET_LAST_VERSION_NOT_FOUND                   = create("exception.resources.dataset.last_version_not_found");
     public static final CommonServiceExceptionType DATASET_MAX_REACHED_IN_OPERATION                 = create("exception.resources.dataset.max_reached_in_operation");
+    public static final CommonServiceExceptionType DATASET_EMPTY_DATASOURCES                        = create("exception.resources.dataset.empty_datasources");
+    public static final CommonServiceExceptionType DATASET_NO_DATA                                  = create("exception.resources.dataset.empty_data");
 
     // Datasource
     public static final CommonServiceExceptionType DATASOURCE_NOT_FOUND                             = create("exception.resources.datasource.not_found");

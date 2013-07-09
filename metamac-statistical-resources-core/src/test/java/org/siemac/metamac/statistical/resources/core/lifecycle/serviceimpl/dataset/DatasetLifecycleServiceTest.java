@@ -5,10 +5,17 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCoverageForDsdComponent;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
@@ -18,30 +25,51 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
+import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
+import org.siemac.metamac.statistical.resources.core.utils.DsRepositoryMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+
+import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
-
+    
+    private static final String DEFAULT_LOCALE = "es";
+    
     @InjectMocks
-    protected LifecycleService<DatasetVersion>         datasetLifecycleService = new DatasetLifecycleServiceImpl();
+    protected DatasetLifecycleServiceImpl         datasetLifecycleService = new DatasetLifecycleServiceImpl();
 
     @Mock
     private SiemacLifecycleChecker                     siemacLifecycleChecker;
@@ -61,6 +89,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     protected DatasetVersionMockFactory                datasetVersionMockFactory;
 
     protected DatasetService                           datasetService;
+    
+    @Mock
+    private DatasetRepositoriesServiceFacade           datasetRepositoriesServiceFacade;
 
     @Mock
     private SrmRestInternalService                     srmRestInternalService;
@@ -80,6 +111,8 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Override
     @Test
     public void testSendToProductionValidation() throws Exception {
+        mockDsdAndatasetRepositoryForProductionValidation();
+        
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
@@ -97,6 +130,8 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Test
     public void testSendToProductionValidationChangingSomeFieldsDontHaveEffect() throws Exception {
+        mockDsdAndatasetRepositoryForProductionValidation();
+        
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
@@ -109,7 +144,65 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionChanged);
     }
-
+    
+    @Test
+    public void testCheckSendToProductionValidationRequiredMetadata() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
+        datasetVersion.getDatasources().clear();
+        datasetVersion.setRelatedDsd(null);
+        
+        Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
+        
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        datasetLifecycleService.checkSendToProductionValidationResource(datasetVersion, exceptionItems);
+        
+        MetamacException expected = new MetamacException(Arrays.asList(
+                new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD),
+                new MetamacExceptionItem(ServiceExceptionType.DATASET_EMPTY_DATASOURCES, datasetVersion.getSiemacMetadataStatisticalResource().getUrn())
+                )
+        );
+        MetamacAsserts.assertEqualsMetamacException(expected, new MetamacException(exceptionItems));
+    }
+    
+    
+    @Test
+    public void testApplySendToProductionValidationResourceFillCoveragesLocalRepresentation() throws Exception {
+        //Mock related stuff
+        mockDsdAndatasetRepositoryForProductionValidation();
+        
+        //TEST
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
+        
+        datasetLifecycleService.applySendToProductionValidationResource(getServiceContextAdministrador(), datasetVersion);
+        
+        assertEquals(Integer.valueOf(3), datasetVersion.getFormatExtentDimensions());
+        //Assert.assertEquals(Integer.valueOf(27), datasetVersion.getFormatExtentObservations());
+        
+        //all coverages
+        assertEqualsCoverageForDsdComponent(datasetVersion, "GEO_DIM", Arrays.asList(
+                new CodeDimension("GEO_DIM", "code-01","Code 01"),
+                new CodeDimension("GEO_DIM", "code-02","Code 02"),
+                new CodeDimension("GEO_DIM", "code-03", "Code 03")));
+        
+        assertEqualsCoverageForDsdComponent(datasetVersion, "MEAS_DIM", Arrays.asList(
+                new CodeDimension("MEAS_DIM", "concept-01","Concept 01"),
+                new CodeDimension("MEAS_DIM", "concept-02","Concept 02"),
+                new CodeDimension("MEAS_DIM", "concept-03", "Concept 03")));
+        
+        assertEqualsCoverageForDsdComponent(datasetVersion, "TIME_PERIOD", Arrays.asList(
+                new CodeDimension("MEAS_DIM", "2010"),
+                new CodeDimension("MEAS_DIM", "2011"),
+                new CodeDimension("MEAS_DIM", "2012")));
+        
+        assertEquals(9,datasetVersion.getCoverages().size());
+        
+        //specific coverages
+        assertEquals(3,datasetVersion.getGeographicCoverage().size());
+        assertEquals(3,datasetVersion.getTemporalCoverage().size());
+        assertEquals(3,datasetVersion.getMeasureCoverage().size());
+    }
+    
+    
     @Override
     @Test
     public void testSendToDiffusionValidation() throws Exception {
@@ -171,4 +264,38 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         datasetLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersion);
     }
 
+    
+    /**
+     * UTILS
+     */
+    private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
+        List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
+        
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("GEO_DIM", "code-01", "code-02", "code-03"));
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("TIME_PERIOD", "2010", "2011", "2012"));
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("MEAS_DIM", "concept-01", "concept-02", "concept-03"));
+        Mockito.when(datasetRepositoriesServiceFacade.findCodeDimensions(Mockito.anyString())).thenReturn(dimensionsCodes);
+        
+        DatasetRepositoryDto datasetRepoDto = DsRepositoryMockUtils.mockDatasetRepository("dsrepo-01", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM");
+        Mockito.when(datasetRepositoriesServiceFacade.retrieveDatasetRepository(Mockito.anyString())).thenReturn(datasetRepoDto);
+
+        //Mock codelist and concept Scheme
+        
+        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:uuid:codelist-01", DEFAULT_LOCALE, 3);
+        Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
+        
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:uuid:cshm-01", DEFAULT_LOCALE, 3);
+        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
+        
+        //Create a datastructure with dimensions marked as measure temporal and spatial
+        
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:uuid:dsd-urn", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
+        
+    }
+    
+
+
+    
 }
+

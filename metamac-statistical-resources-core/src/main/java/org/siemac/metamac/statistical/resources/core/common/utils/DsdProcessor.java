@@ -145,9 +145,9 @@ public class DsdProcessor {
             type = DsdComponentType.MEASURE;
             if (dim.getLocalRepresentation() != null) {
                 if (dim.getLocalRepresentation().getEnumeration() != null) {
-                    codelistRepresentationUrn = dim.getLocalRepresentation().getEnumeration().getURN();
+                    conceptSchemeRepresentationUrn = dim.getLocalRepresentation().getEnumeration().getURN();
                 } else {
-                    throw new IllegalArgumentException("Found a dimension with local representation but no codelist");
+                    throw new IllegalArgumentException("Found a dimension with local representation but no Concept Scheme");
                 }
             } else if (dim.getConceptIdentity() != null) {
                 setRepresentationFromConceptIdentity(dim.getConceptIdentity());

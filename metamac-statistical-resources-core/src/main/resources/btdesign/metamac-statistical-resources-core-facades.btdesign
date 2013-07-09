@@ -85,6 +85,12 @@ Application FacadeStatisticalResources {
     		"Retrieve latest published datasetVersion providing datasetUrn"
     		@DatasetDto retrieveLatestPublishedDatasetVersion(String datasetUrn) throws MetamacException;
     		
+    		//Data related actions
+    		"Retrieve Dataset version dimensions ids"
+    		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
+    		"Retrieve the coverage for a given dimension"
+    		List<@CodeItemDto> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
+    		
     		// PUBLICATIONS & PUBLICATION VERSION
 	   		"Creates publication"
 	   		@PublicationDto createPublication(@PublicationDto publicationDto, @ExternalItemDto statisticalOperation) throws MetamacException;

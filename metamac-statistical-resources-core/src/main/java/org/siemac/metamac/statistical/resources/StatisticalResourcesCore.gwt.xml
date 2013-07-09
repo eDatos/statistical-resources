@@ -12,5 +12,6 @@
     <source path='core/enume/query/domain' />
     <source path='core/utils/shared' />
     <source path='core/dto' />
+    <source path='core/invocation/shared' />
 
 </module>

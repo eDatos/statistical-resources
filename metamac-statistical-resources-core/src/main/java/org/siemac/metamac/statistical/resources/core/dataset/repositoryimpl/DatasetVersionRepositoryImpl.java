@@ -4,6 +4,8 @@ import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCrit
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -111,6 +113,17 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset version with id " + statisticalResourceId + " and versionLogic " + versionLogic + " found");
         }
         return result.get(0);
+    }
+    
+    @Override
+    public List<String> retrieveDimensionsIds(DatasetVersion datasetVersion) throws MetamacException {
+        Query query = getEntityManager().createQuery(
+                "select distinct(code.dsdComponentId) "+
+                "from CodeDimension code " +
+                "where code.datasetVersion = :datasetVersion "+
+                "order by code.dsdComponentId");
+        query.setParameter("datasetVersion", datasetVersion);
+        return query.getResultList();
     }
 
 }

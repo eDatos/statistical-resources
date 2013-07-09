@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsMetamacExceptionItem;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsCodeItemDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory.CHAPTER_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
@@ -16,9 +17,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_05_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +31,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -36,9 +41,13 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.utils.DsRepositoryMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
@@ -46,6 +55,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Datas
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,12 +63,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 /**
  * Spring based transactional test with DbUnit support.
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml",
+        "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class StatisticalResourcesOptimisticLockingTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
@@ -86,6 +101,9 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
+    
+    @Autowired
+    private DatasetRepositoriesServiceFacade  statisticsDatasetRepositoriesServiceFacade;
 
     @Before
     public void onBeforeTest() {
@@ -141,10 +159,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         QueryDto queryDtoSession01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession01.getOptimisticLockingVersion());
-        Map<String, Set<String>> selection = new HashMap<String, Set<String>>() {
+        Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>() {
 
             {
-                put("DIM_SESSION1", new HashSet<String>(Arrays.asList("A", "B")));
+                put("DIM_SESSION1", Arrays.asList(
+                                new CodeItemDto("A", "A"),
+                                new CodeItemDto("B", "B")));
             }
         };
         queryDtoSession01.setSelection(selection);
@@ -153,10 +173,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         QueryDto queryDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME)
                 .getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryDtoSession02.getOptimisticLockingVersion());
-        selection = new HashMap<String, Set<String>>() {
+        selection = new HashMap<String, List<CodeItemDto>>() {
 
             {
-                put("DIM_SESSION2", new HashSet<String>(Arrays.asList("C", "D")));
+                put("DIM_SESSION2", Arrays.asList(
+                        new CodeItemDto("C", "C"),
+                        new CodeItemDto("D", "D")));
             }
         };
         queryDtoSession02.setSelection(selection);
@@ -164,7 +186,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // Update query - session 1 --> OK
         QueryDto queryDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDtoSession01);
         assertEquals(1, queryDtoSession01.getSelection().size());
-        assertEquals(new HashSet<String>(Arrays.asList("A", "B")), queryDtoSession1AfterUpdate01.getSelection().get("DIM_SESSION1"));
+        assertEqualsCodeItemDtoCollection(
+                Arrays.asList(
+                        new CodeItemDto("A", "A"),
+                        new CodeItemDto("B", "B"))
+                ,queryDtoSession1AfterUpdate01.getSelection().get("DIM_SESSION1"));
         assertTrue(queryDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryDtoSession01.getOptimisticLockingVersion());
 
         // Update query - session 2 --> FAIL
@@ -426,6 +452,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendToProductionValidation() throws Exception {
+        mockDsdAndatasetRepositoryForProductionValidation();
+        
         // Retrieve dataset - session 1
         DatasetDto datasetDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
@@ -485,6 +513,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
         assertTrue(datasetDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetDtoSession1AfterUpdate01.getOptimisticLockingVersion());
 
+    }
+    
+    @Override
+    public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
+        fail("testRetrieveCoverageForDatasetVersionDimension not implemented");   
+    }
+    
+    @Override
+    public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
+        fail("testRetrieveDatasetVersionDimensionsIds not implemented");
     }
 
     // ------------------------------------------------------------
@@ -745,5 +783,30 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     public void testRetrieveLatestPublishedQueryVersion() throws Exception {
         /// no optimistic locking in this operation
+    }
+    
+    private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
+        List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
+        
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("GEO_DIM", "code-01", "code-02", "code-03"));
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("TIME_PERIOD", "2010", "2011", "2012"));
+        dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("MEAS_DIM", "concept-01", "concept-02", "concept-03"));
+        Mockito.when(statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(Mockito.anyString())).thenReturn(dimensionsCodes);
+        
+        DatasetRepositoryDto datasetRepoDto = DsRepositoryMockUtils.mockDatasetRepository("dsrepo-01", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM");
+        Mockito.when(statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(Mockito.anyString())).thenReturn(datasetRepoDto);
+
+        //Mock codelist and concept Scheme
+        
+        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:uuid:codelist-01", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
+        
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:uuid:cshm-01", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
+        
+        //Create a datastructure with dimensions marked as measure temporal and spatial
+        
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:uuid:dsd-urn", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
     }
 }

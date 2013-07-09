@@ -27,7 +27,9 @@ import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 
 public class CommonAsserts extends MetamacAsserts {
 
@@ -179,6 +181,73 @@ public class CommonAsserts extends MetamacAsserts {
     }
 
     // -----------------------------------------------------------------
+    // TEMPORAL CODE: DO & DO
+    // -----------------------------------------------------------------
+    
+    public static void assertEqualsTemporalCodeCollection(Collection<TemporalCode> expected, Collection<TemporalCode> actual) {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEquals(expected.size(), actual.size());
+        
+        for (TemporalCode expec : expected) {
+            boolean found = false;
+            for (TemporalCode actualItem : actual) {
+                if (actualItem.getIdentifier().equals(expec.getIdentifier())) {
+                    assertEquals(expec.getTitle(), actualItem.getTitle());
+                }
+            }
+            if (!found) {
+                Assert.fail("Found element in expected collection which is not contained in actual collection");
+            }
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // TEMPORAL CODE: DTO & DO
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsTemporalCode(TemporalCode entity, TemporalCodeDto dto) {
+        assertEqualsNullability(entity, dto);
+        if (entity == null) {
+            return;
+        }
+
+        assertEquals(entity.getIdentifier(), dto.getIdentifier());
+        assertEquals(entity.getTitle(), dto.getTitle());
+    }
+    
+    public static void assertEqualsTemporalCodeCollectionMapper(Collection<TemporalCode> entities, Collection<TemporalCodeDto> dtos) {
+        if (entities == null) {
+            entities = new ArrayList<TemporalCode>(); 
+        }
+        
+        if (dtos == null) {
+            dtos = new ArrayList<TemporalCodeDto>();
+        }
+
+        assertEquals(entities.size(), dtos.size());
+        for (TemporalCode entity : entities) {
+            boolean found = false;
+            Iterator<TemporalCodeDto> itDto = dtos.iterator();
+            while (itDto.hasNext() && !found) {
+                TemporalCodeDto dto = itDto.next();
+                found = true;
+                try {
+                    assertEqualsTemporalCode(entity, dto);
+                } catch (AssertionError e) {
+                    found = false;
+                }
+            }
+            if (!found) {
+                Assert.fail("Not equal collections");
+            }
+        }
+    }
+    
+    
+    // -----------------------------------------------------------------
     // EXTERNAL ITEMS: DO & DO
     // -----------------------------------------------------------------
 
@@ -218,6 +287,7 @@ public class CommonAsserts extends MetamacAsserts {
             }
         }
     }
+
 
     public static void assertEqualsExternalItemList(List<ExternalItem> expected, List<ExternalItem> actual) {
         assertEqualsNullability(expected, actual);

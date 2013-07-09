@@ -81,7 +81,7 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
-
+    
     public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
@@ -89,6 +89,14 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
 
     public static boolean canRetrieveLatestPublishedDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveDatasetVersionDimensionsIds(MetamacPrincipal metamacPrincipal) {
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveCoverageForDatasetVersionDimension(MetamacPrincipal metamacPrincipal) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 

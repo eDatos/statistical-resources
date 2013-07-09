@@ -7,17 +7,40 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFiller;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class LifecycleTemplateService<E extends Object> implements LifecycleService<E> {
 
+    @Autowired
+    private SiemacLifecycleChecker siemacLifecycleChecker;
+    
+    @Autowired
+    private SiemacLifecycleFiller siemacLifecycleFiller;
+    
+    @Autowired
+    private LifecycleChecker lifecycleChecker;
+    
+    @Autowired
+    private LifecycleFiller lifecycleFiller;
+    
+    
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    public final void sendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
+    public final E sendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
         getInvocationValidator().checkSendToProductionValidation(ctx, resource);
 
         resource = retrieveResourceByResource(resource);
@@ -26,7 +49,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         applySendToProductionValidation(ctx, resource);
 
-        saveResource(resource);
+        return saveResource(resource);
     }
 
     protected final void checkSendToProductionValidation(E resource) throws MetamacException {
@@ -46,20 +69,37 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         applySendToProductionValidationResource(ctx, resource);
     }
 
-    protected abstract void checkSendToProductionValidationLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    protected void checkSendToProductionValidationLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleChecker.checkSendToProductionValidation((HasSiemacMetadata)resource, getResourceMetadataName(), exceptionItems);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleChecker.checkSendToProductionValidation((HasLifecycle)resource, getResourceMetadataName(), exceptionItems);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+        }
+    }
+
+    protected void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleFiller.applySendToProductionValidationActions(ctx, (HasSiemacMetadata)resource);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleFiller.applySendToProductionValidationActions(ctx, (HasLifecycle)resource);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+        }
+    }
 
     protected abstract void checkSendToProductionValidationResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
 
-    protected abstract void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
-
     protected abstract void applySendToProductionValidationResource(ServiceContext ctx, E resource) throws MetamacException;
 
+    protected abstract String getResourceMetadataName() throws MetamacException;
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    public final void sendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
+    public final E sendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
         getInvocationValidator().checkSendToDiffusionValidation(ctx, resource);
 
         resource = retrieveResourceByResource(resource);
@@ -68,7 +108,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         applySendToDiffusionValidation(ctx, resource);
 
-        saveResource(resource);
+        return saveResource(resource);
     }
 
     protected final void checkSendToDiffusionValidation(E resource) throws MetamacException {
@@ -88,11 +128,27 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         applySendToDiffusionValidationResource(ctx, resource);
     }
 
-    protected abstract void checkSendToDiffusionValidationLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    protected void checkSendToDiffusionValidationLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleChecker.checkSendToDiffusionValidation((HasSiemacMetadata)resource, getResourceMetadataName(), exceptionItems);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleChecker.checkSendToDiffusionValidation((HasLifecycle)resource, getResourceMetadataName(), exceptionItems);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to diffusion validation");
+        }
+    }
+
+    protected void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleFiller.applySendToDiffusionValidationActions(ctx, (HasSiemacMetadata)resource);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleFiller.applySendToDiffusionValidationActions(ctx, (HasLifecycle)resource);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+        }
+    }
 
     protected abstract void checkSendToDiffusionValidationResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
-
-    protected abstract void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
 
     protected abstract void applySendToDiffusionValidationResource(ServiceContext ctx, E resource) throws MetamacException;
 
@@ -101,7 +157,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    public final void sendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
+    public final E sendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
         getInvocationValidator().checkSendToValidationRejected(ctx, resource);
 
         resource = retrieveResourceByResource(resource);
@@ -110,7 +166,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         applySendToValidationRejected(ctx, resource);
 
-        saveResource(resource);
+        return saveResource(resource);
     }
 
     protected final void checkSendToValidationRejected(E resource) throws MetamacException {
@@ -130,20 +186,37 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         applySendToValidationRejectedResource(ctx, resource);
     }
 
-    protected abstract void checkSendToValidationRejectedLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    protected void checkSendToValidationRejectedLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleChecker.checkSendToValidationRejected((HasSiemacMetadata)resource, getResourceMetadataName(), exceptionItems);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleChecker.checkSendToValidationRejected((HasLifecycle)resource, getResourceMetadataName(), exceptionItems);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to validation rejected");
+        }
+    }
+    
+    protected void applySendToValidationRejectedLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleFiller.applySendToValidationRejectedActions(ctx, (HasSiemacMetadata)resource);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleFiller.applySendToValidationRejectedActions(ctx, (HasLifecycle)resource);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+        }
+    }
 
     protected abstract void checkSendToValidationRejectedResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
 
-    protected abstract void applySendToValidationRejectedLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
-
     protected abstract void applySendToValidationRejectedResource(ServiceContext ctx, E resource) throws MetamacException;
+
 
     // ------------------------------------------------------------------------------------------------------
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    public final void sendToPublished(ServiceContext ctx, E resource) throws MetamacException {
+    public final E sendToPublished(ServiceContext ctx, E resource) throws MetamacException {
         getInvocationValidator().checkSendToPublished(ctx, resource);
 
         resource = retrieveResourceByResource(resource);
@@ -152,7 +225,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         applySendToPublished(ctx, resource);
 
-        saveResource(resource);
+        return saveResource(resource);
     }
 
     protected final void checkSendToPublished(E resource) throws MetamacException {
@@ -185,7 +258,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     // ------------------------------------------------------------------------------------------------------
     
     @Override
-    public final void versioning(ServiceContext ctx, E resource) throws MetamacException {
+    public final E versioning(ServiceContext ctx, E resource) throws MetamacException {
         getInvocationValidator().checkVersioning(ctx, resource);
         
         resource = retrieveResourceByResource(resource);
@@ -194,7 +267,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         
         applySendToPublished(ctx, resource);
         
-        saveResource(resource);
+        return saveResource(resource);
     }
     
     protected final void checkVersioning(E resource) throws MetamacException {

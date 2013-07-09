@@ -34,6 +34,11 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
     @Autowired
     private PublicationVersionRepository                   publicationVersionRepository;
 
+    @Override
+    protected String getResourceMetadataName() throws MetamacException {
+        return ServiceExceptionParameters.PUBLICATION_VERSION;
+    }
+    
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -43,19 +48,10 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
         // FIXME: check possible fields to be checked
     }
 
-    @Override
-    protected void checkSendToProductionValidationLinkedStatisticalResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        siemacLifecycleChecker.checkSendToProductionValidation(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
-    }
 
     @Override
     protected void applySendToProductionValidationResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // FIXME: check possible fields to be checked
-    }
-
-    @Override
-    protected void applySendToProductionValidationLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        siemacLifecycleFiller.applySendToProductionValidationActions(ctx, resource);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -66,20 +62,10 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
     protected void checkSendToDiffusionValidationResource(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // FIXME: check possible fields to be checked
     }
-
-    @Override
-    protected void checkSendToDiffusionValidationLinkedStatisticalResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        siemacLifecycleChecker.checkSendToDiffusionValidation(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
-    }
-
+    
     @Override
     protected void applySendToDiffusionValidationResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // FIXME: check possible fields to be checked
-    }
-
-    @Override
-    protected void applySendToDiffusionValidationLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        siemacLifecycleFiller.applySendToDiffusionValidationActions(ctx, resource);
     }
 
     /* GENERAL ABSTRACT METHODS */

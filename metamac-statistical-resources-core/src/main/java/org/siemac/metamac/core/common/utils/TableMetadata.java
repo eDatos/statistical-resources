@@ -34,4 +34,8 @@ public abstract class TableMetadata {
     
     protected abstract void addColumnsForProperty(String propName, Object value);
     
+    @Override
+    public String toString() {
+        return tableName + columnValues.toString();
+    }
 }

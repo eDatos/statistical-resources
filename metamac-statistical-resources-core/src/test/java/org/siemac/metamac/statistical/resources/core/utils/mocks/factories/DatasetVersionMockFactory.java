@@ -4,15 +4,15 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
 
-import java.util.Arrays;
-
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -104,6 +104,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME               = "DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06";
     private static DatasetVersion DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06;
 
+    public static final String    DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME                                 = "DATASET_VERSION_27_WITH_COVERAGE_FILLED";
+    private static DatasetVersion DATASET_VERSION_27_WITH_COVERAGE_FILLED;
+    
     private static final String   INIT_VERSION                                                                 = "001.000";
     private static final String   SECOND_VERSION                                                               = "002.000";
     private static final String   THIRD_VERSION                                                                = "003.000";
@@ -173,18 +176,18 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         if (DATASET_VERSION_05_FOR_DATASET_04 == null) {
             DatasetVersion datasetVersion = createDatasetVersion(1);
 
-            datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
-            datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
+            datasetVersion.getGeographicCoverage().clear();
             datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
-            datasetVersion.setTemporalCoverageList(Arrays.asList("2010", "2011"));
+            datasetVersion.getTemporalCoverage().clear();
+            datasetVersion.getTemporalCoverage().add(StatisticalResourcesDoMocks.mockTemporalCode());
+
+            datasetVersion.getMeasureCoverage().clear();
+            datasetVersion.getMeasureCoverage().add(StatisticalResourcesDoMocks.mockConceptExternalItem());
 
             datasetVersion.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
             datasetVersion.addTemporalGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
-
-            datasetVersion.addMeasure(StatisticalResourcesDoMocks.mockConceptExternalItem());
-            datasetVersion.addMeasure(StatisticalResourcesDoMocks.mockConceptExternalItem());
 
             datasetVersion.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
             datasetVersion.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
@@ -423,6 +426,28 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06.setDataset(DatasetMockFactory.getDataset06WithMultiplePublishedVersionsAndLatestNoVisible());
         }
         return DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06;
+
+    }
+    
+    protected static DatasetVersion getDatasetVersion27WithCoverageFilled() {
+        if (DATASET_VERSION_27_WITH_COVERAGE_FILLED == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(2);
+            
+            prepareToProductionValidation(datasetVersion);
+            
+            datasetVersion.getCoverages().add(new CodeDimension("dim1","code-d1-1"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim1","code-d1-2"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim2","code-d2-1"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim2","code-d2-2"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim3","code-d3-1"));
+            
+            DATASET_VERSION_27_WITH_COVERAGE_FILLED = datasetVersion;
+            // Relations
+            for (CodeDimension code : datasetVersion.getCoverages()) {
+                code.setDatasetVersion(DATASET_VERSION_27_WITH_COVERAGE_FILLED);
+            }
+        }
+        return DATASET_VERSION_27_WITH_COVERAGE_FILLED;
         
     }
 
@@ -508,5 +533,11 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(code);
         datasetVersion.getSiemacMetadataStatisticalResource().setUrn(buildDatasetVersionUrn(code, datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         datasetVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.DATASET);
+
+        if (datasetVersion.getDatasources().isEmpty()) {
+            Datasource datasource = DatasourceMockFactory.generateSimpleDatasource();
+            datasource.setDatasetVersion(datasetVersion);
+            datasetVersion.addDatasource(datasource);
+        }
     }
 }

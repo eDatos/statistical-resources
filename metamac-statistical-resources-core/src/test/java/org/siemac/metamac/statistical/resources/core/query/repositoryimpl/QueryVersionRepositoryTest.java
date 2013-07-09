@@ -94,10 +94,12 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         CodeItem codeItem011 = new CodeItem();
         codeItem011.setCode("CODE_01");
+        codeItem011.setTitle("Code 01");
         codeItem011.setQuerySelectionItem(querySelectionItem01);
 
         CodeItem codeItem012 = new CodeItem();
         codeItem012.setCode("CODE_02");
+        codeItem012.setTitle("Code 02");
         codeItem012.setQuerySelectionItem(querySelectionItem01);
 
         querySelectionItem01.setDimension("DIMENSION_01");
@@ -110,10 +112,12 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         CodeItem codeItem021 = new CodeItem();
         codeItem021.setCode("CODE_03");
+        codeItem021.setTitle("Code 03");
         codeItem021.setQuerySelectionItem(querySelectionItem02);
 
         CodeItem codeItem022 = new CodeItem();
         codeItem022.setCode("CODE_04");
+        codeItem022.setTitle("Code 04");
         codeItem022.setQuerySelectionItem(querySelectionItem02);
 
         querySelectionItem02.setDimension("DIMENSION_01");
@@ -147,10 +151,12 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         CodeItem codeItem011 = new CodeItem();
         codeItem011.setCode("CODE_01");
+        codeItem011.setTitle("Code 01");
         codeItem011.setQuerySelectionItem(querySelectionItem01);
 
         CodeItem codeItem012 = new CodeItem();
         codeItem012.setCode("CODE_01");
+        codeItem012.setTitle("Code 01B");
         codeItem012.setQuerySelectionItem(querySelectionItem01);
 
         querySelectionItem01.setDimension("DIMESNION_01");
@@ -163,10 +169,12 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         CodeItem codeItem021 = new CodeItem();
         codeItem021.setCode("CODE_01");
+        codeItem021.setTitle("Code 01");
         codeItem021.setQuerySelectionItem(querySelectionItem02);
 
         CodeItem codeItem022 = new CodeItem();
         codeItem022.setCode("CODE_02");
+        codeItem022.setTitle("Code 02");
         codeItem022.setQuerySelectionItem(querySelectionItem02);
 
         querySelectionItem02.setDimension("DIMESNION_02");

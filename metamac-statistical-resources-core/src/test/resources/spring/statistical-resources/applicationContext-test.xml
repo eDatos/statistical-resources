@@ -7,6 +7,7 @@
     <!-- activates annotation-based bean configuration -->
     <context:annotation-config />
 
+    <!-- MOCK EXTERNAL SERVICES -->
     <import resource="classpath:/spring/statistical-resources/include/srm-mockito.xml" />
 
     <!-- scans for @Components, @Repositories, @Services, ... -->
@@ -32,7 +33,8 @@
         </property>
     </bean>
 
-	<import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml" />
+    <!-- dataset-repository -->
+    <import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>
 
     <!-- metamac-core-common -->
     <import resource="classpath:/spring/error-beans-advice.xml" />

@@ -25,6 +25,8 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormat
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptRepresentation;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionRepresentationType;
@@ -44,10 +46,46 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 
 public class SrmMockUtils {
+    
+
+    public static ConceptScheme buildConceptSchemeWithConcepts(String id, String urn, String lang, int numConcepts) {
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptScheme(id, "title", lang, urn);
+        for (int i = 1; i <= numConcepts; i++) {
+            conceptScheme.getConcepts().add(SrmMockUtils.buildConcept("concept-0"+i, "Concept 0"+i, lang));
+        }
+        return conceptScheme;
+    }
+    
+    public static Codelist buildCodelistWithCodes(String id, String urn, String lang, int numCodes) {
+        Codelist codelist = SrmMockUtils.buildCodelist(id, "title", lang, urn);
+        for (int i = 1; i <= numCodes; i++) {
+            codelist.getCodes().add(SrmMockUtils.buildCode("code-0"+i, "Code 0"+i, lang));
+        }
+        return codelist;
+    }
+
+    public static DataStructure mockDsdWithGeoTimeAndMeasureDimensions(String urn, String geoId, String timeId, String measureId, ConceptScheme measureConceptScheme, Codelist geoCodelist) {
+        MeasureDimensionType measureDim = SrmMockUtils.buildMeasureDimension(measureId, measureConceptScheme);
+        TimeDimensionType timeDim = SrmMockUtils.buildTimeDimension(timeId, TimeDataType.REPORTING_YEAR);
+        Dimension geoDim = SrmMockUtils.buildGeoDimension(geoId, geoCodelist);
+        
+        DataStructure dsd = new DataStructure();
+        dsd.setUrn(urn);
+        DataStructureComponentsType components = new DataStructureComponentsType();
+        components.setDimensionList(new DimensionListType());
+        components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(measureDim);
+        components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(timeDim);
+        components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(geoDim);
+        dsd.setDataStructureComponents(components);
+        
+        return dsd;
+    }
+    
 
     public static MeasureDimensionType buildMeasureDimension(String id, ConceptScheme conceptSchemeRepresentation) {
         MeasureDimensionType measureDim = new MeasureDimensionType();

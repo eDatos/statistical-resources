@@ -9,10 +9,13 @@ Application DatasetsStatisticalResourcesDto {
 		
 		// DATASET
 		DataTransferObject DatasetDto extends @SiemacMetadataStatisticalResourceDto {
-			//temporal codes
-			List<String> temporalCoverage;
-			//geographic codes
-			- Bag<@ExternalItemDto> geographicCoverage;
+			//geographic dimension
+			- List<@ExternalItemDto> geographicCoverage;
+			//temporal dimension
+			- List<@TemporalCodeDto> temporalCoverage;
+			//measure dimension
+			- List<@ExternalItemDto> measureCoverage;
+
 			//geographic granularities
 			- Bag<@ExternalItemDto> geographicGranularities;
 			//temporal granularities
@@ -22,7 +25,7 @@ Application DatasetsStatisticalResourcesDto {
 			//Last date which data refers to
 			JAVADATE dateEnd;
 			- Bag<@ExternalItemDto> statisticalUnit;
-			- Bag<@ExternalItemDto> measures;
+			
 			
 			//Production descriptor
 			
@@ -57,7 +60,14 @@ Application DatasetsStatisticalResourcesDto {
             String identifier;
             - @InternationalStringDto description nullable;
         }
-			
+        
+		"Dto for temporal code"
+        DataTransferObject TemporalCodeDto {
+            String identifier;
+            String title;
+        }
+        
+        
 	}
 
 }

@@ -1,17 +1,37 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -19,14 +39,22 @@ import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForC
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 /**
  * Implementation of DatasetService.
@@ -41,10 +69,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private DatasetServiceInvocationValidator         datasetServiceInvocationValidator;
 
     @Autowired
-    SiemacStatisticalResourceGeneratedCode            siemacStatisticalResourceGeneratedCode;
+    private SiemacStatisticalResourceGeneratedCode    siemacStatisticalResourceGeneratedCode;
 
-    public DatasetServiceImpl() {
-    }
+    @Autowired
+    private SrmRestInternalService                    srmRestInternalService;
+
+    @Autowired
+    private DatasetRepositoriesServiceFacade          statisticsDatasetRepositoriesServiceFacade;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -71,6 +102,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Update dataset version (add datasource)
         addDatasourceForDatasetVersion(datasource, datasetVersion);
+
+        //FIXME: REMOVE
+        mockData(datasetVersion);
 
         return datasource;
     }
@@ -281,6 +315,29 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasetNewVersion;
     }
+    
+    @Override
+    public List<String> retrieveDatasetVersionDimensionsIds(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        datasetServiceInvocationValidator.checkRetrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
+        
+        DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        List<String> dimensionsIds = getDatasetVersionRepository().retrieveDimensionsIds(datasetVersion);
+        if (dimensionsIds.size() > 0) {
+            return dimensionsIds;
+        } else {
+            throw new MetamacException(ServiceExceptionType.DATASET_NO_DATA, datasetVersionUrn);
+        }
+    }
+    
+    @Override
+    public List<CodeDimension> retrieveCoverageForDatasetVersionDimension(ServiceContext ctx, String datasetVersionUrn, String dimensionId) throws MetamacException {
+        datasetServiceInvocationValidator.checkRetrieveCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dimensionId);
+        
+        DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        
+        return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId);
+    }
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
@@ -326,5 +383,202 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Add version to dataset
         dataset.addVersion(datasetVersion);
         return getDatasetRepository().save(datasetVersion.getDataset());
+    }
+
+    /**
+     * DATA MOCKING
+     */
+
+    // FIXME: DELETE MOCK
+    private void mockData(DatasetVersion resource) {
+        if (resource.getRelatedDsd() != null) {
+            DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
+            
+            DimensionListType dimensions = dataStructure.getDataStructureComponents().getDimensionList();
+    
+            if (dimensions != null) {
+                Map<String, List<String>> dimensionCodes = computeDimensionsCodes(dimensions);
+        
+                List<ObservationExtendedDto> observations = buildObservations(dimensionCodes);
+        
+                DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
+                datasetRepositoryDto.setDatasetId("dataset_" + UUID.randomUUID().toString());
+                datasetRepositoryDto.setMaxAttributesObservation(1);
+                datasetRepositoryDto.getLanguages().add("es");
+                datasetRepositoryDto.getLanguages().add("en");
+                for (String dimensionId : dimensionCodes.keySet()) {
+                    datasetRepositoryDto.getDimensions().add(dimensionId);
+                }
+        
+                try {
+                    
+                    datasetRepositoryDto = statisticsDatasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
+                    statisticsDatasetRepositoriesServiceFacade.createObservationsExtended(datasetRepositoryDto.getDatasetId(), observations);
+                    String oldDatasetRepositoryId = resource.getDatasetRepositoryId();
+                    resource.setDatasetRepositoryId(datasetRepositoryDto.getDatasetId());
+                    getDatasetVersionRepository().save(resource);
+                    if (!StringUtils.isEmpty(oldDatasetRepositoryId)) {
+                        try {
+                            statisticsDatasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetRepositoryId);
+                        } catch (Exception e) {
+                            //TODO:
+                        }
+                    }
+                } catch (ApplicationException e) {
+                    throw new RuntimeException("Error mocking data, creating dataset repository", e);
+                }
+            }
+        }
+    }
+
+    private List<ObservationExtendedDto> buildObservations(Map<String, List<String>> dimensionCodes) {
+        List<String> dimOrder = new ArrayList<String>(dimensionCodes.keySet());
+        CodeSelectionGenerator codeGen = new CodeSelectionGenerator(dimOrder, dimensionCodes);
+
+        List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
+        while (codeGen.hasNext()) {
+            int[] indexes = codeGen.getNext();
+            ObservationExtendedDto observation = new ObservationExtendedDto();
+            for (int i = 0; i < indexes.length; i++) {
+                String dimensionId = dimOrder.get(i);
+                String code = dimensionCodes.get(dimensionId).get(indexes[i]);
+                CodeDimensionDto codeDimensionDto = new CodeDimensionDto(dimensionId, code);
+                observation.addCodesDimension(codeDimensionDto);
+            }
+            observations.add(observation);
+        }
+        return observations;
+    }
+
+    private class CodeSelectionGenerator {
+
+        private int[] indexes = null;
+        private int[] max     = null;
+
+        public CodeSelectionGenerator(List<String> dimensionOrder, Map<String, List<String>> dimensionCodes) {
+            indexes = new int[dimensionCodes.size()];
+            max = new int[dimensionCodes.size()];
+            int i = 0;
+            for (String dimensionId : dimensionCodes.keySet()) {
+                indexes[i] = 0;
+                max[i] = dimensionCodes.get(dimensionId).size();
+                i++;
+            }
+            indexes[indexes.length-1] = -1;
+        }
+
+        public boolean hasNext() {
+            for (int i = 0; i < indexes.length; i++) {
+                if (indexes[i] < max[i]-1) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public int[] getNext() {
+            int acum = 1;
+            for (int i = indexes.length - 1; i >= 0; i--) {
+                int newAcum = (indexes[i] + acum) / max[i];
+                indexes[i] = (indexes[i] + acum) % max[i];
+                acum = newAcum;
+            }
+            return Arrays.copyOf(indexes, indexes.length);
+        }
+
+    }
+
+    private Map<String, List<String>> computeDimensionsCodes(DimensionListType dimensions) {
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        for (Object dimensionObj : dimensions.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
+            if (dimensionObj instanceof DimensionType) {
+                DimensionType dim = (DimensionType) dimensionObj;
+                dimensionCodes.put(dim.getId(), getCodesForDimension(dim));
+            } else if (dimensionObj instanceof TimeDimensionType) {
+                TimeDimensionType dim = (TimeDimensionType) dimensionObj;
+                dimensionCodes.put(dim.getId(), getCodesForTimeDimension(dim));
+            } else if (dimensionObj instanceof MeasureDimensionType) {
+                MeasureDimensionType dim = (MeasureDimensionType) dimensionObj;
+                dimensionCodes.put(dim.getId(), getCodesForMeasureDimension(dim));
+            }
+        }
+        return dimensionCodes;
+    }
+
+    private List<String> getCodesForDimension(DimensionType dimension) {
+        List<String> codes = null;
+        if (dimension.getLocalRepresentation() != null) {
+            CodelistReferenceType codeListRef = dimension.getLocalRepresentation().getEnumeration();
+            if (codeListRef != null) {
+                codes = getCodesFromCodelist(codeListRef);
+            } else {
+                codes = mockStringCodes(15);
+            }
+        } else {
+            codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
+        }
+        return codes;
+    }
+
+    private List<String> getCodesForTimeDimension(TimeDimensionType dimension) {
+        List<String> codes = null;
+        if (dimension.getLocalRepresentation() != null) {
+            codes = mockStringCodes(15);
+        } else {
+            codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
+        }
+        return codes;
+    }
+
+    private List<String> getCodesForMeasureDimension(MeasureDimensionType dimension) {
+        List<String> codes = null;
+        if (dimension.getLocalRepresentation() != null) {
+            ConceptSchemeReferenceType conceptSchemeRef = dimension.getLocalRepresentation().getEnumeration();
+            codes = getCodesFromConceptScheme(conceptSchemeRef);
+        } else {
+            codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
+        }
+        return codes;
+    }
+
+    private List<String> getCodesFromConceptScheme(ConceptSchemeReferenceType conceptSchemeRef) {
+        ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRef.getURN());
+
+        List<String> codes = new ArrayList<String>();
+        for (ConceptType concept : conceptScheme.getConcepts()) {
+            codes.add(concept.getId());
+        }
+        return codes;
+    }
+
+    private List<String> mockStringCodes(int size) {
+        List<String> codes = new ArrayList<String>();
+        for (int i = 0; i < size; i++) {
+            codes.add("no_emun_code_" + i);
+        }
+        return codes;
+    }
+
+    private List<String> getCodesFromConceptRepresentation(ConceptReferenceType conceptRef) {
+        List<String> codes = new ArrayList<String>();
+
+        Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptRef.getURN());
+        if (concept.getCoreRepresentation() != null) {
+            CodelistReferenceType codeListRef = concept.getCoreRepresentation().getEnumeration();
+            codes = getCodesFromCodelist(codeListRef);
+        } else {
+            throw new IllegalStateException("Found a concept with no core representation");
+        }
+        return codes;
+    }
+
+    private List<String> getCodesFromCodelist(CodelistReferenceType codeListRef) {
+        Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codeListRef.getURN());
+
+        List<String> codes = new ArrayList<String>();
+        for (CodeType code : codelist.getCodes()) {
+            codes.add(code.getId());
+        }
+        return codes;
     }
 }

@@ -5,10 +5,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -31,6 +33,49 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEqualsDatasetVersionCollection(expected.getVersions(), actual.getVersions());
         } else {
             assertEquals(null, actual);
+        }
+    }
+    
+    public static void assertEqualsCoverageForDsdComponent(DatasetVersion datasetVersion, String dsdComponentId, List<CodeDimension> codes) {
+        assertNotNull(datasetVersion.getCoverages());
+        List<CodeDimension> codesForDimensions = new ArrayList<CodeDimension>();
+        for (CodeDimension codeDim : datasetVersion.getCoverages()) {
+            if (codeDim.getDsdComponentId().equals(dsdComponentId)) {
+                codesForDimensions.add(codeDim);
+            }
+        }
+        
+        assertEquals(codes.size(), codesForDimensions.size());
+        
+        for (int i = 0; i < codes.size(); i++) {
+            assertEquals(codes.get(i).getIdentifier(), codesForDimensions.get(i).getIdentifier());
+            assertEquals(codes.get(i).getTitle(), codesForDimensions.get(i).getTitle());
+        }
+    }
+    
+    public static void assertEqualsCodeDimensionsCollection(List<CodeDimension> expected, List<CodeDimension> actual) {
+        assertEqualsNullability(expected, actual);
+        
+        if (expected != null) {
+            assertEquals(expected.size(), actual.size());
+            
+            
+            for (int i = 0; i < expected.size(); i++) {
+                CodeDimension expectedCode = expected.get(i);
+                CodeDimension actualCode = actual.get(i);
+                assertEqualsCodeDimension(expectedCode, actualCode);
+            }
+        }
+    }
+
+    public static void assertEqualsCodeDimension(CodeDimension expected, CodeDimension actual) {
+        assertEqualsNullability(expected, actual);
+        assertEquals(expected.getDsdComponentId(), actual.getDsdComponentId());
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEqualsNullability(expected.getDatasetVersion(), actual.getDatasetVersion());
+        if (expected.getDatasetVersion() != null) {
+            assertEquals(expected.getDatasetVersion().getId(), actual.getDatasetVersion().getId());
         }
     }
 
@@ -84,11 +129,11 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEquals(expected.getUuid(), actual.getUuid());
 
         assertEqualsExternalItem(expected.getRelatedDsd(), actual.getRelatedDsd());
-        assertEqualsExternalItemList(expected.getGeographicCoverage(), actual.getGeographicCoverage());
+        assertEqualsExternalItemCollection(expected.getGeographicCoverage(), actual.getGeographicCoverage());
+        assertEqualsTemporalCodeCollection(expected.getTemporalCoverage(), actual.getTemporalCoverage());
+        assertEqualsExternalItemCollection(expected.getMeasureCoverage(), actual.getMeasureCoverage());
         assertEqualsExternalItemList(expected.getGeographicGranularities(), actual.getGeographicGranularities());
-        assertEquals(expected.getTemporalCoverage(), actual.getTemporalCoverage());
         assertEqualsExternalItemList(expected.getTemporalGranularities(), actual.getTemporalGranularities());
-        assertEqualsExternalItemList(expected.getMeasures(), actual.getMeasures());
         assertEqualsExternalItemList(expected.getStatisticalUnit(), actual.getStatisticalUnit());
         assertEqualsExternalItem(expected.getUpdateFrequency(), actual.getUpdateFrequency());
 
@@ -130,11 +175,11 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEquals(entity.getVersion(), dto.getVersion());
 
                 assertEqualsExternalItemCollectionMapper(entity.getGeographicCoverage(), dto.getGeographicCoverage());
-                assertEquals(entity.getTemporalCoverageList(), dto.getTemporalCoverage());
+                assertEqualsTemporalCodeCollectionMapper(entity.getTemporalCoverage(), dto.getTemporalCoverage());
+                assertEqualsExternalItemCollectionMapper(entity.getMeasureCoverage(), dto.getMeasureCoverage());
                 assertEqualsExternalItemCollectionMapper(entity.getTemporalGranularities(), dto.getTemporalGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getGeographicGranularities(), dto.getGeographicGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalUnit(), dto.getStatisticalUnit());
-                assertEqualsExternalItemCollectionMapper(entity.getMeasures(), dto.getMeasures());
 
                 assertEqualsDate(entity.getDateStart(), dto.getDateStart());
                 assertEqualsDate(entity.getDateEnd(), dto.getDateEnd());

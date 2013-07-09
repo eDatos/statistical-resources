@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 
 public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
 
@@ -22,4 +24,8 @@ public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
     
     // Dataset
     public DatasetDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException;
+    
+    //Code dimension
+    public CodeItemDto codeDimensionDoToCodeItemDto(CodeDimension codeDimension) throws MetamacException;
+    public List<CodeItemDto> codeDimensionDoListToCodeItemDtoList(List<CodeDimension> codeDimensions) throws MetamacException;
 }
