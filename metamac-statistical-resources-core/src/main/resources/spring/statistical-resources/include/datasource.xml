@@ -15,4 +15,12 @@
         <property name="username"           value="${metamac.statistical.resources.db.username}" />
         <property name="password"           value="${metamac.statistical.resources.db.password}" />
     </bean>
+    
+    <bean id="dataSourceDatasetRepository" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${metamac.statistical.resources.repo.db.driverName}" />
+		<property name="url" value="${metamac.statistical.resources.repo.db.url}" />
+		<property name="username" value="${metamac.statistical.resources.repo.db.username}" />
+		<property name="password" value="${metamac.statistical.resources.repo.db.password}" />
+	</bean>
+
 </beans>

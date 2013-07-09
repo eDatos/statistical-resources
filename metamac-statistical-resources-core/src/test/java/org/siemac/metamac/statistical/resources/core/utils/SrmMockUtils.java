@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.BasicComponentDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
@@ -20,7 +21,9 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptRepresentation;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupType;
@@ -188,6 +191,8 @@ public class SrmMockUtils {
             attributeRelationshipType.getAttachmentGroups().add(buildLocalGroupKeyDescriptorReferenceType(group));
         }
 
+        attributeType.setAttributeRelationship(attributeRelationshipType);
+
         return attributeType;
     }
 
@@ -201,6 +206,8 @@ public class SrmMockUtils {
         localPrimaryMeasureRefType.setId("OBS_VALUE");
         localPrimaryMeasureReferenceType.setRef(localPrimaryMeasureRefType);
         attributeRelationshipType.setPrimaryMeasure(localPrimaryMeasureReferenceType);
+
+        attributeType.setAttributeRelationship(attributeRelationshipType);
 
         return attributeType;
     }
@@ -252,6 +259,16 @@ public class SrmMockUtils {
         concept.setUrn("urn:uuid" + id);
         concept.setUri(UUID.randomUUID().toString());
         concept.getNames().add(buildTextType(name, lang));
+        return concept;
+    }
+
+    public static Concept buildConcept(String id, String urn, String name, String lang, ConceptRepresentation conceptRepresentation) {
+        Concept concept = new Concept();
+        concept.setId(id);
+        concept.setUrn(urn);
+        concept.setUri(UUID.randomUUID().toString());
+        concept.getNames().add(buildTextType(name, lang));
+        concept.setCoreRepresentation(conceptRepresentation);
         return concept;
     }
 
@@ -308,6 +325,20 @@ public class SrmMockUtils {
         conceptsList.setTotal(BigInteger.valueOf(concepts.size()));
         conceptsList.setOffset(BigInteger.ZERO);
         return conceptsList;
+    }
+
+    public static ConceptRepresentation buildConceptRepresentation(String codelistUrn) {
+        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
+        conceptRepresentation.setEnumeration(buildCodelistRef(codelistUrn));
+        return conceptRepresentation;
+    }
+
+    public static ConceptRepresentation buildConceptRepresentation(BasicComponentDataType textType) {
+        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
+        BasicComponentTextFormatType basicComponentTextFormatType = new BasicComponentTextFormatType();
+        basicComponentTextFormatType.setTextType(textType);
+        conceptRepresentation.setTextFormat(basicComponentTextFormatType);
+        return conceptRepresentation;
     }
 
     private static List<ResourceInternal> buildResourcesInternalCodes(List<CodeType> codes) {

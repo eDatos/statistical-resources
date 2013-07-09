@@ -31,6 +31,9 @@
 
     <!-- import additional spring configuration files -->
 
+	<!-- dataset-repository -->
+	<import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>
+
     <!-- metamac-statistical-resources -->
     <import resource="classpath:/spring/statistical-resources/include/datasource.xml" />
     <import resource="classpath:/spring/statistical-resources/include/entity-manager-factory.xml" />

@@ -1,0 +1,35 @@
+
+Application DatasetsStatisticalResources { 
+	basePackage=unused
+
+	Module stat_resource_tasks {
+		basePackage=org.siemac.metamac.statistical.resources.core.task
+
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------
+		
+		"Provides access to import data operations"
+		Service TaskServiceFacade {
+			
+			"Perform the importation task"
+    		executeImportationTask(java.io.InputStream inputMessage, String jobKey) throws MetamacException;
+
+		}
+		
+		"Provides access to import data operations"
+		Service TaskService {
+			
+			"Plannify a scheduled task to import"
+			String plannifyImportationDataset(java.io.InputStream inputMessage) throws MetamacException;
+			
+			"Perform the importation task"
+    		processImportationTask(java.io.InputStream inputMessage, String jobKey) throws MetamacException;
+		}
+		
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+	}
+}

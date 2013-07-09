@@ -8,6 +8,8 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesi
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-tasks.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-queries-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries-enums.btdesign"

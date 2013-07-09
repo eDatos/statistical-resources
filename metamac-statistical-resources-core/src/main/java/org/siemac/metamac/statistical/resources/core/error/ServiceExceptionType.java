@@ -41,4 +41,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // LISTS
     public static final CommonServiceExceptionType STATISTIC_OFFICIALITY_NOT_FOUND                  = create("exception.resources.statistic_officiality.not_found");
+
+    // Task
+    public static final CommonServiceExceptionType TASKS_ERROR_MAX_CURRENT_JOBS                     = create("exception.resources.task.error.max_current_jobs");
+    public static final CommonServiceExceptionType TASKS_JOB_NOT_FOUND                              = create("exception.resources.task.error.not_found");
+    public static final CommonServiceExceptionType TASKS_ERROR_SERVER_DOWN                          = create("exception.resources.task.error.server_down");
+    public static final CommonServiceExceptionType TASKS_ERROR                                      = create("exception.resources.task.error");
+
 }

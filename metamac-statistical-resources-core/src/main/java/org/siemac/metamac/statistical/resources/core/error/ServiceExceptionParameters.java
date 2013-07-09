@@ -21,4 +21,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
 
     public static final String QUERY_URN                       = "queryUrn";
 
+    public static final String INPUT_MESSAGE                   = "inputMessage";
+    public static final String JOB_KEY                         = "jobKey";
+
 }

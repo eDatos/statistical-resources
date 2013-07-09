@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2D
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DataManipulateTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
@@ -72,6 +73,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetLifecycleServiceTest.class,
                      VersionUtilsTest.class,
                      CommonDto2DoMapperTest.class,
-                     CommonDo2DtoMapperTest.class})
+                     CommonDo2DtoMapperTest.class,
+                     DataManipulateTest.class})
 public class StatisticalResourcesSuite {
 }

@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
@@ -20,9 +20,10 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapperImpl;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
@@ -33,8 +34,6 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Header;
-import com.arte.statistic.parser.sdmx.v2_1.domain.PayloadStructure;
-import com.arte.statistic.parser.sdmx.v2_1.domain.StructureReferenceBase;
 
 public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback {
 
@@ -64,17 +63,33 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         // Create DatasetRepository
         DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
         datasetRepositoryDto.setDatasetId(UUID.randomUUID().toString());
+        // Dimensions
         for (ComponentInfo componentInfo : retrieveDimensionsInfo()) {
             datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
         }
-        // datasetRepositoryDto.setMaxAttributesObservation(retrieveMaxAttributesInObservationLevel(attributeDescriptorDto)); // Max Attributes Observation
-        // datasetRepositoryDto.setLanguages(Arrays.asList("es", "en"));
+        // Max Attributes in Observation Level
+        int numAttributeInObservationLevel = 0;
+        for (ComponentInfo componentInfo : retrieveAttributesInfo()) {
+            if (Metamac2StatRepoMapperImpl.isAttributeAtObservationLevel(getAttributesMap().get(componentInfo.getCode()))) {
+                numAttributeInObservationLevel++;
+            }
+        }
+        datasetRepositoryDto.setMaxAttributesObservation(numAttributeInObservationLevel);
+        // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
+        // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
+        datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
 
+        try {
+            this.datasetRepositoryDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
+        } catch (ApplicationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void finalizeDatasetCreation(DataContainer dataContainer) {
-        // TODO Auto-generated method stub
+        // TODO pendiente de la gestión de errores, de alberto
 
     }
 
@@ -135,7 +150,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
     @Override
     public List<ComponentInfo> retrieveDimensionsInfo() {
-        return (List<ComponentInfo>) getDimensionsInfoMap().values();
+        return new ArrayList<ComponentInfo>(getDimensionsInfoMap().values());
     }
 
     private Map<String, ComponentInfo> getDimensionsInfoMap() {
@@ -147,7 +162,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
     @Override
     public List<ComponentInfo> retrieveAttributesInfo() {
-        return (List<ComponentInfo>) getAttributesInfoMap().values();
+        return new ArrayList<ComponentInfo>(getAttributesInfoMap().values());
     }
 
     private Map<String, Object> getAttributesMap() {
@@ -179,20 +194,21 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     @Override
     public boolean isValidDataset(Header messageHeader, String currentDatasetRef) {
         // TODO revisar si quieren esta constraint en metamac cuando se le pregunte a Alberto o cualquier otra
-        for (PayloadStructure payloadStructure : messageHeader.getStructure()) {
-            if (currentDatasetRef.equals(payloadStructure.getStructureID())) {
-                StructureReferenceBase structureReference = payloadStructure.getStructure();
-                // Check
-                if (StringUtils.isEmpty(payloadStructure.getStructure().getUrn())) {
-                    String[] ref = UrnUtils.splitUrnStructure(this.dataStructure.getUrn());
-                    return (ref[0].equals(structureReference.getAgency()) && ref[1].equals(structureReference.getCode()) && ref[2].equals(structureReference.getVersionLogic()));
-                } else {
-                    return payloadStructure.getStructure().getUrn().equals(this.dataStructure.getUrn());
-                }
-            }
-        }
-
-        return false;
+        return true;
+        // for (PayloadStructure payloadStructure : messageHeader.getStructure()) {
+        // if (currentDatasetRef.equals(payloadStructure.getStructureID())) {
+        // StructureReferenceBase structureReference = payloadStructure.getStructure();
+        // // Check
+        // if (StringUtils.isEmpty(payloadStructure.getStructure().getUrn())) {
+        // String[] ref = UrnUtils.splitUrnStructure(this.dataStructure.getUrn());
+        // return (ref[0].equals(structureReference.getAgency()) && ref[1].equals(structureReference.getCode()) && ref[2].equals(structureReference.getVersionLogic()));
+        // } else {
+        // return payloadStructure.getStructure().getUrn().equals(this.dataStructure.getUrn());
+        // }
+        // }
+        // }
+        //
+        // return false;
     }
 
     /**************************************************************************
@@ -207,9 +223,9 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
                 if (sourceDim instanceof DimensionType) {
                     dimensionsInfoMap.put(((DimensionType) sourceDim).getId(), new ComponentInfo(((DimensionType) sourceDim).getId(), ComponentInfoTypeEnum.DIMENSION));
                 } else if (sourceDim instanceof TimeDimensionType) {
-                    dimensionsInfoMap.put(((TimeDimensionType) sourceDim).getId(), new ComponentInfo(((DimensionType) sourceDim).getId(), ComponentInfoTypeEnum.TIME_DIMENSION));
+                    dimensionsInfoMap.put(((TimeDimensionType) sourceDim).getId(), new ComponentInfo(((TimeDimensionType) sourceDim).getId(), ComponentInfoTypeEnum.TIME_DIMENSION));
                 } else if (sourceDim instanceof MeasureDimensionType) {
-                    dimensionsInfoMap.put(((MeasureDimensionType) sourceDim).getId(), new ComponentInfo(((DimensionType) sourceDim).getId(), ComponentInfoTypeEnum.MEASURE_DIMENSION));
+                    dimensionsInfoMap.put(((MeasureDimensionType) sourceDim).getId(), new ComponentInfo(((MeasureDimensionType) sourceDim).getId(), ComponentInfoTypeEnum.MEASURE_DIMENSION));
                 }
             }
         }

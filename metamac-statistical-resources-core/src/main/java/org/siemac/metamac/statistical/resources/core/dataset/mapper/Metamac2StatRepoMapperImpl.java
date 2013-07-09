@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalGroupKeyDescriptorReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
@@ -71,7 +70,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         }
     }
 
-    private boolean isAttributeAtObservationLevel(Object attribute) {
+    public static boolean isAttributeAtObservationLevel(Object attribute) {
         if (attribute instanceof ReportingYearStartDayType) {
             return (((ReportingYearStartDayType) attribute).getAttributeRelationship().getPrimaryMeasure() != null);
         } else if (attribute instanceof AttributeType) {
@@ -218,31 +217,33 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
 
             // Note that if one of the referenced dimensions is the time dimension, the groups referenced here will be ignored.
             // See: SDMXStructureDataStructure.xsd => AttributeRelationshipType.AttachmentGroup
-            if (!foundTimeDimension) {
-                // For all groups in this attachment of current attribute
-                for (LocalGroupKeyDescriptorReferenceType localGroupKeyDescriptorReferenceType : attributeRelationship.getAttachmentGroups()) {
-                    List<ComponentInfo> dimensionsGroup = groupDimensionMapInfo.get(localGroupKeyDescriptorReferenceType.getRef().getId());
-                    // For all dimensions key in the group attachment of current attribute
-                    for (ComponentInfo dimensionKey : dimensionsGroup) {
-                        // Search key Value of this attribute
-                        for (CodeDimensionDto codeDimensionDto : attributeDto.getCodesDimension()) {
-                            // Find the key value
-                            if (dimensionKey.getCode().equals(codeDimensionDto.getDimensionId())) {
-                                codeDimensionDtosMap.put(codeDimensionDto.getDimensionId(), codeDimensionDto);
-                                customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            // TODO Hablar con rita q signfica esto, pq me aprece q no es apra compactar sino para validar la estructura del mensaje, luego esto sería para el parser
+            // no para aquí
+
+            // if (!foundTimeDimension) {
+            // // For all groups in this attachment of current attribute
+            // for (LocalGroupKeyDescriptorReferenceType localGroupKeyDescriptorReferenceType : attributeRelationship.getAttachmentGroups()) {
+            // List<ComponentInfo> dimensionsGroup = groupDimensionMapInfo.get(localGroupKeyDescriptorReferenceType.getRef().getId());
+            // // For all dimensions key in the group attachment of current attribute
+            // for (ComponentInfo dimensionKey : dimensionsGroup) {
+            // // Search key Value of this attribute
+            // for (CodeDimensionDto codeDimensionDto : attributeDto.getCodesDimension()) {
+            // // Find the key value
+            // if (dimensionKey.getCode().equals(codeDimensionDto.getDimensionId())) {
+            // codeDimensionDtosMap.put(codeDimensionDto.getDimensionId(), codeDimensionDto);
+            // customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
+            // break;
+            // }
+            // }
+            // }
+            // }
+            // }
             attributeDto.getCodesDimension().clear();
             attributeDto.getCodesDimension().addAll(codeDimensionDtosMap.values());
         }
 
         return StringUtils.EMPTY;
     }
-
     /**************************************************************************
      * PRIVATE
      *************************************************************************/
