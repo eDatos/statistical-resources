@@ -10,7 +10,7 @@
 
     <artifactId>metamac-statistical-resources</artifactId>
     <packaging>pom</packaging>
-    <name>METAMAC :: STATISTICAL :: RESOURCES</name>
+    <name>METAMAC :: STATISTICAL RESOURCES</name>
 
     <scm>
         <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-statistical-resources/trunk/</connection>
