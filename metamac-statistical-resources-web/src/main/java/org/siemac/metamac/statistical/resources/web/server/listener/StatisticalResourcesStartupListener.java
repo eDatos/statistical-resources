@@ -18,6 +18,11 @@ public class StatisticalResourcesStartupListener extends ApplicationStartupListe
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_USERNAME);
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_PASSWORD);
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DIALECT);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DRIVER_NAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_URL);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_USERNAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_PASSWORD);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DIALECT);
 
         // WEB APPLICATIONS
         checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_STATISTICAL_OPERATIONS_INTERNAL_WEB);
