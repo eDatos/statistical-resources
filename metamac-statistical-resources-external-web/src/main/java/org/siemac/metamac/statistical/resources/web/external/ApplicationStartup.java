@@ -7,7 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.operations.core.constants.StatisticalResourcesConfigurationConstants;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 
 public class ApplicationStartup implements ServletContextListener {
 
@@ -39,8 +39,7 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DIALECT);
 
         // Api
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_RESOURCES_EXTERNAL_API);
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_SRM_EXTERNAL_API);
 
         LOG.info("**********************************************************");
