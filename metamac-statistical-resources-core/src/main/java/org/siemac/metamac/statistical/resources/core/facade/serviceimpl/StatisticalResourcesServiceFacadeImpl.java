@@ -434,7 +434,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetDto sendDatasetVersionToProductionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendToProductionValidation(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx);
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
@@ -451,7 +451,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetDto sendDatasetVersionToDiffusionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendToDiffusionValidation(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx);
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
@@ -660,13 +660,30 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationDto sendPublicationVersionToDiffusionValidation(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendToDiffusionValidation(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx);
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
 
         // Send to production validation and retrieve
         publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersion);
+
+        // Transform
+        publicationDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+
+        return publicationDto;        
+    }
+    
+    @Override
+    public PublicationDto sendPublicationVersionToValidationRejected(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx);
+
+        // Transform
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
+
+        // Send to production validation and retrieve
+        publicationVersion = publicationLifecycleService.sendToValidationRejected(ctx, publicationVersion);
 
         // Transform
         publicationDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);

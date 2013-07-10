@@ -125,8 +125,13 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canSendToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
+    public static boolean canSendPublicationVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendPublicationVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
+     // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 }

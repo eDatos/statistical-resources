@@ -117,6 +117,8 @@ Application FacadeStatisticalResources {
     		@PublicationDto sendPublicationVersionToProductionValidation(@PublicationDto publicationDto) throws MetamacException;
     		"Send to diffusion validation"
     		@PublicationDto sendPublicationVersionToDiffusionValidation(@PublicationDto publicationDto) throws MetamacException;
+    		"Send to validation rejected"
+    		@PublicationDto sendPublicationVersionToValidationRejected(@PublicationDto publicationDto) throws MetamacException;
 	    	
 	    	// CHAPTERS
 	    	"Creates a chapter"

@@ -22,10 +22,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +47,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.utils.DsRepositoryMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
@@ -471,7 +468,40 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         publicationDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
         PublicationDto publicationDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDtoSession1AfterUpdate01);
         assertTrue(publicationDtoSession1AfterUpdate02.getOptimisticLockingVersion() > publicationDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+    }
+    
+    
 
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+    public void testSendPublicationVersionToValidationRejected() throws Exception {
+            // Retrieve publication - session 1
+            PublicationDto publicationDtoSession01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                    publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(Long.valueOf(0), publicationDtoSession01.getOptimisticLockingVersion());
+
+            // Retrieve publication - session 2
+            PublicationDto publicationDtoSession02 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                    publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(Long.valueOf(0), publicationDtoSession02.getOptimisticLockingVersion());
+
+            // Send to validation rejected - session 1 --> OK
+            PublicationDto publicationDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(getServiceContextAdministrador(), publicationDtoSession01);
+            assertTrue(publicationDtoSession1AfterUpdate01.getOptimisticLockingVersion() > publicationDtoSession01.getOptimisticLockingVersion());
+
+            // Send to validation rejected - session 2 --> FAIL
+            try {
+                statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(getServiceContextAdministrador(), publicationDtoSession02);
+                fail("optimistic locking");
+            } catch (MetamacException e) {
+                assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+            }
+
+            // Update publication - session 1 --> OK
+            publicationDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+            PublicationDto publicationDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDtoSession1AfterUpdate01);
+            assertTrue(publicationDtoSession1AfterUpdate02.getOptimisticLockingVersion() > publicationDtoSession1AfterUpdate01.getOptimisticLockingVersion());
     }
     
     // ------------------------------------------------------------
@@ -576,8 +606,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         datasetDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
         DatasetDto datasetDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDtoSession1AfterUpdate01);
         assertTrue(datasetDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetDtoSession1AfterUpdate01.getOptimisticLockingVersion());
-
     }
+
     
     @Override
     public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {

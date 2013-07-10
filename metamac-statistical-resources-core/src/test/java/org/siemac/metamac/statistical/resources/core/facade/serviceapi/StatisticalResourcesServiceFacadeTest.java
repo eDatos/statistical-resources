@@ -55,6 +55,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
@@ -1434,6 +1435,24 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, updatedPublication.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), updatedPublication.getDiffusionValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublication.getDiffusionValidationDate()));
+    }
+    
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
+    public void testSendPublicationVersionToValidationRejected() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionUrn);
+
+        PublicationDto updatedPublication = statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(getServiceContextAdministrador(), publicationDto);
+        assertNotNull(updatedPublication);
+        assertEquals(ProcStatusEnum.VALIDATION_REJECTED, updatedPublication.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedPublication.getRejectValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublication.getRejectValidationDate()));
+        
+        assertNotNull(updatedPublication.getProductionValidationUser());
+        assertNotNull(updatedPublication.getProductionValidationDate());
     }
 
     @Override
