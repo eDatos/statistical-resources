@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelection
 
 public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
+    
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 

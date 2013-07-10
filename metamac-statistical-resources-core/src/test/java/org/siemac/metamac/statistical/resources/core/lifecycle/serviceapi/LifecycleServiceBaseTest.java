@@ -8,11 +8,51 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi;
 
 public interface LifecycleServiceBaseTest {
 
-    public void testSendToProductionValidation() throws Exception;
+    // ------------------------------------------------------------------------------------------------------
+    // PRODUCTION VALIDATION
+    // ------------------------------------------------------------------------------------------------------
+    public void testCheckSendToProductionValidationResource() throws Exception;
 
-    public void testSendToDiffusionValidation() throws Exception;
+    public void testApplySendToProductionValidationResource() throws Exception;
 
-    public void testSendToValidationRejected() throws Exception;
+    // ------------------------------------------------------------------------------------------------------
+    // DIFFUSION VALIDATION
+    // ------------------------------------------------------------------------------------------------------
+    public void testCheckSendToDiffusionValidationResource() throws Exception;
 
-    public void testSendToPublished() throws Exception;
+    public void testApplySendToDiffusionValidationResource() throws Exception;
+
+    // ------------------------------------------------------------------------------------------------------
+    // VALIDATION REJECTED
+    // ------------------------------------------------------------------------------------------------------
+    public void testCheckSendToValidationRejectedResource() throws Exception;
+
+    public void testApplySendToValidationRejectedResource() throws Exception;
+
+    // ------------------------------------------------------------------------------------------------------
+    // PUBLISHED
+    // ------------------------------------------------------------------------------------------------------
+    public void testCheckSendToPublishedResource() throws Exception;
+
+    public void testApplySendToPublishedResource() throws Exception;
+
+    // TODO: Pendiente eliminar
+    public void testCheckSendToPublishedLinkedStatisticalResource() throws Exception;
+
+    // TODO: Pendiente eliminar
+    public void testApplySendToPublishedLinkedStatisticalResource() throws Exception;
+
+    // ------------------------------------------------------------------------------------------------------
+    // VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+    public void testCheckVersioningResource() throws Exception;
+
+    public void testApplyVersioningResource() throws Exception;
+
+    // TODO: Pendiente eliminar
+    public void testCheckVersioningLinkedStatisticalResource() throws Exception;
+
+    // TODO: Pendiente eliminar
+    public void testApplyVersioningLinkedStatisticalResource() throws Exception;
+
 }

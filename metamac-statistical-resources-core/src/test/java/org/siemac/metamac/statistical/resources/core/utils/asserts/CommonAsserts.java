@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.core.common.constants.CoreCommonConstants.API_LATEST;
 
@@ -10,6 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import javassist.ClassPool;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -32,6 +37,17 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 
 public class CommonAsserts extends MetamacAsserts {
+
+    // -----------------------------------------------------------------
+    // METHOD IS EMPTY
+    // -----------------------------------------------------------------
+    
+    public static void assertEmptyMethod(String className, String methodName) throws NotFoundException {
+        ClassPool pool = ClassPool.getDefault();
+        CtMethod method = pool.getMethod(className, methodName);
+        boolean result = method.isEmpty();
+        assertTrue(result);
+    }
 
     // -----------------------------------------------------------------
     // INTERNATIONAL STRING: DO & DO
@@ -88,16 +104,14 @@ public class CommonAsserts extends MetamacAsserts {
         if (expected == null) {
             return;
         }
-        
+
         NameableStatisticalResource nameableResourceActual = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(actual);
         NameableStatisticalResource nameableResourceExpec = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(expected);
-        
-        
+
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getId(), actual.getId());
         BaseAsserts.assertEqualsNameableStatisticalResource(nameableResourceExpec, nameableResourceActual);
     }
-
 
     public static void assertEqualsRelatedResourceCollection(Collection<RelatedResource> expected, Collection<RelatedResource> actual) throws MetamacException {
         assertEqualsNullability(expected, actual);
@@ -146,7 +160,7 @@ public class CommonAsserts extends MetamacAsserts {
             return;
         }
 
-        NameableStatisticalResource nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(entity); 
+        NameableStatisticalResource nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(entity);
         assertEquals(entity.getType(), dto.getType());
         assertEquals(nameableResource.getCode(), dto.getCode());
         assertEqualsInternationalString(nameableResource.getTitle(), dto.getTitle());
@@ -155,7 +169,7 @@ public class CommonAsserts extends MetamacAsserts {
 
     public static void assertEqualsRelatedResourceCollectionMapper(Collection<RelatedResource> entities, Collection<RelatedResourceDto> dtos) throws MetamacException {
         if (entities == null) {
-            entities = new ArrayList<RelatedResource>(); 
+            entities = new ArrayList<RelatedResource>();
         }
         if (dtos == null) {
             dtos = new ArrayList<RelatedResourceDto>();
@@ -183,14 +197,14 @@ public class CommonAsserts extends MetamacAsserts {
     // -----------------------------------------------------------------
     // TEMPORAL CODE: DO & DO
     // -----------------------------------------------------------------
-    
+
     public static void assertEqualsTemporalCodeCollection(Collection<TemporalCode> expected, Collection<TemporalCode> actual) {
         assertEqualsNullability(expected, actual);
         if (expected == null) {
             return;
         }
         assertEquals(expected.size(), actual.size());
-        
+
         for (TemporalCode expec : expected) {
             boolean found = false;
             for (TemporalCode actualItem : actual) {
@@ -203,7 +217,7 @@ public class CommonAsserts extends MetamacAsserts {
             }
         }
     }
-    
+
     // -----------------------------------------------------------------
     // TEMPORAL CODE: DTO & DO
     // -----------------------------------------------------------------
@@ -217,12 +231,12 @@ public class CommonAsserts extends MetamacAsserts {
         assertEquals(entity.getIdentifier(), dto.getIdentifier());
         assertEquals(entity.getTitle(), dto.getTitle());
     }
-    
+
     public static void assertEqualsTemporalCodeCollectionMapper(Collection<TemporalCode> entities, Collection<TemporalCodeDto> dtos) {
         if (entities == null) {
-            entities = new ArrayList<TemporalCode>(); 
+            entities = new ArrayList<TemporalCode>();
         }
-        
+
         if (dtos == null) {
             dtos = new ArrayList<TemporalCodeDto>();
         }
@@ -245,8 +259,7 @@ public class CommonAsserts extends MetamacAsserts {
             }
         }
     }
-    
-    
+
     // -----------------------------------------------------------------
     // EXTERNAL ITEMS: DO & DO
     // -----------------------------------------------------------------
@@ -287,7 +300,6 @@ public class CommonAsserts extends MetamacAsserts {
             }
         }
     }
-
 
     public static void assertEqualsExternalItemList(List<ExternalItem> expected, List<ExternalItem> actual) {
         assertEqualsNullability(expected, actual);
@@ -368,9 +380,9 @@ public class CommonAsserts extends MetamacAsserts {
 
     public static void assertEqualsExternalItemCollectionMapper(Collection<ExternalItem> entities, Collection<ExternalItemDto> dtos) {
         if (entities == null) {
-            entities = new ArrayList<ExternalItem>(); 
+            entities = new ArrayList<ExternalItem>();
         }
-        
+
         if (dtos == null) {
             dtos = new ArrayList<ExternalItemDto>();
         }
