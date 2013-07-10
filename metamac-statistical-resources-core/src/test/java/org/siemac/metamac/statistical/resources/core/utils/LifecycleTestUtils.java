@@ -122,6 +122,7 @@ public class LifecycleTestUtils {
         resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().clear();
         resource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_DATA_UPDATE));
         resource.getLifeCycleStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+        resource.getLifeCycleStatisticalResource().setNextVersionDate(null);
 
         resource.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesPersistedDoMocks.mockInternationalString());
         resource.getLifeCycleStatisticalResource().setDescription(StatisticalResourcesPersistedDoMocks.mockInternationalString());

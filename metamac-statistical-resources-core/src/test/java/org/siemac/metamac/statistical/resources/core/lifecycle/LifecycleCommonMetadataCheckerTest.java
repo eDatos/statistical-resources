@@ -196,11 +196,12 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     @Test
     public void testPublicationVersionCommonMetadata() throws Exception {
         PublicationVersion resource = new PublicationVersion();
+        resource.setFormatExtentResources(1);
         
         String baseMetadata = ServiceExceptionSingleParameters.PUBLICATION_VERSION;
         expectedMetamacException(new MetamacException ( 
                 Arrays.asList(
-                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__FORMAT_EXTENT_RESOURCES)
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.PUBLICATION_VERSION__FORMAT_EXTENT_RESOURCES)
                         )));
         
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();

@@ -53,6 +53,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
@@ -77,11 +79,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
@@ -96,7 +94,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
@@ -148,7 +145,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -993,13 +989,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
-    public void testSendToProductionValidation() throws Exception {
+    public void testSendDatasetVersionToProductionValidation() throws Exception {
         mockDsdAndatasetRepositoryForProductionValidation();
 
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
 
-        DatasetDto updatedDataset = statisticalResourcesServiceFacade.sendToProductionValidation(getServiceContextAdministrador(), datasetDto);
+        DatasetDto updatedDataset = statisticalResourcesServiceFacade.sendDatasetVersionToProductionValidation(getServiceContextAdministrador(), datasetDto);
         assertNotNull(updatedDataset);
         assertEquals(ProcStatusEnum.PRODUCTION_VALIDATION, updatedDataset.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), updatedDataset.getProductionValidationUser());
@@ -1009,11 +1005,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
-    public void testSendToDiffusionValidation() throws Exception {
+    public void testSendDatasetVersionToDiffusionValidation() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
 
-        DatasetDto updatedDataset = statisticalResourcesServiceFacade.sendToDiffusionValidation(getServiceContextAdministrador(), datasetDto);
+        DatasetDto updatedDataset = statisticalResourcesServiceFacade.sendDatasetVersionToDiffusionValidation(getServiceContextAdministrador(), datasetDto);
         assertNotNull(updatedDataset);
         assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, updatedDataset.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), updatedDataset.getDiffusionValidationUser());
@@ -1406,7 +1402,38 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertEqualsPublicationVersion(publicationVersionFirst, datasets.get(0));
             assertEqualsPublicationVersion(publicationVersionLast, datasets.get(1));
         }
+    }
 
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
+    public void testSendPublicationVersionToProductionValidation() throws Exception {
+        DataStructure emptyDsd = new DataStructure();
+        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionUrn);
+
+        PublicationDto updatedDataset = statisticalResourcesServiceFacade.sendPublicationVersionToProductionValidation(getServiceContextAdministrador(), publicationDto);
+        assertNotNull(updatedDataset);
+        assertEquals(ProcStatusEnum.PRODUCTION_VALIDATION, updatedDataset.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedDataset.getProductionValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDataset.getProductionValidationDate()));
+    }
+
+    @Override
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+    public void testSendPublicationVersionToDiffusionValidation() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionUrn);
+
+        PublicationDto updatedPublication = statisticalResourcesServiceFacade.sendPublicationVersionToDiffusionValidation(getServiceContextAdministrador(), publicationDto);
+        assertNotNull(updatedPublication);
+        assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, updatedPublication.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedPublication.getDiffusionValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublication.getDiffusionValidationDate()));
     }
 
     @Override

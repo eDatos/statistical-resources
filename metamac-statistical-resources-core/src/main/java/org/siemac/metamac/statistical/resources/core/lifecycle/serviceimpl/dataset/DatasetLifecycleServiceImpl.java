@@ -33,8 +33,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +66,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected String getResourceMetadataName() throws MetamacException {
         return ServiceExceptionParameters.DATASET_VERSION;
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -77,10 +75,10 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected void checkSendToProductionValidationResource(DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // CHECK all dsd related info
         checkMetadataRequired(resource.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD, exceptions);
-        
+
         checkMetadataRequired(resource.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES, exceptions);
         checkMetadataRequired(resource.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES, exceptions);
-        
+
         checkMetadataRequired(resource.getDateNextUpdate(), ServiceExceptionParameters.DATASET_VERSION__DATE_NEXT_UPDATE, exceptions);
         checkMetadataRequired(resource.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY, exceptions);
         checkMetadataRequired(resource.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY, exceptions);
@@ -93,9 +91,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
             }
         }
     }
-    
+
     private boolean hasAnyDatasourceDateNextUpdate(DatasetVersion resource) {
-        for (Datasource datasource: resource.getDatasources()) {
+        for (Datasource datasource : resource.getDatasources()) {
             if (datasource.getDateNextUpdate() != null) {
                 return true;
             }
@@ -103,45 +101,42 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         return false;
     }
 
-
-
     @Override
     protected void applySendToProductionValidationResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         ExternalItem externalDsd = resource.getRelatedDsd();
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(externalDsd.getUrn());
 
         resource.getCoverages().clear();
-        
+
         processCoverages(resource, dataStructure);
-        
+
         processDataRelatedMetadata(resource);
 
-        //processStartEndDates();
-        //TODO: DATE_START, DATE_END
-        
-        //TODO: DATE_NEXT_UPDATE
-        //calculateDateNextUpdate(resource);
+        // processStartEndDates();
+        // TODO: DATE_START, DATE_END
+
+        // TODO: DATE_NEXT_UPDATE
+        // calculateDateNextUpdate(resource);
     }
-    
 
     private void processDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
         try {
             DatasetRepositoryDto datasetRepository = statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(resource.getDatasetRepositoryId());
             resource.setFormatExtentDimensions(datasetRepository.getDimensions().size());
-            //TODO: FORMAT_EXTENT_OBSERVATIONS
+            // TODO: FORMAT_EXTENT_OBSERVATIONS
         } catch (ApplicationException e) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository "+resource.getDatasetRepositoryId());
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId());
         }
     }
 
     private void processCoverages(DatasetVersion resource, DataStructure dataStructure) throws MetamacException {
         List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
-        
+
         resource.getCoverages().clear();
         resource.getGeographicCoverage().clear();
         resource.getTemporalCoverage().clear();
         resource.getMeasureCoverage().clear();
-        
+
         for (DsdDimension dimension : dimensions) {
             List<CodeDimension> codes = getCodesFromDsdComponent(resource, dimension);
             List<ExternalItem> items = buildExternalItemsBasedOnCodeDimensions(codes, dimension);
@@ -149,7 +144,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
                 addTranslationsToCodesFromExternalItems(codes, items);
             }
             resource.getCoverages().addAll(codes);
-            switch (dimension.getType()){
+            switch (dimension.getType()) {
                 case SPATIAL:
                     resource.getGeographicCoverage().addAll(items);
                     break;
@@ -162,8 +157,8 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
                     break;
             }
         }
-        
-        //Try to fill specific coverages from attributes
+
+        // Try to fill specific coverages from attributes
         if (resource.getGeographicCoverage().isEmpty()) {
             List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.SPATIAL);
             resource.getGeographicCoverage().addAll(codeItems);
@@ -178,7 +173,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         }
     }
 
-    
     private List<ExternalItem> processExternalItemsCodeFromAttributeByType(DatasetVersion resource, DataStructure dataStructure, DsdComponentType type) throws MetamacException {
         DsdAttribute attribute = getDsdAttributeByType(dataStructure, type);
         List<ExternalItem> items = new ArrayList<ExternalItem>();
@@ -188,7 +182,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         }
         return items;
     }
-    
+
     private List<CodeDimension> processCodeFromAttributeByType(DatasetVersion resource, DataStructure dataStructure, DsdComponentType type) throws MetamacException {
         DsdAttribute attribute = getDsdAttributeByType(dataStructure, type);
         List<CodeDimension> codes = new ArrayList<CodeDimension>();
@@ -199,7 +193,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         }
         return codes;
     }
-  
 
     private List<TemporalCode> buildTemporalCodeFromCodeDimensions(List<CodeDimension> codes) {
         List<TemporalCode> temporalCodes = new ArrayList<TemporalCode>();
@@ -211,22 +204,22 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         }
         return temporalCodes;
     }
-    
+
     private List<ExternalItem> buildExternalItemsBasedOnCodeDimensions(List<CodeDimension> codes, DsdComponent component) throws MetamacException {
         if (component.getCodelistRepresentationUrn() != null) {
-            return buildExternalItemsBasedOnCodeDimensionsInCodelist(codes,component.getCodelistRepresentationUrn());
+            return buildExternalItemsBasedOnCodeDimensionsInCodelist(codes, component.getCodelistRepresentationUrn());
         } else if (component.getConceptSchemeRepresentationUrn() != null) {
             return buildExternalItemsBasedOnCodeDimensionsInConceptScheme(codes, component.getConceptSchemeRepresentationUrn());
         } else {
-           return null;
+            return null;
         }
     }
 
     private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInCodelist(List<CodeDimension> codeDimensions, String codelistRepresentationUrn) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
-        
+
         Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codelistRepresentationUrn);
-        
+
         for (CodeType code : codelist.getCodes()) {
             for (CodeDimension codeDim : codeDimensions) {
                 if (codeDim.getIdentifier().equals(code.getId())) {
@@ -234,19 +227,19 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
                 }
             }
         }
-        
+
         if (externalItems.size() < codeDimensions.size()) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Some codes in dimension were not found in codelist "+codelistRepresentationUrn);
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Some codes in dimension were not found in codelist " + codelistRepresentationUrn);
         }
 
         return externalItems;
     }
-    
+
     private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInConceptScheme(List<CodeDimension> codeDimensions, String conceptSchemeRepresentationUrn) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
-        
+
         ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRepresentationUrn);
-        
+
         for (ConceptType concept : conceptScheme.getConcepts()) {
             for (CodeDimension codeDim : codeDimensions) {
                 if (codeDim.getIdentifier().equals(concept.getId())) {
@@ -254,9 +247,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
                 }
             }
         }
-        
+
         if (externalItems.size() < codeDimensions.size()) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Some codes in dimension were not found in conceptScheme "+conceptSchemeRepresentationUrn);
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Some codes in dimension were not found in conceptScheme " + conceptSchemeRepresentationUrn);
         }
 
         return externalItems;
@@ -273,7 +266,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         }
         return codes;
     }
-    
+
     private DsdAttribute getDsdAttributeByType(DataStructure dataStructure, DsdComponentType type) {
         List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
         DsdAttribute foundAttribute = filterDsdAttributeWithType(attributes, type);
@@ -283,9 +276,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     private List<CodeDimension> filterCodesFromDimension(DatasetVersion resource, String datasetRepositoryId, String dimensionId) throws MetamacException {
         try {
             List<ConditionObservationDto> conditions = statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(datasetRepositoryId);
-            
+
             List<CodeDimensionDto> dimCodes = filterCodeDimensionsForDimension(dimensionId, conditions);
-            
+
             List<CodeDimension> codes = new ArrayList<CodeDimension>();
             for (CodeDimensionDto code : dimCodes) {
                 CodeDimension codeDimension = new CodeDimension();
@@ -297,14 +290,14 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
             }
             return codes;
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "An error has ocurred retrieving codes from dataset repository "+datasetRepositoryId+" for dimension "+dimensionId);
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "An error has ocurred retrieving codes from dataset repository " + datasetRepositoryId + " for dimension " + dimensionId);
         }
     }
-    
+
     private List<CodeDimension> filterCodesFromAttribute(DatasetVersion resource, String datasetRepositoryId, String attributeId) throws MetamacException {
         try {
             List<AttributeDto> attributes = statisticsDatasetRepositoriesServiceFacade.findAttributes(datasetRepositoryId, attributeId);
-            
+
             List<CodeDimension> codes = new ArrayList<CodeDimension>();
             if (attributes.size() > 0) {
                 String value = attributes.get(0).getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
@@ -317,10 +310,10 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
             }
             return codes;
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "An error has ocurred retrieving values from dataset repository "+datasetRepositoryId+" for attribute "+attributeId);
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "An error has ocurred retrieving values from dataset repository " + datasetRepositoryId + " for attribute " + attributeId);
         }
     }
-    
+
     private void addTranslationsToCodesFromExternalItems(List<CodeDimension> codeDimensions, List<ExternalItem> externalItems) {
         for (ExternalItem externalItem : externalItems) {
             for (CodeDimension codeDimension : codeDimensions) {
@@ -344,8 +337,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         }
         return null;
     }
-    
-
 
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
@@ -355,6 +346,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected void checkSendToDiffusionValidationResource(DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // NOTHING
     }
+
     @Override
     protected void applySendToDiffusionValidationResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         // NOTHING
@@ -372,7 +364,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     @Override
     protected void applySendToValidationRejectedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         // TODO: CLEAR ALL METADATA FILLED IN PREVIOUS VALIDATIONS
-        //resource.getGeographicCoverage().clear();
+        // resource.getGeographicCoverage().clear();
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {
@@ -499,7 +491,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     // SRM related Utils
     // ------------------------------------------------------------------------------------------------------
 
-    
     private DsdAttribute filterDsdAttributeWithType(List<DsdAttribute> attributes, DsdComponentType type) {
         for (DsdAttribute attr : attributes) {
             if (type.equals(attr.getType())) {

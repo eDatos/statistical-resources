@@ -65,7 +65,7 @@ public abstract class LifecycleInvocationValidatorBase<E> {
     }
 
     protected abstract void checkSendToPublishedInternal(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions);
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------

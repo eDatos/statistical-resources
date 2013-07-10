@@ -92,6 +92,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private LifecycleService<DatasetVersion>                         datasetLifecycleService;
+    
+    @Autowired
+    private LifecycleService<PublicationVersion>                     publicationLifecycleService;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -429,7 +432,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public DatasetDto sendToProductionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+    public DatasetDto sendDatasetVersionToProductionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canSendToProductionValidation(ctx);
 
@@ -437,8 +440,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
 
         // Send to production validation and retrieve
-        datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion);
-        datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetDto.getUrn());
+        datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion);
 
         // Transform
         datasetDto = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
@@ -447,7 +449,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public DatasetDto sendToDiffusionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+    public DatasetDto sendDatasetVersionToDiffusionValidation(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canSendToDiffusionValidation(ctx);
 
@@ -455,8 +457,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetDto);
 
         // Send to production validation and retrieve
-        datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion);
-        datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetDto.getUrn());
+        datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion);
 
         // Transform
         datasetDto = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
@@ -636,6 +637,41 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         }
 
         return publicationStructureDto;
+    }
+    
+    @Override
+    public PublicationDto sendPublicationVersionToProductionValidation(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canSendToProductionValidation(ctx);
+        
+        // Transform
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
+        
+        // Send to production validation and retrieve
+        publicationVersion = publicationLifecycleService.sendToProductionValidation(ctx, publicationVersion);
+        
+        // Transform
+        publicationDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        
+        return publicationDto;
+    }
+
+    
+    @Override
+    public PublicationDto sendPublicationVersionToDiffusionValidation(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canSendToDiffusionValidation(ctx);
+
+        // Transform
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationDto);
+
+        // Send to production validation and retrieve
+        publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersion);
+
+        // Transform
+        publicationDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+
+        return publicationDto;        
     }
 
     // ------------------------------------------------------------------------

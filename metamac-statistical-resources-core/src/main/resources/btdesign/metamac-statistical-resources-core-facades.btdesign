@@ -28,6 +28,7 @@ Application FacadeStatisticalResources {
 			> @DatasetService
 			> @PublicationService
 			> @DatasetLifecycleService
+			> @PublicationLifecycleService
 			
 			// QUERIES
 			"Retrieves a query scheme by URN"
@@ -77,9 +78,9 @@ Application FacadeStatisticalResources {
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetDto versioningDatasetVersion(String urnDatasetVersionToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		"Send to production validation"
-    		@DatasetDto sendToProductionValidation(@DatasetDto datasetDto) throws MetamacException;
+    		@DatasetDto sendDatasetVersionToProductionValidation(@DatasetDto datasetDto) throws MetamacException;
     		"Send to diffusion validation"
-    		@DatasetDto sendToDiffusionValidation(@DatasetDto datasetDto) throws MetamacException;
+    		@DatasetDto sendDatasetVersionToDiffusionValidation(@DatasetDto datasetDto) throws MetamacException;
     		"Retrieve latest datasetVersion providing datasetUrn"
     		@DatasetDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
     		"Retrieve latest published datasetVersion providing datasetUrn"
@@ -112,6 +113,10 @@ Application FacadeStatisticalResources {
     		@PublicationDto retrieveLatestPublicationVersion(String publicationUrn) throws MetamacException;
     		"Retrieve latest published publicationVersion providing publicationUrn"
     		@PublicationDto retrieveLatestPublishedPublicationVersion(String publicationUrn) throws MetamacException;
+    		"Send to production validation"
+    		@PublicationDto sendPublicationVersionToProductionValidation(@PublicationDto publicationDto) throws MetamacException;
+    		"Send to diffusion validation"
+    		@PublicationDto sendPublicationVersionToDiffusionValidation(@PublicationDto publicationDto) throws MetamacException;
 	    	
 	    	// CHAPTERS
 	    	"Creates a chapter"

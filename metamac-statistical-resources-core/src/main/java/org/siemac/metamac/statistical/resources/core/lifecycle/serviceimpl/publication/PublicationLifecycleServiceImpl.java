@@ -7,26 +7,18 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// FIXME uncomment @service
-// @Service("publicationLifecycleService")
-public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> {
+@Service("publicationLifecycleService")
+public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> {
 
     @Autowired
     private LifecycleCommonMetadataChecker                 lifecycleCommonMetadataChecker;
-
-    @Autowired
-    private SiemacLifecycleChecker                         siemacLifecycleChecker;
-
-    @Autowired
-    private SiemacLifecycleFiller                          siemacLifecycleFiller;
 
     @Autowired
     private PublicationLifecycleServiceInvocationValidator publicationLifecycleServiceInvocationValidator;
@@ -45,6 +37,7 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
 
     @Override
     protected void checkSendToProductionValidationResource(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        // check format extent resources ?
         // FIXME: check possible fields to be checked
     }
 
@@ -63,12 +56,92 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
         // FIXME: check possible fields to be checked
     }
     
+
     @Override
     protected void applySendToDiffusionValidationResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // FIXME: check possible fields to be checked
     }
 
-    /* GENERAL ABSTRACT METHODS */
+
+    // ------------------------------------------------------------------------------------------------------
+    // >> VALIDATION REJECTED
+    // ------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected void checkSendToValidationRejectedResource(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        // TODO
+    }
+
+
+    @Override
+    protected void applySendToValidationRejectedResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // TODO
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------
+    // >> PUBLISHED
+    // ------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected void checkSendToPublishedResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+
+    }
+
+    @Override
+    protected void applySendToPublishedResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    protected void checkSendToPublishedLinkedStatisticalResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected void checkVersioningResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+
+    @Override
+    protected void applyVersioningResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+
+    @Override
+    protected void checkVersioningLinkedStatisticalResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void applyVersioningLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // GENERAL ABSTRACT METHODS
+    // ------------------------------------------------------------------------------------------------------
+    
     @Override
     protected LifecycleInvocationValidatorBase<PublicationVersion> getInvocationValidator() {
         return publicationLifecycleServiceInvocationValidator;
@@ -86,6 +159,6 @@ public abstract class PublicationLifecycleServiceImpl extends LifecycleTemplateS
 
     @Override
     protected void checkResourceMetadataAllActions(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+        lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
     }
 }

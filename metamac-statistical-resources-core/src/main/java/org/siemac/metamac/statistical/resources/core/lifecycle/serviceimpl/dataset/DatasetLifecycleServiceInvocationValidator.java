@@ -17,12 +17,12 @@ public class DatasetLifecycleServiceInvocationValidator extends LifecycleInvocat
     public void checkSendToProductionValidationInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
         DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
-    
+
     @Override
     public void checkSendToDiffusionValidationInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
         DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
-    
+
     @Override
     public void checkSendToValidationRejectedInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
         DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
@@ -32,7 +32,7 @@ public class DatasetLifecycleServiceInvocationValidator extends LifecycleInvocat
     protected void checkSendToPublishedInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
         DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
     }
-    
+
     @Override
     protected void checkVersioningInternal(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
         DatasetServiceInvocationValidatorImpl.checkExistingDatasetVersion(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);

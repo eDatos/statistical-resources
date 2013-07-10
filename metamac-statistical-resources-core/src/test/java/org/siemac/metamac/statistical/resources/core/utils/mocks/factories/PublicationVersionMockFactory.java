@@ -6,11 +6,17 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -100,19 +106,40 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     private static PublicationVersion PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED;
 
     public static final String        PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME                            = "PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05";
-    private static PublicationVersion     PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
+    private static PublicationVersion PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
 
     public static final String        PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05_NAME                            = "PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05";
-    private static PublicationVersion     PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
+    private static PublicationVersion PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
 
     public static final String        PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME                            = "PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05";
-    private static PublicationVersion     PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
+    private static PublicationVersion PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
 
     public static final String        PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME                            = "PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06";
-    private static PublicationVersion     PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
+    private static PublicationVersion PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
 
     public static final String        PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME                 = "PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06";
-    private static PublicationVersion     PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
+    private static PublicationVersion PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
+
+    public static final String        PUBLICATION_VERSION_32_DRAFT_NOT_READY_NAME                                            = "PUBLICATION_VERSION_32_DRAFT_NOT_READY";
+    private static PublicationVersion PUBLICATION_VERSION_32_DRAFT_NOT_READY;
+
+    public static final String        PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME                      = "PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION";
+    private static PublicationVersion PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION;
+
+    public static final String        PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA_NAME                        = "PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA";
+    private static PublicationVersion PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
+
+    public static final String        PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME                     = "PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
+    private static PublicationVersion PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
+
+    public static final String        PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY_NAME                            = "PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY";
+    private static PublicationVersion PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY;
+
+    public static final String        PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME       = "PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
+    private static PublicationVersion PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
+
+    public static final String        PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME        = "PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED";
+    private static PublicationVersion PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
 
     protected static PublicationVersion getPublicationVersion01Basic() {
         if (PUBLICATION_VERSION_01_BASIC == null) {
@@ -443,98 +470,175 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED;
     }
 
-    
-     protected static PublicationVersion  getPublicationVersion27V1PublishedForPublication05() {
-         if (PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 == null) {
-             PublicationVersion publicationVersion = createPublicationVersion();
-             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+    protected static PublicationVersion getPublicationVersion27V1PublishedForPublication05() {
+        if (PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // not last version
-             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(3));
-             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
+            // not last version
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(3));
+            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
 
-             // Relations
-             PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
-             PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
-         }
-         return PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
+            // Relations
+            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
+            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
+        }
+        return PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
     }
-    
-    
-     protected static PublicationVersion  getPublicationVersion28V2PublishedForPublication05() {
-         if (PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 == null) {
-             PublicationVersion publicationVersion = createPublicationVersion();
-             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // not last version
-             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+    protected static PublicationVersion getPublicationVersion28V2PublishedForPublication05() {
+        if (PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // Relations
-             PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
-             PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
-         }
-         return PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
+            // not last version
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+
+            // Relations
+            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
+            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
+        }
+        return PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
     }
-    
-    
-     protected static PublicationVersion  getPublicationVersion29V3PublishedForPublication05() {
-         if (PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 == null) {
-             PublicationVersion publicationVersion = createPublicationVersion();
-             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(THIRD_VERSION);
-             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // last version
-             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+    protected static PublicationVersion getPublicationVersion29V3PublishedForPublication05() {
+        if (PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(THIRD_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // Relations
-             PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
-             PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
-         }
-         return PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
+            // last version
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+
+            // Relations
+            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
+            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
+        }
+        return PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
     }
-    
-     protected static PublicationVersion  getPublicationVersion30V1PublishedForPublication06() {
-         if (PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 == null) {
-             PublicationVersion publicationVersion = createPublicationVersion();
-             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // last version
-             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+    protected static PublicationVersion getPublicationVersion30V1PublishedForPublication06() {
+        if (PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // Relations
-             PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 = publicationVersion;
-             PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06.setPublication(PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible());
-         }
-         return PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
+            // last version
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+
+            // Relations
+            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 = publicationVersion;
+            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06.setPublication(PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible());
+        }
+        return PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
     }
-    
-    
-     protected static PublicationVersion  getPublicationVersion31V2PublishedNoVisibleForPublication06() {
-         if (PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 == null) {
-             PublicationVersion publicationVersion = createPublicationVersion();
-             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // last version
-             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
-             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+    protected static PublicationVersion getPublicationVersion31V2PublishedNoVisibleForPublication06() {
+        if (PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
+            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-             // Relations
-             PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 = publicationVersion;
-             PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06.setPublication(PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible());
-         }
-         return PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
+            // last version
+            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
+            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+
+            // Relations
+            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 = publicationVersion;
+            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06.setPublication(PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible());
+        }
+        return PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
     }
-    
+
+    protected static PublicationVersion getPublicationVersion32DraftNotReady() {
+        if (PUBLICATION_VERSION_32_DRAFT_NOT_READY == null) {
+            PUBLICATION_VERSION_32_DRAFT_NOT_READY = createPublicationVersion();
+            PUBLICATION_VERSION_32_DRAFT_NOT_READY.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        }
+        return PUBLICATION_VERSION_32_DRAFT_NOT_READY;
+    }
+
+    protected static PublicationVersion getPublicationVersion33DraftReadyForProductionValidation() {
+        if (PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION == null) {
+            PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION = createPublicationVersion();
+            prepareToProductionValidation(PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION);
+        }
+        return PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION;
+    }
+
+    protected static PublicationVersion getPublicationVersion34VersionRationaleTypeMinorErrata() {
+        if (PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA = publicationVersion;
+            prepareToProductionValidation(publicationVersion);
+            publicationVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_ERRATA));
+        }
+        return PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
+    }
+
+    protected static PublicationVersion getPublicationVersion35NextVersionNotScheduledDateFilled() {
+        if (PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED == null) {
+            PublicationVersion publicationVersion = createPublicationVersion();
+            PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED = publicationVersion;
+            prepareToProductionValidation(publicationVersion);
+            publicationVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+            publicationVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(new DateTime().plusDays(10));
+        }
+        return PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
+    }
+
+    protected static PublicationVersion getPublicationVersion36ProductionValidationNotReady() {
+        if (PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY == null) {
+            PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY = createPublicationVersion();
+            prepareToDiffusionValidation(PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY);
+        }
+        return PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY;
+    }
+
+    protected static PublicationVersion getPublicationVersion37ProductionValidationReadyForDiffusionValidation() {
+        if (PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION == null) {
+            PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION = createPublicationVersion();
+            prepareToDiffusionValidation(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION);
+        }
+        return PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
+    }
+
+    protected static PublicationVersion getPublicationVersion38ProductionValidationReadyForValidationRejected() {
+        if (PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED == null) {
+            PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED = createPublicationVersion();
+            prepareToValidationRejected(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED);
+        }
+        return PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
+    }
+
     private static PublicationVersion createPublicationVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
     }
+
+    private static PublicationVersion createPublicationVersionInOperation(String operationCode, int sequentialId) {
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
+        PublicationVersion publicationVersion = getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
+        publicationVersion.getSiemacMetadataStatisticalResource().setCode(buildPublicationCode(operationCode, sequentialId));
+        return publicationVersion;
+    }
+
+    private static String buildPublicationCode(String operationCode, int sequentialId) {
+        return operationCode + "_" + String.format("%06d", sequentialId);
+    }
+    
+    private static String buildPublicationVersionUrn(String code, String version) {
+        return GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(new String[]{"maitainer"}, code, version);
+    }
+    
+    // -----------------------------------------------------------------
+    // PUBLICATION STRUCTURE
+    // -----------------------------------------------------------------
 
     private static ElementLevel createQueryCubeElementLevel(PublicationVersion publicationVersion, Query query) {
         return getStatisticalResourcesPersistedDoMocks().mockQueryCubeElementLevel(publicationVersion, query);
@@ -554,18 +658,6 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     private static ElementLevel createChapterElementLevel(PublicationVersion publicationVersion) {
         return getStatisticalResourcesPersistedDoMocks().mockChapterElementLevel(publicationVersion);
-    }
-
-    private static PublicationVersion createPublicationVersionInOperation(String operationCode, int sequentialId) {
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
-        PublicationVersion publicationVersion = getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
-        publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
-        publicationVersion.getSiemacMetadataStatisticalResource().setCode(buildPublicationCode(operationCode, sequentialId));
-        return publicationVersion;
-    }
-
-    private static String buildPublicationCode(String operationCode, int sequentialId) {
-        return operationCode + "_" + String.format("%06d", sequentialId);
     }
 
     private static PublicationVersion createComplexStructure() {
@@ -605,6 +697,33 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         ElementLevel elementLevel04 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple());
         elementLevel04.setOrderInLevel(Long.valueOf(4));
         return publicationVersion;
+    }
+
+    // -----------------------------------------------------------------
+    // LIFE CYCLE PREPARATIONS
+    // -----------------------------------------------------------------
+
+    private static void prepareToProductionValidation(PublicationVersion publicationVersion) {
+        LifecycleTestUtils.prepareToProductionValidation(publicationVersion);
+        prepareToLifecycleCommonPublicationVersion(publicationVersion);
+    }
+
+    private static void prepareToDiffusionValidation(PublicationVersion publicationVersion) {
+        prepareToProductionValidation(publicationVersion);
+        LifecycleTestUtils.prepareToDiffusionValidation(publicationVersion);
+    }
+
+    private static void prepareToValidationRejected(PublicationVersion publicationVersion) {
+        prepareToProductionValidation(publicationVersion);
+        LifecycleTestUtils.prepareToValidationRejected(publicationVersion);
+    }
+
+    private static void prepareToLifecycleCommonPublicationVersion(PublicationVersion publicationVersion) {
+        // Inherited fields that need customization based on Resource's type
+        String code = buildPublicationCode(publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
+        publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
+        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(buildPublicationVersionUrn(code, publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        publicationVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.COLLECTION);
     }
 
 }

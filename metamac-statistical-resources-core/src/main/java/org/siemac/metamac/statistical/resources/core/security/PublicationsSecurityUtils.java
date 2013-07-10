@@ -139,4 +139,16 @@ public class PublicationsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canSendToProductionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canSendToProductionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canSendToDiffusionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canSendToDiffusionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
 }

@@ -83,6 +83,7 @@ public class LifecycleCommonMetadataChecker {
     }
     
     public void checkPublicationVersionCommonMetadata(PublicationVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
-        checkMetadataRequired(resource.getFormatExtentResources(), addParameter(metadataName, ServiceExceptionSingleParameters.FORMAT_EXTENT_RESOURCES), exceptionItems);
+     // Metadata specific of publicationVersion are only required for published: formatExtentResources and at least one cube per level.
+        checkMetadataEmpty(resource.getFormatExtentResources(), addParameter(metadataName, ServiceExceptionSingleParameters.FORMAT_EXTENT_RESOURCES), exceptionItems);
     }
 }

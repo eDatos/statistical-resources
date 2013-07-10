@@ -42,7 +42,7 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
-    
+
     public static boolean canRetrievePublicationVersions(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
@@ -116,6 +116,16 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canDeleteCube(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendToProductionValidation(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
