@@ -12,7 +12,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 public interface StatisticalResourcesV1_0 {
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("datasets/{agencyID}/{resourceID}/{version}")
     Dataset retrieveDataset(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @PathParam("version") String version);
 
