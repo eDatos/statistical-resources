@@ -37,6 +37,12 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_USERNAME);
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_PASSWORD);
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DIALECT);
+        // Datasource repository
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DRIVER_NAME);
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_URL);
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_USERNAME);
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_PASSWORD);
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DIALECT);
 
         // Api
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_RESOURCES_EXTERNAL_API);

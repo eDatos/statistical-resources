@@ -13,14 +13,12 @@
     <entry key="metamac.statistical.resources.db.username">FILL_ME_WITH_USERNAME</entry>
     <entry key="metamac.statistical.resources.db.password">FILL_ME_WITH_PASSWORD</entry>
     <entry key="metamac.statistical.resources.db.dialect">org.siemac.metamac.hibernate.dialect.Oracle10gDialectMetamac</entry>
-    <!-- MSSQL -->
-    <!--
-        <entry key="metamac.statistical.resources.db.url">jdbc:sqlserver://FILL_ME_WITH_HOST:FILL_ME_WITH_PORT;databaseName=FILL_ME_WITH_DATABASE_NAME</entry>
-        <entry key="metamac.statistical.resources.db.driverName">com.microsoft.sqlserver.jdbc.SQLServerDriver</entry>
-        <entry key="metamac.statistical.resources.db.username">FILL_ME_WITH_USERNAME</entry>
-        <entry key="metamac.statistical.resources.db.password">FILL_ME_WITH_PASSWORD</entry>
-        <entry key="metamac.statistical.resources.db.dialect">org.hibernate.dialect.SQLServerDialect</entry>
-    -->
+
+    <entry key="metamac.statistical.resources.repo.db.url">jdbc:oracle:thin:@FILL_ME_WITH_HOST:FILL_ME_WITH_PORT:XE</entry>
+    <entry key="metamac.statistical.resources.repo.db.driverName">oracle.jdbc.OracleDriver</entry>
+    <entry key="metamac.statistical.resources.repo.db.username">FILL_ME_WITH_USERNAME</entry>
+    <entry key="metamac.statistical.resources.repo.db.password">FILL_ME_WITH_PASSWORD</entry>
+    <entry key="metamac.statistical.resources.repo.db.dialect">org.siemac.metamac.hibernate.dialect.Oracle10gDialectMetamac</entry>
     
     <!--  ********************************************************************************************** -->
     <!--  **************************** APIS ************************************************************ -->
