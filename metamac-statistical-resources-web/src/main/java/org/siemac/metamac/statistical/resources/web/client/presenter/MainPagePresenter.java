@@ -90,27 +90,16 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
     }
 
     @Override
-    protected void onBind() {
-        super.onBind();
-    }
-
-    @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
     }
 
     @Override
-    protected void onReveal() {
-        super.onReveal();
-    }
-
-    @Override
     protected void onReset() {
         super.onReset();
-        hideMessages();
         updateBreadcrumbs();
     }
-    
+
     private void updateBreadcrumbs() {
         int size = placeManager.getHierarchyDepth();
         getView().clearBreadcrumbs(size, placeManager);
@@ -176,6 +165,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
             @Override
             public void onFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error closing session");
+                ShowMessageEvent.fireErrorMessage(MainPagePresenter.this, caught);
             }
             @Override
             public void onSuccess(CloseSessionResult result) {
@@ -187,5 +177,4 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
     private void hideMessages() {
         getView().hideMessages();
     }
-
 }
