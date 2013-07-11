@@ -41,7 +41,7 @@ public class CommonAsserts extends MetamacAsserts {
     // -----------------------------------------------------------------
     // METHOD IS EMPTY
     // -----------------------------------------------------------------
-    
+
     public static void assertEmptyMethod(String className, String methodName) throws NotFoundException {
         ClassPool pool = ClassPool.getDefault();
         CtMethod method = pool.getMethod(className, methodName);
@@ -272,6 +272,7 @@ public class CommonAsserts extends MetamacAsserts {
         }
 
         assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getCodeNested(), actual.getCodeNested());
         assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());
         assertEquals(expected.getUrnInternal(), actual.getUrnInternal());
@@ -372,6 +373,7 @@ public class CommonAsserts extends MetamacAsserts {
 
     private static void assertEqualsExternalItem(ExternalItem entity, ExternalItemDto dto) {
         assertEquals(entity.getCode(), dto.getCode());
+        assertEquals(entity.getCodeNested(), dto.getCodeNested());
         assertEquals(entity.getUrn(), dto.getUrn());
         assertEquals(entity.getUrnInternal(), dto.getUrnInternal());
         assertEquals(entity.getType(), dto.getType());

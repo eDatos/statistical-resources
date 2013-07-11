@@ -36,8 +36,8 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
-    public static final String DEFAULT_DATA_LOCALE = "es";
-    protected static final String USER_MOCK                = "MockedUser";
+    public static final String    DEFAULT_DATA_LOCALE = "es";
+    protected static final String USER_MOCK           = "MockedUser";
 
     // -----------------------------------------------------------------
     // QUERY VERSION
@@ -138,23 +138,23 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public Chapter mockChapter() {
         return mockChapter(mockElementLevel());
     }
-    
+
     public Chapter mockChapterInParentElementLevel(ElementLevel parentElementLevel) {
         Chapter chapter = mockChapter(mockElementLevel());
         chapter.getElementLevel().setParent(parentElementLevel);
         return chapter;
     }
-    
+
     public Chapter mockChapter(ElementLevel elementLevel) {
         Chapter chapter = new Chapter();
-        
+
         // Element level
         chapter.setElementLevel(elementLevel);
         elementLevel.setChapter(chapter);
-        
+
         // Metadata
         chapter.setNameableStatisticalResource(mockNameableStatisticalResorce());
-        
+
         return chapter;
     }
 
@@ -162,25 +162,25 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private Cube mockCube() {
         return mockCube(mockElementLevel());
     }
-    
+
     private Cube mockCube(ElementLevel elementLevel) {
         Cube cube = new Cube();
-        
+
         // Element level
         cube.setElementLevel(elementLevel);
         elementLevel.setCube(cube);
-        
+
         // Metadata
         cube.setNameableStatisticalResource(mockNameableStatisticalResorce());
         return cube;
     }
-    
+
     public Cube mockDatasetCube(Dataset dataset) {
         Cube cube = mockCube();
         cube.setDataset(dataset);
         return cube;
     }
-    
+
     public Cube mockQueryCube(Query query) {
         Cube cube = mockCube();
         cube.setQuery(query);
@@ -194,7 +194,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private ElementLevel mockElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = new ElementLevel();
-        
+
         elementLevel.setOrderInLevel(Long.valueOf(1));
 
         if (publicationVersion == null) {
@@ -212,52 +212,52 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             elementLevel.setParent(parentElementLevel);
             parentElementLevel.addChildren(elementLevel);
         }
-        
+
         return elementLevel;
     }
 
     public ElementLevel mockChapterElementLevel(PublicationVersion publicationVersion) {
         return mockChapterElementLevel(publicationVersion, null);
     }
-    
+
     public ElementLevel mockChapterElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = mockElementLevel(publicationVersion, parentElementLevel);
 
         // Chapter relation
         elementLevel.setChapter(mockChapter(elementLevel));
-        
+
         return elementLevel;
     }
- 
+
     public ElementLevel mockDatasetCubeElementLevel(PublicationVersion publicationVersion, Dataset dataset) {
         ElementLevel elementLevel = mockDatasetCubeElementLevel(publicationVersion, dataset, null);
         return elementLevel;
     }
-    
+
     public ElementLevel mockDatasetCubeElementLevel(PublicationVersion publicationVersion, Dataset dataset, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = mockCubeElementLevel(publicationVersion, parentElementLevel, mockDatasetCube(dataset));
         return elementLevel;
     }
-    
+
     public ElementLevel mockQueryCubeElementLevel(PublicationVersion publicationVersion, Query query) {
         return mockQueryCubeElementLevel(publicationVersion, query, null);
     }
-    
+
     public ElementLevel mockQueryCubeElementLevel(PublicationVersion publicationVersion, Query query, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = mockCubeElementLevel(publicationVersion, parentElementLevel, mockQueryCube(query));
         return elementLevel;
     }
-    
+
     private ElementLevel mockCubeElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel, Cube cube) {
         ElementLevel elementLevel = mockElementLevel(publicationVersion, parentElementLevel);
 
         // Cube relation
         elementLevel.setCube(cube);
         cube.setElementLevel(elementLevel);
-        
+
         return elementLevel;
     }
-    
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -463,27 +463,45 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         String code = mockCode();
         return mockExternalItem(code, mockDimensionUrn(code), TypeExternalArtefactsEnum.DIMENSION);
     }
-    
+
     public static ExternalItem mockConfigurationExternalItem() {
         String code = mockCode();
         return mockExternalItem(code, mockCommonConfigurationUrn(code), TypeExternalArtefactsEnum.CONFIGURATION);
     }
 
+    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type) {
+        ExternalItem target = new ExternalItem();
+        target.setVersion(Long.valueOf(0));
+        target.setCode(code);
+        target.setCodeNested(codeNested);
+        target.setUri(uri);
+        target.setUrn(urn);
+        target.setUrnInternal(urnInternal);
+        target.setType(type);
+        return target;
+    }
+
+    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type, InternationalString title,
+            String managementAppUrl) {
+        ExternalItem target = mockExternalItem(code, codeNested, uri, urn, urnInternal, type);
+        target.setTitle(title);
+        target.setManagementAppUrl(managementAppUrl);
+        return target;
+    }
+
     private static ExternalItem mockExternalItem(String code, String urn, TypeExternalArtefactsEnum type) {
-        ExternalItem item = new ExternalItem(code, CoreCommonConstants.API_LATEST_WITH_SLASHES + code, urn, urn + ":internal", type, mockInternationalString(), CoreCommonConstants.URL_SEPARATOR
+        ExternalItem item = mockExternalItem(code, null, CoreCommonConstants.API_LATEST_WITH_SLASHES + code, urn, urn + ":internal", type, mockInternationalString(), CoreCommonConstants.URL_SEPARATOR
                 + code);
-        item.setVersion(Long.valueOf(0));
-        
         if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type)) {
             item.setUrnInternal(null);
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(type)) {
             item.setUrnInternal(null);
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(type)) {
-            // nothing to do because urn and urnInternal are ok for SrmExternalItems 
+            // nothing to do because urn and urnInternal are ok for SrmExternalItems
         } else {
             fail("Unexpected type of ExternalItem:" + type);
         }
-        
+
         return item;
     }
 
@@ -515,14 +533,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         // TODO: change when publication version urn can be generated with generatorUrnUtils
         return "TODO:mock";
     }
-    
+
     // -----------------------------------------------------------------
     // Temporal code
     // -----------------------------------------------------------------
     public static TemporalCode mockTemporalCode() {
         return mockTemporalCode(mockString(10), mockString(20));
     }
-    
+
     public static TemporalCode mockTemporalCode(String identifier, String title) {
         TemporalCode code = new TemporalCode();
         code.setIdentifier(identifier);

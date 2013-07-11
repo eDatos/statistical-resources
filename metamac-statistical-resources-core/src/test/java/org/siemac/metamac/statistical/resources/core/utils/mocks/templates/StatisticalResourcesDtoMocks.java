@@ -3,17 +3,18 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -61,10 +62,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();
         selection.put("SEX", Arrays.asList(new CodeItemDto("FEMALE", "Female")));
-        selection.put("REGION", Arrays.asList(
-                new CodeItemDto("TENERIFE", "Tenerife"),
-                new CodeItemDto("LA_GOMERA", "La gomera")
-                ));
+        selection.put("REGION", Arrays.asList(new CodeItemDto("TENERIFE", "Tenerife"), new CodeItemDto("LA_GOMERA", "La gomera")));
         queryDto.setSelection(selection);
 
         return queryDto;
@@ -97,7 +95,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
         datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
-        
+
         datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
         datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
 
@@ -135,54 +133,54 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         return publicationDto;
     }
-    
+
     public static ChapterDto mockChapterDto() {
         ChapterDto chapterDto = mockChapterDtoWithParent(null);
-        
+
         return chapterDto;
     }
-    
+
     public static ChapterDto mockChapterDtoWithParent(String parentChapterUrn) {
         ChapterDto chapterDto = new ChapterDto();
-        
+
         chapterDto.setOrderInLevel(Long.valueOf(2));
         chapterDto.setParentChapterUrn(parentChapterUrn);
-        
+
         mockNameableStatisticalResorceDto(chapterDto);
-        
+
         return chapterDto;
     }
-    
+
     public static CubeDto mockDatasetCubeDto(String datasetUrn) {
         CubeDto cubeDto = mockCubeDto(null, datasetUrn, null);
         return cubeDto;
     }
-    
+
     public static CubeDto mockDatasetCubeDtoWithParent(String parentChapterUrn, String datasetUrn) {
         CubeDto cubeDto = mockCubeDto(parentChapterUrn, datasetUrn, null);
         return cubeDto;
     }
-    
+
     public static CubeDto mockQueryCubeDto(String queryUrn) {
         CubeDto cubeDto = mockCubeDto(null, null, queryUrn);
         return cubeDto;
     }
-    
+
     public static CubeDto mockQueryCubeDtoWithParent(String parentChapterUrn, String queryUrn) {
         CubeDto cubeDto = mockCubeDto(parentChapterUrn, null, queryUrn);
         return cubeDto;
     }
-    
+
     private static CubeDto mockCubeDto(String parentChapterUrn, String datasetUrn, String queryUrn) {
         CubeDto cubeDto = new CubeDto();
-        
+
         cubeDto.setDatasetUrn(datasetUrn);
         cubeDto.setQueryUrn(queryUrn);
         cubeDto.setOrderInLevel(Long.valueOf(2));
         cubeDto.setParentChapterUrn(parentChapterUrn);
-        
+
         mockNameableStatisticalResorceDto(cubeDto);
-        
+
         return cubeDto;
     }
 
@@ -196,7 +194,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.addLanguage(mockCodeExternalItemDto());
 
         // siemacMetadataStatisticalResourceDto.setStatisticalOperation(mockStatisticalOperationItem());
-        
+
         siemacMetadataStatisticalResourceDto.getStatisticalOperationInstances().clear();
         siemacMetadataStatisticalResourceDto.getStatisticalOperationInstances().add(mockStatisticalOperationInstanceExternalItemDto());
 
@@ -281,41 +279,51 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // resource.setOperation(mockExternalItemDto(URN_RELATED_RESOURCE_MOCK, TypeExternalArtefactsEnum.STATISTICAL_OPERATION));
     }
 
+    // EXTERNAL ITEMS DTOs
+
+    public static ExternalItemDto mockExternalItemDto(String code, String codeNested, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type) {
+        ExternalItemDto target = new ExternalItemDto();
+        target.setCode(code);
+        target.setCodeNested(codeNested);
+        target.setUri(uri);
+        target.setUrn(urn);
+        target.setUrnInternal(urnInternal);
+        target.setType(type);
+        return target;
+    }
 
     // RELATED RESOURCE DTOs
 
-    
     public static RelatedResourceDto mockNotPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
         populateNotPersistedRelatedResourceIdentifiable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
         return resource;
     }
-    
+
     public static RelatedResourceDto mockPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
-        populatePersistedRelatedResourceNameable(resource,datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+        populatePersistedRelatedResourceNameable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
         return resource;
     }
-    
-    
+
     private static void populateNotPersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
         relatedDto.setUrn(identifiable.getUrn());
         relatedDto.setType(type);
     }
-    
+
     private static void populatePersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
         relatedDto.setUrn(identifiable.getUrn());
         relatedDto.setType(type);
         relatedDto.setCode(identifiable.getCode());
     }
-    
+
     private static void populatePersistedRelatedResourceNameable(RelatedResourceDto relatedDto, NameableStatisticalResource nameable, TypeRelatedResourceEnum type) {
         populatePersistedRelatedResourceIdentifiable(relatedDto, nameable, type);
         relatedDto.setTitle(createInternationalStringDtoFromDo(nameable.getTitle()));
     }
 
     // STATISTIC OFFICIALITY DTOs
-    
+
     private static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
         StatisticOfficialityDto dto = new StatisticOfficialityDto();
         dto.setIdentifier(officiality.getIdentifier());
@@ -346,6 +354,5 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     private static Date mockDate() {
         return mockDateTime().toDate();
     }
-
 
 }

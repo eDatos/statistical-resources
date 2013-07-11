@@ -153,16 +153,14 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         }
 
         if (target == null) {
-            // We set uri because it's required but the information is incorrect because it includes the base
-            target = new ExternalItem(source.getCode(), source.getUri(), source.getUrn(), source.getUrnInternal(), source.getType(), internationalStringDtoToDo(source.getTitle(), null, metadataName));
-        } else {
-            target.setCode(source.getCode());
-            target.setUrn(source.getUrn());
-            target.setUrnInternal(source.getUrnInternal());
-            target.setType(source.getType());
-            target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName));
+            target = new ExternalItem();
         }
-
+        target.setCode(source.getCode());
+        target.setCodeNested(source.getCodeNested());
+        target.setUrn(source.getUrn());
+        target.setUrnInternal(source.getUrnInternal());
+        target.setType(source.getType());
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName));
         return target;
     }
 

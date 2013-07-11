@@ -5,7 +5,9 @@ import static org.mockito.Mockito.times;
 import static org.siemac.metamac.common.test.utils.MetamacMocks.mockExternalItemDtoComplete;
 import static org.siemac.metamac.common.test.utils.MetamacMocks.mockInternationalStringDto;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockAgencyExternalItem;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockExternalItem;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockInternationalString;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockExternalItemDto;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -61,11 +63,11 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     private static final String                     METADATA_NAME                 = "LOREM_IPSUM";
 
     protected ConfigurationService                  configurationService          = new ConfigurationServiceMockImpl();
-    private ExternalItemRepository                  externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
-    private InternationalStringRepository           internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
-    private RelatedResourceRepository               relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
-    private DatasetVersionRepository                datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
-    private PublicationVersionRepository            publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
+    private final ExternalItemRepository            externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
+    private final InternationalStringRepository     internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
+    private final RelatedResourceRepository         relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
+    private final DatasetVersionRepository          datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
+    private final PublicationVersionRepository      publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
 
     @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
@@ -272,14 +274,14 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testExternalItemDtoListToDoListWithSameElements() throws Exception {
         // EXISTS, EXISTS: Same elements
         List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(new ExternalItemDto("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+        dtos.add(mockExternalItemDto("CODE_01", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
                 TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(new ExternalItemDto("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+        dtos.add(mockExternalItemDto("CODE_02", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
                 TypeExternalArtefactsEnum.CATEGORY));
         List<ExternalItem> entities = new ArrayList<ExternalItem>();
-        entities.add(new ExternalItem("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+        entities.add(mockExternalItem("CODE_01", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
                 TypeExternalArtefactsEnum.AGENCY));
-        entities.add(new ExternalItem("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+        entities.add(mockExternalItem("CODE_02", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
                 TypeExternalArtefactsEnum.CATEGORY));
 
         testExternalItemDtoListToDoList(dtos, entities);
@@ -290,16 +292,16 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testExternalItemDtoListToDoListWithMoreElementsInDtoList() throws Exception {
         // EXISTS, EXISTS: More elements
         List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(new ExternalItemDto("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+        dtos.add(mockExternalItemDto("CODE_01", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
                 TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(new ExternalItemDto("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+        dtos.add(mockExternalItemDto("CODE_02", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
                 TypeExternalArtefactsEnum.CATEGORY));
-        dtos.add(new ExternalItemDto("CODE_03", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_03", "URN_03", "URN_03_internal",
+        dtos.add(mockExternalItemDto("CODE_03", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_03", "URN_03", "URN_03_internal",
                 TypeExternalArtefactsEnum.CATEGORY));
         List<ExternalItem> entities = new ArrayList<ExternalItem>();
-        entities.add(new ExternalItem("CODE_01", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
+        entities.add(mockExternalItem("CODE_01", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_01", "URN_01", "URN_01_internal",
                 TypeExternalArtefactsEnum.AGENCY));
-        entities.add(new ExternalItem("CODE_02", ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
+        entities.add(mockExternalItem("CODE_02", null, ConfigurationMockConstants.SRM_INTERNAL_API_URL_BASE + CoreCommonConstants.URL_SEPARATOR + "URI_02", "URN_02", "URN_02_internal",
                 TypeExternalArtefactsEnum.CATEGORY));
 
         testExternalItemDtoListToDoList(dtos, entities);

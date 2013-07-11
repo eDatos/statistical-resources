@@ -48,11 +48,17 @@ public class CommonVersioningCopyUtils {
         if (source == null) {
             return null;
         }
-        ExternalItem target = new ExternalItem(source.getCode(), source.getUri(), source.getUrn(), source.getUrnInternal(), source.getType(), copyInternationalString(source.getTitle()), source.getManagementAppUrl());
-                
+        ExternalItem target = new ExternalItem();
+        target.setCode(source.getCode());
+        target.setCodeNested(source.getCodeNested());
+        target.setUrn(source.getUrn());
+        target.setUrnInternal(source.getUrnInternal());
+        target.setUri(source.getUri());
+        target.setType(source.getType());
+        target.setTitle(copyInternationalString(source.getTitle()));
+        target.setManagementAppUrl(source.getManagementAppUrl());
         return target;
     }
-    
 
     public static List<ExternalItem> copyListExternalItem(List<ExternalItem> source) {
         if (source.isEmpty()) {

@@ -26,16 +26,14 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 @org.springframework.stereotype.Component("commonDo2DtoMapper")
 public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements CommonDo2DtoMapper {
 
-    
-    
     // ------------------------------------------------------------
     // TEMPORAL CODE
     // ------------------------------------------------------------
-    
+
     @Override
     public Collection<TemporalCodeDto> temporalCodeDoCollectionToDtoCollection(Collection<TemporalCode> source) throws MetamacException {
         HashSet<TemporalCodeDto> result = new HashSet<TemporalCodeDto>();
-        
+
         if (source != null) {
             for (TemporalCode temporalCode : source) {
                 result.add(temporalCodeDoToDto(temporalCode));
@@ -43,17 +41,16 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         }
         return result;
     }
-    
+
     @Override
     public TemporalCodeDto temporalCodeDoToDto(TemporalCode source) throws MetamacException {
         TemporalCodeDto target = new TemporalCodeDto();
         target.setIdentifier(source.getIdentifier());
         target.setTitle(source.getTitle());
-       
+
         return target;
     }
-    
-    
+
     // ------------------------------------------------------------
     // EXTERNAL ITEM
     // ------------------------------------------------------------
@@ -69,7 +66,7 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         }
         return result;
     }
-    
+
     @Override
     public ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException {
         ExternalItemDto target = externalItemDoToDtoWithoutUrls(source);
@@ -92,13 +89,19 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         if (source == null) {
             return null;
         }
-
-        ExternalItemDto target = new ExternalItemDto(source.getCode(), source.getUri(), source.getUrn(), source.getUrnInternal(), source.getType(), internationalStringDoToDto(source.getTitle()),
-                source.getManagementAppUrl());
+        ExternalItemDto target = new ExternalItemDto();
         target.setId(source.getId());
+        target.setCode(source.getCode());
+        target.setCodeNested(source.getCodeNested());
+        target.setUri(source.getUri());
+        target.setUrn(source.getUrn());
+        target.setUrnInternal(source.getUrnInternal());
+        target.setType(source.getType());
+        target.setManagementAppUrl(source.getManagementAppUrl());
+        target.setTitle(internationalStringDoToDto(source.getTitle()));
         return target;
     }
-    
+
     private ExternalItemDto commonMetadataExternalItemDoToDto(ExternalItem source, ExternalItemDto target) throws MetamacException {
         target.setUri(commonMetadataExternalApiUrlDoToDto(source.getUri()));
         target.setManagementAppUrl(commonMetadataInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
@@ -110,13 +113,12 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         target.setManagementAppUrl(srmInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
         return target;
     }
-    
+
     private ExternalItemDto statisticalOperationsExternalItemDoToDto(ExternalItem source, ExternalItemDto target) throws MetamacException {
         target.setUri(statisticalOperationsInternalApiUrlDoToDto(source.getUri()));
         target.setManagementAppUrl(statisticalOperationsInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
         return target;
     }
-    
 
     @Override
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) throws MetamacException {
