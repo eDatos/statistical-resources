@@ -1,8 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.common.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodededTextFormatType;
@@ -76,22 +79,33 @@ public class DsdProcessor {
 
         protected DsdComponentType      type;
         protected String                codelistRepresentationUrn;
+        protected String[]              codelistRepresentationRef;
         protected String                conceptSchemeRepresentationUrn;
+        protected String[]              conceptSchemeRepresentationRef;
         protected CodededTextFormatType textFormatType;
 
         protected void setRepresentationFromLocalRepresentation(SimpleDataStructureRepresentationType localRepresentation) {
             if (localRepresentation.getEnumeration() != null) {
-                codelistRepresentationUrn = localRepresentation.getEnumeration().getURN();
+                if (StringUtils.isEmpty(localRepresentation.getEnumeration().getURN())) {
+                    CodelistRefType ref = localRepresentation.getEnumeration().getRef();
+                    codelistRepresentationRef = (String[]) Arrays.asList(ref.getAgencyID(), ref.getId(), ref.getVersion()).toArray();
+                } else {
+                    codelistRepresentationUrn = localRepresentation.getEnumeration().getURN();
+                }
             } else {
                 textFormatType = localRepresentation.getEnumerationFormat();
             }
         }
-
         protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) {
             Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptIdentityRef.getURN());
             if (concept.getCoreRepresentation() != null) {
                 if (concept.getCoreRepresentation().getEnumeration() != null) {
-                    codelistRepresentationUrn = concept.getCoreRepresentation().getEnumeration().getURN();
+                    if (StringUtils.isEmpty(concept.getCoreRepresentation().getEnumeration().getURN())) {
+                        CodelistRefType ref = concept.getCoreRepresentation().getEnumeration().getRef();
+                        codelistRepresentationRef = (String[]) Arrays.asList(ref.getAgencyID(), ref.getId(), ref.getVersion()).toArray();
+                    } else {
+                        codelistRepresentationUrn = concept.getCoreRepresentation().getEnumeration().getURN();
+                    }
                 } else {
                     textFormatType = concept.getCoreRepresentation().getEnumerationFormat();
                 }
@@ -101,8 +115,7 @@ public class DsdProcessor {
         }
 
         public abstract String getComponentId();
-        
-        
+
         public DsdComponentType getType() {
             return type;
         }
@@ -114,7 +127,7 @@ public class DsdProcessor {
         public String getConceptSchemeRepresentationUrn() {
             return conceptSchemeRepresentationUrn;
         }
-        
+
     }
 
     public static class DsdDimension extends DsdComponent {
@@ -149,8 +162,6 @@ public class DsdProcessor {
                 } else {
                     throw new IllegalArgumentException("Found a dimension with local representation but no Concept Scheme");
                 }
-            } else if (dim.getConceptIdentity() != null) {
-                setRepresentationFromConceptIdentity(dim.getConceptIdentity());
             } else {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
@@ -161,8 +172,6 @@ public class DsdProcessor {
             type = DsdComponentType.TEMPORAL;
             if (dim.getLocalRepresentation() != null) {
                 timeTextFormatType = dim.getLocalRepresentation().getTextFormat();
-            } else if (dim.getConceptIdentity() != null) {
-                setRepresentationFromConceptIdentity(dim.getConceptIdentity());
             } else {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
