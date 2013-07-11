@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.view;
 
-import java.util.List;
-
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
@@ -81,7 +79,6 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         southLayout.setHeight100();
 
         footerLayout = new VLayout();
-        footerLayout.setBorder("1px solid #A7ABB4");
         footerLayout.addMember(this.successMessagePanel);
         footerLayout.addMember(this.errorMessagePanel);
         footerLayout.addMember(new VersionFooter(StatisticalResourcesWeb.getConstants().appVersion()));
