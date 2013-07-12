@@ -1,3 +1,4 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-tasks-dtos.btdesign"
 
 Application DatasetsStatisticalResources { 
 	basePackage=unused
@@ -13,7 +14,7 @@ Application DatasetsStatisticalResources {
 		Service TaskServiceFacade {
 			
 			"Perform the importation task"
-    		executeImportationTask(java.io.InputStream inputMessage, String jobKey) throws MetamacException;
+    		executeImportationTask(java.io.InputStream inputMessage, @TaskInfoDataset taskInfoDataset) throws MetamacException;
 
 		}
 		
@@ -21,10 +22,10 @@ Application DatasetsStatisticalResources {
 		Service TaskService {
 			
 			"Plannify a scheduled task to import"
-			String plannifyImportationDataset(java.io.InputStream inputMessage) throws MetamacException;
+			String plannifyImportationDataset(java.io.InputStream inputMessage, @TaskInfoDataset taskInfoDataset) throws MetamacException;
 			
 			"Perform the importation task"
-    		processImportationTask(java.io.InputStream inputMessage, String jobKey) throws MetamacException;
+    		processImportationTask(java.io.InputStream inputMessage, @TaskInfoDataset taskInfoDataset) throws MetamacException;
 		}
 		
 		// ----------------------------------------------------------------

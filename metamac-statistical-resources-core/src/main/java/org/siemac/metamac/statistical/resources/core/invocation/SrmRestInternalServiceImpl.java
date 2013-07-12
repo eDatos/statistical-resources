@@ -17,11 +17,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     @Autowired
     private MetamacApisLocator restApiLocator;
-    
+
     /*
-     * DSD 
+     * DSD
      */
-    
+
     @Override
     public DataStructure retrieveDsdByUrn(String urn) {
         String[] dataStructureComponents = GeneratorUrnUtils.extractSdmxDatastructurUrnComponents(urn);
@@ -30,14 +30,14 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String version = dataStructureComponents[2];
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveDataStructure(agencyId, dsdId, version);
     }
-    
+
     @Override
     public DataStructures findDsds(int firstResult, int maxResult, String condition) {
         String limit = String.valueOf(maxResult);
         String offset = String.valueOf(firstResult);
         return restApiLocator.getSrmRestInternalFacadeV10().findDataStructures(condition, null, limit, offset);
     }
-    
+
     /*
      * Concept schemes
      */
@@ -49,11 +49,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String version = params[2];
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveConceptScheme(agencyId, resourceId, version);
     }
-    
+
     /*
      * Concepts
      */
-    
+
     @Override
     public Concept retrieveConceptByUrn(String urn) {
         String[] params = UrnUtils.splitUrnItem(urn);
@@ -63,7 +63,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String conceptId = params[3];
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveConcept(agencyId, schemeId, version, conceptId);
     }
-    
+
     @Override
     public Concepts findConcepts(String conceptSchemeUrn, int firstResult, int maxResult, String query) {
         String limit = String.valueOf(maxResult);
@@ -74,7 +74,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String version = params[2];
         return restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyId, resourceId, version, query, null, limit, offset);
     }
-    
+
     /*
      * Code lists
      */
@@ -86,7 +86,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String version = params[2];
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveCodelist(agencyId, resourceId, version);
     }
-    
+
     /*
      * Codes
      */
@@ -100,7 +100,5 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String version = params[2];
         return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, query, null, limit, offset);
     }
-    
 
-    
 }

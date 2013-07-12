@@ -1,8 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +14,7 @@ import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
@@ -39,7 +43,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
-    private static Logger                    logger                   = LoggerFactory.getLogger(DataManipulateTest.class);
+    private static Logger                    logger                    = LoggerFactory.getLogger(DataManipulateTest.class);
 
     @Autowired
     private Metamac2StatRepoMapper           metamac2StatRepoMapper;
@@ -62,10 +66,11 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
     protected EntityManager                  entityManager;
 
-    private final ServiceContext             serviceContext           = new ServiceContext("system", "123456", "junit");
+    private final ServiceContext             serviceContext            = new ServiceContext("system", "123456", "junit");
 
-    public static final String               DATA_GEN_ECB_EXR_RG_XS   = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
-    public static final String               DATA_GEN_ECB_EXR_RG_FLAT = "/sdmx/2_1/dataset/structured/ecb_exr_rg_flat.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_XS    = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
+    public static final String               URN_DSD_GEN_ECB_EXR_RG_XS = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT  = "/sdmx/2_1/dataset/structured/ecb_exr_rg_flat.xml";
 
     @Before
     public void onBeforeTest() {
@@ -108,7 +113,11 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
             @Override
             public void doInTransactionWithoutResult(TransactionStatus status) {
                 try {
-                    jobKey = taskService.plannifyImportationDataset(serviceContext, DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_GEN_ECB_EXR_RG_XS);
+                    taskInfoDataset.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
+                    taskInfoDataset.setRepoDatasetId(UUID.randomUUID().toString());
+                    jobKey = taskService.plannifyImportationDataset(serviceContext, DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT), taskInfoDataset);
                 } catch (MetamacException e) {
                     e.printStackTrace();
                 }
@@ -118,9 +127,5 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
         // Wait until the job is finished
         waitUntilJobFinished();
-
-        int kaka = 2;
-
     }
-
 }

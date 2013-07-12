@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
@@ -24,7 +25,8 @@ public interface Metamac2StatRepoMapper {
      * @param attributeDtos
      * @throws MetamacException
      */
-    public void populateDatas(DataContainer dataContainerDto, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) throws MetamacException;
+    public void populateDatas(DataContainer dataContainerDto, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos)
+            throws MetamacException;
 
     /**
      * Adds attributes which are grouped into @param second

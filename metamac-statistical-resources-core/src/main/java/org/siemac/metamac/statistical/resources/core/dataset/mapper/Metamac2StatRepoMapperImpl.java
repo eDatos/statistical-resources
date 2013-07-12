@@ -7,9 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.springframework.stereotype.Component;
 
@@ -29,21 +28,22 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
 public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
 
     @Override
-    public void populateDatas(DataContainer dataContainer, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) throws MetamacException {
+    public void populateDatas(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos)
+            throws MetamacException {
         if (dataDtos == null || attributeDtos == null) {
             return;
         }
 
         // Data in Series
         if (!dataContainer.getSeries().isEmpty()) {
-            processDatasInSeries(dataContainer, attributesMap, dataDtos, attributeDtos);
+            processDatasInSeries(dataContainer, attributesProcessorMap, dataDtos, attributeDtos);
         } else if (!dataContainer.getObservations().isEmpty()) {
-            processDatasInFlat(dataContainer, attributesMap, dataDtos, attributeDtos);
+            processDatasInFlat(dataContainer, attributesProcessorMap, dataDtos, attributeDtos);
         }
 
     }
 
-    private void processDatasInFlat(DataContainer dataContainer, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) {
+    private void processDatasInFlat(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) {
         // Data in observations
         for (Observation observation : dataContainer.getObservations()) {
             ObservationExtendedDto dataDto = new ObservationExtendedDto();
@@ -59,10 +59,12 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                 AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
 
                 if (attributeDto != null) {
-                    if (isAttributeAtObservationLevel(attributesMap.get(attributeDto.getAttributeId()))) {
-                        dataDto.addAttribute(attributeDto); // Add Attribute at observation level
-                    } else {
-                        attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                    if (attributesProcessorMap.containsKey(attributeDto.getAttributeId())) {
+                        if (attributesProcessorMap.get(attributeDto.getAttributeId()).isAttributeAtObservationLevel()) {
+                            dataDto.addAttribute(attributeDto); // Add Attribute at observation level
+                        } else {
+                            attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                        }
                     }
                 }
             }
@@ -71,16 +73,8 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         }
     }
 
-    public static boolean isAttributeAtObservationLevel(Object attribute) {
-        if (attribute instanceof ReportingYearStartDayType) {
-            return (((ReportingYearStartDayType) attribute).getAttributeRelationship().getPrimaryMeasure() != null);
-        } else if (attribute instanceof AttributeType) {
-            return (((AttributeType) attribute).getAttributeRelationship().getPrimaryMeasure() != null);
-        }
-        throw new RuntimeException("Attribute object not supported!");
-    }
-
-    private void processDatasInSeries(DataContainer dataContainer, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) throws MetamacException {
+    private void processDatasInSeries(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos,
+            List<AttributeDto> attributeDtos) throws MetamacException {
         for (Serie serie : dataContainer.getSeries()) {
 
             for (Observation observation : serie.getObs()) {
@@ -98,10 +92,12 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                     AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
 
                     if (attributeDto != null) {
-                        if (isAttributeAtObservationLevel(attributesMap.get(attributeDto.getAttributeId()))) {
+                        if (attributesProcessorMap.containsKey(attributeDto.getAttributeId())) {
+                        if (attributesProcessorMap.get(attributeDto.getAttributeId()).isAttributeAtObservationLevel()) {
                             dataDto.addAttribute(attributeDto); // Add Attribute at observation level
                         } else {
                             attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                        }
                         }
                     }
                 }
