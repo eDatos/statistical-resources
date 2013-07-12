@@ -62,6 +62,12 @@
             <artifactId>statistic-dataset-repository</artifactId>
             <version>${statistic-dataset-repository.version}</version>
             <classifier>client</classifier>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+            		<groupId>org.fornax.cartridges</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Add dependency to JMS when consumers are used, deployment.type=ear -->
