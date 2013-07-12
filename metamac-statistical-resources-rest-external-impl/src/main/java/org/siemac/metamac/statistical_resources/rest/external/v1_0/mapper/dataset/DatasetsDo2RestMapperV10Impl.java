@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
@@ -97,10 +98,20 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             return null;
         }
         DimensionsId targets = new DimensionsId();
-        // TODO toDimensionsId
+        for (LocalDimensionReferenceType source : sources.getDimensions()) {
+            targets.getDimensionIds().add(toDimensionId(source));
+        }
         targets.setTotal(BigInteger.valueOf(targets.getDimensionIds().size()));
         return targets;
     }
+
+    private String toDimensionId(LocalDimensionReferenceType source) {
+        if (source == null) {
+            return null;
+        }
+        return source.getRef().getId();
+    }
+
     private Dimensions toDimensions(String datasetVersionUrn, DataStructure dataStructure) throws MetamacException {
 
         List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
