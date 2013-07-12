@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodededTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
@@ -18,6 +19,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepre
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeQualifierType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
@@ -77,40 +79,57 @@ public class DsdProcessor {
 
     public abstract static class DsdComponent {
 
-        protected DsdComponentType      type;
-        protected String                codelistRepresentationUrn;
-        protected String[]              codelistRepresentationRef;
-        protected String                conceptSchemeRepresentationUrn;
-        protected String[]              conceptSchemeRepresentationRef;
-        protected CodededTextFormatType textFormatType;
+        protected DsdComponentType      type                           = null;
+        protected String                codelistRepresentationUrn      = null;
+        protected String                conceptSchemeRepresentationUrn = null;
+        protected CodededTextFormatType textFormatType                 = null;
 
         protected void setRepresentationFromLocalRepresentation(SimpleDataStructureRepresentationType localRepresentation) {
             if (localRepresentation.getEnumeration() != null) {
-                if (StringUtils.isEmpty(localRepresentation.getEnumeration().getURN())) {
-                    CodelistRefType ref = localRepresentation.getEnumeration().getRef();
-                    codelistRepresentationRef = (String[]) Arrays.asList(ref.getAgencyID(), ref.getId(), ref.getVersion()).toArray();
-                } else {
-                    codelistRepresentationUrn = localRepresentation.getEnumeration().getURN();
-                }
+                extractCodelistUrnFromRef(localRepresentation.getEnumeration().getRef());
             } else {
                 textFormatType = localRepresentation.getEnumerationFormat();
             }
         }
+
         protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) {
-            Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptIdentityRef.getURN());
+            Concept concept = null;
+            if (conceptIdentityRef.getRef() != null) {
+                ConceptRefType ref = conceptIdentityRef.getRef();
+                concept = srmRestInternalService.retrieveConceptByUrn(GeneratorUrnUtils.generateSdmxConceptUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getMaintainableParentID(),
+                        ref.getMaintainableParentVersion(), ref.getId()));
+            } else {
+                // In metamac, Ref is always present
+                throw new RuntimeException("The reference is not present. In Metamac is always present.");
+            }
+
             if (concept.getCoreRepresentation() != null) {
                 if (concept.getCoreRepresentation().getEnumeration() != null) {
-                    if (StringUtils.isEmpty(concept.getCoreRepresentation().getEnumeration().getURN())) {
-                        CodelistRefType ref = concept.getCoreRepresentation().getEnumeration().getRef();
-                        codelistRepresentationRef = (String[]) Arrays.asList(ref.getAgencyID(), ref.getId(), ref.getVersion()).toArray();
-                    } else {
-                        codelistRepresentationUrn = concept.getCoreRepresentation().getEnumeration().getURN();
-                    }
+                    extractCodelistUrnFromRef(concept.getCoreRepresentation().getEnumeration().getRef());
+
                 } else {
                     textFormatType = concept.getCoreRepresentation().getEnumerationFormat();
                 }
             } else {
                 throw new IllegalArgumentException("Found a dimension with concept identity with core representation null");
+            }
+        }
+
+        protected void extractCodelistUrnFromRef(CodelistRefType ref) {
+            if (ref != null) {
+                codelistRepresentationUrn = GeneratorUrnUtils.generateSdmxCodelistUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getId(), ref.getVersion());
+            } else {
+                // In metamac, Ref is always present
+                throw new RuntimeException("The reference is not present. In Metamac is always present.");
+            }
+        }
+
+        protected void extractConceptSchemeUrnFromRef(ConceptSchemeRefType ref) {
+            if (ref != null) {
+                conceptSchemeRepresentationUrn = GeneratorUrnUtils.generateSdmxConceptSchemeUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getId(), ref.getVersion());
+            } else {
+                // In metamac, Ref is always present
+                throw new RuntimeException("The reference is not present. In Metamac is always present.");
             }
         }
 
@@ -158,7 +177,7 @@ public class DsdProcessor {
             type = DsdComponentType.MEASURE;
             if (dim.getLocalRepresentation() != null) {
                 if (dim.getLocalRepresentation().getEnumeration() != null) {
-                    conceptSchemeRepresentationUrn = dim.getLocalRepresentation().getEnumeration().getURN();
+                    extractConceptSchemeUrnFromRef(dim.getLocalRepresentation().getEnumeration().getRef());
                 } else {
                     throw new IllegalArgumentException("Found a dimension with local representation but no Concept Scheme");
                 }
