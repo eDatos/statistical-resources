@@ -1,10 +1,17 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset;
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
@@ -16,40 +23,62 @@ import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionCode;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionCodes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
+import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.BaseDo2RestMapperV10Impl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
+    @Autowired
+    private SrmRestExternalFacade srmRestExternalFacade;
+
+    // TODO acceder desde aquí al servicio?
+    @Autowired
+    private DatasetService        datasetService;
+    private final ServiceContext  ctx = new ServiceContext("restExternal", "restExternal", "restExternal");
+
     @Override
-    public Dataset toDataset(DatasetVersion source, Map<String, DsdDimension> dimensionsById, DataStructure dataStructure) throws MetamacException {
+    public Dataset toDataset(DatasetVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
         Dataset target = new Dataset();
+        String datasetVersionUrn = source.getSiemacMetadataStatisticalResource().getUrn();
+
         target.setKind(RestExternalConstants.KIND_DATASET);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
-        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
-        target.setKind(RestExternalConstants.KIND_DATASET);
+        target.setUrn(datasetVersionUrn);
         target.setSelfLink(toDatasetSelfLink(source));
         target.setName(toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle()));
         target.setParentLink(toDatasetParentLink(source));
         target.setChildLinks(toDatasetChildLinks(source));
         // TODO resto de metadatos públicos
 
+        // Dsd
         target.setDataStructureDefinition(toResourceExternalItemSrm(source.getRelatedDsd()));
-        target.setDimensions(toDimensions(dimensionsById, dataStructure));
+        // Dimensions
+        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
+        target.setDimensions(toDimensions(datasetVersionUrn, dataStructure));
+
         return target;
     }
 
@@ -74,19 +103,23 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return target;
     }
 
-    private Dimensions toDimensions(Map<String, DsdDimension> dimensionsById, DataStructure dataStructure) {
-        if (dimensionsById == null || dimensionsById.size() == 0) {
+    private Dimensions toDimensions(String datasetVersionUrn, DataStructure dataStructure) throws MetamacException {
+
+        List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
+        if (CollectionUtils.isEmpty(dimensionsId)) {
             return null;
         }
+
         Dimensions targets = new Dimensions();
-        for (String sourceId : dimensionsById.keySet()) {
-            targets.getDimensions().add(toDimension(dimensionsById.get(sourceId), dataStructure));
+        List<DsdDimension> dimensionsType = DsdProcessor.getDimensions(dataStructure);
+        for (DsdDimension dsdDimension : dimensionsType) {
+            targets.getDimensions().add(toDimension(datasetVersionUrn, dsdDimension));
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
         return targets;
     }
 
-    private Dimension toDimension(DsdDimension source, DataStructure dataStructure) {
+    private Dimension toDimension(String datasetVersionUrn, DsdDimension source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -103,7 +136,118 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
         target.setType(toDimensionType(source.getType()));
 
-        // TODO codes
+        // Codes
+        target.setCodes(toDimensionCodes(datasetVersionUrn, source));
+        return target;
+    }
+
+    private DimensionCodes toDimensionCodes(String datasetVersionUrn, DsdDimension dimension) throws MetamacException {
+        if (dimension == null) {
+            return null;
+        }
+        DimensionCodes targets = new DimensionCodes();
+
+        List<CodeDimension> coverages = datasetService.retrieveCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dimension.getComponentId());
+        if (CollectionUtils.isEmpty(coverages)) {
+            return null;
+        }
+        Map<String, CodeDimension> coveragesById = new HashMap<String, CodeDimension>(coverages.size());
+        for (CodeDimension coverage : coverages) {
+            coveragesById.put(coverage.getIdentifier(), coverage);
+        }
+
+        if (dimension.getCodelistRepresentationUrn() != null) {
+            toDimensionCodeFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), targets);
+        } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
+            toDimensionCodeFromConceptScheme(coveragesById, dimension.getConceptSchemeRepresentationUrn(), targets);
+        } else if (dimension.getTimeTextFormatType() != null) {
+            toDimensionCodeFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatType(), targets);
+        }
+
+        targets.setTotal(BigInteger.valueOf(targets.getDimensionCodes().size()));
+        return targets;
+    }
+
+    private void toDimensionCodeFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionCodes targets) throws MetamacException {
+        if (codelistUrn == null) {
+            return;
+        }
+        Codelist codelist = srmRestExternalFacade.retrieveCodelistByUrn(codelistUrn);
+        for (CodeType code : codelist.getCodes()) {
+            String id = code.getId();
+            if (!coveragesById.containsKey(id)) {
+                continue;
+            }
+            targets.getDimensionCodes().add(toDimensionCode(code));
+        }
+    }
+
+    private void toDimensionCodeFromConceptScheme(Map<String, CodeDimension> coveragesById, String conceptSchemeUrn, DimensionCodes targets) throws MetamacException {
+        if (conceptSchemeUrn == null) {
+            return;
+        }
+        ConceptScheme conceptScheme = srmRestExternalFacade.retrieveConceptSchemeByUrn(conceptSchemeUrn);
+        for (ConceptType concept : conceptScheme.getConcepts()) {
+            String id = concept.getId();
+            if (!coveragesById.containsKey(id)) {
+                continue;
+            }
+            targets.getDimensionCodes().add(toDimensionCode(concept));
+        }
+    }
+
+    private void toDimensionCodeFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType, DimensionCodes targets) throws MetamacException {
+        if (timeTextFormatType == null) {
+            return;
+        }
+        for (String coverageId : coveragesById.keySet()) {
+            CodeDimension codeDimension = coveragesById.get(coverageId);
+            targets.getDimensionCodes().add(toDimensionCode(codeDimension));
+        }
+    }
+
+    private DimensionCode toDimensionCode(CodeType source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        DimensionCode target = new DimensionCode();
+        target.setId(source.getId());
+        target.setUrn(source.getUrn());
+        target.setName(toInternationalString(source.getNames()));
+        // TODO resource! y resto de metadatos (representation...)
+        return target;
+    }
+
+    private DimensionCode toDimensionCode(ConceptType source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        DimensionCode target = new DimensionCode();
+        target.setId(source.getId());
+        target.setUrn(source.getUrn());
+        target.setName(toInternationalString(source.getNames()));
+        // TODO resource! y resto de metadatos (representation...)
+        return target;
+    }
+
+    private DimensionCode toDimensionCode(CodeDimension source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        DimensionCode target = new DimensionCode();
+        target.setId(source.getIdentifier());
+        target.setUrn(null);
+        {
+            // TODO NAME?
+            InternationalString name = new InternationalString();
+            LocalisedString nameLocalisedString = new LocalisedString();
+            nameLocalisedString.setLang("es"); // TODO locale?
+            nameLocalisedString.setValue(source.getTitle());
+            name.getTexts().add(nameLocalisedString);
+            target.setName(name);
+        }
+
+        // TODO resource! y resto de metadatos (representation...)
         return target;
     }
 

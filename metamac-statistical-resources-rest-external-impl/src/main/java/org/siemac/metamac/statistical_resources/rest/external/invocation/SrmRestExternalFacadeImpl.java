@@ -4,6 +4,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,32 @@ public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
             return restApiLocator.getSrmRestExternalFacadeV10().retrieveDataStructure(agencyID, resourceID, version);
+        } catch (Exception e) {
+            throw toRestException(e);
+        }
+    }
+
+    @Override
+    public Codelist retrieveCodelistByUrn(String urn) {
+        try {
+            String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
+            String agencyID = urnSplited[0];
+            String resourceID = urnSplited[1];
+            String version = urnSplited[2];
+            return restApiLocator.getSrmRestExternalFacadeV10().retrieveCodelist(agencyID, resourceID, version);
+        } catch (Exception e) {
+            throw toRestException(e);
+        }
+    }
+
+    @Override
+    public ConceptScheme retrieveConceptSchemeByUrn(String urn) {
+        try {
+            String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
+            String agencyID = urnSplited[0];
+            String resourceID = urnSplited[1];
+            String version = urnSplited[2];
+            return restApiLocator.getSrmRestExternalFacadeV10().retrieveConceptScheme(agencyID, resourceID, version);
         } catch (Exception e) {
             throw toRestException(e);
         }

@@ -32,7 +32,7 @@
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="type" type="tns:DimensionType" />
-            <xs:element name="codes" type="tns:DimensionCodes" />
+            <xs:element name="dimensionCodes" type="tns:DimensionCodes" />
         </xs:sequence>
     </xs:complexType>      
     

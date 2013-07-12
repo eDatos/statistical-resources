@@ -1,11 +1,14 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -47,8 +50,22 @@ public abstract class BaseDo2RestMapperV10Impl {
         InternationalString targets = new InternationalString();
         for (org.siemac.metamac.core.common.ent.domain.LocalisedString source : sources.getTexts()) {
             LocalisedString target = new LocalisedString();
-            target.setValue(source.getLabel());
             target.setLang(source.getLocale());
+            target.setValue(source.getLabel());
+            targets.getTexts().add(target);
+        }
+        return targets;
+    }
+
+    protected InternationalString toInternationalString(List<TextType> sources) {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        InternationalString targets = new InternationalString();
+        for (TextType source : sources) {
+            LocalisedString target = new LocalisedString();
+            target.setLang(source.getLang());
+            target.setValue(source.getValue());
             targets.getTexts().add(target);
         }
         return targets;
