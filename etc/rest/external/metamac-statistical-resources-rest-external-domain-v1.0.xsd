@@ -14,19 +14,37 @@
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
             <xs:element name="name" type="common:InternationalString" />
-            <xs:element name="dataStructureDefinition" type="common:Resource" />
+            <xs:element name="dataStructureDefinition" type="tns:DataStructureDefinition" />
             <xs:element name="dimensions" type="tns:Dimensions" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
 
+    <xs:complexType name="DataStructureDefinition">
+        <xs:complexContent>
+            <xs:extension base="common:Resource">
+                <xs:sequence>
+                    <xs:element name="heading" type="tns:DimensionsId" />
+                    <xs:element name="stub" type="tns:DimensionsId"  />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>   
+    
+    <xs:complexType name="DimensionsId">
+        <xs:sequence>
+            <xs:element name="dimensionId" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
+    </xs:complexType>    
+    
     <xs:complexType name="Dimensions">
         <xs:sequence>
             <xs:element name="dimension" type="tns:Dimension" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
     </xs:complexType> 
-    
+        
     <xs:complexType name="Dimension">
         <xs:sequence>
             <xs:element name="id" type="xs:string" />

@@ -17,21 +17,20 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionCode;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionCodes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
-import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
@@ -74,35 +73,34 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         // TODO resto de metadatos públicos
 
         // Dsd
-        target.setDataStructureDefinition(toResourceExternalItemSrm(source.getRelatedDsd()));
-        // Dimensions
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
+        target.setDataStructureDefinition(toDataStructureDefinition(source.getRelatedDsd(), dataStructure));
+        // Dimensions
         target.setDimensions(toDimensions(datasetVersionUrn, dataStructure));
 
         return target;
     }
 
-    private Resource toResourceExternalItemSrm(ExternalItem source) {
+    private DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure) {
         if (source == null) {
             return null;
         }
-        return toResourceExternalItem(source, getSrmApiExternalEndpoint());
-    }
-
-    private ResourceInternal toResourceExternalItem(ExternalItem source, String apiExternalItemBase) {
-        if (source == null) {
-            return null;
-        }
-        ResourceInternal target = new ResourceInternal();
-        target.setId(source.getCode());
-        target.setNestedId(source.getCodeNested());
-        target.setUrn(source.getUrn());
-        target.setKind(source.getType().getValue());
-        target.setSelfLink(toResourceLink(target.getKind(), RestUtils.createLink(apiExternalItemBase, source.getUri())));
-        target.setName(toInternationalString(source.getTitle()));
+        DataStructureDefinition target = new DataStructureDefinition();
+        toResourceExternalItemSrm(source, target);
+        target.setHeading(toDimensionsId(dataStructure.getHeading()));
+        target.setStub(toDimensionsId(dataStructure.getStub()));
         return target;
     }
 
+    private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions sources) {
+        if (sources == null) {
+            return null;
+        }
+        DimensionsId targets = new DimensionsId();
+        // TODO toDimensionsId
+        targets.setTotal(BigInteger.valueOf(targets.getDimensionIds().size()));
+        return targets;
+    }
     private Dimensions toDimensions(String datasetVersionUrn, DataStructure dataStructure) throws MetamacException {
 
         List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
@@ -137,7 +135,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setType(toDimensionType(source.getType()));
 
         // Codes
-        target.setCodes(toDimensionCodes(datasetVersionUrn, source));
+        target.setDimensionCodes(toDimensionCodes(datasetVersionUrn, source));
         return target;
     }
 
