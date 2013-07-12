@@ -3,11 +3,17 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.datas
 import java.math.BigInteger;
 import java.util.Map;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.exception.RestException;
+import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
@@ -15,9 +21,11 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.BaseDo2RestMapperV10Impl;
 import org.springframework.stereotype.Component;
 
@@ -84,26 +92,35 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
         Dimension target = new Dimension();
         target.setId(source.getComponentId());
-        // target.setName(value); // TODO name
-        DimensionType type = null;
-        switch (source.getType()) {
-            case OTHER:
-                type = DimensionType.DIMENSION;
-                break;
-            case SPATIAL:
-                type = DimensionType.GEOGRAPHIC_DIMENSION;
-                break;
-            case TEMPORAL:
-                type = DimensionType.TIME_DIMENSION;
-                break;
-            case MEASURE:
-                type = DimensionType.MEASURE_DIMENSION;
-                break;
+        {
+            // TODO NAME del concept identity
+            InternationalString name = new InternationalString();
+            LocalisedString nameLocalisedString = new LocalisedString();
+            nameLocalisedString.setLang("es");
+            nameLocalisedString.setValue(source.getComponentId());
+            name.getTexts().add(nameLocalisedString);
+            target.setName(name);
         }
-        target.setType(type);
+        target.setType(toDimensionType(source.getType()));
 
         // TODO codes
         return target;
+    }
+
+    private DimensionType toDimensionType(DsdComponentType source) {
+        switch (source) {
+            case OTHER:
+                return DimensionType.DIMENSION;
+            case SPATIAL:
+                return DimensionType.GEOGRAPHIC_DIMENSION;
+            case TEMPORAL:
+                return DimensionType.TIME_DIMENSION;
+            case MEASURE:
+                return DimensionType.MEASURE_DIMENSION;
+            default:
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private ResourceLink toDatasetParentLink(DatasetVersion source) {
