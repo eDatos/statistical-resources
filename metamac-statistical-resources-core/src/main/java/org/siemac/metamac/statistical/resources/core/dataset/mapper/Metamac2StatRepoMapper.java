@@ -18,8 +18,10 @@ public interface Metamac2StatRepoMapper {
     /**
      * Convert Datas and Attributes into statistic-dataset-repository-model
      * 
-     * @param dataSetDto
-     * @return Datas and attributes at series or observation level.
+     * @param dataContainerDto
+     * @param attributesMap
+     * @param dataDtos
+     * @param attributeDtos
      * @throws MetamacException
      */
     public void populateDatas(DataContainer dataContainerDto, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) throws MetamacException;

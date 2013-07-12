@@ -19,7 +19,6 @@ import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
-import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Group;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
@@ -59,10 +58,12 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
             for (IdValuePair idValuePair : observation.getAttributes()) {
                 AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
 
-                if (isAttributeAtObservationLevel(attributesMap.get(attributeDto.getAttributeId()))) {
-                    dataDto.addAttribute(attributeDto); // Add Attribute at observation level
-                } else {
-                    attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                if (attributeDto != null) {
+                    if (isAttributeAtObservationLevel(attributesMap.get(attributeDto.getAttributeId()))) {
+                        dataDto.addAttribute(attributeDto); // Add Attribute at observation level
+                    } else {
+                        attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                    }
                 }
             }
 
@@ -79,7 +80,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         throw new RuntimeException("Attribute object not supported!");
     }
 
-    private void processDatasInSeries(DataContainer dataContainer, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) {
+    private void processDatasInSeries(DataContainer dataContainer, Map<String, Object> attributesMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) throws MetamacException {
         for (Serie serie : dataContainer.getSeries()) {
 
             for (Observation observation : serie.getObs()) {
@@ -96,14 +97,15 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                 for (IdValuePair idValuePair : observation.getAttributes()) {
                     AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
 
-                    if (isAttributeAtObservationLevel(attributesMap.get(attributeDto.getAttributeId()))) {
-                        dataDto.addAttribute(attributeDto); // Add Attribute at observation level
-                    } else {
-                        attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                    if (attributeDto != null) {
+                        if (isAttributeAtObservationLevel(attributesMap.get(attributeDto.getAttributeId()))) {
+                            dataDto.addAttribute(attributeDto); // Add Attribute at observation level
+                        } else {
+                            attributeDtos.add(attributeDto); // Add an attribute to different level of observation.
+                        }
                     }
                 }
                 dataDtos.add(dataDto); // Add Data
-
             }
 
             // Attributes *************************
@@ -117,8 +119,8 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
             }
 
         }
-    }
 
+    }
     @Override
     public void processGroupAttribute(List<Group> groups, List<AttributeDto> attributeDtos) throws MetamacException {
         if (attributeDtos == null) {
@@ -134,7 +136,10 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
 
             // Attributes
             for (IdValuePair idValuePair : group.getAttributes()) {
-                attributeDtos.add(processAttribute(keys, idValuePair)); // Add attributeDtos
+                AttributeDto attributeDto = processAttribute(keys, idValuePair);
+                if (attributeDto != null) {
+                    attributeDtos.add(attributeDto);
+                }
             }
         }
 
@@ -148,7 +153,11 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
 
         // Attributes
         for (IdValuePair attribute : attributes) {
-            attributeDtos.add(processAttribute(new ArrayList<CodeDimensionDto>(), attribute));
+            AttributeDto attributeDto = processAttribute(new ArrayList<CodeDimensionDto>(), attribute);
+
+            if (attributeDto != null) {
+                attributeDtos.add(attributeDto);
+            }
         }
     }
 
@@ -199,7 +208,6 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         // Dimension relationship
         if (!attributeRelationship.getDimensions().isEmpty() || !attributeRelationship.getAttachmentGroups().isEmpty()) {
             Map<String, CodeDimensionDto> codeDimensionDtosMap = new HashMap<String, CodeDimensionDto>(); // Dimensions and values to insert
-            boolean foundTimeDimension = false; // Is time Dimension presented
 
             // For all dimensions key in the attachment of current attribute
             for (ComponentInfo componentInfo : dimensionsInfo) {
@@ -207,7 +215,6 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                 for (CodeDimensionDto codeDimensionDto : attributeDto.getCodesDimension()) {
                     // Find the key value
                     if (componentInfo.getCode().equals(codeDimensionDto.getDimensionId())) {
-                        foundTimeDimension = (ComponentInfoTypeEnum.TIME_DIMENSION.equals(componentInfo.getTypeComponentInfo()));
                         codeDimensionDtosMap.put(codeDimensionDto.getDimensionId(), codeDimensionDto);
                         customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
                         break;
@@ -215,29 +222,11 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                 }
             }
 
-            // Note that if one of the referenced dimensions is the time dimension, the groups referenced here will be ignored.
-            // See: SDMXStructureDataStructure.xsd => AttributeRelationshipType.AttachmentGroup
-            // TODO Hablar con rita q signfica esto, pq me aprece q no es apra compactar sino para validar la estructura del mensaje, luego esto sería para el parser
-            // no para aquí
+            // AttachmentGroup
+            // This is used to specify that the attribute should always be attached to the groups referenced here. Note that if one of the referenced dimensions is the time dimension, the groups
+            // referenced here will be ignored.
+            // No need to check this.
 
-            // if (!foundTimeDimension) {
-            // // For all groups in this attachment of current attribute
-            // for (LocalGroupKeyDescriptorReferenceType localGroupKeyDescriptorReferenceType : attributeRelationship.getAttachmentGroups()) {
-            // List<ComponentInfo> dimensionsGroup = groupDimensionMapInfo.get(localGroupKeyDescriptorReferenceType.getRef().getId());
-            // // For all dimensions key in the group attachment of current attribute
-            // for (ComponentInfo dimensionKey : dimensionsGroup) {
-            // // Search key Value of this attribute
-            // for (CodeDimensionDto codeDimensionDto : attributeDto.getCodesDimension()) {
-            // // Find the key value
-            // if (dimensionKey.getCode().equals(codeDimensionDto.getDimensionId())) {
-            // codeDimensionDtosMap.put(codeDimensionDto.getDimensionId(), codeDimensionDto);
-            // customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
-            // break;
-            // }
-            // }
-            // }
-            // }
-            // }
             attributeDto.getCodesDimension().clear();
             attributeDto.getCodesDimension().addAll(codeDimensionDtosMap.values());
         }
@@ -257,6 +246,9 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
      */
     private AttributeDto processAttribute(List<CodeDimensionDto> keys, IdValuePair idValuePair) {
         AttributeDto attributeDto = new AttributeDto();
+        if (StringUtils.isEmpty(idValuePair.getValue())) {
+            return null;
+        }
 
         // Keys
         attributeDto.getCodesDimension().addAll(keys);
