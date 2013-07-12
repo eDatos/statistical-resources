@@ -9,6 +9,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodededTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
@@ -196,6 +197,10 @@ public class DsdProcessor {
             }
         }
 
+        public TimeTextFormatType getTimeTextFormatType() {
+            return timeTextFormatType;
+        }
+
         @Override
         public String getComponentId() {
             return dimensionId;
@@ -206,6 +211,8 @@ public class DsdProcessor {
 
         private String                              attributeId;
         private ReportingYearStartDayTextFormatType timeTextFormatType;
+        private boolean                             isAttributeAtObservationLevel;
+        private AttributeRelationshipType           attributeRelationship;
 
         public DsdAttribute(Attribute attr) {
             attributeId = attr.getId();
@@ -221,6 +228,8 @@ public class DsdProcessor {
             } else {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
             }
+            isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
+            attributeRelationship = attr.getAttributeRelationship();
         }
 
         public DsdAttribute(ReportingYearStartDayType attr) {
@@ -232,11 +241,25 @@ public class DsdProcessor {
             } else {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
             }
+            isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
+            attributeRelationship = attr.getAttributeRelationship();
         }
 
         @Override
         public String getComponentId() {
             return attributeId;
+        }
+
+        public boolean isAttributeAtObservationLevel() {
+            return isAttributeAtObservationLevel;
+        }
+
+        public AttributeRelationshipType getAttributeRelationship() {
+            return attributeRelationship;
+        }
+
+        public ReportingYearStartDayTextFormatType getTimeTextFormatType() {
+            return timeTextFormatType;
         }
     }
 
