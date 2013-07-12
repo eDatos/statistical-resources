@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
@@ -19,6 +20,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayTyp
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
@@ -157,7 +159,7 @@ public class DsdProcessor {
 
         public DsdDimension(Dimension dim) {
             dimensionId = dim.getId();
-            if (dim.isIsSpatial()) {
+            if (BooleanUtils.isTrue(dim.isIsSpatial())) {
                 type = DsdComponentType.SPATIAL;
             } else {
                 type = DsdComponentType.OTHER;
@@ -213,6 +215,7 @@ public class DsdProcessor {
         private ReportingYearStartDayTextFormatType timeTextFormatType;
         private boolean                             isAttributeAtObservationLevel;
         private AttributeRelationshipType           attributeRelationship;
+        private boolean                             isMandatory;
 
         public DsdAttribute(Attribute attr) {
             attributeId = attr.getId();
@@ -230,6 +233,7 @@ public class DsdProcessor {
             }
             isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
             attributeRelationship = attr.getAttributeRelationship();
+            isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
         }
 
         public DsdAttribute(ReportingYearStartDayType attr) {
@@ -243,6 +247,7 @@ public class DsdProcessor {
             }
             isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
             attributeRelationship = attr.getAttributeRelationship();
+            isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
         }
 
         @Override
@@ -260,6 +265,10 @@ public class DsdProcessor {
 
         public ReportingYearStartDayTextFormatType getTimeTextFormatType() {
             return timeTextFormatType;
+        }
+
+        public boolean isMandatory() {
+            return isMandatory;
         }
     }
 
