@@ -252,7 +252,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setId(source.getId());
         target.setUrn(source.getUrn());
         target.setName(toInternationalString(source.getNames()));
-        // TODO resource! y resto de metadatos (representation...)
+        if (source.getParent() != null) {
+            target.setParent(source.getParent().getRef().getId());
+        }
+        // TODO resource
         return target;
     }
 
@@ -431,8 +434,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
                 }
             }
         }
-
-        return StringUtils.join(dataObservations.iterator(), ", "); // TODO así?
+        return StringUtils.join(dataObservations.iterator(), " | ");
     }
 
     private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {

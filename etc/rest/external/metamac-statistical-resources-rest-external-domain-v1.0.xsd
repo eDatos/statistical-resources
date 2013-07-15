@@ -105,7 +105,7 @@
         <xs:complexContent>
             <xs:extension base="common:Resource">
                 <xs:sequence>
-                    <xs:element name="representationIndex" type="xs:long" />
+                    <xs:element name="parent" type="xs:string" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
