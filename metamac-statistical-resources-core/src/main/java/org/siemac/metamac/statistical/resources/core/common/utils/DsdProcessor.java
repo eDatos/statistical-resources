@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
@@ -99,8 +100,10 @@ public class DsdProcessor {
             Concept concept = null;
             if (conceptIdentityRef.getRef() != null) {
                 ConceptRefType ref = conceptIdentityRef.getRef();
-                concept = srmRestInternalService.retrieveConceptByUrn(GeneratorUrnUtils.generateSdmxConceptUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getMaintainableParentID(),
-                        ref.getMaintainableParentVersion(), ref.getId()));
+                concept = getSrmRestInternalService()
+                        .retrieveConceptByUrn(
+                                GeneratorUrnUtils.generateSdmxConceptUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getMaintainableParentID(), ref.getMaintainableParentVersion(),
+                                        ref.getId()));
             } else {
                 // In metamac, Ref is always present
                 throw new RuntimeException("The reference is not present. In Metamac is always present.");
@@ -148,6 +151,19 @@ public class DsdProcessor {
 
         public String getConceptSchemeRepresentationUrn() {
             return conceptSchemeRepresentationUrn;
+        }
+
+        public String getEnumeratedRepresentationUrn() {
+            if (StringUtils.isNotEmpty(this.codelistRepresentationUrn) && StringUtils.isNotEmpty(this.conceptSchemeRepresentationUrn)) {
+                throw new RuntimeException("Two enumerated representation aren't allowed.");
+            }
+            if (StringUtils.isNotEmpty(this.codelistRepresentationUrn)) {
+                return this.codelistRepresentationUrn;
+            }
+            if (StringUtils.isNotEmpty(this.conceptSchemeRepresentationUrn)) {
+                return this.conceptSchemeRepresentationUrn;
+            }
+            return null;
         }
 
     }

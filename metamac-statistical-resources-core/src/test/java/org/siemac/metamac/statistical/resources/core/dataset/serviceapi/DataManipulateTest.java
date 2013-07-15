@@ -74,8 +74,10 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     @Before
     public void onBeforeTest() {
+        // DSD
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG());
 
+        // CODELIST
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DECIMALS(1.0)")).thenReturn(Mocks.mock_CL_DECIMALS());
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_FREQ(1.0)")).thenReturn(Mocks.mock_CL_FREQ());
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_CONF_STATUS(1.0)")).thenReturn(Mocks.mock_CL_CONF_STATUS());
@@ -85,10 +87,42 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_VAR(1.0)")).thenReturn(Mocks.mock_CL_EXR_VAR());
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)")).thenReturn(Mocks.mock_CL_CURRENCY());
 
+        // CONCEPT SCHEME
         Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)")).thenReturn(
                 Mocks.mock_CROSS_DOMAIN_CONCEPTS());
 
         Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=ECB:ECB_CONCEPTS(1.0)")).thenReturn(Mocks.mock_ECB_CONCEPTS());
+
+        // CONCEPT
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM")).thenReturn(
+                Mocks.mock_ECB_CONCEPTS_1_0_CURRENCY_DENOM());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"))
+                .thenReturn(Mocks.mock_ECB_CONCEPTS_1_0_EXR_TYPE());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_VAR")).thenReturn(Mocks.mock_ECB_CONCEPTS_1_0_EXR_VAR());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS());
+
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
+
     }
 
     @Test

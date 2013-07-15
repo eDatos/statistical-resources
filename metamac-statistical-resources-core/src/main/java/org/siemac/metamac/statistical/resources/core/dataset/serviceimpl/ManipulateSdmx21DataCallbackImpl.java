@@ -55,7 +55,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     private DatasetRepositoriesServiceFacade       datasetRepositoriesServiceFacade        = null;
     private SrmRestInternalService                 srmRestInternalService                  = null;
 
-    // Calculated and cache data
+    // DSD: Calculated and cache data
     private Map<String, ComponentInfo>             dimensionsInfoMap                       = null;
     private Map<String, ComponentInfo>             attributesInfoMap                       = null;
     private MultiMap                               enumerationRepresentationsMultimap      = null;                 // Key: URN, Value: Set<String>
@@ -64,10 +64,10 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     private Set<String>                            dimensionsCodeSet                       = null;
     private Set<String>                            attributesCodeSet                       = null;
     private Set<String>                            attributeIdsAtObservationLevelSet       = null;
-    private List<String>                           mandatoryAttributeIdsAtObservationLevel = null;
+    private Set<String>                            mandatoryAttributeIdsAtObservationLevel = null;
     private Map<String, List<ComponentInfo>>       groupDimensionMapInfo                   = null;
 
-    // Cache
+    // DATASET: Calculated and cache data
     private Set<String>                            keyAttributesAdded                      = new HashSet<String>();
     private DatasetRepositoryDto                   datasetRepositoryDto                    = null;
     private String                                 repoDatasetID                           = null;
@@ -110,11 +110,13 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
         // If is a new Dataset
         if (datasetRepositoryDto == null) {
-            createDatasetRepository();
+            datasetRepositoryDto = createDatasetRepository();
         }
+
+        this.datasetRepositoryDto = datasetRepositoryDto;
     }
 
-    protected void createDatasetRepository() {
+    protected DatasetRepositoryDto createDatasetRepository() {
         // Create DatasetRepository
         DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
         datasetRepositoryDto.setDatasetId(this.repoDatasetID);
@@ -132,11 +134,13 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
 
         try {
-            this.datasetRepositoryDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
+            return datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
         } catch (ApplicationException e) {
             // TODO Lanzar excepcion, mark failed?
             e.printStackTrace();
         }
+
+        return null;
     }
 
     @Override
@@ -151,11 +155,12 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         List<AttributeDto> attributeDtos = new ArrayList<AttributeDto>();
 
         try {
+
             // Transform Data y Attributes (series or observation level) into repository model
             metamac2StatRepoMapper.populateDatas(dataContainer, this.attributesProcessorMap, dataDtos, attributeDtos);
 
             // Transform Attributes (group level) into repository model
-            metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos);
+            metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos, this.mandatoryAttributeIdsAtObservationLevel);
 
             // Transform Attributes (dataset level) into repository model
             metamac2StatRepoMapper.processDatasetAttribute(dataContainer.getAttributes(), attributeDtos);
@@ -168,7 +173,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
                 if (this.attributesProcessorMap.containsKey(attributeDto.getAttributeId())) {
                     // TODO validate attribute
                     String attributeCustomKey = metamac2StatRepoMapper.generateAttributeKeyInAttachmentLevel(attributeDto, this.attributesProcessorMap.get(attributeDto.getAttributeId())
-                            .getAttributeRelationship(), retrieveDimensionsInfo(), this.groupDimensionMapInfo);
+                            .getAttributeRelationship(), this.groupDimensionMapInfo);
 
                     // If attribute is not processed
                     if (!this.keyAttributesAdded.contains(attributeCustomKey)) {
@@ -210,56 +215,6 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     public List<ComponentInfo> retrieveAttributesInfo() {
         return new ArrayList<ComponentInfo>(this.attributesInfoMap.values());
     }
-
-    // private Map<String, ComponentInfo> getDimensionsInfoMap() {
-    // if (this.dimensionsInfoMap == null) {
-    // calculateDimensionsInfo();
-    // }
-    // return dimensionsInfoMap;
-    // }
-
-    // private Map<String, List<ComponentInfo>> getGroupDimensionMapInfo() {
-    // if (this.groupDimensionMapInfo == null) {
-    // calculateGroupDimensionMapInfo();
-    // }
-    // return groupDimensionMapInfo;
-    // }
-
-    // private Set<String> getDimensionsCodeSet() {
-    // return getDimensionsInfoMap().keySet();
-    // }
-
-    // private Map<String, Object> getAttributesMap() {
-    // if (this.attributesMap == null) {
-    // calculateAttributesInfo();
-    // }
-    // return this.attributesMap;
-    // }
-    //
-    // private Map<String, ComponentInfo> getAttributesInfoMap() {
-    // if (this.attributesInfoMap == null) {
-    // calculateAttributesInfo();
-    // }
-    // return attributesInfoMap;
-    // }
-
-    // private List<String> getMandatoryAttributeIdsAtObservationLevel() {
-    // if (this.mandatoryAttributeIdsAtObservationLevel == null) {
-    // calculateAttributesInfo();
-    // }
-    // return this.mandatoryAttributeIdsAtObservationLevel;
-    // }
-    //
-    // private Set<String> getAttributeIdsAtObservationLevelSet() {
-    // if (this.attributeIdsAtObservationLevelSet == null) {
-    // calculateAttributesInfo();
-    // }
-    // return this.attributeIdsAtObservationLevelSet;
-    // }
-
-    // private Set<String> getAttributesCodeSet() {
-    // return getAttributesInfoMap().keySet();
-    // }
 
     /*
      * In metamac only are valid the datasets that references to the "dsdUrn" data structure definition.
@@ -309,7 +264,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap = new HashMap<String, DsdProcessor.DsdAttribute>();
         Map<String, ComponentInfo> attributesInfoMap = new HashMap<String, ComponentInfo>();
         Set<String> attributeIdsAtObservationLevelSet = new HashSet<String>();
-        List<String> mandatoryAttributeIdsAtObservationLevel = new LinkedList<String>();
+        Set<String> mandatoryAttributeIdsAtObservationLevel = new HashSet<String>();
 
         if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getAttributeList() != null) {
             for (Object sourceAttribute : dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies()) {
@@ -333,9 +288,9 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
                 if (dsdAttribute != null) {
                     if (dsdAttribute.isAttributeAtObservationLevel()) {
                         attributeIdsAtObservationLevelSet.add(dsdAttribute.getComponentId());
-                    }
-                    if (dsdAttribute.isMandatory()) {
-                        mandatoryAttributeIdsAtObservationLevel.add(dsdAttribute.getComponentId());
+                        if (dsdAttribute.isMandatory()) {
+                            mandatoryAttributeIdsAtObservationLevel.add(dsdAttribute.getComponentId());
+                        }
                     }
                 }
             }
@@ -347,7 +302,6 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         this.mandatoryAttributeIdsAtObservationLevel = mandatoryAttributeIdsAtObservationLevel;
         this.attributesCodeSet = attributesInfoMap.keySet();
     }
-
     protected MultiMap calculateCacheDimensionInfo(MultiMap enumerationRepresentationsMultimap) {
         // Dimensions
         Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap = new HashMap<String, DsdProcessor.DsdDimension>();
@@ -392,7 +346,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         {
             // Codelist: If is not currently cached
             String codelistRepresentationUrn = dsdComponent.getCodelistRepresentationUrn();
-            if (enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
+            if (codelistRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
                 Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codelistRepresentationUrn);
 
                 for (CodeType codeType : codelist.getCodes()) {
@@ -404,7 +358,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         {
             // ConceptScheme:
             String conceptSchemeRepresentationUrn = dsdComponent.getConceptSchemeRepresentationUrn();
-            if (enumerationRepresentationsMultimap.containsKey(conceptSchemeRepresentationUrn)) {
+            if (conceptSchemeRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(conceptSchemeRepresentationUrn)) {
                 ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRepresentationUrn);
 
                 for (ConceptType conceptType : conceptScheme.getConcepts()) {
@@ -425,24 +379,28 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             // Number of dimensions
             if (retrieveDimensionsInfo().size() != overExtendedDto.getCodesDimension().size()) {
                 // TODO El número de dimensiones del DSD es distinto al de la observacion
+                throw new UnsupportedOperationException("TODO El número de dimensiones del DSD es distinto al de la observacion");
             }
 
             // The used dimension if correct
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 if (!this.dimensionsCodeSet.contains(codeDimensionDto.getDimensionId())) {
                     // TODO la dimension usada no existe
+                    throw new UnsupportedOperationException("la dimension usada no existe");
                 }
             }
 
-            // Number of attributes at observation level
-            if (overExtendedDto.getAttributes().size() <= this.attributeIdsAtObservationLevelSet.size()) {
+            // Number of attributes at observation level,can not exceed the maximum cardinality.
+            if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size()) {
                 // TODO El numero de atributos a nivel de obseracion difiere del DS
+                throw new UnsupportedOperationException("El numero de atributos a nivel de obseracion difiere del DS");
             }
 
             // The used attribute if correct
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId())) {
                     // TODO excepción: No existe definido este atributo de nivel de observaicon en el DSD
+                    throw new UnsupportedOperationException("No existe definido este atributo de nivel de observaicon en el DSD");
                 }
             }
 
@@ -454,6 +412,31 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             for (String attributeId : this.mandatoryAttributeIdsAtObservationLevel) {
                 if (!attributesInCurrentObservation.contains(attributeId)) {
                     // TODO Excepcion: No existe el atributo X obligatorio a nivel de obseracion
+                    throw new UnsupportedOperationException("No existe el atributo X obligatorio a nivel de obseracion");
+                }
+            }
+
+            // Si la representación es enumerada, los valores que se usen en el dataset (tanto en atributos como en dimensiones) deben estar dentro del correspondiente itemScheme (codelist o
+            // conceptScheme).
+            for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
+                String enumeratedRepresentationUrn = dimensionsProcessorMap.get(codeDimensionDto.getDimensionId()).getEnumeratedRepresentationUrn();
+                if (enumeratedRepresentationUrn != null) {
+                    Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+                    if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
+                        // TODO excepción: El código X de la dimendion Y no es valido
+                        throw new UnsupportedOperationException("El código X de la dimendion Y no es valido");
+                    }
+                }
+            }
+
+            for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
+                String enumeratedRepresentationUrn = attributesProcessorMap.get(attributeBasicDto.getAttributeId()).getEnumeratedRepresentationUrn();
+                if (enumeratedRepresentationUrn != null) {
+                    Set<String> validAttributeCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+                    if (!validAttributeCodes.contains(attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE))) {
+                        // TODO excepción: El código X del atributo Y no es valido
+                        throw new UnsupportedOperationException("El código X del atributo Y no es valido");
+                    }
                 }
             }
 

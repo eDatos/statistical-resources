@@ -7,8 +7,11 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.BasicComponentDataType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.DimensionTypeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionRefType;
@@ -20,7 +23,6 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalPrimaryMeasureReferenc
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptRepresentation;
@@ -37,9 +39,11 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionRepresentat
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -51,20 +55,19 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensi
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 
 public class SrmMockUtils {
-    
 
     public static ConceptScheme buildConceptSchemeWithConcepts(String id, String urn, String lang, int numConcepts) {
         ConceptScheme conceptScheme = SrmMockUtils.buildConceptScheme(id, "title", lang, urn);
         for (int i = 1; i <= numConcepts; i++) {
-            conceptScheme.getConcepts().add(SrmMockUtils.buildConcept("concept-0"+i, "Concept 0"+i, lang));
+            conceptScheme.getConcepts().add(SrmMockUtils.buildConcept("concept-0" + i, "Concept 0" + i, lang));
         }
         return conceptScheme;
     }
-    
+
     public static Codelist buildCodelistWithCodes(String id, String urn, String lang, int numCodes) {
         Codelist codelist = SrmMockUtils.buildCodelist(id, "title", lang, urn);
         for (int i = 1; i <= numCodes; i++) {
-            codelist.getCodes().add(SrmMockUtils.buildCode("code-0"+i, "Code 0"+i, lang));
+            codelist.getCodes().add(SrmMockUtils.buildCode("code-0" + i, "Code 0" + i, lang));
         }
         return codelist;
     }
@@ -73,7 +76,7 @@ public class SrmMockUtils {
         MeasureDimensionType measureDim = SrmMockUtils.buildMeasureDimension(measureId, measureConceptScheme);
         TimeDimensionType timeDim = SrmMockUtils.buildTimeDimension(timeId, TimeDataType.REPORTING_YEAR);
         Dimension geoDim = SrmMockUtils.buildGeoDimension(geoId, geoCodelist);
-        
+
         DataStructure dsd = new DataStructure();
         dsd.setUrn(urn);
         DataStructureComponentsType components = new DataStructureComponentsType();
@@ -82,10 +85,9 @@ public class SrmMockUtils {
         components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(timeDim);
         components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(geoDim);
         dsd.setDataStructureComponents(components);
-        
+
         return dsd;
     }
-    
 
     public static MeasureDimensionType buildMeasureDimension(String id, ConceptScheme conceptSchemeRepresentation) {
         MeasureDimensionType measureDim = new MeasureDimensionType();
@@ -181,30 +183,30 @@ public class SrmMockUtils {
         return localDimensionReferenceType;
     }
 
-    private static AttributeType buildAttributeType(String attributeId, String conceptIdentityURN, UsageStatusType usageStatusType, String representationURN) {
-        AttributeType attributeType = new AttributeType();
-        attributeType.setId(attributeId);
-        attributeType.setAssignmentStatus(usageStatusType);
+    private static Attribute buildAttributeType(String attributeId, String conceptIdentityURN, UsageStatusType usageStatusType, String representationURN) {
+        Attribute attribute = new Attribute();
+        attribute.setId(attributeId);
+        attribute.setAssignmentStatus(usageStatusType);
 
-        attributeType.setConceptIdentity(buildConceptReferenceTypeWithURN(conceptIdentityURN));
+        attribute.setConceptIdentity(buildConceptReferenceTypeWithURN(conceptIdentityURN));
 
         if (StringUtils.isNotEmpty(representationURN)) {
-            attributeType.setLocalRepresentation(buildSimpleDataStructureRepresentationTypeWithURN(representationURN));
+            attribute.setLocalRepresentation(buildSimpleDataStructureRepresentationTypeWithURN(representationURN));
         }
 
-        return attributeType;
+        return attribute;
     }
 
-    public static AttributeType buildAttributeTypeWithGroupRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType, String groupId) {
-        AttributeType attributeType = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
+    public static Attribute buildAttributeTypeWithGroupRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType, String groupId) {
+        Attribute attribute = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
 
         AttributeRelationshipType attributeRelationshipType = new AttributeRelationshipType();
         LocalGroupKeyDescriptorReferenceType localGroupKeyDescriptorReferenceType = buildLocalGroupKeyDescriptorReferenceType(groupId);
         attributeRelationshipType.setGroup(localGroupKeyDescriptorReferenceType);
 
-        attributeType.setAttributeRelationship(attributeRelationshipType);
+        attribute.setAttributeRelationship(attributeRelationshipType);
 
-        return attributeType;
+        return attribute;
     }
 
     protected static LocalGroupKeyDescriptorReferenceType buildLocalGroupKeyDescriptorReferenceType(String groupId) {
@@ -215,9 +217,9 @@ public class SrmMockUtils {
         return localGroupKeyDescriptorReferenceType;
     }
 
-    public static AttributeType buildAttributeTypeWithDimensionRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType,
+    public static Attribute buildAttributeTypeWithDimensionRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType,
             List<String> dimensions, List<String> groups) {
-        AttributeType attributeType = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
+        Attribute attribute = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
 
         AttributeRelationshipType attributeRelationshipType = new AttributeRelationshipType();
 
@@ -229,13 +231,13 @@ public class SrmMockUtils {
             attributeRelationshipType.getAttachmentGroups().add(buildLocalGroupKeyDescriptorReferenceType(group));
         }
 
-        attributeType.setAttributeRelationship(attributeRelationshipType);
+        attribute.setAttributeRelationship(attributeRelationshipType);
 
-        return attributeType;
+        return attribute;
     }
 
-    public static AttributeType buildAttributeTypeWithPrimaryMeasureRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType) {
-        AttributeType attributeType = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
+    public static Attribute buildAttributeTypeWithPrimaryMeasureRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType) {
+        Attribute attribute = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
 
         AttributeRelationshipType attributeRelationshipType = new AttributeRelationshipType();
 
@@ -245,9 +247,9 @@ public class SrmMockUtils {
         localPrimaryMeasureReferenceType.setRef(localPrimaryMeasureRefType);
         attributeRelationshipType.setPrimaryMeasure(localPrimaryMeasureReferenceType);
 
-        attributeType.setAttributeRelationship(attributeRelationshipType);
+        attribute.setAttributeRelationship(attributeRelationshipType);
 
-        return attributeType;
+        return attribute;
     }
 
     private static SimpleDataStructureRepresentationType buildSimpleDataStructureRepresentationTypeWithURN(String representationURN) {
@@ -271,7 +273,18 @@ public class SrmMockUtils {
     public static ConceptReferenceType buildConceptReferenceTypeWithURN(String conceptIdentityURN) {
         ConceptReferenceType conceptReferenceType = new ConceptReferenceType();
         conceptReferenceType.setURN(conceptIdentityURN);
+        conceptReferenceType.setRef(buildConceptRefType(conceptIdentityURN));
         return conceptReferenceType;
+    }
+
+    protected static ConceptRefType buildConceptRefType(String codelistUrn) {
+        ConceptRefType conceptRefType = new ConceptRefType();
+        String[] params = UrnUtils.splitUrnItem(codelistUrn);
+        conceptRefType.setAgencyID(params[0]);
+        conceptRefType.setMaintainableParentID(params[1]);
+        conceptRefType.setMaintainableParentVersion(params[2]);
+        conceptRefType.setId(params[3]);
+        return conceptRefType;
     }
 
     public static ConceptScheme buildConceptScheme(String id, String name, String lang, String urn) {
@@ -285,12 +298,12 @@ public class SrmMockUtils {
     public static ConceptSchemeReferenceType buildConceptSchemeRef(ConceptScheme scheme) {
         if (scheme != null) {
             ConceptSchemeReferenceType ref = new ConceptSchemeReferenceType();
+            ref.setRef(buildConceptSchemeRefType(scheme.getUrn()));
             ref.setURN(scheme.getUrn());
             return ref;
         }
         return null;
     }
-
     public static Concept buildConcept(String id, String name, String lang) {
         Concept concept = new Concept();
         concept.setId(id);
@@ -321,7 +334,9 @@ public class SrmMockUtils {
     public static CodelistReferenceType buildCodelistRef(Codelist scheme) {
         if (scheme != null) {
             CodelistReferenceType ref = new CodelistReferenceType();
+            ref.setRef(buildCodelistRefType(scheme.getUrn()));
             ref.setURN(scheme.getUrn());
+
             return ref;
         }
         return null;
@@ -329,8 +344,30 @@ public class SrmMockUtils {
 
     public static CodelistReferenceType buildCodelistRef(String codelistUrn) {
         CodelistReferenceType ref = new CodelistReferenceType();
+
+        ref.setRef(buildCodelistRefType(codelistUrn));
+
         ref.setURN(codelistUrn);
+
         return ref;
+    }
+
+    protected static CodelistRefType buildCodelistRefType(String codelistUrn) {
+        CodelistRefType codelistRefType = new CodelistRefType();
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        codelistRefType.setAgencyID(params[0]);
+        codelistRefType.setId(params[1]);
+        codelistRefType.setVersion(params[2]);
+        return codelistRefType;
+    }
+
+    protected static ConceptSchemeRefType buildConceptSchemeRefType(String codelistUrn) {
+        ConceptSchemeRefType conceptSchemeRefType = new ConceptSchemeRefType();
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        conceptSchemeRefType.setAgencyID(params[0]);
+        conceptSchemeRefType.setId(params[1]);
+        conceptSchemeRefType.setVersion(params[2]);
+        return conceptSchemeRefType;
     }
 
     public static Code buildCode(String id, String name, String lang) {

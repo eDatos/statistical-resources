@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -35,7 +36,7 @@ public interface Metamac2StatRepoMapper {
      * @param second
      * @throws MetamacException
      */
-    public void processGroupAttribute(List<Group> groups, List<AttributeDto> attributeDtos) throws MetamacException;
+    public void processGroupAttribute(List<Group> groups, List<AttributeDto> attributeDtos, Set<String> mandatoryAttributeIdsAtObservationLevel) throws MetamacException;
 
     /**
      * Convert dataset level attribtues into statistic-dataset-repository-model
@@ -52,11 +53,9 @@ public interface Metamac2StatRepoMapper {
      * @param ctx
      * @param attributeDto Attribute representation model in repository
      * @param attributeRelationship
-     * @param dimensionsInfo
-     * @param groupDimensionMapInfo
      * @return key of attribute
      * @throws MetamacException
      */
-    public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationshipType attributeRelationship, List<ComponentInfo> dimensionsInfo,
-            Map<String, List<ComponentInfo>> groupDimensionMapInfo) throws MetamacException;
+    public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationshipType attributeRelationship, Map<String, List<ComponentInfo>> groupDimensionMapInfo)
+            throws MetamacException;
 }
