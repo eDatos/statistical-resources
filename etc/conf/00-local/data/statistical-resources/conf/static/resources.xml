@@ -3,6 +3,4 @@
 <properties>
     <comment>Configurations</comment>
     <entry key="metamac.statistical.resources.user.guide.file.name">Gestor_recursos_estadisticos-Manual_usuario.pdf</entry>
-    <entry key="metamac.statistical.resources.geographic_granularity.codelist.urn">FILL_ME_WITH_CODELIST_URN</entry>
-    <entry key="metamac.statistical.resources.temporal_granularity.codelist.urn">FILL_ME_WITH_CODELIST_URN</entry>
 </properties>
