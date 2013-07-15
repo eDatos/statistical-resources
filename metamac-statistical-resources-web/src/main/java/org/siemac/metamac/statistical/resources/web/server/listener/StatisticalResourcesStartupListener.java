@@ -35,7 +35,14 @@ public class StatisticalResourcesStartupListener extends ApplicationStartupListe
         checkRequiredProperty(ConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         checkRequiredProperty(ConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
 
+        // DEFAULT RESOURCES
+        checkDefaultCodelistTemporalGranularityUrn();
+        checkDefaultCodelistGeographicalGranularityUrn();
+        checkDefaultCodeLanguageUrn();
+        checkDefaultCodelistLanguagesUrn();
+
         // OTHER CONFIGURATION PROPERTIES
+
         // Common properties
         checkEditionLanguagesProperty();
         checkNavBarUrlProperty();
