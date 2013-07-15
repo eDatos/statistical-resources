@@ -14,12 +14,52 @@
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
             <xs:element name="name" type="common:InternationalString" />
-            <xs:element name="dataStructureDefinition" type="tns:DataStructureDefinition" />
-            <xs:element name="dimensions" type="tns:Dimensions" />
+            <xs:element name="metadata" type="tns:DatasetMetadata" />
+            <xs:element name="data" type="tns:DatasetData" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
 
+    <xs:complexType name="DatasetMetadata">
+        <xs:sequence>
+            <xs:element name="dataStructureDefinition" type="tns:DataStructureDefinition" />
+            <xs:element name="dimensions" type="tns:Dimensions" />
+        </xs:sequence>
+    </xs:complexType>  
+    
+    <xs:complexType name="DatasetData">
+        <xs:sequence>
+            <xs:element name="dimensions" type="tns:DimensionRepresentations" />
+            <xs:element name="observations" type="xs:string" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>   
+    
+    <xs:complexType name="DimensionRepresentations">
+        <xs:sequence>
+            <xs:element name="dimension" type="tns:DimensionRepresentation" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
+    </xs:complexType> 
+    
+    <xs:complexType name="DimensionRepresentation">
+        <xs:sequence>
+            <xs:element name="dimensionId" type="xs:string" />
+            <xs:element name="representations" type="tns:CodeRepresentations" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType> 
+    
+    <xs:complexType name="CodeRepresentations">
+        <xs:sequence>
+            <xs:element name="representation" type="tns:CodeRepresentation" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
+    </xs:complexType>     
+    
+    <xs:complexType name="CodeRepresentation">
+        <xs:attribute name="code" type="xs:string" use="required"/>
+        <xs:attribute name="index" type="xs:long" use="required"/>
+    </xs:complexType>  
+            
     <xs:complexType name="DataStructureDefinition">
         <xs:complexContent>
             <xs:extension base="common:Resource">
@@ -80,7 +120,6 @@
             <xs:enumeration value="DIMENSION" />
         </xs:restriction>
     </xs:simpleType>
-    
     
     <!-- Elements -->
     <xs:element name="dataset" type="tns:Dataset" />
