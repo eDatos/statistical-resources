@@ -50,8 +50,6 @@ public class StatisticalResourcesStartupListener extends ApplicationStartupListe
 
         // Statistical resources properties
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME);
-        checkOptionalProperty(StatisticalResourcesConfigurationConstants.GEOGRAPHIC_GRANULARITY_CODELIST_URN);
-        checkOptionalProperty(StatisticalResourcesConfigurationConstants.TEMPORAL_GRANULARITY_CODELIST_URN);
 
         // TODO add properties to check
     }
