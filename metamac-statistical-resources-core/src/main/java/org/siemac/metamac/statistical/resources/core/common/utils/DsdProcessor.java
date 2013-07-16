@@ -87,6 +87,17 @@ public class DsdProcessor {
         protected String                codelistRepresentationUrn      = null;
         protected String                conceptSchemeRepresentationUrn = null;
         protected CodededTextFormatType textFormatType                 = null;
+        protected String                conceptIdentityUrn             = null;
+
+        protected void setConceptIdentityUrn(ConceptReferenceType conceptIdentityRef) {
+            if (conceptIdentityRef.getRef() != null) {
+                ConceptRefType ref = conceptIdentityRef.getRef();
+                conceptIdentityUrn = GeneratorUrnUtils.generateSdmxConceptUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getMaintainableParentID(), ref.getMaintainableParentVersion(),
+                        ref.getId());
+            } else {
+                throw new IllegalArgumentException("Concept identity is required.");
+            }
+        }
 
         protected void setRepresentationFromLocalRepresentation(SimpleDataStructureRepresentationType localRepresentation) {
             if (localRepresentation.getEnumeration() != null) {
@@ -166,6 +177,9 @@ public class DsdProcessor {
             return null;
         }
 
+        public String getConceptIdentityUrn() {
+            return conceptIdentityUrn;
+        }
     }
 
     public static class DsdDimension extends DsdComponent {
@@ -188,6 +202,8 @@ public class DsdProcessor {
             } else {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
+
+            setConceptIdentityUrn(dim.getConceptIdentity());
 
         }
 
@@ -247,6 +263,9 @@ public class DsdProcessor {
             } else {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
             }
+
+            setConceptIdentityUrn(attr.getConceptIdentity());
+
             isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
             attributeRelationship = attr.getAttributeRelationship();
             isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
