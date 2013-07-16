@@ -21,6 +21,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
@@ -34,12 +35,14 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.ManipulateDataCallback;
@@ -302,6 +305,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         this.mandatoryAttributeIdsAtObservationLevel = mandatoryAttributeIdsAtObservationLevel;
         this.attributesCodeSet = attributesInfoMap.keySet();
     }
+
     protected MultiMap calculateCacheDimensionInfo(MultiMap enumerationRepresentationsMultimap) {
         // Dimensions
         Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap = new HashMap<String, DsdProcessor.DsdDimension>();
@@ -372,35 +376,33 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
      * VALIDATORS
      **************************************************************************/
 
+    @SuppressWarnings("unchecked")
     private void checkObservation(List<ObservationExtendedDto> dataDtos) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
         for (ObservationExtendedDto overExtendedDto : dataDtos) {
 
             // Number of dimensions
             if (retrieveDimensionsInfo().size() != overExtendedDto.getCodesDimension().size()) {
-                // TODO El número de dimensiones del DSD es distinto al de la observacion
-                throw new UnsupportedOperationException("TODO El número de dimensiones del DSD es distinto al de la observacion");
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_KEY_CARDINALITY_NOT_MATCH).build();
             }
 
             // The used dimension if correct
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 if (!this.dimensionsCodeSet.contains(codeDimensionDto.getDimensionId())) {
-                    // TODO la dimension usada no existe
-                    throw new UnsupportedOperationException("la dimension usada no existe");
+                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_NOT_MATCH).withMessageParameters(codeDimensionDto.getDimensionId()).build();
                 }
             }
 
-            // Number of attributes at observation level,can not exceed the maximum cardinality.
+            // Number of attributes at observation level, can not exceed the maximum cardinality.
             if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size()) {
-                // TODO El numero de atributos a nivel de obseracion difiere del DS
-                throw new UnsupportedOperationException("El numero de atributos a nivel de obseracion difiere del DS");
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED).build();
             }
 
             // The used attribute if correct
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId())) {
-                    // TODO excepción: No existe definido este atributo de nivel de observaicon en el DSD
-                    throw new UnsupportedOperationException("No existe definido este atributo de nivel de observaicon en el DSD");
+                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH).withMessageParameters(attributeBasicDto.getAttributeId())
+                            .build();
                 }
             }
 
@@ -411,38 +413,43 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             }
             for (String attributeId : this.mandatoryAttributeIdsAtObservationLevel) {
                 if (!attributesInCurrentObservation.contains(attributeId)) {
-                    // TODO Excepcion: No existe el atributo X obligatorio a nivel de obseracion
-                    throw new UnsupportedOperationException("No existe el atributo X obligatorio a nivel de obseracion");
+                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_ATTR_NOT_FOUND).withMessageParameters(attributeId).build();
                 }
             }
 
-            // Si la representación es enumerada, los valores que se usen en el dataset (tanto en atributos como en dimensiones) deben estar dentro del correspondiente itemScheme (codelist o
-            // conceptScheme).
+            // The codes of dimensions must be defined in the enumerated representation
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 String enumeratedRepresentationUrn = dimensionsProcessorMap.get(codeDimensionDto.getDimensionId()).getEnumeratedRepresentationUrn();
                 if (enumeratedRepresentationUrn != null) {
                     Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
                     if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
-                        // TODO excepción: El código X de la dimendion Y no es valido
-                        throw new UnsupportedOperationException("El código X de la dimendion Y no es valido");
+                        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID)
+                                .withMessageParameters(codeDimensionDto.getCodeDimensionId()).withMessageParameters(codeDimensionDto.getDimensionId())
+                                .withMessageParameters(enumeratedRepresentationUrn).build();
                     }
                 }
             }
 
+            // The codes of attributes must be defined in the enumerated representation
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                String enumeratedRepresentationUrn = attributesProcessorMap.get(attributeBasicDto.getAttributeId()).getEnumeratedRepresentationUrn();
-                if (enumeratedRepresentationUrn != null) {
-                    Set<String> validAttributeCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
-                    if (!validAttributeCodes.contains(attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE))) {
-                        // TODO excepción: El código X del atributo Y no es valido
-                        throw new UnsupportedOperationException("El código X del atributo Y no es valido");
-                    }
-                }
+                checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue());
             }
-
         }
 
         ExceptionUtils.throwIfException(exceptions);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void checkAttributeEnumeratedRepresentation(String attributeId, InternationalStringDto value) throws MetamacException {
+        String enumeratedRepresentationUrn = attributesProcessorMap.get(attributeId).getEnumeratedRepresentationUrn();
+        if (enumeratedRepresentationUrn != null) {
+            Set<String> validAttributeCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+            if (!validAttributeCodes.contains(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE))) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_ATTR_CODE_ENUM_NOT_VALID)
+                        .withMessageParameters(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)).withMessageParameters(attributeId)
+                        .withMessageParameters(enumeratedRepresentationUrn).build();
+            }
+        }
     }
 
     private void checkAttributes(List<AttributeDto> attributeDtos) throws MetamacException {
@@ -452,9 +459,12 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
             // The used attribute if correct
             if (!this.attributesCodeSet.contains(attributeDto.getAttributeId()) || this.attributeIdsAtObservationLevelSet.contains(attributeDto.getAttributeId())) {
-                // TODO excepcion, el atributo X no está definido en el DSD, o está definido a otro nivel de attachment
+
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH).withMessageParameters(attributeDto.getAttributeId()).build();
             }
 
+            // The codes of attributes must be defined in the enumerated representation
+            checkAttributeEnumeratedRepresentation(attributeDto.getAttributeId(), attributeDto.getValue());
         }
 
         ExceptionUtils.throwIfException(exceptions);

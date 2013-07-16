@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
-import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -136,7 +134,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // int kaka = 2;
     }
 
-    // @Test
+//    @Test
     // @DirtyDatabase
     public void testImport_Sdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
@@ -150,7 +148,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_GEN_ECB_EXR_RG_XS);
                     taskInfoDataset.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
-                    taskInfoDataset.setRepoDatasetId(UUID.randomUUID().toString());
+                    taskInfoDataset.setRepoDatasetId("TEST_DATA_GEN_ECB_EXR_RG_FLAT");
                     jobKey = taskService.plannifyImportationDataset(serviceContext, DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT), taskInfoDataset);
                 } catch (MetamacException e) {
                     e.printStackTrace();
