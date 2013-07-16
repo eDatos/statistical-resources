@@ -22,7 +22,9 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.Item;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
@@ -40,17 +42,27 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepres
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Languages;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Resources;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
@@ -90,6 +102,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
         target.setSelfLink(toDatasetSelfLink(source));
         target.setName(toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
+        target.setDescription(toInternationalString(source.getSiemacMetadataStatisticalResource().getDescription(), selectedLanguages));
         target.setParentLink(toDatasetParentLink(source));
         target.setChildLinks(toDatasetChildLinks(source));
         target.setSelectedLanguages(toLanguages(selectedLanguages));
@@ -119,8 +132,8 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return targets;
     }
 
-    private Languages toLanguages(List<String> selectedLanguages) {
-        Languages target = new Languages();
+    private SelectedLanguages toLanguages(List<String> selectedLanguages) {
+        SelectedLanguages target = new SelectedLanguages();
         target.getLanguages().addAll(selectedLanguages);
         target.setTotal(BigInteger.valueOf(target.getLanguages().size()));
         return target;
@@ -133,10 +146,148 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         DatasetMetadata target = new DatasetMetadata();
         // Dsd
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
-        target.setDataStructureDefinition(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
+        target.setRelatedDsd(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
         // Dimensions
         target.setDimensions(toDimensions(source.getSiemacMetadataStatisticalResource().getUrn(), dataStructure, selectedLanguages));
+
+        // Other metadata
+        target.setGeographicCoverages(toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
+        // TODO TemporalCoverage, title?
+        target.setGeographicGranularities(toResourcesExternalItemsSrm(source.getGeographicGranularities(), selectedLanguages));
+        target.setTemporalGranularities(toResourcesExternalItemsSrm(source.getTemporalGranularities(), selectedLanguages));
+        target.setDateStart(toDate(source.getDateStart()));
+        target.setDateEnd(toDate(source.getDateEnd()));
+        target.setStatisticalUnit(toResourcesExternalItemsSrm(source.getStatisticalUnit(), selectedLanguages));
+        target.setMeasures(toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));
+        target.setFormatExtentObservations(toBigInteger(source.getFormatExtentObservations()));
+        target.setFormatExtentDimensions(toBigInteger(source.getFormatExtentDimensions()));
+        target.setDateNextUpdate(toDate(source.getDateNextUpdate()));
+        target.setUpdateFrequency(toResourceExternalItemSrm(source.getUpdateFrequency(), selectedLanguages));
+        target.setStatisticOfficiality(toStatisticOfficiality(source.getStatisticOfficiality(), selectedLanguages));
+        target.setBibliographicCitation(toInternationalString(source.getBibliographicCitation(), selectedLanguages));
+
+        toDatasetMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
+
         return target;
+    }
+
+    // TODO item?
+    private Item toStatisticOfficiality(StatisticOfficiality source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Item target = new Item();
+        target.setId(source.getIdentifier());
+        target.setName(toInternationalString(source.getDescription(), selectedLanguages));
+        return target;
+    }
+
+    // TODO hacer específicos? TODO si no, pasar Resources a rest-api-1.0
+    private Resources toResourcesExternalItemsSrm(List<ExternalItem> sources, List<String> selectedLanguages) throws MetamacException {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (ExternalItem source : sources) {
+            Resource target = toResourceExternalItemSrm(source, selectedLanguages);
+            targets.getResources().add(target);
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
+    }
+    // TODO hacer específicos? TODO si no, pasar Resources a rest-api-1.0
+    private Resources toResourcesExternalItemsStatisticalOperations(List<ExternalItem> sources, List<String> selectedLanguages) throws MetamacException {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (ExternalItem source : sources) {
+            Resource target = toResourceExternalItemStatisticalOperations(source, selectedLanguages);
+            targets.getResources().add(target);
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
+    }
+
+    private void toDatasetMetadataStatisticalResource(SiemacMetadataStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        target.setLanguage(toResourceExternalItemSrm(source.getLanguage(), selectedLanguages));
+        target.setLanguages(toResourcesExternalItemsSrm(source.getLanguages(), selectedLanguages));
+        target.setStatisticalOperation(toResourceExternalItemStatisticalOperations(source.getStatisticalOperation(), selectedLanguages));
+        target.setStatisticalOperationInstances(toResourcesExternalItemsStatisticalOperations(source.getStatisticalOperationInstances(), selectedLanguages));
+        target.setSubtitle(toInternationalString(source.getSubtitle(), selectedLanguages));
+        target.setTitleAlternative(toInternationalString(source.getTitleAlternative(), selectedLanguages));
+        target.setAbstract(toInternationalString(source.getAbstractLogic(), selectedLanguages));
+        target.setKeywords(toInternationalString(source.getKeywords(), selectedLanguages));
+        target.setType(toStatisticalResourceType(source.getType()));
+        target.setMaintainer(toResourceExternalItemSrm(source.getMaintainer(), selectedLanguages));
+        target.setCreator(toResourceExternalItemSrm(source.getCreator(), selectedLanguages));
+        target.setContributors(toResourcesExternalItemsSrm(source.getContributor(), selectedLanguages));
+        target.setCreatedDate(toDate(source.getResourceCreatedDate()));
+        target.setLastUpdate(toDate(source.getLastUpdate()));
+        target.setConformsTo(toInternationalString(source.getConformsTo(), selectedLanguages));
+        target.setPublishers(toResourcesExternalItemsSrm(source.getPublisher(), selectedLanguages));
+        target.setPublisherContributors(toResourcesExternalItemsSrm(source.getPublisherContributor(), selectedLanguages));
+        target.setMediators(toResourcesExternalItemsSrm(source.getMediator(), selectedLanguages));
+        target.setNewnessUntilDate(toDate(source.getNewnessUntilDate()));
+
+        // TODO resto de metadatos
+        // SOURCE
+        // REPLACES
+        // IS_REPLACED_BY
+        // REQUIRES
+        // IS_REQUIRED_BY
+        // HAS_PART
+        // IS_PART_OF
+        // IS_REFERENCE_BY
+        // REFERENCES
+        // IS_FORMAT_OF
+        // HAS_FORMAT
+
+        target.setRightsHolder(toResourceExternalItemSrm(source.getRightsHolder(), selectedLanguages));
+        target.setCopyrightedDate(toDate(source.getCopyrightedDate()));
+        target.setLicense(toInternationalString(source.getLicense(), selectedLanguages));
+        target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
+
+        // Lifecycle
+        toDatasetMetadataLifeCycleStatisticalResource(source, target, selectedLanguages);
+
+    }
+
+    private void toDatasetMetadataLifeCycleStatisticalResource(LifeCycleStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+
+        // TODO lifecycle?
+
+        // Versionable
+        toDatasetMetadataVersionableStatisticalResource(source, target, selectedLanguages);
+    }
+
+    private void toDatasetMetadataVersionableStatisticalResource(VersionableStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        target.setVersion(source.getVersionLogic());
+        target.setVersionRationaleTypes(toVersionRationaleTypes(source.getVersionRationaleTypes(), selectedLanguages));
+        target.setVersionRationale(toInternationalString(source.getVersionRationale(), selectedLanguages));
+        target.setValidFrom(toDate(source.getValidFrom()));
+        target.setValidTo(toDate(source.getValidTo()));
+    }
+
+    private VersionRationaleTypes toVersionRationaleTypes(List<VersionRationaleType> sources, List<String> selectedLanguages) {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        VersionRationaleTypes targets = new VersionRationaleTypes();
+        for (VersionRationaleType source : sources) {
+            targets.getVersionRationaleTypes().add(toVersionRationaleType(source.getValue()));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getVersionRationaleTypes().size()));
+        return targets;
     }
 
     private DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages) {
@@ -333,11 +484,55 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             case MEASURE:
                 return DimensionType.MEASURE_DIMENSION;
             default:
+                logger.error("DsdComponentType unsupported: " + source);
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
     }
 
+    private StatisticalResourceType toStatisticalResourceType(StatisticalResourceTypeEnum source) {
+        switch (source) {
+            case DATASET:
+                return StatisticalResourceType.DATASET;
+            case QUERY:
+                return StatisticalResourceType.QUERY;
+            case COLLECTION:
+                return StatisticalResourceType.COLLECTION;
+            default:
+                logger.error("StatisticalResourceTypeEnum unsupported: " + source);
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType toVersionRationaleType(VersionRationaleTypeEnum source) {
+        switch (source) {
+            case MAJOR_NEW_RESOURCE:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MAJOR_NEW_RESOURCE;
+            case MAJOR_ESTIMATORS:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MAJOR_ESTIMATORS;
+            case MAJOR_CATEGORIES:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MAJOR_CATEGORIES;
+            case MAJOR_VARIABLES:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MAJOR_VARIABLES;
+            case MAJOR_OTHER:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MAJOR_OTHER;
+            case MINOR_ERRATA:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MINOR_ERRATA;
+            case MINOR_METADATA:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MINOR_METADATA;
+            case MINOR_DATA_UPDATE:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MINOR_DATA_UPDATE;
+            case MINOR_SERIES_UPDATE:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MINOR_SERIES_UPDATE;
+            case MINOR_OTHER:
+                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MINOR_OTHER;
+            default:
+                logger.error("VersionRationaleTypeEnum unsupported: " + source);
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
     // TODO attributes
     private DatasetData toDatasetData(DatasetVersion source, List<String> languagesSelected, Map<String, List<String>> dimensionCodesSelected) throws Exception {
         if (source == null) {

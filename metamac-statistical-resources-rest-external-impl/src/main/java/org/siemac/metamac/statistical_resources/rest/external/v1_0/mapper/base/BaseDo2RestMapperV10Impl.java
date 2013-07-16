@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -20,15 +21,20 @@ import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class BaseDo2RestMapperV10Impl {
 
-    @Autowired
-    private ConfigurationService configurationService;
+    protected static final Logger logger = LoggerFactory.getLogger(BaseDo2RestMapperV10Impl.class);
 
-    private String               statisticalResourcesApiExternalEndpointV10;
-    private String               srmApiExternalEndpoint;
+    @Autowired
+    private ConfigurationService  configurationService;
+
+    private String                statisticalResourcesApiExternalEndpointV10;
+    private String                srmApiExternalEndpoint;
+    private String                statisticalOperationsApiExternalEndpoint;
 
     @PostConstruct
     public void init() throws Exception {
@@ -41,6 +47,28 @@ public abstract class BaseDo2RestMapperV10Impl {
 
     public String getSrmApiExternalEndpoint() {
         return srmApiExternalEndpoint;
+    }
+
+    public String getStatisticalOperationsApiExternalEndpoint() {
+        return statisticalOperationsApiExternalEndpoint;
+    }
+
+    protected Resource toResourceExternalItemStatisticalOperations(ExternalItem source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Resource target = new Resource();
+        toResourceExternalItem(source, getStatisticalOperationsApiExternalEndpoint(), target, selectedLanguages);
+        return target;
+    }
+
+    protected Resource toResourceExternalItemSrm(ExternalItem source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Resource target = new Resource();
+        toResourceExternalItem(source, getSrmApiExternalEndpoint(), target, selectedLanguages);
+        return target;
     }
 
     protected void toResourceExternalItemSrm(ExternalItem source, Resource target, List<String> selectedLanguages) {
@@ -84,6 +112,13 @@ public abstract class BaseDo2RestMapperV10Impl {
 
     protected Date toDate(DateTime source) {
         return RestCommonUtil.transformDateTimeToDate(source);
+    }
+
+    protected BigInteger toBigInteger(Integer source) {
+        if (source == null) {
+            return null;
+        }
+        return BigInteger.valueOf(source.longValue());
     }
 
     protected ResourceLink toResourceLink(String kind, String href) {
@@ -138,5 +173,9 @@ public abstract class BaseDo2RestMapperV10Impl {
         // SRM external Api (do not add api version! it is already stored in database (~latest))
         srmApiExternalEndpoint = configurationService.retrieveSrmExternalApiUrlBase();
         srmApiExternalEndpoint = StringUtils.removeEnd(srmApiExternalEndpoint, "/");
+
+        // Statistical operations external Api (do not add api version! it is already stored in database (~latest))
+        statisticalOperationsApiExternalEndpoint = configurationService.retrieveStatisticalOperationsExternalApiUrlBase();
+        statisticalOperationsApiExternalEndpoint = StringUtils.removeEnd(srmApiExternalEndpoint, "/");
     }
 }
