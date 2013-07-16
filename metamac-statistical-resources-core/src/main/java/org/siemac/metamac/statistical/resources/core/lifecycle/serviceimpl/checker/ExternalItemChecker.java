@@ -40,12 +40,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ExternalItemChecker {
+    
+    @Autowired
+    private SrmRestInternalService                   srmRestInternalService;
 
     @Autowired
     private StatisticalOperationsRestInternalService statisticalOperationsRestInternalService;
-
-    @Autowired
-    private SrmRestInternalService                   srmRestInternalService;
 
     @Autowired
     private CommonMetadataRestExternalService        commonMetadataRestExternalService;
@@ -128,7 +128,7 @@ public class ExternalItemChecker {
             case CONFIGURATION:
                 query = createQueryForPublishedResourcesSearchingByUrn(ConfigurationCriteriaPropertyRestriction.URN, null, null, expectedUrns);
 
-                result = commonMetadataRestExternalService.findConfigurationsAsUrnsList(query);
+                result = commonMetadataRestExternalService.findConfigurationsUrns(query);
                 checkResult(expectedUrnsInternal, result, ResultType.URNS, metadataName, exceptionItems);
                 break;
             case DATA_CONSUMER:
@@ -197,13 +197,13 @@ public class ExternalItemChecker {
             case STATISTICAL_OPERATION:
                 query = createQueryForPublishedResourcesSearchingByUrn(OperationCriteriaPropertyRestriction.URN, OperationCriteriaPropertyRestriction.PROC_STATUS,
                         ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
-                result = statisticalOperationsRestInternalService.findOperationsAsUrnsList(firstResult, maxResult, query);
+                result = statisticalOperationsRestInternalService.findOperationsUrns(firstResult, maxResult, query);
                 checkResult(expectedUrns, result, ResultType.URNS, metadataName, exceptionItems);
                 break;
             case STATISTICAL_OPERATION_INSTANCE:
                 query = createQueryForPublishedResourcesSearchingByUrn(InstanceCriteriaPropertyRestriction.URN, InstanceCriteriaPropertyRestriction.PROC_STATUS,
                         ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
-                result = statisticalOperationsRestInternalService.findInstancesAsUrnsList(null, firstResult, maxResult, query);
+                result = statisticalOperationsRestInternalService.findInstancesUrns(null, firstResult, maxResult, query);
                 checkResult(expectedUrns, result, ResultType.URNS, metadataName, exceptionItems);
                 break;
             default:

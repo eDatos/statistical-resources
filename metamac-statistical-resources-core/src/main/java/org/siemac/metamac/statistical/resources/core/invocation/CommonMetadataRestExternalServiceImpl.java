@@ -22,7 +22,7 @@ public class CommonMetadataRestExternalServiceImpl implements CommonMetadataRest
     }
 
     @Override
-    public List<String> findConfigurationsAsUrnsList(String query) {
+    public List<String> findConfigurationsUrns(String query) {
         Configurations configurations = findConfigurations(query);
         List<String> urns = new ArrayList<String>();
         for (ResourceInternal resource : configurations.getConfigurations()) {

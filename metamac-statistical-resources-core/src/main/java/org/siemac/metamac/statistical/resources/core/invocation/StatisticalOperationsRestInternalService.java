@@ -12,10 +12,10 @@ public interface StatisticalOperationsRestInternalService {
     public Operation retrieveOperationById(String operationCode);
 
     public Operations findOperations(int firstResult, int maxResult, String query);
-    public List<String> findOperationsAsUrnsList(int firstResult, int maxResult, String query);
+    public List<String> findOperationsUrns(int firstResult, int maxResult, String query);
     public List<ExternalItem> findOperationsAsExternalItems(int firstResult, int maxResult, String query);
     
     public Instances findInstances(String operationId, int firstResult, int maxResult, String query);
-    public List<String> findInstancesAsUrnsList(String operationId, int firstResult, int maxResult, String query);
+    public List<String> findInstancesUrns(String operationId, int firstResult, int maxResult, String query);
 
 }

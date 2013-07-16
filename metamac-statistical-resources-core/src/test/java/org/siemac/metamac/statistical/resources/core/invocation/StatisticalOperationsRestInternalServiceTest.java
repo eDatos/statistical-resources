@@ -19,7 +19,7 @@ public class StatisticalOperationsRestInternalServiceTest extends StatisticalRes
     }
     
     @Test
-    public void testFindOperationsAsUrnsList() throws Exception {
+    public void testFindOperationsUrns() throws Exception {
         fail("not implemented");
     }
     
@@ -34,7 +34,7 @@ public class StatisticalOperationsRestInternalServiceTest extends StatisticalRes
     }
     
     @Test
-    public void testFindInstancesAsUrnsList() throws Exception {
+    public void testFindInstancesUrns() throws Exception {
         fail("not implemented");
     }
 }

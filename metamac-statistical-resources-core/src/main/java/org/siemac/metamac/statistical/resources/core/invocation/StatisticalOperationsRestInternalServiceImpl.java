@@ -25,6 +25,10 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     @Autowired
     private MetamacApisLocator restApiLocator;
 
+    // ---------------------------------------------------------------------------------
+    // OPERATIONS
+    // ---------------------------------------------------------------------------------
+    
     @Override
     public Operation retrieveOperationById(String operationCode) {
         return restApiLocator.getStatisticalOperationsRestInternalFacadeV10().retrieveOperationById(operationCode);
@@ -39,7 +43,7 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     }
 
     @Override
-    public List<String> findOperationsAsUrnsList(int firstResult, int maxResult, String query) {
+    public List<String> findOperationsUrns(int firstResult, int maxResult, String query) {
         Operations operations = findOperations(firstResult, maxResult, query);
         List<String> urns = new ArrayList<String>();
         for (ResourceInternal resource : operations.getOperations()) {
@@ -82,6 +86,10 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
         return appLocalisedStrings;
     }
 
+    // ---------------------------------------------------------------------------------
+    // INSTANCES
+    // ---------------------------------------------------------------------------------
+    
     @Override
     public Instances findInstances(String operationId, int firstResult, int maxResult, String query) {
         String limit = String.valueOf(maxResult);
@@ -95,7 +103,7 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     }
 
     @Override
-    public List<String> findInstancesAsUrnsList(String operationId, int firstResult, int maxResult, String query) {
+    public List<String> findInstancesUrns(String operationId, int firstResult, int maxResult, String query) {
         Instances instances = findInstances(operationId, firstResult, maxResult, query);
         List<String> ids = new ArrayList<String>();
         for (ResourceInternal resource : instances.getInstances()) {

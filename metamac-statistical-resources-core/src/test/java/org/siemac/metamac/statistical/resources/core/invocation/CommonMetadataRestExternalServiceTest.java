@@ -15,7 +15,7 @@ public class CommonMetadataRestExternalServiceTest extends StatisticalResourcesB
     }
     
     @Test
-    public void testFindConfigurationsAsUrnsList() throws Exception {
+    public void testFindConfigurationsUrns() throws Exception {
         fail("not implemented");
     }
 
