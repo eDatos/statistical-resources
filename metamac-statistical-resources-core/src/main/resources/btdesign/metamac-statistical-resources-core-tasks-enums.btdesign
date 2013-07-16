@@ -1,0 +1,14 @@
+Application DatasetsStatisticalResources { 
+	basePackage=unused
+
+	Module stat_resource_tasks_enums {
+		basePackage=org.siemac.metamac.statistical.resources.core.enume.task
+
+    	enum DatasetFileFormatEnum {
+    		SDMX_2_1,
+    		PX,
+    		CSV
+    	}
+    	
+	}
+}

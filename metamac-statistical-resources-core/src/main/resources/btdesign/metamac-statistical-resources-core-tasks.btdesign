@@ -1,4 +1,5 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-tasks-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-tasks-enums.btdesign"
 
 Application DatasetsStatisticalResources { 
 	basePackage=unused

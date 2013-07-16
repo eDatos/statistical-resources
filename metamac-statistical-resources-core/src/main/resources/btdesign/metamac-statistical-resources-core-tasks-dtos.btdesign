@@ -1,3 +1,4 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-tasks-enums.btdesign"
 
 Application DatasetsStatisticalResourcesDto {
 	basePackage=unused
@@ -7,13 +8,14 @@ Application DatasetsStatisticalResourcesDto {
 		
 		// TASK INFO DATASET
 		DataTransferObject TaskInfoDatasetDto {
+			java.io.InputStream inputMessage;
 			String fileName;
 			String dataStructureUrn; 
 			String repoDatasetId;
 			String jobKey;
+			@DatasetFileFormatEnum datasetFileFormatEnum;
 		}
-        
-        
+		
 	}
 
 }
