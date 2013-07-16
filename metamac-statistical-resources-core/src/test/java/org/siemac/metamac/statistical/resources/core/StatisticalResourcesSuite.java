@@ -19,11 +19,16 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
+import org.siemac.metamac.statistical.resources.core.invocation.CommonMetadataRestExternalServiceTest;
+import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalServiceTest;
+import org.siemac.metamac.statistical.resources.core.invocation.StatisticalOperationsRestInternalServiceTest;
+import org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtilsTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFillerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFillerTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceInvocationValidatorTest;
@@ -78,6 +83,11 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      VersionUtilsTest.class,
                      CommonDto2DoMapperTest.class,
                      CommonDo2DtoMapperTest.class,
-                     DataManipulateTest.class})
+                     DataManipulateTest.class,
+                     ExternalItemCheckerTest.class,
+                     RestCriteriaUtilsTest.class,
+                     StatisticalOperationsRestInternalServiceTest.class,
+                     CommonMetadataRestExternalServiceTest.class,
+                     SrmRestInternalServiceTest.class})
 public class StatisticalResourcesSuite {
 }

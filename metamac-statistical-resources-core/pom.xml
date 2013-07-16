@@ -40,6 +40,16 @@
             <version>${metamac-srm.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
+            <artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
+            <version>${metamac-statistical-operations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac.metamac-common-metadata</groupId>
+            <artifactId>metamac-common-metadata-rest-external-api</artifactId>
+            <version>${metamac-common-metadata.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-rest-common</artifactId>
             <version>${metamac-rest-common.version}</version>

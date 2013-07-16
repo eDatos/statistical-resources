@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
@@ -44,7 +45,6 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Mock
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
-   
     @After
     public void checkMockitoUsage() {
         validateMockitoUsage();
@@ -71,7 +71,6 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         verify(lifecycleService, times(1)).checkSendToProductionValidation(any(HasLifecycle.class), anyString(), anyListOf(MetamacExceptionItem.class));
         verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
-
 
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
@@ -107,7 +106,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
-        
+
         prepareToValidationRejected(mockedResource);
 
         siemacLifecycleServiceImpl.checkSendToValidationRejected(mockedResource, baseMetadata, exceptionItems);
@@ -119,4 +118,22 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
 
+    // ------------------------------------------------------------------------------------------------------
+    // >> PUBLISHED
+    // ------------------------------------------------------------------------------------------------------
+    
+    @Test
+    public void testSiemacResourceCheckSendToPublished() throws Exception {
+        fail("not implemented");
+    }
+    
+    @Test
+    public void testSiemacResourceCheckExternalItemsPreviouslyPublished() throws Exception {
+        fail("not implemented");
+    }
+    
+    @Test
+    public void testSiemacResourceCheckRelatedResourcesPreviouslyPublished() throws Exception {
+        fail("not implemented");
+    }
 }

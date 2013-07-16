@@ -6,6 +6,7 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
@@ -17,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,6 +51,10 @@ public class LifecycleCommonMetadataChecker {
         
         // LifeCycleResource
         checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.PROC_STATUS), exceptionItems);
+        checkMetadataEmpty(lifeCycleStatisticalResource.getIsReplacedByVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.IS_REPLACED_BY_VERSION), exceptionItems);
+        if(StringUtils.isNotBlank(lifeCycleStatisticalResource.getVersionLogic()) && !StatisticalResourcesVersionUtils.isInitialVersion(lifeCycleStatisticalResource.getVersionLogic())) {
+            checkMetadataRequired(lifeCycleStatisticalResource.getReplacesVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
+        }
     }
     
     public void checkSiemacCommonMetadata(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
