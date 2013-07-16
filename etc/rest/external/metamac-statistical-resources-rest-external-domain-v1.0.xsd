@@ -161,18 +161,21 @@
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="type" type="tns:DimensionType" />
-            <xs:element name="dimensionCodes" type="tns:DimensionCodes" />
+            <xs:element name="dimensionValues" type="tns:DimensionValues" />
         </xs:sequence>
     </xs:complexType>      
     
-    <xs:complexType name="DimensionCodes">
+    <xs:complexType name="DimensionValues">
         <xs:sequence>
-            <xs:element name="dimensionCode" type="tns:DimensionCode" minOccurs="1" maxOccurs="unbounded" />
+            <xs:choice>
+                <xs:element name="enumeratedDimensionValue" type="tns:EnumeratedDimensionValue" minOccurs="1" maxOccurs="unbounded" />
+                <xs:element name="nonEnumeratedDimensionValue" type="tns:NonEnumeratedDimensionValue" minOccurs="1" maxOccurs="unbounded" />
+            </xs:choice>
         </xs:sequence>
         <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
     </xs:complexType> 
     
-    <xs:complexType name="DimensionCode">
+    <xs:complexType name="EnumeratedDimensionValue">
         <xs:complexContent>
             <xs:extension base="common:Resource">
                 <xs:sequence>
@@ -180,6 +183,13 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>      
+    
+    <xs:complexType name="NonEnumeratedDimensionValue">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" />
+            <xs:element name="name" type="common:InternationalString" />
+        </xs:sequence>
     </xs:complexType>      
     
     <!-- Enums -->
