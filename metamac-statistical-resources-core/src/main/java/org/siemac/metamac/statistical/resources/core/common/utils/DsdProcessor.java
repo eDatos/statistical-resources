@@ -219,6 +219,8 @@ public class DsdProcessor {
             } else {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
+
+            setConceptIdentityUrn(dim.getConceptIdentity());
         }
 
         public DsdDimension(TimeDimensionType dim) {
@@ -229,6 +231,8 @@ public class DsdProcessor {
             } else {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
+
+            setConceptIdentityUrn(dim.getConceptIdentity());
         }
 
         public TimeTextFormatType getTimeTextFormatType() {
@@ -280,6 +284,9 @@ public class DsdProcessor {
             } else {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
             }
+
+            setConceptIdentityUrn(attr.getConceptIdentity());
+
             isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
             attributeRelationship = attr.getAttributeRelationship();
             isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
