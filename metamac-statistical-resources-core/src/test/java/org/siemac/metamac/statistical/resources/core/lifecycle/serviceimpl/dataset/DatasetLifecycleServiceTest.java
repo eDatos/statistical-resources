@@ -370,10 +370,10 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         // Mock codelist and concept Scheme
 
-        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:uuid:codelist-01", DEFAULT_LOCALE, 3);
+        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)", DEFAULT_LOCALE, 3);
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
 
-        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:uuid:cshm-01", DEFAULT_LOCALE, 3);
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)", DEFAULT_LOCALE, 3);
         Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
