@@ -123,7 +123,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         Languages target = new Languages();
         target.getLanguages().addAll(selectedLanguages);
         target.setTotal(BigInteger.valueOf(target.getLanguages().size()));
-        return null;
+        return target;
     }
 
     private DatasetMetadata toDatasetMetadata(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
