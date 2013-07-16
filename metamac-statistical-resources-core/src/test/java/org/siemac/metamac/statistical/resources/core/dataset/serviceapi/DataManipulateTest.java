@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
-import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
@@ -145,7 +145,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
             @Override
             public void doInTransactionWithoutResult(TransactionStatus status) {
                 try {
-                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    TaskInfoDatasetDto taskInfoDataset = new TaskInfoDatasetDto();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_GEN_ECB_EXR_RG_XS);
                     taskInfoDataset.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
                     taskInfoDataset.setRepoDatasetId("TEST_DATA_GEN_ECB_EXR_RG_FLAT");

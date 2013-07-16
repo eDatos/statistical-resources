@@ -29,7 +29,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
-import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
@@ -81,7 +81,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public synchronized String plannifyImportationDataset(ServiceContext ctx, InputStream inputMessage, TaskInfoDataset taskInfoDataset) throws MetamacException {
+    public synchronized String plannifyImportationDataset(ServiceContext ctx, InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
         // Validation
         taskServiceInvocationValidator.checkPlannifyImportationDataset(ctx, inputMessage, taskInfoDataset);
 
@@ -128,14 +128,14 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public void processImportationTask(ServiceContext ctx, InputStream inputMessage, TaskInfoDataset taskInfoDataset) throws MetamacException {
+    public void processImportationTask(ServiceContext ctx, InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
         // Validation
         taskServiceInvocationValidator.checkProcessImportationTask(ctx, inputMessage, taskInfoDataset);
 
         processDatasetSDMX_21(inputMessage, taskInfoDataset);
     }
 
-    private void processDatasetSDMX_21(InputStream inputMessage, TaskInfoDataset taskInfoDataset) throws MetamacException {
+    private void processDatasetSDMX_21(InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
         ManipulateSdmx21DataCallbackImpl callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade,

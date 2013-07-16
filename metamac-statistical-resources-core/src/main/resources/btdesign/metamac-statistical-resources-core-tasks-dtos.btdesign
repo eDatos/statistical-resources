@@ -6,7 +6,7 @@ Application DatasetsStatisticalResourcesDto {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.task 
 		
 		// TASK INFO DATASET
-		DataTransferObject TaskInfoDataset {
+		DataTransferObject TaskInfoDatasetDto {
 			String fileName;
 			String dataStructureUrn; 
 			String repoDatasetId;

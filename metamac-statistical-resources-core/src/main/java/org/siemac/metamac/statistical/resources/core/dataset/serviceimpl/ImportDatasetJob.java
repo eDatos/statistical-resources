@@ -10,7 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class ImportDatasetJob implements Job {
 
         try {
             logger.info("ImportationJob: " + jobKey + " starting at " + new Date());
-            TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+            TaskInfoDatasetDto taskInfoDataset = new TaskInfoDatasetDto();
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
             taskInfoDataset.setFileName(data.getString(FILE_NAME));
             taskInfoDataset.setJobKey(jobKey.getName());
