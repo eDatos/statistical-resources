@@ -40,6 +40,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -161,22 +162,16 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
         Dimension target = new Dimension();
         target.setId(source.getComponentId());
-        {
-            // TODO NAME del concept identity
-            InternationalString name = new InternationalString();
-            LocalisedString nameLocalisedString = new LocalisedString();
-            nameLocalisedString.setLang("es");
-            nameLocalisedString.setValue(source.getComponentId());
-            name.getTexts().add(nameLocalisedString);
-            target.setName(name);
-        }
         target.setType(toDimensionType(source.getType()));
+
+        Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
+        target.setName(toInternationalString(conceptIdentity.getNames()));
 
         // Codes
         target.setDimensionCodes(toDimensionCodes(datasetVersionUrn, source));
         return target;
     }
-    // TODO dónde hay que tener en cuenta el conceptIdentity?
+
     private DimensionCodes toDimensionCodes(String datasetVersionUrn, DsdDimension dimension) throws MetamacException {
         if (dimension == null) {
             return null;

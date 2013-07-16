@@ -5,6 +5,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.slf4j.Logger;
@@ -57,6 +58,20 @@ public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
             return restApiLocator.getSrmRestExternalFacadeV10().retrieveConceptScheme(agencyID, resourceID, version);
+        } catch (Exception e) {
+            throw toRestException(e);
+        }
+    }
+
+    @Override
+    public Concept retrieveConceptByUrn(String urn) {
+        try {
+            String[] urnSplited = UrnUtils.splitUrnItem(urn);
+            String agencyID = urnSplited[0];
+            String itemSchemeID = urnSplited[1];
+            String version = urnSplited[2];
+            String itemId = urnSplited[3];
+            return restApiLocator.getSrmRestExternalFacadeV10().retrieveConcept(agencyID, itemSchemeID, version, itemId);
         } catch (Exception e) {
             throw toRestException(e);
         }
