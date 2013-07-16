@@ -98,6 +98,8 @@ public class SrmMockUtils {
         representationType.setEnumeration(buildConceptSchemeRef(conceptSchemeRepresentation));
 
         measureDim.setLocalRepresentation(representationType);
+
+        measureDim.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
         return measureDim;
     }
 
@@ -112,7 +114,7 @@ public class SrmMockUtils {
         representationType.setTextFormat(formatType);
 
         dim.setLocalRepresentation(representationType);
-
+        dim.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
         return dim;
     }
 
@@ -143,6 +145,7 @@ public class SrmMockUtils {
 
         dim.setLocalRepresentation(representation);
 
+        dim.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
         return dim;
     }
 
