@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical_resources.rest.external.service.uti
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.manageException;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.parseDimensionExpression;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -26,16 +25,15 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     private DatasetsDo2RestMapperV10                      datasetsDo2RestMapper;
 
     @Override
-    public Dataset retrieveDataset(String agencyID, String resourceID, String version, String[] lang, String fields, String dim) {
+    public Dataset retrieveDataset(String agencyID, String resourceID, String version, List<String> lang, String fields, String dim) {
         try {
 
-            List<String> languages = Arrays.asList("es");// TODO languages
             Map<String, List<String>> dimensions = parseDimensionExpression(dim);
             boolean includeMetadata = !hasField(fields, RestExternalConstants.RETRIEVE_DATASET_EXCLUDE_METADATA);
             boolean includeData = !hasField(fields, RestExternalConstants.RETRIEVE_DATASET_EXCLUDE_DATA);
 
             DatasetVersion datasetVersion = commonService.retrieveDatasetVersion(agencyID, resourceID, version);
-            Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, languages, includeMetadata, includeData);
+            Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, lang, includeMetadata, includeData);
             return dataset;
         } catch (Exception e) {
             throw manageException(e);

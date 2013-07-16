@@ -14,12 +14,20 @@
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
             <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="selectedLanguages" type="tns:Languages" minOccurs="1" />
             <xs:element name="metadata" type="tns:DatasetMetadata" />
             <xs:element name="data" type="tns:DatasetData" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
 
+    <xs:complexType name="Languages">
+        <xs:sequence>
+            <xs:element name="language" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
+    </xs:complexType> 
+    
     <xs:complexType name="DatasetMetadata">
         <xs:sequence>
             <xs:element name="dataStructureDefinition" type="tns:DataStructureDefinition" />

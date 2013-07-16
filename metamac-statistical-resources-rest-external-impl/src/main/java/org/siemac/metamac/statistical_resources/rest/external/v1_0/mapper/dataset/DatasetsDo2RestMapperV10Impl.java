@@ -17,6 +17,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
@@ -39,6 +40,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepres
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Languages;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
@@ -72,24 +74,29 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
     @Autowired
     private DatasetRepositoriesServiceFacade statisticsDatasetRepositoriesServiceFacade;
 
-    // TODO Map<String, List<String>> dimensions, List<String> selectedLanguages
+    @Autowired
+    private ConfigurationService             configurationService;
+
     @Override
     public Dataset toDataset(DatasetVersion source, Map<String, List<String>> selectedDimensions, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception {
         if (source == null) {
             return null;
         }
+        selectedLanguages = toSelectedLanguages(selectedLanguages);
+
         Dataset target = new Dataset();
         target.setKind(RestExternalConstants.KIND_DATASET);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
         target.setSelfLink(toDatasetSelfLink(source));
-        target.setName(toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle()));
+        target.setName(toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         target.setParentLink(toDatasetParentLink(source));
         target.setChildLinks(toDatasetChildLinks(source));
+        target.setSelectedLanguages(toLanguages(selectedLanguages));
         // TODO resto de metadatos públicos
 
         if (includeMetadata) {
-            target.setMetadata(toDatasetMetadata(source));
+            target.setMetadata(toDatasetMetadata(source, selectedLanguages));
         }
         if (includeData) {
             target.setData(toDatasetData(source, selectedLanguages, selectedDimensions));
@@ -97,25 +104,47 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return target;
     }
 
-    private DatasetMetadata toDatasetMetadata(DatasetVersion source) throws MetamacException {
+    /**
+     * Create list with requested languages and default language in service
+     */
+    private List<String> toSelectedLanguages(List<String> sources) throws MetamacException {
+        List<String> targets = new ArrayList<String>();
+        if (!CollectionUtils.isEmpty(sources)) {
+            targets.addAll(sources);
+        }
+        String languageDefault = configurationService.retrieveLanguageDefault();
+        if (!targets.contains(languageDefault)) {
+            targets.add(languageDefault);
+        }
+        return targets;
+    }
+
+    private Languages toLanguages(List<String> selectedLanguages) {
+        Languages target = new Languages();
+        target.getLanguages().addAll(selectedLanguages);
+        target.setTotal(BigInteger.valueOf(target.getLanguages().size()));
+        return null;
+    }
+
+    private DatasetMetadata toDatasetMetadata(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         DatasetMetadata target = new DatasetMetadata();
         // Dsd
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
-        target.setDataStructureDefinition(toDataStructureDefinition(source.getRelatedDsd(), dataStructure));
+        target.setDataStructureDefinition(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
         // Dimensions
-        target.setDimensions(toDimensions(source.getSiemacMetadataStatisticalResource().getUrn(), dataStructure));
+        target.setDimensions(toDimensions(source.getSiemacMetadataStatisticalResource().getUrn(), dataStructure, selectedLanguages));
         return target;
     }
 
-    private DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure) {
+    private DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages) {
         if (source == null) {
             return null;
         }
         DataStructureDefinition target = new DataStructureDefinition();
-        toResourceExternalItemSrm(source, target);
+        toResourceExternalItemSrm(source, target, selectedLanguages);
         target.setHeading(toDimensionsId(dataStructure.getHeading()));
         target.setStub(toDimensionsId(dataStructure.getStub()));
         return target;
@@ -140,7 +169,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return source.getRef().getId();
     }
 
-    private Dimensions toDimensions(String datasetVersionUrn, DataStructure dataStructure) throws MetamacException {
+    private Dimensions toDimensions(String datasetVersionUrn, DataStructure dataStructure, List<String> selectedLanguages) throws MetamacException {
 
         List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
         if (CollectionUtils.isEmpty(dimensionsId)) {
@@ -150,13 +179,13 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         Dimensions targets = new Dimensions();
         List<DsdDimension> dimensionsType = DsdProcessor.getDimensions(dataStructure);
         for (DsdDimension dsdDimension : dimensionsType) {
-            targets.getDimensions().add(toDimension(datasetVersionUrn, dsdDimension));
+            targets.getDimensions().add(toDimension(datasetVersionUrn, dsdDimension, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
         return targets;
     }
 
-    private Dimension toDimension(String datasetVersionUrn, DsdDimension source) throws MetamacException {
+    private Dimension toDimension(String datasetVersionUrn, DsdDimension source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -165,14 +194,14 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setType(toDimensionType(source.getType()));
 
         Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
-        target.setName(toInternationalString(conceptIdentity.getNames()));
+        target.setName(toInternationalString(conceptIdentity.getNames(), selectedLanguages));
 
         // Codes
-        target.setDimensionCodes(toDimensionCodes(datasetVersionUrn, source));
+        target.setDimensionCodes(toDimensionCodes(datasetVersionUrn, source, selectedLanguages));
         return target;
     }
 
-    private DimensionCodes toDimensionCodes(String datasetVersionUrn, DsdDimension dimension) throws MetamacException {
+    private DimensionCodes toDimensionCodes(String datasetVersionUrn, DsdDimension dimension, List<String> selectedLanguages) throws MetamacException {
         if (dimension == null) {
             return null;
         }
@@ -188,18 +217,18 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
 
         if (dimension.getCodelistRepresentationUrn() != null) {
-            toDimensionCodeFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), targets);
+            toDimensionCodeFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), targets, selectedLanguages);
         } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
-            toDimensionCodeFromConceptScheme(coveragesById, dimension.getConceptSchemeRepresentationUrn(), targets);
+            toDimensionCodeFromConceptScheme(coveragesById, dimension.getConceptSchemeRepresentationUrn(), targets, selectedLanguages);
         } else if (dimension.getTimeTextFormatType() != null) {
-            toDimensionCodeFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatType(), targets);
+            toDimensionCodeFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatType(), targets, selectedLanguages);
         }
 
         targets.setTotal(BigInteger.valueOf(targets.getDimensionCodes().size()));
         return targets;
     }
 
-    private void toDimensionCodeFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionCodes targets) throws MetamacException {
+    private void toDimensionCodeFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionCodes targets, List<String> selectedLanguages) throws MetamacException {
         if (codelistUrn == null) {
             return;
         }
@@ -210,11 +239,11 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
                 // skip to include only codes in coverage
                 continue;
             }
-            targets.getDimensionCodes().add(toDimensionCode(code));
+            targets.getDimensionCodes().add(toDimensionCode(code, selectedLanguages));
         }
     }
 
-    private void toDimensionCodeFromConceptScheme(Map<String, CodeDimension> coveragesById, String conceptSchemeUrn, DimensionCodes targets) throws MetamacException {
+    private void toDimensionCodeFromConceptScheme(Map<String, CodeDimension> coveragesById, String conceptSchemeUrn, DimensionCodes targets, List<String> selectedLanguages) throws MetamacException {
         if (conceptSchemeUrn == null) {
             return;
         }
@@ -225,28 +254,29 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
                 // skip to include only concepts in coverage
                 continue;
             }
-            targets.getDimensionCodes().add(toDimensionCode(concept));
+            targets.getDimensionCodes().add(toDimensionCode(concept, selectedLanguages));
         }
     }
 
-    private void toDimensionCodeFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType, DimensionCodes targets) throws MetamacException {
+    private void toDimensionCodeFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType, DimensionCodes targets, List<String> selectedLanguages)
+            throws MetamacException {
         if (timeTextFormatType == null) {
             return;
         }
         for (String coverageId : coveragesById.keySet()) {
             CodeDimension codeDimension = coveragesById.get(coverageId);
-            targets.getDimensionCodes().add(toDimensionCode(codeDimension));
+            targets.getDimensionCodes().add(toDimensionCode(codeDimension, selectedLanguages));
         }
     }
 
-    private DimensionCode toDimensionCode(CodeType source) throws MetamacException {
+    private DimensionCode toDimensionCode(CodeType source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         DimensionCode target = new DimensionCode();
         target.setId(source.getId());
         target.setUrn(source.getUrn());
-        target.setName(toInternationalString(source.getNames()));
+        target.setName(toInternationalString(source.getNames(), selectedLanguages));
         if (source.getParent() != null) {
             target.setParent(source.getParent().getRef().getId());
         }
@@ -254,19 +284,22 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return target;
     }
 
-    private DimensionCode toDimensionCode(ConceptType source) throws MetamacException {
+    private DimensionCode toDimensionCode(ConceptType source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         DimensionCode target = new DimensionCode();
         target.setId(source.getId());
         target.setUrn(source.getUrn());
-        target.setName(toInternationalString(source.getNames()));
-        // TODO resource! y resto de metadatos (representation...)
+        target.setName(toInternationalString(source.getNames(), selectedLanguages));
+        if (source.getParent() != null) {
+            target.setParent(source.getParent().getRef().getId());
+        }
+        // TODO resource
         return target;
     }
 
-    private DimensionCode toDimensionCode(CodeDimension source) throws MetamacException {
+    private DimensionCode toDimensionCode(CodeDimension source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -274,16 +307,18 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setId(source.getIdentifier());
         target.setUrn(null);
         {
-            // TODO NAME?
+            // TODO name
             InternationalString name = new InternationalString();
-            LocalisedString nameLocalisedString = new LocalisedString();
-            nameLocalisedString.setLang("es"); // TODO locale?
-            nameLocalisedString.setValue(source.getTitle());
-            name.getTexts().add(nameLocalisedString);
-            target.setName(name);
+            for (String selectedLanguage : selectedLanguages) {
+                LocalisedString nameLocalisedString = new LocalisedString();
+                nameLocalisedString.setLang(selectedLanguage);
+                nameLocalisedString.setValue(source.getTitle());
+                name.getTexts().add(nameLocalisedString);
+                target.setName(name);
+            }
         }
-
-        // TODO resource! y resto de metadatos (representation...)
+        // TODO parent?
+        // TODO resource
         return target;
     }
 

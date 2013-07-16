@@ -43,37 +43,41 @@ public abstract class BaseDo2RestMapperV10Impl {
         return srmApiExternalEndpoint;
     }
 
-    protected void toResourceExternalItemSrm(ExternalItem source, Resource target) {
+    protected void toResourceExternalItemSrm(ExternalItem source, Resource target, List<String> selectedLanguages) {
         if (source == null) {
             return;
         }
-        toResourceExternalItem(source, getSrmApiExternalEndpoint(), target);
+        toResourceExternalItem(source, getSrmApiExternalEndpoint(), target, selectedLanguages);
     }
 
-    protected InternationalString toInternationalString(org.siemac.metamac.core.common.ent.domain.InternationalString sources) {
+    protected InternationalString toInternationalString(org.siemac.metamac.core.common.ent.domain.InternationalString sources, List<String> selectedLanguages) {
         if (sources == null) {
             return null;
         }
         InternationalString targets = new InternationalString();
         for (org.siemac.metamac.core.common.ent.domain.LocalisedString source : sources.getTexts()) {
-            LocalisedString target = new LocalisedString();
-            target.setLang(source.getLocale());
-            target.setValue(source.getLabel());
-            targets.getTexts().add(target);
+            if (selectedLanguages.contains(source.getLocale())) {
+                LocalisedString target = new LocalisedString();
+                target.setLang(source.getLocale());
+                target.setValue(source.getLabel());
+                targets.getTexts().add(target);
+            }
         }
         return targets;
     }
 
-    protected InternationalString toInternationalString(List<TextType> sources) {
+    protected InternationalString toInternationalString(List<TextType> sources, List<String> selectedLanguages) {
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
         InternationalString targets = new InternationalString();
         for (TextType source : sources) {
-            LocalisedString target = new LocalisedString();
-            target.setLang(source.getLang());
-            target.setValue(source.getValue());
-            targets.getTexts().add(target);
+            if (selectedLanguages.contains(source.getLang())) {
+                LocalisedString target = new LocalisedString();
+                target.setLang(source.getLang());
+                target.setValue(source.getValue());
+                targets.getTexts().add(target);
+            }
         }
         return targets;
     }
@@ -113,7 +117,7 @@ public abstract class BaseDo2RestMapperV10Impl {
         return link;
     }
 
-    private void toResourceExternalItem(ExternalItem source, String apiExternalItemBase, Resource target) {
+    private void toResourceExternalItem(ExternalItem source, String apiExternalItemBase, Resource target, List<String> selectedLanguages) {
         if (source == null) {
             return;
         }
@@ -122,7 +126,7 @@ public abstract class BaseDo2RestMapperV10Impl {
         target.setUrn(source.getUrn());
         target.setKind(source.getType().getValue());
         target.setSelfLink(toResourceLink(target.getKind(), RestUtils.createLink(apiExternalItemBase, source.getUri())));
-        target.setName(toInternationalString(source.getTitle()));
+        target.setName(toInternationalString(source.getTitle(), selectedLanguages));
     }
 
     private void initEndpoints() throws MetamacException {
