@@ -76,7 +76,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     private String                                 repoDatasetID                           = null;
 
     public ManipulateSdmx21DataCallbackImpl(DataStructure dataStructure, SrmRestInternalService srmRestInternalService, Metamac2StatRepoMapper metamac2StatRepoMapper,
-            DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, String datasetID) {
+            DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, String datasetID) throws MetamacException {
         this.srmRestInternalService = srmRestInternalService;
         this.dataStructure = dataStructure;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
@@ -87,7 +87,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     }
 
     public ManipulateSdmx21DataCallbackImpl(DataStructure dataStructure, SrmRestInternalService srmRestInternalService, Metamac2StatRepoMapper metamac2StatRepoMapper,
-            DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade) {
+            DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade) throws MetamacException {
         this.srmRestInternalService = srmRestInternalService;
         this.dataStructure = dataStructure;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
@@ -232,8 +232,9 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
     /**************************************************************************
      * PROCESSORS
+     * @throws MetamacException 
      **************************************************************************/
-    private void calculateCacheInfo() {
+    private void calculateCacheInfo() throws MetamacException {
         MultiMap enumerationRepresentationsMultimap = MultiValueMap.decorate(new HashMap<String, Set<String>>(), HashSet.class);
 
         calculateCacheDimensionInfo(enumerationRepresentationsMultimap);
@@ -262,7 +263,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         this.groupDimensionMapInfo = groupDimensionMapInfo;
     }
 
-    protected void calculatedCacheAttributeInfo(MultiMap enumerationRepresentationsMultimap) {
+    protected void calculatedCacheAttributeInfo(MultiMap enumerationRepresentationsMultimap) throws MetamacException {
         // Attributes
         Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap = new HashMap<String, DsdProcessor.DsdAttribute>();
         Map<String, ComponentInfo> attributesInfoMap = new HashMap<String, ComponentInfo>();
@@ -306,7 +307,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         this.attributesCodeSet = attributesInfoMap.keySet();
     }
 
-    protected MultiMap calculateCacheDimensionInfo(MultiMap enumerationRepresentationsMultimap) {
+    protected MultiMap calculateCacheDimensionInfo(MultiMap enumerationRepresentationsMultimap) throws MetamacException {
         // Dimensions
         Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap = new HashMap<String, DsdProcessor.DsdDimension>();
         Map<String, ComponentInfo> dimensionsInfoMap = new HashMap<String, ComponentInfo>();
@@ -345,7 +346,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         return enumerationRepresentationsMultimap;
     }
 
-    private void cacheEnumerateRepresentation(DsdComponent dsdComponent, MultiMap enumerationRepresentationsMultimap) {
+    private void cacheEnumerateRepresentation(DsdComponent dsdComponent, MultiMap enumerationRepresentationsMultimap) throws MetamacException {
 
         {
             // Codelist: If is not currently cached
