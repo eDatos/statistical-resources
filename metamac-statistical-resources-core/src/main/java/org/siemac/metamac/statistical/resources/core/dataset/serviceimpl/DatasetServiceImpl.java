@@ -387,10 +387,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     /**
      * DATA MOCKING
+     * @throws MetamacException 
      */
 
     // FIXME: DELETE MOCK
-    private void mockData(DatasetVersion resource) {
+    private void mockData(DatasetVersion resource) throws MetamacException {
         if (resource.getRelatedDsd() != null) {
             DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
             
@@ -488,7 +489,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     }
 
-    private Map<String, List<String>> computeDimensionsCodes(DimensionListType dimensions) {
+    private Map<String, List<String>> computeDimensionsCodes(DimensionListType dimensions) throws MetamacException {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         for (Object dimensionObj : dimensions.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
             if (dimensionObj instanceof DimensionType) {
@@ -505,7 +506,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return dimensionCodes;
     }
 
-    private List<String> getCodesForDimension(DimensionType dimension) {
+    private List<String> getCodesForDimension(DimensionType dimension) throws MetamacException {
         List<String> codes = null;
         if (dimension.getLocalRepresentation() != null) {
             CodelistReferenceType codeListRef = dimension.getLocalRepresentation().getEnumeration();
@@ -520,7 +521,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesForTimeDimension(TimeDimensionType dimension) {
+    private List<String> getCodesForTimeDimension(TimeDimensionType dimension) throws MetamacException {
         List<String> codes = null;
         if (dimension.getLocalRepresentation() != null) {
             codes = mockStringCodes(15);
@@ -530,7 +531,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesForMeasureDimension(MeasureDimensionType dimension) {
+    private List<String> getCodesForMeasureDimension(MeasureDimensionType dimension) throws MetamacException {
         List<String> codes = null;
         if (dimension.getLocalRepresentation() != null) {
             ConceptSchemeReferenceType conceptSchemeRef = dimension.getLocalRepresentation().getEnumeration();
@@ -541,7 +542,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesFromConceptScheme(ConceptSchemeReferenceType conceptSchemeRef) {
+    private List<String> getCodesFromConceptScheme(ConceptSchemeReferenceType conceptSchemeRef) throws MetamacException {
         ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRef.getURN());
 
         List<String> codes = new ArrayList<String>();
@@ -559,7 +560,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesFromConceptRepresentation(ConceptReferenceType conceptRef) {
+    private List<String> getCodesFromConceptRepresentation(ConceptReferenceType conceptRef) throws MetamacException {
         List<String> codes = new ArrayList<String>();
 
         Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptRef.getURN());
@@ -572,7 +573,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesFromCodelist(CodelistReferenceType codeListRef) {
+    private List<String> getCodesFromCodelist(CodelistReferenceType codeListRef) throws MetamacException {
         Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codeListRef.getURN());
 
         List<String> codes = new ArrayList<String>();
