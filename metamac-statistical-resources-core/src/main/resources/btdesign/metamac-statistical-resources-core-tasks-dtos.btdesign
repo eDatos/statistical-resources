@@ -4,17 +4,17 @@ Application DatasetsStatisticalResourcesDto {
 	basePackage=unused
 
 	Module dtos_tasks {
-		basePackage=org.siemac.metamac.statistical.resources.core.dto.task 
+		basePackage=org.siemac.metamac.statistical.resources.core.task.domain
 		
 		// TASK INFO DATASET
-		DataTransferObject TaskInfoDatasetDto {
-			- List<@FileDescriptorDto> files;
+		DataTransferObject TaskInfoDataset {
+			- List<@FileDescriptor> files;
 			String dataStructureUrn; 
 			String repoDatasetId;
 			String jobKey;
 		}
 		
-		DataTransferObject FileDescriptorDto {
+		DataTransferObject FileDescriptor {
 			java.io.InputStream inputMessage;
 			String fileName;
 			- @DatasetFileFormatEnum datasetFileFormatEnum;

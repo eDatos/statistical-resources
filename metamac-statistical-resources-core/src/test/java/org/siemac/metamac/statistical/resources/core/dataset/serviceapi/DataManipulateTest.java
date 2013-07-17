@@ -25,11 +25,11 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
-import org.siemac.metamac.statistical.resources.core.dto.task.FileDescriptorDto;
-import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
+import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 import org.slf4j.Logger;
@@ -162,11 +162,11 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
             public void doInTransactionWithoutResult(TransactionStatus status) {
                 try {
 
-                    TaskInfoDatasetDto taskInfoDataset = new TaskInfoDatasetDto();
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_GEN_ECB_EXR_RG_XS);
                     taskInfoDataset.setRepoDatasetId("TEST_DATA_GEN_ECB_EXR_RG_FLAT");
 
-                    FileDescriptorDto fileDescriptorDto = new FileDescriptorDto();
+                    FileDescriptor fileDescriptorDto = new FileDescriptor();
                     fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                     fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
                     fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));

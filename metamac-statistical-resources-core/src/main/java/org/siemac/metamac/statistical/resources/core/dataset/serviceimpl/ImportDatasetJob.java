@@ -13,9 +13,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.dto.task.FileDescriptorDto;
-import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class ImportDatasetJob implements Job {
 
         try {
             logger.info("ImportationJob: " + jobKey + " starting at " + new Date());
-            TaskInfoDatasetDto taskInfoDataset = new TaskInfoDatasetDto();
+            TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES)));
             taskInfoDataset.setJobKey(jobKey.getName());
@@ -79,13 +79,13 @@ public class ImportDatasetJob implements Job {
         }
     }
 
-    private List<FileDescriptorDto> inflateFileDescriptors(String filePaths, String fileNames) throws FileNotFoundException {
-        List<FileDescriptorDto> fileDescriptorDtos = new LinkedList<FileDescriptorDto>();
+    private List<FileDescriptor> inflateFileDescriptors(String filePaths, String fileNames) throws FileNotFoundException {
+        List<FileDescriptor> fileDescriptorDtos = new LinkedList<FileDescriptor>();
         String[] files = filePaths.split("\\" + SERIALIZATION_SEPARATOR);
         String[] names = fileNames.split("\\" + SERIALIZATION_SEPARATOR);
 
         for (int i = 0; i < files.length; i++) {
-            FileDescriptorDto fileDescriptorDto = new FileDescriptorDto();
+            FileDescriptor fileDescriptorDto = new FileDescriptor();
             if (files[i].endsWith(DatasetFileFormatEnum.SDMX_2_1 + ".imp")) {
                 fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
             } else if (files[i].endsWith(DatasetFileFormatEnum.PX + ".imp")) {

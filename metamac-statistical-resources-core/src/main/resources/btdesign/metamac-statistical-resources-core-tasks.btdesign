@@ -15,7 +15,7 @@ Application DatasetsStatisticalResources {
 		Service TaskServiceFacade {
 			
 			"Perform the importation task"
-    		executeImportationTask(@TaskInfoDatasetDto taskInfoDataset) throws MetamacException;
+    		executeImportationTask(@TaskInfoDataset taskInfoDataset) throws MetamacException;
 
 		}
 		
@@ -23,10 +23,10 @@ Application DatasetsStatisticalResources {
 		Service TaskService {
 			
 			"Plannify a scheduled task to import"
-			String plannifyImportationDataset(@TaskInfoDatasetDto taskInfoDataset) throws MetamacException;
+			String plannifyImportationDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
 			
 			"Perform the importation task"
-    		processImportationTask(@TaskInfoDatasetDto taskInfoDataset) throws MetamacException;
+    		processImportationTask(@TaskInfoDataset taskInfoDataset) throws MetamacException;
     		
     		"Check if exists a job task in the @param datasetId"
     		boolean existTaskInDataset(String datasetId) throws MetamacException;

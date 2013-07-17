@@ -31,10 +31,10 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
-import org.siemac.metamac.statistical.resources.core.dto.task.FileDescriptorDto;
-import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +84,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public synchronized String plannifyImportationDataset(ServiceContext ctx, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+    public synchronized String plannifyImportationDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
         // Validation
         taskServiceInvocationValidator.checkPlannifyImportationDataset(ctx, taskInfoDataset);
 
@@ -109,7 +109,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             // Save InputStream (TempFile)
             StringBuilder filePaths = new StringBuilder();
             StringBuilder fileNames = new StringBuilder();
-            for (FileDescriptorDto fileDescriptorDto : taskInfoDataset.getFiles()) {
+            for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
                 File file = File.createTempFile("data_", "_" + fileDescriptorDto.getDatasetFileFormatEnum() + ".imp");
                 file.deleteOnExit();
                 os = new FileOutputStream(file);
@@ -135,7 +135,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
                     .build(); // Error
         } finally {
-            for (FileDescriptorDto fileDescriptorDto : taskInfoDataset.getFiles()) {
+            for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
                 IOUtils.closeQuietly(fileDescriptorDto.getInputMessage());
             }
             IOUtils.closeQuietly(os);
@@ -146,7 +146,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public void processImportationTask(ServiceContext ctx, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+    public void processImportationTask(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
         // Validation
         taskServiceInvocationValidator.checkProcessImportationTask(ctx, taskInfoDataset);
 
@@ -159,24 +159,22 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
             return sched.checkExists(createJobKeyForDatasetImportation(datasetId));
         } catch (SchedulerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
-        return false;
     }
 
     private JobKey createJobKeyForDatasetImportation(String datasetId) {
         return new JobKey("job_importdata_" + datasetId, "importation");
     }
 
-    private void processDatasetSDMX_21(TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+    private void processDatasetSDMX_21(TaskInfoDataset taskInfoDataset) throws MetamacException {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
         ManipulateSdmx21DataCallbackImpl callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade,
                 taskInfoDataset.getRepoDatasetId());
 
         try {
-            for (FileDescriptorDto fileDescriptorDto : taskInfoDataset.getFiles()) {
+            for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
                 Sdmx21Parser.parseData(fileDescriptorDto.getInputMessage(), callback);
             }
         } catch (Exception e) {
