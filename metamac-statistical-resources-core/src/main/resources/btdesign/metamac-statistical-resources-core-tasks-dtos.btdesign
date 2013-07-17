@@ -8,12 +8,16 @@ Application DatasetsStatisticalResourcesDto {
 		
 		// TASK INFO DATASET
 		DataTransferObject TaskInfoDatasetDto {
-			java.io.InputStream inputMessage;
-			String fileName;
+			- List<@FileDescriptorDto> files;
 			String dataStructureUrn; 
 			String repoDatasetId;
 			String jobKey;
-			@DatasetFileFormatEnum datasetFileFormatEnum;
+		}
+		
+		DataTransferObject FileDescriptorDto {
+			java.io.InputStream inputMessage;
+			String fileName;
+			- @DatasetFileFormatEnum datasetFileFormatEnum;
 		}
 		
 	}

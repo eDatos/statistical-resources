@@ -26,4 +26,11 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     public void testProcessImportationTask() throws Exception {
         // TODO Auto-generated method stub
     }
+
+    @Override
+    // @Test
+    public void testExistTaskInDataset() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
 }

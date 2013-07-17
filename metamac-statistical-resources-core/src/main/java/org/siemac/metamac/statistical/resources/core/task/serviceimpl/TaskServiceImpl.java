@@ -7,7 +7,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
@@ -17,9 +16,12 @@ import org.apache.commons.io.IOUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.SimpleTrigger;
+import org.quartz.TriggerKey;
 import org.quartz.impl.SchedulerRepository;
 import org.quartz.impl.StdSchedulerFactory;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
@@ -29,6 +31,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
+import org.siemac.metamac.statistical.resources.core.dto.task.FileDescriptorDto;
 import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
@@ -81,37 +84,50 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public synchronized String plannifyImportationDataset(ServiceContext ctx, InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+    public synchronized String plannifyImportationDataset(ServiceContext ctx, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
         // Validation
-        taskServiceInvocationValidator.checkPlannifyImportationDataset(ctx, inputMessage, taskInfoDataset);
+        taskServiceInvocationValidator.checkPlannifyImportationDataset(ctx, taskInfoDataset);
 
-        String jobKey = "job_importdata_" + java.util.UUID.randomUUID().toString();
+        JobKey jobKey = createJobKeyForDatasetImportation(taskInfoDataset.getRepoDatasetId());
+        TriggerKey triggerKey = new TriggerKey("trigger_" + taskInfoDataset.getRepoDatasetId(), "importation");
+
+        // String jobKey = "job_importdata_" + taskInfoDataset.getRepoDatasetId(); // ; + java.util.UUID.randomUUID().toString();
 
         OutputStream os = null;
-        File file = null;
+        // File file = null;
         try {
             // TODO Mark importation in progress
 
             // Scheduler an importation job
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
-            // Validation: There shouldn't be an import processing..
-            if (sched.getCurrentlyExecutingJobs().size() != 0) {
+            // Validation: There shouldn't be an import processing on this dataset
+            if (sched.checkExists(jobKey)) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
             // Save InputStream (TempFile)
-            file = File.createTempFile("stat_resources_", ".import");
-            file.deleteOnExit();
-            os = new FileOutputStream(file);
-            IOUtils.copy(inputMessage, os);
+            StringBuilder filePaths = new StringBuilder();
+            StringBuilder fileNames = new StringBuilder();
+            for (FileDescriptorDto fileDescriptorDto : taskInfoDataset.getFiles()) {
+                File file = File.createTempFile("data_", "_" + fileDescriptorDto.getDatasetFileFormatEnum() + ".imp");
+                file.deleteOnExit();
+                os = new FileOutputStream(file);
+                IOUtils.copy(fileDescriptorDto.getInputMessage(), os);
+
+                if (filePaths.length() > 0) {
+                    filePaths.append(ImportDatasetJob.SERIALIZATION_SEPARATOR);
+                }
+                filePaths.append(file.getAbsolutePath());
+                fileNames.append(fileDescriptorDto.getFileName());
+            }
 
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey, "importation").usingJobData(ImportDatasetJob.FILE_PATH, file.getAbsolutePath())
-                    .usingJobData(ImportDatasetJob.FILE_NAME, taskInfoDataset.getFileName()).usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
+            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
+                    .usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString()).usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
                     .usingJobData(ImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId()).usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
-            SimpleTrigger trigger = newTrigger().withIdentity("trigger_" + jobKey, "importation").startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
             sched.scheduleJob(job, trigger);
 
@@ -119,30 +135,50 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
                     .build(); // Error
         } finally {
-            IOUtils.closeQuietly(inputMessage);
+            for (FileDescriptorDto fileDescriptorDto : taskInfoDataset.getFiles()) {
+                IOUtils.closeQuietly(fileDescriptorDto.getInputMessage());
+            }
             IOUtils.closeQuietly(os);
         }
 
-        taskInfoDataset.setJobKey(jobKey);
-        return jobKey;
+        taskInfoDataset.setJobKey(jobKey.getName());
+        return jobKey.getName();
     }
 
     @Override
-    public void processImportationTask(ServiceContext ctx, InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+    public void processImportationTask(ServiceContext ctx, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
         // Validation
-        taskServiceInvocationValidator.checkProcessImportationTask(ctx, inputMessage, taskInfoDataset);
+        taskServiceInvocationValidator.checkProcessImportationTask(ctx, taskInfoDataset);
 
-        processDatasetSDMX_21(inputMessage, taskInfoDataset);
+        processDatasetSDMX_21(taskInfoDataset);
     }
 
-    private void processDatasetSDMX_21(InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+    @Override
+    public boolean existTaskInDataset(ServiceContext ctx, String datasetId) throws MetamacException {
+        try {
+            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+            return sched.checkExists(createJobKeyForDatasetImportation(datasetId));
+        } catch (SchedulerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private JobKey createJobKeyForDatasetImportation(String datasetId) {
+        return new JobKey("job_importdata_" + datasetId, "importation");
+    }
+
+    private void processDatasetSDMX_21(TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
         ManipulateSdmx21DataCallbackImpl callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade,
                 taskInfoDataset.getRepoDatasetId());
 
         try {
-            Sdmx21Parser.parseData(inputMessage, callback);
+            for (FileDescriptorDto fileDescriptorDto : taskInfoDataset.getFiles()) {
+                Sdmx21Parser.parseData(fileDescriptorDto.getInputMessage(), callback);
+            }
         } catch (Exception e) {
             // TODO Lanzar excepcion de metmac importando sdmx y gestión-recuperación de errores.
             e.printStackTrace();

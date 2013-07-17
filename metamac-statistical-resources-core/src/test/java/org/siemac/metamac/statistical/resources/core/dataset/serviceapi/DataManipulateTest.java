@@ -1,5 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
+import static org.quartz.DateBuilder.futureDate;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -9,13 +14,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SimpleTrigger;
+import org.quartz.TriggerKey;
+import org.quartz.impl.SchedulerRepository;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
+import org.siemac.metamac.statistical.resources.core.dto.task.FileDescriptorDto;
 import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
+import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,7 +150,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // int kaka = 2;
     }
 
-//    @Test
+    @Test
     // @DirtyDatabase
     public void testImport_Sdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
@@ -145,11 +161,19 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
             @Override
             public void doInTransactionWithoutResult(TransactionStatus status) {
                 try {
+
                     TaskInfoDatasetDto taskInfoDataset = new TaskInfoDatasetDto();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_GEN_ECB_EXR_RG_XS);
-                    taskInfoDataset.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
                     taskInfoDataset.setRepoDatasetId("TEST_DATA_GEN_ECB_EXR_RG_FLAT");
-                    jobKey = taskService.plannifyImportationDataset(serviceContext, DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT), taskInfoDataset);
+
+                    FileDescriptorDto fileDescriptorDto = new FileDescriptorDto();
+                    fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                    fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
+                    fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
+                    taskInfoDataset.addFile(fileDescriptorDto);
+
+                    jobKey = taskService.plannifyImportationDataset(serviceContext, taskInfoDataset);
+
                 } catch (MetamacException e) {
                     e.printStackTrace();
                 }
@@ -159,5 +183,43 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
         // Wait until the job is finished
         waitUntilJobFinished();
+    }
+
+    // @Test
+    // @DirtyDatabase
+    public void testKaka() throws Exception {
+
+        // Scheduler an importation job
+        Scheduler sched = SchedulerRepository.getInstance().lookup(TaskServiceImpl.SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+
+        JobKey kakajobKey = new JobKey("probando", "importation");
+        TriggerKey triggerKey = new TriggerKey("trigger_" + "probando", "importation");
+        {
+            // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
+            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(kakajobKey).requestRecovery().build();
+
+            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+
+            sched.scheduleJob(job, trigger);
+        }
+
+        sched.checkExists(kakajobKey);
+        sched.checkExists(triggerKey);
+
+        {
+            // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
+            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(kakajobKey).requestRecovery().build();
+
+            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+
+            sched.scheduleJob(job, trigger);
+        }
+
+        sched.checkExists(new JobKey("probando", "importation"));
+
+        // Validation: There shouldn't be an import processing..
+        if (sched.getCurrentlyExecutingJobs().size() != 0) {
+        }
+
     }
 }

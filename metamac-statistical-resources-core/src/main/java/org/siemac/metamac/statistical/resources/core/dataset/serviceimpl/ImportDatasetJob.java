@@ -1,7 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.Job;
@@ -10,22 +13,26 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.statistical.resources.core.dto.task.FileDescriptorDto;
 import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
+import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ImportDatasetJob implements Job {
 
-    private static Logger      logger             = LoggerFactory.getLogger(ImportDatasetJob.class);
+    private static Logger      logger                  = LoggerFactory.getLogger(ImportDatasetJob.class);
 
-    public static final String USER               = "user";
-    public static final String FILE_PATH          = "filePath";
-    public static final String DATA_STRUCTURE_URN = "dataStructureUrn";
-    public static final String FILE_NAME          = "fileName";
-    public static final String REPO_DATASET_ID    = "repoDatasetId";
+    public static final String SERIALIZATION_SEPARATOR = "|";
 
-    private TaskServiceFacade  taskServiceFacade  = null;
+    public static final String USER                    = "user";
+    public static final String FILE_PATHS              = "filePaths";
+    public static final String FILE_NAMES              = "fileNames";
+    public static final String DATA_STRUCTURE_URN      = "dataStructureUrn";
+    public static final String REPO_DATASET_ID         = "repoDatasetId";
+
+    private TaskServiceFacade  taskServiceFacade       = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
@@ -56,10 +63,10 @@ public class ImportDatasetJob implements Job {
             logger.info("ImportationJob: " + jobKey + " starting at " + new Date());
             TaskInfoDatasetDto taskInfoDataset = new TaskInfoDatasetDto();
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
-            taskInfoDataset.setFileName(data.getString(FILE_NAME));
+            taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES)));
             taskInfoDataset.setJobKey(jobKey.getName());
             taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
-            getTaskServiceFacade().executeImportationTask(serviceContext, new FileInputStream(data.getString(FILE_PATH)), taskInfoDataset);
+            getTaskServiceFacade().executeImportationTask(serviceContext, taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
         } catch (Exception e) {
             logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed", e);
@@ -71,4 +78,31 @@ public class ImportDatasetJob implements Job {
             // }
         }
     }
+
+    private List<FileDescriptorDto> inflateFileDescriptors(String filePaths, String fileNames) throws FileNotFoundException {
+        List<FileDescriptorDto> fileDescriptorDtos = new LinkedList<FileDescriptorDto>();
+        String[] files = filePaths.split("\\" + SERIALIZATION_SEPARATOR);
+        String[] names = fileNames.split("\\" + SERIALIZATION_SEPARATOR);
+
+        for (int i = 0; i < files.length; i++) {
+            FileDescriptorDto fileDescriptorDto = new FileDescriptorDto();
+            if (files[i].endsWith(DatasetFileFormatEnum.SDMX_2_1 + ".imp")) {
+                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+            } else if (files[i].endsWith(DatasetFileFormatEnum.PX + ".imp")) {
+                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.PX);
+            } else if (files[i].endsWith(DatasetFileFormatEnum.CSV + ".imp")) {
+                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.CSV);
+            } else {
+                throw new UnsupportedOperationException("Unrecognized file format");
+            }
+
+            fileDescriptorDto.setFileName(names[i]);
+            fileDescriptorDto.setInputMessage(new FileInputStream(files[i]));
+
+            fileDescriptorDtos.add(fileDescriptorDto);
+        }
+
+        return fileDescriptorDtos;
+    }
+
 }

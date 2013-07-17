@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.task.serviceimpl;
 
-import java.io.InputStream;
-
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.task.TaskInfoDatasetDto;
@@ -22,7 +20,7 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
-    public void executeImportationTask(ServiceContext ctx, InputStream inputMessage, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
-        taskservice.processImportationTask(ctx, inputMessage, taskInfoDataset);
+    public void executeImportationTask(ServiceContext ctx, TaskInfoDatasetDto taskInfoDataset) throws MetamacException {
+        taskservice.processImportationTask(ctx, taskInfoDataset);
     }
 }
