@@ -45,10 +45,10 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType EXTERNAL_ITEM_URN_NOT_PUBLISHED                   = create("exception.resources.external_item.urn.not_published");
     public static final CommonServiceExceptionType EXTERNAL_ITEM_URN_INTERNAL_NOT_PUBLISHED          = create("exception.resources.external_item.urn_internal.not_published");
 
-    // LISTS
+    // Lists
     public static final CommonServiceExceptionType STATISTIC_OFFICIALITY_NOT_FOUND                   = create("exception.resources.statistic_officiality.not_found");
 
-    // Task
+    // Tasks
     public static final CommonServiceExceptionType TASKS_ERROR_MAX_CURRENT_JOBS                      = create("exception.resources.task.error.max_current_jobs");
     public static final CommonServiceExceptionType TASKS_JOB_NOT_FOUND                               = create("exception.resources.task.error.not_found");
     public static final CommonServiceExceptionType TASKS_ERROR_SERVER_DOWN                           = create("exception.resources.task.error.server_down");
