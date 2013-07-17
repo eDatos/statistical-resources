@@ -3,42 +3,42 @@ package org.siemac.metamac.statistical.resources.core.error;
 public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
 
     // Version
-    public static final String VERSION_TYPE                    = "versionType";
-    public static final String PREVIOUS_VERSION                = "previousVersion";
+    public static final String VERSION_TYPE                    = "parameter.resources.versionType";
+    public static final String PREVIOUS_VERSION                = "parameter.resources.previousVersion";
     
     // DSD
-    public static final String DSD_DIMENSION_ID                = "dsdDimensionId";
+    public static final String DSD_DIMENSION_ID                = "parameter.resources.dsdDimensionId";
     
     // Statistical operation
-    public static final String STATISTICAL_OPERATION_URN       = "statisticalOperationUrn";
-    public static final String STATISTICAL_OPERATION           = "statisticalOperation";
+    public static final String STATISTICAL_OPERATION_URN       = "parameter.resources.statisticalOperationUrn";
+    public static final String STATISTICAL_OPERATION           = "parameter.resources.statisticalOperation";
 
     // Dataset
-    public static final String DATASET_URN                     = "datasetUrn";
-    public static final String DATASET_VERSION_URN             = "datasetVersionUrn";
-    public static final String DATASET_VERSION_URN_TO_COPY     = "datasetVersionUrnToCopy";
+    public static final String DATASET_URN                     = "parameter.resources.datasetUrn";
+    public static final String DATASET_VERSION_URN             = "parameter.resources.datasetVersionUrn";
+    public static final String DATASET_VERSION_URN_TO_COPY     = "parameter.resources.datasetVersionUrnToCopy";
 
     // Publication
-    public static final String PUBLICATION_URN                 = "publicationUrn";
-    public static final String PUBLICATION_VERSION_URN         = "publicationVersionUrn";
-    public static final String PUBLICATION_VERSION_URN_TO_COPY = "publicationVersionUrnToCopy";
-    public static final String CHAPTER_URN                     = "chapterUrn";
-    public static final String PARENT_CHAPTER_URN              = "parentChapterUrn";
-    public static final String ORDER_IN_LEVEL                  = "orderInLevel";
-    public static final String CUBE_URN                        = "cubeUrn";
+    public static final String PUBLICATION_URN                 = "parameter.resources.publicationUrn";
+    public static final String PUBLICATION_VERSION_URN         = "parameter.resources.publicationVersionUrn";
+    public static final String PUBLICATION_VERSION_URN_TO_COPY = "parameter.resources.publicationVersionUrnToCopy";
+    public static final String CHAPTER_URN                     = "parameter.resources.chapterUrn";
+    public static final String PARENT_CHAPTER_URN              = "parameter.resources.parentChapterUrn";
+    public static final String ORDER_IN_LEVEL                  = "parameter.resources.orderInLevel";
+    public static final String CUBE_URN                        = "parameter.resources.cubeUrn";
 
     // Query
-    public static final String QUERY_URN                       = "queryUrn";
+    public static final String QUERY_URN                       = "parameter.resources.queryUrn";
 
     // Tasks
-    public static final String TASK_INFO_DATASET               = "taskInfoDataset";
-    public static final String TASK_INFO_DATASET_DSD_URN       = "dataStructureUrn";
-    public static final String TASK_INFO_DATASET_DATASET_ID    = "repoDatasetId";
-    public static final String TASK_INFO_DATASET_FILES         = "files";
-    public static final String TASK_INFO_DATASET_JOB_KEY       = "jobKey";
+    public static final String TASK_INFO_DATASET               = "parameter.resources.taskInfoDataset";
+    public static final String TASK_INFO_DATASET_DSD_URN       = "parameter.resources.dataStructureUrn";
+    public static final String TASK_INFO_DATASET_DATASET_ID    = "parameter.resources.repoDatasetId";
+    public static final String TASK_INFO_DATASET_FILES         = "parameter.resources.files";
+    public static final String TASK_INFO_DATASET_JOB_KEY       = "parameter.resources.jobKey";
 
     // Files
-    public static final String FILE_DESCRIPTOR_INPUT_MESSAGE   = "inputMessage";
-    public static final String FILE_DESCRIPTOR_FILE_NAME       = "fileName";
-    public static final String FILE_DESCRIPTOR_DATASET_FORMAT  = "datasetFormat";
+    public static final String FILE_DESCRIPTOR_INPUT_MESSAGE   = "parameter.resources.inputMessage";
+    public static final String FILE_DESCRIPTOR_FILE_NAME       = "parameter.resources.fileName";
+    public static final String FILE_DESCRIPTOR_DATASET_FORMAT  = "parameter.resources.datasetFormat";
 }
