@@ -377,6 +377,17 @@
                         <modelFile>src/main/resources/btdesing/model-statistical-resources-core.btdesign</modelFile>
                         <appProject>${project.artifactId}</appProject>
                     </properties>
+                    
+                    <jvmSettings>
+                        <copySysProperties>true</copySysProperties>
+                        <jvmArgs>
+                            <jvmArg>-client</jvmArg>
+                            <jvmArg>-Xms256m</jvmArg>
+                            <jvmArg>-Xmx512m</jvmArg>
+                            <jvmArg>-Dlogback.configurationFile=generator/logback-sculptor.xml</jvmArg>
+                        </jvmArgs>
+                    </jvmSettings>
+                    
                 </configuration>
                 <executions>
                     <execution>
