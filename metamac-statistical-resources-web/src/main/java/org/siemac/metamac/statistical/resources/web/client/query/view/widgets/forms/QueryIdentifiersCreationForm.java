@@ -17,18 +17,18 @@ public class QueryIdentifiersCreationForm extends GroupDynamicForm {
         super(getConstants().formIdentifiers());
 
         RequiredTextItem identifier = new RequiredTextItem(IdentifiableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        
+
         MultiLanguageTextItem title = new MultiLanguageTextItem(NameableResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         title.setRequired(true);
 
-        setFields(identifier,title);
+        setFields(identifier, title);
     }
 
     public void setNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         setValue(IdentifiableResourceDS.CODE, nameableStatisticalResourceDto.getCode());
         setValue(NameableResourceDS.TITLE, RecordUtils.getInternationalStringRecord(nameableStatisticalResourceDto.getTitle()));
     }
-    
+
     public NameableStatisticalResourceDto getNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         nameableStatisticalResourceDto.setCode(getValueAsString(IdentifiableResourceDS.CODE));
         nameableStatisticalResourceDto.setTitle((InternationalStringDto) getValue(NameableResourceDS.TITLE));

@@ -6,9 +6,8 @@ import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryD
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-
 public class QueryRecord extends ListGridRecord {
-    
+
     public QueryRecord(Long id, String identifier, String name, String status, String type, String versionLogic, String urn, QueryDto queryDto) {
         setId(id);
         setIdentifier(identifier);
@@ -35,7 +34,7 @@ public class QueryRecord extends ListGridRecord {
     public void setProcStatus(String value) {
         setAttribute(QueryDS.PROC_STATUS, value);
     }
-    
+
     public void setType(String value) {
         setAttribute(QueryDS.TYPE, value);
     }
@@ -71,8 +70,8 @@ public class QueryRecord extends ListGridRecord {
     public String getUrn() {
         return getAttributeAsString(QueryDS.URN);
     }
-    
+
     public QueryDto getQueryDto() {
-        return (QueryDto)getAttributeAsObject(QueryDS.DTO);
+        return (QueryDto) getAttributeAsObject(QueryDS.DTO);
     }
 }

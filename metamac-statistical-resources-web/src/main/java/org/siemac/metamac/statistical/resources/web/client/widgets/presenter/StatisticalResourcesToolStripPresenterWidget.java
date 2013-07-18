@@ -5,8 +5,8 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.web.common.client.widgets.toolstrip.presenter.MetamacToolStripPresenterWidget;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -55,9 +55,9 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
 
             @Override
             public void onClick(ClickEvent event) {
-                 List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
-                 operationHierarchy.add(new PlaceRequest(NameTokens.queriesListPage));
-                 getPlaceManager().revealPlaceHierarchy(operationHierarchy);
+                List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
+                operationHierarchy.add(new PlaceRequest(NameTokens.queriesListPage));
+                getPlaceManager().revealPlaceHierarchy(operationHierarchy);
             }
         }));
     }

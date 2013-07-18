@@ -38,7 +38,7 @@ public class PlaceRequestUtils {
         }
         return null;
     }
-    
+
     public static String getQueryParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.queryPage.equals(request.getNameToken())) {
@@ -71,7 +71,7 @@ public class PlaceRequestUtils {
 
         return filteredHierarchy;
     }
-    
+
     public static List<PlaceRequest> buildAbsoluteResourcePlaceRequest(RelatedResourceDto relatedResourceDto) {
         if (relatedResourceDto != null) {
             switch (relatedResourceDto.getType()) {
@@ -80,9 +80,9 @@ public class PlaceRequestUtils {
                 case PUBLICATION_VERSION:
                     break;
             }
-        
+
         }
-        //FIXME: se debe generar la ruta absoluta
+        // FIXME: se debe generar la ruta absoluta
         return new ArrayList<PlaceRequest>();
     }
 

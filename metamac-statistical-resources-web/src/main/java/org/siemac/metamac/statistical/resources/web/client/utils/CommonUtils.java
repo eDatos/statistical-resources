@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.utils;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -29,19 +31,16 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static String getProcStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        return lifeCycleStatisticalResourceDto != null && lifeCycleStatisticalResourceDto.getProcStatus() != null
-                ? getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName())
-                : null;
+        return lifeCycleStatisticalResourceDto != null && lifeCycleStatisticalResourceDto.getProcStatus() != null ? getCoreMessages().getString(
+                getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName()) : null;
     }
-    
+
     // -----------------------------------------------------------------------------------------
     // QUERY TYPE
     // -----------------------------------------------------------------------------------------
-    
+
     public static String getQueryTypeName(QueryDto queryDto) {
-        return queryDto != null && queryDto.getType() != null
-        ? getCoreMessages().getString(getCoreMessages().queryTypeEnum() + queryDto.getType().getName())
-                : null;
+        return queryDto != null && queryDto.getType() != null ? getCoreMessages().getString(getCoreMessages().queryTypeEnum() + queryDto.getType().getName()) : null;
     }
 
     // -----------------------------------------------------------------------------------------
@@ -136,6 +135,28 @@ public class CommonUtils {
     public static String getStatisticOfficialityName(StatisticOfficialityDto statisticOfficialityDto) {
         if (statisticOfficialityDto != null) {
             return CommonWebUtils.getElementName(statisticOfficialityDto.getIdentifier(), statisticOfficialityDto.getDescription());
+        }
+        return StringUtils.EMPTY;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // TEMPORAL CODES
+    // -----------------------------------------------------------------------------------------
+
+    public static String getTemporalCodeName(TemporalCodeDto dto) {
+        if (dto != null) {
+            return CommonWebUtils.getElementName(dto.getIdentifier(), dto.getTitle());
+        }
+        return StringUtils.EMPTY;
+    }
+
+    public static String getTemporalCodesNames(List<TemporalCodeDto> dtos) {
+        if (dtos != null) {
+            List<String> names = new ArrayList<String>();
+            for (TemporalCodeDto dto : dtos) {
+                names.add(getTemporalCodeName(dto));
+            }
+            return CommonWebUtils.getStringListToString(names);
         }
         return StringUtils.EMPTY;
     }

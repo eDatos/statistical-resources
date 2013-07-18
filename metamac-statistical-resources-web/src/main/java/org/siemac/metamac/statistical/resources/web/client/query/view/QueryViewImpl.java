@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
@@ -35,12 +35,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-
 public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implements QueryPresenter.QueryView {
 
-    private VLayout          panel;
+    private VLayout        panel;
 
-    private QueryFormPanel   queryFormPanel;
+    private QueryFormPanel queryFormPanel;
 
     @Inject
     public QueryViewImpl() {
@@ -60,7 +59,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     public Widget asWidget() {
         return panel;
     }
-    
+
     @Override
     public void setUiHandlers(QueryUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
@@ -71,21 +70,31 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     public void setQueryDto(QueryDto queryDto) {
         queryFormPanel.setQuery(queryDto);
     }
-    
+
     @Override
     public void newQueryDto() {
         queryFormPanel.createQuery();
     }
-    
+
     @Override
     public void setDatasetsForQuery(GetDatasetsResult result) {
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetDtosAsRelatedResourceDtos(result.getDatasetDtos());
         queryFormPanel.productionDescriptorsEditionForm.setDatasetsForQuery(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
-    
+
     @Override
     public void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result) {
         queryFormPanel.productionDescriptorsEditionForm.setStatisticalOperationsForDatasetSelection(result.getOperationsList());
+    }
+
+    @Override
+    public void setDatasetDimensionsIds(List<String> datasetDimensionsIds) {
+        queryFormPanel.productionDescriptorsEditionForm.setDatasetDimensionsIds(datasetDimensionsIds);
+    }
+
+    @Override
+    public void setDatasetDimensionCodes(String dimensionId, List<CodeItemDto> codesDimension) {
+        queryFormPanel.productionDescriptorsEditionForm.setDatasetDimensionCodes(dimensionId, codesDimension);
     }
 
     @Override
@@ -118,11 +127,11 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private LifeCycleResourceLifeCycleForm         lifeCycleForm;
         private LifeCycleResourceVersionForm           versionForm;
 
-        //only creation
+        // only creation
         private QueryIdentifiersCreationForm           identifiersCreationForm;
-        //Only edition
+        // Only edition
         private NameableResourceIdentifiersEditionForm identifiersEditionForm;
-        
+
         private QueryProductionDescriptorsEditionForm  productionDescriptorsEditionForm;
         private LifeCycleResourceLifeCycleForm         lifeCycleEditionForm;
         private LifeCycleResourceVersionEditionForm    versionEditionForm;
@@ -172,7 +181,6 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             });
         }
 
-        
         private void createViewForm() {
             identifiersForm = new NameableResourceIdentifiersForm();
             productionDescriptorsForm = new QueryProductionDescriptorsForm();

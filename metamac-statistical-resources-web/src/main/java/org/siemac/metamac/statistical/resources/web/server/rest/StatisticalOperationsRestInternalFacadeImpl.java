@@ -1,24 +1,23 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryStatisticalOperation;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryStatisticalOperationInstance;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
-import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
-import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instances;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
-import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
-import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.core.invocation.StatisticalOperationsRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.constants.CommonSharedConstants;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,63 +27,68 @@ import org.springframework.stereotype.Component;
 public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalOperationsRestInternalFacade {
 
     @Autowired
-    private RestApiLocator restApiLocator;
+    private StatisticalOperationsRestInternalService statisticalOperationsRestInternalService;
 
     @Override
     public ExternalItemDto retrieveOperation(String operationCode) throws MetamacWebException {
         try {
-            return buildExternalItemDtoFromOperation(restApiLocator.getStatisticalOperationsRestFacadeV10().retrieveOperationById(operationCode)); // OPERATION ID in the rest API is what we call CODE
-        } catch (ServerWebApplicationException e) {
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
-                    org.siemac.metamac.rest.common.v1_0.domain.Exception.class);
-            throw WebExceptionUtils.createMetamacWebException(exception);
-        } catch (Exception e) {
-            throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, StatisticalResourcesWeb.getCoreMessages().exception_common_unknown());
+            Operation operation = statisticalOperationsRestInternalService.retrieveOperationById(operationCode);
+            return buildExternalItemDtoFromOperation(operation);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 
     @Override
-    public ExternalItemsResult findOperations(int firstResult, int maxResult, String operation) throws MetamacWebException {
+    public ExternalItemsResult findOperations(int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
         try {
-            String query = null;
-            if (!StringUtils.isBlank(operation)) {
-                query = OperationCriteriaPropertyRestriction.TITLE + " " + ComparisonOperator.ILIKE.name() + " \"" + operation + "\"";
-                query += " " + LogicalOperator.OR.name() + " " + OperationCriteriaPropertyRestriction.ID + " " + ComparisonOperator.ILIKE.name() + " \"" + operation + "\"";
-            }
+            String query = buildQueryStatisticalOperation(criteria);
 
-            // Pagination
-            String limit = String.valueOf(maxResult);
-            String offset = String.valueOf(firstResult);
+            Operations findOperationsResult = statisticalOperationsRestInternalService.findOperations(firstResult, maxResult, query);
 
-            Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset);
-            List<ExternalItemDto> externalItemDtos = new ArrayList<ExternalItemDto>();
-            for (ResourceInternal resource : findOperationsResult.getOperations()) {
-                ExternalItemDto externalItemDto = buildExternalItemDtoFromResource(resource);
-                externalItemDtos.add(externalItemDto);
-            }
-            
+            List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findOperationsResult.getOperations(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+
             ExternalItemsResult result = ExternalItemUtils.createExternalItemsResultFromListBase(findOperationsResult, externalItemDtos);
-
             return result;
-        } catch (ServerWebApplicationException e) {
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
-                    org.siemac.metamac.rest.common.v1_0.domain.Exception.class);
-            throw WebExceptionUtils.createMetamacWebException(exception);
-        } catch (Exception e) {
-            throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, StatisticalResourcesWeb.getCoreMessages().exception_common_unknown());
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 
-    private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource) {
+    @Override
+    public ExternalItemsResult findOperationInstances(String operationId, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
+        try {
+            String query = buildQueryStatisticalOperationInstance(criteria);
+
+            Instances instances = statisticalOperationsRestInternalService.findInstances(operationId, firstResult, maxResult, query);
+
+            List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(instances.getInstances(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
+
+            ExternalItemsResult result = ExternalItemUtils.createExternalItemsResultFromListBase(instances, externalItemDtos);
+            return result;
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(resource.getId());
         externalItemDto.setUri(resource.getSelfLink().getHref());
         externalItemDto.setUrn(resource.getUrn());
-        externalItemDto.setType(TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
+        externalItemDto.setType(type);
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
         return externalItemDto;
     }
-    
+
+    private List<ExternalItemDto> buildExternalItemDtosFromResources(List<ResourceInternal> resources, TypeExternalArtefactsEnum type) {
+        List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
+        for (ResourceInternal resource : resources) {
+            results.add(buildExternalItemDtoFromResource(resource, type));
+        }
+        return results;
+    }
+
     private ExternalItemDto buildExternalItemDtoFromOperation(Operation operation) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(operation.getId());
@@ -94,4 +98,5 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
         return externalItemDto;
     }
+
 }

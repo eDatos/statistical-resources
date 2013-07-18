@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginatorResult;
@@ -16,7 +15,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -25,9 +23,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -53,51 +49,51 @@ public class MockServices {
 
     private static Logger                                  logger                = LoggerFactory.getLogger(MockServices.class);
 
-    static {
-        getAgencies();
-    }
+    // static {
+    // getAgencies();
+    // }
 
     //
     // ORGANIZATIONS
     //
 
-    public static MetamacCriteriaResult<ExternalItemDto> findAgencies(int firstResult, int maxResults) throws MetamacException {
-        List<ExternalItemDto> agenciesList = new ArrayList<ExternalItemDto>(getAgencies().values());
+    // public static MetamacCriteriaResult<ExternalItemDto> findAgencies(int firstResult, int maxResults) throws MetamacException {
+    // List<ExternalItemDto> agenciesList = new ArrayList<ExternalItemDto>(getAgencies().values());
+    //
+    // int endIndex = agenciesList.size();
+    // if (endIndex - firstResult > maxResults) {
+    // endIndex = firstResult + maxResults;
+    // }
+    // MetamacCriteriaResult<ExternalItemDto> result = new MetamacCriteriaResult<ExternalItemDto>();
+    // MetamacCriteriaPaginatorResult paginatorResult = new MetamacCriteriaPaginatorResult();
+    // paginatorResult.setFirstResult(firstResult);
+    // paginatorResult.setMaximumResultSize(maxResults);
+    // paginatorResult.setTotalResults(agenciesList.size());
+    // result.setPaginatorResult(paginatorResult);
+    // result.setResults(new ArrayList<ExternalItemDto>(agenciesList.subList(firstResult, endIndex)));
+    // return result;
+    // }
 
-        int endIndex = agenciesList.size();
-        if (endIndex - firstResult > maxResults) {
-            endIndex = firstResult + maxResults;
-        }
-        MetamacCriteriaResult<ExternalItemDto> result = new MetamacCriteriaResult<ExternalItemDto>();
-        MetamacCriteriaPaginatorResult paginatorResult = new MetamacCriteriaPaginatorResult();
-        paginatorResult.setFirstResult(firstResult);
-        paginatorResult.setMaximumResultSize(maxResults);
-        paginatorResult.setTotalResults(agenciesList.size());
-        result.setPaginatorResult(paginatorResult);
-        result.setResults(new ArrayList<ExternalItemDto>(agenciesList.subList(firstResult, endIndex)));
-        return result;
-    }
+    // private static Map<String, ExternalItemDto> getAgencies() {
+    // if (agencies == null) {
+    // agencies = new HashMap<String, ExternalItemDto>();
+    // istacAgency = createAgency("ds-0001", "ISTAC", "ISTAC");
+    // createAgency("age-0002", "Agencia 2", "Agency 2");
+    // createAgency("age-0003", "Agencia 3", "Agency 3");
+    // createAgency("age-0004", "Agencia 4", "Agency 4");
+    // createAgency("age-0005", "Agencia 5", "Agency 5");
+    // createAgency("age-0006", "Agencia 6", "Agency 6");
+    // }
+    // return agencies;
+    // }
 
-    private static Map<String, ExternalItemDto> getAgencies() {
-        if (agencies == null) {
-            agencies = new HashMap<String, ExternalItemDto>();
-            istacAgency = createAgency("ds-0001", "ISTAC", "ISTAC");
-            createAgency("age-0002", "Agencia 2", "Agency 2");
-            createAgency("age-0003", "Agencia 3", "Agency 3");
-            createAgency("age-0004", "Agencia 4", "Agency 4");
-            createAgency("age-0005", "Agencia 5", "Agency 5");
-            createAgency("age-0006", "Agencia 6", "Agency 6");
-        }
-        return agencies;
-    }
-
-    private static ExternalItemDto createAgency(String code, String title_es, String title_en) {
-        String uri = AGENCY_URI_PREFIX + code;
-        String urn = UrnUtils.generateUrn(UrnConstants.URN_SDMX_CLASS_AGENCY_PREFIX, code);
-        ExternalItemDto agency = new ExternalItemDto(code, uri, urn, urn, TypeExternalArtefactsEnum.AGENCY, createInternationalString(title_es, title_en));
-        agencies.put(agency.getUrn(), agency);
-        return agency;
-    }
+    // private static ExternalItemDto createAgency(String code, String title_es, String title_en) {
+    // String uri = AGENCY_URI_PREFIX + code;
+    // String urn = UrnUtils.generateUrn(UrnConstants.URN_SDMX_CLASS_AGENCY_PREFIX, code);
+    // ExternalItemDto agency = new ExternalItemDto(code, uri, urn, urn, TypeExternalArtefactsEnum.AGENCY, createInternationalString(title_es, title_en));
+    // agencies.put(agency.getUrn(), agency);
+    // return agency;
+    // }
 
     //
     // DATASETS
@@ -469,356 +465,6 @@ public class MockServices {
     //
     // COLLECTIONS
     //
-
-    public static PublicationDto createPublication(ServiceContext ctx, PublicationDto PublicationDto) throws MetamacException {
-        String identifier = PublicationDto.getCode();
-        String collectionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, identifier);
-        // if (getCollections().containsKey(collectionUrn)) {
-        // throw new MetamacException(ServiceExceptionType.COLLECTION_ALREADY_EXIST_IDENTIFIER_DUPLICATED, identifier);
-        // }
-
-        Date now = new Date();
-
-        PublicationDto.setId(Long.valueOf(getCollections().size() + 1));
-        PublicationDto.setUuid(UUID.randomUUID().toString());
-        PublicationDto.setVersion(1L);
-
-        // Audit
-        // PublicationDto.setResponsabilityCreator(ctx.getUserId());
-        // PublicationDto.setDateCreated(now);
-        // PublicationDto.setDateLastUpdate(now);
-        // PublicationDto.setLastUpdateUser(ctx.getUserId());
-
-        // Identifiers
-        PublicationDto.setUri(COLLECTION_URI_PREFIX + PublicationDto.getCode());
-        PublicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, PublicationDto.getCode()));
-
-        // Version
-        // PublicationDto.setVersionDate(now);
-        PublicationDto.setVersionLogic("01.000");
-
-        // Life cycle
-        PublicationDto.setCreator(istacAgency);
-        PublicationDto.setProcStatus(ProcStatusEnum.DRAFT);
-
-        // Content
-        // ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        // contentMetadata.setSpatialCoverage(new ArrayList<String>());
-        // contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
-        // contentMetadata.setTemporalCoverage(new ArrayList<String>());
-        // contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
-        // contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        // PublicationDto.setContentMetadata(contentMetadata);
-
-        PublicationStructureHierarchyDto structure = createCollectionStructureBase(PublicationDto.getTitle());
-
-        PublicationDto.setStructure(structure);
-
-        getCollections().put(PublicationDto.getUrn(), PublicationDto);
-        return PublicationDto;
-    }
-
-    public static PublicationDto retrievePublication(ServiceContext ctx, String collectionUrn) throws MetamacException {
-        PublicationDto collection = getCollections().get(collectionUrn);
-        if (collection != null) {
-            return collection;
-        } else {
-            throw new MetamacException(ServiceExceptionType.PUBLICATION_NOT_FOUND, collectionUrn);
-        }
-    }
-
-    public static PublicationDto updatePublication(ServiceContext ctx, PublicationDto publicationDto) throws MetamacException {
-        if (publicationDto.getId() == null) {
-            throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
-        }
-        PublicationDto oldCollection = getCollections().get(publicationDto.getUrn());
-
-        // if (!oldCollection.getOperation().getUrn().equals(PublicationDto.getOperation().getUrn())) {
-        // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.COLLECTION_OPERATION);
-        // }
-        //
-        // Date now = new Date();
-        // PublicationDto.setDateLastUpdate(now);
-        // PublicationDto.setLastUpdateUser(ctx.getUserId());
-
-        publicationDto.setVersion(publicationDto.getVersion() + 1);
-
-        getCollections().put(publicationDto.getUrn(), publicationDto);
-
-        return publicationDto;
-    }
-
-    public static void deleteCollection(ServiceContext ctx, String urn) throws MetamacException {
-        if (urn == null || !getCollections().containsKey(urn)) {
-            throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
-        }
-        getCollections().remove(urn);
-    }
-
-    public static List<PublicationDto> findCollections(String operationUrn, int firstResult, int maxResults) throws MetamacException {
-        List<PublicationDto> collectionList = new ArrayList<PublicationDto>();
-        List<PublicationDto> PublicationDtos = new ArrayList<PublicationDto>(getCollections().values());
-        for (PublicationDto collection : PublicationDtos) {
-            // if (operationUrn.equals(collection.getStatisticalOperation().getUrn())) {
-            PublicationDto c = collection;
-            collectionList.add(c);
-            // }
-        }
-
-        int endIndex = collectionList.size();
-        if (endIndex - firstResult > maxResults) {
-            endIndex = firstResult + maxResults;
-        }
-        return new ArrayList<PublicationDto>(collectionList.subList(firstResult, endIndex));
-    }
-
-    public static PublicationDto sendCollectionToProductionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-        return PublicationDto;
-    }
-
-    public static PublicationDto sendCollectionToDiffusionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-        return PublicationDto;
-    }
-
-    public static PublicationDto rejectCollectionProductionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(ProcStatusEnum.DRAFT);
-        return PublicationDto;
-    }
-
-    public static PublicationDto rejectCollectionDiffusionValidation(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(ProcStatusEnum.DRAFT);
-        return PublicationDto;
-    }
-
-    public static PublicationDto publishCollection(String urn) throws MetamacException {
-        PublicationDto PublicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        PublicationDto.setProcStatus(ProcStatusEnum.PUBLISHED);
-        return PublicationDto;
-    }
-
-    public static PublicationDto versionCollection(String urn, VersionTypeEnum versionType) throws MetamacException {
-        PublicationDto publicationDto = retrievePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
-        publicationDto.setId(Long.valueOf(collections.size() + 1));
-        // PublicationDto.setVersionLogic(VersionUtil.createNextVersionTag(PublicationDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
-        publicationDto.setProcStatus(ProcStatusEnum.DRAFT);
-        getCollections().put(publicationDto.getUrn(), publicationDto);
-        return publicationDto;
-    }
-
-    private static Map<String, PublicationDto> getCollections() {
-        if (collections == null) {
-            collections = new HashMap<String, PublicationDto>();
-            try {
-                List<ExternalItemDto> operations = getOperationsList();
-                if (operations.size() > 0) {
-                    Random randGen = new Random();
-                    createCollection("col-0001", "Collection 1", "Collection 1", operations.get(randGen.nextInt(operations.size())));
-                    createCollection("col-0002", "Collection 2", "Collection 2", operations.get(randGen.nextInt(operations.size())));
-                    createCollection("col-0003", "Collection 3", "Collection 3", operations.get(randGen.nextInt(operations.size())));
-                    createCollection("col-0004", "Collection 4", "Collection 4", operations.get(randGen.nextInt(operations.size())));
-                    createCollection("col-0005", "Collection 5", "Collection 5", operations.get(randGen.nextInt(operations.size())));
-                    createCollection("col-0006", "Collection 6", "Collection 6", operations.get(randGen.nextInt(operations.size())));
-                }
-            } catch (MetamacWebException e) {
-                logger.error("Error en collections ", e);
-            }
-        }
-        return collections;
-    }
-
-    private static void createCollection(String code, String title_es, String title_en, ExternalItemDto operation) {
-        Date now = new Date();
-        PublicationDto publicationDto = new PublicationDto();
-
-        publicationDto.setId(Long.valueOf(collections.size() + 1));
-        publicationDto.setUuid(UUID.randomUUID().toString());
-        publicationDto.setVersion(1L);
-        publicationDto.setStatisticalOperation(operation);
-        //
-        // // Audit
-        // PublicationDto.setResponsabilityCreator("ISTAC_ADMIN");
-        // PublicationDto.setDateCreated(now);
-        // PublicationDto.setDateLastUpdate(now);
-        // PublicationDto.setLastUpdateUser("ISTAC_ADMIN");
-
-        // Identifiers
-        publicationDto.setCode(code);
-        publicationDto.setTitle(createInternationalString(title_es, title_en));
-        publicationDto.setUri(COLLECTION_URI_PREFIX + code);
-        publicationDto.setUrn(UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, code));
-
-        // Version
-        // PublicationDto.setVersionDate(now);
-        // PublicationDto.setVersionLogic("01.000");
-        //
-        // // Life cycle
-        publicationDto.setCreator(istacAgency);
-        publicationDto.setProcStatus(ProcStatusEnum.DRAFT);
-        //
-        // // Content
-        // ContentMetadataDto contentMetadata = new ContentMetadataDto();
-        // contentMetadata.setLanguage("es");
-        // contentMetadata.setDescription(createInternationalString(
-        // "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus"
-        // + " et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla "
-        // + "consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.", ""));
-        //
-        // contentMetadata.setKeywords(new ArrayList<String>());
-        // contentMetadata.getKeywords().add("statistic");
-        // contentMetadata.getKeywords().add("data");
-        // contentMetadata.getKeywords().add("collection");
-        //
-        // contentMetadata.setSpatialCoverage(new ArrayList<String>());
-        // contentMetadata.getSpatialCoverage().add("CANARIAS");
-        // contentMetadata.getSpatialCoverage().add("LANZAROTE");
-        // contentMetadata.getSpatialCoverage().add("Lanzarote - Este");
-        // contentMetadata.getSpatialCoverage().add("Lanzarote - Norte");
-        //
-        // contentMetadata.setSpatialCoverageCodes(new ArrayList<String>());
-        // contentMetadata.getSpatialCoverageCodes().add("ES70");
-        // contentMetadata.getSpatialCoverageCodes().add("ES708");
-        // contentMetadata.getSpatialCoverageCodes().add("ES708A01");
-        // contentMetadata.getSpatialCoverageCodes().add("ES708A02");
-        //
-        // contentMetadata.setTemporalCoverage(new ArrayList<String>());
-        // contentMetadata.getTemporalCoverage().add("2002 Primer trimestre");
-        // contentMetadata.getTemporalCoverage().add("2002 Segundo trimestre");
-        // contentMetadata.getTemporalCoverage().add("2002 Tercer trimestre");
-        //
-        // contentMetadata.setTemporalCoverageCodes(new ArrayList<String>());
-        // contentMetadata.getTemporalCoverageCodes().add("2002Q1");
-        // contentMetadata.getTemporalCoverageCodes().add("2002Q2");
-        // contentMetadata.getTemporalCoverageCodes().add("2002Q3");
-        //
-        // contentMetadata.setFormat(StatisticalResourceFormatEnum.DS);
-        // contentMetadata.setType(StatisticalResourceTypeEnum.COLLECTION);
-        // contentMetadata.setCopyrightedDate(new Date());
-        // PublicationDto.setContentMetadata(contentMetadata);
-
-        // STRUCTURE
-
-        PublicationStructureHierarchyDto structure = createCollectionStructure();
-
-        publicationDto.setStructure(structure);
-
-        collections.put(publicationDto.getUrn(), publicationDto);
-    }
-
-    private static PublicationStructureHierarchyDto createCollectionStructureBase(InternationalStringDto title) {
-        PublicationStructureHierarchyDto titleNode = createTitleNode(title);
-        return titleNode;
-    }
-    private static PublicationStructureHierarchyDto createCollectionStructure() {
-        PublicationStructureHierarchyDto title = createTitleNode(createInternationalString("Título", "Title"));
-        PublicationStructureHierarchyDto chapter1 = createChapterNode("Capítulo 1", "Chapter 1");
-        PublicationStructureHierarchyDto chapter2 = createChapterNode("Capítulo 2", "Chapter 2");
-        PublicationStructureHierarchyDto chapter3 = createChapterNode("Capítulo 3", "Chapter 3");
-        PublicationStructureHierarchyDto subchapter1 = createSubChapter1Node("Subcapítulo 1", "Subchapter 1");
-        PublicationStructureHierarchyDto subchapter11 = createSubChapter2Node("Subcapítulo 11", "Subchapter 11");
-        PublicationStructureHierarchyDto text11 = createTextNode("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
-                "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.");
-        PublicationStructureHierarchyDto dataSet11 = createDataSetNode("urn:dataset", "Dataset 1", "Dataset 1");
-        PublicationStructureHierarchyDto query11 = createQueryNode("urn:query", "Consulta 1", "Query 1");
-        PublicationStructureHierarchyDto text2 = createTextNode("Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. "
-                + "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. ", "English");
-        PublicationStructureHierarchyDto dataSet2 = createDataSetNode("urn:dataset", "Dataset 2", "Dataset 2");
-        PublicationStructureHierarchyDto query2 = createQueryNode("urn:query", "Consulta 2", "Query 2");
-        PublicationStructureHierarchyDto url2 = createUrlNode("http://www.gobiernodecanarias.org/istac/", "URL del ISTAC", "ISTAC URL");
-
-        title.getChildren().add(chapter1);
-
-        chapter1.getChildren().add(subchapter1);
-
-        subchapter1.getChildren().add(subchapter11);
-
-        subchapter11.getChildren().add(text11);
-        subchapter11.getChildren().add(dataSet11);
-        subchapter11.getChildren().add(query11);
-
-        title.getChildren().add(chapter2);
-
-        chapter2.getChildren().add(text2);
-        chapter2.getChildren().add(url2);
-        chapter2.getChildren().add(dataSet2);
-        chapter2.getChildren().add(query2);
-
-        title.getChildren().add(chapter3);
-
-        return title;
-    }
-
-    private static PublicationStructureHierarchyDto createTitleNode(InternationalStringDto text) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.TITLE);
-        node.setText(text);
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createChapterNode(String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.CHAPTER);
-        node.setText(createInternationalString(text_es, text_en));
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createSubChapter1Node(String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.SUBCHAPTER1);
-        node.setText(createInternationalString(text_es, text_en));
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createSubChapter2Node(String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.SUBCHAPTER2);
-        node.setText(createInternationalString(text_es, text_en));
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createTextNode(String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.TEXT);
-        node.setText(createInternationalString(text_es, text_en));
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createUrlNode(String url, String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.URL);
-        node.setText(createInternationalString(text_es, text_en));
-        node.setUrl(url);
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createDataSetNode(String urn, String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.DATASET);
-        node.setText(createInternationalString(text_es, text_en));
-        node.setUrn(urn);
-        return node;
-    }
-
-    private static PublicationStructureHierarchyDto createQueryNode(String urn, String text_es, String text_en) {
-        PublicationStructureHierarchyDto node = new PublicationStructureHierarchyDto();
-        node.setId(RandomUtils.nextLong());
-        node.setType(PublicationStructureHierarchyTypeEnum.QUERY);
-        node.setText(createInternationalString(text_es, text_en));
-        node.setUrn(urn);
-        return node;
-    }
 
     //
     // OTHERS METHODS

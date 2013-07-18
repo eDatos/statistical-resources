@@ -10,21 +10,20 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
@@ -42,9 +41,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListView, QueryListPresenter.QueryListProxy> implements QueryListUiHandlers {
-
-    public final static int                           QUERY_LIST_FIRST_RESULT                           = 0;
-    public final static int                           QUERY_LIST_MAX_RESULTS                            = 30;
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
@@ -83,7 +79,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        retrieveQueries(QUERY_LIST_FIRST_RESULT, QUERY_LIST_MAX_RESULTS);
+        retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
     }
 
     @Override
@@ -125,8 +121,8 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
 
             @Override
             public void onWaitSuccess(DeleteQueriesResult result) {
-                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());  
-                retrieveQueries(QUERY_LIST_FIRST_RESULT, QUERY_LIST_MAX_RESULTS);
+                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }
@@ -137,11 +133,10 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.queryPage).with(PlaceRequestParams.queryParam, UrnUtils.removePrefix(urn)));
         }
     }
-    
+
     @Override
     public void goToNewQuery() {
         placeManager.revealRelativePlace(new PlaceRequest(NameTokens.queryPage));
     }
-
 
 }

@@ -51,4 +51,8 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     // LANGUAGES
     public static final String LANGUAGE                       = "sr-lang";
     public static final String LANGUAGES                      = "sr-langs";
+
+    // intellectual property descriptors
+    public static final String COPYRIGHT_DATE                 = "sr-copyright-date";
+    public static final String ACCESS_RIGHTS                  = "sr-access-rights";
 }

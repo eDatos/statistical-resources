@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
@@ -119,19 +120,17 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
             toolStrip.addButton(deleteQueryButton);
 
             // List
-            queriesList = new PaginatedCheckListGrid(QueryListPresenter.QUERY_LIST_MAX_RESULTS, new PaginatedAction() {
+            queriesList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
                 @Override
                 public void retrieveResultSet(int firstResult, int maxResults) {
                     getUiHandlers().retrieveQueries(firstResult, maxResults);
                 }
             });
-            queriesList.getListGrid().setAutoFitMaxRecords(QueryListPresenter.QUERY_LIST_MAX_RESULTS);
+            queriesList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             queriesList.getListGrid().setAutoFitData(Autofit.VERTICAL);
             queriesList.getListGrid().setDataSource(new QueryDS());
             queriesList.getListGrid().setUseAllDataSourceFields(false);
-            
-           
 
             ListGridField fieldCode = new ListGridField(QueryDS.CODE, getConstants().identifiableStatisticalResourceCode());
             fieldCode.setAlign(Alignment.LEFT);
@@ -225,5 +224,4 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
         }
     }
 
-   
 }

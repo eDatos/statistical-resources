@@ -4,11 +4,12 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleRes
 
 public class QueryDS extends LifeCycleResourceDS {
 
-    public static final String ID                  = "query-id";
-    public static final String TYPE                = "query-type";
-    public static final String DTO                 = "query-dto";
+    public static final String ID                      = "query-id";
+    public static final String TYPE                    = "query-type";
+    public static final String DTO                     = "query-dto";
 
     public static String       RELATED_DATASET_VERSION = "query-dataset-version";
+    public static String       SELECTION               = "query-dataset-version";
 
     public QueryDS() {
         super();
