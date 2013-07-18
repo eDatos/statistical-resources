@@ -44,15 +44,21 @@
     <source path='client' />
     <source path='shared' />
 
-    <stylesheet src="StatisticalResourcesWebStyles.css"/>
-    
+    <stylesheet src="StatisticalResourcesWebStyles.css" />
+
     <!-- Languages -->
     <extend-property name="locale" values="es" />
     <extend-property name="locale" values="en" />
     <extend-property name="locale" values="pt" />
 
+    <!-- Default locale -->
+    <set-property name="locale" value="en,es" />
+
+    <!-- Fallback locale -->
+    <set-property-fallback name="locale" value="en" />
+
     <!-- Generate code in compilation time only for gecko-based browsers -->
-<!--     <set-property name="user.agent" value="gecko1_8" /> -->
+    <!-- <set-property name="user.agent" value="gecko1_8" /> -->
 
     <!-- Disable image sprite -->
     <set-property name="ClientBundle.enableInlining" value="false" />
