@@ -1,48 +1,225 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemsValue;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemsValue;
 
+import java.util.List;
+
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.web.client.base.checks.DatasetMetadataShowChecks;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemListItem;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.HiddenItem;
+import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class DatasetContentDescriptorsEditionForm extends StatisticalResourceContentDescriptorsEditionForm {
+
+    private DatasetMetadataTabUiHandlers                         uiHandlers;
+    private SearchMultipleSrmItemWithSchemeFilterPaginatedWindow statisticalUnitWindow;
+
+    private SearchMultiExternalItemSimpleItem                    geographicalGranularitiesItem;
+    private SearchMultiExternalItemSimpleItem                    temporalGranularitiesItem;
 
     public DatasetContentDescriptorsEditionForm() {
         super();
 
+        HiddenItem procStatusHidden = new HiddenItem(DatasetDS.PROC_STATUS);
+
         ExternalItemListItem geographicCoverage = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_COVERAGE, getConstants().datasetGeographicCoverage(), false);
-        ViewTextItem temporalCoverage = new ViewTextItem(DatasetDS.DATE_START, getConstants().datasetTemporalCoverage()); 
-        ExternalItemListItem geographicGranularities = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_GRANULARITY, getConstants().datasetGeographicGranularities(), false); // TODO editable
-        ExternalItemListItem temporalGranularities = new ExternalItemListItem(DatasetDS.TEMPORAL_GRANULARITY, getConstants().datasetTemporalGranularities(), false); // TODO editable
+        geographicCoverage.setShowIfCondition(getCanShowCoveragesFunction());
+        ExternalItemListItem temporalCoverage = new ExternalItemListItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().datasetTemporalCoverage(), false);
+        temporalCoverage.setShowIfCondition(getCanShowCoveragesFunction());
+        ExternalItemListItem measures = new ExternalItemListItem(DatasetDS.MEASURES, getConstants().datasetMeasures(), false);
+        measures.setShowIfCondition(getCanShowCoveragesFunction());
+
+        geographicalGranularitiesItem = createGeographicGranularitiesItem();
+        temporalGranularitiesItem = createTemporalGranularitiesItem();
+
         ViewTextItem dateStart = new ViewTextItem(DatasetDS.DATE_START, getConstants().datasetDateStart());
         ViewTextItem dateEnd = new ViewTextItem(DatasetDS.DATE_END, getConstants().datasetDateEnd());
-        ExternalItemListItem statisticalUnit = new ExternalItemListItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(), false); // TODO editable
-        ExternalItemListItem measures = new ExternalItemListItem(DatasetDS.MEASURES, getConstants().datasetMeasures(), false);
 
-        addFields(geographicCoverage, temporalCoverage, geographicGranularities, temporalGranularities, dateStart, dateEnd, statisticalUnit, measures);
+        ExternalItemListItem statisticalUnit = createStatisticalUnitItem();
+
+        addFields(procStatusHidden, geographicCoverage, temporalCoverage, measures, geographicalGranularitiesItem, temporalGranularitiesItem, dateStart, dateEnd, statisticalUnit);
     }
 
     public void setDatasetDto(DatasetDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
-        ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_COVERAGE)).setExternalItems(datasetDto.getGeographicCoverage());
-        setValue(DatasetDS.TEMPORAL_COVERAGE, CommonWebUtils.getStringListToString(datasetDto.getTemporalCoverage()));
-        ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_GRANULARITY)).setExternalItems(datasetDto.getGeographicGranularities());
-        ((ExternalItemListItem) getItem(DatasetDS.TEMPORAL_GRANULARITY)).setExternalItems(datasetDto.getTemporalGranularities());
+
+        setValue(DatasetDS.PROC_STATUS, datasetDto.getProcStatus().name());
+
+        setExternalItemsValue(getItem(DatasetDS.GEOGRAPHIC_GRANULARITY), datasetDto.getGeographicGranularities());
+
+        setExternalItemsValue(getItem(DatasetDS.TEMPORAL_GRANULARITY), datasetDto.getTemporalGranularities());
+
         setValue(DatasetDS.DATE_START, datasetDto.getDateStart());
         setValue(DatasetDS.DATE_END, datasetDto.getDateEnd());
-        ((ExternalItemListItem) getItem(DatasetDS.STATISTICAL_UNIT)).setExternalItems(datasetDto.getStatisticalUnit());
-        ((ExternalItemListItem) getItem(DatasetDS.MEASURES)).setExternalItems(datasetDto.getMeasures());
+
+        setSelectedConceptsForStatisticalUnit(datasetDto.getTemporalGranularities());
+    }
+
+    public void setCoverages(List<ExternalItemDto> geoItems, List<ExternalItemDto> temporalItems, List<ExternalItemDto> measureItems) {
+        ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_COVERAGE)).setExternalItems(geoItems);
+        ((ExternalItemListItem) getItem(DatasetDS.TEMPORAL_COVERAGE)).setExternalItems(temporalItems);
+        ((ExternalItemListItem) getItem(DatasetDS.MEASURES)).setExternalItems(measureItems);
     }
 
     public DatasetDto getDatasetDto(DatasetDto datasetDto) {
         datasetDto = (DatasetDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
-        // TODO GEOGRAPHIC_GRANULARITY
-        // TODO TEMPORAL_GRANULARITY
-        // TODO STATISTICAL_UNIT
+
+        datasetDto.getGeographicGranularities().clear();
+        datasetDto.getGeographicGranularities().addAll(getExternalItemsValue(getItem(DatasetDS.GEOGRAPHIC_GRANULARITY)));
+
+        datasetDto.getTemporalGranularities().clear();
+        datasetDto.getTemporalGranularities().addAll(getExternalItemsValue(getItem(DatasetDS.TEMPORAL_GRANULARITY)));
+
+        datasetDto.getStatisticalUnit().clear();
+        datasetDto.getStatisticalUnit().addAll(getExternalItemsValue(getItem(DatasetDS.STATISTICAL_UNIT)));
+
         return datasetDto;
     }
+
+    // ***************************************************************************************
+    // GEO GRANULARITIES
+    // ***************************************************************************************
+
+    public void setCodesForGeographicalGranularities(List<ExternalItemDto> items, int firstResult, int totalResults) {
+        geographicalGranularitiesItem.setResources(items, firstResult, totalResults);
+    }
+
+    private SearchMultiExternalItemSimpleItem createGeographicGranularitiesItem() {
+        return new SearchMultiExternalItemSimpleItem(DatasetDS.GEOGRAPHIC_GRANULARITY, getConstants().datasetGeographicGranularities(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+
+            @Override
+            protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                uiHandlers.retrieveCodesForGeographicalGranularities(firstResult, maxResults, webCriteria);
+            }
+        };
+    }
+
+    // ***************************************************************************************
+    // Time GRANULARITIES
+    // ***************************************************************************************
+
+    public void setCodesForTemporalGranularities(List<ExternalItemDto> items, int firstResult, int totalResults) {
+        temporalGranularitiesItem.setResources(items, firstResult, totalResults);
+    }
+
+    private SearchMultiExternalItemSimpleItem createTemporalGranularitiesItem() {
+        return new SearchMultiExternalItemSimpleItem(DatasetDS.TEMPORAL_GRANULARITY, getConstants().datasetTemporalGranularities(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+
+            @Override
+            protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                uiHandlers.retrieveCodesForTemporalGranularities(firstResult, maxResults, webCriteria);
+            }
+        };
+    }
+
+    // ***************************************************************************************
+    // STATISTICAL UNIT
+    // ***************************************************************************************
+
+    public void setConceptsForStatisticalUnit(List<ExternalItemDto> items, int firstResult, int totalResults) {
+        if (statisticalUnitWindow != null) {
+            statisticalUnitWindow.setResources(items);
+            statisticalUnitWindow.refreshSourcePaginationInfo(firstResult, items.size(), totalResults);
+        }
+    }
+
+    public void setConceptSchemesForStatisticalUnit(List<ExternalItemDto> items, int firstResult, int totalResults) {
+        if (statisticalUnitWindow != null) {
+            statisticalUnitWindow.setFilterResources(items);
+            statisticalUnitWindow.refreshFilterSourcePaginationInfo(firstResult, items.size(), totalResults);
+        }
+    }
+
+    public void setSelectedConceptsForStatisticalUnit(List<ExternalItemDto> items) {
+        if (statisticalUnitWindow != null) {
+            statisticalUnitWindow.setSelectedResources(items);
+            setExternalItemsValue(getItem(DatasetDS.STATISTICAL_UNIT), items);
+        }
+    }
+
+    private ExternalItemListItem createStatisticalUnitItem() {
+        final ExternalItemListItem listItem = new ExternalItemListItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(), true);
+        listItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                SearchPaginatedAction<MetamacWebCriteria> filterAction = new SearchPaginatedAction<MetamacWebCriteria>() {
+
+                    @Override
+                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                        retrieveConceptSchemesForStatisticalUnit(firstResult, maxResults, webCriteria);
+                    }
+                };
+
+                statisticalUnitWindow = new SearchMultipleSrmItemWithSchemeFilterPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        filterAction, new SearchPaginatedAction<ItemSchemeWebCriteria>() {
+
+                            @Override
+                            public void retrieveResultSet(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+                                retrieveConceptsForStatisticalUnit(firstResult, maxResults, webCriteria);
+                            }
+
+                        });
+
+                retrieveConceptsForStatisticalUnit(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new ItemSchemeWebCriteria());
+
+                statisticalUnitWindow.setSelectedResources(listItem.getSelectedRelatedResources());
+
+                statisticalUnitWindow.setSaveAction(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        setSelectedConceptsForStatisticalUnit(statisticalUnitWindow.getSelectedResources());
+                        statisticalUnitWindow.markForDestroy();
+                    }
+                });
+            }
+        });
+        return listItem;
+    }
+
+    private void retrieveConceptSchemesForStatisticalUnit(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+        uiHandlers.retrieveConceptSchemesForStatisticalUnit(firstResult, maxResults, webCriteria);
+    };
+
+    private void retrieveConceptsForStatisticalUnit(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+        uiHandlers.retrieveConceptsForStatisticalUnit(firstResult, maxResults, webCriteria);
+    };
+
+    public void setUiHandlers(DatasetMetadataTabUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
+    }
+
+    private FormItemIfFunction getCanShowCoveragesFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                Object valueObject = form.getItem(DatasetDS.PROC_STATUS).getValue();
+                return DatasetMetadataShowChecks.canCoveragesBeShown(valueObject);
+            }
+        };
+    }
+
 }

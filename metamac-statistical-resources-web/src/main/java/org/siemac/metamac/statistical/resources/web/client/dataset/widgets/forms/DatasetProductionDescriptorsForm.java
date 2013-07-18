@@ -5,20 +5,20 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
-import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
 public class DatasetProductionDescriptorsForm extends StatisticalResourceProductionDescriptorsForm {
 
     public DatasetProductionDescriptorsForm() {
 
-        ViewTextItem relatedDsd = new ViewTextItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
+        ExternalItemLinkItem relatedDsd = new ExternalItemLinkItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
 
         addFields(relatedDsd);
     }
 
     public void setDatasetDto(DatasetDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
-        setValue(DatasetDS.RELATED_DSD, ExternalItemUtils.getExternalItemName(datasetDto.getRelatedDsd()));
+        StatisticalResourcesFormUtils.setExternalItemValue(getItem(DatasetDS.RELATED_DSD), datasetDto.getRelatedDsd());
     }
 }

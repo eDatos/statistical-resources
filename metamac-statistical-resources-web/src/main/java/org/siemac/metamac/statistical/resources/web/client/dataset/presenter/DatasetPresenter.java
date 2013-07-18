@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.List;
 
@@ -16,19 +15,16 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
@@ -111,12 +107,8 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(DatasetPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     DatasetPresenter.this.operation = result.getOperation();
@@ -128,12 +120,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     public void retrieveDataset(String datasetIdentifier) {
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
-        dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallback<GetDatasetResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetPresenter.this, caught);
-            }
+        dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetResult result) {

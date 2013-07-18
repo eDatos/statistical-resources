@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
@@ -24,7 +27,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
@@ -41,7 +43,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
+public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
 
     private VLayout                  panel;
 
@@ -81,6 +83,8 @@ public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandler
                         }
                     }
                 });
+                newDatasetWindow.setDefaultLanguage(defaultLanguage);
+                newDatasetWindow.setDefaultMaintainer(defaultAgency);
             }
         });
         newDatasetButton.setVisibility(DatasetClientSecurityUtils.canCreateDataset() ? Visibility.VISIBLE : Visibility.HIDDEN);
@@ -98,14 +102,14 @@ public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandler
         toolStrip.addButton(newDatasetButton);
         toolStrip.addButton(deleteDatasetButton);
 
-        datasetsList = new PaginatedCheckListGrid(DatasetListPresenter.DATASET_LIST_MAX_RESULTS, new PaginatedAction() {
+        datasetsList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
             }
         });
-        datasetsList.getListGrid().setAutoFitMaxRecords(DatasetListPresenter.DATASET_LIST_MAX_RESULTS);
+        datasetsList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
         datasetsList.getListGrid().setAutoFitData(Autofit.VERTICAL);
         datasetsList.getListGrid().setDataSource(new DatasetDS());
         datasetsList.getListGrid().setUseAllDataSourceFields(false);
@@ -165,13 +169,13 @@ public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandler
     public void goToDatasetListLastPageAfterCreate() {
         datasetsList.goToLastPageAfterCreate();
     }
-    
+
     @Override
     public void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result) {
         List<ExternalItemDto> externalItemsDtos = result.getDsdsList();
         newDatasetWindow.setExternalItemsForRelatedDsd(externalItemsDtos, result.getFirstResultOut(), externalItemsDtos.size(), result.getTotalResults());
     }
-    
+
     @Override
     public void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
         newDatasetWindow.setStatisticalOperationsForRelatedDsd(results, defaultSelected);
@@ -223,6 +227,11 @@ public class DatasetListViewImpl extends ViewWithUiHandlers<DatasetListUiHandler
             // Who knows, maybe the parent class knows what to do with this slot.
             super.setInSlot(slot, content);
         }
+    }
+
+    @Override
+    protected NewStatisticalResourceWindow getNewStatisticalResourceWindow() {
+        return newDatasetWindow;
     }
 
     private void showListGridDeleteButton() {

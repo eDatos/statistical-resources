@@ -15,14 +15,13 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
@@ -34,24 +33,27 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
@@ -62,25 +64,28 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPresenter.DatasetMetadataTabView, DatasetMetadataTabPresenter.DatasetMetadataTabProxy>
+public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBasePresenter<DatasetMetadataTabPresenter.DatasetMetadataTabView, DatasetMetadataTabPresenter.DatasetMetadataTabProxy>
         implements
             DatasetMetadataTabUiHandlers {
 
-    private DispatchAsync   dispatcher;
-    private PlaceManager    placeManager;
-
     private ExternalItemDto operation;
 
-    public interface DatasetMetadataTabView extends View, HasUiHandlers<DatasetMetadataTabUiHandlers> {
+    public interface DatasetMetadataTabView extends StatisticalResourceMetadataBasePresenter.StatisticalResourceMetadataBaseView, HasUiHandlers<DatasetMetadataTabUiHandlers> {
 
         void setDataset(DatasetDto datasetDto);
-        void setAgenciesPaginatedList(GetAgenciesPaginatedListResult datasetsPaginatedList);
 
+        // metadata fill methods
         void setDatasetsForReplaces(GetDatasetsResult result);
         void setDatasetsForIsReplacedBy(GetDatasetsResult result);
-        void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
+
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
-        void setCommonConfigurations(GetCommonMetadataConfigurationsListResult result);
+        void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
+
+        void setCodesForGeographicalGranularities(GetGeographicalGranularitiesListResult result);
+        void setCodesForTemporalGranularities(GetTemporalGranularitiesListResult result);
+
+        void setConceptSchemesForStatisticalUnit(GetConceptSchemesPaginatedListResult result);
+        void setConceptsForStatisticalUnit(GetConceptsPaginatedListResult result);
     }
 
     @ProxyCodeSplit
@@ -91,9 +96,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
     @Inject
     public DatasetMetadataTabPresenter(EventBus eventBus, DatasetMetadataTabView view, DatasetMetadataTabProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, view, proxy);
-        this.dispatcher = dispatcher;
-        this.placeManager = placeManager;
+        super(eventBus, view, proxy, dispatcher, placeManager);
         getView().setUiHandlers(this);
     }
 
@@ -124,12 +127,8 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     DatasetMetadataTabPresenter.this.operation = result.getOperation();
@@ -140,29 +139,9 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     }
 
     @Override
-    public void retrieveAgencies(int firstResult, int maxResults, String queryText) {
-        dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult, maxResults, queryText), new WaitingAsyncCallback<GetAgenciesPaginatedListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(GetAgenciesPaginatedListResult result) {
-                getView().setAgenciesPaginatedList(result);
-            }
-        });
-    }
-
-    @Override
     public void retrieveDataset(String datasetIdentifier) {
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
-        dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallback<GetDatasetResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
+        dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetResult result) {
@@ -173,12 +152,7 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
 
     @Override
     public void saveDataset(DatasetDto datasetDto) {
-        dispatcher.execute(new SaveDatasetAction(datasetDto, datasetDto.getStatisticalOperation().getCode()), new WaitingAsyncCallback<SaveDatasetResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
+        dispatcher.execute(new SaveDatasetAction(datasetDto, datasetDto.getStatisticalOperation().getCode()), new WaitingAsyncCallbackHandlingError<SaveDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
@@ -188,51 +162,37 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     }
 
     @Override
-    public void sendToProductionValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(urn, ProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus),
-                new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
-                        getView().setDataset(result.getDatasetDto());
-                    }
-                });
-    }
-
-    @Override
-    public void sendToDiffusionValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(urn, ProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus),
-                new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
-                        getView().setDataset(result.getDatasetDto());
-                    }
-                });
-    }
-
-    @Override
-    public void rejectValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(urn, ProcStatusEnum.VALIDATION_REJECTED, currentProcStatus), new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
+    public void sendToProductionValidation(DatasetDto dataset) {
+        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
+            public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
+                getView().setDataset(result.getResultDatasetDto());
             }
+        });
+    }
+
+    @Override
+    public void sendToDiffusionValidation(DatasetDto dataset) {
+        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
+
+            @Override
+            public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                getView().setDataset(result.getResultDatasetDto());
+            }
+        });
+    }
+
+    @Override
+    public void rejectValidation(DatasetDto dataset) {
+        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.VALIDATION_REJECTED), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
+
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                getView().setDataset(result.getDatasetDto());
+                getView().setDataset(result.getResultDatasetDto());
             }
         });
     }
@@ -289,17 +249,13 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     // }
 
     @Override
-    public void publish(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(urn, ProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
+    public void publish(DatasetDto dataset) {
+        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setDataset(result.getDatasetDto());
+                getView().setDataset(result.getResultDatasetDto());
             }
         });
     }
@@ -321,17 +277,13 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
     // }
 
     @Override
-    public void version(String urn, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersionDatasetAction(urn, versionType), new WaitingAsyncCallback<VersionDatasetResult>() {
+    public void version(DatasetDto dataset, VersionTypeEnum versionType) {
+        dispatcher.execute(new VersionDatasetAction(dataset, versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(VersionDatasetResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setDataset(result.getDatasetDto());
+                getView().setDataset(result.getResultDatasetDto());
             }
         });
     }
@@ -342,42 +294,74 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
         VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         // TODO Which is the condition to find the datasets to fill REPLACES?
 
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
                 getView().setDatasetsForReplaces(result);
             }
         });
     }
-    
+
     @Override
     public void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria) {
-        dispatcher.execute(new GetDsdsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDsdsPaginatedListResult>() {
+        dispatcher.execute(new GetDsdsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDsdsPaginatedListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDsdsPaginatedListResult result) {
                 getView().setDsdsForRelatedDsd(result);
             }
         });
     }
-    
+
+    @Override
+    public void retrieveCodesForGeographicalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetGeographicalGranularitiesListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetGeographicalGranularitiesListResult result) {
+                getView().setCodesForGeographicalGranularities(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveCodesForTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+        dispatcher.execute(new GetTemporalGranularitiesListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetTemporalGranularitiesListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetTemporalGranularitiesListResult result) {
+                getView().setCodesForTemporalGranularities(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveConceptSchemesForStatisticalUnit(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetConceptSchemesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptSchemesPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetConceptSchemesPaginatedListResult result) {
+                getView().setConceptSchemesForStatisticalUnit(result);
+            }
+        });;
+    }
+
+    @Override
+    public void retrieveConceptsForStatisticalUnit(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+        dispatcher.execute(new GetConceptsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetConceptsPaginatedListResult result) {
+                getView().setConceptsForStatisticalUnit(result);
+            }
+        });;
+    }
+
     @Override
     public void retrieveStatisticalOperationsForDsdSelection() {
-        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallback<GetStatisticalOperationsPaginatedListResult>() {
-            
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), operation);
@@ -391,38 +375,13 @@ public class DatasetMetadataTabPresenter extends Presenter<DatasetMetadataTabPre
         VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         // TODO Which is the condition to find the datasets to fill IS_REPLACED_BY?
 
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
                 getView().setDatasetsForIsReplacedBy(result);
             }
         });
     }
-    
-    @Override
-    public void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria) {
-        dispatcher.execute(new GetCommonMetadataConfigurationsListAction(criteria), new WaitingAsyncCallback<GetCommonMetadataConfigurationsListResult>() {
-           
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetMetadataTabPresenter.this, caught);            }
-            
-            @Override
-            public void onWaitSuccess(GetCommonMetadataConfigurationsListResult result) {
-                getView().setCommonConfigurations(result);
-            }
-        });
-    }
-    
-    @Override
-    public void goTo(List<PlaceRequest> location) {
-        if (location != null && !location.isEmpty()) {
-            placeManager.revealPlaceHierarchy(location);
-        }
-    }
+
 }

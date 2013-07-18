@@ -14,10 +14,11 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
@@ -28,12 +29,10 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourc
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
@@ -51,9 +50,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy>
         implements
             DatasetDatasourcesTabUiHandlers {
-
-    public final static int DATASOURCE_LIST_FIRST_RESULT = 0;
-    public final static int DATASOURCE_LIST_MAX_RESULTS  = 30;
 
     private DispatchAsync   dispatcher;
     private PlaceManager    placeManager;
@@ -101,7 +97,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             String datasetUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetCode);
             retrieveOperation(operationUrn);
             retrieveDataset(datasetUrn);
-            retrieveDatasourcesByDataset(datasetUrn, DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
+            retrieveDatasourcesByDataset(datasetUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -109,12 +105,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     DatasetDatasourcesTabPresenter.this.operation = result.getOperation();
@@ -125,12 +117,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     public void retrieveDataset(String datasetUrn) {
-        dispatcher.execute(new GetDatasetAction(datasetUrn), new WaitingAsyncCallback<GetDatasetResult>() {
+        dispatcher.execute(new GetDatasetAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDatasetResult result) {
                 setDataset(result.getDatasetDto());
@@ -140,13 +128,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     public void retrieveDatasourcesByDataset(final String datasetUrn, int firstResult, int maxResults) {
-        dispatcher.execute(new GetDatasourcesByDatasetAction(datasetUrn), new WaitingAsyncCallback<GetDatasourcesByDatasetResult>() {
+        dispatcher.execute(new GetDatasourcesByDatasetAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasourcesByDatasetResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
-            }
-            
             @Override
             public void onWaitSuccess(GetDatasourcesByDatasetResult result) {
                 getView().setDatasources(datasetUrn, result.getDatasourcesList());
@@ -156,33 +139,24 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     public void saveDatasource(DatasourceDto datasourceDto) {
-        dispatcher.execute(new SaveDatasourceAction(dataset.getUrn(), datasourceDto), new WaitingAsyncCallback<SaveDatasourceResult>() {
+        dispatcher.execute(new SaveDatasourceAction(dataset.getUrn(), datasourceDto), new WaitingAsyncCallbackHandlingError<SaveDatasourceResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(SaveDatasourceResult result) {
                 getView().setDatasource(result.getDatasourceSaved());
-                retrieveDatasourcesByDataset(dataset.getUrn(), DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
+                retrieveDatasourcesByDataset(dataset.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }
 
     @Override
     public void deleteDatasources(List<String> datasourcesUrns) {
-        dispatcher.execute(new DeleteDatasourceListAction(datasourcesUrns), new WaitingAsyncCallback<DeleteDatasourceListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, caught);
-            }
+        dispatcher.execute(new DeleteDatasourceListAction(datasourcesUrns), new WaitingAsyncCallbackHandlingError<DeleteDatasourceListResult>(this) {
 
             @Override
             public void onWaitSuccess(DeleteDatasourceListResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesDeleted());
-                retrieveDatasourcesByDataset(dataset.getUrn(), DATASOURCE_LIST_FIRST_RESULT, DATASOURCE_LIST_MAX_RESULTS);
+                retrieveDatasourcesByDataset(dataset.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
 

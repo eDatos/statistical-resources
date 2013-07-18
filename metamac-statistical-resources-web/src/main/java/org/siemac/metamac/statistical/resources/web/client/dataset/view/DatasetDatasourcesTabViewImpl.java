@@ -8,9 +8,9 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
-import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
@@ -72,7 +72,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     public void setDatasource(DatasourceDto datasourceDto) {
         datasourceFormPanel.selectDatasource(datasourceDto);
     }
-    
+
     private void hideDetailView() {
         datasourceFormPanel.hide();
     }
@@ -81,7 +81,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     public Widget asWidget() {
         return panel;
     }
-    
+
     public List<String> getUrnsFromSelected() {
         List<String> codes = new ArrayList<String>();
         for (ListGridRecord record : datasourcesListPanel.datasourcesList.getSelectedRecords()) {
@@ -95,7 +95,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         private ToolStripButton          newDatasourceButton;
         private ToolStripButton          deleteDatasourceButton;
-        private CustomListGrid   datasourcesList;
+        private CustomListGrid           datasourcesList;
 
         private DeleteConfirmationWindow deleteConfirmationWindow;
 
@@ -118,11 +118,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             // List
 
             datasourcesList = new CustomListGrid();
-            datasourcesList.setAutoFitMaxRecords(DatasetDatasourcesTabPresenter.DATASOURCE_LIST_MAX_RESULTS);
+            datasourcesList.setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             datasourcesList.setAutoFitData(Autofit.VERTICAL);
             datasourcesList.setDataSource(new DatasourceDS());
             datasourcesList.setUseAllDataSourceFields(false);
-            
 
             ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
             fieldCode.setAlign(Alignment.LEFT);
@@ -131,7 +130,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
             deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
-
 
             // Panel conf
             addMember(toolStrip);
@@ -202,8 +200,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
     }
 
-
-
     private class DatasourceFormPanel extends VLayout {
 
         private MainFormLayout                           mainFormLayout;
@@ -257,7 +253,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             identifiersEditionForm = new DatasourceResourceIdentifiersEditionForm();
             contentEditionForm = new DatasourceContentEditionForm();
             mainFormLayout.addEditionCanvas(identifiersEditionForm);
-            //mainFormLayout.addEditionCanvas(contentEditionForm);
+            // mainFormLayout.addEditionCanvas(contentEditionForm);
         }
 
         private void createDatasource() {

@@ -13,11 +13,13 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
+import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetListAction;
@@ -32,18 +34,14 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -56,12 +54,8 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class DatasetListPresenter extends Presenter<DatasetListPresenter.DatasetListView, DatasetListPresenter.DatasetListProxy> implements DatasetListUiHandlers {
+public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<DatasetListPresenter.DatasetListView, DatasetListPresenter.DatasetListProxy> implements DatasetListUiHandlers {
 
-    public final static int                           DATASET_LIST_FIRST_RESULT                           = 0;
-    public final static int                           DATASET_LIST_MAX_RESULTS                            = 30;
-
-    private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
 
     private ExternalItemDto                           operation;
@@ -82,7 +76,8 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
         return getConstants().breadcrumbDatasets();
     }
 
-    public interface DatasetListView extends View, HasUiHandlers<DatasetListUiHandlers> {
+    public interface DatasetListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<DatasetListUiHandlers> {
+
         void setDatasetPaginatedList(String operationUrn, GetDatasetsResult datasetsPaginatedList);
         void goToDatasetListLastPageAfterCreate();
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
@@ -91,9 +86,8 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     @Inject
     public DatasetListPresenter(EventBus eventBus, DatasetListView datasetListView, DatasetListProxy datasetListProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, datasetListView, datasetListProxy);
+        super(eventBus, datasetListView, datasetListProxy, dispatcher);
         this.placeManager = placeManager;
-        this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
     }
 
@@ -105,7 +99,10 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrieveDatasetsByStatisticalOperation(operationUrn, DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+            retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+
+            retrieveDefaultLanguage();
+            retrieveDefaultAgency();
         }
     }
 
@@ -122,12 +119,8 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     DatasetListPresenter.this.operation = result.getOperation();
@@ -142,12 +135,7 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
         final String statisticalOperationUrn = operationUrn;
         VersionableStatisticalResourceWebCriteria criteria = new VersionableStatisticalResourceWebCriteria();
         criteria.setStatisticalOperationUrn(statisticalOperationUrn);
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
-            }
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
@@ -158,17 +146,12 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     @Override
     public void createDataset(DatasetDto datasetDto) {
-        dispatcher.execute(new SaveDatasetAction(datasetDto, operation.getCode()), new WaitingAsyncCallback<SaveDatasetResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
-            }
+        dispatcher.execute(new SaveDatasetAction(datasetDto, operation.getCode()), new WaitingAsyncCallbackHandlingError<SaveDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
                 getView().goToDatasetListLastPageAfterCreate();
             }
         });
@@ -176,44 +159,31 @@ public class DatasetListPresenter extends Presenter<DatasetListPresenter.Dataset
 
     @Override
     public void deleteDatasets(List<String> urnsFromSelected) {
-        dispatcher.execute(new DeleteDatasetListAction(urnsFromSelected), new WaitingAsyncCallback<DeleteDatasetListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
-            }
+        dispatcher.execute(new DeleteDatasetListAction(urnsFromSelected), new WaitingAsyncCallbackHandlingError<DeleteDatasetListResult>(this) {
 
             @Override
             public void onWaitSuccess(DeleteDatasetListResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
-                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), DATASET_LIST_FIRST_RESULT, DATASET_LIST_MAX_RESULTS);
+                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }
-    
+
     @Override
     public void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria) {
-        dispatcher.execute(new GetDsdsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDsdsPaginatedListResult>() {
+        dispatcher.execute(new GetDsdsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDsdsPaginatedListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDsdsPaginatedListResult result) {
                 getView().setDsdsForRelatedDsd(result);
             }
         });
     }
-    
+
     @Override
     public void retrieveStatisticalOperationsForDsdSelection() {
-        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallback<GetStatisticalOperationsPaginatedListResult>() {
-            
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, caught);
-            }
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), operation);
