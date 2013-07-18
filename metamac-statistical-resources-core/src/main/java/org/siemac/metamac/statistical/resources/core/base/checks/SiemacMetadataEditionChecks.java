@@ -13,6 +13,13 @@ public class SiemacMetadataEditionChecks {
         return false;
     }
     
+    public static boolean canMaintainerBeEdited(Long id) {
+        if (id == null) {
+            return true;
+        }
+        return false;
+    }
+    
     public static boolean canKeywordsBeEdited(ProcStatusEnum procStatus) {
         if (ProcStatusEnum.DRAFT.equals(procStatus)) {
             return false;

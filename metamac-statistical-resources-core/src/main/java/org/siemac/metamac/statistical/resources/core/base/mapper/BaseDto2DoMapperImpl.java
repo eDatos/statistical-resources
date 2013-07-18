@@ -51,6 +51,14 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
             target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
                     + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
         }
+        if (SiemacMetadataEditionChecks.canMaintainerBeEdited(target.getId())) {
+            target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
+        }
+        
+        // Not always modifiable
+        if (SiemacMetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
+            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
+        }
 
         // Always Modifiable
         target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
@@ -63,11 +71,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
                 addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
         target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
 
-        if (SiemacMetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
-            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
-        }
 
-        target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
+
         target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR)));
         externalItemDtoListToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
         target.setConformsTo(internationalStringDtoToDo(source.getConformsTo(), target.getConformsTo(), addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO)));
