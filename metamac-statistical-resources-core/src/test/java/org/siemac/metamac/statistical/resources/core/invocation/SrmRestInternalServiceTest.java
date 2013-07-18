@@ -88,6 +88,11 @@ public class SrmRestInternalServiceTest extends StatisticalResourcesBaseTest {
     public void testFindCodesUrns() throws Exception {
         fail("not implemented");
     }
+    
+    @Test
+    public void testRetrieveCodeByUrn() throws Exception {
+        fail("not implemented");
+    }
 
     // -----------------------------------------------------------------------------------
     // ORGANISATION SCHEMES
@@ -110,6 +115,11 @@ public class SrmRestInternalServiceTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testFindOrganisationsUrns() throws Exception {
+        fail("not implemented");
+    }
+    
+    @Test
+    public void testRetrieveAgencyByUrn() throws Exception {
         fail("not implemented");
     }
 

@@ -1654,15 +1654,15 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         //Mock codelist and concept Scheme
         
-        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:uuid:codelist-01", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
         
-        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:uuid:cshm-01", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
         Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
         
         //Create a datastructure with dimensions marked as measure temporal and spatial
         
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:uuid:dsd-urn", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
     }
         

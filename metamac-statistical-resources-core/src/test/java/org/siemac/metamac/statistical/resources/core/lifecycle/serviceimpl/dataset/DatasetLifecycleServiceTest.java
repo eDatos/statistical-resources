@@ -378,7 +378,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:uuid:dsd-urn", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
 
     }

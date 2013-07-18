@@ -521,7 +521,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.setRelatedDsd(dsd);
 
         datasetVersion.setDateNextUpdate(new DateTime().plusDays(10));
-
+        
         ExternalItem codeUpdateFreq = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
         datasetVersion.setUpdateFrequency(codeUpdateFreq);
 

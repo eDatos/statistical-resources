@@ -490,18 +490,26 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     private static ExternalItem mockExternalItem(String code, String urn, TypeExternalArtefactsEnum type) {
-        ExternalItem item = mockExternalItem(code, null, CoreCommonConstants.API_LATEST_WITH_SLASHES + code, urn, urn + ":internal", type, mockInternationalString(), CoreCommonConstants.URL_SEPARATOR
-                + code);
+        String codeNested = null;
+        String uri = CoreCommonConstants.API_LATEST_WITH_SLASHES + code;
+        String urnInternal = urn + ":internal";
+        InternationalString title = mockInternationalString();
+        String managementAppUrl = CoreCommonConstants.URL_SEPARATOR + code;
+
         if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type)) {
-            item.setUrnInternal(null);
+            urnInternal = null;
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(type)) {
-            item.setUrnInternal(null);
+            urnInternal = null;
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(type)) {
-            // nothing to do because urn and urnInternal are ok for SrmExternalItems
+            // nothing to do with urnInternal because it's ok for SrmExternalItems
+            if (TypeExternalArtefactsEnum.AGENCY.equals(type) || TypeExternalArtefactsEnum.CATEGORY.equals(type)) {
+                codeNested = code;
+            }
         } else {
             fail("Unexpected type of ExternalItem:" + type);
         }
-
+        
+        ExternalItem item = mockExternalItem(code, codeNested, uri, urn, urnInternal, type, title, managementAppUrl);
         return item;
     }
 
