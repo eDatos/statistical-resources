@@ -47,7 +47,7 @@ public class GetPublicationsActionHandler extends SecurityActionHandler<GetPubli
         criteria.getPaginator().setCountTotalResults(true);
 
         try {
-            MetamacCriteriaResult<PublicationDto> result = statisticalResourcesServiceFacade.findPublicationByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<PublicationDto> result = statisticalResourcesServiceFacade.findPublicationVersionByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetPublicationsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

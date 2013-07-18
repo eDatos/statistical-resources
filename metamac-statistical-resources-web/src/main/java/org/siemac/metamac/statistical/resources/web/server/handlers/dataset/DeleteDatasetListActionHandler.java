@@ -26,7 +26,7 @@ public class DeleteDatasetListActionHandler extends SecurityActionHandler<Delete
     public DeleteDatasetListResult executeSecurityAction(DeleteDatasetListAction action) throws ActionException {
         try {
             for (String urn : action.getUrns()) {
-                statisticalResourcesServiceFacade.deleteDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+                statisticalResourcesServiceFacade.deleteDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), urn);
             }
         } catch (MetamacException e) {
             WebExceptionUtils.createMetamacWebException(e);

@@ -26,7 +26,7 @@ public class GetDatasetActionHandler extends SecurityActionHandler<GetDatasetAct
     @Override
     public GetDatasetResult executeSecurityAction(GetDatasetAction action) throws ActionException {
         try {
-            DatasetDto dataset = statisticalResourcesServiceFacade.retrieveDatasetByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetUrn());
+            DatasetDto dataset = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetUrn());
             return new GetDatasetResult(dataset);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

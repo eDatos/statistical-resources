@@ -26,7 +26,7 @@ public class DeleteQueriesActionHandler extends SecurityActionHandler<DeleteQuer
     public DeleteQueriesResult executeSecurityAction(DeleteQueriesAction action) throws ActionException {
         try {
             for (String urn : action.getUrns()) {
-                statisticalResourcesServiceFacade.deleteQuery(ServiceContextHolder.getCurrentServiceContext(), urn);
+                statisticalResourcesServiceFacade.deleteQueryVersion(ServiceContextHolder.getCurrentServiceContext(), urn);
             }
             return new DeleteQueriesResult();
         } catch (MetamacException e) {

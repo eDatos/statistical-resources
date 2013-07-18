@@ -14,7 +14,7 @@ public class GetCommonMetadataConfigurationsListActionHandler extends SecurityAc
 
     @Autowired
     private CommonMetadataRestExternalFacade commonMetadataRestExternalFacade;
-    
+
     public GetCommonMetadataConfigurationsListActionHandler() {
         super(GetCommonMetadataConfigurationsListAction.class);
     }
@@ -23,6 +23,5 @@ public class GetCommonMetadataConfigurationsListActionHandler extends SecurityAc
     public GetCommonMetadataConfigurationsListResult executeSecurityAction(GetCommonMetadataConfigurationsListAction action) throws ActionException {
         return new GetCommonMetadataConfigurationsListResult(commonMetadataRestExternalFacade.findConfigurations(action.getCriteria()));
     }
-    
-    
+
 }

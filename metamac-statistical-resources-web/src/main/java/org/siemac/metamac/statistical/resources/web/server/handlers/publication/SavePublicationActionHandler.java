@@ -32,7 +32,7 @@ public class SavePublicationActionHandler extends SecurityActionHandler<SavePubl
             if (publicationToSave.getId() == null) {
                 publicationSaved = statisticalResourcesServiceFacade.createPublication(ServiceContextHolder.getCurrentServiceContext(), publicationToSave, action.getStatisticalOperationDto());
             } else {
-                publicationSaved = statisticalResourcesServiceFacade.updatePublication(ServiceContextHolder.getCurrentServiceContext(), publicationToSave);
+                publicationSaved = statisticalResourcesServiceFacade.updatePublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationToSave);
             }
             return new SavePublicationResult(publicationSaved);
         } catch (MetamacException e) {

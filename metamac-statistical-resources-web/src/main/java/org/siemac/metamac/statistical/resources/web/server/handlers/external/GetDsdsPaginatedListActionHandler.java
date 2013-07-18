@@ -11,16 +11,15 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetDsdsPaginatedListActionHandler extends SecurityActionHandler<GetDsdsPaginatedListAction, GetDsdsPaginatedListResult>  {
+public class GetDsdsPaginatedListActionHandler extends SecurityActionHandler<GetDsdsPaginatedListAction, GetDsdsPaginatedListResult> {
 
     @Autowired
     private SrmRestInternalFacade srmRestInternalFacade;
-    
-    
+
     public GetDsdsPaginatedListActionHandler() {
         super(GetDsdsPaginatedListAction.class);
     }
-    
+
     @Override
     public GetDsdsPaginatedListResult executeSecurityAction(GetDsdsPaginatedListAction action) throws ActionException {
         ExternalItemsResult result = srmRestInternalFacade.findDsds(action.getFirstResult(), action.getMaxResults(), action.getCriteria());

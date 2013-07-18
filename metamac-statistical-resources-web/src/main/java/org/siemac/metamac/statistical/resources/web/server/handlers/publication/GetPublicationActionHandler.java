@@ -26,7 +26,7 @@ public class GetPublicationActionHandler extends SecurityActionHandler<GetPublic
     @Override
     public GetPublicationResult executeSecurityAction(GetPublicationAction action) throws ActionException {
         try {
-            PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getUrn());
+            PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getUrn());
             return new GetPublicationResult(publicationDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

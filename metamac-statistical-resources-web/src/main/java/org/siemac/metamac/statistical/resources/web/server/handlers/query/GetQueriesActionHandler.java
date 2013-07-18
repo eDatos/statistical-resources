@@ -39,7 +39,7 @@ public class GetQueriesActionHandler extends SecurityActionHandler<GetQueriesAct
             criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
             criteria.getPaginator().setCountTotalResults(true);
 
-            MetamacCriteriaResult<QueryDto> result = statisticalResourcesServiceFacade.findQueriesByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<QueryDto> result = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetQueriesResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

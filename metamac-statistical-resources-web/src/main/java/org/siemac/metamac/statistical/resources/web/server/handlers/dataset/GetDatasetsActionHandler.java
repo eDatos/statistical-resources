@@ -47,7 +47,7 @@ public class GetDatasetsActionHandler extends SecurityActionHandler<GetDatasetsA
         criteria.getPaginator().setCountTotalResults(true);
 
         try {
-            MetamacCriteriaResult<DatasetDto> result = statisticalResourcesServiceFacade.findDatasetsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<DatasetDto> result = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetDatasetsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

@@ -36,7 +36,7 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
                 ExternalItemDto statisticalOperation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getStatisticalOperationCode());
                 savedDataset = statisticalResourcesServiceFacade.createDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset(), statisticalOperation);
             } else {
-                savedDataset = statisticalResourcesServiceFacade.updateDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset());
+                savedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDataset());
             }
             return new SaveDatasetResult(savedDataset);
         } catch (MetamacException e) {

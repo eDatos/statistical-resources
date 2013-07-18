@@ -22,7 +22,7 @@ public class GetStatisticalOperationsPaginatedListActionHandler extends Security
 
     @Override
     public GetStatisticalOperationsPaginatedListResult executeSecurityAction(GetStatisticalOperationsPaginatedListAction action) throws ActionException {
-        ExternalItemsResult result = statisticalOperationsRestInternalFacade.findOperations(action.getFirstResult(), action.getMaxResults(), action.getOperation());
+        ExternalItemsResult result = statisticalOperationsRestInternalFacade.findOperations(action.getFirstResult(), action.getMaxResults(), action.getCriteria());
         return new GetStatisticalOperationsPaginatedListResult(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
     }
 

@@ -30,7 +30,7 @@ public class SaveQueryActionHandler extends SecurityActionHandler<SaveQueryActio
             if (action.getQuery().getId() == null) {
                 savedQuery = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQuery());
             } else {
-                savedQuery = statisticalResourcesServiceFacade.updateQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQuery());
+                savedQuery = statisticalResourcesServiceFacade.updateQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQuery());
             }
             return new SaveQueryResult(savedQuery);
         } catch (MetamacException e) {

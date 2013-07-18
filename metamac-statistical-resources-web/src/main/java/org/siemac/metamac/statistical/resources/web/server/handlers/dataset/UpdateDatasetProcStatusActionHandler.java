@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
@@ -26,10 +25,19 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
 
     @Override
     public UpdateDatasetProcStatusResult executeSecurityAction(UpdateDatasetProcStatusAction action) throws ActionException {
-        String urn = action.getUrn();
-        ProcStatusEnum procStatus = action.getNextProcStatus();
+        DatasetDto datasetDto = action.getDatasetDto();
         try {
-
+            switch (action.getNextProcStatus()) {
+                case PRODUCTION_VALIDATION:
+                    datasetDto = statisticalResourcesServiceFacade.sendDatasetVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), datasetDto);
+                    break;
+                case DIFFUSION_VALIDATION:
+                    datasetDto = statisticalResourcesServiceFacade.sendDatasetVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), datasetDto);
+                    break;
+                default:
+                    // TODO: handle more cases
+                    break;
+            }
             /*
              * if (StatisticalResourceProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
              * datasetDto = MockServices.sendDatasetToProductionValidation(urn);
@@ -51,7 +59,6 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
              * datasetDto = MockServices.publishDataset(urn);
              * }
              */
-            DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetByUrn(ServiceContextHolder.getCurrentServiceContext(), urn);
 
             return new UpdateDatasetProcStatusResult(datasetDto);
         } catch (MetamacException e) {

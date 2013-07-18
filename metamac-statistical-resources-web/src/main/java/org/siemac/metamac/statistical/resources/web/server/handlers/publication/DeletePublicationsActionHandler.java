@@ -26,7 +26,7 @@ public class DeletePublicationsActionHandler extends SecurityActionHandler<Delet
     public DeletePublicationsResult executeSecurityAction(DeletePublicationsAction action) throws ActionException {
         try {
             for (String urn : action.getUrns()) {
-                statisticalResourcesServiceFacade.deletePublication(ServiceContextHolder.getCurrentServiceContext(), urn);
+                statisticalResourcesServiceFacade.deletePublicationVersion(ServiceContextHolder.getCurrentServiceContext(), urn);
             }
             return new DeletePublicationsResult();
         } catch (MetamacException e) {

@@ -26,7 +26,7 @@ public class GetQueryActionHandler extends SecurityActionHandler<GetQueryAction,
     @Override
     public GetQueryResult executeSecurityAction(GetQueryAction action) throws ActionException {
         try {
-            QueryDto queryDto = statisticalResourcesServiceFacade.retrieveQueryByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getQueryUrn());
+            QueryDto queryDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getQueryUrn());
             return new GetQueryResult(queryDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
