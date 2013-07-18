@@ -202,11 +202,11 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
                     taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
 
                     // File 01
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
-                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
                         fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_STR_ECB_EXR_RG_XS));
                         taskInfoDataset.addFile(fileDescriptorDto);
@@ -215,7 +215,6 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     // File 02
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
-                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
                         fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
                         taskInfoDataset.addFile(fileDescriptorDto);

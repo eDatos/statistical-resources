@@ -8,11 +8,17 @@ import static org.quartz.TriggerBuilder.newTrigger;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.quartz.DateBuilder.IntervalUnit;
@@ -33,10 +39,13 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2Stat
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
+import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.task.exception.TaskNotFoundException;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,9 +103,13 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         JobKey jobKey = createJobKeyForDatasetImportation(taskInfoDataset.getRepoDatasetId());
         TriggerKey triggerKey = new TriggerKey("trigger_" + taskInfoDataset.getRepoDatasetId(), "importation");
 
+        Task task = null;
         OutputStream os = null;
         try {
-            // TODO Mark importation in progress
+            // Mark importation in progress
+            task = new Task(jobKey.getName());
+            task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
+            createTask(ctx, task);
 
             // Scheduler an importation job
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
@@ -110,7 +123,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             StringBuilder filePaths = new StringBuilder();
             StringBuilder fileNames = new StringBuilder();
             for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
-                File file = File.createTempFile("data_", "_" + fileDescriptorDto.getDatasetFileFormatEnum() + ".imp");
+                File file = File.createTempFile("data_", "_" + taskInfoDataset.getDatasetFileFormatEnum() + ".imp");
                 file.deleteOnExit();
                 os = new FileOutputStream(file);
                 IOUtils.copy(fileDescriptorDto.getInputMessage(), os);
@@ -129,7 +142,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
                     .usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString()).usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
-                    .usingJobData(ImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId()).usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
+                    .usingJobData(ImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId()).usingJobData(ImportDatasetJob.USER, ctx.getUserId())
+                    .usingJobData(ImportDatasetJob.FILE_FORMAT, taskInfoDataset.getDatasetFileFormatEnum().toString()).requestRecovery().build();
 
             SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
@@ -155,6 +169,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         taskServiceInvocationValidator.checkProcessImportationTask(ctx, taskInfoDataset);
 
         processDatasetSDMX_21(taskInfoDataset);
+        markTaskAsFinished(ctx, taskInfoDataset.getJobKey());
     }
 
     @Override
@@ -165,6 +180,58 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
+    }
+
+    @Override
+    public Task createTask(ServiceContext ctx, Task task) throws MetamacException {
+        // Save version
+        task = getTaskRepository().save(task);
+        return task;
+    }
+
+    @Override
+    public Task updateTask(ServiceContext ctx, Task task) throws MetamacException {
+        // Save version
+        task = getTaskRepository().save(task);
+        return task;
+    }
+
+    @Override
+    public Task retrieveTaskByJob(ServiceContext ctx, String job) throws MetamacException {
+        try {
+            Task task = getTaskRepository().findByKey(job);
+            return task;
+        } catch (TaskNotFoundException e) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_NOT_FOUND).withMessageParameters(job).build();
+        }
+    }
+
+    @Override
+    public void markTaskAsFinished(ServiceContext ctx, String job) throws MetamacException {
+
+        // Update
+        Task task = retrieveTaskByJob(ctx, job);
+        task.setStatus(TaskStatusTypeEnum.FINISHED);
+        updateTask(ctx, task);
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String job, Exception exception) throws MetamacException {
+        // Update
+        Task task = retrieveTaskByJob(ctx, job);
+        task.setStatus(TaskStatusTypeEnum.FAILED);
+        updateTask(ctx, task);
+        // TODO recuperación de errores
+    }
+
+    @Override
+    public PagedResult<Task> findTasksByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Find
+        if (conditions == null) {
+            conditions = ConditionalCriteriaBuilder.criteriaFor(Task.class).distinctRoot().build();
+        }
+        PagedResult<Task> pagedResult = getTaskRepository().findByCondition(conditions, pagingParameter);
+        return pagedResult;
     }
 
     /****************************************************************
@@ -178,28 +245,39 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     private void processDatasetSDMX_21(TaskInfoDataset taskInfoDataset) throws MetamacException {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
-        ManipulateSdmx21DataCallbackImpl callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade,
-                taskInfoDataset.getRepoDatasetId());
-
-        try {
-            for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
-                if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                    callback.setDataSourceID(generateDataSourceId(fileDescriptor.getFileName()));
-                    Sdmx21Parser.parseData(fileDescriptor.getInputMessage(), callback);
-                } else if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                    throw new UnsupportedOperationException("Import PX");
-                } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                    throw new UnsupportedOperationException("Import CSV");
-                }
-            }
-        } catch (Exception e) {
-            // TODO Lanzar excepcion de metmac importando sdmx y gestión-recuperación de errores.
-            e.printStackTrace();
+        // Prepare callback
+        ManipulateSdmx21DataCallbackImpl callback = null;
+        if (DatasetFileFormatEnum.SDMX_2_1.equals(taskInfoDataset.getDatasetFileFormatEnum())) {
+            callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade, taskInfoDataset.getRepoDatasetId());
+            importDatasetSDMX_21(callback, taskInfoDataset.getFiles());
+        } else if (DatasetFileFormatEnum.PX.equals(taskInfoDataset.getDatasetFileFormatEnum())) {
+            throw new UnsupportedOperationException("Import PX");
+        } else if (DatasetFileFormatEnum.CSV.equals(taskInfoDataset.getDatasetFileFormatEnum())) {
+            throw new UnsupportedOperationException("Import CSV");
         }
+
     }
 
     private String generateDataSourceId(String fileName) {
         return fileName + "_" + new DateTime().toString();
     }
 
+    private void importDatasetSDMX_21(ManipulateSdmx21DataCallbackImpl callback, List<FileDescriptor> fileDescriptors) throws MetamacException {
+        try {
+            for (FileDescriptor fileDescriptor : fileDescriptors) {
+                callback.setDataSourceID(generateDataSourceId(fileDescriptor.getFileName()));
+                Sdmx21Parser.parseData(fileDescriptor.getInputMessage(), callback);
+            }
+        } catch (Exception e) {
+            // Concert parser exception to metamac exception
+            MetamacException throwableMetamacException = null;
+            if (e instanceof MetamacException) {
+                throwableMetamacException = (MetamacException) e;
+            } else {
+                throwableMetamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
+                        .build();
+            }
+            throw throwableMetamacException;
+        }
+    }
 }

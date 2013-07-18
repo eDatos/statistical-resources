@@ -1,8 +1,20 @@
 package org.siemac.metamac.statistical.resources.core.task.serviceimpl;
 
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +34,23 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     @Override
     public void executeImportationTask(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
         taskservice.processImportationTask(ctx, taskInfoDataset);
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String job, Exception exception) throws MetamacException {
+        taskservice.markTaskAsFailed(ctx, job, exception);
+    }
+
+    @Override
+    public void markAllInProgressJobToFailed(ServiceContext ctx) throws MetamacException {
+        // Mark as failed current IN_PROGRESS states, if are available.
+        List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.status()).eq(TaskStatusTypeEnum.IN_PROGRESS).build();
+        PagedResult<Task> pagedResult = taskservice.findTasksByCondition(ctx, conditionList, PagingParameter.noLimits());
+
+        for (Task task : pagedResult.getValues()) {
+            // Other Exception
+            MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN)).build();
+            taskservice.markTaskAsFailed(ctx, task.getJob(), metamacException);
+        }
     }
 }

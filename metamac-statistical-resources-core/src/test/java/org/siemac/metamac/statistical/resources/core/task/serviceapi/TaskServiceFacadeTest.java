@@ -16,8 +16,19 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     protected TaskServiceFacade taskServiceFacade;
 
     @Override
-    // @Test
     public void testExecuteImportationTask() throws Exception {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void testMarkTaskAsFailed() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testMarkAllInProgressJobToFailed() throws Exception {
+        // TODO Auto-generated method stub
+
     }
 }

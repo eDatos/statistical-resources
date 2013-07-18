@@ -17,19 +17,35 @@ Application DatasetsStatisticalResources {
 			"Perform the importation task"
     		executeImportationTask(@TaskInfoDataset taskInfoDataset) throws MetamacException;
 
+    		// General JOBS
+    		markTaskAsFailed(String job, java.lang.Exception exception) throws MetamacException;
+    		markAllInProgressJobToFailed() throws MetamacException;
 		}
 		
 		"Provides access to import data operations"
 		Service TaskService {
+			> @TaskRepository
 			
 			"Plannify a scheduled task to import"
 			String plannifyImportationDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
-			
 			"Perform the importation task"
     		processImportationTask(@TaskInfoDataset taskInfoDataset) throws MetamacException;
-    		
     		"Check if exists a job task in the @param datasetId"
     		boolean existTaskInDataset(String datasetId) throws MetamacException;
+    		
+    		
+    		"Creates a task"
+			@Task createTask(@Task task) throws MetamacException;
+			"Updates a task"
+			@Task updateTask(@Task task) throws MetamacException;
+			"Retrieves a task by job key"
+			@Task retrieveTaskByJob(String job) throws MetamacException;
+    		"Mark task as finished"
+			markTaskAsFinished(String job) throws MetamacException;
+		    "Mark task as failed"
+    		markTaskAsFailed(String job, java.lang.Exception exception) throws MetamacException;
+    		"Find information about tasks"
+			PagedResult<@Task> findTasksByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 		}
 		
 		// ----------------------------------------------------------------
@@ -42,7 +58,6 @@ Application DatasetsStatisticalResources {
 	 		hint = "idSequence=TASKS"
 
 			String job key;
-			String fileName nullable;
 			-@TaskStatusTypeEnum status not nullable;
 				   		      	
 	   		Repository TaskRepository {

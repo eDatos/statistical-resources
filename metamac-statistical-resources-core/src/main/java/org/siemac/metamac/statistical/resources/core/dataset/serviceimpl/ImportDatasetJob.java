@@ -12,6 +12,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
@@ -29,6 +30,7 @@ public class ImportDatasetJob implements Job {
     public static final String USER                    = "user";
     public static final String FILE_PATHS              = "filePaths";
     public static final String FILE_NAMES              = "fileNames";
+    public static final String FILE_FORMAT             = "fileFormat";
     public static final String DATA_STRUCTURE_URN      = "dataStructureUrn";
     public static final String REPO_DATASET_ID         = "repoDatasetId";
 
@@ -65,18 +67,18 @@ public class ImportDatasetJob implements Job {
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES)));
             taskInfoDataset.setJobKey(jobKey.getName());
+            taskInfoDataset.setDatasetFileFormatEnum(DatasetFileFormatEnum.valueOf(data.getString(FILE_FORMAT)));
             taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
 
             getTaskServiceFacade().executeImportationTask(serviceContext, taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
         } catch (Exception e) {
             logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed", e);
-            // TODO REcuperación de errores
-            // try {
-            // getTaskServiceFacade().markTaskAsFailed(serviceContext, jobKey.getName(), e);
-            // } catch (MetamacException e1) {
-            // logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed and it can't marked as error", e1);
-            // }
+            try {
+                getTaskServiceFacade().markTaskAsFailed(serviceContext, jobKey.getName(), e);
+            } catch (MetamacException e1) {
+                logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed and it can't marked as error", e1);
+            }
         }
     }
 
@@ -87,15 +89,6 @@ public class ImportDatasetJob implements Job {
 
         for (int i = 0; i < files.length; i++) {
             FileDescriptor fileDescriptorDto = new FileDescriptor();
-            if (files[i].endsWith(DatasetFileFormatEnum.SDMX_2_1 + ".imp")) {
-                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
-            } else if (files[i].endsWith(DatasetFileFormatEnum.PX + ".imp")) {
-                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.PX);
-            } else if (files[i].endsWith(DatasetFileFormatEnum.CSV + ".imp")) {
-                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.CSV);
-            } else {
-                throw new UnsupportedOperationException("Unrecognized file format");
-            }
 
             fileDescriptorDto.setFileName(names[i]);
             fileDescriptorDto.setInputMessage(new FileInputStream(files[i]));

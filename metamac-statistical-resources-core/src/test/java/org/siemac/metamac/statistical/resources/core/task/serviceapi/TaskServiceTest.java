@@ -33,4 +33,40 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void testMarkTaskAsFinished() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testMarkTaskAsFailed() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testCreateTask() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testUpdateTask() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveTaskByJob() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testFindTasksByCondition() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
 }
