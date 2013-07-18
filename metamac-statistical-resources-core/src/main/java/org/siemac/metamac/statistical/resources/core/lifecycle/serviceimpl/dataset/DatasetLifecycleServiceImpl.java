@@ -267,7 +267,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         return codes;
     }
 
-    private DsdAttribute getDsdAttributeByType(DataStructure dataStructure, DsdComponentType type) {
+    private DsdAttribute getDsdAttributeByType(DataStructure dataStructure, DsdComponentType type) throws MetamacException {
         List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
         DsdAttribute foundAttribute = filterDsdAttributeWithType(attributes, type);
         return foundAttribute;
