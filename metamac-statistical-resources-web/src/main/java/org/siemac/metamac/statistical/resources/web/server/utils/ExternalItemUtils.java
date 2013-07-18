@@ -6,7 +6,6 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.rest.common.v1_0.domain.ListBase;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
-
 public class ExternalItemUtils extends org.siemac.metamac.web.common.client.utils.ExternalItemUtils {
 
     public static ExternalItemsResult createExternalItemsResultFromListBase(ListBase listBase, List<ExternalItemDto> dtos) {
