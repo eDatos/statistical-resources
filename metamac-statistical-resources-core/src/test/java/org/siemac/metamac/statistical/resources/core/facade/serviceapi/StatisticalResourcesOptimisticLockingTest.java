@@ -105,7 +105,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     private DatasetRepositoriesServiceFacade  statisticsDatasetRepositoriesServiceFacade;
 
     @Before
-    public void onBeforeTest() {
+    public void onBeforeTest() throws Exception {
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
 

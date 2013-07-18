@@ -87,7 +87,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     public static final String               DATA_GEN_ECB_EXR_RG_FLAT  = "/sdmx/2_1/dataset/structured/ecb_exr_rg_flat.xml";
 
     @Before
-    public void onBeforeTest() {
+    public void onBeforeTest() throws Exception {
         // DSD
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG());
 
