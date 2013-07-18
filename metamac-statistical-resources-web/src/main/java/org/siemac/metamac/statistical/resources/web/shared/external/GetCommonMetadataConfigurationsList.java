@@ -16,5 +16,5 @@ public class GetCommonMetadataConfigurationsList {
     CommonConfigurationWebCriteria criteria;
 
     @Out(1)
-    List<ExternalItemDto>     results;
+    List<ExternalItemDto>          results;
 }

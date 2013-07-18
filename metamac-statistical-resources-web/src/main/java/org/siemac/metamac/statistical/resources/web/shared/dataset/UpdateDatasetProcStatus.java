@@ -11,15 +11,12 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class UpdateDatasetProcStatus {
 
     @In(1)
-    String                            urn;
+    DatasetDto     datasetDto;
 
     @In(2)
     ProcStatusEnum nextProcStatus;
 
-    @In(3)
-    ProcStatusEnum currentProcStatus;
-
     @Out(1)
-    DatasetDto                        datasetDto;
+    DatasetDto     resultDatasetDto;
 
 }

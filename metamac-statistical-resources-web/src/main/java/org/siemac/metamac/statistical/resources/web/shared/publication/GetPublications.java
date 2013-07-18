@@ -13,20 +13,20 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetPublications {
 
     @In(1)
-    int                    firstResult;
+    int                                       firstResult;
 
     @In(2)
-    int                    maxResults;
+    int                                       maxResults;
 
     @In(3)
     VersionableStatisticalResourceWebCriteria criteria;
 
     @Out(1)
-    List<PublicationDto>   publicationDtos;
+    List<PublicationDto>                      publicationDtos;
 
     @Out(2)
-    Integer                firstResultOut;
+    Integer                                   firstResultOut;
 
     @Out(3)
-    Integer                totalResults;
+    Integer                                   totalResults;
 }

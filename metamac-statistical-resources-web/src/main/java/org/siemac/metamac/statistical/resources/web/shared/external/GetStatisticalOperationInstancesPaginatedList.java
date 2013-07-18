@@ -10,23 +10,27 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetStatisticalOperationsPaginatedList {
+public class GetStatisticalOperationInstancesPaginatedList {
 
     @In(1)
-    int                   firstResult;
+    String                operationCode;
 
     @In(2)
-    int                   maxResults;
+    int                   firstResult;
 
     @In(3)
+    int                   maxResults;
+
+    @In(4)
     MetamacWebCriteria    criteria;
 
     @Out(1)
-    List<ExternalItemDto> operationsList;
+    List<ExternalItemDto> operationInstancesList;
 
     @Out(2)
     Integer               firstResultOut;
 
     @Out(3)
     Integer               totalResults;
+
 }

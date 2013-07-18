@@ -11,7 +11,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class UpdatePublicationProcStatus {
 
     @In(1)
-    String                            urn;
+    String         urn;
 
     @In(2)
     ProcStatusEnum nextProcStatus;
@@ -20,5 +20,5 @@ public class UpdatePublicationProcStatus {
     ProcStatusEnum currentProcStatus;
 
     @Out(1)
-    PublicationDto                    publicationDto;
+    PublicationDto publicationDto;
 }

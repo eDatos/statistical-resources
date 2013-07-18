@@ -13,20 +13,20 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasets {
 
     @In(1)
-    int                firstResult;
+    int                                       firstResult;
 
     @In(2)
-    int                maxResults;
+    int                                       maxResults;
 
     @In(3)
     VersionableStatisticalResourceWebCriteria criteria;
 
     @Out(1)
-    List<DatasetDto>   datasetDtos;
+    List<DatasetDto>                          datasetDtos;
 
     @Out(2)
-    Integer            firstResultOut;
+    Integer                                   firstResultOut;
 
     @Out(3)
-    Integer            totalResults;
+    Integer                                   totalResults;
 }

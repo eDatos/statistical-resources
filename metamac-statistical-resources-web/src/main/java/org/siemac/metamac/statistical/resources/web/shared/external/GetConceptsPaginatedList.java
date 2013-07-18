@@ -3,14 +3,14 @@ package org.siemac.metamac.statistical.resources.web.shared.external;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetStatisticalOperationsPaginatedList {
+public class GetConceptsPaginatedList {
 
     @In(1)
     int                   firstResult;
@@ -19,10 +19,10 @@ public class GetStatisticalOperationsPaginatedList {
     int                   maxResults;
 
     @In(3)
-    MetamacWebCriteria    criteria;
+    ItemSchemeWebCriteria criteria;
 
     @Out(1)
-    List<ExternalItemDto> operationsList;
+    List<ExternalItemDto> concepts;
 
     @Out(2)
     Integer               firstResultOut;

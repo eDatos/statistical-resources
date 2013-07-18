@@ -11,6 +11,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
 public class GetDsdsPaginatedList {
+
     @In(1)
     int                   firstResult;
 
@@ -18,14 +19,14 @@ public class GetDsdsPaginatedList {
     int                   maxResults;
 
     @In(3)
-    DsdWebCriteria          criteria;
+    DsdWebCriteria        criteria;
 
     @Out(1)
     List<ExternalItemDto> dsdsList;
 
     @Out(2)
-    Integer            firstResultOut;
+    Integer               firstResultOut;
 
     @Out(3)
-    Integer            totalResults;
+    Integer               totalResults;
 }
