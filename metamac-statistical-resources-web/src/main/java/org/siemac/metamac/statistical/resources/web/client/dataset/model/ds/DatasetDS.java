@@ -25,8 +25,8 @@ public class DatasetDS extends StatisticalResourceDS {
     public static final String BIBLIOGRAPHIC_CITATION     = "ds-bib-cit";
 
     // PRODUCTION DESCRIPTORS
-    public static final String RELATED_DSD                        = "ds-dsd";
-    public static final String RELATED_DSD_VIEW                        = "ds-dsd-view";
+    public static final String RELATED_DSD                = "ds-dsd";
+    public static final String RELATED_DSD_VIEW           = "ds-dsd-view";
 
     // DTO
     public static final String DTO                        = "ds-dto";
