@@ -4,10 +4,18 @@ Application DatasetsStatisticalResources {
 	Module stat_resource_tasks_enums {
 		basePackage=org.siemac.metamac.statistical.resources.core.enume.task
 
+		"Data File Format Enumerated"
     	enum DatasetFileFormatEnum {
     		SDMX_2_1,
     		PX,
     		CSV
+    	}
+    	
+    	"Task Status Type Enumerated"
+    	enum TaskStatusTypeEnum {
+    		IN_PROGRESS,
+    		FAILED,
+    		FINISHED
     	}
     	
 	}

@@ -36,5 +36,23 @@ Application DatasetsStatisticalResources {
 		// 							ENTITIES
 		// ---------------------------------------------------------------- 
 		
+		"Provides information about the tasks in background"	
+	    Entity Task {
+	   	 	databaseTable = "TB_TASKS"
+	 		hint = "idSequence=TASKS"
+
+			String job key;
+			String fileName nullable;
+			-@TaskStatusTypeEnum status not nullable;
+				   		      	
+	   		Repository TaskRepository {
+	   			save;
+	   			delete;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				findByKey;
+			}
+	    }
+	    
 	}
 }
