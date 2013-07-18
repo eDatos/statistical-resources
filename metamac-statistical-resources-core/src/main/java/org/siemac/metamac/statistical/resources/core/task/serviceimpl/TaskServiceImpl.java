@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -31,6 +32,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
+import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
@@ -174,13 +176,24 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 taskInfoDataset.getRepoDatasetId());
 
         try {
-            for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
-                Sdmx21Parser.parseData(fileDescriptorDto.getInputMessage(), callback);
+            for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
+                if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
+                    callback.setDataSourceID(generateDataSourceId(fileDescriptor.getFileName()));
+                    Sdmx21Parser.parseData(fileDescriptor.getInputMessage(), callback);
+                } else if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
+                    throw new UnsupportedOperationException("Import PX");
+                } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
+                    throw new UnsupportedOperationException("Import CSV");
+                }
             }
         } catch (Exception e) {
             // TODO Lanzar excepcion de metmac importando sdmx y gestión-recuperación de errores.
             e.printStackTrace();
         }
+    }
+
+    private String generateDataSourceId(String fileName) {
+        return fileName + "_" + new DateTime().toString();
     }
 
 }

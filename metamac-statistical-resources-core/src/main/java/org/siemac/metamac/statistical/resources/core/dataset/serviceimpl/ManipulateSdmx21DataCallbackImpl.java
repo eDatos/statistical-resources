@@ -35,6 +35,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 
@@ -74,6 +75,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     private Set<String>                            keyAttributesAdded                      = new HashSet<String>();
     private DatasetRepositoryDto                   datasetRepositoryDto                    = null;
     private String                                 repoDatasetID                           = null;
+    private String                                 dataSourceID                            = null;
 
     public ManipulateSdmx21DataCallbackImpl(DataStructure dataStructure, SrmRestInternalService srmRestInternalService, Metamac2StatRepoMapper metamac2StatRepoMapper,
             DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, String datasetID) throws MetamacException {
@@ -130,7 +132,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         }
 
         // Max Attributes in Observation Level
-        datasetRepositoryDto.setMaxAttributesObservation(this.attributeIdsAtObservationLevelSet.size());
+        datasetRepositoryDto.setMaxAttributesObservation(this.attributeIdsAtObservationLevelSet.size() + 1); // +1 by Extra Attribute with information about data source
 
         // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
         // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
@@ -154,13 +156,13 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     @Override
     public void insertDataAndAttributes(DataContainer dataContainer) {
 
-        List<ObservationExtendedDto> dataDtos = new ArrayList<ObservationExtendedDto>();
-        List<AttributeDto> attributeDtos = new ArrayList<AttributeDto>();
+        List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
+        List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
 
         try {
 
             // Transform Data y Attributes (series or observation level) into repository model
-            metamac2StatRepoMapper.populateDatas(dataContainer, this.attributesProcessorMap, dataDtos, attributeDtos);
+            metamac2StatRepoMapper.populateDatas(dataContainer, this.attributesProcessorMap, dataDtos, attributeDtos, this.dataSourceID);
 
             // Transform Attributes (group level) into repository model
             metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos, this.mandatoryAttributeIdsAtObservationLevel);
@@ -219,6 +221,10 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         return new ArrayList<ComponentInfo>(this.attributesInfoMap.values());
     }
 
+    public void setDataSourceID(String dataSourceID) {
+        this.dataSourceID = dataSourceID;
+    }
+
     /*
      * In metamac only are valid the datasets that references to the "dsdUrn" data structure definition.
      * (non-Javadoc)
@@ -232,7 +238,6 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
     /**************************************************************************
      * PROCESSORS
-     * @throws MetamacException 
      **************************************************************************/
     private void calculateCacheInfo() throws MetamacException {
         MultiMap enumerationRepresentationsMultimap = MultiValueMap.decorate(new HashMap<String, Set<String>>(), HashSet.class);
@@ -395,13 +400,13 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             }
 
             // Number of attributes at observation level, can not exceed the maximum cardinality.
-            if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size()) {
+            if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size() + 1) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED).build();
             }
 
             // The used attribute if correct
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId())) {
+                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !Metamac2StatRepoMapperImpl.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                     throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH).withMessageParameters(attributeBasicDto.getAttributeId())
                             .build();
                 }
@@ -433,7 +438,9 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
             // The codes of attributes must be defined in the enumerated representation
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue());
+                if (!Metamac2StatRepoMapperImpl.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+                    checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue());
+                }
             }
         }
 

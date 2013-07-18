@@ -10,8 +10,11 @@ import org.apache.commons.lang.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
@@ -29,23 +32,26 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
 @Component(value = "metamac2StatRepoMapper")
 public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
 
+    public static String DATA_SOURCE_ID = "DATA_SOURCE_ID";
+
     @Override
-    public void populateDatas(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos)
-            throws MetamacException {
+    public void populateDatas(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos,
+            String datasourceId) throws MetamacException {
         if (dataDtos == null || attributeDtos == null) {
             return;
         }
 
         // Data in Series
         if (!dataContainer.getSeries().isEmpty()) {
-            processDatasInSeries(dataContainer, attributesProcessorMap, dataDtos, attributeDtos);
+            processDatasInSeries(dataContainer, attributesProcessorMap, dataDtos, attributeDtos, datasourceId);
         } else if (!dataContainer.getObservations().isEmpty()) {
-            processDatasInFlat(dataContainer, attributesProcessorMap, dataDtos, attributeDtos);
+            processDatasInFlat(dataContainer, attributesProcessorMap, dataDtos, attributeDtos, datasourceId);
         }
 
     }
 
-    private void processDatasInFlat(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos) {
+    private void processDatasInFlat(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos,
+            List<AttributeDto> attributeDtos, String datasourceId) throws MetamacException {
         // Data in observations
         for (Observation observation : dataContainer.getObservations()) {
             ObservationExtendedDto dataDto = new ObservationExtendedDto();
@@ -57,6 +63,8 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
             dataDto.setPrimaryMeasure(observation.getObservationValue().getValue());
 
             // Attributes *************************
+            dataDto.addAttribute(createDataSourceIdentificationAttribute(dataDto.getCodesDimension(), datasourceId)); // Add identification datasource attribute
+
             for (IdValuePair idValuePair : observation.getAttributes()) {
                 AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
 
@@ -76,7 +84,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
     }
 
     private void processDatasInSeries(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos,
-            List<AttributeDto> attributeDtos) throws MetamacException {
+            List<AttributeDto> attributeDtos, String datasourceId) throws MetamacException {
         for (Serie serie : dataContainer.getSeries()) {
 
             for (Observation observation : serie.getObs()) {
@@ -90,6 +98,8 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                 dataDto.setPrimaryMeasure(observation.getObservationValue().getValue());
 
                 // Attributes *************************
+                dataDto.addAttribute(createDataSourceIdentificationAttribute(dataDto.getCodesDimension(), datasourceId)); // Add identification datasource attribute
+
                 for (IdValuePair idValuePair : observation.getAttributes()) {
                     AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
 
@@ -117,7 +127,6 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
             }
 
         }
-
     }
 
     @Override
@@ -145,6 +154,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         }
 
     }
+
     @Override
     public void processDatasetAttribute(List<IdValuePair> attributes, List<AttributeDto> attributeDtos) throws MetamacException {
         if (attributeDtos == null) {
@@ -316,5 +326,38 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         }
 
         return codeDimensionDtos;
+    }
+
+    /**
+     * Create a data source extra identification attribute
+     * 
+     * @param keys
+     * @param dataSourceId
+     * @return AttributeDto
+     */
+    private AttributeDto createDataSourceIdentificationAttribute(List<CodeDimensionDto> keys, String dataSourceId) throws MetamacException {
+        AttributeDto attributeDto = new AttributeDto();
+
+        if (StringUtils.isEmpty(dataSourceId)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.TASK_DATASOURCE_ID).build();
+        }
+
+        // Keys
+        attributeDto.getCodesDimension().addAll(keys);
+
+        // Data
+        InternationalStringDto internationalStringDto = new InternationalStringDto();
+        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+        localisedStringDto.setLabel(dataSourceId);
+        // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
+        // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
+        localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+        internationalStringDto.addText(localisedStringDto);
+
+        attributeDto.setValue(internationalStringDto);
+
+        // Attribute Id
+        attributeDto.setAttributeId(DATA_SOURCE_ID);
+        return attributeDto;
     }
 }

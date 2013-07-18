@@ -24,10 +24,11 @@ public interface Metamac2StatRepoMapper {
      * @param attributesMap
      * @param dataDtos
      * @param attributeDtos
+     * @param datasourceId
      * @throws MetamacException
      */
-    public void populateDatas(DataContainer dataContainerDto, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos)
-            throws MetamacException;
+    public void populateDatas(DataContainer dataContainerDto, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos,
+            String datasourceId) throws MetamacException;
 
     /**
      * Adds attributes which are grouped into @param second

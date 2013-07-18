@@ -84,7 +84,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     public static final String               DATA_GEN_ECB_EXR_RG_XS    = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
     public static final String               URN_DSD_GEN_ECB_EXR_RG_XS = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
-    public static final String               DATA_GEN_ECB_EXR_RG_FLAT  = "/sdmx/2_1/dataset/structured/ecb_exr_rg_flat.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT  = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -150,7 +150,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // int kaka = 2;
     }
 
-    @Test
+//    @Test
     // @DirtyDatabase
     public void testImport_Sdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
