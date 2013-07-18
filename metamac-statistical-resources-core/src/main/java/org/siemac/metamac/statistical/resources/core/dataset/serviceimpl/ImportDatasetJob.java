@@ -66,6 +66,7 @@ public class ImportDatasetJob implements Job {
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES)));
             taskInfoDataset.setJobKey(jobKey.getName());
             taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
+
             getTaskServiceFacade().executeImportationTask(serviceContext, taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
         } catch (Exception e) {

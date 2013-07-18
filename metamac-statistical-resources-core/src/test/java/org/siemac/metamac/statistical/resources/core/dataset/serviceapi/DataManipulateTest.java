@@ -1,12 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
-import static org.quartz.DateBuilder.futureDate;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -14,28 +15,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.quartz.DateBuilder.IntervalUnit;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SimpleTrigger;
-import org.quartz.TriggerKey;
-import org.quartz.impl.SchedulerRepository;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
-import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -57,7 +52,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
-    private static Logger                    logger                    = LoggerFactory.getLogger(DataManipulateTest.class);
+    private static Logger                    logger                   = LoggerFactory.getLogger(DataManipulateTest.class);
 
     @Autowired
     private Metamac2StatRepoMapper           metamac2StatRepoMapper;
@@ -77,14 +72,31 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     public String                            jobKey;
 
+    private JdbcTemplate                     jdbcTemplate;
+
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
     protected EntityManager                  entityManager;
 
-    private final ServiceContext             serviceContext            = new ServiceContext("system", "123456", "junit");
+    private final ServiceContext             serviceContext           = new ServiceContext("system", "123456", "junit");
 
-    public static final String               DATA_GEN_ECB_EXR_RG_XS    = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
-    public static final String               URN_DSD_GEN_ECB_EXR_RG_XS = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
-    public static final String               DATA_GEN_ECB_EXR_RG_FLAT  = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
+    public static final String               DATA_STR_ECB_EXR_RG_XS   = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
+    public static final String               URN_DSD_ECB_EXR_RG       = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
+
+    @Autowired
+    @Qualifier("dataSourceDatasetRepository")
+    public void setDataSource(DataSource dataSource) throws Exception {
+        Connection connection = null;
+        try {
+            this.jdbcTemplate = new JdbcTemplate(dataSource);
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(true);
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -137,22 +149,47 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE")).thenReturn(
                 Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
 
+        clearDataBase(); // Clear dirty database
+    }
+
+    private class TableNameResultSetExtractor implements ResultSetExtractor<String> {
+
+        @Override
+        public String extractData(ResultSet rs) throws SQLException {
+            return rs.getString(1);
+        }
+    }
+
+    private class TableNameRowMapper implements RowMapper<String> {
+
+        @Override
+        public String mapRow(ResultSet rs, int line) throws SQLException {
+            TableNameResultSetExtractor extractor = new TableNameResultSetExtractor();
+            return extractor.extractData(rs);
+        }
+    }
+
+    public void clearDataBase() {
+        List<String> tableNames = this.jdbcTemplate.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
+
+        // Truncate tables
+        this.jdbcTemplate.update("truncate table TB_LOCALISED_STRINGS");
+        this.jdbcTemplate.update("truncate table TB_DATASET_DIMENSIONS");
+        this.jdbcTemplate.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
+
+        // Deletes
+        this.jdbcTemplate.update("delete from TB_ATTRIBUTES");
+        this.jdbcTemplate.update("delete from TB_DATASETS");
+        this.jdbcTemplate.update("delete from TB_INTERNATIONAL_STRINGS");
+
+        // Drop table data
+        for (String tableName : tableNames) {
+            this.jdbcTemplate.update("drop table " + tableName);
+        }
     }
 
     @Test
     public void testImportSdmx21Datasource() throws Exception {
-
-        // ManipulateSdmx21DataCallbackImpl callback = new ManipulateSdmx21DataCallbackImpl(mockDSD_ECB_EXR_RG(), metamac2StatRepoMapper, datasetRepositoriesServiceFacade);
-        // InputStream sdmxStream = DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT);
-        //
-        // Sdmx21Parser.parseData(sdmxStream, callback);
-        //
-        // int kaka = 2;
-    }
-
-//    @Test
-    // @DirtyDatabase
-    public void testImport_Sdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -163,14 +200,26 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                 try {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
-                    taskInfoDataset.setDataStructureUrn(URN_DSD_GEN_ECB_EXR_RG_XS);
-                    taskInfoDataset.setRepoDatasetId("TEST_DATA_GEN_ECB_EXR_RG_FLAT");
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
 
-                    FileDescriptor fileDescriptorDto = new FileDescriptor();
-                    fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
-                    fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
-                    fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
-                    taskInfoDataset.addFile(fileDescriptorDto);
+                    // File 01
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
+                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_STR_ECB_EXR_RG_XS));
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    // File 02
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
+                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
 
                     jobKey = taskService.plannifyImportationDataset(serviceContext, taskInfoDataset);
 
@@ -185,41 +234,4 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         waitUntilJobFinished();
     }
 
-    // @Test
-    // @DirtyDatabase
-    public void testKaka() throws Exception {
-
-        // Scheduler an importation job
-        Scheduler sched = SchedulerRepository.getInstance().lookup(TaskServiceImpl.SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-        JobKey kakajobKey = new JobKey("probando", "importation");
-        TriggerKey triggerKey = new TriggerKey("trigger_" + "probando", "importation");
-        {
-            // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(kakajobKey).requestRecovery().build();
-
-            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
-
-            sched.scheduleJob(job, trigger);
-        }
-
-        sched.checkExists(kakajobKey);
-        sched.checkExists(triggerKey);
-
-        {
-            // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(kakajobKey).requestRecovery().build();
-
-            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
-
-            sched.scheduleJob(job, trigger);
-        }
-
-        sched.checkExists(new JobKey("probando", "importation"));
-
-        // Validation: There shouldn't be an import processing..
-        if (sched.getCurrentlyExecutingJobs().size() != 0) {
-        }
-
-    }
 }

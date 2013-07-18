@@ -90,13 +90,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         // Validation
         taskServiceInvocationValidator.checkPlannifyImportationDataset(ctx, taskInfoDataset);
 
+        // job keys
         JobKey jobKey = createJobKeyForDatasetImportation(taskInfoDataset.getRepoDatasetId());
         TriggerKey triggerKey = new TriggerKey("trigger_" + taskInfoDataset.getRepoDatasetId(), "importation");
 
-        // String jobKey = "job_importdata_" + taskInfoDataset.getRepoDatasetId(); // ; + java.util.UUID.randomUUID().toString();
-
         OutputStream os = null;
-        // File file = null;
         try {
             // TODO Mark importation in progress
 
@@ -121,6 +119,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                     filePaths.append(ImportDatasetJob.SERIALIZATION_SEPARATOR);
                 }
                 filePaths.append(file.getAbsolutePath());
+
+                if (fileNames.length() > 0) {
+                    fileNames.append(ImportDatasetJob.SERIALIZATION_SEPARATOR);
+                }
                 fileNames.append(fileDescriptorDto.getFileName());
             }
 
@@ -164,6 +166,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
     }
+
+    /****************************************************************
+     * PRIVATES
+     ****************************************************************/
 
     private JobKey createJobKeyForDatasetImportation(String datasetId) {
         return new JobKey("job_importdata_" + datasetId, "importation");
