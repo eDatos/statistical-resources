@@ -2,27 +2,23 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
-public class NewPublicationWindow extends CustomWindow {
+public class NewPublicationWindow extends NewStatisticalResourceWindow {
 
     private static final int    FORM_ITEM_CUSTOM_WIDTH = 300;
 
     private static final String FIELD_SAVE             = "save-con";
-
-    private CustomDynamicForm   form;
 
     public NewPublicationWindow(String title) {
         super(title);
@@ -35,10 +31,14 @@ public class NewPublicationWindow extends CustomWindow {
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(nameItem, saveItem);
+        form.setFields(nameItem, languageItem, maintainerItem, saveItem);
 
         addItem(form);
         show();
+    }
+
+    public void setUiHandlers(PublicationListUiHandlers uiHandlers) {
+        super.setSiemacUiHandlers(uiHandlers);
     }
 
     public HasClickHandlers getSave() {
@@ -48,34 +48,8 @@ public class NewPublicationWindow extends CustomWindow {
     public PublicationDto getNewPublicationDto() {
         PublicationDto publicationDto = new PublicationDto();
         publicationDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(PublicationDS.TITLE)));
-
-        // FIXME Remove this mocks!! Languages and maintainer should be read from DATA
-        publicationDto.setLanguage(mockLanguage("es", "Español"));
-        publicationDto.getLanguages().add(mockLanguage("es", "Español"));
-        publicationDto.setMaintainer(mockMaintainer("es", "ISTAC"));
-
+        populateSiemacResourceDto(publicationDto);
         return publicationDto;
     }
 
-    public boolean validateForm() {
-        return form.validate();
-    }
-
-    private ExternalItemDto mockMaintainer(String locale, String label) {
-        InternationalStringDto title = mockInternationalString(locale, label);
-        return new ExternalItemDto("MAINTAINER-ISTAC", "FAKE-URI", "FAKE-URN","FAKE-URN", TypeExternalArtefactsEnum.AGENCY, title);
-    }
-
-    private ExternalItemDto mockLanguage(String locale, String label) {
-        return new ExternalItemDto("LANG_ES", "CODE-URI", "FAKE-URN","FAKE-URN", TypeExternalArtefactsEnum.CODE, mockInternationalString(locale, label));
-    }
-
-    private InternationalStringDto mockInternationalString(String locale, String label) {
-        InternationalStringDto title = new InternationalStringDto();
-        LocalisedStringDto localised = new LocalisedStringDto();
-        localised.setLabel(label);
-        localised.setLocale(locale);
-        title.addText(localised);
-        return title;
-    }
 }

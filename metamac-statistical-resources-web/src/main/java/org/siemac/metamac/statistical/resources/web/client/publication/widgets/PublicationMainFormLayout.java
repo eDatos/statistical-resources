@@ -11,13 +11,13 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 public class PublicationMainFormLayout extends InternationalMainFormLayout {
 
-    private MainFormLayoutButton              productionValidation;
-    private MainFormLayoutButton              diffusionValidation;
-    private MainFormLayoutButton              rejectValidation;
-    private MainFormLayoutButton              publish;
-    private MainFormLayoutButton              versioning;
+    private MainFormLayoutButton productionValidation;
+    private MainFormLayoutButton diffusionValidation;
+    private MainFormLayoutButton rejectValidation;
+    private MainFormLayoutButton publish;
+    private MainFormLayoutButton versioning;
 
-    private ProcStatusEnum status;
+    private ProcStatusEnum       status;
 
     public PublicationMainFormLayout() {
         super();
@@ -39,11 +39,13 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
 
-        /*toolStrip.addButton(productionValidation);
-        toolStrip.addButton(diffusionValidation);
-        toolStrip.addButton(rejectValidation);
-        toolStrip.addButton(publish);
-        toolStrip.addButton(versioning);*/
+        /*
+         * toolStrip.addButton(productionValidation);
+         * toolStrip.addButton(diffusionValidation);
+         * toolStrip.addButton(rejectValidation);
+         * toolStrip.addButton(publish);
+         * toolStrip.addButton(versioning);
+         */
     }
 
     @Override
@@ -66,19 +68,21 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         // Hide all buttons
         hideAllLifeCycleButtons();
         // Show buttons depending on the status
-       /* if (ProcStatusEnum.DRAFT.equals(status)) {
-            showProductionValidationButton();
-        } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
-            showProductionValidationButton();
-        } else if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
-            showDiffusionValidationButton();
-            showRejectValidationButton();
-        } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            showRejectValidationButton();
-            showPublishButton();
-        } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
-            showVersioningButton();
-        }*/
+        /*
+         * if (ProcStatusEnum.DRAFT.equals(status)) {
+         * showProductionValidationButton();
+         * } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
+         * showProductionValidationButton();
+         * } else if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+         * showDiffusionValidationButton();
+         * showRejectValidationButton();
+         * } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
+         * showRejectValidationButton();
+         * showPublishButton();
+         * } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
+         * showVersioningButton();
+         * }
+         */
     }
 
     private void hideAllLifeCycleButtons() {

@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationCommonMetadataEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
@@ -34,20 +35,17 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
-import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
+public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataBaseViewImpl<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
     private VLayout                                                       panel;
 
@@ -68,7 +66,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
     private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
     private StatisticalResourceContentDescriptorsEditionForm              contentDescriptorsEditionForm;
-    private PublicationCommonMetadataEditionForm                          commonMetadataEditionForm;
+    private StatisticalResourceCommonMetadataEditionForm                  commonMetadataEditionForm;
     private StatisticalResourceThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
     private StatisticalResourceLanguageEditionForm                        languageEditionForm;
     private StatisticalResourceProductionDescriptorsEditionForm           productionDescriptorsEditionForm;
@@ -78,9 +76,6 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     private LifeCycleResourceLifeCycleForm                                lifeCycleEditionForm;
     private LifeCycleResourceVersionEditionForm                           versionEditionForm;
     private StatisticalResourceIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
-
-    // private SearchExternalItemWindow searchAgencyWindow;
-    // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
     private PublicationDto                                                publicationDto;
 
@@ -108,8 +103,12 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         super.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
-        commonMetadataEditionForm.setUiHandlers(uiHandlers);
         commonMetadataForm.setBaseUiHandlers(uiHandlers);
+        commonMetadataEditionForm.setUiHandlers(uiHandlers);
+        thematicContentClassifiersEditionForm.setUiHandlers(uiHandlers);
+        productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        publicationDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        languageEditionForm.setUiHandlers(uiHandlers);
     }
 
     private void bindMainFormLayoutEvents() {
@@ -123,7 +122,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
                 contentDescriptorsForm.setTranslationsShowed(translationsShowed);
                 contentDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
-                
+
                 commonMetadataForm.setTranslationsShowed(translationsShowed);
                 commonMetadataEditionForm.setTranslationsShowed(translationsShowed);
 
@@ -162,10 +161,10 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
             @Override
             public void onClick(ClickEvent event) {
-                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && commonMetadataEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false)
-                        && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false) && resourceRelationDescriptorsEditionForm.validate(false)
-                        && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false) && languageEditionForm.validate(false)
-                        && intellectualPropertyDescriptorsEditionForm.validate(false)) {
+                if (identifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && commonMetadataEditionForm.validate(false)
+                        && productionDescriptorsEditionForm.validate(false) && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)
+                        && resourceRelationDescriptorsEditionForm.validate(false) && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false)
+                        && languageEditionForm.validate(false) && intellectualPropertyDescriptorsEditionForm.validate(false)) {
                     getUiHandlers().savePublication(getPublicationDto());
                 }
             }
@@ -227,7 +226,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         // Content descriptors form
         contentDescriptorsForm = new StatisticalResourceContentDescriptorsForm();
         mainFormLayout.addViewCanvas(contentDescriptorsForm);
-        
+
         // Common metadata form
         commonMetadataForm = new StatisticalResourceCommonMetadataForm();
         mainFormLayout.addViewCanvas(commonMetadataForm);
@@ -279,9 +278,9 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 
         // Common metadata
-        commonMetadataEditionForm = new PublicationCommonMetadataEditionForm();
+        commonMetadataEditionForm = new StatisticalResourceCommonMetadataEditionForm();
         mainFormLayout.addEditionCanvas(commonMetadataEditionForm);
-        
+
         // Thematic content classifiers
         thematicContentClassifiersEditionForm = new StatisticalResourceThematicContentClassifiersEditionForm();
         mainFormLayout.addEditionCanvas(thematicContentClassifiersEditionForm);
@@ -319,29 +318,13 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         mainFormLayout.addEditionCanvas(intellectualPropertyDescriptorsEditionForm);
     }
 
-    // private SearchExternalViewTextItem createRelatedAgencyItem(String name, String title, AgencyField agencyField) {
-    // SearchExternalViewTextItem agencyItem = new SearchExternalViewTextItem(name, title);
-    // agencyItem.setRequired(true);
-    // agencyItem.getSearchIcon().addFormItemClickHandler(new SearchAgencyFormItemClickHandler(agencyField));
-    // return agencyItem;
-    // }
-    //
-    // private SearchExternalListItem createRelatedMultiAgencyItem(String name, String title, AgencyField agencyField, boolean editionMode) {
-    // SearchExternalListItem agencyItem = new SearchExternalListItem(name, title, editionMode);
-    // if (editionMode) {
-    // agencyItem.setRequired(false);
-    // agencyItem.getSearchIcon().addFormItemClickHandler(new SearchMultiAgencyFormItemClickHandler(agencyField));
-    // }
-    // return agencyItem;
-    // }
-
     private void setPublicationViewMode(PublicationDto publicationDto) {
         // Identifiers form
         identifiersForm.setNameableStatisticalResourceDto(publicationDto);
 
         // Content descriptors form
         contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
-        
+
         // Common metadata form
         commonMetadataForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
@@ -379,7 +362,7 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
 
         // Content descriptors form
         contentDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
-        
+
         // Common metadata
         commonMetadataEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
 
@@ -422,23 +405,13 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
         setPublicationEditionMode(publicationDto);
     }
 
-    @Override
-    public void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result) {
-        // if (searchAgencyWindow != null) {
-        // searchAgencyWindow.setExternalItems(result.getAgenciesList());
-        // }
-        // if (searchMultiAgencyWindow != null) {
-        // searchMultiAgencyWindow.setSourceExternalItems(result.getAgenciesList());
-        // }
-    }
-
     private PublicationDto getPublicationDto() {
         // Identifiers
         publicationDto = (PublicationDto) identifiersEditionForm.getNameableStatisticalResourceDto(publicationDto);
 
         // Content descriptors
         publicationDto = (PublicationDto) contentDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
-        
+
         // Content descriptors
         publicationDto = (PublicationDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
@@ -482,107 +455,27 @@ public class PublicationMetadataTabViewImpl extends ViewWithUiHandlers<Publicati
     }
 
     @Override
-    public void setCommonConfigurations(GetCommonMetadataConfigurationsListResult result) {
-        commonMetadataEditionForm.setCommonConfigurationsList(result.getResults());
+    protected StatisticalResourceCommonMetadataEditionForm getCommonMetadataEditionForm() {
+        return commonMetadataEditionForm;
     }
-    
-    // private enum AgencyField {
-    // AGENCY_CREATOR(PublicationDS.CREATOR), AGENCY_CONTRIBUTOR(PublicationDS.CONTRIBUTOR), AGENCY_PUBLISHER(PublicationDS.PUBLISHER), AGENCY_MEDIATOR(PublicationDS.MEDIATOR);
-    //
-    // private String formFieldId;
-    //
-    // private AgencyField(String formFieldId) {
-    // this.formFieldId = formFieldId;
-    // }
-    //
-    // public String getFormFieldId() {
-    // return formFieldId;
-    // }
-    // }
 
-    // private class SearchAgencyFormItemClickHandler implements FormItemClickHandler {
-    //
-    // private AgencyField agencyField;
-    //
-    // public SearchAgencyFormItemClickHandler(AgencyField agencyField) {
-    // this.agencyField = agencyField;
-    // }
-    //
-    // @Override
-    // public void onFormItemClick(FormItemIconClickEvent event) {
-    // final int AGENCY_FIRST_RESULT = 0;
-    // final int AGENCY_MAX_RESULTS = 16;
-    //
-    // searchAgencyWindow = new SearchExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
-    //
-    // @Override
-    // public void retrieveResultSet(int firstResult, int maxResults) {
-    // uiHandlers.retrieveAgencies(firstResult, maxResults, null);
-    // }
-    // });
-    // uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
-    // searchAgencyWindow.setSearchAction(new SearchPaginatedAction() {
-    //
-    // @Override
-    // public void retrieveResultSet(int firstResult, int maxResults, String code) {
-    // uiHandlers.retrieveAgencies(firstResult, maxResults, code);
-    // }
-    // });
-    // searchAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-    //
-    // @Override
-    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-    // ExternalItemDto selectedAgency = searchAgencyWindow.getSelectedExternalItem();
-    //
-    // ((SearchExternalViewTextItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItem(selectedAgency);
-    // searchAgencyWindow.destroy();
-    // }
-    // });
-    // }
-    // }
-    //
-    // private class SearchMultiAgencyFormItemClickHandler implements FormItemClickHandler {
-    //
-    // private AgencyField agencyField;
-    //
-    // public SearchMultiAgencyFormItemClickHandler(AgencyField agencyField) {
-    // this.agencyField = agencyField;
-    // }
-    //
-    // @Override
-    // public void onFormItemClick(FormItemIconClickEvent event) {
-    // final int AGENCY_FIRST_RESULT = 0;
-    // final int AGENCY_MAX_RESULTS = 16;
-    //
-    // searchMultiAgencyWindow = new SearchMultipleExternalItemWindow(getConstants().agencySearch(), AGENCY_MAX_RESULTS, new PaginatedAction() {
-    //
-    // @Override
-    // public void retrieveResultSet(int firstResult, int maxResults) {
-    // uiHandlers.retrieveAgencies(firstResult, maxResults, null);
-    // }
-    // });
-    //
-    // List<ExternalItemDto> selectedAgencies = ((SearchExternalListItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).getSelectedExternalItems();
-    // searchMultiAgencyWindow.setSelectedExternalItems(selectedAgencies);
-    //
-    // uiHandlers.retrieveAgencies(AGENCY_FIRST_RESULT, AGENCY_MAX_RESULTS, null);
-    // searchMultiAgencyWindow.setSearchAction(new SearchPaginatedAction() {
-    //
-    // @Override
-    // public void retrieveResultSet(int firstResult, int maxResults, String code) {
-    // uiHandlers.retrieveAgencies(firstResult, maxResults, code);
-    // }
-    // });
-    // searchMultiAgencyWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-    //
-    // @Override
-    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-    // List<ExternalItemDto> selectedAgencies = searchMultiAgencyWindow.getSelectedExternalItems();
-    // ((SearchExternalListItem) lifeCycleEditionForm.getField(agencyField.getFormFieldId())).setExternalItems(selectedAgencies);
-    // searchMultiAgencyWindow.hide();
-    // searchMultiAgencyWindow.destroy();
-    // }
-    // });
-    // }
-    // }
+    @Override
+    protected StatisticalResourceProductionDescriptorsEditionForm getProductionDescriptorsEditionForm() {
+        return productionDescriptorsEditionForm;
+    }
+
+    @Override
+    protected StatisticalResourcePublicationDescriptorsEditionForm getPublicationDescriptorsEditionForm() {
+        return publicationDescriptorsEditionForm;
+    }
+
+    @Override
+    protected StatisticalResourceThematicContentClassifiersEditionForm getThematicContentClassifiersEditionForm() {
+        return thematicContentClassifiersEditionForm;
+    }
+
+    @Override
+    protected StatisticalResourceLanguageEditionForm getLanguageEditionForm() {
+        return languageEditionForm;
+    }
 }

@@ -1,15 +1,12 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getCoreMessages;
 
-import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureHierarchyDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationStructureDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
@@ -25,28 +22,18 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.menu.events.ClickHandler;
-import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.smartgwt.client.widgets.tree.events.FolderClickEvent;
-import com.smartgwt.client.widgets.tree.events.FolderClickHandler;
-import com.smartgwt.client.widgets.tree.events.FolderContextClickEvent;
-import com.smartgwt.client.widgets.tree.events.FolderContextClickHandler;
-import com.smartgwt.client.widgets.tree.events.LeafClickEvent;
-import com.smartgwt.client.widgets.tree.events.LeafClickHandler;
-import com.smartgwt.client.widgets.tree.events.LeafContextClickEvent;
-import com.smartgwt.client.widgets.tree.events.LeafContextClickHandler;
 
 public class PublicationStructurePanel extends HLayout {
 
-    private static final int                 FORM_ITEM_CUSTOM_WIDTH = 250;
+    private static final int             FORM_ITEM_CUSTOM_WIDTH = 250;
 
-    private PublicationStructureTreeGrid     collectionStructureTreeGrid;
+    private PublicationStructureTreeGrid collectionStructureTreeGrid;
 
-    private InternationalMainFormLayout      mainFormLayout;
-    private GroupDynamicForm                 form;
-    private GroupDynamicForm                 editionForm;
+    private InternationalMainFormLayout  mainFormLayout;
+    private GroupDynamicForm             form;
+    private GroupDynamicForm             editionForm;
 
-    private PublicationStructureHierarchyDto selectedNode;
+    private PublicationStructureDto      selectedNode;
 
     public PublicationStructurePanel() {
 
@@ -55,53 +42,45 @@ public class PublicationStructurePanel extends HLayout {
         collectionStructureTreeGrid = new PublicationStructureTreeGrid();
         collectionStructureTreeGrid.setWidth("40%");
 
-        collectionStructureTreeGrid.getCreateElementMenuItem().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(MenuItemClickEvent event) {
-                setElementInForm(new PublicationStructureHierarchyDto());
-                mainFormLayout.setEditionMode();
-            }
-        });
-
-        collectionStructureTreeGrid.addFolderContextClickHandler(new FolderContextClickHandler() {
-
-            @Override
-            public void onFolderContextClick(final FolderContextClickEvent event) {
-                selectedNode = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
-                collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
-            }
-        });
-
-        collectionStructureTreeGrid.addLeafContextClickHandler(new LeafContextClickHandler() {
-
-            @Override
-            public void onLeafContextClick(LeafContextClickEvent event) {
-                selectedNode = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
-                collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
-
-            }
-        });
-
-        collectionStructureTreeGrid.addFolderClickHandler(new FolderClickHandler() {
-
-            @Override
-            public void onFolderClick(FolderClickEvent event) {
-                selectedNode = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
-                PublicationStructureHierarchyDto collectionStructureHierarchyDto = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
-                setElementInForm(collectionStructureHierarchyDto);
-            }
-        });
-
-        collectionStructureTreeGrid.addLeafClickHandler(new LeafClickHandler() {
-
-            @Override
-            public void onLeafClick(LeafClickEvent event) {
-                selectedNode = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
-                PublicationStructureHierarchyDto collectionStructureHierarchyDto = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
-                setElementInForm(collectionStructureHierarchyDto);
-            }
-        });
+        /*
+         * collectionStructureTreeGrid.getCreateElementMenuItem().addClickHandler(new ClickHandler() {
+         * @Override
+         * public void onClick(MenuItemClickEvent event) {
+         * setElementInForm(new PublicationStructureHierarchyDto());
+         * mainFormLayout.setEditionMode();
+         * }
+         * });
+         * collectionStructureTreeGrid.addFolderContextClickHandler(new FolderContextClickHandler() {
+         * @Override
+         * public void onFolderContextClick(final FolderContextClickEvent event) {
+         * selectedNode = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
+         * collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
+         * }
+         * });
+         * collectionStructureTreeGrid.addLeafContextClickHandler(new LeafContextClickHandler() {
+         * @Override
+         * public void onLeafContextClick(LeafContextClickEvent event) {
+         * selectedNode = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
+         * collectionStructureTreeGrid.showContextMenu(selectedNode.getType());
+         * }
+         * });
+         * collectionStructureTreeGrid.addFolderClickHandler(new FolderClickHandler() {
+         * @Override
+         * public void onFolderClick(FolderClickEvent event) {
+         * selectedNode = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
+         * PublicationStructureHierarchyDto collectionStructureHierarchyDto = (PublicationStructureHierarchyDto) event.getFolder().getAttributeAsObject(PublicationStructureDS.DTO);
+         * setElementInForm(collectionStructureHierarchyDto);
+         * }
+         * });
+         * collectionStructureTreeGrid.addLeafClickHandler(new LeafClickHandler() {
+         * @Override
+         * public void onLeafClick(LeafClickEvent event) {
+         * selectedNode = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
+         * PublicationStructureHierarchyDto collectionStructureHierarchyDto = (PublicationStructureHierarchyDto) event.getLeaf().getAttributeAsObject(PublicationStructureDS.DTO);
+         * setElementInForm(collectionStructureHierarchyDto);
+         * }
+         * });
+         */
 
         // MainFormLayout
 
@@ -125,18 +104,19 @@ public class PublicationStructurePanel extends HLayout {
 
     // TREE GRID
 
-    public void setPublicationStructure(PublicationStructureHierarchyDto structureHierarchyDto) {
-        mainFormLayout.hide();
-        collectionStructureTreeGrid.setCollectionStructure(structureHierarchyDto);
-    }
-
-    private void setElementInForm(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
-        mainFormLayout.show();
-        if (selectedNode != null) {
-            updateFormElementTypeValueMap(selectedNode.getType());
-        }
-        setElement(collectionStructureHierarchyDto);
-    }
+    /*
+     * public void setPublicationStructure(PublicationStructureHierarchyDto structureHierarchyDto) {
+     * mainFormLayout.hide();
+     * collectionStructureTreeGrid.setCollectionStructure(structureHierarchyDto);
+     * }
+     * private void setElementInForm(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
+     * mainFormLayout.show();
+     * if (selectedNode != null) {
+     * updateFormElementTypeValueMap(selectedNode.getType());
+     * }
+     * setElement(collectionStructureHierarchyDto);
+     * }
+     */
 
     // FORM
 
@@ -229,38 +209,36 @@ public class PublicationStructurePanel extends HLayout {
         mainFormLayout.addEditionCanvas(editionForm);
     }
 
-    private void setElement(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
-        setElementViewMode(collectionStructureHierarchyDto);
-        setElementEditionMode(collectionStructureHierarchyDto);
-    }
-
-    private void setElementViewMode(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
-        form.setValue(
-                PublicationStructureDS.TYPE,
-                collectionStructureHierarchyDto.getType() != null ? getCoreMessages().getString(
-                        getCoreMessages().publicationStructureHierarchyTypeEnum() + collectionStructureHierarchyDto.getType().name()) : StringUtils.EMPTY);
-        form.setValue(PublicationStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
-        form.setValue(PublicationStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
-        form.setValue(PublicationStructureDS.URL, collectionStructureHierarchyDto.getUrl());
-        form.setValue(PublicationStructureDS.URN, collectionStructureHierarchyDto.getUrn());
-
-        form.markForRedraw();
-    }
-
-    private void setElementEditionMode(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
-        editionForm.setValue(PublicationStructureDS.TYPE, collectionStructureHierarchyDto.getType() != null
-                ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType())
-                : StringUtils.EMPTY);
-        editionForm.setValue(PublicationStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
-        editionForm.setValue(PublicationStructureDS.TYPE_VIEW_NAME,
-                collectionStructureHierarchyDto.getType() != null ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType()) : StringUtils.EMPTY);
-        updateFormTypeItemVisibility(collectionStructureHierarchyDto);
-        editionForm.setValue(PublicationStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
-        editionForm.setValue(PublicationStructureDS.URL, collectionStructureHierarchyDto.getUrl());
-        editionForm.setValue(PublicationStructureDS.URN, collectionStructureHierarchyDto.getUrn());
-
-        editionForm.markForRedraw();
-    }
+    /*
+     * private void setElement(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
+     * setElementViewMode(collectionStructureHierarchyDto);
+     * setElementEditionMode(collectionStructureHierarchyDto);
+     * }
+     * private void setElementViewMode(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
+     * form.setValue(
+     * PublicationStructureDS.TYPE,
+     * collectionStructureHierarchyDto.getType() != null ? getCoreMessages().getString(
+     * getCoreMessages().publicationStructureHierarchyTypeEnum() + collectionStructureHierarchyDto.getType().name()) : StringUtils.EMPTY);
+     * form.setValue(PublicationStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
+     * form.setValue(PublicationStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
+     * form.setValue(PublicationStructureDS.URL, collectionStructureHierarchyDto.getUrl());
+     * form.setValue(PublicationStructureDS.URN, collectionStructureHierarchyDto.getUrn());
+     * form.markForRedraw();
+     * }
+     * private void setElementEditionMode(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
+     * editionForm.setValue(PublicationStructureDS.TYPE, collectionStructureHierarchyDto.getType() != null
+     * ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType())
+     * : StringUtils.EMPTY);
+     * editionForm.setValue(PublicationStructureDS.TYPE_VIEW, collectionStructureHierarchyDto.getType() != null ? collectionStructureHierarchyDto.getType().name() : StringUtils.EMPTY);
+     * editionForm.setValue(PublicationStructureDS.TYPE_VIEW_NAME,
+     * collectionStructureHierarchyDto.getType() != null ? CommonUtils.getStructureHierarchyTypeName(collectionStructureHierarchyDto.getType()) : StringUtils.EMPTY);
+     * updateFormTypeItemVisibility(collectionStructureHierarchyDto);
+     * editionForm.setValue(PublicationStructureDS.TEXT, RecordUtils.getInternationalStringRecord(collectionStructureHierarchyDto.getText()));
+     * editionForm.setValue(PublicationStructureDS.URL, collectionStructureHierarchyDto.getUrl());
+     * editionForm.setValue(PublicationStructureDS.URN, collectionStructureHierarchyDto.getUrn());
+     * editionForm.markForRedraw();
+     * }
+     */
 
     private void updateFormElementTypeValueMap(PublicationStructureHierarchyTypeEnum type) {
         if (PublicationStructureHierarchyTypeEnum.TITLE.equals(type)) {
@@ -276,14 +254,16 @@ public class PublicationStructurePanel extends HLayout {
         }
     }
 
-    private void updateFormTypeItemVisibility(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
-        if (collectionStructureHierarchyDto.getId() == null) {
-            editionForm.getItem(PublicationStructureDS.TYPE).show();
-            editionForm.getItem(PublicationStructureDS.TYPE_VIEW_NAME).hide();
-        } else {
-            editionForm.getItem(PublicationStructureDS.TYPE).hide();
-            editionForm.getItem(PublicationStructureDS.TYPE_VIEW_NAME).show();
-        }
-    }
+    /*
+     * private void updateFormTypeItemVisibility(PublicationStructureHierarchyDto collectionStructureHierarchyDto) {
+     * if (collectionStructureHierarchyDto.getId() == null) {
+     * editionForm.getItem(PublicationStructureDS.TYPE).show();
+     * editionForm.getItem(PublicationStructureDS.TYPE_VIEW_NAME).hide();
+     * } else {
+     * editionForm.getItem(PublicationStructureDS.TYPE).hide();
+     * editionForm.getItem(PublicationStructureDS.TYPE_VIEW_NAME).show();
+     * }
+     * }
+     */
 
 }

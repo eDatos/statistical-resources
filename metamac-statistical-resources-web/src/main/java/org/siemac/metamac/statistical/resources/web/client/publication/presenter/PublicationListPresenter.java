@@ -14,12 +14,14 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent.SetOperationHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
@@ -29,18 +31,14 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -54,15 +52,11 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class PublicationListPresenter extends Presenter<PublicationListPresenter.PublicationListView, PublicationListPresenter.PublicationListProxy>
+public class PublicationListPresenter extends StatisticalResourceBaseListPresenter<PublicationListPresenter.PublicationListView, PublicationListPresenter.PublicationListProxy>
         implements
             PublicationListUiHandlers,
             SetOperationHandler {
 
-    public final static int                           PUBLICATION_LIST_FIRST_RESULT                       = 0;
-    public final static int                           PUBLICATION_LIST_MAX_RESULTS                        = 30;
-
-    private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
 
     private ExternalItemDto                           operation;
@@ -83,7 +77,7 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
         return StatisticalResourcesWeb.getConstants().breadcrumbCollections();
     }
 
-    public interface PublicationListView extends View, HasUiHandlers<PublicationListUiHandlers> {
+    public interface PublicationListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<PublicationListUiHandlers> {
 
         void setPublicationPaginatedList(List<PublicationDto> PublicationDtos, int firstResult, int totalResults);
         // void clearSearchSection();
@@ -91,9 +85,8 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
     @Inject
     public PublicationListPresenter(EventBus eventBus, PublicationListView publicationListView, PublicationListProxy publicationListProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, publicationListView, publicationListProxy);
+        super(eventBus, publicationListView, publicationListProxy, dispatcher);
         this.placeManager = placeManager;
-        this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
     }
 
@@ -109,7 +102,9 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrievePublications(operationUrn, PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
+            retrievePublications(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            retrieveDefaultAgency();
+            retrieveDefaultLanguage();
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -137,12 +132,8 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
         VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         publicationWebCriteria.setStatisticalOperationUrn(operationUrn);
 
-        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
+        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublicationPaginatedList(result.getPublicationDtos(), result.getFirstResultOut(), result.getTotalResults());
@@ -152,15 +143,11 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
     @Override
     public void createPublication(PublicationDto publicationDto) {
-        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallback<SavePublicationResult>() {
+        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallbackHandlingError<SavePublicationResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
-            }
-            @Override
             public void onWaitSuccess(SavePublicationResult result) {
-                retrievePublications(PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
 
@@ -168,29 +155,20 @@ public class PublicationListPresenter extends Presenter<PublicationListPresenter
 
     @Override
     public void deletePublication(List<String> urns) {
-        dispatcher.execute(new DeletePublicationsAction(urns), new WaitingAsyncCallback<DeletePublicationsResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
-            }
+        dispatcher.execute(new DeletePublicationsAction(urns), new WaitingAsyncCallbackHandlingError<DeletePublicationsResult>(this) {
 
             @Override
             public void onWaitSuccess(DeletePublicationsResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().collectionDeleted());
-                retrievePublications(PublicationListPresenter.this.operation.getUrn(), PUBLICATION_LIST_FIRST_RESULT, PUBLICATION_LIST_MAX_RESULTS, null);
+                retrievePublications(PublicationListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             };
         });
     }
 
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(PublicationListPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     PublicationListPresenter.this.operation = result.getOperation();

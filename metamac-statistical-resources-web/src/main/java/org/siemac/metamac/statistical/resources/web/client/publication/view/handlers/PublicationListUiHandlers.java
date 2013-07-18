@@ -3,10 +3,9 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view.han
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 
-import com.gwtplatform.mvp.client.UiHandlers;
-
-public interface PublicationListUiHandlers extends UiHandlers {
+public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandlers {
 
     void createPublication(PublicationDto collectionDto);
     void deletePublication(List<String> urns);

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
@@ -23,7 +26,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
@@ -42,7 +44,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListUiHandlers> implements PublicationListPresenter.PublicationListView {
+public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl<PublicationListUiHandlers> implements PublicationListPresenter.PublicationListView {
 
     private VLayout                  panel;
 
@@ -53,6 +55,8 @@ public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListU
     private ToolStripButton          deletePublicationButton;
 
     private DeleteConfirmationWindow deleteConfirmationWindow;
+
+    private NewPublicationWindow     newPublicationWindow;
 
     @Inject
     public PublicationListViewImpl() {
@@ -68,7 +72,8 @@ public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListU
 
             @Override
             public void onClick(ClickEvent event) {
-                final NewPublicationWindow newPublicationWindow = new NewPublicationWindow(getConstants().collectionCreate());
+                newPublicationWindow = new NewPublicationWindow(getConstants().collectionCreate());
+                newPublicationWindow.setUiHandlers(getUiHandlers());
                 newPublicationWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
@@ -79,6 +84,8 @@ public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListU
                         }
                     }
                 });
+                newPublicationWindow.setDefaultLanguage(defaultLanguage);
+                newPublicationWindow.setDefaultMaintainer(defaultAgency);
             }
         });
         newPublicationButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
@@ -114,21 +121,20 @@ public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListU
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                getUiHandlers().retrievePublications(PublicationListPresenter.PUBLICATION_LIST_FIRST_RESULT, PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS,
-                        searchSectionStack.getSearchCriteria());
+                getUiHandlers().retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
             }
         });
 
         // Publication list
 
-        publicationListGrid = new PaginatedCheckListGrid(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS, new PaginatedAction() {
+        publicationListGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 getUiHandlers().retrievePublications(firstResult, maxResults, null);
             }
         });
-        publicationListGrid.getListGrid().setAutoFitMaxRecords(PublicationListPresenter.PUBLICATION_LIST_MAX_RESULTS);
+        publicationListGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
         publicationListGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         publicationListGrid.getListGrid().setDataSource(new PublicationDS());
         publicationListGrid.getListGrid().setUseAllDataSourceFields(false);
@@ -175,6 +181,11 @@ public class PublicationListViewImpl extends ViewWithUiHandlers<PublicationListU
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
         publicationListGrid.getListGrid().setData(records);
+    }
+
+    @Override
+    protected NewStatisticalResourceWindow getNewStatisticalResourceWindow() {
+        return newPublicationWindow;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class PublicationStructureTabViewImpl extends ViewImpl implements Publica
     public void setPublication(PublicationDto collectionDto) {
         this.collectionDto = collectionDto;
 
-        structurePanel.setPublicationStructure(collectionDto.getStructure());
+        // structurePanel.setPublicationStructure(collectionDto.getStructure());
     }
 
     @Override

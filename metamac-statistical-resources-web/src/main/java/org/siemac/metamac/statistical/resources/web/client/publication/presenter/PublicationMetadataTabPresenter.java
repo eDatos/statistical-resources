@@ -3,8 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -15,16 +13,12 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.utils.ErrorUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.agency.GetAgenciesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
@@ -37,16 +31,12 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationResult;
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
@@ -57,23 +47,20 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-public class PublicationMetadataTabPresenter extends Presenter<PublicationMetadataTabPresenter.PublicationMetadataTabView, PublicationMetadataTabPresenter.PublicationMetadataTabProxy>
+public class PublicationMetadataTabPresenter
+        extends
+            StatisticalResourceMetadataBasePresenter<PublicationMetadataTabPresenter.PublicationMetadataTabView, PublicationMetadataTabPresenter.PublicationMetadataTabProxy>
         implements
             PublicationMetadataTabUiHandlers {
 
-    private DispatchAsync   dispatcher;
-    private PlaceManager    placeManager;
-
     private ExternalItemDto operation;
 
-    public interface PublicationMetadataTabView extends View, HasUiHandlers<PublicationMetadataTabUiHandlers> {
+    public interface PublicationMetadataTabView extends StatisticalResourceMetadataBasePresenter.StatisticalResourceMetadataBaseView, HasUiHandlers<PublicationMetadataTabUiHandlers> {
 
-        void setAgenciesPaginatedList(GetAgenciesPaginatedListResult result);
         void setPublication(PublicationDto collectionDto);
 
         void setPublicationsForReplaces(GetPublicationsResult result);
         void setPublicationsForIsReplacedBy(GetPublicationsResult result);
-        void setCommonConfigurations(GetCommonMetadataConfigurationsListResult result);
     }
 
     @ProxyCodeSplit
@@ -84,9 +71,7 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     @Inject
     public PublicationMetadataTabPresenter(EventBus eventBus, PublicationMetadataTabView view, PublicationMetadataTabProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, view, proxy);
-        this.dispatcher = dispatcher;
-        this.placeManager = placeManager;
+        super(eventBus, view, proxy, dispatcher, placeManager);
         getView().setUiHandlers(this);
     }
 
@@ -117,12 +102,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     PublicationMetadataTabPresenter.this.operation = result.getOperation();
@@ -133,12 +114,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     private void retrievePublication(String urn) {
-        dispatcher.execute(new GetPublicationAction(urn), new WaitingAsyncCallback<GetPublicationResult>() {
+        dispatcher.execute(new GetPublicationAction(urn), new WaitingAsyncCallbackHandlingError<GetPublicationResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
                 getView().setPublication(result.getPublicationDto());
@@ -147,29 +124,9 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     }
 
     @Override
-    public void retrieveAgencies(int firstResult, int maxResults, String queryText) {
-        dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult, maxResults, queryText), new WaitingAsyncCallback<GetAgenciesPaginatedListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(GetAgenciesPaginatedListResult result) {
-                getView().setAgenciesPaginatedList(result);
-            }
-        });
-
-    }
-
-    @Override
     public void savePublication(PublicationDto publicationDto) {
-        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallback<SavePublicationResult>() {
+        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallbackHandlingError<SavePublicationResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(SavePublicationResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().collectionSaved());
@@ -180,45 +137,35 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     @Override
     public void sendToProductionValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationProcStatusResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
-            
-            @Override
-            public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
-                getView().setPublication(result.getPublicationDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
+                        getView().setPublication(result.getPublicationDto());
+                    }
+                });
     }
 
     @Override
     public void sendToDiffusionValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationProcStatusResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
-                getView().setPublication(result.getPublicationDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        getView().setPublication(result.getPublicationDto());
+                    }
+                });
     }
 
     @Override
     public void rejectValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.VALIDATION_REJECTED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.VALIDATION_REJECTED, currentProcStatus), new WaitingAsyncCallbackHandlingError<UpdatePublicationProcStatusResult>(
+                this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
@@ -229,12 +176,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     @Override
     public void publish(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallback<UpdatePublicationProcStatusResult>() {
+        dispatcher.execute(new UpdatePublicationProcStatusAction(urn, ProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallbackHandlingError<UpdatePublicationProcStatusResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(UpdatePublicationProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
@@ -245,12 +188,8 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
 
     @Override
     public void version(String urn, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersionPublicationAction(urn, versionType), new WaitingAsyncCallback<VersionPublicationResult>() {
+        dispatcher.execute(new VersionPublicationAction(urn, versionType), new WaitingAsyncCallbackHandlingError<VersionPublicationResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(VersionPublicationResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
@@ -263,14 +202,9 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     public void retrievePublicationsForReplaces(int firstResult, int maxResults, String criteria) {
 
         VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
-        // TODO Which is the condition to find the publications to fill REPLACES?
 
-        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
+        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublicationsForReplaces(result);
@@ -282,42 +216,14 @@ public class PublicationMetadataTabPresenter extends Presenter<PublicationMetada
     public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
 
         VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
-        // TODO Which is the condition to find the publications to fill IS_REPLACED_BY?
 
-        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
+        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublicationsForIsReplacedBy(result);
             }
         });
-    }
-    
-    @Override
-    public void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria) {
-        dispatcher.execute(new GetCommonMetadataConfigurationsListAction(criteria), new WaitingAsyncCallback<GetCommonMetadataConfigurationsListResult>() {
-           
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationMetadataTabPresenter.this, caught);
-            }
-            
-            @Override
-            public void onWaitSuccess(GetCommonMetadataConfigurationsListResult result) {
-                getView().setCommonConfigurations(result);
-            }
-        });
-    }
-
-    @Override
-    public void goTo(List<PlaceRequest> location) {
-        if (location != null && !location.isEmpty()) {
-            placeManager.revealPlaceHierarchy(location);
-        }
     }
 
 }
