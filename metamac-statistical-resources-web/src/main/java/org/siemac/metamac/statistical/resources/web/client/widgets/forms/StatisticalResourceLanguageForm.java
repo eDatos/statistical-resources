@@ -1,27 +1,28 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemsValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
-import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemListItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
 public class StatisticalResourceLanguageForm extends GroupDynamicForm {
 
     public StatisticalResourceLanguageForm() {
         super(getConstants().formLanguages());
 
-        ViewTextItem language = new ViewTextItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
+        ExternalItemLinkItem language = new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
         ExternalItemListItem languages = new ExternalItemListItem(StatisticalResourceDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(), false);
 
         setFields(language, languages);
     }
 
-    public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        setValue(StatisticalResourceDS.LANGUAGE, ExternalItemUtils.getExternalItemName(siemacMetadataStatisticalResourceDto.getLanguage()));
-        ((ExternalItemListItem) getItem(StatisticalResourceDS.LANGUAGES)).setExternalItems(siemacMetadataStatisticalResourceDto.getLanguages());
+    public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
+        setExternalItemValue(getItem(StatisticalResourceDS.LANGUAGE), dto.getLanguage());
+        setExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES), dto.getLanguages());
     }
 }

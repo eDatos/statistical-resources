@@ -17,9 +17,10 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleResourceContentDescriptorsEditionForm {
+
     private ViewMultiLanguageTextItem keywordsView;
-    private MultiLanguageTextAreaItem keywords; 
-    
+    private MultiLanguageTextAreaItem keywords;
+
     public StatisticalResourceContentDescriptorsEditionForm() {
 
         MultiLanguageTextItem subtitle = new MultiLanguageTextItem(StatisticalResourceDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
@@ -27,7 +28,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
         MultilanguageRichTextEditorItem abstractLogic = new MultilanguageRichTextEditorItem(StatisticalResourceDS.ABSTRACT, getConstants().siemacMetadataStatisticalResourceAbstractLogic());
         keywordsView = new ViewMultiLanguageTextItem(StatisticalResourceDS.KEYWORDS_VIEW, getConstants().siemacMetadataStatisticalResourceKeywords());
         keywords = new MultiLanguageTextAreaItem(StatisticalResourceDS.KEYWORDS, getConstants().siemacMetadataStatisticalResourceKeywords());
-        
+
         addFields(subtitle, titleAlternative, abstractLogic, keywordsView, keywords);
     }
 
@@ -50,7 +51,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
         siemacMetadataStatisticalResourceDto.setKeywords((InternationalStringDto) getValue(StatisticalResourceDS.KEYWORDS));
         return siemacMetadataStatisticalResourceDto;
     }
-    
+
     private FormItemIfFunction getKeywordsFormItemIfFunction(final SiemacMetadataStatisticalResourceDto resource) {
         return new FormItemIfFunction() {
 
@@ -62,7 +63,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
     }
     private FormItemIfFunction getStaticKeywordsFormItemIfFunction(final SiemacMetadataStatisticalResourceDto resource) {
         return new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 return !SiemacMetadataEditionChecks.canKeywordsBeEdited(resource.getProcStatus());
