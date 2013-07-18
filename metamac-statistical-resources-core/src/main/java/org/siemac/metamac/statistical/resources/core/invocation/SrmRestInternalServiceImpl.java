@@ -7,8 +7,10 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelists;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -26,6 +28,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils
 import org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+
 
 @Component
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
@@ -259,7 +263,21 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-
+    
+    @Override
+    public Code retrieveCodeByUrn(String urn)  throws MetamacException {
+        try {
+            String[] params = UrnUtils.splitUrnItem(urn);
+            String agencyId = params[0];
+            String schemeId = params[1];
+            String version = params[2];
+            String conceptId = params[3];
+            return restApiLocator.getSrmRestInternalFacadeV10().retrieveCode(agencyId, schemeId, version, conceptId);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+    
     /*
      * Organisation Schemes
      */
@@ -319,6 +337,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
+    
     /*
      * CATEGORY SCHEMES
      */
@@ -378,6 +397,22 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
+    
+
+    @Override
+    public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException {
+        try {
+            String[] params = UrnUtils.splitUrnItem(agencyUrn);
+            String agencyId = params[0];
+            String schemeId = params[1];
+            String version = params[2];
+            String organisationId = params[3];
+            return restApiLocator.getSrmRestInternalFacadeV10().retrieveAgency(agencyId, schemeId, version, organisationId);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+    
 
     private MetamacException manageSrmInternalRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_SRM_INTERNAL, restApiLocator.getSrmRestInternalFacadeV10());

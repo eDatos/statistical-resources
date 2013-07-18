@@ -3,8 +3,10 @@ package org.siemac.metamac.statistical.resources.core.invocation;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelists;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -42,6 +44,7 @@ public interface SrmRestInternalService {
     // CODES
     public Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findCodesUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public Code retrieveCodeByUrn(String urn) throws MetamacException;
     
     // ORGANISATION SCHEMES
     public OrganisationSchemes findOrganisationSchemes(int firstResult, int maxResult, String query) throws MetamacException;
@@ -59,4 +62,5 @@ public interface SrmRestInternalService {
     public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findCategoriesUrns(int firstResult, int maxResult, String query) throws MetamacException;
 
+    public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException;
 }
