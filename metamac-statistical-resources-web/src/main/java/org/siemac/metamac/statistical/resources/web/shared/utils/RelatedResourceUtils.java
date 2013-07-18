@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -71,9 +72,31 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
         }
         return relatedResourceDtos;
     }
-    
+
     public static String getRelatedResourceName(RelatedResourceDto relatedResourceDto) {
         return relatedResourceDto != null ? CommonWebUtils.getElementName(relatedResourceDto.getCode(), relatedResourceDto.getTitle()) : StringUtils.EMPTY;
+    }
+
+    public static RelatedResourceDto getRelatedResourceFromExternalItemDto(ExternalItemDto externalItem) {
+        RelatedResourceDto relatedResource = new RelatedResourceDto();
+        relatedResource.setId(externalItem.getId());
+        relatedResource.setCode(externalItem.getCode());
+        relatedResource.setTitle(externalItem.getTitle());
+        relatedResource.setUrn(externalItem.getUrn());
+        relatedResource.setUuid(externalItem.getUuid());
+        relatedResource.setVersion(externalItem.getVersion());
+
+        return relatedResource;
+    }
+
+    public static List<RelatedResourceDto> getRelatedResourceDtosFromExternalItemDtos(List<ExternalItemDto> externalItems) {
+        List<RelatedResourceDto> relatedResources = new ArrayList<RelatedResourceDto>();
+        if (externalItems != null) {
+            for (ExternalItemDto externalItem : externalItems) {
+                relatedResources.add(getRelatedResourceFromExternalItemDto(externalItem));
+            }
+        }
+        return relatedResources;
     }
 
 }

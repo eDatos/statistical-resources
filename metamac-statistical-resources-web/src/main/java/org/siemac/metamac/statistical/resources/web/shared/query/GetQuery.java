@@ -10,7 +10,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetQuery {
 
     @In(1)
-    String     queryUrn;
+    String   queryUrn;
 
     @Out(1)
     QueryDto queryDto;
