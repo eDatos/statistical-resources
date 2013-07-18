@@ -5,10 +5,10 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     // Version
     public static final String VERSION_TYPE                    = "parameter.resources.versionType";
     public static final String PREVIOUS_VERSION                = "parameter.resources.previousVersion";
-    
+
     // DSD
     public static final String DSD_DIMENSION_ID                = "parameter.resources.dsdDimensionId";
-    
+
     // Statistical operation
     public static final String STATISTICAL_OPERATION_URN       = "parameter.resources.statisticalOperationUrn";
     public static final String STATISTICAL_OPERATION           = "parameter.resources.statisticalOperation";
@@ -36,6 +36,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String TASK_INFO_DATASET_DATASET_ID    = "parameter.resources.repoDatasetId";
     public static final String TASK_INFO_DATASET_FILES         = "parameter.resources.files";
     public static final String TASK_INFO_DATASET_JOB_KEY       = "parameter.resources.jobKey";
+    public static final String TASK_DATASOURCE_ID              = "parameter.resources.datasourceId";
 
     // Files
     public static final String FILE_DESCRIPTOR_INPUT_MESSAGE   = "parameter.resources.inputMessage";
