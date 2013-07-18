@@ -22,6 +22,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepre
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
@@ -42,7 +43,7 @@ public class DsdProcessor {
         return srmRestInternalService;
     }
 
-    public static List<DsdDimension> getDimensions(DataStructure dsd) {
+    public static List<DsdDimension> getDimensions(DataStructure dsd) throws MetamacException {
         List<DsdDimension> dimensions = new ArrayList<DsdProcessor.DsdDimension>();
         DataStructureComponentsType components = dsd.getDataStructureComponents();
         if (components != null && components.getDimensionList() != null) {
@@ -62,7 +63,7 @@ public class DsdProcessor {
         return dimensions;
     }
 
-    public static List<DsdAttribute> getAttributes(DataStructure dsd) {
+    public static List<DsdAttribute> getAttributes(DataStructure dsd) throws MetamacException {
         List<DsdAttribute> attributes = new ArrayList<DsdAttribute>();
         DataStructureComponentsType components = dsd.getDataStructureComponents();
 
@@ -107,7 +108,7 @@ public class DsdProcessor {
             }
         }
 
-        protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) {
+        protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) throws MetamacException {
             Concept concept = null;
             if (conceptIdentityRef.getRef() != null) {
                 ConceptRefType ref = conceptIdentityRef.getRef();
@@ -187,7 +188,7 @@ public class DsdProcessor {
         private String             dimensionId;
         private TimeTextFormatType timeTextFormatType;
 
-        public DsdDimension(Dimension dim) {
+        public DsdDimension(Dimension dim) throws MetamacException {
             dimensionId = dim.getId();
             if (BooleanUtils.isTrue(dim.isIsSpatial())) {
                 type = DsdComponentType.SPATIAL;
@@ -253,7 +254,7 @@ public class DsdProcessor {
         private AttributeRelationshipType           attributeRelationship;
         private boolean                             isMandatory;
 
-        public DsdAttribute(Attribute attr) {
+        public DsdAttribute(Attribute attr) throws MetamacException {
             attributeId = attr.getId();
             if (AttributeQualifierType.SPATIAL.equals(attr.getType())) {
                 type = DsdComponentType.SPATIAL;
@@ -275,7 +276,7 @@ public class DsdProcessor {
             isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
         }
 
-        public DsdAttribute(ReportingYearStartDayType attr) {
+        public DsdAttribute(ReportingYearStartDayType attr) throws MetamacException {
             attributeId = attr.getId();
             type = DsdComponentType.TEMPORAL;
 
