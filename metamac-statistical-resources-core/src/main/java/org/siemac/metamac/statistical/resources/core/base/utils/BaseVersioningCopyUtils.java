@@ -37,7 +37,6 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setType(source.getType());
 
         // Production descriptors
-        target.setMaintainer(copyExternalItem(source.getMaintainer()));
         target.setCreator(copyExternalItem(source.getCreator()));
         target.getContributor().clear();
         target.getContributor().addAll(copyListExternalItem(source.getContributor()));
@@ -72,7 +71,8 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
 
     private static void copyLifeCycleStatisticalResource(LifeCycleStatisticalResource source, LifeCycleStatisticalResource target) {
         copyVersionableStatisticalResource(source, target);
-        // ALL lifecycle metadata are filled automatically
+        target.setMaintainer(copyExternalItem(source.getMaintainer()));
+        // Other lifecycle metadata are filled automatically
     }
 
     // --------------------------------------------------------------------------

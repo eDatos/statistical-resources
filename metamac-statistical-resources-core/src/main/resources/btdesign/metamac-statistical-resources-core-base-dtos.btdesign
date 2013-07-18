@@ -56,6 +56,8 @@ Application StatisticalResourcesDto {
 			
 			- @RelatedResourceDto replacesVersion;
 			- @RelatedResourceDto isReplacedByVersion;
+			
+			- @ExternalItemDto maintainer;
 		}
 		
 		DataTransferObject SiemacMetadataStatisticalResourceDto extends @LifeCycleStatisticalResourceDto {
@@ -80,7 +82,6 @@ Application StatisticalResourcesDto {
 			- @StatisticalResourceTypeEnum type;
 			
 			//PRODUCTION DESCRIPTORS
-			- @ExternalItemDto maintainer;
 			- @ExternalItemDto creator;
 			- Bag<@ExternalItemDto> contributor;
 			JAVADATE resourceCreatedDate;

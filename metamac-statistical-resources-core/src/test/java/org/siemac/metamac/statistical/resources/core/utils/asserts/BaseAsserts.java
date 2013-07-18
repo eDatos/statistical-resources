@@ -61,7 +61,6 @@ public class BaseAsserts extends CommonAsserts {
         
         assertEquals(previous.getType(), next.getType());
 
-        assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
         assertEqualsExternalItem(previous.getCreator(), next.getCreator());
         assertEqualsExternalItemCollection(previous.getContributor(), next.getContributor());
         assertEqualsDate(previous.getCreatedDate(), next.getCreatedDate());
@@ -99,6 +98,8 @@ public class BaseAsserts extends CommonAsserts {
         assertNull(next.getPublicationUser());
         assertNull(next.getReplacesVersion());
         assertNull(next.getIsReplacedByVersion());
+        
+        assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
     }
 
     private static void assertEqualsVersioningVersionable(VersionableStatisticalResource previous, VersionableStatisticalResource next) {
@@ -147,7 +148,6 @@ public class BaseAsserts extends CommonAsserts {
 
         assertEquals(expected.getType(), actual.getType());
 
-        assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
         assertEqualsExternalItem(expected.getCreator(), actual.getCreator());
         assertEqualsExternalItemList(expected.getContributor(), actual.getContributor());
         assertEqualsDate(expected.getResourceCreatedDate(), actual.getResourceCreatedDate());
@@ -194,6 +194,8 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResource(expected.getIsReplacedByVersion(), actual.getIsReplacedByVersion());
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
 
+        assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
+        
         assertEqualsVersionableStatisticalResource(expected, actual);
     }
 
@@ -248,7 +250,6 @@ public class BaseAsserts extends CommonAsserts {
 
                 assertEquals(dto.getType(), entity.getType());
 
-                assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer(), mapperEnum);
                 assertEqualsExternalItem(entity.getCreator(), dto.getCreator(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getContributor(), dto.getContributor());
                 assertEqualsDate(entity.getResourceCreatedDate(), dto.getResourceCreatedDate());
@@ -314,6 +315,8 @@ public class BaseAsserts extends CommonAsserts {
 
                 assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
                 assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
+                
+                assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer(), mapperEnum);
                 break;
         }
         assertEqualsVersionableStatisticalResource(entity, dto, mapperEnum);

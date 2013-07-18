@@ -155,13 +155,11 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml",
-                                    "classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
-    
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
@@ -302,13 +300,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
                 queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
 
         expectedQuery.getSelection().remove("SEX");
-        expectedQuery.getSelection().put("DIM1", Arrays.asList(
-                new CodeItemDto("A","A"),
-                new CodeItemDto("B","B"),
-                new CodeItemDto("C","C")));
-        expectedQuery.getSelection().put("DIM2", Arrays.asList(
-                new CodeItemDto("D","D"),
-                new CodeItemDto("E","E")));
+        expectedQuery.getSelection().put("DIM1", Arrays.asList(new CodeItemDto("A", "A"), new CodeItemDto("B", "B"), new CodeItemDto("C", "C")));
+        expectedQuery.getSelection().put("DIM2", Arrays.asList(new CodeItemDto("D", "D"), new CodeItemDto("E", "E")));
 
         // Service operation
         QueryDto actualQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), expectedQuery);
@@ -334,6 +327,21 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         QueryDto actualQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), expectedQuery);
         assertEquals(expectedStatus, actualQuery.getStatus());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
+    public void testUpdateQueryVersionIgnoreChangeMaintainer() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME);
+        String originalMaintainerCode = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode();
+
+        QueryDto queryDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto();
+        queryDto.setMaintainer(maintainer);
+
+        QueryDto updatedQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDto);
+        assertNotNull(updatedQuery);
+        assertEquals(originalMaintainerCode, updatedQuery.getMaintainer().getCode());
     }
 
     @Override
@@ -725,6 +733,21 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
+    public void testUpdateDatasetVersionChangeMaintainerNotAllowed() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String originalMaintainerCode = datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode();
+
+        DatasetDto datasetDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto();
+        datasetDto.setMaintainer(maintainer);
+
+        DatasetDto updatedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetDto);
+        assertNotNull(updatedDataset);
+        assertEquals(originalMaintainerCode, updatedDataset.getMaintainer().getCode());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetVersionIgnoreDateNextVersion() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         DateTime originalDateNextVersion = datasetVersion.getSiemacMetadataStatisticalResource().getNextVersionDate();
@@ -1021,12 +1044,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
         fail("testRetrieveCoverageForDatasetVersionDimension not implemented");
     }
-    
+
     @Override
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         fail("testRetrieveCoverageForDatasetVersionDimension not implemented");
     }
-    
+
     @Override
     @Test
     public void testCreatePublication() throws Exception {
@@ -1080,6 +1103,22 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         PublicationDto updatedPublication = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDto);
         assertNotNull(updatedPublication);
         assertEquals(originalStatisticalOperationCode, updatedPublication.getStatisticalOperation().getCode());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testUpdatePublicationVersionIgnoreChangeMaintainer() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
+        String originalMaintainerCode = publicationVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode();
+
+        PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource()
+                .getUrn());
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto();
+        publicationDto.setMaintainer(maintainer);
+
+        PublicationDto updatedPublication = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationDto);
+        assertNotNull(updatedPublication);
+        assertEquals(originalMaintainerCode, updatedPublication.getMaintainer().getCode());
     }
 
     @Test
@@ -1427,7 +1466,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendPublicationVersionToDiffusionValidation() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
         PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionUrn);
 
         PublicationDto updatedPublication = statisticalResourcesServiceFacade.sendPublicationVersionToDiffusionValidation(getServiceContextAdministrador(), publicationDto);
@@ -1436,13 +1476,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(getServiceContextAdministrador().getUserId(), updatedPublication.getDiffusionValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublication.getDiffusionValidationDate()));
     }
-    
 
     @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
     public void testSendPublicationVersionToValidationRejected() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
         PublicationDto publicationDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionUrn);
 
         PublicationDto updatedPublication = statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(getServiceContextAdministrador(), publicationDto);
@@ -1450,7 +1490,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(ProcStatusEnum.VALIDATION_REJECTED, updatedPublication.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), updatedPublication.getRejectValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublication.getRejectValidationDate()));
-        
+
         assertNotNull(updatedPublication.getProductionValidationUser());
         assertNotNull(updatedPublication.getProductionValidationDate());
     }
@@ -1640,30 +1680,33 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         propertyRestriction.setStringValue(stringValue);
         metamacCriteria.setRestriction(propertyRestriction);
     }
-    
+
     private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
         List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
-        
+
         dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("GEO_DIM", "code-01", "code-02", "code-03"));
         dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("TIME_PERIOD", "2010", "2011", "2012"));
         dimensionsCodes.add(DsRepositoryMockUtils.mockCodeDimensions("MEAS_DIM", "concept-01", "concept-02", "concept-03"));
         Mockito.when(statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(Mockito.anyString())).thenReturn(dimensionsCodes);
-        
+
         DatasetRepositoryDto datasetRepoDto = DsRepositoryMockUtils.mockDatasetRepository("dsrepo-01", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM");
         Mockito.when(statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(Mockito.anyString())).thenReturn(datasetRepoDto);
 
-        //Mock codelist and concept Scheme
-        
-        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+        // Mock codelist and concept Scheme
+
+        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE,
+                3);
         Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
-        
-        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
+
+        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)",
+                StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
         Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
-        
-        //Create a datastructure with dimensions marked as measure temporal and spatial
-        
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+
+        // Create a datastructure with dimensions marked as measure temporal and spatial
+
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD",
+                "MEAS_DIM", conceptScheme, codelist);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
     }
-        
+
 }

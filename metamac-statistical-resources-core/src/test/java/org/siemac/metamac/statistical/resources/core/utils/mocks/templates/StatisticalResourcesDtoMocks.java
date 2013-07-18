@@ -52,7 +52,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     public static QueryDto mockQueryDto(DatasetVersion datasetVersion) {
         QueryDto queryDto = new QueryDto();
 
-        mockNameableStatisticalResorceDto(queryDto);
+        mockLifeCycleStatisticalResourceDto(queryDto);
 
         // code is not setting in nameable becasuse some resources have generated code
         queryDto.setCode(mockString(8));
@@ -204,7 +204,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.setKeywords(mockInternationalStringDto());
         siemacMetadataStatisticalResourceDto.setType(type);
 
-        siemacMetadataStatisticalResourceDto.setMaintainer(mockAgencyExternalItemDto());
         siemacMetadataStatisticalResourceDto.setCreator(mockOrganizationUnitExternalItemDto());
         siemacMetadataStatisticalResourceDto.addContributor(mockOrganizationUnitExternalItemDto());
         siemacMetadataStatisticalResourceDto.setResourceCreatedDate(mockDate());
@@ -245,7 +244,9 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         lifeCycleStatisticalResourceDto.setPublicationDate(new DateTime().toDate());
         lifeCycleStatisticalResourceDto.setPublicationUser(mockString(10));
 
-        // Cant mock replacedByVersion and replacesVersion, we don't know the type of resource
+        lifeCycleStatisticalResourceDto.setMaintainer(mockAgencyExternalItemDto());
+        
+        // Can not mock replacedByVersion and replacesVersion, we don't know the type of resource
 
         mockVersionableStatisticalResourceDto(lifeCycleStatisticalResourceDto);
     }

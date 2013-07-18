@@ -189,6 +189,7 @@ public abstract class BaseInvocationValidator {
     }
 
     private static void checkLifeCycleStatisticalResource(LifeCycleStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptions);
     }
 
     // ------------------------------------------------------------------------------------
@@ -221,7 +222,6 @@ public abstract class BaseInvocationValidator {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getStatisticalOperationInstances(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES), exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(resource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR), exceptions);
         StatisticalResourcesValidationUtils.checkListMetadataOptionalIsValid(resource.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER), exceptions);

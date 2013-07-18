@@ -52,7 +52,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
 
         target.setType(source.getType());
 
-        target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
         target.setCreator(externalItemDoToDto(source.getCreator()));
         target.getContributor().clear();
         target.getContributor().addAll(externalItemDoCollectionToDtoCollection(source.getContributor()));
@@ -108,6 +107,8 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
 
         target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
+        
+        target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
     }
 
     @Override

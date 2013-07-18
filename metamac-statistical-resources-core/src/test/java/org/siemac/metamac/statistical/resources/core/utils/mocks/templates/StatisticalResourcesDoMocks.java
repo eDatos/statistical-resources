@@ -273,7 +273,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         resource.setType(type);
 
-        resource.setMaintainer(mockAgencyExternalItem());
         resource.setCreator(mockOrganizationUnitExternalItem());
         resource.addPublisher(mockOrganizationUnitExternalItem());
         resource.setRightsHolder(mockOrganizationUnitExternalItem());
@@ -289,6 +288,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
         mockVersionableStatisticalResource(resource);
 
+        resource.setMaintainer(mockAgencyExternalItem());
+        
         setSpecialCasesLifeCycleStatisticalResourceMock(resource);
         return resource;
     }

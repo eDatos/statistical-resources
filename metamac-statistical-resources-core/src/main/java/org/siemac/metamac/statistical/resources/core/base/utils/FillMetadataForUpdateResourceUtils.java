@@ -15,19 +15,20 @@ public class FillMetadataForUpdateResourceUtils {
     }
 
     public static void fillMetadataForUpdateLifeCycleResource(LifeCycleStatisticalResource resource, StatisticalResourceTypeEnum type) {
-        fillMetadataForUpdateVersionableResource(resource, type);
+        String[] maintainerCodes = new String[]{resource.getMaintainer().getCode()};
+        fillMetadataForUpdateVersionableResource(maintainerCodes, resource, type);
     }
 
-    private static void fillMetadataForUpdateVersionableResource(VersionableStatisticalResource resource, StatisticalResourceTypeEnum type) {
-        fillMetadataForUpdateIdentifiableResource(resource, type);
+    private static void fillMetadataForUpdateVersionableResource(String[] maintainerCodes, VersionableStatisticalResource resource, StatisticalResourceTypeEnum type) {
+        fillMetadataForUpdateIdentifiableResource(maintainerCodes, resource, type);
     }
 
-    private static void fillMetadataForUpdateIdentifiableResource(IdentifiableStatisticalResource resource, StatisticalResourceTypeEnum type) {
+    private static void fillMetadataForUpdateIdentifiableResource(String[] maintainerCodes, IdentifiableStatisticalResource resource, StatisticalResourceTypeEnum type) {
         resource.setUri(null);
 
         // URN
         if (StatisticalResourceTypeEnum.QUERY.equals(type)) {
-            resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(resource.getCode()));
+            resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, resource.getCode()));
 
         }
         // DATASETS AND PUBLICATIONS: CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block

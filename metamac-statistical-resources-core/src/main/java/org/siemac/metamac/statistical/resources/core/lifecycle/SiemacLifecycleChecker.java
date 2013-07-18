@@ -78,9 +78,6 @@ public class SiemacLifecycleChecker {
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperationInstances(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES),
                 exceptionItems);
 
-        // Maintainer
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptionItems);
-
         // Creator
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptionItems);
 

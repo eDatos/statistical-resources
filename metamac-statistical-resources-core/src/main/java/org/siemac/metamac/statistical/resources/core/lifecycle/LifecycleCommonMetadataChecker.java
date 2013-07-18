@@ -55,6 +55,7 @@ public class LifecycleCommonMetadataChecker {
         if(StringUtils.isNotBlank(lifeCycleStatisticalResource.getVersionLogic()) && !StatisticalResourcesVersionUtils.isInitialVersion(lifeCycleStatisticalResource.getVersionLogic())) {
             checkMetadataRequired(lifeCycleStatisticalResource.getReplacesVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
         }
+        checkMetadataRequired(lifeCycleStatisticalResource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptionItems);
     }
     
     public void checkSiemacCommonMetadata(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
@@ -69,7 +70,6 @@ public class LifecycleCommonMetadataChecker {
         
         checkMetadataRequired(siemacMetadataStatisticalResource.getType(), addParameter(metadataName, ServiceExceptionSingleParameters.TYPE), exceptionItems);
         
-        checkMetadataRequired(siemacMetadataStatisticalResource.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptionItems);
         checkMetadataRequired(siemacMetadataStatisticalResource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptionItems);
         checkMetadataRequired(siemacMetadataStatisticalResource.getLastUpdate(), addParameter(metadataName, ServiceExceptionSingleParameters.LAST_UPDATE), exceptionItems);
         

@@ -51,9 +51,6 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
             target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
                     + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
         }
-        if (SiemacMetadataEditionChecks.canMaintainerBeEdited(target.getId())) {
-            target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
-        }
         
         // Not always modifiable
         if (SiemacMetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
@@ -98,7 +95,12 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         // Hierarchy
         versionableStatisticalResourceDtoToDo(source, target, metadataName);
 
-        // All attributes are automatic, non modifiable
+        // Only modifiable in creation
+        if (SiemacMetadataEditionChecks.canMaintainerBeEdited(target.getId())) {
+            target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
+        }
+        
+        // Other attributes are automatic, non modifiable
 
         return target;
     }

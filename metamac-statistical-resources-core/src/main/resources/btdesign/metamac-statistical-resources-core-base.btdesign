@@ -104,6 +104,8 @@ Application BaseStatisticalResources {
 						
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
+			
+			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {
@@ -131,7 +133,6 @@ Application BaseStatisticalResources {
 			- @StatisticalResourceTypeEnum type nullable;
 			
 			//PRODUCTION DESCRIPTORS
-			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
 			- @ExternalItem creator cascade="all" databaseColumn="CREATOR_FK" nullable;
 			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" databaseJoinTable="TB_EI_CONTRIBUTORS" databaseColumn="CONTRIBUTOR_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			DateTimeTZ resourceCreatedDate nullable;

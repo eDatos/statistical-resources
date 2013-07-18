@@ -153,7 +153,10 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         Query query = new Query();
         query.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
         query.getIdentifiableStatisticalResource().setCode(queryVersion.getLifeCycleStatisticalResource().getCode());
-        query.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(queryVersion.getLifeCycleStatisticalResource().getCode()));
+
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode());
+        query.getIdentifiableStatisticalResource().setUrn(urn);
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
         return query;
     }
@@ -161,9 +164,10 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), ctx);
         queryVersion.setStatus(determineQueryStatus(queryVersion));
-        queryVersion.getLifeCycleStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion.getLifeCycleStatisticalResource()
-                        .getVersionLogic()));
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
+                .getLifeCycleStatisticalResource().getVersionLogic());
+        queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
     }
 
     private QueryStatusEnum determineQueryStatus(QueryVersion queryVersion) throws MetamacException {

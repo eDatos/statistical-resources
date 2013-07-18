@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,9 @@ public class LifecycleChecker {
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
+    
+    @Autowired
+    private ExternalItemChecker            externalItemChecker;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -84,6 +88,9 @@ public class LifecycleChecker {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM)));
         }
 
+        // Maintainer
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptionItems);
+        
         // TODO: Metadatos de relaciones entre recursos
     }
 

@@ -105,7 +105,6 @@ public class LifecycleTestUtils {
         ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem();
         resource.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
 
-        resource.getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesPersistedDoMocks.mockAgencyExternalItem());
         resource.getSiemacMetadataStatisticalResource().setCreator(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime().minusMinutes(10));
 
@@ -127,6 +126,8 @@ public class LifecycleTestUtils {
 
         resource.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesPersistedDoMocks.mockInternationalString());
         resource.getLifeCycleStatisticalResource().setDescription(StatisticalResourcesPersistedDoMocks.mockInternationalString());
+        
+        resource.getLifeCycleStatisticalResource().setMaintainer(StatisticalResourcesPersistedDoMocks.mockAgencyExternalItem());
     }
 
 }

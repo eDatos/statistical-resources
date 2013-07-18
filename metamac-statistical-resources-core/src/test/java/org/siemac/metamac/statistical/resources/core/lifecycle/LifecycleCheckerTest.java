@@ -34,15 +34,19 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @InjectMocks
-    private LifecycleChecker                        lifecycleChecker                        = new LifecycleChecker();
-    
+    private LifecycleChecker                lifecycleChecker = new LifecycleChecker();
+
     @Mock
-    private LifecycleCommonMetadataChecker          lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker  lifecycleCommonMetadataChecker;
+
+    @Mock
+    private ExternalItemChecker             externalItemChecker;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -55,7 +59,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
-        lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems); 
+        lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems);
 
         assertEquals(0, exceptionItems.size());
 
@@ -183,7 +187,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
             mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
-            
+
             HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
 
             if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
@@ -209,7 +213,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(null);
-        
+
         HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -225,7 +229,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(40));
-        
+
         HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -241,7 +245,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusMinutes(120));
-        
+
         HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -255,14 +259,14 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
-        
+
         HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleChecker.checkSendToPublished(mockedResource, mockedPreviousVersion, baseMetadata, exceptionItems);
         assertEquals(0, exceptionItems.size());
     }
-    
+
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusErrorRequiredPreviousVersion() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
@@ -270,12 +274,12 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setVersionLogic("002.000");
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
-        
+
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleChecker.checkSendToPublished(mockedResource, null, baseMetadata, exceptionItems);
         assertEquals(1, exceptionItems.size());
     }
-    
+
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusWithPreviousVersionNullInAnInitialVersion() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
@@ -283,13 +287,12 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
-        
+
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleChecker.checkSendToPublished(mockedResource, null, baseMetadata, exceptionItems);
         assertEquals(0, exceptionItems.size());
     }
 
-    
     // ------------------------------------------------------------------------------------------------------
     // UTILS
     // ------------------------------------------------------------------------------------------------------
