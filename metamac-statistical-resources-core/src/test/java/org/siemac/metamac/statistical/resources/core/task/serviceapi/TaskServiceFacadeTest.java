@@ -27,7 +27,13 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     }
 
     @Override
-    public void testMarkAllInProgressJobToFailed() throws Exception {
+    public void testMarkAllInProgressTaskToFailed() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testExecuteRecoveryImportationTask() throws Exception {
         // TODO Auto-generated method stub
 
     }

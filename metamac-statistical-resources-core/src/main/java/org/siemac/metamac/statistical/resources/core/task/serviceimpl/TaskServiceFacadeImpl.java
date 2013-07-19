@@ -37,12 +37,17 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void executeRecoveryImportationTask(ServiceContext ctx, String recoveryJobKey, String datasetId) throws MetamacException {
+        taskservice.processRollbackImportationTask(ctx, recoveryJobKey, datasetId);
+    }
+
+    @Override
     public void markTaskAsFailed(ServiceContext ctx, String job, Exception exception) throws MetamacException {
         taskservice.markTaskAsFailed(ctx, job, exception);
     }
 
     @Override
-    public void markAllInProgressJobToFailed(ServiceContext ctx) throws MetamacException {
+    public void markAllInProgressTaskToFailed(ServiceContext ctx) throws MetamacException {
         // Mark as failed current IN_PROGRESS states, if are available.
         List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.status()).eq(TaskStatusTypeEnum.IN_PROGRESS).build();
         PagedResult<Task> pagedResult = taskservice.findTasksByCondition(ctx, conditionList, PagingParameter.noLimits());
@@ -53,4 +58,5 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
             taskservice.markTaskAsFailed(ctx, task.getJob(), metamacException);
         }
     }
+
 }

@@ -16,10 +16,12 @@ Application DatasetsStatisticalResources {
 			
 			"Perform the importation task"
     		executeImportationTask(@TaskInfoDataset taskInfoDataset) throws MetamacException;
+    		"Perform the receovery importation task"
+    		executeRecoveryImportationTask(String recoveryJobKey, String datasetId) throws MetamacException; 
 
     		// General JOBS
     		markTaskAsFailed(String job, java.lang.Exception exception) throws MetamacException;
-    		markAllInProgressJobToFailed() throws MetamacException;
+    		markAllInProgressTaskToFailed() throws MetamacException;
 		}
 		
 		"Provides access to import data operations"
@@ -27,12 +29,17 @@ Application DatasetsStatisticalResources {
 			> @TaskRepository
 			
 			"Plannify a scheduled task to import"
-			String plannifyImportationDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
+			String planifyImportationDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
+			"Plannify a scheduled task to recovery import"
+			String planifyRecoveryImportDataset(String repoDatasetId) throws MetamacException;
 			"Perform the importation task"
     		processImportationTask(@TaskInfoDataset taskInfoDataset) throws MetamacException;
+    		"Perform a rollback in a importation task"
+    		processRollbackImportationTask(String jobKey, String datasetId);
+    		
     		"Check if exists a job task in the @param datasetId"
     		boolean existTaskInDataset(String datasetId) throws MetamacException;
-    		
+
     		
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;
@@ -59,6 +66,7 @@ Application DatasetsStatisticalResources {
 
 			String job key;
 			-@TaskStatusTypeEnum status not nullable;
+			String extensionPoint length="4000" nullable;
 				   		      	
 	   		Repository TaskRepository {
 	   			save;

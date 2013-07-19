@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
@@ -41,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 /**
@@ -52,10 +54,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
-    private static Logger                    logger                   = LoggerFactory.getLogger(DataManipulateTest.class);
-
-    @Autowired
-    private Metamac2StatRepoMapper           metamac2StatRepoMapper;
+    private static Logger                    logger                          = LoggerFactory.getLogger(DataManipulateTest.class);
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
@@ -72,23 +71,40 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     public String                            jobKey;
 
-    private JdbcTemplate                     jdbcTemplate;
+    private JdbcTemplate                     jdbcTemplateRepository;
+    private JdbcTemplate                     jdbcTemplateResources;
 
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
     protected EntityManager                  entityManager;
 
-    private final ServiceContext             serviceContext           = new ServiceContext("system", "123456", "junit");
+    private final ServiceContext             serviceContext                  = new ServiceContext("system", "123456", "junit");
 
-    public static final String               DATA_STR_ECB_EXR_RG_XS   = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
-    public static final String               DATA_GEN_ECB_EXR_RG_FLAT = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
-    public static final String               URN_DSD_ECB_EXR_RG       = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
+    public static final String               DATA_STR_ECB_EXR_RG_XS          = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT        = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT_FAILED = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat_failed.xml";
+    public static final String               URN_DSD_ECB_EXR_RG              = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
 
     @Autowired
     @Qualifier("dataSourceDatasetRepository")
-    public void setDataSource(DataSource dataSource) throws Exception {
+    public void setDataSourceRepository(DataSource dataSource) throws Exception {
         Connection connection = null;
         try {
-            this.jdbcTemplate = new JdbcTemplate(dataSource);
+            this.jdbcTemplateRepository = new JdbcTemplate(dataSource);
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(true);
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+
+    @Autowired
+    @Qualifier("dataSource")
+    public void setDataSourceResources(DataSource dataSource) throws Exception {
+        Connection connection = null;
+        try {
+            this.jdbcTemplateResources = new JdbcTemplate(dataSource);
             connection = dataSource.getConnection();
             connection.setAutoCommit(true);
         } finally {
@@ -170,22 +186,31 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     }
 
     public void clearDataBase() {
-        List<String> tableNames = this.jdbcTemplate.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
+        // REPOSITORY
+        {
+            List<String> tableNames = this.jdbcTemplateRepository.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
 
-        // Truncate tables
-        this.jdbcTemplate.update("truncate table TB_LOCALISED_STRINGS");
-        this.jdbcTemplate.update("truncate table TB_DATASET_DIMENSIONS");
-        this.jdbcTemplate.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
+            // Truncate tables
+            this.jdbcTemplateRepository.update("truncate table TB_LOCALISED_STRINGS");
+            this.jdbcTemplateRepository.update("truncate table TB_DATASET_DIMENSIONS");
+            this.jdbcTemplateRepository.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
 
-        // Deletes
-        this.jdbcTemplate.update("delete from TB_ATTRIBUTES");
-        this.jdbcTemplate.update("delete from TB_DATASETS");
-        this.jdbcTemplate.update("delete from TB_INTERNATIONAL_STRINGS");
+            // Deletes
+            this.jdbcTemplateRepository.update("delete from TB_ATTRIBUTES");
+            this.jdbcTemplateRepository.update("delete from TB_DATASETS");
+            this.jdbcTemplateRepository.update("delete from TB_INTERNATIONAL_STRINGS");
 
-        // Drop table data
-        for (String tableName : tableNames) {
-            this.jdbcTemplate.update("drop table " + tableName);
+            // Drop table data
+            for (String tableName : tableNames) {
+                this.jdbcTemplateRepository.update("drop table " + tableName);
+            }
         }
+
+        // RESOURCES
+        {
+            this.jdbcTemplateResources.update("truncate table TB_TASKS");
+        }
+
     }
 
     @Test
@@ -202,13 +227,13 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
                     taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
-                    taskInfoDataset.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
 
                     // File 01
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
                         fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_STR_ECB_EXR_RG_XS));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
@@ -217,10 +242,11 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
                         fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.plannifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -231,6 +257,60 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
         // Wait until the job is finished
         waitUntilJobFinished();
+
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+
+        assertNotNull(datasetRepositoryDto);
+    }
+
+    @Test
+    public void testImportSdmx21Datasource_FAIL_WITH_RECOVERY() throws Exception {
+        // New Transaction: Because the job needs persisted data
+        final TransactionTemplate tt = new TransactionTemplate(transactionManager);
+        tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        tt.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            public void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+
+                    // File 01
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
+                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_STR_ECB_EXR_RG_XS));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    // File 02
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT_FAILED, "/"));
+                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT_FAILED));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+
+                } catch (MetamacException e) {
+                    e.printStackTrace();
+                }
+                logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
+            }
+        });
+
+        // Wait until the job is finished
+        waitUntilJobFinished();
+
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+
+        assertNotNull(datasetRepositoryDto);
     }
 
 }

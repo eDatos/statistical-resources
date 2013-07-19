@@ -12,12 +12,12 @@ Application DatasetsStatisticalResourcesDto {
 			String dataStructureUrn; 
 			String repoDatasetId;
 			String jobKey;
-			- @DatasetFileFormatEnum datasetFileFormatEnum;
 		}
 		
 		DataTransferObject FileDescriptor {
 			java.io.InputStream inputMessage;
 			String fileName;
+			- @DatasetFileFormatEnum datasetFileFormatEnum;
 		}
 		
 	}

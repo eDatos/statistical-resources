@@ -99,18 +99,13 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     }
 
     @Override
-    public void startDatasetCreation(DataContainer dataContainer) {
+    public void startDatasetCreation(DataContainer dataContainer) throws Exception {
 
         DatasetRepositoryDto datasetRepositoryDto = null;
 
         // If is a update Dataset
-        try {
-            // Find previous dataset
-            if (StringUtils.isNotEmpty(this.repoDatasetID)) {
-                datasetRepositoryDto = datasetRepositoriesServiceFacade.findDatasetRepository(this.repoDatasetID);
-            }
-        } catch (ApplicationException e) {
-            // TODO: Lanzar excepcion, mark failed?
+        if (StringUtils.isNotEmpty(this.repoDatasetID)) {
+            datasetRepositoryDto = datasetRepositoriesServiceFacade.findDatasetRepository(this.repoDatasetID);
         }
 
         // If is a new Dataset
@@ -121,7 +116,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         this.datasetRepositoryDto = datasetRepositoryDto;
     }
 
-    protected DatasetRepositoryDto createDatasetRepository() {
+    protected DatasetRepositoryDto createDatasetRepository() throws Exception {
         // Create DatasetRepository
         DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
         datasetRepositoryDto.setDatasetId(this.repoDatasetID);
@@ -149,75 +144,66 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     }
 
     @Override
-    public void finalizeDatasetCreation(DataContainer dataContainer) {
+    public void finalizeDatasetCreation(DataContainer dataContainer) throws Exception {
         // TODO pendiente de la gestión de errores, de alberto
     }
 
     @Override
-    public void insertDataAndAttributes(DataContainer dataContainer) {
+    public void insertDataAndAttributes(DataContainer dataContainer) throws Exception {
 
         List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
         List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
 
-        try {
+        // Transform Data y Attributes (series or observation level) into repository model
+        metamac2StatRepoMapper.populateDatas(dataContainer, this.attributesProcessorMap, dataDtos, attributeDtos, this.dataSourceID);
 
-            // Transform Data y Attributes (series or observation level) into repository model
-            metamac2StatRepoMapper.populateDatas(dataContainer, this.attributesProcessorMap, dataDtos, attributeDtos, this.dataSourceID);
+        // Transform Attributes (group level) into repository model
+        metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos, this.mandatoryAttributeIdsAtObservationLevel);
 
-            // Transform Attributes (group level) into repository model
-            metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos, this.mandatoryAttributeIdsAtObservationLevel);
+        // Transform Attributes (dataset level) into repository model
+        metamac2StatRepoMapper.processDatasetAttribute(dataContainer.getAttributes(), attributeDtos);
 
-            // Transform Attributes (dataset level) into repository model
-            metamac2StatRepoMapper.processDatasetAttribute(dataContainer.getAttributes(), attributeDtos);
+        // Process attributes: The attributes can appears flat on the XML. So you have to group them. According to the DSD definition.
+        // Note: The observation level attributes need not be flattened.
+        List<AttributeDto> compactedAttributes = new ArrayList<AttributeDto>();
+        for (AttributeDto attributeDto : attributeDtos) {
 
-            // Process attributes: The attributes can appears flat on the XML. So you have to group them. According to the DSD definition.
-            // Note: The observation level attributes need not be flattened.
-            List<AttributeDto> compactedAttributes = new ArrayList<AttributeDto>();
-            for (AttributeDto attributeDto : attributeDtos) {
+            if (this.attributesProcessorMap.containsKey(attributeDto.getAttributeId())) {
+                // TODO validate attribute
+                String attributeCustomKey = metamac2StatRepoMapper.generateAttributeKeyInAttachmentLevel(attributeDto, this.attributesProcessorMap.get(attributeDto.getAttributeId())
+                        .getAttributeRelationship(), this.groupDimensionMapInfo);
 
-                if (this.attributesProcessorMap.containsKey(attributeDto.getAttributeId())) {
-                    // TODO validate attribute
-                    String attributeCustomKey = metamac2StatRepoMapper.generateAttributeKeyInAttachmentLevel(attributeDto, this.attributesProcessorMap.get(attributeDto.getAttributeId())
-                            .getAttributeRelationship(), this.groupDimensionMapInfo);
-
-                    // If attribute is not processed
-                    if (!this.keyAttributesAdded.contains(attributeCustomKey)) {
-                        this.keyAttributesAdded.add(attributeCustomKey);
-                        compactedAttributes.add(attributeDto);
-                    }
-                } else {
-                    // TODO Error check
+                // If attribute is not processed
+                if (!this.keyAttributesAdded.contains(attributeCustomKey)) {
+                    this.keyAttributesAdded.add(attributeCustomKey);
+                    compactedAttributes.add(attributeDto);
                 }
+            } else {
+                // TODO Error check
             }
-
-            // Persist Observations and attributes
-            if (!dataDtos.isEmpty()) {
-                checkObservation(dataDtos);
-                datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos); // TODO para perfomance si sabesmos que no hay colision usar el
-                                                                                                                                    // create sin update
-            }
-
-            if (!attributeDtos.isEmpty()) {
-                checkAttributes(attributeDtos);
-                datasetRepositoriesServiceFacade.createAttributes(datasetRepositoryDto.getDatasetId(), attributeDtos);
-            }
-
-        } catch (MetamacException e) {
-            // TODO Lanzar excepcion, mark failed?
-            e.printStackTrace();
-        } catch (ApplicationException e) {
-            // TODO Lanzar excepcion, mark failed?
-            e.printStackTrace();
         }
+
+        // Persist Observations and attributes
+        if (!dataDtos.isEmpty()) {
+            checkObservation(dataDtos);
+            datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos); // TODO para perfomance si sabesmos que no hay colision usar el
+                                                                                                                                // create sin update
+        }
+
+        if (!attributeDtos.isEmpty()) {
+            checkAttributes(attributeDtos);
+            datasetRepositoriesServiceFacade.createAttributes(datasetRepositoryDto.getDatasetId(), attributeDtos);
+        }
+
     }
 
     @Override
-    public List<ComponentInfo> retrieveDimensionsInfo() {
+    public List<ComponentInfo> retrieveDimensionsInfo() throws Exception {
         return new ArrayList<ComponentInfo>(this.dimensionsInfoMap.values());
     }
 
     @Override
-    public List<ComponentInfo> retrieveAttributesInfo() {
+    public List<ComponentInfo> retrieveAttributesInfo() throws Exception {
         return new ArrayList<ComponentInfo>(this.attributesInfoMap.values());
     }
 
@@ -383,7 +369,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
      **************************************************************************/
 
     @SuppressWarnings("unchecked")
-    private void checkObservation(List<ObservationExtendedDto> dataDtos) throws MetamacException {
+    private void checkObservation(List<ObservationExtendedDto> dataDtos) throws Exception {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
         for (ObservationExtendedDto overExtendedDto : dataDtos) {
 
@@ -430,8 +416,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
                     Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
                     if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
                         throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID)
-                                .withMessageParameters(codeDimensionDto.getCodeDimensionId()).withMessageParameters(codeDimensionDto.getDimensionId())
-                                .withMessageParameters(enumeratedRepresentationUrn).build();
+                                .withMessageParameters(codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId(), enumeratedRepresentationUrn).build();
                     }
                 }
             }
@@ -454,8 +439,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             Set<String> validAttributeCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
             if (!validAttributeCodes.contains(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE))) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_ATTR_CODE_ENUM_NOT_VALID)
-                        .withMessageParameters(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)).withMessageParameters(attributeId)
-                        .withMessageParameters(enumeratedRepresentationUrn).build();
+                        .withMessageParameters(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE), attributeId, enumeratedRepresentationUrn).build();
             }
         }
     }

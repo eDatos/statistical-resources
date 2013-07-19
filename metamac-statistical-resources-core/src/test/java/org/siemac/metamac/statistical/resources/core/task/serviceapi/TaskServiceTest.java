@@ -17,7 +17,7 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
 
     @Override
     // @Test
-    public void testPlannifyImportationDataset() throws Exception {
+    public void testPlanifyImportationDataset() throws Exception {
         // TODO Auto-generated method stub
     }
 
@@ -66,6 +66,18 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
 
     @Override
     public void testFindTasksByCondition() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testPlanifyRecoveryImportDataset() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testProcessRollbackImportationTask() throws Exception {
         // TODO Auto-generated method stub
 
     }

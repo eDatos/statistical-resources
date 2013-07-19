@@ -67,7 +67,6 @@ public class ImportDatasetJob implements Job {
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES)));
             taskInfoDataset.setJobKey(jobKey.getName());
-            taskInfoDataset.setDatasetFileFormatEnum(DatasetFileFormatEnum.valueOf(data.getString(FILE_FORMAT)));
             taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
 
             getTaskServiceFacade().executeImportationTask(serviceContext, taskInfoDataset);
@@ -89,6 +88,15 @@ public class ImportDatasetJob implements Job {
 
         for (int i = 0; i < files.length; i++) {
             FileDescriptor fileDescriptorDto = new FileDescriptor();
+            if (files[i].endsWith(DatasetFileFormatEnum.SDMX_2_1 + ".imp")) {
+                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+            } else if (files[i].endsWith(DatasetFileFormatEnum.PX + ".imp")) {
+                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.PX);
+            } else if (files[i].endsWith(DatasetFileFormatEnum.CSV + ".imp")) {
+                fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.CSV);
+            } else {
+                throw new UnsupportedOperationException("Unrecognized file format");
+            }
 
             fileDescriptorDto.setFileName(names[i]);
             fileDescriptorDto.setInputMessage(new FileInputStream(files[i]));

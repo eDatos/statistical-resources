@@ -14,8 +14,7 @@ Application DatasetsStatisticalResources {
     	"Task Status Type Enumerated"
     	enum TaskStatusTypeEnum {
     		IN_PROGRESS,
-    		FAILED,
-    		FINISHED
+    		FAILED
     	}
     	
 	}
