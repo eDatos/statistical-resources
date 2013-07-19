@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.external.Get
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetTemporalGranularitiesListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationStructureActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationProcStatusActionHandler;
@@ -67,6 +68,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
@@ -144,6 +146,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeletePublicationsAction.class, DeletePublicationsActionHandler.class);
         bindHandler(UpdatePublicationProcStatusAction.class, UpdatePublicationProcStatusActionHandler.class);
         bindHandler(VersionPublicationAction.class, VersionPublicationActionHandler.class);
+        bindHandler(GetPublicationStructureAction.class, GetPublicationStructureActionHandler.class);
 
         // QUERIES
         bindHandler(GetQueriesAction.class, GetQueriesActionHandler.class);
