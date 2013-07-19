@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
@@ -93,7 +93,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
     }
 
     @Override
-    public void setDatasets(List<DatasetDto> datasetsDtos) {
+    public void setDatasets(List<DatasetVersionDto> datasetsDtos) {
         datasetsListGrid.setDatasets(datasetsDtos);
     }
 }

@@ -32,6 +32,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -199,29 +200,16 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void retrievePublicationsForReplaces(int firstResult, int maxResults, String criteria) {
+    public void retrievePublicationsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
 
-        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
+        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria.getCriteria());
+        publicationWebCriteria.setOnlyLastVersion(false);
 
         dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetPublicationsResult result) {
                 getView().setPublicationsForReplaces(result);
-            }
-        });
-    }
-
-    @Override
-    public void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
-
-        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
-
-        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationsResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetPublicationsResult result) {
-                getView().setPublicationsForIsReplacedBy(result);
             }
         });
     }

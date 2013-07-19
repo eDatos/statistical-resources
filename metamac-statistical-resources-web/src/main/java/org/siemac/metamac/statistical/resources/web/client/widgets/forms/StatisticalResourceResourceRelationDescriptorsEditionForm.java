@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getRelatedResourceValue;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourceValue;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourcesValue;
 
 import java.util.List;
 
@@ -8,10 +11,11 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleRelatedResourcePaginatedWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -22,26 +26,18 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
-    private RelatedResourceDto                         replaces;
-    private RelatedResourceDto                         isReplacedBy;
-
     private SearchSingleRelatedResourcePaginatedWindow searchReplacesWindow;
     private SearchSingleRelatedResourcePaginatedWindow searchIsReplacedByWindow;
 
     public StatisticalResourceResourceRelationDescriptorsEditionForm() {
         super(getConstants().formResourceRelationDescriptors());
 
-        SearchViewTextItem replaces = createReplacesItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
-
-        SearchViewTextItem isReplacedBy = createIsReplacedByItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy());
-
+        SearchRelatedResourceLinkItem replaces = createReplacesItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
+        RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(), getCustomLinkItemNavigationClickHandler()); 
         RelatedResourceListItem requires = new RelatedResourceListItem(StatisticalResourceDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false, getRecordNavigationHandler());
-
         RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(StatisticalResourceDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
-
         RelatedResourceListItem hasPart = new RelatedResourceListItem(StatisticalResourceDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
-
         RelatedResourceListItem isPartOf = new RelatedResourceListItem(StatisticalResourceDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false,
                 getRecordNavigationHandler());
 
@@ -52,30 +48,21 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
     // SETTERS
     //
 
-    public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-
-        setReplaces(siemacMetadataStatisticalResourceDto.getReplaces());
-
-        setIsReplacedBy(siemacMetadataStatisticalResourceDto.getIsReplacedBy());
-
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.REQUIRES)).setRelatedResources(siemacMetadataStatisticalResourceDto.getRequires());
-
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.IS_REQUIRED_BY)).setRelatedResources(siemacMetadataStatisticalResourceDto.getIsRequiredBy());
-
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.HAS_PART)).setRelatedResources(siemacMetadataStatisticalResourceDto.getHasPart());
-
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.IS_PART_OF)).setRelatedResources(siemacMetadataStatisticalResourceDto.getIsPartOf());
+    public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
+        setRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES), dto.getReplaces());
+        setRelatedResourceValue(getItem(StatisticalResourceDS.IS_REPLACED_BY), dto.getIsReplacedBy());
+        
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.REQUIRES), dto.getRequires());
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
+        
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.HAS_PART), dto.getHasPart());
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_PART_OF), dto.getIsPartOf());
     }
 
     private void setReplaces(RelatedResourceDto relatedResourceDto) {
         setValue(StatisticalResourceDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(relatedResourceDto));
-        replaces = relatedResourceDto;
     }
 
-    private void setIsReplacedBy(RelatedResourceDto relatedResourceDto) {
-        setValue(StatisticalResourceDS.IS_REPLACED_BY, RelatedResourceBaseUtils.getRelatedResourceName(relatedResourceDto));
-        isReplacedBy = relatedResourceDto;
-    }
 
     public void setRelatedResourcesForReplaces(List<RelatedResourceDto> relatedResourceDtos, int firstResult, int elementsInPage, int totalResults) {
         if (searchReplacesWindow != null) {
@@ -94,19 +81,19 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
     //
     // GETTER
     //
-
-    public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        siemacMetadataStatisticalResourceDto.setReplaces(replaces);
-        siemacMetadataStatisticalResourceDto.setIsReplacedBy(isReplacedBy);
-        return siemacMetadataStatisticalResourceDto;
+    public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
+        
+        dto.setReplaces(getRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES)));
+        
+        return dto;
     }
 
     //
     // FORM ITEM CREATION
     //
-
-    private SearchViewTextItem createReplacesItem(String name, String title) {
-        final SearchViewTextItem replacesItem = new SearchViewTextItem(name, title);
+    private SearchRelatedResourceLinkItem createReplacesItem(String name, String title) {
+        final SearchRelatedResourceLinkItem replacesItem = new SearchRelatedResourceLinkItem(name, title, getCustomLinkItemNavigationClickHandler());
+        
         replacesItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
             @Override
@@ -141,45 +128,7 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
         return replacesItem;
     }
 
-    private SearchViewTextItem createIsReplacedByItem(String name, String title) {
-        final int FIRST_RESULT = 0;
-        final int MAX_RESULTS = 8;
-        final SearchViewTextItem isReplacedByItem = new SearchViewTextItem(name, title);
-        isReplacedByItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
-
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-
-                searchIsReplacedByWindow = new SearchSingleRelatedResourcePaginatedWindow(getConstants().resourceSelection(), MAX_RESULTS, new SearchPaginatedAction<MetamacWebCriteria>() {
-
-                    @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
-                        retrieveResourcesForReplaces(firstResult, maxResults, webCriteria);
-                        retrieveResourcesForIsReplacedBy(firstResult, maxResults, webCriteria);
-                    }
-                });
-
-                // Load resources (to populate the selection window)
-                retrieveResourcesForIsReplacedBy(FIRST_RESULT, MAX_RESULTS, null);
-
-                searchIsReplacedByWindow.setSaveAction(new ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        RelatedResourceDto selectedResource = searchIsReplacedByWindow.getSelectedResource();
-                        searchIsReplacedByWindow.markForDestroy();
-                        // Set selected resource in form
-                        setIsReplacedBy(selectedResource);
-                        validate(false);
-                    }
-
-                });
-            }
-        });
-        return isReplacedByItem;
-    }
 
     public abstract void setUiHandlers(UiHandlers uiHandlers);
     public abstract void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria);
-    public abstract void retrieveResourcesForIsReplacedBy(int firstResult, int maxResults, MetamacWebCriteria criteria);
 }

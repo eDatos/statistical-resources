@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.checks.DatasetMetadataShowChecks;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
@@ -39,10 +39,10 @@ public class DatasetContentDescriptorsForm extends StatisticalResourceContentDes
 
         ExternalItemListItem statisticalUnit = new ExternalItemListItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(), false);
 
-        addFields(procStatusHidden, geographicCoverage, temporalCoverage, measures, geographicGranularities, temporalGranularities, dateStart, dateEnd, statisticalUnit);
+        addFields(procStatusHidden, dateStart, dateEnd, statisticalUnit, geographicCoverage, temporalCoverage, measures, geographicGranularities, temporalGranularities);
     }
 
-    public void setDatasetDto(DatasetDto datasetDto) {
+    public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         setValue(DatasetDS.PROC_STATUS, datasetDto.getProcStatus().name());

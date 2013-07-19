@@ -18,14 +18,7 @@ public class PublicationResourceRelationDescriptorsEditionForm extends Statistic
 
     @Override
     public void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-        // FIXME: send criteria
-        uiHandlers.retrievePublicationsForReplaces(firstResult, maxResults, criteria.getCriteria());
-    }
-
-    @Override
-    public void retrieveResourcesForIsReplacedBy(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-        // FIXME: send criteria
-        uiHandlers.retrievePublicationsForIsReplacedBy(firstResult, maxResults, criteria != null ? criteria.getCriteria() : null);
+        uiHandlers.retrievePublicationsForReplaces(firstResult, maxResults, criteria);
     }
 
     @Override

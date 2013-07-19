@@ -169,7 +169,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(GetDatasetDimensionsResult result) {
-                getView().setDatasetDimensionsIds(result.getDatasetDimensionsIds());
+                getView().setDatasetDimensionsIds(result.getDatasetVersionDimensionsIds());
             }
         });
     }

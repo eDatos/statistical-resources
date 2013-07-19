@@ -10,12 +10,13 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -48,6 +49,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.inject.Inject;
@@ -72,7 +74,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     public interface DatasetMetadataTabView extends StatisticalResourceMetadataBasePresenter.StatisticalResourceMetadataBaseView, HasUiHandlers<DatasetMetadataTabUiHandlers> {
 
-        void setDataset(DatasetDto datasetDto);
+        void setDataset(DatasetVersionDto datasetDto);
 
         // metadata fill methods
         void setDatasetsForReplaces(GetDatasetsResult result);
@@ -82,7 +84,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
 
         void setCodesForGeographicalGranularities(GetGeographicalGranularitiesListResult result);
-        void setCodesForTemporalGranularities(GetTemporalGranularitiesListResult result);
+        void setTemporalCodesForField(GetTemporalGranularitiesListResult result, DatasetMetadataExternalField field);
 
         void setConceptSchemesForStatisticalUnit(GetConceptSchemesPaginatedListResult result);
         void setConceptsForStatisticalUnit(GetConceptsPaginatedListResult result);
@@ -145,54 +147,54 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(GetDatasetResult result) {
-                getView().setDataset(result.getDatasetDto());
+                getView().setDataset(result.getDatasetVersionDto());
             }
         });
     }
 
     @Override
-    public void saveDataset(DatasetDto datasetDto) {
+    public void saveDataset(DatasetVersionDto datasetDto) {
         dispatcher.execute(new SaveDatasetAction(datasetDto, datasetDto.getStatisticalOperation().getCode()), new WaitingAsyncCallbackHandlingError<SaveDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
-                getView().setDataset(result.getSavedDataset());
+                getView().setDataset(result.getSavedDatasetVersion());
             }
         });
     }
 
     @Override
-    public void sendToProductionValidation(DatasetDto dataset) {
+    public void sendToProductionValidation(DatasetVersionDto dataset) {
         dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
-                getView().setDataset(result.getResultDatasetDto());
+                getView().setDataset(result.getResultDatasetVersionDto());
             }
         });
     }
 
     @Override
-    public void sendToDiffusionValidation(DatasetDto dataset) {
+    public void sendToDiffusionValidation(DatasetVersionDto dataset) {
         dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
-                getView().setDataset(result.getResultDatasetDto());
+                getView().setDataset(result.getResultDatasetVersionDto());
             }
         });
     }
 
     @Override
-    public void rejectValidation(DatasetDto dataset) {
+    public void rejectValidation(DatasetVersionDto dataset) {
         dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.VALIDATION_REJECTED), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                getView().setDataset(result.getResultDatasetDto());
+                getView().setDataset(result.getResultDatasetVersionDto());
             }
         });
     }
@@ -209,7 +211,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     // @Override
     // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
     // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToPendingPublication()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetDto());
+    // getView().setDataset(result.getDatasetVersionDto());
     // }
     // });
     // }
@@ -226,7 +228,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     // @Override
     // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
     // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceProgramPublication()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetDto());
+    // getView().setDataset(result.getDatasetVersionDto());
     // }
     // });
     // }
@@ -243,19 +245,19 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     // @Override
     // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
     // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceCancelProgrammedPublication()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetDto());
+    // getView().setDataset(result.getDatasetVersionDto());
     // }
     // });
     // }
 
     @Override
-    public void publish(DatasetDto dataset) {
+    public void publish(DatasetVersionDto dataset) {
         dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setDataset(result.getResultDatasetDto());
+                getView().setDataset(result.getResultDatasetVersionDto());
             }
         });
     }
@@ -271,30 +273,30 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     // @Override
     // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
     // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceArchive()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetDto());
+    // getView().setDataset(result.getDatasetVersionDto());
     // }
     // });
     // }
 
     @Override
-    public void version(DatasetDto dataset, VersionTypeEnum versionType) {
+    public void version(DatasetVersionDto dataset, VersionTypeEnum versionType) {
         dispatcher.execute(new VersionDatasetAction(dataset, versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(VersionDatasetResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setDataset(result.getResultDatasetDto());
+                getView().setDataset(result.getResultDatasetVersionDto());
             }
         });
     }
 
     @Override
-    public void retrieveDatasetsForReplaces(int firstResult, int maxResults, String criteria) {
+    public void retrieveDatasetsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
 
-        VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
-        // TODO Which is the condition to find the datasets to fill REPLACES?
-
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
+        VersionableStatisticalResourceWebCriteria versionableCriteria = new VersionableStatisticalResourceWebCriteria(criteria.getCriteria());
+        versionableCriteria.setOnlyLastVersion(false);
+        
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
@@ -326,12 +328,12 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void retrieveCodesForTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+    public void retrieveTemporalCodesForField(int firstResult, int maxResults, MetamacWebCriteria webCriteria, final DatasetMetadataExternalField field) {
         dispatcher.execute(new GetTemporalGranularitiesListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetTemporalGranularitiesListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetTemporalGranularitiesListResult result) {
-                getView().setCodesForTemporalGranularities(result);
+                getView().setTemporalCodesForField(result, field);
             }
         });
     }
@@ -368,20 +370,4 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             }
         });
     }
-
-    @Override
-    public void retrieveDatasetsForIsReplacedBy(int firstResult, int maxResults, String criteria) {
-
-        VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
-        // TODO Which is the condition to find the datasets to fill IS_REPLACED_BY?
-
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, datasetWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetDatasetsResult result) {
-                getView().setDatasetsForIsReplacedBy(result);
-            }
-        });
-    }
-
 }

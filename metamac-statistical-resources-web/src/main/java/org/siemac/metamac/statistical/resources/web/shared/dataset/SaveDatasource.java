@@ -10,7 +10,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class SaveDatasource {
 
     @In(1)
-    String        urnDataset;
+    String        urnDatasetVersion;
 
     @In(2)
     DatasourceDto datasource;

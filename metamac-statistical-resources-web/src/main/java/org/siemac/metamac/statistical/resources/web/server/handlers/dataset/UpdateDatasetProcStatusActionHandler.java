@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
@@ -25,7 +25,7 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
 
     @Override
     public UpdateDatasetProcStatusResult executeSecurityAction(UpdateDatasetProcStatusAction action) throws ActionException {
-        DatasetDto datasetDto = action.getDatasetDto();
+        DatasetVersionDto datasetDto = action.getDatasetVersionDto();
         try {
             switch (action.getNextProcStatus()) {
                 case PRODUCTION_VALIDATION:

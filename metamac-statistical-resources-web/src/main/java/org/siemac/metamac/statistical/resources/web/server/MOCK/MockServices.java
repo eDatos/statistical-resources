@@ -20,7 +20,7 @@ import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -39,7 +39,7 @@ public class MockServices {
     private static final String                            COLLECTION_URI_PREFIX = "http://siemac.metamac/collections/";
     private static final String                            QUERY_URI_PREFIX      = "http://siemac.metamac/queries/";
 
-    private static Map<String, DatasetDto>                 datasets;
+    private static Map<String, DatasetVersionDto>                 datasets;
     private static Map<String, DatasourceDto>              datasources;
     private static Map<String, PublicationDto>             collections;
     private static Map<String, ExternalItemDto>            agencies;
@@ -99,7 +99,7 @@ public class MockServices {
     // DATASETS
     //
 
-    public static DatasetDto createDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+    public static DatasetVersionDto createDataset(ServiceContext ctx, DatasetVersionDto datasetDto) throws MetamacException {
         String identifier = datasetDto.getCode();
         String datasetUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, identifier);
         // if (getDatasets().containsKey(datasetUrn)) {
@@ -143,8 +143,8 @@ public class MockServices {
         return datasetDto;
     }
 
-    public static DatasetDto retrieveDataset(ServiceContext ctx, String datasetUrn) throws MetamacException {
-        DatasetDto dataset = getDatasets().get(datasetUrn);
+    public static DatasetVersionDto retrieveDataset(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        DatasetVersionDto dataset = getDatasets().get(datasetUrn);
         if (dataset != null) {
             return dataset;
         } else {
@@ -152,11 +152,11 @@ public class MockServices {
         }
     }
 
-    public static DatasetDto updateDataset(ServiceContext ctx, DatasetDto datasetDto) throws MetamacException {
+    public static DatasetVersionDto updateDataset(ServiceContext ctx, DatasetVersionDto datasetDto) throws MetamacException {
         if (datasetDto.getUuid() == null || !getDatasets().containsKey(datasetDto.getUrn())) {
             throw new MetamacException(CommonServiceExceptionType.UNKNOWN);
         }
-        DatasetDto oldDataset = getDatasets().get(datasetDto.getUrn());
+        DatasetVersionDto oldDataset = getDatasets().get(datasetDto.getUrn());
 
         // if (!oldDataset.getStatisticalOperation().getUrn().equals(datasetDto.getStatisticalOperation().getUrn())) {
         // throw new MetamacException(CommonServiceExceptionType.METADATA_UNMODIFIABLE, ServiceExceptionParameters.DATASET_SOPERATION);
@@ -180,9 +180,9 @@ public class MockServices {
         getDatasets().remove(urn);
     }
 
-    public static MetamacCriteriaResult<DatasetDto> findDatasets(String operationUrn, int firstResult, int maxResults) throws MetamacException {
-        List<DatasetDto> datasetsList = new ArrayList<DatasetDto>();
-        // for (DatasetDto dataset : getDatasets().values()) {
+    public static MetamacCriteriaResult<DatasetVersionDto> findDatasets(String operationUrn, int firstResult, int maxResults) throws MetamacException {
+        List<DatasetVersionDto> datasetsList = new ArrayList<DatasetVersionDto>();
+        // for (DatasetVersionDto dataset : getDatasets().values()) {
         // if (operationUrn.equals(dataset.getOperation().getUrn())) {
         // datasetsList.add(dataset);
         // }
@@ -192,19 +192,19 @@ public class MockServices {
         if (endIndex - firstResult > maxResults) {
             endIndex = firstResult + maxResults;
         }
-        MetamacCriteriaResult<DatasetDto> result = new MetamacCriteriaResult<DatasetDto>();
+        MetamacCriteriaResult<DatasetVersionDto> result = new MetamacCriteriaResult<DatasetVersionDto>();
         MetamacCriteriaPaginatorResult paginatorResult = new MetamacCriteriaPaginatorResult();
         paginatorResult.setFirstResult(firstResult);
         paginatorResult.setMaximumResultSize(maxResults);
         paginatorResult.setTotalResults(datasetsList.size());
         result.setPaginatorResult(paginatorResult);
-        result.setResults(new ArrayList<DatasetDto>(datasetsList.subList(firstResult, endIndex)));
+        result.setResults(new ArrayList<DatasetVersionDto>(datasetsList.subList(firstResult, endIndex)));
         return result;
     }
 
-    private static Map<String, DatasetDto> getDatasets() {
+    private static Map<String, DatasetVersionDto> getDatasets() {
         if (datasets == null) {
-            datasets = new HashMap<String, DatasetDto>();
+            datasets = new HashMap<String, DatasetVersionDto>();
             try {
                 List<ExternalItemDto> operations = getOperationsList();
                 if (operations.size() > 0) {
@@ -225,7 +225,7 @@ public class MockServices {
 
     private static void createDataset(String code, String title_es, String title_en, ExternalItemDto operation) {
         Date now = new Date();
-        DatasetDto datasetDto = new DatasetDto();
+        DatasetVersionDto datasetDto = new DatasetVersionDto();
 
         datasetDto.setId(Long.valueOf(datasets.size() + 1));
         datasetDto.setUuid(UUID.randomUUID().toString());
@@ -293,38 +293,38 @@ public class MockServices {
         datasets.put(datasetDto.getUrn(), datasetDto);
     }
 
-    public static DatasetDto sendDatasetToProductionValidation(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+    public static DatasetVersionDto sendDatasetToProductionValidation(String urn) throws MetamacException {
+        DatasetVersionDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         return datasetDto;
     }
 
-    public static DatasetDto sendDatasetToDiffusionValidation(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+    public static DatasetVersionDto sendDatasetToDiffusionValidation(String urn) throws MetamacException {
+        DatasetVersionDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         return datasetDto;
     }
 
-    public static DatasetDto rejectDatasetProductionValidation(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+    public static DatasetVersionDto rejectDatasetProductionValidation(String urn) throws MetamacException {
+        DatasetVersionDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
         return datasetDto;
     }
 
-    public static DatasetDto rejectDatasetDiffusionValidation(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+    public static DatasetVersionDto rejectDatasetDiffusionValidation(String urn) throws MetamacException {
+        DatasetVersionDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
         return datasetDto;
     }
 
-    public static DatasetDto publishDataset(String urn) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+    public static DatasetVersionDto publishDataset(String urn) throws MetamacException {
+        DatasetVersionDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setProcStatus(ProcStatusEnum.PUBLISHED);
         return datasetDto;
     }
 
-    public static DatasetDto versionDataset(String urn, VersionTypeEnum versionType) throws MetamacException {
-        DatasetDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
+    public static DatasetVersionDto versionDataset(String urn, VersionTypeEnum versionType) throws MetamacException {
+        DatasetVersionDto datasetDto = retrieveDataset(ServiceContextHolder.getCurrentServiceContext(), urn);
         datasetDto.setId(Long.valueOf(collections.size() + 1));
         // datasetDto.setVersionLogic(VersionUtil.createNextVersionTag(datasetDto.getVersionLogic(), VersionTypeEnum.MINOR.equals(versionType)));
         datasetDto.setProcStatus(ProcStatusEnum.DRAFT);
@@ -426,7 +426,7 @@ public class MockServices {
     private static Map<String, DatasourceDto> getDatasources() {
         if (datasources == null) {
             datasources = new HashMap<String, DatasourceDto>();
-            List<DatasetDto> datasets = new ArrayList<DatasetDto>(getDatasets().values());
+            List<DatasetVersionDto> datasets = new ArrayList<DatasetVersionDto>(getDatasets().values());
             if (datasets.size() > 0) {
                 Random randGen = new Random();
                 createDatasource("dsource-0001", "Datasource 1", "Datasource 1", datasets.get(randGen.nextInt(datasets.size())));
@@ -440,7 +440,7 @@ public class MockServices {
         return datasources;
     }
 
-    private static void createDatasource(String code, String title_es, String title_en, DatasetDto dataset) {
+    private static void createDatasource(String code, String title_es, String title_en, DatasetVersionDto dataset) {
         Date now = new Date();
         DatasourceDto datasourceDto = new DatasourceDto();
 

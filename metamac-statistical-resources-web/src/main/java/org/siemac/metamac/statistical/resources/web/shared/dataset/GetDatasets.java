@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -22,7 +22,7 @@ public class GetDatasets {
     VersionableStatisticalResourceWebCriteria criteria;
 
     @Out(1)
-    List<DatasetDto>                          datasetDtos;
+    List<DatasetVersionDto>                          datasetVersionDtos;
 
     @Out(2)
     Integer                                   firstResultOut;

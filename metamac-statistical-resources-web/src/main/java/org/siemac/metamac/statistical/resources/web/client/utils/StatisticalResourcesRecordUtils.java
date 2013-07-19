@@ -5,7 +5,7 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
@@ -20,7 +20,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.model.record.Qu
 
 public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.common.client.utils.RecordUtils {
 
-    public static DatasetRecord getDatasetRecord(DatasetDto datasetDto) {
+    public static DatasetRecord getDatasetRecord(DatasetVersionDto datasetDto) {
         DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getCode(), getLocalisedString(datasetDto.getTitle()), getLocalisedString(datasetDto.getDescription()),
                 CommonUtils.getProcStatusName(datasetDto), datasetDto.getVersionLogic(), datasetDto.getUrn(), datasetDto);
         return record;

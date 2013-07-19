@@ -28,7 +28,7 @@ public class GetDatasetDimensionCoverageActionHandler extends SecurityActionHand
     @Override
     public GetDatasetDimensionCoverageResult executeSecurityAction(GetDatasetDimensionCoverageAction action) throws ActionException {
         try {
-            List<CodeItemDto> codes = statisticalResourcesServiceFacade.retrieveCoverageForDatasetVersionDimension(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetUrn(),
+            List<CodeItemDto> codes = statisticalResourcesServiceFacade.retrieveCoverageForDatasetVersionDimension(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn(),
                     action.getDimensionId());
             return new GetDatasetDimensionCoverageResult(codes);
         } catch (MetamacException e) {

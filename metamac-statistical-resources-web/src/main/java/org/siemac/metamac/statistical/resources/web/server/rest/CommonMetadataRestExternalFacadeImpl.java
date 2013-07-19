@@ -65,13 +65,14 @@ public class CommonMetadataRestExternalFacadeImpl implements CommonMetadataRestE
         return queryBuilder.toString();
     }
 
-    private ExternalItemDto getExternalItemDtoFromConfiguration(Resource configuration) {
+    private ExternalItemDto getExternalItemDtoFromConfiguration(ResourceInternal configuration) {
         ExternalItemDto item = new ExternalItemDto();
         item.setCode(configuration.getId());
         item.setUri(configuration.getSelfLink().getHref());
         item.setUrn(configuration.getUrn());
         item.setType(TypeExternalArtefactsEnum.CONFIGURATION);
         item.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(configuration.getName()));
+        item.setManagementAppUrl(configuration.getManagementAppLink());
         return item;
     }
 

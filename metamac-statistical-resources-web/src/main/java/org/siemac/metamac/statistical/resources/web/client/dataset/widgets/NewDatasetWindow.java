@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
@@ -63,8 +63,8 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         return form.getItem(FIELD_SAVE);
     }
 
-    public DatasetDto getNewDatasetDto(String operationUrn) {
-        DatasetDto datasetDto = new DatasetDto();
+    public DatasetVersionDto getNewDatasetVersionDto(String operationUrn) {
+        DatasetVersionDto datasetDto = new DatasetVersionDto();
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         datasetDto.setRelatedDsd(getExternalItemValue(form.getItem(DatasetDS.RELATED_DSD)));
         populateSiemacResourceDto(datasetDto);

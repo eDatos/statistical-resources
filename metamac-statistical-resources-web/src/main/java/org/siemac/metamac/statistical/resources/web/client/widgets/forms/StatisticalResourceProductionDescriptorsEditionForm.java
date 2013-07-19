@@ -48,7 +48,7 @@ public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDy
         MultilanguageRichTextEditorItem conformsToInternal = new MultilanguageRichTextEditorItem(StatisticalResourceDS.CONFORMS_TO_INTERNAL, getConstants()
                 .siemacMetadataStatisticalResourceConformsToInternal());
 
-        setFields(maintainer, creatorItem, contributorItem, dateCreated, lastUpdate, conformsTo, conformsToInternal);
+        setFields(dateCreated, lastUpdate, maintainer, creatorItem, contributorItem, conformsTo, conformsToInternal);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {

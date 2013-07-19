@@ -7,10 +7,11 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.checks.DatasetMetadataShowChecks;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
@@ -58,10 +59,10 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
 
         ExternalItemListItem statisticalUnit = createStatisticalUnitItem();
 
-        addFields(procStatusHidden, geographicCoverage, temporalCoverage, measures, geographicalGranularitiesItem, temporalGranularitiesItem, dateStart, dateEnd, statisticalUnit);
+        addFields(procStatusHidden, dateStart, dateEnd, statisticalUnit, geographicCoverage, temporalCoverage, measures, geographicalGranularitiesItem, temporalGranularitiesItem);
     }
 
-    public void setDatasetDto(DatasetDto datasetDto) {
+    public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         setValue(DatasetDS.PROC_STATUS, datasetDto.getProcStatus().name());
@@ -82,8 +83,8 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
         ((ExternalItemListItem) getItem(DatasetDS.MEASURES)).setExternalItems(measureItems);
     }
 
-    public DatasetDto getDatasetDto(DatasetDto datasetDto) {
-        datasetDto = (DatasetDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
+    public DatasetVersionDto getDatasetVersionDto(DatasetVersionDto datasetDto) {
+        datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         datasetDto.getGeographicGranularities().clear();
         datasetDto.getGeographicGranularities().addAll(getExternalItemsValue(getItem(DatasetDS.GEOGRAPHIC_GRANULARITY)));
@@ -128,7 +129,7 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
 
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
-                uiHandlers.retrieveCodesForTemporalGranularities(firstResult, maxResults, webCriteria);
+                uiHandlers.retrieveTemporalCodesForField(firstResult, maxResults, webCriteria, DatasetMetadataExternalField.TEMPORAL_GRANULARITY);
             }
         };
     }

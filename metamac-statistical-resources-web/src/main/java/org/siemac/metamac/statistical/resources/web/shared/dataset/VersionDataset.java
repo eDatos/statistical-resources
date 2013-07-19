@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -11,12 +11,12 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class VersionDataset {
 
     @In(1)
-    DatasetDto      datasetDto;
+    DatasetVersionDto      datasetVersionDto;
 
     @In(2)
     VersionTypeEnum versionType;
 
     @Out(1)
-    DatasetDto      resultDatasetDto;
+    DatasetVersionDto      resultDatasetVersionDto;
 
 }

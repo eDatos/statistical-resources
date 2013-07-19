@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.record;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 
@@ -8,7 +8,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class DatasetRecord extends ListGridRecord {
 
-    public DatasetRecord(Long id, String identifier, String name, String description, String status, String versionLogic, String urn, DatasetDto datasetDto) {
+    public DatasetRecord(Long id, String identifier, String name, String description, String status, String versionLogic, String urn, DatasetVersionDto datasetDto) {
         setId(id);
         setIdentifier(identifier);
         setName(name);
@@ -47,7 +47,7 @@ public class DatasetRecord extends ListGridRecord {
         setAttribute(DatasetDS.URN, value);
     }
 
-    public void setDataSetDto(DatasetDto datasetDto) {
+    public void setDataSetDto(DatasetVersionDto datasetDto) {
         setAttribute(DatasetDS.DTO, datasetDto);
     }
 
@@ -64,7 +64,7 @@ public class DatasetRecord extends ListGridRecord {
     }
 
     public ProcStatusEnum getProcStatus() {
-        return ((DatasetDto) getAttributeAsObject(DatasetDS.DTO)).getProcStatus();
+        return ((DatasetVersionDto) getAttributeAsObject(DatasetDS.DTO)).getProcStatus();
     }
 
     public String getDescription() {

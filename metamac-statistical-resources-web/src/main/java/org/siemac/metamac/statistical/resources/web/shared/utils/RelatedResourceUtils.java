@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
@@ -59,16 +59,16 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // DATASETS
     // -------------------------------------------------------------------------------------------------------------
 
-    public static RelatedResourceDto getDatasetDtoAsRelatedResourceDto(DatasetDto datasetDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(datasetDto);
+    public static RelatedResourceDto getDatasetVersionDtoAsRelatedResourceDto(DatasetVersionDto DatasetVersionDto) {
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(DatasetVersionDto);
         relatedResourceDto.setType(TypeRelatedResourceEnum.DATASET_VERSION);
         return relatedResourceDto;
     }
 
-    public static List<RelatedResourceDto> getDatasetDtosAsRelatedResourceDtos(List<DatasetDto> datasetDtos) {
-        List<RelatedResourceDto> relatedResourceDtos = new ArrayList<RelatedResourceDto>(datasetDtos.size());
-        for (DatasetDto datasetDto : datasetDtos) {
-            relatedResourceDtos.add(getDatasetDtoAsRelatedResourceDto(datasetDto));
+    public static List<RelatedResourceDto> getDatasetVersionDtosAsRelatedResourceDtos(List<DatasetVersionDto> DatasetVersionDtos) {
+        List<RelatedResourceDto> relatedResourceDtos = new ArrayList<RelatedResourceDto>(DatasetVersionDtos.size());
+        for (DatasetVersionDto DatasetVersionDto : DatasetVersionDtos) {
+            relatedResourceDtos.add(getDatasetVersionDtoAsRelatedResourceDto(DatasetVersionDto));
         }
         return relatedResourceDtos;
     }

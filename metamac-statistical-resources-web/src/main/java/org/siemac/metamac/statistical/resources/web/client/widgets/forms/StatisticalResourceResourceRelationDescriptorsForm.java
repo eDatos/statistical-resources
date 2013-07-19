@@ -1,12 +1,14 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.*; 
+
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class StatisticalResourceResourceRelationDescriptorsForm extends NavigationEnabledDynamicForm {
@@ -16,8 +18,8 @@ public class StatisticalResourceResourceRelationDescriptorsForm extends Navigati
     public StatisticalResourceResourceRelationDescriptorsForm() {
         super(getConstants().formResourceRelationDescriptors());
 
-        ViewTextItem replaces = new ViewTextItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
-        ViewTextItem isReplacedBy = new ViewTextItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy());
+        RelatedResourceLinkItem replaces = new RelatedResourceLinkItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces(), getCustomLinkItemNavigationClickHandler());
+        RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(), getCustomLinkItemNavigationClickHandler());
         RelatedResourceListItem requires = new RelatedResourceListItem(StatisticalResourceDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false, getRecordNavigationHandler());
         RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(StatisticalResourceDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
@@ -28,13 +30,15 @@ public class StatisticalResourceResourceRelationDescriptorsForm extends Navigati
         setFields(replaces, isReplacedBy, requires, isRequiredBy, hasPart, isPartOf);
     }
 
-    public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        setValue(StatisticalResourceDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(siemacMetadataStatisticalResourceDto.getReplaces()));
-        setValue(StatisticalResourceDS.IS_REPLACED_BY, RelatedResourceBaseUtils.getRelatedResourceName(siemacMetadataStatisticalResourceDto.getIsReplacedBy()));
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.REQUIRES)).setRelatedResources(siemacMetadataStatisticalResourceDto.getRequires());
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.IS_REQUIRED_BY)).setRelatedResources(siemacMetadataStatisticalResourceDto.getIsRequiredBy());
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.HAS_PART)).setRelatedResources(siemacMetadataStatisticalResourceDto.getHasPart());
-        ((RelatedResourceListItem) getItem(StatisticalResourceDS.IS_PART_OF)).setRelatedResources(siemacMetadataStatisticalResourceDto.getIsPartOf());
+    public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
+        setRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES), dto.getReplaces());
+        setRelatedResourceValue(getItem(StatisticalResourceDS.IS_REPLACED_BY), dto.getIsReplacedBy());
+        
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.REQUIRES), dto.getRequires());
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
+        
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.HAS_PART), dto.getHasPart());
+        setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_PART_OF), dto.getIsPartOf());
     }
 
     public void setUiHandlers(BaseUiHandlers uiHandlers) {

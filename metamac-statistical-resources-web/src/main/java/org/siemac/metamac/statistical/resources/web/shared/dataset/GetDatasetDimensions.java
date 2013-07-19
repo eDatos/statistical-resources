@@ -13,5 +13,5 @@ public class GetDatasetDimensions {
     String       urn;
 
     @Out(1)
-    List<String> datasetDimensionsIds;
+    List<String> datasetVersionDimensionsIds;
 }

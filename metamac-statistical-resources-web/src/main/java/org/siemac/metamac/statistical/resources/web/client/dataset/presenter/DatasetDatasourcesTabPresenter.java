@@ -9,7 +9,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
@@ -55,7 +55,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     private PlaceManager    placeManager;
 
     private ExternalItemDto operation;
-    private DatasetDto      dataset;
+    private DatasetVersionDto      dataset;
 
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
 
@@ -82,7 +82,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         return getConstants().breadcrumbDatasources();
     }
 
-    private void setDataset(DatasetDto datasetDto) {
+    private void setDataset(DatasetVersionDto datasetDto) {
         this.dataset = datasetDto;
     }
 
@@ -121,7 +121,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
             @Override
             public void onWaitSuccess(GetDatasetResult result) {
-                setDataset(result.getDatasetDto());
+                setDataset(result.getDatasetVersionDto());
             }
         });
     }

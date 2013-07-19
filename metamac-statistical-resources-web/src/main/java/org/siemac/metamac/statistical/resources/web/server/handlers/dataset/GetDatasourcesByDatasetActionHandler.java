@@ -29,7 +29,7 @@ public class GetDatasourcesByDatasetActionHandler extends SecurityActionHandler<
     @Override
     public GetDatasourcesByDatasetResult executeSecurityAction(GetDatasourcesByDatasetAction action) throws ActionException {
         try {
-            List<DatasourceDto> datasources = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetUrn());
+            List<DatasourceDto> datasources = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn());
             return new GetDatasourcesByDatasetResult(datasources);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

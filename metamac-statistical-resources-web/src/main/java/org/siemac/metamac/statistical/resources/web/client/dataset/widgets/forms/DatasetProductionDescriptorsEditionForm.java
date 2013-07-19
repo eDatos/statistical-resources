@@ -10,7 +10,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
@@ -52,11 +52,12 @@ public class DatasetProductionDescriptorsEditionForm extends StatisticalResource
         addFields(relatedDsdView, relatedDsd);
     }
 
-    public void setUiHandlers(UiHandlers uiHandlers) {
-        this.uiHandlers = (DatasetMetadataTabUiHandlers) uiHandlers;
+    public void setUiHandlers(DatasetMetadataTabUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        this.uiHandlers = uiHandlers;
     }
 
-    public void setDatasetDto(DatasetDto datasetDto) {
+    public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         setRelatedDsd(datasetDto.getRelatedDsd());
         relatedDsd.setShowIfCondition(getRelatedDsdFormItemIfFunction(datasetDto));
@@ -70,8 +71,8 @@ public class DatasetProductionDescriptorsEditionForm extends StatisticalResource
         }
     }
 
-    public DatasetDto getDatasetDto(DatasetDto datasetDto) {
-        datasetDto = (DatasetDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
+    public DatasetVersionDto getDatasetVersionDto(DatasetVersionDto datasetDto) {
+        datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
         datasetDto.setRelatedDsd(getExternalItemValue(getItem(DatasetDS.RELATED_DSD)));
         return datasetDto;
     }
@@ -113,7 +114,7 @@ public class DatasetProductionDescriptorsEditionForm extends StatisticalResource
 
     // FORM ITEM IF FUNCTIONS
 
-    private FormItemIfFunction getRelatedDsdFormItemIfFunction(final DatasetDto resource) {
+    private FormItemIfFunction getRelatedDsdFormItemIfFunction(final DatasetVersionDto resource) {
         return new FormItemIfFunction() {
 
             @Override
@@ -122,7 +123,7 @@ public class DatasetProductionDescriptorsEditionForm extends StatisticalResource
             }
         };
     }
-    private FormItemIfFunction getStaticRelatedDsdFormItemIfFunction(final DatasetDto resource) {
+    private FormItemIfFunction getStaticRelatedDsdFormItemIfFunction(final DatasetVersionDto resource) {
         return new FormItemIfFunction() {
 
             @Override

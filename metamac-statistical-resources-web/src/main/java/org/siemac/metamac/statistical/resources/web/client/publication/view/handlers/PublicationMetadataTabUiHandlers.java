@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiHandlers, BaseUiHandlers {
 
@@ -12,8 +13,7 @@ public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiH
 
     // RELATED PUBLICATIONS
 
-    void retrievePublicationsForReplaces(int firstResult, int maxResults, String criteria);
-    void retrievePublicationsForIsReplacedBy(int firstResult, int maxResults, String criteria);
+    void retrievePublicationsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria);
 
     // LIFECYCLE
 

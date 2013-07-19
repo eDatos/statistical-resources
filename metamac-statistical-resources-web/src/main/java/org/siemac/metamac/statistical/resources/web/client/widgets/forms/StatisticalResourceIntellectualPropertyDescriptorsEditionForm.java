@@ -7,8 +7,8 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 public class StatisticalResourceIntellectualPropertyDescriptorsEditionForm extends GroupDynamicForm {
 
@@ -16,8 +16,8 @@ public class StatisticalResourceIntellectualPropertyDescriptorsEditionForm exten
         super(getConstants().formIntellectualPropertyDescriptors());
 
         MultiLanguageTextItem accessRights = new MultiLanguageTextItem(StatisticalResourceDS.ACCESS_RIGHTS, getConstants().siemacMetadataStatisticalResourceAccessRights());
-        CustomDateItem copyrightDate = new CustomDateItem(StatisticalResourceDS.COPYRIGHT_DATE, getConstants().siemacMetadataStatisticalResourceCopyrightedDate());
-
+        ViewTextItem copyrightDate = new ViewTextItem(StatisticalResourceDS.COPYRIGHT_DATE, getConstants().siemacMetadataStatisticalResourceCopyrightedDate());
+        
         addFields(copyrightDate, accessRights);
     }
 
@@ -28,7 +28,6 @@ public class StatisticalResourceIntellectualPropertyDescriptorsEditionForm exten
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         dto.setAccessRights((InternationalStringDto) getValue(StatisticalResourceDS.ACCESS_RIGHTS));
-        dto.setCopyrightedDate(StatisticalResourcesFormUtils.getDate(getItem(StatisticalResourceDS.COPYRIGHT_DATE)));
         return dto;
     }
 }

@@ -12,6 +12,8 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
@@ -119,8 +121,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                // FIXME: title
-                final SearchMultipleCodeItemWindow window = new SearchMultipleCodeItemWindow("title", new SearchAction<MetamacWebCriteria>() {
+                final SearchMultipleCodeItemWindow window = new SearchMultipleCodeItemWindow(StatisticalResourcesWeb.getConstants().codeSelection(), new SearchAction<MetamacWebCriteria>() {
 
                     @Override
                     public void retrieveResultSet(MetamacWebCriteria webCriteria) {

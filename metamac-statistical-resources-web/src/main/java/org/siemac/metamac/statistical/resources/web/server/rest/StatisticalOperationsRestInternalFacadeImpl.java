@@ -78,6 +78,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         externalItemDto.setUrn(resource.getUrn());
         externalItemDto.setType(type);
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
+        externalItemDto.setManagementAppUrl(resource.getManagementAppLink());
         return externalItemDto;
     }
 
@@ -96,6 +97,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         externalItemDto.setUrn(operation.getUrn());
         externalItemDto.setType(TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
+        externalItemDto.setManagementAppUrl(operation.getManagementAppLink());
         return externalItemDto;
     }
 

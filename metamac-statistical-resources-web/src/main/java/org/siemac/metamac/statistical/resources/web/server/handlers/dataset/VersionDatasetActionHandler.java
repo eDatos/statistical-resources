@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetResult;
@@ -27,7 +27,7 @@ public class VersionDatasetActionHandler extends SecurityActionHandler<VersionDa
     public VersionDatasetResult executeSecurityAction(VersionDatasetAction action) throws ActionException {
         try {
             // FIXME: using dataset not urn
-            DatasetDto datasetDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetDto().getUrn(),
+            DatasetVersionDto datasetDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionDto().getUrn(),
                     action.getVersionType());
             return new VersionDatasetResult(datasetDto);
         } catch (MetamacException e) {

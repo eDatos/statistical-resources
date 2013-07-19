@@ -27,7 +27,7 @@ public class StatisticalResourceProductionDescriptorsForm extends GroupDynamicFo
         ViewMultiLanguageTextItem conformsTo = new ViewMultiLanguageTextItem(StatisticalResourceDS.CONFORMS_TO, getConstants().siemacMetadataStatisticalResourceConformsTo());
         ViewMultiLanguageTextItem conformsToInternal = new ViewMultiLanguageTextItem(StatisticalResourceDS.CONFORMS_TO_INTERNAL, getConstants().siemacMetadataStatisticalResourceConformsToInternal());
 
-        setFields(maintainer, creator, contributor, dateCreated, lastUpdate, conformsTo, conformsToInternal);
+        setFields(dateCreated, lastUpdate, maintainer, creator, contributor, conformsTo, conformsToInternal);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {

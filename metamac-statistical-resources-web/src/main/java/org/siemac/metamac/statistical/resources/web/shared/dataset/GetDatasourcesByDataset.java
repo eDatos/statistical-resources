@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasourcesByDataset {
 
     @In(1)
-    String              datasetUrn;
+    String              datasetVersionUrn;
 
     @Out(1)
     List<DatasourceDto> datasourcesList;

@@ -18,13 +18,7 @@ public class DatasetResourceRelationDescriptorsEditionForm extends StatisticalRe
 
     @Override
     public void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-        // FIXME: send criteria
-        uiHandlers.retrieveDatasetsForReplaces(firstResult, maxResults, criteria != null ? criteria.getCriteria() : null);
-    }
-
-    @Override
-    public void retrieveResourcesForIsReplacedBy(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-        uiHandlers.retrieveDatasetsForIsReplacedBy(firstResult, maxResults, criteria != null ? criteria.getCriteria() : null);
+        uiHandlers.retrieveDatasetsForReplaces(firstResult, maxResults, criteria);
     }
 
     @Override

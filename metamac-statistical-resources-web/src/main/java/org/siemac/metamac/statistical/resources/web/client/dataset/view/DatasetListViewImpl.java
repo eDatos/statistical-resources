@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -78,7 +78,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newDatasetWindow.validateForm()) {
-                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetDto(operationUrn));
+                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto(operationUrn));
                             newDatasetWindow.destroy();
                         }
                     }
@@ -161,8 +161,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     public void setDatasetPaginatedList(String operationUrn, GetDatasetsResult result) {
         setOperation(operationUrn);
-        setDatasetList(result.getDatasetDtos());
-        datasetsList.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetDtos().size(), result.getTotalResults());
+        setDatasetList(result.getDatasetVersionDtos());
+        datasetsList.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetVersionDtos().size(), result.getTotalResults());
     }
 
     @Override
@@ -181,10 +181,10 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         newDatasetWindow.setStatisticalOperationsForRelatedDsd(results, defaultSelected);
     }
 
-    private void setDatasetList(List<DatasetDto> datasetsDtos) {
+    private void setDatasetList(List<DatasetVersionDto> datasetsDtos) {
         DatasetRecord[] records = new DatasetRecord[datasetsDtos.size()];
         int index = 0;
-        for (DatasetDto datasetDto : datasetsDtos) {
+        for (DatasetVersionDto datasetDto : datasetsDtos) {
             records[index++] = StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto);
         }
         datasetsList.getListGrid().setData(records);

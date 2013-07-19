@@ -69,9 +69,8 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
         schemeFilter.setValue(ExternalItemUtils.getExternalItemName(schemeWindow.getSelectedResource()));
         filterAction.applyFilter();
     }
-    // FIXME: GENERALIZE, CHANGE CONCEPT SCHEME BY SCHEME
     private SearchExternalItemLinkItem createSchemeFilterItem(final SearchPaginatedAction<MetamacWebCriteria> action) {
-        SearchExternalItemLinkItem item = new SearchExternalItemLinkItem("CONCEPT_SCHEME", StatisticalResourcesWeb.getConstants().conceptScheme());
+        SearchExternalItemLinkItem item = new SearchExternalItemLinkItem("SCHEME", StatisticalResourcesWeb.getConstants().itemScheme());
 
         item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 

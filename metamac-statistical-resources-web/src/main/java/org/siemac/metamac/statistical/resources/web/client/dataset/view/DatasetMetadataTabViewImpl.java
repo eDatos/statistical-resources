@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetClassDescriptorsEditionForm;
@@ -85,7 +86,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private DatasetDto                                                    datasetDto;
+    private DatasetVersionDto                                                    datasetDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
@@ -172,7 +173,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                         && productionDescriptorsEditionForm.validate(false) && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)
                         && resourceRelationDescriptorsEditionForm.validate(false) && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false)
                         && languageEditionForm.validate(false) && intellectualPropertyDescriptorsEditionForm.validate(false)) {
-                    getUiHandlers().saveDataset(getDatasetDto());
+                    getUiHandlers().saveDataset(getDatasetVersionDto());
                 }
             }
         });
@@ -367,7 +368,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     }
 
     @Override
-    public void setDataset(DatasetDto datasetDto) {
+    public void setDataset(DatasetVersionDto datasetDto) {
         this.datasetDto = datasetDto;
 
         mainFormLayout.updatePublishSection(datasetDto.getProcStatus());
@@ -378,12 +379,12 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         setDatasetEditionMode(datasetDto);
     }
 
-    private void setDatasetViewMode(DatasetDto datasetDto) {
+    private void setDatasetViewMode(DatasetVersionDto datasetDto) {
         // Identifiers
         identifiersForm.setNameableStatisticalResourceDto(datasetDto);
 
         // Content descriptors
-        contentDescriptorsForm.setDatasetDto(datasetDto);
+        contentDescriptorsForm.setDatasetVersionDto(datasetDto);
 
         // Common metadata
         commonMetadataForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
@@ -395,16 +396,16 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         languageForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Production descriptors
-        productionDescriptorsForm.setDatasetDto(datasetDto);
+        productionDescriptorsForm.setDatasetVersionDto(datasetDto);
 
         // Class descriptors
-        classDescriptorsForm.setDatasetDto(datasetDto);
+        classDescriptorsForm.setDatasetVersionDto(datasetDto);
 
         // Resource relation descriptors
         resourceRelationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Publication descriptors
-        publicationDescriptorsForm.setDatasetDto(datasetDto);
+        publicationDescriptorsForm.setDatasetVersionDto(datasetDto);
 
         // Life cycle
         lifeCycleForm.setLifeCycleStatisticalResourceDto(datasetDto);
@@ -417,12 +418,12 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     }
 
-    private void setDatasetEditionMode(DatasetDto datasetDto) {
+    private void setDatasetEditionMode(DatasetVersionDto datasetDto) {
         // Identifiers form
         identifiersEditionForm.setNameableStatisticalResourceDto(datasetDto);
 
         // Content Descriptors
-        contentDescriptorsEditionForm.setDatasetDto(datasetDto);
+        contentDescriptorsEditionForm.setDatasetVersionDto(datasetDto);
 
         // Common metadata
         commonMetadataEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
@@ -434,16 +435,16 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         languageEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Production descriptors
-        productionDescriptorsEditionForm.setDatasetDto(datasetDto);
+        productionDescriptorsEditionForm.setDatasetVersionDto(datasetDto);
 
         // Class descriptors
-        classDescriptorsEditionForm.setDatasetDto(datasetDto);
+        classDescriptorsEditionForm.setDatasetVersionDto(datasetDto);
 
         // Resource relation descriptors
         resourceRelationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Publication descriptors
-        publicationDescriptorsEditionForm.setDatasetDto(datasetDto);
+        publicationDescriptorsEditionForm.setDatasetVersionDto(datasetDto);
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(datasetDto);
@@ -456,52 +457,52 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     }
 
-    public DatasetDto getDatasetDto() {
+    public DatasetVersionDto getDatasetVersionDto() {
         // Identifiers form
-        datasetDto = (DatasetDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetDto);
 
         // Content descriptors form
-        datasetDto = contentDescriptorsEditionForm.getDatasetDto(datasetDto);
+        datasetDto = contentDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
 
         // Common metadata
-        datasetDto = (DatasetDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Thematic content classifiers
-        datasetDto = (DatasetDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Language
-        datasetDto = (DatasetDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Production descriptors
-        datasetDto = productionDescriptorsEditionForm.getDatasetDto(datasetDto);
+        datasetDto = productionDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
 
         // Class descriptors
-        datasetDto = classDescriptorsEditionForm.getDatasetDto(datasetDto);
+        datasetDto = classDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
 
         // Resource relation descriptors
-        datasetDto = (DatasetDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         // Publication descriptors
-        datasetDto = publicationDescriptorsEditionForm.getDatasetDto(datasetDto);
+        datasetDto = publicationDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
 
         // Version
-        datasetDto = (DatasetDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetDto);
 
         // Intellectual property descriptors
-        datasetDto = (DatasetDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetDto = (DatasetVersionDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
 
         return datasetDto;
     }
 
     @Override
     public void setDatasetsForReplaces(GetDatasetsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetDtosAsRelatedResourceDtos(result.getDatasetDtos());
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionDtosAsRelatedResourceDtos(result.getDatasetVersionDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 
     @Override
     public void setDatasetsForIsReplacedBy(GetDatasetsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetDtosAsRelatedResourceDtos(result.getDatasetDtos());
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionDtosAsRelatedResourceDtos(result.getDatasetVersionDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 
@@ -523,9 +524,16 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     }
 
     @Override
-    public void setCodesForTemporalGranularities(GetTemporalGranularitiesListResult result) {
+    public void setTemporalCodesForField(GetTemporalGranularitiesListResult result, DatasetMetadataExternalField field) {
         List<ExternalItemDto> externalItemsDtos = result.getTemporalGranularities();
-        contentDescriptorsEditionForm.setCodesForTemporalGranularities(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
+        switch (field) {
+            case TEMPORAL_GRANULARITY:
+                contentDescriptorsEditionForm.setCodesForTemporalGranularities(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
+                break;
+            case UPDATE_FREQUENCY:
+                publicationDescriptorsEditionForm.setCodesForUpdateFrequency(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
+                break;
+        }
     }
 
     @Override

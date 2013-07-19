@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
@@ -31,12 +31,12 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
     @Override
     public SaveDatasetResult executeSecurityAction(SaveDatasetAction action) throws ActionException {
         try {
-            DatasetDto savedDataset = null;
-            if (action.getDataset().getUuid() == null) {
+            DatasetVersionDto savedDataset = null;
+            if (action.getDatasetVersion().getUuid() == null) {
                 ExternalItemDto statisticalOperation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getStatisticalOperationCode());
-                savedDataset = statisticalResourcesServiceFacade.createDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDataset(), statisticalOperation);
+                savedDataset = statisticalResourcesServiceFacade.createDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersion(), statisticalOperation);
             } else {
-                savedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDataset());
+                savedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersion());
             }
             return new SaveDatasetResult(savedDataset);
         } catch (MetamacException e) {

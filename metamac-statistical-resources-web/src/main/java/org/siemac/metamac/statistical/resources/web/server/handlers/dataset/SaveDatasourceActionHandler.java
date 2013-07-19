@@ -30,7 +30,7 @@ public class SaveDatasourceActionHandler extends SecurityActionHandler<SaveDatas
             if (action.getDatasource().getUrn() != null) {
                 datasource = statisticalResourcesServiceFacade.updateDatasource(ServiceContextHolder.getCurrentServiceContext(), action.getDatasource());
             } else {
-                datasource = statisticalResourcesServiceFacade.createDatasource(ServiceContextHolder.getCurrentServiceContext(), action.getUrnDataset(), action.getDatasource());
+                datasource = statisticalResourcesServiceFacade.createDatasource(ServiceContextHolder.getCurrentServiceContext(), action.getUrnDatasetVersion(), action.getDatasource());
             }
             return new SaveDatasourceResult(datasource);
         } catch (MetamacException e) {

@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
@@ -17,7 +17,7 @@ public class DatasetProductionDescriptorsForm extends StatisticalResourceProduct
         addFields(relatedDsd);
     }
 
-    public void setDatasetDto(DatasetDto datasetDto) {
+    public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         StatisticalResourcesFormUtils.setExternalItemValue(getItem(DatasetDS.RELATED_DSD), datasetDto.getRelatedDsd());
     }
