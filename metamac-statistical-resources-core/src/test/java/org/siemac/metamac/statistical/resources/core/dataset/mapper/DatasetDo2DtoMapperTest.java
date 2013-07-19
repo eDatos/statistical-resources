@@ -1,11 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
@@ -65,7 +64,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     public void testDatasourceDoListToDtoList() {
         List<Datasource> expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
         List<DatasourceDto> actual = datasetDo2DtoMapper.datasourceDoListToDtoList(expected);
-        
+
         assertEquals(expected.size(), actual.size());
         assertEqualsDatasourceDoAndDtoCollection(expected, actual);
     }
@@ -91,9 +90,6 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     public void testDatasetDoToDto() throws MetamacException {
         Dataset expected = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
         DatasetDto actual = datasetDo2DtoMapper.datasetDoToDto(expected);
-        
-        fail("not implemented");
-        // TODO RI AHORA
-        // assertEqualsDataset(expected, actual);
+        assertEqualsDataset(expected, actual);
     }
 }

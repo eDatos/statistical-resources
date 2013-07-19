@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 
@@ -35,7 +36,7 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEquals(null, actual);
         }
     }
-    
+
     public static void assertEqualsCoverageForDsdComponent(DatasetVersion datasetVersion, String dsdComponentId, List<CodeDimension> codes) {
         assertNotNull(datasetVersion.getCoverages());
         List<CodeDimension> codesForDimensions = new ArrayList<CodeDimension>();
@@ -44,22 +45,21 @@ public class DatasetsAsserts extends BaseAsserts {
                 codesForDimensions.add(codeDim);
             }
         }
-        
+
         assertEquals(codes.size(), codesForDimensions.size());
-        
+
         for (int i = 0; i < codes.size(); i++) {
             assertEquals(codes.get(i).getIdentifier(), codesForDimensions.get(i).getIdentifier());
             assertEquals(codes.get(i).getTitle(), codesForDimensions.get(i).getTitle());
         }
     }
-    
+
     public static void assertEqualsCodeDimensionsCollection(List<CodeDimension> expected, List<CodeDimension> actual) {
         assertEqualsNullability(expected, actual);
-        
+
         if (expected != null) {
             assertEquals(expected.size(), actual.size());
-            
-            
+
             for (int i = 0; i < expected.size(); i++) {
                 CodeDimension expectedCode = expected.get(i);
                 CodeDimension actualCode = actual.get(i);
@@ -90,7 +90,7 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEqualsDatasetVersion(expected, actual, false);
         }
     }
-    
+
     public static void assertEqualsDatasetVersionNotChecksDataset(DatasetVersion expected, DatasetVersion actual) throws MetamacException {
         if ((expected != null && actual == null) || (expected == null && actual != null)) {
             fail("The expected datasetVersion and the actual are not equals");
@@ -148,6 +148,23 @@ public class DatasetsAsserts extends BaseAsserts {
 
         assertEqualsInternationalString(expected.getBibliographicCitation(), actual.getBibliographicCitation());
 
+    }
+
+    // -----------------------------------------------------------------
+    // DATASET: DTO & DO
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsDataset(Dataset entity, DatasetDto dto) throws MetamacException {
+        assertEqualsIdentifiableStatisticalResource(entity.getIdentifiableStatisticalResource(), dto, MapperEnum.DO2DTO);
+
+        assertNotNull(entity.getId());
+        assertEquals(entity.getId(), dto.getId());
+
+        assertNotNull(entity.getUuid());
+        assertEquals(entity.getUuid(), dto.getUuid());
+
+        assertNotNull(entity.getVersion());
+        assertEquals(entity.getVersion(), dto.getVersion());
     }
 
     // -----------------------------------------------------------------

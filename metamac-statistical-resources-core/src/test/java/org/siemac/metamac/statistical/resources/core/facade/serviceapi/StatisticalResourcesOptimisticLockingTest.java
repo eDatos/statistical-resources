@@ -500,16 +500,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     // ------------------------------------------------------------
-    // DATASET
-    // ------------------------------------------------------------
-
-    @Override
-    public void testFindDatasetsByCondition() throws Exception {
-        // TODO RI AHORA
-        fail("not implemented");
-    }
-
-    // ------------------------------------------------------------
     // DATASET VERSIONS
     // ------------------------------------------------------------
 
@@ -882,8 +872,17 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testRetrieveLatestPublishedQueryVersion() throws Exception {
-        // / no optimistic locking in this operation
+        // no optimistic locking in this operation
     }
+
+    @Override
+    public void testFindDatasetsByCondition() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    // ------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------
 
     private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
         List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
