@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.siemac.metamac.metamac-common-metadata</groupId>
             <artifactId>metamac-common-metadata-rest-external-api</artifactId>
-            <version>${metamac-common-metadata.version}</version>
+            <version>${metamac-common-metadata-rest-external-api.version}</version>
         </dependency>
 
         <dependency>
