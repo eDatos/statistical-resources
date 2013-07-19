@@ -9,7 +9,7 @@ Application PublicationsStatisticalResourcesDto {
 	Module dtos_publications {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.publication
 
-		DataTransferObject PublicationDto extends @SiemacMetadataStatisticalResourceDto {
+		DataTransferObject PublicationVersionDto extends @SiemacMetadataStatisticalResourceDto {
 			Integer formatExtentResources;
 		}
 

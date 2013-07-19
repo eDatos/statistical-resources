@@ -13,7 +13,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -48,7 +48,7 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testPublicationDtoToDo() throws MetamacException {
-        PublicationDto dto = StatisticalResourcesDtoMocks.mockPublicationDto();
+        PublicationVersionDto dto = StatisticalResourcesDtoMocks.mockPublicationVersionDto();
         PublicationVersion entity = publicationDto2DoMapper.publicationVersionDtoToDo(dto);
         assertEqualsPublicationVersion(dto, entity);
     }

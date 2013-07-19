@@ -11,7 +11,7 @@ Application QueriesStatisticalResourcesDto {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.query 
 
 		// QUERY
-		DataTransferObject QueryDto extends @LifeCycleStatisticalResourceDto {
+		DataTransferObject QueryVersionDto extends @LifeCycleStatisticalResourceDto {
 			- @RelatedResourceDto relatedDatasetVersion;
 			- @QueryStatusEnum status;
 			- @QueryTypeEnum type;

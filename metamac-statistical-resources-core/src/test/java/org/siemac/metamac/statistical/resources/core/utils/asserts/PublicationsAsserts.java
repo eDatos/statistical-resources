@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -179,23 +179,23 @@ public class PublicationsAsserts extends BaseAsserts {
     // PUBLICATION VERSION: DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsPublicationVersion(PublicationVersion entity, PublicationDto dto) throws MetamacException {
+    public static void assertEqualsPublicationVersion(PublicationVersion entity, PublicationVersionDto dto) throws MetamacException {
         assertEqualsPublicationVersion(dto, entity, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsPublicationVersion(PublicationDto dto, PublicationVersion entity) throws MetamacException {
+    public static void assertEqualsPublicationVersion(PublicationVersionDto dto, PublicationVersion entity) throws MetamacException {
         assertEqualsPublicationVersion(dto, entity, MapperEnum.DTO2DO);
     }
 
-    public static void assertEqualsPublicationVersionDoAndDtoCollection(Collection<PublicationVersion> expected, Collection<PublicationDto> actual) throws MetamacException {
+    public static void assertEqualsPublicationVersionDoAndDtoCollection(Collection<PublicationVersion> expected, Collection<PublicationVersionDto> actual) throws MetamacException {
         assertEqualsPublicationVersionCollection(expected, actual, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsPublicationVersionDtoAndDoCollection(Collection<PublicationDto> expected, Collection<PublicationVersion> actual) throws MetamacException {
+    public static void assertEqualsPublicationVersionDtoAndDoCollection(Collection<PublicationVersionDto> expected, Collection<PublicationVersion> actual) throws MetamacException {
         assertEqualsPublicationVersionCollection(actual, expected, MapperEnum.DTO2DO);
     }
 
-    private static void assertEqualsPublicationVersion(PublicationDto dto, PublicationVersion entity, MapperEnum mapperEnum) throws MetamacException {
+    private static void assertEqualsPublicationVersion(PublicationVersionDto dto, PublicationVersion entity, MapperEnum mapperEnum) throws MetamacException {
         assertEqualsSiemacMetadataStatisticalResource(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
 
         // Publication attributes
@@ -212,13 +212,13 @@ public class PublicationsAsserts extends BaseAsserts {
         }
     }
 
-    private static void assertEqualsPublicationVersionCollection(Collection<PublicationVersion> entities, Collection<PublicationDto> dtos, MapperEnum mapperEnum) throws MetamacException {
+    private static void assertEqualsPublicationVersionCollection(Collection<PublicationVersion> entities, Collection<PublicationVersionDto> dtos, MapperEnum mapperEnum) throws MetamacException {
         if (entities != null) {
             assertNotNull(dtos);
             assertEquals(entities.size(), dtos.size());
             for (PublicationVersion expectedItem : entities) {
                 boolean match = false;
-                for (PublicationDto actualItem : dtos) {
+                for (PublicationVersionDto actualItem : dtos) {
                     try {
                         assertEqualsPublicationVersion(actualItem, expectedItem, mapperEnum);
                         match = true;

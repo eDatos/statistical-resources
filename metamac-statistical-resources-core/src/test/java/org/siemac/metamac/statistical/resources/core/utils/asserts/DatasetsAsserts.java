@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 
 public class DatasetsAsserts extends BaseAsserts {
@@ -154,15 +154,15 @@ public class DatasetsAsserts extends BaseAsserts {
     // DATASET VERSION: DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsDatasetVersion(DatasetVersion entity, DatasetDto dto) throws MetamacException {
+    public static void assertEqualsDatasetVersion(DatasetVersion entity, DatasetVersionDto dto) throws MetamacException {
         assertEqualsDatasetVersion(dto, entity, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsDatasetVersion(DatasetDto dto, DatasetVersion entity) throws MetamacException {
+    public static void assertEqualsDatasetVersion(DatasetVersionDto dto, DatasetVersion entity) throws MetamacException {
         assertEqualsDatasetVersion(dto, entity, MapperEnum.DTO2DO);
     }
 
-    private static void assertEqualsDatasetVersion(DatasetDto dto, DatasetVersion entity, MapperEnum mapperEnum) throws MetamacException {
+    private static void assertEqualsDatasetVersion(DatasetVersionDto dto, DatasetVersion entity, MapperEnum mapperEnum) throws MetamacException {
         assertEqualsSiemacMetadataStatisticalResource(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
 
         // Dataset attributes

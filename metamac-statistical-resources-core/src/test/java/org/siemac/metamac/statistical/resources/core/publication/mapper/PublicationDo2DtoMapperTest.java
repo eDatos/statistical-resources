@@ -27,7 +27,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -64,7 +64,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @MetamacMock({PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME})
     public void testPublicationDoToDto() throws MetamacException {
         PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME);
-        PublicationDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
+        PublicationVersionDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
         assertEqualsPublicationVersion(expected, actual);
     }
 
@@ -77,7 +77,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         expected.add(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME));
         expected.add(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME));
 
-        List<PublicationDto> actual = publicationDo2DtoMapper.publicationVersionDoListToDtoList(expected);
+        List<PublicationVersionDto> actual = publicationDo2DtoMapper.publicationVersionDoListToDtoList(expected);
 
         assertEquals(expected.size(), actual.size());
         assertEqualsPublicationVersionDoAndDtoCollection(expected, actual);

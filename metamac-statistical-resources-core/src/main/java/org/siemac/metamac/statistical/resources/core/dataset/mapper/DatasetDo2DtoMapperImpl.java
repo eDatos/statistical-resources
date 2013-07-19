@@ -6,16 +6,22 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 
 @org.springframework.stereotype.Component("datasetDo2DtoMapper")
 public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
+
+    // ---------------------------------------------------------------------------------------------------------
+    // DATASOURCES
+    // ---------------------------------------------------------------------------------------------------------
 
     @Override
     public DatasourceDto datasourceDoToDto(Datasource source) {
@@ -55,17 +61,51 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         return target;
     }
 
+    // ---------------------------------------------------------------------------------------------------------
+    // DATASETS
+    // ---------------------------------------------------------------------------------------------------------
+
     @Override
-    public DatasetDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException {
+    public DatasetDto datasetDoToDto(Dataset source) throws MetamacException {
         if (source == null) {
             return null;
         }
         DatasetDto target = new DatasetDto();
+        datasetDoToDto(source, target);
+        return target;
+    }
+    
+    private DatasetDto datasetDoToDto(Dataset source, DatasetDto target) {
+        if (source == null) {
+            return null;
+        }
+
+        // Hierarchy
+        identifiableStatisticalResourceDoToDto(source.getIdentifiableStatisticalResource(), target);
+
+        // Identity
+        target.setId(source.getId());
+        target.setUuid(source.getUuid());
+        target.setVersion(source.getVersion());
+
+        return target;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // DATASETS VERSIONS
+    // ---------------------------------------------------------------------------------------------------------
+
+    @Override
+    public DatasetVersionDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        DatasetVersionDto target = new DatasetVersionDto();
         datasetVersionDoToDto(source, target);
         return target;
     }
 
-    private DatasetDto datasetVersionDoToDto(DatasetVersion source, DatasetDto target) throws MetamacException {
+    private DatasetVersionDto datasetVersionDoToDto(DatasetVersion source, DatasetVersionDto target) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -81,10 +121,10 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         // Other
         target.getGeographicCoverage().clear();
         target.getGeographicCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicCoverage()));
-        
+
         target.getTemporalCoverage().clear();
         target.getTemporalCoverage().addAll(temporalCodeDoCollectionToDtoCollection(source.getTemporalCoverage()));
-        
+
         target.getMeasureCoverage().clear();
         target.getMeasureCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getMeasureCoverage()));
 
@@ -99,12 +139,12 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         target.setDateStart(dateDoToDto(source.getDateStart()));
         target.setDateEnd(dateDoToDto(source.getDateEnd()));
-        
+
         target.setRelatedDsd(externalItemDoToDto(source.getRelatedDsd()));
-        
+
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
         target.setFormatExtentObservations(source.getFormatExtentObservations());
-        
+
         target.setDateNextUpdate(dateDoToDto(source.getDateNextUpdate()));
         target.setUpdateFrequency(externalItemDoToDto(source.getUpdateFrequency()));
         target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
@@ -112,27 +152,35 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         return target;
     }
-    
+
+    // ---------------------------------------------------------------------------------------------------------
+    // STATISTIC OFFICIALITY
+    // ---------------------------------------------------------------------------------------------------------
+
     @Override
     public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source) {
         if (source == null) {
             return null;
         }
-        
+
         StatisticOfficialityDto target = new StatisticOfficialityDto();
-        
+
         // Identity
         target.setId(source.getId());
         target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
-        
+
         // Other
         target.setIdentifier(source.getIdentifier());
         target.setDescription(internationalStringDoToDto(source.getDescription()));
-        
+
         return target;
     }
-    
+
+    // ---------------------------------------------------------------------------------------------------------
+    // CODE ITEM
+    // ---------------------------------------------------------------------------------------------------------
+
     @Override
     public CodeItemDto codeDimensionDoToCodeItemDto(CodeDimension source) throws MetamacException {
         if (source == null) {
@@ -143,7 +191,11 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         dto.setTitle(source.getTitle());
         return dto;
     }
-    
+
+    // ---------------------------------------------------------------------------------------------------------
+    // CODE DIMENSION
+    // ---------------------------------------------------------------------------------------------------------
+
     @Override
     public List<CodeItemDto> codeDimensionDoListToCodeItemDtoList(List<CodeDimension> sources) throws MetamacException {
         List<CodeItemDto> targets = new ArrayList<CodeItemDto>();

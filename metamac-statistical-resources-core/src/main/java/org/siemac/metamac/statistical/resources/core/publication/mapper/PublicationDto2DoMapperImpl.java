@@ -16,7 +16,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -55,7 +55,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
     // --------------------------------------------------------------------------------------
 
     @Override
-    public PublicationVersion publicationVersionDtoToDo(PublicationDto source) throws MetamacException {
+    public PublicationVersion publicationVersionDtoToDo(PublicationVersionDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -79,7 +79,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         return target;
     }
 
-    private PublicationVersion datasetVersionDtoToDo(PublicationDto source, PublicationVersion target) throws MetamacException {
+    private PublicationVersion datasetVersionDtoToDo(PublicationVersionDto source, PublicationVersion target) throws MetamacException {
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.PUBLICATION_VERSION).build();
         }

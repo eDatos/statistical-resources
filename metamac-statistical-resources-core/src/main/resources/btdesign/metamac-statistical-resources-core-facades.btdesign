@@ -32,23 +32,23 @@ Application FacadeStatisticalResources {
 			
 			// QUERIES
 			"Retrieves a query scheme by URN"
-            @QueryDto retrieveQueryVersionByUrn(String urn) throws MetamacException;
+            @QueryVersionDto retrieveQueryVersionByUrn(String urn) throws MetamacException;
             "Retrieve queries"
-            List<@QueryDto> retrieveQueriesVersions() throws MetamacException;
+            List<@QueryVersionDto> retrieveQueriesVersions() throws MetamacException;
             "Create a query"
-            @QueryDto createQuery(@QueryDto queryDto) throws MetamacException;
+            @QueryVersionDto createQuery(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Update a query"
-            @QueryDto updateQueryVersion(@QueryDto queryDto) throws MetamacException;
+            @QueryVersionDto updateQueryVersion(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Find queries by criteria"
-    		MetamacCriteriaResult<@QueryDto> findQueriesVersionsByCondition(MetamacCriteria criteria)  throws MetamacException;
+    		MetamacCriteriaResult<@QueryVersionDto> findQueriesVersionsByCondition(MetamacCriteria criteria)  throws MetamacException;
     		"Mark query as discontinued because the data is not going to be updated"
-            @QueryDto markQueryVersionAsDiscontinued(@QueryDto queryDto) throws MetamacException;
+            @QueryVersionDto markQueryVersionAsDiscontinued(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Delete query"
             deleteQueryVersion(String urn) throws MetamacException;
             "Retrieve latest queryVersion providing queryUrn"
-    		@QueryDto retrieveLatestQueryVersion(String queryUrn) throws MetamacException;
+    		@QueryVersionDto retrieveLatestQueryVersion(String queryUrn) throws MetamacException;
     		"Retrieve latest published queryVersion providing queryUrn"
-    		@QueryDto retrieveLatestPublishedQueryVersion(String queryUrn) throws MetamacException
+    		@QueryVersionDto retrieveLatestPublishedQueryVersion(String queryUrn) throws MetamacException
     		 			
 			// DATASOURCES
 			"Creates a datasource"
@@ -62,29 +62,33 @@ Application FacadeStatisticalResources {
 	    	"Retrieves all datasources of a dataset version"
 	    	List<@DatasourceDto> retrieveDatasourcesByDatasetVersion(String urnDatasetVersion) throws MetamacException;
 	    	
-	    	// DATASETS & DATASET VERSION
-	   		"Creates dataset"
-	   		@DatasetDto createDataset(@DatasetDto datasetDto, @ExternalItemDto statisticalOperation) throws MetamacException;
+	    	// DATASETS 
+	   		"Find all datasets"
+	   		MetamacCriteriaResult<@DatasetDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException; 
+	    	
+	    	// DATASET VERSION
+	    	"Creates dataset"
+	   		@DatasetVersionDto createDataset(@DatasetVersionDto datasetVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates dataset"
-            @DatasetDto updateDatasetVersion(@DatasetDto datasetDto) throws MetamacException;
+            @DatasetVersionDto updateDatasetVersion(@DatasetVersionDto datasetVersionDto) throws MetamacException;
             "Deletes dataset"
             deleteDatasetVersion(String urn) throws MetamacException;
             "Finds datasets by criteria"
-            MetamacCriteriaResult<@DatasetDto> findDatasetsVersionsByCondition(MetamacCriteria criteria) throws MetamacException;
+            MetamacCriteriaResult<@DatasetVersionDto> findDatasetsVersionsByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a dataset by URN"
-            @DatasetDto retrieveDatasetVersionByUrn(String urn) throws MetamacException;
+            @DatasetVersionDto retrieveDatasetVersionByUrn(String urn) throws MetamacException;
             "Retrieves all dataset versions"
-            List<@DatasetDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
+            List<@DatasetVersionDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
-    		@DatasetDto versioningDatasetVersion(String urnDatasetVersionToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		@DatasetVersionDto versioningDatasetVersion(String urnDatasetVersionToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		"Send to production validation"
-    		@DatasetDto sendDatasetVersionToProductionValidation(@DatasetDto datasetDto) throws MetamacException;
+    		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		"Send to diffusion validation"
-    		@DatasetDto sendDatasetVersionToDiffusionValidation(@DatasetDto datasetDto) throws MetamacException;
+    		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		"Retrieve latest datasetVersion providing datasetUrn"
-    		@DatasetDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
+    		@DatasetVersionDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
     		"Retrieve latest published datasetVersion providing datasetUrn"
-    		@DatasetDto retrieveLatestPublishedDatasetVersion(String datasetUrn) throws MetamacException;
+    		@DatasetVersionDto retrieveLatestPublishedDatasetVersion(String datasetUrn) throws MetamacException;
     		
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
@@ -94,31 +98,31 @@ Application FacadeStatisticalResources {
     		
     		// PUBLICATIONS & PUBLICATION VERSION
 	   		"Creates publication"
-	   		@PublicationDto createPublication(@PublicationDto publicationDto, @ExternalItemDto statisticalOperation) throws MetamacException;
+	   		@PublicationVersionDto createPublication(@PublicationVersionDto publicationVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates publication"
-            @PublicationDto updatePublicationVersion(@PublicationDto publicationDto) throws MetamacException;
+            @PublicationVersionDto updatePublicationVersion(@PublicationVersionDto publicationVersionDto) throws MetamacException;
             "Deletes publication"
             deletePublicationVersion(String urn) throws MetamacException;
             "Finds publications by criteria"
-            MetamacCriteriaResult<@PublicationDto> findPublicationVersionByCondition(MetamacCriteria criteria) throws MetamacException;
+            MetamacCriteriaResult<@PublicationVersionDto> findPublicationVersionByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a publication by URN"
-            @PublicationDto retrievePublicationVersionByUrn(String urn) throws MetamacException;
+            @PublicationVersionDto retrievePublicationVersionByUrn(String urn) throws MetamacException;
             "Retrieves all publication versions"
-            List<@PublicationDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
+            List<@PublicationVersionDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
-    		@PublicationDto versioningPublicationVersion(String publicationVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		@PublicationVersionDto versioningPublicationVersion(String publicationVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieves publication version structure: chapter and cubes by levels."
 	    	@PublicationStructureDto retrievePublicationVersionStructure(String publicationVersionUrn) throws MetamacException;
 	    	"Retrieve latest publicationVersion providing publicationUrn"
-    		@PublicationDto retrieveLatestPublicationVersion(String publicationUrn) throws MetamacException;
+    		@PublicationVersionDto retrieveLatestPublicationVersion(String publicationUrn) throws MetamacException;
     		"Retrieve latest published publicationVersion providing publicationUrn"
-    		@PublicationDto retrieveLatestPublishedPublicationVersion(String publicationUrn) throws MetamacException;
+    		@PublicationVersionDto retrieveLatestPublishedPublicationVersion(String publicationUrn) throws MetamacException;
     		"Send to production validation"
-    		@PublicationDto sendPublicationVersionToProductionValidation(@PublicationDto publicationDto) throws MetamacException;
+    		@PublicationVersionDto sendPublicationVersionToProductionValidation(@PublicationVersionDto publicationVersionDto) throws MetamacException;
     		"Send to diffusion validation"
-    		@PublicationDto sendPublicationVersionToDiffusionValidation(@PublicationDto publicationDto) throws MetamacException;
+    		@PublicationVersionDto sendPublicationVersionToDiffusionValidation(@PublicationVersionDto publicationVersionDto) throws MetamacException;
     		"Send to validation rejected"
-    		@PublicationDto sendPublicationVersionToValidationRejected(@PublicationDto publicationDto) throws MetamacException;
+    		@PublicationVersionDto sendPublicationVersionToValidationRejected(@PublicationVersionDto publicationVersionDto) throws MetamacException;
 	    	
 	    	// CHAPTERS
 	    	"Creates a chapter"

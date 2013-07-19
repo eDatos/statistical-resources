@@ -20,15 +20,13 @@ Application DatasetsStatisticalResources {
 			> @CodeDimensionRepository
 			
 			// Datasources
-			
 			@Datasource createDatasource(String datasetVersionUrn, @Datasource datasource) throws MetamacException;
 	    	@Datasource updateDatasource(@Datasource datasource) throws MetamacException;
 	    	@Datasource retrieveDatasourceByUrn(String urn) throws MetamacException;
 	    	deleteDatasource(String urn) throws MetamacException;
 	    	List<@Datasource> retrieveDatasourcesByDatasetVersion(String datasetVersionUrn) throws MetamacException;
 	    	
-	    	// Datasets
-	    	
+	    	// Datasets Versions
 	    	"Creates dataset version"
 			@DatasetVersion createDatasetVersion(@DatasetVersion datasetVersion, @ExternalItem statisticalOperation) throws MetamacException;
 			"Updates dataset version"
@@ -41,15 +39,18 @@ Application DatasetsStatisticalResources {
     		@DatasetVersion retrieveLatestPublishedDatasetVersionByDatasetUrn(String datasetUrn) throws MetamacException;
 			"Retrieves all datasets versions of one dataset"
 			List<@DatasetVersion> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
-			"Finds datasets by criteria"
+			"Finds datasets versions by criteria"
     		PagedResult<@DatasetVersion> findDatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 			"Deletes dataset version. This must be last version and no published"
     		deleteDatasetVersion(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersion versioningDatasetVersion(String datasetVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		
-    		//Data related actions
+    		// Datasets
+    		"Finds datasets by criteria"
+    		PagedResult<@Dataset> findDatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
     		
+    		//Data related actions
     		"Retrieve Dataset version dimensions ids"
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
@@ -100,6 +101,7 @@ Application DatasetsStatisticalResources {
 			
 			Repository DatasetRepository {
 				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
 				save;
 				delete;
 				@Dataset retrieveByUrn(String urn) throws MetamacException;

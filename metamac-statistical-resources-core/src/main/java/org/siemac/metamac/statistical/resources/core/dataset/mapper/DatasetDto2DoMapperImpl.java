@@ -18,7 +18,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasetVersionNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasourceNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dataset.exception.StatisticOfficialityNotFoundException;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -76,7 +76,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
     }
 
     @Override
-    public DatasetVersion datasetVersionDtoToDo(DatasetDto source) throws MetamacException {
+    public DatasetVersion datasetVersionDtoToDo(DatasetVersionDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -100,7 +100,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         return target;
     }
 
-    private DatasetVersion datasetVersionDtoToDo(DatasetDto source, DatasetVersion target) throws MetamacException {
+    private DatasetVersion datasetVersionDtoToDo(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.DATASET_VERSION).build();
         }
@@ -129,7 +129,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
     }
 
     //source.relatedDsd is supposed not to be null
-    private void datasetVersionDtoRelatedDsdToDo(DatasetDto source, DatasetVersion target) throws MetamacException {
+    private void datasetVersionDtoRelatedDsdToDo(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
         if (target.getRelatedDsd() == null) {
             target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
         } else {

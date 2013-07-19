@@ -38,6 +38,8 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -205,6 +207,35 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     @Override
     @Test
+    @MetamacMock(DATASET_01_BASIC_NAME)
+    public void testFindDatasetsByCondition() throws Exception {
+        Dataset result = datasetMockFactory.retrieveMock(DATASET_01_BASIC_NAME);
+
+        // Find by code
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Dataset.class).withProperty(DatasetProperties.identifiableStatisticalResource().code())
+                .eq(result.getIdentifiableStatisticalResource().getCode()).build();
+
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+        PagedResult<Dataset> datasetsPagedResult = datasetService.findDatasetsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+        assertEquals(1, datasetsPagedResult.getTotalRows());
+        assertEquals(result.getIdentifiableStatisticalResource().getUrn(), datasetsPagedResult.getValues().get(0).getIdentifiableStatisticalResource().getUrn());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_01_BASIC_NAME, DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testFindDatasetsByConditionWithoutConditions() throws Exception {
+        // Find by code
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+        PagedResult<Dataset> datasetsPagedResult = datasetService.findDatasetsByCondition(getServiceContextWithoutPrincipal(), null, pagingParameter);
+        assertEquals(3, datasetsPagedResult.getTotalRows());
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASETS VERSIONS
+    // ------------------------------------------------------------------------
+
+    @Override
+    @Test
     public void testCreateDatasetVersion() throws Exception {
         DatasetVersion expected = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
@@ -245,7 +276,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, "001.000"), actual.getSiemacMetadataStatisticalResource()
+                    .getUrn());
             assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         }
         {
@@ -254,7 +286,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, "001.000"), actual.getSiemacMetadataStatisticalResource()
+                    .getUrn());
             assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         }
     }
@@ -347,14 +380,14 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion actual = datasetService.retrieveLatestDatasetVersionByDatasetUrn(getServiceContextWithoutPrincipal(), urn);
         assertEqualsDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLatestDatasetVersionByDatasetUrnErrorParameterRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.DATASET_URN));
         datasetService.retrieveLatestDatasetVersionByDatasetUrn(getServiceContextWithoutPrincipal(), null);
     }
-    
+
     @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
@@ -363,7 +396,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion actual = datasetService.retrieveLatestPublishedDatasetVersionByDatasetUrn(getServiceContextWithoutPrincipal(), urn);
         assertEqualsDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME), actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLatestPublishedDatasetVersionByDatasetUrnErrorParameterRequired() throws Exception {
@@ -409,18 +442,15 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testFindDatasetVersionsByCondition() throws Exception {
-        {
-            // Find by version number
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
-                    .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic()).eq("002.000").orderBy(DatasetVersionProperties.siemacMetadataStatisticalResource().id())
-                    .ascending().build();
+        // Find by version number
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic())
+                .eq("002.000").orderBy(DatasetVersionProperties.siemacMetadataStatisticalResource().id()).ascending().build();
 
-            PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
-            PagedResult<DatasetVersion> datasetVersionPagedResult = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
-            assertEquals(1, datasetVersionPagedResult.getTotalRows());
-            assertEquals(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(), datasetVersionPagedResult
-                    .getValues().get(0).getSiemacMetadataStatisticalResource().getUrn());
-        }
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+        PagedResult<DatasetVersion> datasetVersionPagedResult = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+        assertEquals(1, datasetVersionPagedResult.getTotalRows());
+        assertEquals(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn(), datasetVersionPagedResult
+                .getValues().get(0).getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Override
@@ -492,19 +522,17 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewDatasetVersionCreated(datasetVersion, datasetNewVersion);
     }
-    
+
     @Override
     public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
         Assert.fail("Unimplemented");
-        
+
     }
-    
+
     @Override
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         Assert.fail("Unimplemented");
     }
-    
-    
 
     private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());

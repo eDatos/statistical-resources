@@ -27,14 +27,14 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -49,23 +49,23 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     // QUERY
     // -----------------------------------------------------------------
 
-    public static QueryDto mockQueryDto(DatasetVersion datasetVersion) {
-        QueryDto queryDto = new QueryDto();
+    public static QueryVersionDto mockQueryVersionDto(DatasetVersion datasetVersion) {
+        QueryVersionDto queryVersionDto = new QueryVersionDto();
 
-        mockLifeCycleStatisticalResourceDto(queryDto);
+        mockLifeCycleStatisticalResourceDto(queryVersionDto);
 
         // code is not setting in nameable becasuse some resources have generated code
-        queryDto.setCode(mockString(8));
+        queryVersionDto.setCode(mockString(8));
 
-        queryDto.setRelatedDatasetVersion(mockPersistedRelatedResourceDatasetVersionDto(datasetVersion));
-        queryDto.setType(QueryTypeEnum.FIXED);
+        queryVersionDto.setRelatedDatasetVersion(mockPersistedRelatedResourceDatasetVersionDto(datasetVersion));
+        queryVersionDto.setType(QueryTypeEnum.FIXED);
 
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();
         selection.put("SEX", Arrays.asList(new CodeItemDto("FEMALE", "Female")));
         selection.put("REGION", Arrays.asList(new CodeItemDto("TENERIFE", "Tenerife"), new CodeItemDto("LA_GOMERA", "La gomera")));
-        queryDto.setSelection(selection);
+        queryVersionDto.setSelection(selection);
 
-        return queryDto;
+        return queryVersionDto;
     }
 
     // -----------------------------------------------------------------
@@ -90,48 +90,48 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     // DATASETS
     // -----------------------------------------------------------------
 
-    public static DatasetDto mockDatasetDto(StatisticOfficiality officiality) {
-        DatasetDto datasetDto = new DatasetDto();
+    public static DatasetVersionDto mockDatasetVersionDto(StatisticOfficiality officiality) {
+        DatasetVersionDto datasetVersionDto = new DatasetVersionDto();
 
-        datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
-        datasetDto.addGeographicGranularity(mockCodeExternalItemDto());
+        datasetVersionDto.addGeographicGranularity(mockCodeExternalItemDto());
+        datasetVersionDto.addGeographicGranularity(mockCodeExternalItemDto());
 
-        datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
-        datasetDto.addTemporalGranularity(mockCodeExternalItemDto());
+        datasetVersionDto.addTemporalGranularity(mockCodeExternalItemDto());
+        datasetVersionDto.addTemporalGranularity(mockCodeExternalItemDto());
 
-        datasetDto.setDateStart(mockDate());
-        datasetDto.setDateEnd(mockDate());
+        datasetVersionDto.setDateStart(mockDate());
+        datasetVersionDto.setDateEnd(mockDate());
 
-        datasetDto.addStatisticalUnit(mockConceptExternalItemDto());
-        datasetDto.addStatisticalUnit(mockConceptExternalItemDto());
+        datasetVersionDto.addStatisticalUnit(mockConceptExternalItemDto());
+        datasetVersionDto.addStatisticalUnit(mockConceptExternalItemDto());
 
-        datasetDto.setRelatedDsd(mockDsdExternalItemDto());
+        datasetVersionDto.setRelatedDsd(mockDsdExternalItemDto());
 
-        datasetDto.setFormatExtentDimensions(5);
-        datasetDto.setFormatExtentObservations(8);
+        datasetVersionDto.setFormatExtentDimensions(5);
+        datasetVersionDto.setFormatExtentObservations(8);
 
-        datasetDto.setDateNextUpdate(mockDate());
-        datasetDto.setUpdateFrequency(mockCodeExternalItemDto());
-        datasetDto.setStatisticOfficiality(createStatisticOfficialityDtoFromDo(officiality));
-        datasetDto.setBibliographicCitation(mockInternationalStringDto());
+        datasetVersionDto.setDateNextUpdate(mockDate());
+        datasetVersionDto.setUpdateFrequency(mockCodeExternalItemDto());
+        datasetVersionDto.setStatisticOfficiality(createStatisticOfficialityDtoFromDo(officiality));
+        datasetVersionDto.setBibliographicCitation(mockInternationalStringDto());
 
-        mockSiemacMetadataStatisticalResource(datasetDto, StatisticalResourceTypeEnum.DATASET);
+        mockSiemacMetadataStatisticalResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET);
 
-        return datasetDto;
+        return datasetVersionDto;
     }
 
     // -----------------------------------------------------------------
     // PUBLICATIONS
     // -----------------------------------------------------------------
 
-    public static PublicationDto mockPublicationDto() {
-        PublicationDto publicationDto = new PublicationDto();
+    public static PublicationVersionDto mockPublicationVersionDto() {
+        PublicationVersionDto publicationVersionDto = new PublicationVersionDto();
 
-        publicationDto.setFormatExtentResources(RandomUtils.nextInt(999));
+        publicationVersionDto.setFormatExtentResources(RandomUtils.nextInt(999));
 
-        mockSiemacMetadataStatisticalResource(publicationDto, StatisticalResourceTypeEnum.COLLECTION);
+        mockSiemacMetadataStatisticalResource(publicationVersionDto, StatisticalResourceTypeEnum.COLLECTION);
 
-        return publicationDto;
+        return publicationVersionDto;
     }
 
     public static ChapterDto mockChapterDto() {

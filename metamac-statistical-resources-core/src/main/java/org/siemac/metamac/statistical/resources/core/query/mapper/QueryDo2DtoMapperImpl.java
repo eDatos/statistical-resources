@@ -10,7 +10,7 @@ import java.util.Set;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
@@ -21,25 +21,25 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
 
     @Override
-    public QueryDto queryVersionDoToDto(QueryVersion source) throws MetamacException {
+    public QueryVersionDto queryVersionDoToDto(QueryVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
-        QueryDto target = new QueryDto();
+        QueryVersionDto target = new QueryVersionDto();
         queryVersionDoToDto(source, target);
         return target;
     }
     
     @Override
-    public List<QueryDto> queryVersionDoListToDtoList(List<QueryVersion> sources) throws MetamacException {
-        List<QueryDto> targets = new ArrayList<QueryDto>();
+    public List<QueryVersionDto> queryVersionDoListToDtoList(List<QueryVersion> sources) throws MetamacException {
+        List<QueryVersionDto> targets = new ArrayList<QueryVersionDto>();
         for (QueryVersion source : sources) {
             targets.add(queryVersionDoToDto(source));
         }
         return targets;
     }
 
-    private QueryDto queryVersionDoToDto(QueryVersion source, QueryDto target) throws MetamacException {
+    private QueryVersionDto queryVersionDoToDto(QueryVersion source, QueryVersionDto target) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -73,7 +73,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         return target;
     }
 
-    private Map<String, List<CodeItemDto>> selectionDo2Dto(List<QuerySelectionItem> source, QueryDto target) {
+    private Map<String, List<CodeItemDto>> selectionDo2Dto(List<QuerySelectionItem> source, QueryVersionDto target) {
         Map<String, List<CodeItemDto>> result = new HashMap<String, List<CodeItemDto>>();
         for (QuerySelectionItem querySelectionItem : source) {
             List<CodeItemDto> codesResult = new ArrayList<CodeItemDto>();

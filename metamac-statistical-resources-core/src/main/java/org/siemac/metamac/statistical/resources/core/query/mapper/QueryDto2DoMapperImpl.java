@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -14,7 +13,7 @@ import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMappe
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -38,7 +37,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     private QuerySelectionItemRepository querySelectionItemRepository;
 
     @Override
-    public QueryVersion queryVersionDtoToDo(QueryDto source) throws MetamacException {
+    public QueryVersion queryVersionDtoToDo(QueryVersionDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -62,7 +61,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         return target;
     }
 
-    private QueryVersion queryVersionDtoToDo(QueryDto source, QueryVersion target) throws MetamacException {
+    private QueryVersion queryVersionDtoToDo(QueryVersionDto source, QueryVersion target) throws MetamacException {
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.QUERY).build();
         }

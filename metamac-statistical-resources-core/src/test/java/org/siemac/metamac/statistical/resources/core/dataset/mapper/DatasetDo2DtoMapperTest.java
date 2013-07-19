@@ -1,9 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
@@ -15,11 +18,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +45,12 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
     private DatasetVersionMockFactory datasetVersionMockFactory;
-    
+
     @Autowired
-    private DatasourceMockFactory datasourceMockFactory;
+    private DatasetMockFactory        datasetMockFactory;
+
+    @Autowired
+    private DatasourceMockFactory     datasourceMockFactory;
 
     @Test
     @MetamacMock(DATASOURCE_01_BASIC_NAME)
@@ -55,30 +64,36 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @MetamacMock({DATASET_VERSION_03_FOR_DATASET_03_NAME})
     public void testDatasourceDoListToDtoList() {
         List<Datasource> expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
-
         List<DatasourceDto> actual = datasetDo2DtoMapper.datasourceDoListToDtoList(expected);
-
+        
         assertEquals(expected.size(), actual.size());
         assertEqualsDatasourceDoAndDtoCollection(expected, actual);
     }
 
     @Test
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
-    public void testDatasetDoToDto() throws MetamacException {
+    public void testDatasetVersionDoToDto() throws MetamacException {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
-
-        DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
-
+        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME})
-    public void testDatasetDoToDtoWithStatisticOfficiality() throws MetamacException {
+    public void testDatasetVersionDoToDtoWithStatisticOfficiality() throws MetamacException {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
-
-        DatasetDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
-
+        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
         assertEqualsDatasetVersion(expected, actual);
+    }
+
+    @Test
+    @MetamacMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME)
+    public void testDatasetDoToDto() throws MetamacException {
+        Dataset expected = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        DatasetDto actual = datasetDo2DtoMapper.datasetDoToDto(expected);
+        
+        fail("not implemented");
+        // TODO RI AHORA
+        // assertEqualsDataset(expected, actual);
     }
 }

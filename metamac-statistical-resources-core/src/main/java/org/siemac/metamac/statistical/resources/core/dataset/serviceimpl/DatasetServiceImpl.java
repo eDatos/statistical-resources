@@ -103,7 +103,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Update dataset version (add datasource)
         addDatasourceForDatasetVersion(datasource, datasetVersion);
 
-        //FIXME: REMOVE
+        // FIXME: REMOVE
         mockData(datasetVersion);
 
         return datasource;
@@ -162,7 +162,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     // ------------------------------------------------------------------------
-    // DATASETS
+    // DATASETS VERSIONS
     // ------------------------------------------------------------------------
 
     @Override
@@ -315,11 +315,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasetNewVersion;
     }
-    
+
     @Override
     public List<String> retrieveDatasetVersionDimensionsIds(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
         datasetServiceInvocationValidator.checkRetrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
-        
+
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         List<String> dimensionsIds = getDatasetVersionRepository().retrieveDimensionsIds(datasetVersion);
@@ -329,14 +329,31 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw new MetamacException(ServiceExceptionType.DATASET_NO_DATA, datasetVersionUrn);
         }
     }
-    
+
     @Override
     public List<CodeDimension> retrieveCoverageForDatasetVersionDimension(ServiceContext ctx, String datasetVersionUrn, String dimensionId) throws MetamacException {
         datasetServiceInvocationValidator.checkRetrieveCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dimensionId);
-        
+
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
-        
+
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId);
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASETS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public PagedResult<Dataset> findDatasetsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validations
+        datasetServiceInvocationValidator.checkFindDatasetsByCondition(ctx, conditions, pagingParameter);
+
+        // Find
+        conditions = CriteriaUtils.initConditions(conditions, DatasetVersion.class);
+        pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
+
+        PagedResult<Dataset> datasetsPagedResult = getDatasetRepository().findByCondition(conditions, pagingParameter);
+        return datasetsPagedResult;
     }
 
     // ------------------------------------------------------------------------
@@ -387,21 +404,22 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     /**
      * DATA MOCKING
-     * @throws MetamacException 
+     * 
+     * @throws MetamacException
      */
 
     // FIXME: DELETE MOCK
     private void mockData(DatasetVersion resource) throws MetamacException {
         if (resource.getRelatedDsd() != null) {
             DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
-            
+
             DimensionListType dimensions = dataStructure.getDataStructureComponents().getDimensionList();
-    
+
             if (dimensions != null) {
                 Map<String, List<String>> dimensionCodes = computeDimensionsCodes(dimensions);
-        
+
                 List<ObservationExtendedDto> observations = buildObservations(dimensionCodes);
-        
+
                 DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
                 datasetRepositoryDto.setDatasetId("dataset_" + UUID.randomUUID().toString());
                 datasetRepositoryDto.setMaxAttributesObservation(1);
@@ -410,9 +428,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 for (String dimensionId : dimensionCodes.keySet()) {
                     datasetRepositoryDto.getDimensions().add(dimensionId);
                 }
-        
+
                 try {
-                    
+
                     datasetRepositoryDto = statisticsDatasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
                     statisticsDatasetRepositoriesServiceFacade.createObservationsExtended(datasetRepositoryDto.getDatasetId(), observations);
                     String oldDatasetRepositoryId = resource.getDatasetRepositoryId();
@@ -422,7 +440,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                         try {
                             statisticsDatasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetRepositoryId);
                         } catch (Exception e) {
-                            //TODO:
+                            // TODO:
                         }
                     }
                 } catch (ApplicationException e) {
@@ -465,12 +483,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 max[i] = dimensionCodes.get(dimensionId).size();
                 i++;
             }
-            indexes[indexes.length-1] = -1;
+            indexes[indexes.length - 1] = -1;
         }
 
         public boolean hasNext() {
             for (int i = 0; i < indexes.length; i++) {
-                if (indexes[i] < max[i]-1) {
+                if (indexes[i] < max[i] - 1) {
                     return true;
                 }
             }

@@ -8,7 +8,7 @@ import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMappe
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -23,26 +23,26 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
     // --------------------------------------------------------------------------------------
     
     @Override
-    public PublicationDto publicationVersionDoToDto(PublicationVersion source) throws MetamacException {
+    public PublicationVersionDto publicationVersionDoToDto(PublicationVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
         
-        PublicationDto target = new PublicationDto();
+        PublicationVersionDto target = new PublicationVersionDto();
         publicationVersionDoToDto(source, target);
         return target;
     }
 
     @Override
-    public List<PublicationDto> publicationVersionDoListToDtoList(List<PublicationVersion> sources) throws MetamacException {
-        List<PublicationDto> targets = new ArrayList<PublicationDto>();
+    public List<PublicationVersionDto> publicationVersionDoListToDtoList(List<PublicationVersion> sources) throws MetamacException {
+        List<PublicationVersionDto> targets = new ArrayList<PublicationVersionDto>();
         for (PublicationVersion source : sources) {
             targets.add(publicationVersionDoToDto(source));
         }
         return targets;
     }
     
-    private PublicationDto publicationVersionDoToDto(PublicationVersion source, PublicationDto target) throws MetamacException {
+    private PublicationVersionDto publicationVersionDoToDto(PublicationVersion source, PublicationVersionDto target) throws MetamacException {
         if (source == null) {
             return null;
         }

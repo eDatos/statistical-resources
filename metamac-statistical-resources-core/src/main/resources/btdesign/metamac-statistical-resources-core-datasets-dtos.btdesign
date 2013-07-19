@@ -8,7 +8,12 @@ Application DatasetsStatisticalResourcesDto {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.datasets 
 		
 		// DATASET
-		DataTransferObject DatasetDto extends @SiemacMetadataStatisticalResourceDto {
+		DataTransferObject DatasetDto extends @IdentifiableStatisticalResourceDto {
+		}
+		
+		
+		// DATASET VERSION
+		DataTransferObject DatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
 			//geographic dimension
 			- List<@ExternalItemDto> geographicCoverage;
 			//temporal dimension
