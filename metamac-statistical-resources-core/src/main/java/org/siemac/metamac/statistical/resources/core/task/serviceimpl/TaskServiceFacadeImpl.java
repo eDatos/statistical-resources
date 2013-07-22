@@ -32,13 +32,13 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
-    public void executeImportationTask(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
-        taskservice.processImportationTask(ctx, taskInfoDataset);
+    public void executeImportationTask(ServiceContext ctx, String importationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        taskservice.processImportationTask(ctx, importationJobKey, taskInfoDataset);
     }
 
     @Override
-    public void executeRecoveryImportationTask(ServiceContext ctx, String recoveryJobKey, String datasetId) throws MetamacException {
-        taskservice.processRollbackImportationTask(ctx, recoveryJobKey, datasetId);
+    public void executeRecoveryImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        taskservice.processRollbackImportationTask(ctx, recoveryJobKey, taskInfoDataset);
     }
 
     @Override

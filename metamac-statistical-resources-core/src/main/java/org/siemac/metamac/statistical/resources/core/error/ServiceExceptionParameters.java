@@ -35,13 +35,13 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String TASK_INFO_DATASET_DSD_URN       = "parameter.resources.dataStructureUrn";
     public static final String TASK_INFO_DATASET_DATASET_ID    = "parameter.resources.repoDatasetId";
     public static final String TASK_INFO_DATASET_FILES         = "parameter.resources.files";
-    public static final String TASK_INFO_DATASET_JOB_KEY       = "parameter.resources.jobKey";
     public static final String TASK_DATASOURCE_ID              = "parameter.resources.datasourceId";
     public static final String TASK                            = "parameter.resources.task";
+    public static final String TASK_DATASET_JOB_KEY            = "parameter.resources.jobKey";
 
     // Files
     public static final String FILE_DESCRIPTOR_INPUT_MESSAGE   = "parameter.resources.inputMessage";
     public static final String FILE_DESCRIPTOR_FILE_NAME       = "parameter.resources.fileName";
-    public static final String FILE_DESCRIPTOR_FORMAT             = "parameter.resources.datasetFormat";
+    public static final String FILE_DESCRIPTOR_FORMAT          = "parameter.resources.datasetFormat";
 
 }

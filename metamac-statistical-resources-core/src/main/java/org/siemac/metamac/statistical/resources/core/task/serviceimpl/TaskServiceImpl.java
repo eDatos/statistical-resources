@@ -17,6 +17,7 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -161,7 +162,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             } else if (TaskStatusTypeEnum.FAILED.equals(task.getStatus())) {
                 if (!sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId()))) {
-                    planifyRecoveryImportDataset(ctx, taskInfoDataset.getRepoDatasetId()); // Perform a clean recovery
+                    TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
+                    recoveryTaskInfo.setRepoDatasetId(taskInfoDataset.getRepoDatasetId());
+                    planifyRecoveryImportDataset(ctx, recoveryTaskInfo); // Perform a clean recovery
                 }
 
                 task.setCreatedDate(new DateTime());
@@ -182,16 +185,15 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             IOUtils.closeQuietly(os);
         }
 
-        taskInfoDataset.setJobKey(jobKey.getName());
         return jobKey.getName();
     }
 
     @Override
-    public void processImportationTask(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
+    public void processImportationTask(ServiceContext ctx, String importationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
         // Validation
-        taskServiceInvocationValidator.checkProcessImportationTask(ctx, taskInfoDataset);
+        taskServiceInvocationValidator.checkProcessImportationTask(ctx, importationJobKey, taskInfoDataset);
 
-        Task task = retrieveTaskByJob(ctx, taskInfoDataset.getJobKey());
+        Task task = retrieveTaskByJob(ctx, importationJobKey);
 
         try {
             processDatasets(taskInfoDataset, task.getCreatedDate());
@@ -204,11 +206,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 throwableMetamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
                         .build();
             }
-            markTaskAsFailed(ctx, taskInfoDataset.getJobKey(), throwableMetamacException); // Mark as failed
+            // markTaskAsFailed(ctx, taskInfoDataset.getJobKey(), throwableMetamacException); // Mark as failed
             throw throwableMetamacException;
         }
 
-        markTaskAsFinished(ctx, taskInfoDataset.getJobKey()); // Finish the importation
+        markTaskAsFinished(ctx, importationJobKey); // Finish the importation
     }
 
     @Override
@@ -264,7 +266,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         // Plannify a recovery job
         if (jobKey.startsWith(PREFIX_JOB_IMPORT_DATA)) {
-            planifyRecoveryImportDataset(ctx, jobKey);
+            TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
+            recoveryTaskInfo.setRepoDatasetId(extractDatasetIdFormJobKeyImportationDataset(jobKey));
+            planifyRecoveryImportDataset(ctx, recoveryTaskInfo);
         }
         // TODO envio al gestor de avisos de fallo de importación
     }
@@ -280,19 +284,19 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, String repoDatasetId) throws MetamacException {
+    public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
         // Validation TODO
 
         // Job keys
-        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationDataset(repoDatasetId);
-        TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(repoDatasetId);
+        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId());
+        TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId());
 
         // Scheduler an importation job
         Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
         // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-        JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey).usingJobData(RecoveryImportDatasetJob.REPO_DATASET_ID, repoDatasetId)
-                .usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
+        JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
+                .usingJobData(RecoveryImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
         SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
@@ -306,10 +310,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public void processRollbackImportationTask(ServiceContext ctx, String jobKey, String datasetId) {
+    public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
 
         try {
-            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationDataset(datasetId).getName());
+            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationDataset(taskInfoDataset.getRepoDatasetId()).getName());
 
             String fileNames = task.getExtensionPoint();
             String[] names = fileNames.split("\\" + ImportDatasetJob.SERIALIZATION_SEPARATOR);
@@ -331,7 +335,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             getTaskRepository().delete(task);
 
             // Any
-            executeDormantJobsInThisDataset(datasetId);
+            executeDormantJobsInThisDataset(taskInfoDataset.getRepoDatasetId());
         } catch (Exception e) {
             logger.error("Error while perform a recovery in dataset", e);
         }
@@ -372,6 +376,13 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     private TriggerKey createTriggerKeyForRecoveryImportationDataset(String datasetId) {
         return new TriggerKey(PREFIX_JOB_RECOVERY_IMPORT_DATA + datasetId, GROUP_IMPORTATION);
+    }
+
+    private String extractDatasetIdFormJobKeyImportationDataset(String jobImportKeyName) {
+        if (StringUtils.isEmpty(jobImportKeyName)) {
+            return null;
+        }
+        return StringUtils.substringAfter(jobImportKeyName, PREFIX_JOB_IMPORT_DATA);
     }
 
     protected OutputStream cacheFiles(TaskInfoDataset taskInfoDataset, OutputStream os, StringBuilder filePaths, StringBuilder fileNames) throws IOException, FileNotFoundException {

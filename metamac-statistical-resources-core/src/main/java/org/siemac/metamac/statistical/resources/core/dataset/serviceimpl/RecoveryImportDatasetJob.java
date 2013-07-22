@@ -9,6 +9,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,10 @@ public class RecoveryImportDatasetJob implements Job {
         try {
             logger.info("RecoveryImportationJob: " + jobKey + " starting at " + new Date());
 
-            getTaskServiceFacade().executeRecoveryImportationTask(serviceContext, jobKey.getName(), data.getString(REPO_DATASET_ID));
+            TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+            taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
+
+            getTaskServiceFacade().executeRecoveryImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
             logger.info("RecoveryImportationJob: " + jobKey + " finished at " + new Date());
         } catch (Exception e) {
             logger.error("RecoveryImportationJob: the importation with key " + jobKey.getName() + " has failed", e);

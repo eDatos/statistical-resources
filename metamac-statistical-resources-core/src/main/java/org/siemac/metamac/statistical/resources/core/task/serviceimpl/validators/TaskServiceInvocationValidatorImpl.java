@@ -29,21 +29,19 @@ public class TaskServiceInvocationValidatorImpl {
         }
     }
 
-    public static void checkPlanifyRecoveryImportDataset(String repoDatasetId, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(repoDatasetId, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
-    }
-
-    public static void checkProcessImportationTask(TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
-
-        StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset.getJobKey(), ServiceExceptionParameters.TASK_INFO_DATASET_JOB_KEY, exceptions);
-
+    public static void checkProcessImportationTask(String importationJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(importationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
         checkPlanifyImportationDataset(taskInfoDataset, exceptions);
     }
 
-    public static void checkProcessRollbackImportationTask(String jobKey, String repoDatasetId, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(repoDatasetId, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(jobKey, ServiceExceptionParameters.TASK_INFO_DATASET_JOB_KEY, exceptions);
+    public static void checkPlanifyRecoveryImportDataset(TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getRepoDatasetId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
+    }
+
+    public static void checkProcessRollbackImportationTask(String recoveryJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(recoveryJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
+        checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
     }
 
     public static void checkExistTaskInDataset(String datasetId, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -51,11 +49,11 @@ public class TaskServiceInvocationValidatorImpl {
     }
 
     public static void checkMarkTaskAsFinished(String job, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_INFO_DATASET_JOB_KEY, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
     }
 
     public static void checkMarkTaskAsFailed(String job, Exception exception, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_INFO_DATASET_JOB_KEY, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
     }
 
     public static void checkCreateTask(Task task, List<MetamacExceptionItem> exceptions) {
@@ -65,7 +63,7 @@ public class TaskServiceInvocationValidatorImpl {
     }
 
     public static void checkRetrieveTaskByJob(String job, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_INFO_DATASET_JOB_KEY, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
     }
 
     public static void checkUpdateTask(Task task, List<MetamacExceptionItem> exceptions) {
