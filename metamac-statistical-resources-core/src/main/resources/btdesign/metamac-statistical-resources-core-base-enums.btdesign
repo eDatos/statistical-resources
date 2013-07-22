@@ -66,18 +66,5 @@ Application StatisticalResourcesEnums {
     		DATASET,
     		QUERY
     	}
-    	
-    	enum PublicationStructureHierarchyTypeEnum {
-    		TITLE,
-    		CHAPTER,
-    		SUBCHAPTER1,
-    		SUBCHAPTER2,
-    		TEXT,
-    		URL,
-    		DATASET,
-    		QUERY;
-    	}
-
     }
-
 }
