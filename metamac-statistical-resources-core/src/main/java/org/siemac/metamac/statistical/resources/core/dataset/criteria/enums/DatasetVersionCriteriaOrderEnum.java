@@ -1,14 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.dataset.criteria.enums;
 
-public enum DatasetCriteriaOrderEnum {
+public enum DatasetVersionCriteriaOrderEnum {
 
-    CODE, URN, LATEST_DATASET_VERSION_TITLE, STATISTICAL_OPERATION_URN;
+    CODE, URN, TITLE, LAST_VERSION, STATISTICAL_OPERATION_URN;
 
     public String value() {
         return name();
     }
 
-    public static DatasetCriteriaOrderEnum fromValue(String v) {
+    public static DatasetVersionCriteriaOrderEnum fromValue(String v) {
         return valueOf(v);
     }
 

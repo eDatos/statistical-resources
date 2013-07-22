@@ -14,9 +14,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 public class DatasetsAsserts extends BaseAsserts {
 
@@ -154,17 +155,21 @@ public class DatasetsAsserts extends BaseAsserts {
     // DATASET: DTO & DO
     // -----------------------------------------------------------------
 
-    public static void assertEqualsDataset(Dataset entity, DatasetDto dto) throws MetamacException {
-        assertEqualsIdentifiableStatisticalResource(entity.getIdentifiableStatisticalResource(), dto, MapperEnum.DO2DTO);
+    public static void assertEqualsDataset(DatasetVersion entity, RelatedResourceDto dto) throws MetamacException {
+        assertNotNull(entity.getDataset().getId());
+        assertEquals(entity.getDataset().getId(), dto.getId());
 
-        assertNotNull(entity.getId());
-        assertEquals(entity.getId(), dto.getId());
+        assertNotNull(entity.getDataset().getUuid());
+        assertEquals(entity.getDataset().getUuid(), dto.getUuid());
 
-        assertNotNull(entity.getUuid());
-        assertEquals(entity.getUuid(), dto.getUuid());
+        assertNotNull(entity.getDataset().getVersion());
+        assertEquals(entity.getDataset().getVersion(), dto.getVersion());
 
-        assertNotNull(entity.getVersion());
-        assertEquals(entity.getVersion(), dto.getVersion());
+        assertEquals(TypeRelatedResourceEnum.DATASET, dto.getType());
+        assertEquals(entity.getDataset().getIdentifiableStatisticalResource().getCode(), dto.getCode());
+        assertNull(dto.getCodeNested());
+        assertEquals(entity.getDataset().getIdentifiableStatisticalResource().getUrn(), dto.getUrn());
+        assertEqualsInternationalString(entity.getSiemacMetadataStatisticalResource().getTitle(), dto.getTitle());
     }
 
     // -----------------------------------------------------------------

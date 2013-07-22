@@ -212,7 +212,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             // Relations
             DATASET_VERSION_05_FOR_DATASET_04 = datasetVersion;
-            DATASET_VERSION_05_FOR_DATASET_04.setDataset(DatasetMockFactory.getDataset04With1DatasetVersions());
+            DATASET_VERSION_05_FOR_DATASET_04.setDataset(DatasetMockFactory.getDataset04FullFilledWith1DatasetVersions());
         }
         return DATASET_VERSION_05_FOR_DATASET_04;
     }

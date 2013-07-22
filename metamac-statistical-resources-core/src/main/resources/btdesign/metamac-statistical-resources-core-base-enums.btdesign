@@ -62,7 +62,9 @@ Application StatisticalResourcesEnums {
     	enum TypeRelatedResourceEnum {
     		DATASET_VERSION,
     		PUBLICATION_VERSION,
-    		QUERY_VERSION
+    		QUERY_VERSION,
+    		DATASET,
+    		QUERY
     	}
     	
     	enum PublicationStructureHierarchyTypeEnum {

@@ -45,6 +45,16 @@ public class DatasetsSecurityUtils extends SecurityUtils {
     // DATASETS
     // ------------------------------------------------------------------------
 
+    public static void canFindDatasetsByCondition(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canFindDatasetsByCondition(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASETS VERSIONS
+    // ------------------------------------------------------------------------
+
     public static void canCreateDataset(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canCreateDataset(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -52,25 +62,25 @@ public class DatasetsSecurityUtils extends SecurityUtils {
     }
 
     public static void canUpdateDatasetVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canUpdateDataset(getMetamacPrincipal(ctx))) {
+        if (!SharedDatasetsSecurityUtils.canUpdateDatasetVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canDeleteDatasetVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canDeleteDataset(getMetamacPrincipal(ctx))) {
+        if (!SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canFindDatasetsVersionsByCondition(ServiceContext ctx) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canFindDatasetsByCondition(getMetamacPrincipal(ctx))) {
+        if (!SharedDatasetsSecurityUtils.canFindDatasetsVersionsByCondition(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canRetrieveDatasetVersionByUrn(ServiceContext ctx) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canRetrieveDatasetByUrn(getMetamacPrincipal(ctx))) {
+        if (!SharedDatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
@@ -110,7 +120,7 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     public static void canRetrieveDatasetVersionDimensionsIds(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canRetrieveDatasetVersionDimensionsIds(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);

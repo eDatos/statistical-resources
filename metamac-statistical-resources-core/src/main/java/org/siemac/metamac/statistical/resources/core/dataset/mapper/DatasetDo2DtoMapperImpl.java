@@ -6,15 +6,15 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 @org.springframework.stereotype.Component("datasetDo2DtoMapper")
 public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
@@ -65,29 +65,38 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
     // DATASETS
     // ---------------------------------------------------------------------------------------------------------
 
+
     @Override
-    public DatasetDto datasetDoToDto(Dataset source) throws MetamacException {
+    public RelatedResourceDto datasetVersionDoToDatasetRelatedResourceDto(DatasetVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
-        DatasetDto target = new DatasetDto();
-        datasetDoToDto(source, target);
+        RelatedResourceDto target = new RelatedResourceDto();
+        datasetVersionDoToDatasetRelatedResourceDto(source, target);
         return target;
     }
     
-    private DatasetDto datasetDoToDto(Dataset source, DatasetDto target) {
+    private RelatedResourceDto datasetVersionDoToDatasetRelatedResourceDto(DatasetVersion source, RelatedResourceDto target) {
         if (source == null) {
             return null;
         }
 
-        // Hierarchy
-        identifiableStatisticalResourceDoToDto(source.getIdentifiableStatisticalResource(), target);
-
         // Identity
-        target.setId(source.getId());
-        target.setUuid(source.getUuid());
-        target.setVersion(source.getVersion());
+        target.setId(source.getDataset().getId());
+        target.setUuid(source.getDataset().getUuid());
+        target.setVersion(source.getDataset().getVersion());
 
+        // Type
+        target.setType(TypeRelatedResourceEnum.DATASET);
+        
+        // Identifiable Fields
+        target.setCode(source.getDataset().getIdentifiableStatisticalResource().getCode());
+        target.setCodeNested(null);
+        target.setUrn(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+
+        // Nameable Fields
+        target.setTitle(internationalStringDoToDto(source.getSiemacMetadataStatisticalResource().getTitle()));
+        
         return target;
     }
 

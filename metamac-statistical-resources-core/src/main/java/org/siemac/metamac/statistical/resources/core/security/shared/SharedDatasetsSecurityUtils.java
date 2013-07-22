@@ -37,27 +37,36 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     // DATASETS
     // ------------------------------------------------------------------------
 
+    public static boolean canFindDatasetsByCondition(MetamacPrincipal metamacPrincipal) {
+        // TODO Auto-generated method stub
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASETS VERSIONS
+    // ------------------------------------------------------------------------
+
     public static boolean canCreateDataset(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canUpdateDataset(MetamacPrincipal metamacPrincipal) {
+    public static boolean canUpdateDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canDeleteDataset(MetamacPrincipal metamacPrincipal) {
+    public static boolean canDeleteDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canFindDatasetsByCondition(MetamacPrincipal metamacPrincipal) {
+    public static boolean canFindDatasetsVersionsByCondition(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canRetrieveDatasetByUrn(MetamacPrincipal metamacPrincipal) {
+    public static boolean canRetrieveDatasetVersionByUrn(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
@@ -81,7 +90,7 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
-    
+
     public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
@@ -93,11 +102,12 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveDatasetVersionDimensionsIds(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
     public static boolean canRetrieveCoverageForDatasetVersionDimension(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
-
 }

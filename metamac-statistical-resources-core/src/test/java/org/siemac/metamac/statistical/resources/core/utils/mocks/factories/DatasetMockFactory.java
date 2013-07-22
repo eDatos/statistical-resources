@@ -26,7 +26,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     public static final String DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME                          = "DATASET_03_WITH_2_DATASET_VERSIONS";
     private static Dataset     DATASET_03_BASIC_WITH_2_DATASET_VERSIONS;
 
-    public static final String DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME                    = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME";
+    public static final String DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME                    = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS";
     private static Dataset     DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS;
 
     public static final String DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME                       = "DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS";
@@ -71,7 +71,8 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         dsV2.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(dsV1));
     }
 
-    protected static Dataset getDataset04With1DatasetVersions() {
+    
+    protected static Dataset getDataset04FullFilledWith1DatasetVersions() {
         if (DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS == null) {
             Dataset dataset = createDataset();
             // Dataset version relation is set in version factory
@@ -83,6 +84,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
     private static void setDataset04Versions(Dataset dataset) {
         DatasetVersion dsV1 = getDatasetVersion05ForDataset04();
+        dsV1.getSiemacMetadataStatisticalResource().setLastVersion(Boolean.TRUE);
 
         dataset.addVersion(dsV1);
         dsV1.setDataset(dataset);

@@ -1,6 +1,8 @@
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-common-dtos.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 
@@ -64,7 +66,7 @@ Application FacadeStatisticalResources {
 	    	
 	    	// DATASETS 
 	   		"Find all datasets"
-	   		MetamacCriteriaResult<@DatasetDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException; 
+	   		MetamacCriteriaResult<@RelatedResourceDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException; 
 	    	
 	    	// DATASET VERSION
 	    	"Creates dataset"
