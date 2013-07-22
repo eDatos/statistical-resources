@@ -265,23 +265,24 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum type) {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
         mockLifeCycleStatisticalResource(resource);
+        String resourceCode = resource.getCode();
 
         resource.setLanguage(mockCodeExternalItem("language01"));
         resource.addLanguage(mockCodeExternalItem("language01"));
         resource.addLanguage(mockCodeExternalItem("language02"));
 
-        resource.setSubtitle(mockInternationalString("subtitle"));
-        resource.setTitleAlternative(mockInternationalString("titleAlternative"));
-        resource.setAbstractLogic(mockInternationalString("abstract"));
-        resource.setKeywords(mockInternationalString("keyword1 keyword2 keyword3"));
+        resource.setSubtitle(mockInternationalStringMetadata(resourceCode, "subtitle"));
+        resource.setTitleAlternative(mockInternationalStringMetadata(resourceCode, "titleAlternative"));
+        resource.setAbstractLogic(mockInternationalStringMetadata(resourceCode, "abstract"));
+        resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
 
         resource.setType(type);
 
         resource.setCreator(mockOrganizationUnitExternalItem("creator"));
         resource.addContributor(mockOrganizationUnitExternalItem("contributor01"));
         resource.addContributor(mockOrganizationUnitExternalItem("contributor02"));
-        resource.setConformsTo(mockInternationalString("conformsTo"));
-        resource.setConformsToInternal(mockInternationalString("conformsToInternal"));
+        resource.setConformsTo(mockInternationalStringMetadata(resourceCode, "conformsTo"));
+        resource.setConformsToInternal(mockInternationalStringMetadata(resourceCode, "conformsToInternal"));
         resource.addPublisher(mockOrganizationUnitExternalItem("publisher01"));
         resource.addPublisher(mockOrganizationUnitExternalItem("publisher02"));
         resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor01"));
@@ -290,8 +291,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.addMediator(mockOrganizationUnitExternalItem("mediator02"));
         resource.setRightsHolder(mockOrganizationUnitExternalItem("rightsHolder"));
         resource.setCopyrightedDate(new DateTime());
-        resource.setLicense(mockInternationalString("license"));
-        resource.setAccessRights(mockInternationalString("accessRights"));
+        resource.setLicense(mockInternationalStringMetadata(resourceCode, "license"));
+        resource.setAccessRights(mockInternationalStringMetadata(resourceCode, "accessRights"));
 
         setSpecialCasesSiemacMetadataStatisticalResourceMock(resource);
 
@@ -323,9 +324,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
         mockIdentifiableStatisticalResource(resource);
+        String resourceCode = resource.getCode();
 
-        resource.setTitle(mockInternationalString("title"));
-        resource.setDescription(mockInternationalString("description"));
+        resource.setTitle(mockInternationalStringMetadata(resourceCode, "title"));
+        resource.setDescription(mockInternationalStringMetadata(resourceCode, "description"));
 
         return resource;
     }
@@ -347,7 +349,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public StatisticOfficiality mockStatisticOfficiality(String identifier) {
         StatisticOfficiality mock = new StatisticOfficiality();
-        mock.setDescription(mockInternationalString("statisticOfficiality"));
+        mock.setDescription(mockInternationalStringMetadata(identifier, "statisticOfficiality"));
         mock.setIdentifier(identifier);
 
         setSpecialCasesStatisticOfficialityMock(mock);
@@ -376,22 +378,34 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public static InternationalString mockInternationalString() {
-        return mockInternationalString(mockString(10));
+        return mockInternationalString(mockString(10), null);
     }
 
-    public static InternationalString mockInternationalString(String code) {
+    public static InternationalString mockInternationalStringMetadata(String resource, String metadata) {
         InternationalString internationalString = new InternationalString();
-        LocalisedString es = new LocalisedString();
-        es.setLabel(code + " en Espanol");
-        es.setLocale("es");
-        es.setVersion(Long.valueOf(0));
-        LocalisedString en = new LocalisedString();
-        en.setLabel(code + " in English");
-        en.setLocale("en");
-        en.setVersion(Long.valueOf(0));
-        internationalString.addText(es);
-        internationalString.addText(en);
         internationalString.setVersion(Long.valueOf(0));
+        {
+            LocalisedString es = new LocalisedString();
+            if (metadata != null) {
+                es.setLabel(metadata + "-" + resource + " en Espanol");
+            } else {
+                es.setLabel(resource + " en Espanol");
+            }
+            es.setLocale("es");
+            es.setVersion(Long.valueOf(0));
+            internationalString.addText(es);
+        }
+        {
+            LocalisedString en = new LocalisedString();
+            if (metadata != null) {
+                en.setLabel(metadata + "-" + resource + " in English");
+            } else {
+                en.setLabel(resource + " in English");
+            }
+            en.setLocale("en");
+            en.setVersion(Long.valueOf(0));
+            internationalString.addText(en);
+        }
         return internationalString;
     }
 
@@ -535,7 +549,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         String codeNested = null;
         String uri = CoreCommonConstants.API_LATEST_WITH_SLASHES + code;
         String urnInternal = urn + ":internal";
-        InternationalString title = mockInternationalString(code);
+        InternationalString title = mockInternationalStringMetadata(code, "title");
         String managementAppUrl = CoreCommonConstants.URL_SEPARATOR + code;
 
         if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type)) {

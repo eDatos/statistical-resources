@@ -127,9 +127,10 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
+        String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getCode();
 
         datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
-        datasetVersion.setBibliographicCitation(mockInternationalString("bibliographicCitation"));
+        datasetVersion.setBibliographicCitation(mockInternationalStringMetadata(datasetCode, "bibliographicCitation"));
 
         // Mock code
         String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
