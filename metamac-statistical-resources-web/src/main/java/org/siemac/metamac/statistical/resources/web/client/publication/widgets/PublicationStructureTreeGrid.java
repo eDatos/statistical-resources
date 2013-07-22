@@ -35,7 +35,7 @@ import com.smartgwt.client.widgets.tree.events.LeafClickHandler;
 import com.smartgwt.client.widgets.viewer.DetailViewer;
 import com.smartgwt.client.widgets.viewer.DetailViewerField;
 
-public abstract class BaseItemsTreeGrid extends NavigableTreeGrid {
+public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected static final String   SCHEME_NODE_NAME = "scheme-node";
 
@@ -54,7 +54,7 @@ public abstract class BaseItemsTreeGrid extends NavigableTreeGrid {
 
     protected HandlerRegistration   filterEditionHandler;
 
-    public BaseItemsTreeGrid() {
+    public PublicationStructureTreeGrid() {
         setHeight(175);
         setAutoFitData(Autofit.VERTICAL);
         setShowOpenIcons(false);
