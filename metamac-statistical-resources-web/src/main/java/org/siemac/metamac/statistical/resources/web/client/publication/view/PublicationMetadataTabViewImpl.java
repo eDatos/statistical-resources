@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
@@ -77,7 +77,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     private LifeCycleResourceVersionEditionForm                           versionEditionForm;
     private StatisticalResourceIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
-    private PublicationDto                                                publicationDto;
+    private PublicationVersionDto                                         publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -318,7 +318,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addEditionCanvas(intellectualPropertyDescriptorsEditionForm);
     }
 
-    private void setPublicationViewMode(PublicationDto publicationDto) {
+    private void setPublicationViewMode(PublicationVersionDto publicationDto) {
         // Identifiers form
         identifiersForm.setNameableStatisticalResourceDto(publicationDto);
 
@@ -356,7 +356,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         intellectualPropertyDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
     }
 
-    private void setPublicationEditionMode(PublicationDto publicationDto) {
+    private void setPublicationEditionMode(PublicationVersionDto publicationDto) {
         // Identifiers form
         identifiersEditionForm.setNameableStatisticalResourceDto(publicationDto);
 
@@ -395,7 +395,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     }
 
     @Override
-    public void setPublication(PublicationDto publicationDto) {
+    public void setPublication(PublicationVersionDto publicationDto) {
         this.publicationDto = publicationDto;
 
         mainFormLayout.updatePublishSection(publicationDto.getProcStatus());
@@ -405,39 +405,39 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         setPublicationEditionMode(publicationDto);
     }
 
-    private PublicationDto getPublicationDto() {
+    private PublicationVersionDto getPublicationDto() {
         // Identifiers
-        publicationDto = (PublicationDto) identifiersEditionForm.getNameableStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(publicationDto);
 
         // Content descriptors
-        publicationDto = (PublicationDto) contentDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) contentDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Content descriptors
-        publicationDto = (PublicationDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Thematic content classifiers
-        publicationDto = (PublicationDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Language
-        publicationDto = (PublicationDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Production descriptors
-        publicationDto = (PublicationDto) productionDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) productionDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Class descriptors
         publicationDto = classDescriptorsEditionForm.getPublicationDto(publicationDto);
 
         // Resource relation descriptors
-        publicationDto = (PublicationDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Publication descriptors
-        publicationDto = (PublicationDto) publicationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) publicationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         // Version
-        publicationDto = (PublicationDto) versionEditionForm.getLifeCycleStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) versionEditionForm.getLifeCycleStatisticalResourceDto(publicationDto);
 
         // Intellectual property descriptors
-        publicationDto = (PublicationDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDto = (PublicationVersionDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(publicationDto);
 
         return publicationDto;
     }

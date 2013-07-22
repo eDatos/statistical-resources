@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
@@ -29,7 +29,7 @@ public class UpdatePublicationProcStatusActionHandler extends SecurityActionHand
         String urn = action.getUrn();
 
         ProcStatusEnum procStatus = action.getNextProcStatus();
-        PublicationDto publicationDto = null;
+        PublicationVersionDto publicationDto = null;
         return new UpdatePublicationProcStatusResult(publicationDto);
     }
 }

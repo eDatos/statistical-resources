@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatistical
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
@@ -41,15 +41,15 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // PUBLICATIONS
     // -------------------------------------------------------------------------------------------------------------
 
-    public static RelatedResourceDto getPublicationDtoAsRelatedResourceDto(PublicationDto publicationDto) {
+    public static RelatedResourceDto getPublicationDtoAsRelatedResourceDto(PublicationVersionDto publicationDto) {
         RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(publicationDto);
         relatedResourceDto.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return relatedResourceDto;
     }
 
-    public static List<RelatedResourceDto> getPublicationDtosAsRelatedResourceDtos(List<PublicationDto> publicationDtos) {
+    public static List<RelatedResourceDto> getPublicationDtosAsRelatedResourceDtos(List<PublicationVersionDto> publicationDtos) {
         List<RelatedResourceDto> relatedResourceDtos = new ArrayList<RelatedResourceDto>(publicationDtos.size());
-        for (PublicationDto publicationDto : publicationDtos) {
+        for (PublicationVersionDto publicationDto : publicationDtos) {
             relatedResourceDtos.add(getPublicationDtoAsRelatedResourceDto(publicationDto));
         }
         return relatedResourceDtos;
@@ -98,5 +98,4 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
         }
         return relatedResources;
     }
-
 }

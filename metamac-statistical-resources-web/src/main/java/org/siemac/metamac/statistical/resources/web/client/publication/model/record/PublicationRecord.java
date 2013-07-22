@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.model.record;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 
@@ -8,7 +8,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class PublicationRecord extends ListGridRecord {
 
-    public PublicationRecord(Long id, String identifier, String name, String description, String status, String versionLogic, String urn, PublicationDto publicationDto) {
+    public PublicationRecord(Long id, String identifier, String name, String description, String status, String versionLogic, String urn, PublicationVersionDto publicationDto) {
         setId(id);
         setIdentifier(identifier);
         setName(name);
@@ -47,7 +47,7 @@ public class PublicationRecord extends ListGridRecord {
         setAttribute(PublicationDS.URN, value);
     }
 
-    public void setPublicationDto(PublicationDto publicationDto) {
+    public void setPublicationDto(PublicationVersionDto publicationDto) {
         setAttribute(PublicationDS.DTO, publicationDto);
     }
 
@@ -64,7 +64,7 @@ public class PublicationRecord extends ListGridRecord {
     }
 
     public ProcStatusEnum getProcStatus() {
-        return ((PublicationDto) getAttributeAsObject(PublicationDS.DTO)).getProcStatus();
+        return ((PublicationVersionDto) getAttributeAsObject(PublicationDS.DTO)).getProcStatus();
     }
 
     public String getDescription() {

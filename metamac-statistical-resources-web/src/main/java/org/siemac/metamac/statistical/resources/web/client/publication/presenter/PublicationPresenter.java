@@ -6,7 +6,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -66,7 +66,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
     public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {
 
-        void setPublication(PublicationDto collectionDto);
+        void setPublication(PublicationVersionDto collectionDto);
         void showMetadata();
     }
 
@@ -131,7 +131,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
             }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
-                getView().setPublication(result.getPublicationDto());
+                getView().setPublication(result.getPublicationVersionDto());
             }
         });
     }

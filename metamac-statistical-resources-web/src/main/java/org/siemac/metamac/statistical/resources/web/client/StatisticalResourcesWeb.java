@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client;
 
-import java.util.logging.Logger;
-
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
@@ -15,8 +13,7 @@ import com.google.gwt.core.client.GWT;
  */
 public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
-    private static final boolean                         SECURITY_ENABLED = false;
-    private static Logger                                logger           = Logger.getLogger(StatisticalResourcesWeb.class.getName());
+    private static final boolean                         SECURITY_ENABLED = true;
 
     private static MetamacPrincipal                      principal;
     private static StatisticalResourcesWebConstants      constants;
@@ -77,7 +74,7 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
     @Override
     protected void setPrincipal(MetamacPrincipal principal) {
-        this.principal = principal;
+        StatisticalResourcesWeb.principal = principal;
     }
 
     @Override

@@ -7,7 +7,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -174,10 +174,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
-    public void setPublicationPaginatedList(List<PublicationDto> collectionDtos, int firstResult, int totalResults) {
+    public void setPublicationPaginatedList(List<PublicationVersionDto> collectionDtos, int firstResult, int totalResults) {
         PublicationRecord[] records = new PublicationRecord[collectionDtos.size()];
         int index = 0;
-        for (PublicationDto scheme : collectionDtos) {
+        for (PublicationVersionDto scheme : collectionDtos) {
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
         publicationListGrid.getListGrid().setData(records);

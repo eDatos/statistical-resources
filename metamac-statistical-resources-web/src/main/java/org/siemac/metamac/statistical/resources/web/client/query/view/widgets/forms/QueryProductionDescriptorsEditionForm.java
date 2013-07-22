@@ -10,10 +10,9 @@ import java.util.Map;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
@@ -149,7 +148,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         return item;
     }
 
-    public void setQueryDto(QueryDto queryDto) {
+    public void setQueryDto(QueryVersionDto queryDto) {
         this.selectedDatasetResource = queryDto.getRelatedDatasetVersion();
         setValue(QueryDS.RELATED_DATASET_VERSION, RelatedResourceUtils.getRelatedResourceName(queryDto.getRelatedDatasetVersion()));
 
@@ -159,7 +158,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         }
     }
 
-    public QueryDto getQueryDto(QueryDto queryDto) {
+    public QueryVersionDto getQueryDto(QueryVersionDto queryDto) {
         queryDto.setRelatedDatasetVersion(selectedDatasetResource);
 
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();

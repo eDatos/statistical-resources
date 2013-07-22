@@ -22,7 +22,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
@@ -39,9 +39,9 @@ public class MockServices {
     private static final String                            COLLECTION_URI_PREFIX = "http://siemac.metamac/collections/";
     private static final String                            QUERY_URI_PREFIX      = "http://siemac.metamac/queries/";
 
-    private static Map<String, DatasetVersionDto>                 datasets;
+    private static Map<String, DatasetVersionDto>          datasets;
     private static Map<String, DatasourceDto>              datasources;
-    private static Map<String, PublicationDto>             collections;
+    private static Map<String, PublicationVersionDto>      collections;
     private static Map<String, ExternalItemDto>            agencies;
     private static StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 

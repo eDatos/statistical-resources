@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -46,7 +46,7 @@ public class PublicationListGrid extends BaseCustomListGrid {
         this.setFields(identifierField, titleField);
     }
 
-    public void setPublications(List<PublicationDto> collections) {
+    public void setPublications(List<PublicationVersionDto> collections) {
         removeAllData();
         if (collections != null) {
             PublicationRecord[] records = new PublicationRecord[collections.size()];

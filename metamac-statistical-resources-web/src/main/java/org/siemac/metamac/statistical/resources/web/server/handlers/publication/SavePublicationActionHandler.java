@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.publication;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
@@ -26,15 +26,16 @@ public class SavePublicationActionHandler extends SecurityActionHandler<SavePubl
     @Override
     public SavePublicationResult executeSecurityAction(SavePublicationAction action) throws ActionException {
 
-        PublicationDto publicationToSave = action.getPublicationDto();
-        PublicationDto publicationSaved = null;
+        PublicationVersionDto publicationVersionToSave = action.getPublicationVersionDto();
+        PublicationVersionDto publicationVersionSaved = null;
         try {
-            if (publicationToSave.getId() == null) {
-                publicationSaved = statisticalResourcesServiceFacade.createPublication(ServiceContextHolder.getCurrentServiceContext(), publicationToSave, action.getStatisticalOperationDto());
+            if (publicationVersionToSave.getId() == null) {
+                publicationVersionSaved = statisticalResourcesServiceFacade.createPublication(ServiceContextHolder.getCurrentServiceContext(), publicationVersionToSave,
+                        action.getStatisticalOperationDto());
             } else {
-                publicationSaved = statisticalResourcesServiceFacade.updatePublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationToSave);
+                publicationVersionSaved = statisticalResourcesServiceFacade.updatePublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionToSave);
             }
-            return new SavePublicationResult(publicationSaved);
+            return new SavePublicationResult(publicationVersionSaved);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

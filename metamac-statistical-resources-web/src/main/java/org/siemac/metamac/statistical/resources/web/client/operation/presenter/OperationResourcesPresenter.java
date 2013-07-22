@@ -9,7 +9,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -58,7 +58,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
 
         void setDatasets(List<DatasetVersionDto> datasetDtos);
-        void setPublications(List<PublicationDto> collectionDtos);
+        void setPublications(List<PublicationVersionDto> collectionDtos);
     }
 
     @ProxyCodeSplit
@@ -172,5 +172,4 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
         }
     }
-
 }

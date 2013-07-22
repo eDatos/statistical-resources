@@ -12,7 +12,7 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
@@ -39,7 +39,7 @@ public class CommonUtils {
     // QUERY TYPE
     // -----------------------------------------------------------------------------------------
 
-    public static String getQueryTypeName(QueryDto queryDto) {
+    public static String getQueryTypeName(QueryVersionDto queryDto) {
         return queryDto != null && queryDto.getType() != null ? getCoreMessages().getString(getCoreMessages().queryTypeEnum() + queryDto.getType().getName()) : null;
     }
 

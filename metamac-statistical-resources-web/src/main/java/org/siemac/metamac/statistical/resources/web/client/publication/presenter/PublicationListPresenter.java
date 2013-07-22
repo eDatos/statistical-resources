@@ -9,7 +9,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -79,7 +79,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     public interface PublicationListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<PublicationListUiHandlers> {
 
-        void setPublicationPaginatedList(List<PublicationDto> PublicationDtos, int firstResult, int totalResults);
+        void setPublicationPaginatedList(List<PublicationVersionDto> PublicationDtos, int firstResult, int totalResults);
         // void clearSearchSection();
     }
 
@@ -142,7 +142,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void createPublication(PublicationDto publicationDto) {
+    public void createPublication(PublicationVersionDto publicationDto) {
         dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallbackHandlingError<SavePublicationResult>(this) {
 
             @Override
@@ -150,7 +150,6 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
-
     }
 
     @Override

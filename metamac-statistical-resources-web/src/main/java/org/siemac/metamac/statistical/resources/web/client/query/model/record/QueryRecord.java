@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.query.model.record;
 
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 
@@ -8,7 +8,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class QueryRecord extends ListGridRecord {
 
-    public QueryRecord(Long id, String identifier, String name, String status, String type, String versionLogic, String urn, QueryDto queryDto) {
+    public QueryRecord(Long id, String identifier, String name, String status, String type, String versionLogic, String urn, QueryVersionDto queryDto) {
         setId(id);
         setIdentifier(identifier);
         setName(name);
@@ -47,7 +47,7 @@ public class QueryRecord extends ListGridRecord {
         setAttribute(QueryDS.URN, value);
     }
 
-    public void setQueryDto(QueryDto queryDto) {
+    public void setQueryDto(QueryVersionDto queryDto) {
         setAttribute(QueryDS.DTO, queryDto);
     }
 
@@ -64,14 +64,14 @@ public class QueryRecord extends ListGridRecord {
     }
 
     public ProcStatusEnum getProcStatus() {
-        return ((QueryDto) getAttributeAsObject(QueryDS.DTO)).getProcStatus();
+        return ((QueryVersionDto) getAttributeAsObject(QueryDS.DTO)).getProcStatus();
     }
 
     public String getUrn() {
         return getAttributeAsString(QueryDS.URN);
     }
 
-    public QueryDto getQueryDto() {
-        return (QueryDto) getAttributeAsObject(QueryDS.DTO);
+    public QueryVersionDto getQueryDto() {
+        return (QueryVersionDto) getAttributeAsObject(QueryDS.DTO);
     }
 }

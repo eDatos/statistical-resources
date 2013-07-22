@@ -9,7 +9,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -75,7 +75,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     public interface QueryView extends View, HasUiHandlers<QueryUiHandlers> {
 
-        void setQueryDto(QueryDto queryDto);
+        void setQueryDto(QueryVersionDto queryDto);
         void newQueryDto();
         void setDatasetsForQuery(GetDatasetsResult result);
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
@@ -114,23 +114,23 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(GetQueryResult result) {
-                getView().setQueryDto(result.getQueryDto());
+                getView().setQueryDto(result.getQueryVersionDto());
             }
         });
     }
 
     @Override
-    public void saveQuery(QueryDto queryDto) {
+    public void saveQuery(QueryVersionDto queryDto) {
         dispatcher.execute(new SaveQueryAction(queryDto), new WaitingAsyncCallbackHandlingError<SaveQueryResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveQueryResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().querySaved());
-                getView().setQueryDto(result.getSavedQuery());
-                updateUrlIfNeeded(result.getSavedQuery());
+                getView().setQueryDto(result.getSavedQueryVersionDto());
+                updateUrlIfNeeded(result.getSavedQueryVersionDto());
             }
 
-            private void updateUrlIfNeeded(QueryDto query) {
+            private void updateUrlIfNeeded(QueryVersionDto query) {
                 String queryParam = placeManager.getCurrentPlaceRequest().getParameter(PlaceRequestParams.queryParam, null);
                 if (queryParam == null) {
                     String queryCodeWithVersion = query.getCode() + "(" + query.getVersionLogic() + ")";
@@ -192,5 +192,4 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             placeManager.revealPlaceHierarchy(location);
         }
     }
-
 }

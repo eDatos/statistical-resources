@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.shared.query;
 
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -10,8 +10,8 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class SaveQuery {
 
     @In(1)
-    QueryDto query;
+    QueryVersionDto queryVersionDto;
 
     @Out(1)
-    QueryDto savedQuery;
+    QueryVersionDto savedQueryVersionDto;
 }

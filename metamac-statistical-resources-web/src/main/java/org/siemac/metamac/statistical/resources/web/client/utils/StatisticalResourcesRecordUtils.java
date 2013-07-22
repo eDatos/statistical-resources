@@ -8,9 +8,9 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
@@ -31,13 +31,13 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
         return record;
     }
 
-    public static PublicationRecord getPublicationRecord(PublicationDto publicationDto) {
+    public static PublicationRecord getPublicationRecord(PublicationVersionDto publicationDto) {
         PublicationRecord record = new PublicationRecord(publicationDto.getId(), publicationDto.getCode(), getLocalisedString(publicationDto.getTitle()),
                 getLocalisedString(publicationDto.getDescription()), CommonUtils.getProcStatusName(publicationDto), publicationDto.getVersionLogic(), publicationDto.getUrn(), publicationDto);
         return record;
     }
 
-    public static QueryRecord getQueryRecord(QueryDto queryDto) {
+    public static QueryRecord getQueryRecord(QueryVersionDto queryDto) {
         QueryRecord record = new QueryRecord(queryDto.getId(), queryDto.getCode(), getLocalisedString(queryDto.getTitle()), CommonUtils.getProcStatusName(queryDto),
                 CommonUtils.getQueryTypeName(queryDto), queryDto.getVersionLogic(), queryDto.getUrn(), queryDto);
         return record;

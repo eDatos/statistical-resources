@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.query;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryResult;
@@ -26,13 +26,13 @@ public class SaveQueryActionHandler extends SecurityActionHandler<SaveQueryActio
     @Override
     public SaveQueryResult executeSecurityAction(SaveQueryAction action) throws ActionException {
         try {
-            QueryDto savedQuery = null;
-            if (action.getQuery().getId() == null) {
-                savedQuery = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQuery());
+            QueryVersionDto savedQueryVersion = null;
+            if (action.getQueryVersionDto().getId() == null) {
+                savedQueryVersion = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto());
             } else {
-                savedQuery = statisticalResourcesServiceFacade.updateQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQuery());
+                savedQueryVersion = statisticalResourcesServiceFacade.updateQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto());
             }
-            return new SaveQueryResult(savedQuery);
+            return new SaveQueryResult(savedQueryVersion);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

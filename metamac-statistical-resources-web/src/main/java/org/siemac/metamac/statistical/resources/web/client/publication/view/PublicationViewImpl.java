@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
@@ -71,9 +71,9 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     }
 
     @Override
-    public void setPublication(PublicationDto collectionDto) {
+    public void setPublication(PublicationVersionDto publicationVersionDto) {
         // TODO Update the title label when the title is changed!!
-        titleLabel.setContents(InternationalStringUtils.getLocalisedString(collectionDto.getTitle()));
+        titleLabel.setContents(InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
         titleLabel.show();
     }
 

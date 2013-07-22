@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.shared.publication;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -11,14 +11,14 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class UpdatePublicationProcStatus {
 
     @In(1)
-    String         urn;
+    String                urn;
 
     @In(2)
-    ProcStatusEnum nextProcStatus;
+    ProcStatusEnum        nextProcStatus;
 
     @In(3)
-    ProcStatusEnum currentProcStatus;
+    ProcStatusEnum        currentProcStatus;
 
     @Out(1)
-    PublicationDto publicationDto;
+    PublicationVersionDto publicationVersionDto;
 }

@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
@@ -88,7 +88,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
     }
 
     @Override
-    public void setPublications(List<PublicationDto> publicationDtos) {
+    public void setPublications(List<PublicationVersionDto> publicationDtos) {
         publicationsListGrid.setPublications(publicationDtos);
     }
 

@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.query;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryResult;
@@ -26,8 +26,8 @@ public class GetQueryActionHandler extends SecurityActionHandler<GetQueryAction,
     @Override
     public GetQueryResult executeSecurityAction(GetQueryAction action) throws ActionException {
         try {
-            QueryDto queryDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getQueryUrn());
-            return new GetQueryResult(queryDto);
+            QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getQueryUrn());
+            return new GetQueryResult(queryVersionDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

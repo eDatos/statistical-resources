@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
@@ -48,8 +48,8 @@ public class NewQueryWindow extends CustomWindow {
         return form.getItem(FIELD_SAVE);
     }
 
-    public QueryDto getNewQueryDto() {
-        QueryDto queryDto = new QueryDto();
+    public QueryVersionDto getNewQueryDto() {
+        QueryVersionDto queryDto = new QueryVersionDto();
         queryDto.setCode(form.getValueAsString(QueryDS.CODE));
         queryDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(QueryDS.TITLE)));
         queryDto.setSelection(new HashMap<String, List<CodeItemDto>>());
@@ -59,5 +59,4 @@ public class NewQueryWindow extends CustomWindow {
     public boolean validateForm() {
         return form.validate();
     }
-
 }

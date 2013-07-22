@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.view.widgets.f
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -18,7 +18,7 @@ public class QueryProductionDescriptorsForm extends GroupDynamicForm {
         setFields(datasetVersion);
     }
 
-    public void setQueryDto(QueryDto queryDto) {
+    public void setQueryDto(QueryVersionDto queryDto) {
         setValue(QueryDS.RELATED_DATASET_VERSION, RelatedResourceUtils.getRelatedResourceName(queryDto.getRelatedDatasetVersion()));
     }
 }

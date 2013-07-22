@@ -6,7 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
@@ -201,7 +201,7 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
         public void setQueriesPaginatedList(GetQueriesResult result) {
             QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
             int index = 0;
-            for (QueryDto queryDto : result.getQueriesList()) {
+            for (QueryVersionDto queryDto : result.getQueriesList()) {
                 records[index++] = StatisticalResourcesRecordUtils.getQueryRecord(queryDto);
             }
             queriesList.getListGrid().setData(records);

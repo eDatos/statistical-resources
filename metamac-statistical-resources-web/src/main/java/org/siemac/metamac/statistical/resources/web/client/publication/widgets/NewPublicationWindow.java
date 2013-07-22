@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
@@ -45,8 +45,8 @@ public class NewPublicationWindow extends NewStatisticalResourceWindow {
         return form.getItem(FIELD_SAVE);
     }
 
-    public PublicationDto getNewPublicationDto() {
-        PublicationDto publicationDto = new PublicationDto();
+    public PublicationVersionDto getNewPublicationDto() {
+        PublicationVersionDto publicationDto = new PublicationVersionDto();
         publicationDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(PublicationDS.TITLE)));
         populateSiemacResourceDto(publicationDto);
         return publicationDto;

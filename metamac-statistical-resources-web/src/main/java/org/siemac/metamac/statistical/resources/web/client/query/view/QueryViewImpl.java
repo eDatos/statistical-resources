@@ -7,7 +7,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
@@ -67,7 +67,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     }
 
     @Override
-    public void setQueryDto(QueryDto queryDto) {
+    public void setQueryDto(QueryVersionDto queryDto) {
         queryFormPanel.setQuery(queryDto);
     }
 
@@ -136,7 +136,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private LifeCycleResourceLifeCycleForm         lifeCycleEditionForm;
         private LifeCycleResourceVersionEditionForm    versionEditionForm;
 
-        private QueryDto                               query;
+        private QueryVersionDto                        queryVersionDto;
 
         public QueryFormPanel() {
             super();
@@ -207,35 +207,35 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         }
 
         private void createQuery() {
-            this.query = new QueryDto();
+            this.queryVersionDto = new QueryVersionDto();
 
             mainFormLayout.setTitleLabelContents(getConstants().queryNew());
             mainFormLayout.setEditionMode();
-            fillViewForm(query);
-            fillEditionForm(query);
+            fillViewForm(queryVersionDto);
+            fillEditionForm(queryVersionDto);
 
             mainFormLayout.redraw();
             this.show();
         }
 
-        private void setQuery(QueryDto queryDto) {
-            this.query = queryDto;
-            mainFormLayout.setTitleLabelContents(query.getCode());
+        private void setQuery(QueryVersionDto queryDto) {
+            this.queryVersionDto = queryDto;
+            mainFormLayout.setTitleLabelContents(queryVersionDto.getCode());
             mainFormLayout.setViewMode();
-            fillViewForm(query);
-            fillEditionForm(query);
+            fillViewForm(queryVersionDto);
+            fillEditionForm(queryVersionDto);
             mainFormLayout.redraw();
             this.show();
         }
 
-        private void fillViewForm(QueryDto queryDto) {
+        private void fillViewForm(QueryVersionDto queryDto) {
             identifiersForm.setNameableStatisticalResourceDto(queryDto);
             productionDescriptorsForm.setQueryDto(queryDto);
             lifeCycleForm.setLifeCycleStatisticalResourceDto(queryDto);
             versionForm.setLifeCycleStatisticalResourceDto(queryDto);
         }
 
-        private void fillEditionForm(QueryDto queryDto) {
+        private void fillEditionForm(QueryVersionDto queryDto) {
             identifiersEditionForm.setNameableStatisticalResourceDto(queryDto);
             identifiersCreationForm.setNameableStatisticalResourceDto(queryDto);
             productionDescriptorsEditionForm.setQueryDto(queryDto);
@@ -252,19 +252,19 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             versionEditionForm.setLifeCycleStatisticalResourceDto(queryDto);
         }
 
-        private QueryDto getQuery() {
+        private QueryVersionDto getQuery() {
             if (isCreationMode()) {
-                query = (QueryDto) identifiersCreationForm.getNameableStatisticalResourceDto(query);
+                queryVersionDto = (QueryVersionDto) identifiersCreationForm.getNameableStatisticalResourceDto(queryVersionDto);
             } else {
-                query = (QueryDto) identifiersEditionForm.getNameableStatisticalResourceDto(query);
+                queryVersionDto = (QueryVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(queryVersionDto);
             }
-            query = productionDescriptorsEditionForm.getQueryDto(query);
-            query = (QueryDto) versionEditionForm.getLifeCycleStatisticalResourceDto(query);
-            return query;
+            queryVersionDto = productionDescriptorsEditionForm.getQueryDto(queryVersionDto);
+            queryVersionDto = (QueryVersionDto) versionEditionForm.getLifeCycleStatisticalResourceDto(queryVersionDto);
+            return queryVersionDto;
         }
 
         private boolean isCreationMode() {
-            return StringUtils.isEmpty(this.query.getUrn());
+            return StringUtils.isEmpty(this.queryVersionDto.getUrn());
         }
     }
 }

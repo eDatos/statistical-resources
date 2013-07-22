@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -22,7 +22,7 @@ public class GetPublications {
     VersionableStatisticalResourceWebCriteria criteria;
 
     @Out(1)
-    List<PublicationDto>                      publicationDtos;
+    List<PublicationVersionDto>               publicationDtos;
 
     @Out(2)
     Integer                                   firstResultOut;
