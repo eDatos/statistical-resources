@@ -121,15 +121,15 @@ public class PublicationStructurePanel extends HLayout {
     // FORM
 
     private void createViewForm() {
-        form = new GroupDynamicForm(getConstants().collectionStructureElement());
+        form = new GroupDynamicForm(getConstants().publicationStructureElement());
 
-        ViewTextItem type = new ViewTextItem(PublicationStructureDS.TYPE, getConstants().collectionStructureElementType());
-        ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().collectionStructureElementType());
+        ViewTextItem type = new ViewTextItem(PublicationStructureDS.TYPE, getConstants().publicationStructureElementType());
+        ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().publicationStructureElementType());
         typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
 
-        ViewMultiLanguageTextItem text = new ViewMultiLanguageTextItem(PublicationStructureDS.TEXT, getConstants().collectionStructureElementText());
+        ViewMultiLanguageTextItem text = new ViewMultiLanguageTextItem(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText());
 
-        ViewTextItem url = new ViewTextItem(PublicationStructureDS.URL, getConstants().collectionStructureElementURL());
+        ViewTextItem url = new ViewTextItem(PublicationStructureDS.URL, getConstants().publicationStructureElementURL());
         url.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -138,7 +138,7 @@ public class PublicationStructurePanel extends HLayout {
             }
         });
 
-        ViewTextItem urn = new ViewTextItem(PublicationStructureDS.URN, getConstants().collectionStructureElementURN());
+        ViewTextItem urn = new ViewTextItem(PublicationStructureDS.URN, getConstants().publicationStructureElementURN());
         urn.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -154,15 +154,15 @@ public class PublicationStructurePanel extends HLayout {
     }
 
     private void createEditionForm() {
-        editionForm = new GroupDynamicForm(getConstants().collectionStructureElement());
+        editionForm = new GroupDynamicForm(getConstants().publicationStructureElement());
 
-        RequiredSelectItem type = new RequiredSelectItem(PublicationStructureDS.TYPE, getConstants().collectionStructureElementType());
+        RequiredSelectItem type = new RequiredSelectItem(PublicationStructureDS.TYPE, getConstants().publicationStructureElementType());
         type.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-        ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().collectionStructureElementType());
+        ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().publicationStructureElementType());
         typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
-        ViewTextItem typeViewName = new ViewTextItem(PublicationStructureDS.TYPE_VIEW_NAME, getConstants().collectionStructureElementType());
+        ViewTextItem typeViewName = new ViewTextItem(PublicationStructureDS.TYPE_VIEW_NAME, getConstants().publicationStructureElementType());
 
-        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(PublicationStructureDS.TEXT, getConstants().collectionStructureElementText(), String.valueOf(FORM_ITEM_CUSTOM_WIDTH));
+        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText(), String.valueOf(FORM_ITEM_CUSTOM_WIDTH));
         text.setRequired(true);
         text.setShowIfCondition(new FormItemIfFunction() {
 
@@ -172,7 +172,7 @@ public class PublicationStructurePanel extends HLayout {
             }
         });
 
-        MultilanguageRichTextEditorItem textHtml = new MultilanguageRichTextEditorItem(PublicationStructureDS.TEXT_HTML, getConstants().collectionStructureElementText());
+        MultilanguageRichTextEditorItem textHtml = new MultilanguageRichTextEditorItem(PublicationStructureDS.TEXT_HTML, getConstants().publicationStructureElementText());
         textHtml.setRequired(true);
         textHtml.setWidth(FORM_ITEM_CUSTOM_WIDTH);
         textHtml.setShowIfCondition(new FormItemIfFunction() {
@@ -183,7 +183,7 @@ public class PublicationStructurePanel extends HLayout {
             }
         });
 
-        RequiredTextItem url = new RequiredTextItem(PublicationStructureDS.URL, getConstants().collectionStructureElementURL());
+        RequiredTextItem url = new RequiredTextItem(PublicationStructureDS.URL, getConstants().publicationStructureElementURL());
         url.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -193,7 +193,7 @@ public class PublicationStructurePanel extends HLayout {
         });
         url.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
-        RequiredTextItem urn = new RequiredTextItem(PublicationStructureDS.URN, getConstants().collectionStructureElementURN());
+        RequiredTextItem urn = new RequiredTextItem(PublicationStructureDS.URN, getConstants().publicationStructureElementURN());
         urn.setShowIfCondition(new FormItemIfFunction() {
 
             @Override

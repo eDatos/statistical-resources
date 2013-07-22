@@ -18,7 +18,7 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
     public interface StatisticalResourcesToolStripView extends MetamacToolStripPresenterWidget.MetamacToolStripView {
 
         HasClickHandlers getGoDatasetsList();
-        HasClickHandlers getGoCollectionsList();
+        HasClickHandlers getGoPublicationsList();
         HasClickHandlers getGoQueriesList();
     }
 
@@ -41,7 +41,7 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
             }
         }));
 
-        registerHandler(getView().getGoCollectionsList().addClickHandler(new ClickHandler() {
+        registerHandler(getView().getGoPublicationsList().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {

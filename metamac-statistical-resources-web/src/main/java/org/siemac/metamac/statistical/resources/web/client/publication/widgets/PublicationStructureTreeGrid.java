@@ -46,16 +46,16 @@ public class PublicationStructureTreeGrid extends TreeGrid {
 
         setShowHeader(false);
 
-        TreeGridField nameField = new TreeGridField(PublicationStructureDS.TEXT, getConstants().collectionStructureElementText());
+        TreeGridField nameField = new TreeGridField(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText());
 
         setFields(nameField);
 
         // Menu
 
-        createElementMenuItem = new MenuItem(getConstants().collectionStructureCreateElement());
+        createElementMenuItem = new MenuItem(getConstants().publicationStructureCreateElement());
 
-        deleteElementMenuItem = new MenuItem(getConstants().collectionStructureDeleteElement());
-        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().collectionStructureDeleteElementTitle(), getConstants().collectionStructureDeleteElementConfirmation());
+        deleteElementMenuItem = new MenuItem(getConstants().publicationStructureDeleteElement());
+        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().publicationStructureDeleteElementTitle(), getConstants().publicationStructureDeleteElementConfirmation());
         deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
             @Override
@@ -76,7 +76,7 @@ public class PublicationStructureTreeGrid extends TreeGrid {
         contextMenu.addItem(deleteElementMenuItem);
     }
 
-    public void setCollectionStructure(PublicationStructureDto structureHierarchyDto) {
+    public void setPublicationStructure(PublicationStructureDto structureHierarchyDto) {
         /*
          * if (structureHierarchyDto != null) {
          * TreeNode collectionTreeNode = createCollectionTreeNode(structureHierarchyDto);

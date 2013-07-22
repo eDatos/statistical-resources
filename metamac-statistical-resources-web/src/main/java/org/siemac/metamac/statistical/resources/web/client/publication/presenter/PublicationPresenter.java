@@ -61,7 +61,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
     @TitleFunction
     public static String getTranslatedTitle() {
-        return StatisticalResourcesWeb.getConstants().breadcrumbCollection();
+        return StatisticalResourcesWeb.getConstants().breadcrumbPublication();
     }
 
     public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {

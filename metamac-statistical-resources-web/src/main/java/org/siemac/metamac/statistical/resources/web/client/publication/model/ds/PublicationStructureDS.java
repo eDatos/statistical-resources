@@ -19,7 +19,7 @@ public class PublicationStructureDS extends DataSource {
     public static final String DTO            = "str-dto";
 
     public PublicationStructureDS() {
-        DataSourceIntegerField identifier = new DataSourceIntegerField(ID, StatisticalResourcesWeb.getConstants().collectionStructureElementIdentifier());
+        DataSourceIntegerField identifier = new DataSourceIntegerField(ID, StatisticalResourcesWeb.getConstants().publicationStructureElementIdentifier());
         identifier.setPrimaryKey(true);
         addField(identifier);
     }

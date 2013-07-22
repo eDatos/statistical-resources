@@ -58,7 +58,7 @@ public class PublicationMetadataTabPresenter
 
     public interface PublicationMetadataTabView extends StatisticalResourceMetadataBasePresenter.StatisticalResourceMetadataBaseView, HasUiHandlers<PublicationMetadataTabUiHandlers> {
 
-        void setPublication(PublicationVersionDto collectionDto);
+        void setPublication(PublicationVersionDto publicationDto);
 
         void setPublicationsForReplaces(GetPublicationsResult result);
         void setPublicationsForIsReplacedBy(GetPublicationsResult result);
@@ -130,7 +130,7 @@ public class PublicationMetadataTabPresenter
 
             @Override
             public void onWaitSuccess(SavePublicationResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().collectionSaved());
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().publicationSaved());
                 getView().setPublication(result.getSavedPublicationVersion());
             }
         });

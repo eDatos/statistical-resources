@@ -72,7 +72,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                newPublicationWindow = new NewPublicationWindow(getConstants().collectionCreate());
+                newPublicationWindow = new NewPublicationWindow(getConstants().publicationCreate());
                 newPublicationWindow.setUiHandlers(getUiHandlers());
                 newPublicationWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -90,7 +90,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         });
         newPublicationButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
-        deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().collectionDeleteConfirmationTitle(), getMessages().collectionDeleteConfirmation());
+        deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationDeleteConfirmationTitle(), getMessages().publicationDeleteConfirmation());
         deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
         deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 

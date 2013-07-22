@@ -22,7 +22,7 @@ public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewI
         datasetsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().datasets());
         datasetsButton.setID(StatisticalResourcesToolStripButtonEnum.DATASETS.getValue());
 
-        publicationsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().collections());
+        publicationsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().publications());
         publicationsButton.setID(StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.getValue());
 
         queriesButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().queries());
@@ -39,7 +39,7 @@ public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewI
     }
 
     @Override
-    public HasClickHandlers getGoCollectionsList() {
+    public HasClickHandlers getGoPublicationsList() {
         return publicationsButton;
     }
 

@@ -67,7 +67,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
         });
 
         SectionStackSection lastModifiedPublicationsSection = new SectionStackSection();
-        lastModifiedPublicationsSection.setTitle(getConstants().collectionLastModified());
+        lastModifiedPublicationsSection.setTitle(getConstants().publicationLastModified());
         lastModifiedPublicationsSection.setExpanded(false);
         lastModifiedPublicationsSection.setItems(publicationsListGrid);
         sections.addSection(lastModifiedPublicationsSection);

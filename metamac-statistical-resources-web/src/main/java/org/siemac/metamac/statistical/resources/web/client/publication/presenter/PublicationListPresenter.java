@@ -74,7 +74,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @TitleFunction
     public static String getTranslatedTitle() {
-        return StatisticalResourcesWeb.getConstants().breadcrumbCollections();
+        return StatisticalResourcesWeb.getConstants().breadcrumbPublications();
     }
 
     public interface PublicationListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<PublicationListUiHandlers> {
@@ -113,7 +113,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     @Override
     protected void onReset() {
         super.onReset();
-        SetTitleEvent.fire(this, getConstants().collections());
+        SetTitleEvent.fire(this, getConstants().publications());
     }
 
     @ProxyEvent
@@ -123,8 +123,8 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void retrievePublications(int firstResult, int maxResults, String collection) {
-        retrievePublications(operation != null ? operation.getUrn() : null, firstResult, maxResults, collection);
+    public void retrievePublications(int firstResult, int maxResults, String criteria) {
+        retrievePublications(operation != null ? operation.getUrn() : null, firstResult, maxResults, criteria);
     }
 
     private void retrievePublications(String operationUrn, int firstResult, int maxResults, String criteria) {
@@ -158,7 +158,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
             @Override
             public void onWaitSuccess(DeletePublicationsResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().collectionDeleted());
+                ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().publicationDeleted());
                 retrievePublications(PublicationListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             };
         });

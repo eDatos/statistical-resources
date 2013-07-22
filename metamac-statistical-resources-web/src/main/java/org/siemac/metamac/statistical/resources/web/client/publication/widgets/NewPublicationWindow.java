@@ -27,7 +27,7 @@ public class NewPublicationWindow extends NewStatisticalResourceWindow {
         RequiredTextItem nameItem = new RequiredTextItem(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         nameItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
 
-        CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().collectionCreate());
+        CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().publicationCreate());
 
         form = new CustomDynamicForm();
         form.setMargin(5);

@@ -43,7 +43,7 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
         tabSet = new TabSet();
         tabSet.setMargin(10);
 
-        publicationMetadataTab = new Tab(getConstants().collectionMetadata());
+        publicationMetadataTab = new Tab(getConstants().publicationMetadata());
         publicationStructureTab = new Tab(getConstants().publicationStructure());
 
         tabSet.setTabs(publicationMetadataTab, publicationStructureTab);
