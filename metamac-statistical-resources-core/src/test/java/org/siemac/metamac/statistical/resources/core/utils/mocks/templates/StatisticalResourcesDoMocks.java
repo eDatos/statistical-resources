@@ -266,19 +266,32 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
         mockLifeCycleStatisticalResource(resource);
 
-        resource.setLanguage(mockCodeExternalItem());
-        resource.addLanguage(mockCodeExternalItem());
+        resource.setLanguage(mockCodeExternalItem("language01"));
+        resource.addLanguage(mockCodeExternalItem("language01"));
+        resource.addLanguage(mockCodeExternalItem("language02"));
 
-        // TODO: KEYWORDS
+        resource.setSubtitle(mockInternationalString("subtitle"));
+        resource.setTitleAlternative(mockInternationalString("titleAlternative"));
+        resource.setAbstractLogic(mockInternationalString("abstract"));
+        resource.setKeywords(mockInternationalString("keywords"));
 
         resource.setType(type);
 
-        resource.setCreator(mockOrganizationUnitExternalItem());
-        resource.addPublisher(mockOrganizationUnitExternalItem());
-        resource.setRightsHolder(mockOrganizationUnitExternalItem());
+        resource.setCreator(mockOrganizationUnitExternalItem("creator"));
+        resource.addContributor(mockOrganizationUnitExternalItem("contributor01"));
+        resource.addContributor(mockOrganizationUnitExternalItem("contributor02"));
+        resource.setConformsTo(mockInternationalString("conformsTo"));
+        resource.setConformsToInternal(mockInternationalString("conformsToInternal"));
+        resource.addPublisher(mockOrganizationUnitExternalItem("publisher01"));
+        resource.addPublisher(mockOrganizationUnitExternalItem("publisher02"));
+        resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor01"));
+        resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor02"));
+        resource.addMediator(mockOrganizationUnitExternalItem("mediator01"));
+        resource.addMediator(mockOrganizationUnitExternalItem("mediator02"));
+        resource.setRightsHolder(mockOrganizationUnitExternalItem("rightsHolder"));
         resource.setCopyrightedDate(new DateTime());
-        resource.setLicense(mockInternationalString());
-        resource.setAccessRights(mockInternationalString());
+        resource.setLicense(mockInternationalString("license"));
+        resource.setAccessRights(mockInternationalString("accessRights"));
 
         setSpecialCasesSiemacMetadataStatisticalResourceMock(resource);
 
@@ -288,8 +301,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
         mockVersionableStatisticalResource(resource);
 
-        resource.setMaintainer(mockAgencyExternalItem());
-        
+        resource.setMaintainer(mockAgencyExternalItem("agency01"));
+
         setSpecialCasesLifeCycleStatisticalResourceMock(resource);
         return resource;
     }
@@ -311,8 +324,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
         mockIdentifiableStatisticalResource(resource);
 
-        resource.setTitle(mockInternationalString());
-        resource.setDescription(mockInternationalString());
+        resource.setTitle(mockInternationalString("title"));
+        resource.setDescription(mockInternationalString("description"));
 
         return resource;
     }
@@ -334,7 +347,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public StatisticOfficiality mockStatisticOfficiality(String identifier) {
         StatisticOfficiality mock = new StatisticOfficiality();
-        mock.setDescription(mockInternationalString());
+        mock.setDescription(mockInternationalString("statisticOfficiality"));
         mock.setIdentifier(identifier);
 
         setSpecialCasesStatisticOfficialityMock(mock);
@@ -363,13 +376,17 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public static InternationalString mockInternationalString() {
+        return mockInternationalString(mockString(10));
+    }
+
+    public static InternationalString mockInternationalString(String code) {
         InternationalString internationalString = new InternationalString();
         LocalisedString es = new LocalisedString();
-        es.setLabel(mockString(10) + " en Espanol");
+        es.setLabel(code + " en Espanol");
         es.setLocale("es");
         es.setVersion(Long.valueOf(0));
         LocalisedString en = new LocalisedString();
-        en.setLabel(mockString(10) + " in English");
+        en.setLabel(code + " in English");
         en.setLocale("en");
         en.setVersion(Long.valueOf(0));
         internationalString.addText(es);
@@ -422,21 +439,37 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public static ExternalItem mockStatisticalOperationInstanceExternalItem() {
         String code = mockCode();
+        return mockStatisticalOperationInstanceExternalItem(code);
+    }
+
+    public static ExternalItem mockStatisticalOperationInstanceExternalItem(String code) {
         return mockExternalItem(code, mockStatisticalOperationInstanceUrn(code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
     }
 
     public static ExternalItem mockAgencyExternalItem() {
         String code = mockCode();
+        return mockAgencyExternalItem(code);
+    }
+
+    public static ExternalItem mockAgencyExternalItem(String code) {
         return mockExternalItem(code, mockAgencyUrn(code), TypeExternalArtefactsEnum.AGENCY);
     }
 
     public static ExternalItem mockOrganizationUnitExternalItem() {
         String code = mockCode();
+        return mockOrganizationUnitExternalItem(code);
+    }
+
+    public static ExternalItem mockOrganizationUnitExternalItem(String code) {
         return mockExternalItem(code, mockOrganizationUnitUrn(code), TypeExternalArtefactsEnum.ORGANISATION_UNIT);
     }
 
     public static ExternalItem mockConceptExternalItem() {
         String code = mockCode();
+        return mockConceptExternalItem(code);
+    }
+
+    public static ExternalItem mockConceptExternalItem(String code) {
         return mockExternalItem(code, mockConceptUrn(code), TypeExternalArtefactsEnum.CONCEPT);
     }
 
@@ -452,11 +485,19 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public static ExternalItem mockCodeExternalItem() {
         String code = mockCode();
+        return mockCodeExternalItem(code);
+    }
+
+    public static ExternalItem mockCodeExternalItem(String code) {
         return mockExternalItem(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
     }
 
     public static ExternalItem mockDsdExternalItem() {
         String code = mockCode();
+        return mockDsdExternalItem(code);
+    }
+
+    public static ExternalItem mockDsdExternalItem(String code) {
         return mockExternalItem(code, mockDsdUrn(code), TypeExternalArtefactsEnum.DATASTRUCTURE);
     }
 
@@ -494,7 +535,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         String codeNested = null;
         String uri = CoreCommonConstants.API_LATEST_WITH_SLASHES + code;
         String urnInternal = urn + ":internal";
-        InternationalString title = mockInternationalString();
+        InternationalString title = mockInternationalString(code);
         String managementAppUrl = CoreCommonConstants.URL_SEPARATOR + code;
 
         if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type)) {
@@ -509,7 +550,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         } else {
             fail("Unexpected type of ExternalItem:" + type);
         }
-        
+
         ExternalItem item = mockExternalItem(code, codeNested, uri, urn, urnInternal, type, title, managementAppUrl);
         return item;
     }

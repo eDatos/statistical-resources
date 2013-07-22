@@ -89,7 +89,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return queryVersion;
     }
 
-    
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -117,7 +116,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         }
         return dataset;
     }
-    
 
     // -----------------------------------------------------------------
     // DATASET VERSION
@@ -131,6 +129,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
 
         datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
+        datasetVersion.setBibliographicCitation(mockInternationalString("bibliographicCitation"));
 
         // Mock code
         String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
@@ -170,24 +169,23 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return publicationVersion;
     }
-    
+
     public Chapter mockChapterWithParent() {
         return mockChapterInParentElementLevel(mockChapterElementLevel(mockPublicationVersion()));
     }
 
-    
     public Cube mockDatasetCubeWithParent(Dataset mockDatasetWithGeneratedDatasetVersions) {
         Cube cube = mockDatasetCube(mockDatasetWithGeneratedDatasetVersions);
         cube.getElementLevel().setParent(mockChapter().getElementLevel());
         return cube;
     }
-    
+
     public Cube mockQueryCubeWithParent(Query mockQueryWithGeneratedQueryVersions) {
         Cube cube = mockQueryCube(mockQueryWithGeneratedQueryVersions);
         cube.getElementLevel().setParent(mockChapter().getElementLevel());
         return cube;
     }
-    
+
     // -----------------------------------------------------------------
     // STATISTICAL OFFICIALITY
     // -----------------------------------------------------------------
@@ -198,10 +196,10 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     @Override
     protected void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource) {
-        resource.setStatisticalOperation(mockStatisticalOperationExternalItem());
+        resource.setStatisticalOperation(mockStatisticalOperationExternalItem("statisticalOperation01"));
 
         resource.setResourceCreatedDate(new DateTime());
-        resource.setLastUpdate(resource.getResourceCreatedDate());
+        resource.setLastUpdate(resource.getResourceCreatedDate().plusDays(1));
     }
 
     @Override
