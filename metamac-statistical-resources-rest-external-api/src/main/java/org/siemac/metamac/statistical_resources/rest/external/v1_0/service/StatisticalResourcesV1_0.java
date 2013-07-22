@@ -9,10 +9,29 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 
 @Path("v1.0")
 // IMPORTANT: If a new version of API is added, remember change latest url y urlrewrite.xml in war
 public interface StatisticalResourcesV1_0 {
+
+    @GET
+    @Produces("application/xml")
+    @Path("datasets")
+    Datasets findDatasets(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+            @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces("application/xml")
+    @Path("datasets/{agencyID}")
+    Datasets findDatasets(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
+            @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces("application/xml")
+    @Path("datasets/{agencyID}/{resourceID}")
+    Datasets findDatasets(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy,
+            @QueryParam("limit") String limit, @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
 
     @GET
     @Produces({"application/xml", "application/json"})

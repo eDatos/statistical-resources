@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.service;
 
+import static org.siemac.metamac.rest.exception.utils.RestExceptionUtils.checkParameterNotWildcardAll;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.hasField;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.manageException;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.parseDimensionExpression;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.service.StatisticalResourcesRestExternalCommonService;
@@ -25,9 +27,26 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     private DatasetsDo2RestMapperV10                      datasetsDo2RestMapper;
 
     @Override
+    public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
+        return findDatasets(null, null, null, query, orderBy, limit, offset);
+    }
+
+    @Override
+    public Datasets findDatasets(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        return findDatasets(agencyID, null, null, query, orderBy, limit, offset);
+    }
+
+    @Override
+    public Datasets findDatasets(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+        return findDatasets(agencyID, resourceID, null, query, orderBy, limit, offset);
+    }
+
+    @Override
     public Dataset retrieveDataset(String agencyID, String resourceID, String version, List<String> lang, String fields, String dim) {
         try {
-
             Map<String, List<String>> dimensions = parseDimensionExpression(dim);
             boolean includeMetadata = !hasField(fields, RestExternalConstants.RETRIEVE_DATASET_EXCLUDE_METADATA);
             boolean includeData = !hasField(fields, RestExternalConstants.RETRIEVE_DATASET_EXCLUDE_DATA);
@@ -40,4 +59,20 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
         }
     }
 
+    private Datasets findDatasets(String agencyID, String resourceID, String version, String query, String orderBy, String limit, String offset) {
+        try {
+            // TODO findDatasets
+            return null;
+            // SculptorCriteria sculptorCriteria = conceptsRest2DoMapper.getDatasetCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
+            //
+            // // Find
+            // PagedResult<DatasetVersion> entitiesPagedResult = findDatasetsCore(agencyID, resourceID, version, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+            //
+            // // Transform
+            // Datasets datasets = conceptsDo2RestMapper.toDatasets(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit());
+            // return datasets;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
 }

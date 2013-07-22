@@ -12,20 +12,20 @@ import java.util.Stack;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
-import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.Item;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.common.v1_0.domain.Items;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
@@ -42,8 +42,9 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionValues
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Resources;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
@@ -55,12 +56,14 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
@@ -68,6 +71,8 @@ import org.siemac.metamac.statistical_resources.rest.external.RestExternalConsta
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.BaseDo2RestMapperV10Impl;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -88,7 +93,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
     private DatasetRepositoriesServiceFacade statisticsDatasetRepositoriesServiceFacade;
 
     @Autowired
-    private ConfigurationService             configurationService;
+    private QueriesDo2RestMapperV10          queriesDo2RestMapper;
+
+    @Autowired
+    private CollectionsDo2RestMapperV10      collectionsDo2RestMapper;
 
     @Override
     public Dataset toDataset(DatasetVersion source, Map<String, List<String>> selectedDimensions, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception {
@@ -107,7 +115,6 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setParentLink(toDatasetParentLink(source));
         target.setChildLinks(toDatasetChildLinks(source));
         target.setSelectedLanguages(toLanguages(selectedLanguages));
-        // TODO resto de metadatos públicos
 
         if (includeMetadata) {
             target.setMetadata(toDatasetMetadata(source, selectedLanguages));
@@ -118,19 +125,18 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return target;
     }
 
-    /**
-     * Create list with requested languages and default language in service
-     */
-    private List<String> toSelectedLanguages(List<String> sources) throws MetamacException {
-        List<String> targets = new ArrayList<String>();
-        if (!CollectionUtils.isEmpty(sources)) {
-            targets.addAll(sources);
+    @Override
+    public Resource toResource(DatasetVersion source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
         }
-        String languageDefault = configurationService.retrieveLanguageDefault();
-        if (!targets.contains(languageDefault)) {
-            targets.add(languageDefault);
-        }
-        return targets;
+        Resource target = new Resource();
+        target.setId(source.getSiemacMetadataStatisticalResource().getCode());
+        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
+        target.setKind(RestExternalConstants.KIND_DATASET);
+        target.setSelfLink(toDatasetSelfLink(source));
+        target.setName(toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
+        return target;
     }
 
     private SelectedLanguages toLanguages(List<String> selectedLanguages) {
@@ -145,21 +151,21 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             return null;
         }
         DatasetMetadata target = new DatasetMetadata();
-        // Dsd
-        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
-        target.setRelatedDsd(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
-        // Dimensions
-        target.setDimensions(toDimensions(source.getSiemacMetadataStatisticalResource().getUrn(), dataStructure, selectedLanguages));
 
-        // Other metadata
+        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
+        List<DsdDimension> dimensionsType = DsdProcessor.getDimensions(dataStructure);
+
+        // DatasetResource
         target.setGeographicCoverages(toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
-        // TODO TemporalCoverage, title?
+        target.setTemporalCoverages(toTemporalCoverages(source.getTemporalCoverage(), selectedLanguages));
+        target.setMeasureCoverages(toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));
         target.setGeographicGranularities(toResourcesExternalItemsSrm(source.getGeographicGranularities(), selectedLanguages));
         target.setTemporalGranularities(toResourcesExternalItemsSrm(source.getTemporalGranularities(), selectedLanguages));
         target.setDateStart(toDate(source.getDateStart()));
         target.setDateEnd(toDate(source.getDateEnd()));
         target.setStatisticalUnit(toResourcesExternalItemsSrm(source.getStatisticalUnit(), selectedLanguages));
-        target.setMeasures(toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));
+        target.setRelatedDsd(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
+        target.setDimensions(toDimensions(dimensionsType, source.getSiemacMetadataStatisticalResource().getUrn(), selectedLanguages));
         target.setFormatExtentObservations(toBigInteger(source.getFormatExtentObservations()));
         target.setFormatExtentDimensions(toBigInteger(source.getFormatExtentDimensions()));
         target.setDateNextUpdate(toDate(source.getDateNextUpdate()));
@@ -167,12 +173,33 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setStatisticOfficiality(toStatisticOfficiality(source.getStatisticOfficiality(), selectedLanguages));
         target.setBibliographicCitation(toInternationalString(source.getBibliographicCitation(), selectedLanguages));
 
-        toDatasetMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
-
+        // StatisticalResource and other
+        toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
         return target;
     }
 
-    // TODO item?
+    private Items toTemporalCoverages(List<TemporalCode> sources, List<String> selectedLanguages) {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        Items targets = new Items();
+        for (TemporalCode source : sources) {
+            targets.getItems().add(toTemporalCoverage(source, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getItems().size()));
+        return targets;
+    }
+
+    private Item toTemporalCoverage(TemporalCode source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Item target = new Item();
+        target.setId(source.getIdentifier());
+        target.setName(toInternationalString(source.getTitle(), selectedLanguages));
+        return target;
+    }
+
     private Item toStatisticOfficiality(StatisticOfficiality source, List<String> selectedLanguages) {
         if (source == null) {
             return null;
@@ -183,34 +210,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return target;
     }
 
-    // TODO hacer específicos? TODO si no, pasar Resources a rest-api-1.0
-    private Resources toResourcesExternalItemsSrm(List<ExternalItem> sources, List<String> selectedLanguages) throws MetamacException {
-        if (CollectionUtils.isEmpty(sources)) {
-            return null;
-        }
-        Resources targets = new Resources();
-        for (ExternalItem source : sources) {
-            Resource target = toResourceExternalItemSrm(source, selectedLanguages);
-            targets.getResources().add(target);
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
-        return targets;
-    }
-    // TODO hacer específicos? TODO si no, pasar Resources a rest-api-1.0
-    private Resources toResourcesExternalItemsStatisticalOperations(List<ExternalItem> sources, List<String> selectedLanguages) throws MetamacException {
-        if (CollectionUtils.isEmpty(sources)) {
-            return null;
-        }
-        Resources targets = new Resources();
-        for (ExternalItem source : sources) {
-            Resource target = toResourceExternalItemStatisticalOperations(source, selectedLanguages);
-            targets.getResources().add(target);
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
-        return targets;
-    }
-
-    private void toDatasetMetadataStatisticalResource(SiemacMetadataStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
+    private void toMetadataStatisticalResource(SiemacMetadataStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return;
         }
@@ -234,30 +234,57 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setMediators(toResourcesExternalItemsSrm(source.getMediator(), selectedLanguages));
         target.setNewnessUntilDate(toDate(source.getNewnessUntilDate()));
 
-        // TODO resto de metadatos
-        // SOURCE
-        // REPLACES
-        // IS_REPLACED_BY
-        // REQUIRES
-        // IS_REQUIRED_BY
-        // HAS_PART
-        // IS_PART_OF
-        // IS_REFERENCE_BY
-        // REFERENCES
-        // IS_FORMAT_OF
-        // HAS_FORMAT
+        target.setReplaces(toResource(source.getReplaces(), selectedLanguages));
+        target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
+        target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
+        target.setRequires(toResources(source.getRequires(), selectedLanguages));
+        target.setIsRequiredBy(toResources(source.getIsRequiredBy(), selectedLanguages));
+        target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
+        target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
 
         target.setRightsHolder(toResourceExternalItemSrm(source.getRightsHolder(), selectedLanguages));
-        target.setCopyrightedDate(toDate(source.getCopyrightedDate()));
+        target.setCopyrightDate(toDate(source.getCopyrightedDate()));
         target.setLicense(toInternationalString(source.getLicense(), selectedLanguages));
         target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
 
         // Lifecycle
-        toDatasetMetadataLifeCycleStatisticalResource(source, target, selectedLanguages);
+        toMetadataLifeCycleStatisticalResource(source, target, selectedLanguages);
 
     }
 
-    private void toDatasetMetadataLifeCycleStatisticalResource(LifeCycleStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
+    // TODO a baseMapper
+    private Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages) {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (RelatedResource source : sources) {
+            targets.getResources().add(toResource(source, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
+    }
+
+    // TODO a baseMapper
+    private Resource toResource(RelatedResource source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        switch (source.getType()) {
+            case DATASET_VERSION:
+                return toResource(source.getDatasetVersion(), selectedLanguages);
+            case QUERY_VERSION:
+                return queriesDo2RestMapper.toResource(source.getQueryVersion(), selectedLanguages);
+            case PUBLICATION_VERSION:
+                return collectionsDo2RestMapper.toResource(source.getPublicationVersion(), selectedLanguages);
+            default:
+                logger.error("RelatedResource unsupported: " + source.getType());
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void toMetadataLifeCycleStatisticalResource(LifeCycleStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return;
         }
@@ -265,10 +292,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         // TODO lifecycle?
 
         // Versionable
-        toDatasetMetadataVersionableStatisticalResource(source, target, selectedLanguages);
+        toMetadataVersionableStatisticalResource(source, target, selectedLanguages);
     }
 
-    private void toDatasetMetadataVersionableStatisticalResource(VersionableStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
+    private void toMetadataVersionableStatisticalResource(VersionableStatisticalResource source, DatasetMetadata target, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return;
         }
@@ -321,7 +348,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return source.getRef().getId();
     }
 
-    private Dimensions toDimensions(String datasetVersionUrn, DataStructure dataStructure, List<String> selectedLanguages) throws MetamacException {
+    private Dimensions toDimensions(List<DsdDimension> sources, String datasetVersionUrn, List<String> selectedLanguages) throws MetamacException {
 
         List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
         if (CollectionUtils.isEmpty(dimensionsId)) {
@@ -329,9 +356,8 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
 
         Dimensions targets = new Dimensions();
-        List<DsdDimension> dimensionsType = DsdProcessor.getDimensions(dataStructure);
-        for (DsdDimension dsdDimension : dimensionsType) {
-            targets.getDimensions().add(toDimension(datasetVersionUrn, dsdDimension, selectedLanguages));
+        for (DsdDimension source : sources) {
+            targets.getDimensions().add(toDimension(datasetVersionUrn, source, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
         return targets;
@@ -348,7 +374,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
         target.setName(toInternationalString(conceptIdentity.getNames(), selectedLanguages));
 
-        // Codes
+        // Dimension values
         target.setDimensionValues(toDimensionValues(datasetVersionUrn, source, selectedLanguages));
         return target;
     }
@@ -357,8 +383,6 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         if (dimension == null) {
             return null;
         }
-        DimensionValues targets = new DimensionValues();
-
         List<CodeDimension> coverages = datasetService.retrieveCoverageForDatasetVersionDimension(SERVICE_CONTEXT, datasetVersionUrn, dimension.getComponentId());
         if (CollectionUtils.isEmpty(coverages)) {
             return null;
@@ -367,62 +391,69 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         for (CodeDimension coverage : coverages) {
             coveragesById.put(coverage.getIdentifier(), coverage);
         }
-
+        DimensionValues targets = null;
         if (dimension.getCodelistRepresentationUrn() != null) {
-            toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), targets, selectedLanguages);
+            targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), selectedLanguages);
         } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
-            toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dimension.getConceptSchemeRepresentationUrn(), targets, selectedLanguages);
+            targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dimension.getConceptSchemeRepresentationUrn(), selectedLanguages);
         } else if (dimension.getTimeTextFormatType() != null) {
-            toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatType(), targets, selectedLanguages);
+            targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatType(), selectedLanguages);
         }
 
         return targets;
     }
 
-    private void toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionValues targets, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, List<String> selectedLanguages) throws MetamacException {
         if (codelistUrn == null) {
-            return;
+            return null;
         }
+        EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
         Codelist codelist = srmRestExternalFacade.retrieveCodelistByUrn(codelistUrn);
+        // TODO cambiará. habrá que obtener los codes con otra llamada. actualizar tests (quitar de SrmRestDoMocks)
         for (CodeType code : codelist.getCodes()) {
             String id = code.getId();
             if (!coveragesById.containsKey(id)) {
                 // skip to include only codes in coverage
                 continue;
             }
-            targets.getEnumeratedDimensionValues().add(toEnumeratedDimensionValue(code, selectedLanguages));
+            targets.getValues().add(toEnumeratedDimensionValue(code, selectedLanguages));
         }
-        targets.setTotal(BigInteger.valueOf(targets.getEnumeratedDimensionValues().size()));
+        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
+        return targets;
     }
 
-    private void toEnumeratedDimensionValuesFromConceptScheme(Map<String, CodeDimension> coveragesById, String conceptSchemeUrn, DimensionValues targets, List<String> selectedLanguages)
+    private EnumeratedDimensionValues toEnumeratedDimensionValuesFromConceptScheme(Map<String, CodeDimension> coveragesById, String conceptSchemeUrn, List<String> selectedLanguages)
             throws MetamacException {
         if (conceptSchemeUrn == null) {
-            return;
+            return null;
         }
+        EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
         ConceptScheme conceptScheme = srmRestExternalFacade.retrieveConceptSchemeByUrn(conceptSchemeUrn);
+        // TODO cambiará. habrá que obtener los concepts con otra llamada. actualizar tests (quitar de SrmRestDoMocks)
         for (ConceptType concept : conceptScheme.getConcepts()) {
             String id = concept.getId();
             if (!coveragesById.containsKey(id)) {
                 // skip to include only concepts in coverage
                 continue;
             }
-            targets.getEnumeratedDimensionValues().add(toEnumeratedDimensionValue(concept, selectedLanguages));
+            targets.getValues().add(toEnumeratedDimensionValue(concept, selectedLanguages));
         }
-        targets.setTotal(BigInteger.valueOf(targets.getEnumeratedDimensionValues().size()));
+        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
+        return targets;
     }
 
-    private void toNonEnumeratedDimensionValuesFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType, DimensionValues targets,
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType,
             List<String> selectedLanguages) throws MetamacException {
         if (timeTextFormatType == null) {
-            return;
+            return null;
         }
+        NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
         for (String coverageId : coveragesById.keySet()) {
             CodeDimension codeDimension = coveragesById.get(coverageId);
-            targets.getNonEnumeratedDimensionValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
+            targets.getValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
         }
-        targets.setTotal(BigInteger.valueOf(targets.getNonEnumeratedDimensionValues().size()));
-
+        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
+        return targets;
     }
 
     private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeType source, List<String> selectedLanguages) throws MetamacException {
@@ -461,17 +492,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
         NonEnumeratedDimensionValue target = new NonEnumeratedDimensionValue();
         target.setId(source.getIdentifier());
-        {
-            // TODO name
-            InternationalString name = new InternationalString();
-            for (String selectedLanguage : selectedLanguages) {
-                LocalisedString nameLocalisedString = new LocalisedString();
-                nameLocalisedString.setLang(selectedLanguage);
-                nameLocalisedString.setValue(source.getTitle());
-                name.getTexts().add(nameLocalisedString);
-                target.setName(name);
-            }
-        }
+        target.setName(toInternationalString(source.getTitle(), selectedLanguages));
         return target;
     }
 
@@ -535,7 +556,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
     }
-    // TODO attributes
+
     private DatasetData toDatasetData(DatasetVersion source, List<String> languagesSelected, Map<String, List<String>> dimensionValuesSelected) throws Exception {
         if (source == null) {
             return null;
@@ -551,10 +572,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setObservations(observations);
 
         // Dimensions
-        // List<List<String>> dataFormat = new ArrayList<List<String>>();
-        // dataFormat.add(new ArrayList<String>(dimensions.size()));
-        // dataFormat.add(new ArrayList<String>(dimensions.size()));
-        target.setDimensions(new DimensionRepresentations()); // TODO método privado?
+        target.setDimensions(new DimensionRepresentations());
 
         for (String dimension : dimensions) {
             DimensionRepresentation representation = new DimensionRepresentation();
@@ -571,8 +589,6 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             }
             representation.getRepresentations().setTotal(BigInteger.valueOf(representation.getRepresentations().getRepresentations().size()));
             target.getDimensions().getDimensions().add(representation);
-            // dataFormat.get(0).add(dimensionDto.getIdentifier());
-            // dataFormat.get(1).add(String.valueOf(codesSize));
         }
         target.getDimensions().setTotal(BigInteger.valueOf(target.getDimensions().getDimensions().size()));
 
@@ -603,9 +619,14 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
 
     /**
      * Retrieve observations of selected code
+     * FIXME attributes
      */
     private String toDatasetDataObservations(DatasetVersion source, List<String> dimensions, Map<String, List<String>> dimensionsSelected, Map<String, List<String>> dimensionsCodesSelectedEffective)
             throws Exception {
+
+        if (MapUtils.isEmpty(dimensionsCodesSelectedEffective)) {
+            return null;
+        }
 
         // Search observations in repository
         List<ConditionDimensionDto> conditions = generateConditions(dimensionsSelected);
@@ -616,7 +637,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         for (String dimension : dimensionsCodesSelectedEffective.keySet()) {
             sizeObservation = sizeObservation * dimensionsCodesSelectedEffective.get(dimension).size();
         }
-        // OBSERVATIONS (return sorted) // TODO método privado
+        // OBSERVATIONS (return sorted)
         List<String> dataObservations = new ArrayList<String>(sizeObservation);
         Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
         stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
@@ -646,7 +667,6 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
                 ObservationExtendedDto value = datas.get(id);
                 if (value != null) {
                     dataObservations.add(value.getPrimaryMeasure());
-                    // TODO atributos
                 } else {
                     dataObservations.add(null); // Return observation null
                 }
@@ -692,7 +712,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
 
     private String toDatasetsLink(String agencyID, String resourceID, String version) {
         String resourceSubpath = RestExternalConstants.LINK_SUBPATH_DATASETS;
-        return toStatisticalResourceLink(resourceSubpath, agencyID, resourceID, version);
+        return toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
     private ResourceLink toDatasetSelfLink(DatasetVersion source) {
@@ -701,7 +721,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
 
     private String toDatasetLink(DatasetVersion source) {
         String resourceSubpath = RestExternalConstants.LINK_SUBPATH_DATASETS;
-        return toStatisticalResourceLink(resourceSubpath, source.getSiemacMetadataStatisticalResource());
+        String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
+        String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
+        String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
+        return toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
     private class OrderingStackElement {

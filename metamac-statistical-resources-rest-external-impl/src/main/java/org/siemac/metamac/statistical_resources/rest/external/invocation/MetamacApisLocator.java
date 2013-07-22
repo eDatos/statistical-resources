@@ -15,7 +15,7 @@ public class MetamacApisLocator {
     @Autowired
     private ConfigurationService     configurationService;
 
-    // TODO SRM: cambiar a API externa
+    // FIXME SRM: cambiar a API externa
     private SrmRestInternalFacadeV10 srmRestExternalFacadeV10 = null;
 
     @PostConstruct

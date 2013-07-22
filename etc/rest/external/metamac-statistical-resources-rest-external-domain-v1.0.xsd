@@ -31,17 +31,16 @@
     
     <xs:complexType name="DatasetMetadata">
         <xs:sequence>
-            <xs:element name="dimensions" type="tns:Dimensions" />
-
-            <xs:element name="geographicCoverages" type="tns:Resources" />
-            <xs:element name="temporalCoverages" type="tns:Resources" />
-            <xs:element name="geographicGranularities" type="tns:Resources" />
-            <xs:element name="temporalGranularities" type="tns:Resources" />
+            <xs:element name="geographicCoverages" type="common:Resources" />
+            <xs:element name="temporalCoverages" type="common:Items" />
+            <xs:element name="measureCoverages" type="common:Resources" />
+            <xs:element name="geographicGranularities" type="common:Resources" />
+            <xs:element name="temporalGranularities" type="common:Resources" />
             <xs:element name="dateStart" type="xs:dateTime" />
             <xs:element name="dateEnd" type="xs:dateTime" />
-            <xs:element name="statisticalUnit" type="tns:Resources" minOccurs="0" />
-            <xs:element name="measures" type="tns:Resources" />
+            <xs:element name="statisticalUnit" type="common:Resources" minOccurs="0" />
             <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
+            <xs:element name="dimensions" type="tns:Dimensions" />
             <xs:element name="formatExtentObservations" type="xs:integer" />
             <xs:element name="formatExtentDimensions" type="xs:integer" />
             <xs:element name="dateNextUpdate" type="xs:dateTime" />
@@ -50,9 +49,9 @@
             <xs:element name="bibliographicCitation" type="common:InternationalString" />
 
             <xs:element name="language" type="common:Resource" />
-            <xs:element name="languages" type="tns:Resources" />
+            <xs:element name="languages" type="common:Resources" />
             <xs:element name="statisticalOperation" type="common:Resource" />
-            <xs:element name="statisticalOperationInstances" type="tns:Resources" minOccurs="0" />
+            <xs:element name="statisticalOperationInstances" type="common:Resources" minOccurs="0" />
             <xs:element name="subtitle" type="common:InternationalString" minOccurs="0" />
             <xs:element name="titleAlternative" type="common:InternationalString" minOccurs="0" />
             <xs:element name="abstract" type="common:InternationalString" minOccurs="0" />
@@ -60,18 +59,22 @@
             <xs:element name="type" type="tns:StatisticalResourceType" />
             <xs:element name="maintainer" type="common:Resource" />
             <xs:element name="creator" type="common:Resource" />
-            <xs:element name="contributors" type="tns:Resources" minOccurs="0" />
-            <xs:element name="creation" type="common:Resource" />
+            <xs:element name="contributors" type="common:Resources" minOccurs="0" />
             <xs:element name="createdDate" type="xs:dateTime" />
             <xs:element name="lastUpdate" type="xs:dateTime" />
             <xs:element name="conformsTo" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="publishers" type="tns:Resources" />
-            <xs:element name="publisherContributors" type="tns:Resources" minOccurs="0" />
-            <xs:element name="mediators" type="tns:Resources" minOccurs="0" />
+            <xs:element name="publishers" type="common:Resources" />
+            <xs:element name="publisherContributors" type="common:Resources" minOccurs="0" />
+            <xs:element name="mediators" type="common:Resources" minOccurs="0" />
             <xs:element name="newnessUntilDate" type="xs:dateTime" minOccurs="0" />
-            
+            <xs:element name="replaces" type="common:Resource" />
+            <xs:element name="isReplacedBy" type="common:Resource" />
+            <xs:element name="requires" type="common:Resources" />
+            <xs:element name="isRequiredBy" type="common:Resources" />
+            <xs:element name="hasPart" type="common:Resources" />
+            <xs:element name="isPartOf" type="common:Resources" />
             <xs:element name="rightsHolder" type="common:Resource" />
-            <xs:element name="copyrightedDate" type="xs:dateTime" />
+            <xs:element name="copyrightDate" type="xs:dateTime" />
             <xs:element name="license" type="common:InternationalString" />
             <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
             
@@ -83,13 +86,6 @@
             
         </xs:sequence>
     </xs:complexType>  
-    
-    <xs:complexType name="Resources">
-        <xs:sequence>
-            <xs:element name="resource" type="common:Resource" minOccurs="1" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType>     
     
     <xs:complexType name="VersionRationaleTypes">
         <xs:sequence>
@@ -165,15 +161,30 @@
         </xs:sequence>
     </xs:complexType>      
     
-    <xs:complexType name="DimensionValues">
-        <xs:sequence>
-            <xs:choice>
-                <xs:element name="enumeratedDimensionValue" type="tns:EnumeratedDimensionValue" minOccurs="1" maxOccurs="unbounded" />
-                <xs:element name="nonEnumeratedDimensionValue" type="tns:NonEnumeratedDimensionValue" minOccurs="1" maxOccurs="unbounded" />
-            </xs:choice>
-        </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType> 
+    <xs:complexType name="DimensionValues" abstract="true">
+    </xs:complexType>
+
+    <xs:complexType name="EnumeratedDimensionValues">
+        <xs:complexContent>
+            <xs:extension base="tns:DimensionValues">
+                <xs:sequence>
+                    <xs:element name="value" type="tns:EnumeratedDimensionValue" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NonEnumeratedDimensionValues">
+        <xs:complexContent>
+            <xs:extension base="tns:DimensionValues">
+                <xs:sequence>
+                    <xs:element name="value" type="tns:NonEnumeratedDimensionValue" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     
     <xs:complexType name="EnumeratedDimensionValue">
         <xs:complexContent>
@@ -191,6 +202,17 @@
             <xs:element name="name" type="common:InternationalString" />
         </xs:sequence>
     </xs:complexType>      
+    
+    <!-- Lists -->
+    <xs:complexType name="Datasets">
+        <xs:complexContent>
+            <xs:extension base="common:ListBase">
+                <xs:sequence>
+                    <xs:element name="datasets" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     
     <!-- Enums -->
     <xs:simpleType name="DimensionType">
@@ -225,6 +247,40 @@
         </xs:restriction>
     </xs:simpleType>
     
+    <!-- Criterias -->
+    <xs:simpleType name="DatasetCriteriaPropertyRestriction">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+            <xs:enumeration value="NAME" />
+            <xs:enumeration value="DESCRIPTION" />
+            <xs:enumeration value="GEOGRAPHIC_COVERAGE_URN" />
+            <xs:enumeration value="TEMPORAL_COVERAGE" />
+            <xs:enumeration value="GEOGRAPHIC_GRANULARITY_URN" />
+            <xs:enumeration value="TEMPORAL_GRANULARITY_URN" />
+            <xs:enumeration value="DATE_START" />
+            <xs:enumeration value="DATE_END" />
+            <xs:enumeration value="STATISTICAL_UNIT_URN" />
+            <xs:enumeration value="MEASURE_COVERAGE_URN" />
+            <xs:enumeration value="RELATED_DSD_URN" />
+            <xs:enumeration value="DATE_NEXT_UPDATE" />
+            <xs:enumeration value="STATISTIC_OFFICIALITY" />
+            <xs:enumeration value="STATISTIC_OPERATION_URN" />
+            <xs:enumeration value="SUBTITLE" />
+            <xs:enumeration value="TITLE_ALTERNATIVE" />
+            <xs:enumeration value="KEYWORD" />
+            <xs:enumeration value="NEWNESS_UNTIL_DATE" />
+            <xs:enumeration value="VALID_FROM" />
+            <xs:enumeration value="VALID_TO" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DatasetCriteriaPropertyOrder">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+        </xs:restriction>
+    </xs:simpleType>
+    
     <!-- Elements -->
     <xs:element name="dataset" type="tns:Dataset" />
+    <xs:element name="datasets" type="tns:Datasets" />
 </xs:schema>

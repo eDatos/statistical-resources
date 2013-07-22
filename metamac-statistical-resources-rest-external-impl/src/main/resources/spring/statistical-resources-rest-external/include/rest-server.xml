@@ -15,9 +15,9 @@
 
     <jaxrs:server id="restExternal" address="/statistical-resources">
 
-<!--         <jaxrs:features> -->
-<!--             <cxf:logging /> -->
-<!--         </jaxrs:features> -->
+        <jaxrs:features>
+            <cxf:logging />
+        </jaxrs:features>
 
         <jaxrs:serviceBeans>
             <ref bean="statisticalResourcesRestExternalFacadeV10" />
