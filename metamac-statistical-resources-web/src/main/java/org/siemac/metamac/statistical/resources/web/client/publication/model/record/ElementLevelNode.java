@@ -21,7 +21,7 @@ public class ElementLevelNode extends NavigableTreeNode {
         setAttribute(ElementLevelDS.DESCRIPTION, value);
     }
 
-    public void setOrderInLevel(String value) {
+    public void setOrderInLevel(Long value) {
         setAttribute(ElementLevelDS.ORDER_IN_LEVEL, value);
     }
 

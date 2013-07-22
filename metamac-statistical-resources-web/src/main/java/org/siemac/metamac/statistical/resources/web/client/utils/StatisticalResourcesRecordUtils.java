@@ -9,6 +9,8 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
@@ -55,6 +57,13 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
         elementLevelNode.setUrn(element.getId());
         elementLevelNode.setTitle(InternationalStringUtils.getLocalisedString(element.getTitle()));
         elementLevelNode.setDescription(InternationalStringUtils.getLocalisedString(element.getDescription()));
+        if (element instanceof ChapterDto) {
+            elementLevelNode.setOrderInLevel(((ChapterDto) element).getOrderInLevel());
+            elementLevelNode.setParentChapterUrn(((ChapterDto) element).getParentChapterUrn());
+        } else if (element instanceof CubeDto) {
+            elementLevelNode.setOrderInLevel(((CubeDto) element).getOrderInLevel());
+            elementLevelNode.setParentChapterUrn(((CubeDto) element).getParentChapterUrn());
+        }
         return elementLevelNode;
     }
 
