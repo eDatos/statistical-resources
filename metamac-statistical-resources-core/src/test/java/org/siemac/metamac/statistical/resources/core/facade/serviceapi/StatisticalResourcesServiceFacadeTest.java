@@ -118,13 +118,13 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationVersionCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryVersionCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -381,7 +381,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find all
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, QueryCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, QueryVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
@@ -400,13 +400,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find code
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, QueryCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, QueryVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
             // Restrictions
             String code = queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getCode();
 
-            setCriteriaStringPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.CODE, OperationType.EQ, code);
+            setCriteriaStringPropertyRestriction(metamacCriteria, QueryVersionCriteriaPropertyEnum.CODE, OperationType.EQ, code);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
@@ -422,13 +422,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find URN
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, QueryCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, QueryVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
             // Restrictions
             String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn();
 
-            setCriteriaStringPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.URN, OperationType.EQ, urn);
+            setCriteriaStringPropertyRestriction(metamacCriteria, QueryVersionCriteriaPropertyEnum.URN, OperationType.EQ, urn);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
@@ -444,13 +444,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find title
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, QueryCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, QueryVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
             // Restrictions
             String titleQuery = queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getTitle().getLocalisedLabel("es");
 
-            setCriteriaStringPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.TITLE, OperationType.EQ, titleQuery);
+            setCriteriaStringPropertyRestriction(metamacCriteria, QueryVersionCriteriaPropertyEnum.TITLE, OperationType.EQ, titleQuery);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
@@ -472,7 +472,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
 
-            setCriteriaEnumPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.STATUS, OperationType.EQ, QueryStatusEnum.ACTIVE);
+            setCriteriaEnumPropertyRestriction(metamacCriteria, QueryVersionCriteriaPropertyEnum.STATUS, OperationType.EQ, QueryStatusEnum.ACTIVE);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
@@ -486,7 +486,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
 
-            setCriteriaEnumPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.STATUS, OperationType.EQ, QueryStatusEnum.DISCONTINUED);
+            setCriteriaEnumPropertyRestriction(metamacCriteria, QueryVersionCriteriaPropertyEnum.STATUS, OperationType.EQ, QueryStatusEnum.DISCONTINUED);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
@@ -500,7 +500,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
 
-            setCriteriaEnumPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.STATUS, OperationType.EQ, QueryStatusEnum.PENDING_REVIEW);
+            setCriteriaEnumPropertyRestriction(metamacCriteria, QueryVersionCriteriaPropertyEnum.STATUS, OperationType.EQ, QueryStatusEnum.PENDING_REVIEW);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
@@ -515,8 +515,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
 
             MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
-            disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QueryCriteriaPropertyEnum.STATUS.name(), QueryStatusEnum.PENDING_REVIEW, OperationType.EQ));
-            disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QueryCriteriaPropertyEnum.STATUS.name(), QueryStatusEnum.DISCONTINUED, OperationType.EQ));
+            disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QueryVersionCriteriaPropertyEnum.STATUS.name(), QueryStatusEnum.PENDING_REVIEW, OperationType.EQ));
+            disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QueryVersionCriteriaPropertyEnum.STATUS.name(), QueryStatusEnum.DISCONTINUED, OperationType.EQ));
             metamacCriteria.setRestriction(disjunction);
 
             MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
@@ -1255,7 +1255,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find All
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, PublicationVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
             MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
@@ -1281,9 +1281,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find CODE
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, PublicationVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaOrderEnum.CODE, OperationType.EQ, publicationVersionOperation1Code3.getSiemacMetadataStatisticalResource()
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationVersionCriteriaOrderEnum.CODE, OperationType.EQ, publicationVersionOperation1Code3.getSiemacMetadataStatisticalResource()
                     .getCode());
 
             MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
@@ -1304,7 +1304,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find URN
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, PublicationVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, DatasetVersionCriteriaPropertyEnum.URN, OperationType.EQ, publicationVersionOperation1Code3.getSiemacMetadataStatisticalResource()
                     .getUrn());
@@ -1330,7 +1330,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Find PROC STATUS
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.PROC_STATUS, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, PublicationVersionCriteriaOrderEnum.PROC_STATUS, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setDisjunctionCriteriaEnumPropertyRestriction(metamacCriteria, DatasetVersionCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
@@ -1344,7 +1344,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
         {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
-            addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            addOrderToCriteria(metamacCriteria, PublicationVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, DatasetVersionCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
 
@@ -1375,7 +1375,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, DatasetVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationVersionCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
             MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -1392,7 +1392,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, DatasetVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationVersionCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
             MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -1410,7 +1410,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             addOrderToCriteria(metamacCriteria, DatasetVersionCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
+            setCriteriaStringPropertyRestriction(metamacCriteria, PublicationVersionCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
             MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(0, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -1430,9 +1430,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         String code = "000003";
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
-        addOrderToCriteria(metamacCriteria, PublicationCriteriaOrderEnum.STATISTICAL_OPERATION_URN, OrderTypeEnum.ASC);
+        addOrderToCriteria(metamacCriteria, PublicationVersionCriteriaOrderEnum.STATISTICAL_OPERATION_URN, OrderTypeEnum.ASC);
         setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
-        setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.CODE, OperationType.ILIKE, code);
+        setCriteriaStringPropertyRestriction(metamacCriteria, PublicationVersionCriteriaPropertyEnum.CODE, OperationType.ILIKE, code);
 
         MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
         assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QuerySculptorCriteria2MetamacCriteriaMapperImpl implements QuerySculptorCriteria2MetamacCriteriaMapper {
+public class QueryVersionSculptorCriteria2MetamacCriteriaMapperImpl implements QueryVersionSculptorCriteria2MetamacCriteriaMapper {
 
     @Autowired
     private QueryDo2DtoMapper              do2DtoMapper;

@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.publication.criteria.enums;
 
-public enum PublicationCriteriaOrderEnum {
+public enum PublicationVersionCriteriaOrderEnum {
 
     CODE, URN, TITLE, PROC_STATUS, STATISTICAL_OPERATION_URN;
 
@@ -8,7 +8,7 @@ public enum PublicationCriteriaOrderEnum {
         return name();
     }
 
-    public static PublicationCriteriaOrderEnum fromValue(String v) {
+    public static PublicationVersionCriteriaOrderEnum fromValue(String v) {
         return valueOf(v);
     }
 

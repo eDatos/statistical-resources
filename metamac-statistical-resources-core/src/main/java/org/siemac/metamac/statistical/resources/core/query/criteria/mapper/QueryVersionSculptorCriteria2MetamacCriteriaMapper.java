@@ -6,7 +6,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
-public interface QuerySculptorCriteria2MetamacCriteriaMapper {
+public interface QueryVersionSculptorCriteria2MetamacCriteriaMapper {
 
     public MetamacCriteriaResult<QueryVersionDto> pageResultToMetamacCriteriaResultQuery(PagedResult<QueryVersion> source, Integer pageSize) throws MetamacException;
 

@@ -89,6 +89,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return queryVersion;
     }
 
+    
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -116,6 +117,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         }
         return dataset;
     }
+    
 
     // -----------------------------------------------------------------
     // DATASET VERSION
@@ -127,10 +129,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
-        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
-        String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getCode();
 
-        datasetVersion.setBibliographicCitation(mockInternationalStringMetadata(datasetCode, "bibliographicCitation"));
+        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
 
         // Mock code
         String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
@@ -170,23 +170,24 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return publicationVersion;
     }
-
+    
     public Chapter mockChapterWithParent() {
         return mockChapterInParentElementLevel(mockChapterElementLevel(mockPublicationVersion()));
     }
 
+    
     public Cube mockDatasetCubeWithParent(Dataset mockDatasetWithGeneratedDatasetVersions) {
         Cube cube = mockDatasetCube(mockDatasetWithGeneratedDatasetVersions);
         cube.getElementLevel().setParent(mockChapter().getElementLevel());
         return cube;
     }
-
+    
     public Cube mockQueryCubeWithParent(Query mockQueryWithGeneratedQueryVersions) {
         Cube cube = mockQueryCube(mockQueryWithGeneratedQueryVersions);
         cube.getElementLevel().setParent(mockChapter().getElementLevel());
         return cube;
     }
-
+    
     // -----------------------------------------------------------------
     // STATISTICAL OFFICIALITY
     // -----------------------------------------------------------------
@@ -197,12 +198,12 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     @Override
     protected void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource) {
-        resource.setStatisticalOperation(mockStatisticalOperationExternalItem("statisticalOperation01"));
+        resource.setStatisticalOperation(mockStatisticalOperationExternalItem());
 
-        DateTime today = new DateTime();
-        resource.setResourceCreatedDate(today.minusDays(1));
-        resource.setLastUpdate(today);
+        resource.setResourceCreatedDate(new DateTime());
+        resource.setLastUpdate(resource.getResourceCreatedDate());
     }
+
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
         resource.setProcStatus(ProcStatusEnum.DRAFT);

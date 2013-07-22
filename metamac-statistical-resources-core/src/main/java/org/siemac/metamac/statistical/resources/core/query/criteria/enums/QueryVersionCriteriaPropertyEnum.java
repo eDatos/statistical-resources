@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.query.criteria.enums;
 
-public enum QueryCriteriaPropertyEnum {
+public enum QueryVersionCriteriaPropertyEnum {
 
     CODE, TITLE, DESCRIPTION, URN, STATUS, PROC_STATUS;
 
@@ -8,7 +8,7 @@ public enum QueryCriteriaPropertyEnum {
         return name();
     }
 
-    public static QueryCriteriaPropertyEnum fromValue(String v) {
+    public static QueryVersionCriteriaPropertyEnum fromValue(String v) {
         return valueOf(v);
     }
 }

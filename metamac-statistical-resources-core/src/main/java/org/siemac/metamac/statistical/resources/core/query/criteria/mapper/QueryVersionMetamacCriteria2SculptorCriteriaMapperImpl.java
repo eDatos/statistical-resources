@@ -8,24 +8,23 @@ import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCr
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryVersionCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMetamacCriteria2SculptorCriteriaMapper {
+public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements QueryVersionMetamacCriteria2SculptorCriteriaMapper {
 
-    private MetamacCriteria2SculptorCriteria<Query> queryCriteriaMapper = null;
+    private MetamacCriteria2SculptorCriteria<QueryVersion> queryCriteriaMapper = null;
 
     /**************************************************************************
      * Constructor
      **************************************************************************/
 
-    public QueryMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<Query>(Query.class, QueryCriteriaOrderEnum.class, QueryCriteriaPropertyEnum.class, new QueryCriteriaCallback());
+    public QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
+        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<QueryVersion>(QueryVersion.class, QueryVersionCriteriaOrderEnum.class, QueryVersionCriteriaPropertyEnum.class, new QueryCriteriaCallback());
     }
 
     /**************************************************************************
@@ -33,7 +32,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
      **************************************************************************/
 
     @Override
-    public MetamacCriteria2SculptorCriteria<Query> getQueryCriteriaMapper() {
+    public MetamacCriteria2SculptorCriteria<QueryVersion> getQueryCriteriaMapper() {
         return queryCriteriaMapper;
     }
 
@@ -45,7 +44,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
 
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            QueryCriteriaPropertyEnum propertyEnum = QueryCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
+            QueryVersionCriteriaPropertyEnum propertyEnum = QueryVersionCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case CODE:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue());
@@ -66,7 +65,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
 
         @Override
         public Property<QueryVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            QueryCriteriaOrderEnum propertyOrderEnum = QueryCriteriaOrderEnum.fromValue(order.getPropertyName());
+            QueryVersionCriteriaOrderEnum propertyOrderEnum = QueryVersionCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
                 case CODE:
                     return QueryVersionProperties.lifeCycleStatisticalResource().code();

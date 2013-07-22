@@ -8,8 +8,8 @@ import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCr
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationVersionCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
      **************************************************************************/
 
     public PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        publicationVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<PublicationVersion>(PublicationVersion.class, PublicationCriteriaOrderEnum.class, PublicationCriteriaPropertyEnum.class, new PublicationVersionCriteriaCallback());
+        publicationVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<PublicationVersion>(PublicationVersion.class, PublicationVersionCriteriaOrderEnum.class, PublicationVersionCriteriaPropertyEnum.class, new PublicationVersionCriteriaCallback());
     }
 
     /**************************************************************************
@@ -44,7 +44,7 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
 
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            PublicationCriteriaPropertyEnum propertyEnum = PublicationCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
+            PublicationVersionCriteriaPropertyEnum propertyEnum = PublicationVersionCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case CODE:
                     return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().code(), propertyRestriction.getStringValue());
@@ -63,7 +63,7 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
 
         @Override
         public Property<PublicationVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            PublicationCriteriaOrderEnum propertyOrderEnum = PublicationCriteriaOrderEnum.fromValue(order.getPropertyName());
+            PublicationVersionCriteriaOrderEnum propertyOrderEnum = PublicationVersionCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
                 case CODE:
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().code();

@@ -43,8 +43,8 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapper;
-import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryMetamacCriteria2SculptorCriteriaMapper;
-import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QuerySculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryVersionMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
@@ -79,10 +79,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private PublicationDto2DoMapper                                  publicationDto2DoMapper;
 
     @Autowired
-    private QueryMetamacCriteria2SculptorCriteriaMapper              queryMetamacCriteria2SculptorCriteriaMapper;
+    private QueryVersionMetamacCriteria2SculptorCriteriaMapper       queryVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QuerySculptorCriteria2MetamacCriteriaMapper              querySculptorCriteria2MetamacCriteriaMapper;
+    private QueryVersionSculptorCriteria2MetamacCriteriaMapper       queryVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
     private DatasetVersionMetamacCriteria2SculptorCriteriaMapper     datasetVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -209,13 +209,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canFindQueriesVersionsByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = queryVersionMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
         PagedResult<QueryVersion> result = getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<QueryVersionDto> metamacCriteriaResult = querySculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
+        MetamacCriteriaResult<QueryVersionDto> metamacCriteriaResult = queryVersionSculptorCriteria2MetamacCriteriaMapper
+                .pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
     }
@@ -332,11 +333,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         SculptorCriteria sculptorCriteria = datasetMetamacCriteria2SculptorCriteriaMapper.getDatasetCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
-        
+
         // Add condition for latest datasetVersions
-        ConditionalCriteria latestDatasetVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE).buildSingle();
+        ConditionalCriteria latestDatasetVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
+                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE).buildSingle();
         sculptorCriteria.getConditions().add(latestDatasetVersionRestriction);
-        
+
         // Find
         PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
