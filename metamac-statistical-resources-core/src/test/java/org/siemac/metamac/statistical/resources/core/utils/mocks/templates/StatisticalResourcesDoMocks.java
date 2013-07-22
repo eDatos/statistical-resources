@@ -273,7 +273,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setSubtitle(mockInternationalString("subtitle"));
         resource.setTitleAlternative(mockInternationalString("titleAlternative"));
         resource.setAbstractLogic(mockInternationalString("abstract"));
-        resource.setKeywords(mockInternationalString("keywords"));
+        resource.setKeywords(mockInternationalString("keyword1 keyword2 keyword3"));
 
         resource.setType(type);
 

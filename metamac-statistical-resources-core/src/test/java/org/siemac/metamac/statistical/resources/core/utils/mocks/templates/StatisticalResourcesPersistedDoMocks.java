@@ -198,10 +198,10 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource) {
         resource.setStatisticalOperation(mockStatisticalOperationExternalItem("statisticalOperation01"));
 
-        resource.setResourceCreatedDate(new DateTime());
-        resource.setLastUpdate(resource.getResourceCreatedDate().plusDays(1));
+        DateTime today = new DateTime();
+        resource.setResourceCreatedDate(today.minusDays(1));
+        resource.setLastUpdate(today);
     }
-
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
         resource.setProcStatus(ProcStatusEnum.DRAFT);
