@@ -5,9 +5,11 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
@@ -15,10 +17,16 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.TemporalCodeRecord;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
 public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.common.client.utils.RecordUtils {
+
+    //
+    // DATASETS
+    //
 
     public static DatasetRecord getDatasetRecord(DatasetVersionDto datasetDto) {
         DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getCode(), getLocalisedString(datasetDto.getTitle()), getLocalisedString(datasetDto.getDescription()),
@@ -31,17 +39,36 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
         return record;
     }
 
+    //
+    // PUBLICATIONS
+    //
+
     public static PublicationRecord getPublicationRecord(PublicationVersionDto publicationDto) {
         PublicationRecord record = new PublicationRecord(publicationDto.getId(), publicationDto.getCode(), getLocalisedString(publicationDto.getTitle()),
                 getLocalisedString(publicationDto.getDescription()), CommonUtils.getProcStatusName(publicationDto), publicationDto.getVersionLogic(), publicationDto.getUrn(), publicationDto);
         return record;
     }
 
+    public static ElementLevelNode getElementLevelNode(ElementLevelDto elementLevelDto) {
+        ElementLevelNode elementLevelNode = new ElementLevelNode();
+        NameableStatisticalResourceDto element = elementLevelDto.getChapter() != null ? elementLevelDto.getChapter() : elementLevelDto.getCube();
+        elementLevelNode.setUrn(element.getId());
+        elementLevelNode.setTitle(InternationalStringUtils.getLocalisedString(element.getTitle()));
+        elementLevelNode.setDescription(InternationalStringUtils.getLocalisedString(element.getDescription()));
+        return elementLevelNode;
+    }
+
+    //
+    // QUERIES
+    //
+
     public static QueryRecord getQueryRecord(QueryVersionDto queryDto) {
         QueryRecord record = new QueryRecord(queryDto.getId(), queryDto.getCode(), getLocalisedString(queryDto.getTitle()), CommonUtils.getProcStatusName(queryDto),
                 CommonUtils.getQueryTypeName(queryDto), queryDto.getVersionLogic(), queryDto.getUrn(), queryDto);
         return record;
     }
+
+    // Codes
 
     public static CodeItemRecord getCodeItemRecord(CodeItemDto codeItemDto) {
         CodeItemRecord record = new CodeItemRecord();
