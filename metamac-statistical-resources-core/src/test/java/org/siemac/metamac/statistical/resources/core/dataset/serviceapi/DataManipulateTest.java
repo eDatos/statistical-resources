@@ -18,7 +18,6 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -176,7 +175,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         clearDataBase(); // Clear dirty database
     }
 
-    @After
+    // @After
     public void onAfter() throws Exception {
         clearDataBase(); // Clear dirty database
     }

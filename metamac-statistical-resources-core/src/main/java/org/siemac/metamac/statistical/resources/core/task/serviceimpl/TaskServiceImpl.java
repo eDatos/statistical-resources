@@ -198,7 +198,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         try {
             processDatasets(taskInfoDataset, task.getCreatedDate());
         } catch (Exception e) {
-            // Concert parser exception to metamac exception
+            // Convert parser exception to metamac exception
             MetamacException throwableMetamacException = null;
             if (e instanceof MetamacException) {
                 throwableMetamacException = (MetamacException) e;
@@ -206,7 +206,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 throwableMetamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
                         .build();
             }
-            // markTaskAsFailed(ctx, taskInfoDataset.getJobKey(), throwableMetamacException); // Mark as failed
             throw throwableMetamacException;
         }
 
@@ -214,9 +213,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public boolean existTaskInDataset(ServiceContext ctx, String datasetId) throws MetamacException {
+    public boolean existImportationTaskInDataset(ServiceContext ctx, String datasetId) throws MetamacException {
         try {
-            // TODO REFACTORIZAT EL METODO por existImportationTaskInDataset
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
             return sched.checkExists(createJobKeyForImportationDataset(datasetId));
         } catch (SchedulerException e) {
@@ -254,7 +252,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, job);
         getTaskRepository().delete(task);
 
-        // TODO envio al gesto de avisos que la importación fue correcta
+        // TODO envio al gestor de avisos que la importación fue correcta
     }
 
     @Override
@@ -285,7 +283,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Override
     public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
-        // Validation TODO
+        // Validation
+        taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset);
 
         // Job keys
         JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId());

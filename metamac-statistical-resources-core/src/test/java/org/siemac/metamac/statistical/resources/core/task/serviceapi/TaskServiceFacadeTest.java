@@ -17,24 +17,21 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
 
     @Override
     public void testExecuteImportationTask() throws Exception {
-        // TODO Auto-generated method stub
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testMarkTaskAsFailed() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testMarkAllInProgressTaskToFailed() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Already checked without test
     }
 
     @Override
     public void testExecuteRecoveryImportationTask() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 }

@@ -12,7 +12,6 @@ import java.util.Set;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.StringUtils;
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
@@ -133,19 +132,11 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
         datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
 
-        try {
-            return datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
-        } catch (ApplicationException e) {
-            // TODO Lanzar excepcion, mark failed?
-            e.printStackTrace();
-        }
-
-        return null;
+        return datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
     }
 
     @Override
     public void finalizeDatasetCreation(DataContainer dataContainer) throws Exception {
-        // TODO pendiente de la gestión de errores, de alberto
     }
 
     @Override
@@ -169,7 +160,6 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         for (AttributeDto attributeDto : attributeDtos) {
 
             if (this.attributesProcessorMap.containsKey(attributeDto.getAttributeId())) {
-                // TODO validate attribute
                 String attributeCustomKey = metamac2StatRepoMapper.generateAttributeKeyInAttachmentLevel(attributeDto, this.attributesProcessorMap.get(attributeDto.getAttributeId())
                         .getAttributeRelationship(), this.groupDimensionMapInfo);
 
@@ -179,22 +169,20 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
                     compactedAttributes.add(attributeDto);
                 }
             } else {
-                // TODO Error check
+                // This is a validation error but for performance improvements the validation runs later
             }
         }
 
         // Persist Observations and attributes
         if (!dataDtos.isEmpty()) {
             checkObservation(dataDtos);
-            datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos); // TODO para perfomance si sabesmos que no hay colision usar el
-                                                                                                                                // create sin update
+            datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos);
         }
 
-        if (!attributeDtos.isEmpty()) {
-            checkAttributes(attributeDtos);
-            datasetRepositoriesServiceFacade.createAttributes(datasetRepositoryDto.getDatasetId(), attributeDtos);
+        if (!compactedAttributes.isEmpty()) {
+            checkAttributes(compactedAttributes);
+            datasetRepositoriesServiceFacade.createAttributes(datasetRepositoryDto.getDatasetId(), compactedAttributes);
         }
-
     }
 
     @Override

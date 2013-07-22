@@ -44,7 +44,7 @@ public class TaskServiceInvocationValidatorImpl {
         checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
     }
 
-    public static void checkExistTaskInDataset(String datasetId, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkExistImportationTaskInDataset(String datasetId, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetId, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
     }
 

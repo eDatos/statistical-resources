@@ -32,7 +32,8 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
 @Component(value = "metamac2StatRepoMapper")
 public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
 
-    public static String DATA_SOURCE_ID = "DATA_SOURCE_ID";
+    public static String DATA_SOURCE_ID              = "DATA_SOURCE_ID";
+    public static String ATTRIBUTE_GEN_KEY_SEPARATOR = ":";
 
     @Override
     public void populateDatas(DataContainer dataContainer, Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap, List<ObservationExtendedDto> dataDtos, List<AttributeDto> attributeDtos,
@@ -189,7 +190,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
         if (attributeRelationship.getPrimaryMeasure() != null) {
             // Nothing: the key is full
             for (CodeDimensionDto codeDimensionDto : attributeDto.getCodesDimension()) {
-                customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
+                customKeyAttribute.append(ATTRIBUTE_GEN_KEY_SEPARATOR).append(codeDimensionDto.getDimensionId()).append(ATTRIBUTE_GEN_KEY_SEPARATOR).append(codeDimensionDto.getCodeDimensionId());
             }
             return customKeyAttribute.toString();
         }
@@ -207,7 +208,8 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                     // Find the key value
                     if (componentInfo.getCode().equals(codeDimensionDto.getDimensionId())) {
                         // codeDimensionDtos.add(codeDimensionDto);
-                        customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
+                        customKeyAttribute.append(ATTRIBUTE_GEN_KEY_SEPARATOR).append(codeDimensionDto.getDimensionId()).append(ATTRIBUTE_GEN_KEY_SEPARATOR)
+                                .append(codeDimensionDto.getCodeDimensionId());
                         break;
                     }
                 }
@@ -229,7 +231,8 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
                     // Find the key value
                     if (dimensionId.equals(codeDimensionDto.getDimensionId())) {
                         // codeDimensionDtosMap.put(codeDimensionDto.getDimensionId(), codeDimensionDto);
-                        customKeyAttribute.append(codeDimensionDto.getDimensionId()).append(codeDimensionDto.getCodeDimensionId());
+                        customKeyAttribute.append(ATTRIBUTE_GEN_KEY_SEPARATOR).append(codeDimensionDto.getDimensionId()).append(ATTRIBUTE_GEN_KEY_SEPARATOR)
+                                .append(codeDimensionDto.getCodeDimensionId());
                         break;
                     }
                 }
@@ -244,7 +247,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
             // attributeDto.getCodesDimension().addAll(codeDimensionDtosMap.values());
         }
 
-        return StringUtils.EMPTY;
+        return customKeyAttribute.toString();
     }
 
     /**************************************************************************

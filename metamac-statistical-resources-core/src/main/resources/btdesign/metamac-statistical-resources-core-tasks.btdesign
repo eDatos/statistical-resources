@@ -37,8 +37,8 @@ Application DatasetsStatisticalResources {
     		"Perform a rollback in a importation task"
     		processRollbackImportationTask(String recoveryJobKey, @TaskInfoDataset taskInfoDataset);
     		
-    		"Check if exists a job task in the @param datasetId"
-    		boolean existTaskInDataset(String datasetId) throws MetamacException;
+    		"Check if exists a importation job task in the @param datasetId"
+    		boolean existImportationTaskInDataset(String datasetId) throws MetamacException;
 
     		
     		"Creates a task"

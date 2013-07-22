@@ -16,69 +16,58 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     protected TaskService taskService;
 
     @Override
-    // @Test
     public void testPlanifyImportationDataset() throws Exception {
-        // TODO Auto-generated method stub
+        // See integration test in DataManipulateTest
     }
 
     @Override
-    // @Test
     public void testProcessImportationTask() throws Exception {
-        // TODO Auto-generated method stub
+        // See integration test in DataManipulateTest
     }
 
     @Override
     // @Test
-    public void testExistTaskInDataset() throws Exception {
-        // TODO Auto-generated method stub
-
+    public void testExistImportationTaskInDataset() throws Exception {
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testMarkTaskAsFinished() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testMarkTaskAsFailed() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testCreateTask() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testUpdateTask() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testRetrieveTaskByJob() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testFindTasksByCondition() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testPlanifyRecoveryImportDataset() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testProcessRollbackImportationTask() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Already checked without test
     }
 }
