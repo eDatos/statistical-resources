@@ -1,20 +1,11 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
-import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationStructureDS;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
-import com.smartgwt.client.types.Autofit;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
-import com.smartgwt.client.widgets.menu.events.ClickHandler;
-import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tree.TreeGrid;
-import com.smartgwt.client.widgets.tree.TreeGridField;
 
 public class PublicationStructureTreeGrid extends TreeGrid {
 
@@ -27,52 +18,52 @@ public class PublicationStructureTreeGrid extends TreeGrid {
 
     public PublicationStructureTreeGrid() {
 
-        setAutoFitMaxRecords(10);
-        setAutoFitData(Autofit.VERTICAL);
-
-        setShowOpenIcons(false);
-        setShowDropIcons(false);
-        setShowSelectedStyle(true);
-        setShowPartialSelection(true);
-        setCascadeSelection(false);
-        setCanSort(false);
-        setShowConnectors(true);
-        setShowHeader(true);
-        setLoadDataOnDemand(false);
-        setSelectionType(SelectionStyle.SINGLE);
-        setShowCellContextMenus(true);
-        setLeaveScrollbarGap(Boolean.FALSE);
-
-        setShowHeader(false);
-
-        TreeGridField nameField = new TreeGridField(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText());
-
-        setFields(nameField);
-
-        // Menu
-
-        createElementMenuItem = new MenuItem(getConstants().publicationStructureCreateElement());
-
-        deleteElementMenuItem = new MenuItem(getConstants().publicationStructureDeleteElement());
-        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().publicationStructureDeleteElementTitle(), getConstants().publicationStructureDeleteElementConfirmation());
-        deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                // TODO delete element
-            }
-        });
-        deleteElementMenuItem.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(MenuItemClickEvent event) {
-                deleteConfirmationWindow.show();
-            }
-        });
-
-        contextMenu = new Menu();
-        contextMenu.addItem(createElementMenuItem);
-        contextMenu.addItem(deleteElementMenuItem);
+        // setAutoFitMaxRecords(10);
+        // setAutoFitData(Autofit.VERTICAL);
+        //
+        // setShowOpenIcons(false);
+        // setShowDropIcons(false);
+        // setShowSelectedStyle(true);
+        // setShowPartialSelection(true);
+        // setCascadeSelection(false);
+        // setCanSort(false);
+        // setShowConnectors(true);
+        // setShowHeader(true);
+        // setLoadDataOnDemand(false);
+        // setSelectionType(SelectionStyle.SINGLE);
+        // setShowCellContextMenus(true);
+        // setLeaveScrollbarGap(Boolean.FALSE);
+        //
+        // setShowHeader(false);
+        //
+        // TreeGridField nameField = new TreeGridField(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText());
+        //
+        // setFields(nameField);
+        //
+        // // Menu
+        //
+        // createElementMenuItem = new MenuItem(getConstants().publicationStructureCreateElement());
+        //
+        // deleteElementMenuItem = new MenuItem(getConstants().publicationStructureDeleteElement());
+        // deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().publicationStructureDeleteElementTitle(), getConstants().publicationStructureDeleteElementConfirmation());
+        // deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+        //
+        // @Override
+        // public void onClick(ClickEvent event) {
+        // // TODO delete element
+        // }
+        // });
+        // deleteElementMenuItem.addClickHandler(new ClickHandler() {
+        //
+        // @Override
+        // public void onClick(MenuItemClickEvent event) {
+        // deleteConfirmationWindow.show();
+        // }
+        // });
+        //
+        // contextMenu = new Menu();
+        // contextMenu.addItem(createElementMenuItem);
+        // contextMenu.addItem(deleteElementMenuItem);
     }
 
     public void setPublicationStructure(PublicationStructureDto structureHierarchyDto) {
