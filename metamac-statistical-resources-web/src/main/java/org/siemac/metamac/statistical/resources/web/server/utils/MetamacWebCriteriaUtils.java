@@ -23,7 +23,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
-import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -79,9 +79,9 @@ public class MetamacWebCriteriaUtils {
 
             MetamacCriteriaDisjunctionRestriction datasetCriteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
             if (StringUtils.isNotBlank(criteria.getCriteria())) {
-                datasetCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
-                datasetCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
-                datasetCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.URN.name(), criteria.getCriteria(), OperationType.ILIKE));
+                datasetCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetVersionCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
+                datasetCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetVersionCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
+                datasetCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetVersionCriteriaPropertyEnum.URN.name(), criteria.getCriteria(), OperationType.ILIKE));
             }
             conjunctionRestriction.getRestrictions().add(datasetCriteriaDisjuction);
 
@@ -89,11 +89,11 @@ public class MetamacWebCriteriaUtils {
 
             if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
                 conjunctionRestriction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ));
+                        new MetamacCriteriaPropertyRestriction(DatasetVersionCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ));
             }
 
             if (criteria.isOnlyLastVersion()) {
-                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ));
+                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(DatasetVersionCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ));
             }
 
         }

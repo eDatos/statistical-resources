@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
@@ -16,6 +17,8 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
@@ -43,7 +46,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     public interface PublicationStructureTabView extends View {
 
-        void setPublication(PublicationVersionDto publicationDto);
+        void setPublicationVersion(PublicationVersionDto publicationVersionDto);
+        void setPublicationStructure(PublicationStructureDto publicationStructureDto);
     }
 
     @ProxyCodeSplit
@@ -77,8 +81,9 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            String publicationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
-            retrievePublication(publicationUrn);
+            String publicationVersionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
+            retrievePublicationVersion(publicationVersionUrn);
+            retrievePublicationStructure(publicationVersionUrn);
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -101,8 +106,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         }
     }
 
-    private void retrievePublication(String urn) {
-        dispatcher.execute(new GetPublicationAction(urn), new WaitingAsyncCallback<GetPublicationResult>() {
+    private void retrievePublicationVersion(String publicationVersionUrn) {
+        dispatcher.execute(new GetPublicationAction(publicationVersionUrn), new WaitingAsyncCallback<GetPublicationResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -110,7 +115,21 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             }
             @Override
             public void onWaitSuccess(GetPublicationResult result) {
-                getView().setPublication(result.getPublicationVersionDto());
+                getView().setPublicationVersion(result.getPublicationVersionDto());
+            }
+        });
+    }
+
+    private void retrievePublicationStructure(String publicationVersionUrn) {
+        dispatcher.execute(new GetPublicationStructureAction(publicationVersionUrn), new WaitingAsyncCallback<GetPublicationStructureResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(GetPublicationStructureResult result) {
+                getView().setPublicationStructure(result.getPublicationStructureDto());
             }
         });
     }

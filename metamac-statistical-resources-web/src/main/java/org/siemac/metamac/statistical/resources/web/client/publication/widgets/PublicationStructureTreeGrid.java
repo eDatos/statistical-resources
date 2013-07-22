@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationStructureDS;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
@@ -120,16 +119,16 @@ public class PublicationStructureTreeGrid extends TreeGrid {
         return deleteElementMenuItem;
     }
 
-    public void showContextMenu(PublicationStructureHierarchyTypeEnum type) {
-        contextMenu.markForRedraw();
-        contextMenu.showContextMenu();
-        updateNodeMenuItems(type);
-    }
-
-    private void updateNodeMenuItems(PublicationStructureHierarchyTypeEnum type) {
-        boolean isFinalNode = PublicationStructureHierarchyTypeEnum.TEXT.equals(type) || PublicationStructureHierarchyTypeEnum.URL.equals(type)
-                || PublicationStructureHierarchyTypeEnum.DATASET.equals(type) || PublicationStructureHierarchyTypeEnum.QUERY.equals(type);
-        createElementMenuItem.setEnabled(!isFinalNode);
-        deleteElementMenuItem.setEnabled(!PublicationStructureHierarchyTypeEnum.TITLE.equals(type));
-    }
+    // public void showContextMenu(PublicationStructureHierarchyTypeEnum type) {
+    // contextMenu.markForRedraw();
+    // contextMenu.showContextMenu();
+    // updateNodeMenuItems(type);
+    // }
+    //
+    // private void updateNodeMenuItems(PublicationStructureHierarchyTypeEnum type) {
+    // boolean isFinalNode = PublicationStructureHierarchyTypeEnum.TEXT.equals(type) || PublicationStructureHierarchyTypeEnum.URL.equals(type)
+    // || PublicationStructureHierarchyTypeEnum.DATASET.equals(type) || PublicationStructureHierarchyTypeEnum.QUERY.equals(type);
+    // createElementMenuItem.setEnabled(!isFinalNode);
+    // deleteElementMenuItem.setEnabled(!PublicationStructureHierarchyTypeEnum.TITLE.equals(type));
+    // }
 }

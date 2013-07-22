@@ -1,26 +1,11 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.PublicationStructureHierarchyTypeEnum;
-import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationStructureDS;
-import org.siemac.metamac.statistical.resources.web.client.publication.utils.CommonUtils;
-import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FormItemIfFunction;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class PublicationStructurePanel extends HLayout {
@@ -95,8 +80,8 @@ public class PublicationStructurePanel extends HLayout {
             }
         });
         mainFormLayout.setVisibility(Visibility.HIDDEN);
-        createViewForm();
-        createEditionForm();
+        // createViewForm();
+        // createEditionForm();
 
         addMember(publicationStructureTreeGrid);
         addMember(mainFormLayout);
@@ -120,94 +105,94 @@ public class PublicationStructurePanel extends HLayout {
 
     // FORM
 
-    private void createViewForm() {
-        form = new GroupDynamicForm(getConstants().publicationStructureElement());
+    // private void createViewForm() {
+    // form = new GroupDynamicForm(getConstants().publicationStructureElement());
+    //
+    // ViewTextItem type = new ViewTextItem(PublicationStructureDS.TYPE, getConstants().publicationStructureElementType());
+    // ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().publicationStructureElementType());
+    // typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
+    //
+    // ViewMultiLanguageTextItem text = new ViewMultiLanguageTextItem(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText());
+    //
+    // ViewTextItem url = new ViewTextItem(PublicationStructureDS.URL, getConstants().publicationStructureElementURL());
+    // url.setShowIfCondition(new FormItemIfFunction() {
+    //
+    // @Override
+    // public boolean execute(FormItem item, Object value, DynamicForm form) {
+    // return PublicationStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
+    // }
+    // });
+    //
+    // ViewTextItem urn = new ViewTextItem(PublicationStructureDS.URN, getConstants().publicationStructureElementURN());
+    // urn.setShowIfCondition(new FormItemIfFunction() {
+    //
+    // @Override
+    // public boolean execute(FormItem item, Object value, DynamicForm form) {
+    // return PublicationStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
+    // || PublicationStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+    // }
+    // });
+    //
+    // form.setFields(type, typeView, text, url, urn);
+    //
+    // mainFormLayout.addViewCanvas(form);
+    // }
 
-        ViewTextItem type = new ViewTextItem(PublicationStructureDS.TYPE, getConstants().publicationStructureElementType());
-        ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().publicationStructureElementType());
-        typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
-
-        ViewMultiLanguageTextItem text = new ViewMultiLanguageTextItem(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText());
-
-        ViewTextItem url = new ViewTextItem(PublicationStructureDS.URL, getConstants().publicationStructureElementURL());
-        url.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return PublicationStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
-            }
-        });
-
-        ViewTextItem urn = new ViewTextItem(PublicationStructureDS.URN, getConstants().publicationStructureElementURN());
-        urn.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return PublicationStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
-                        || PublicationStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
-            }
-        });
-
-        form.setFields(type, typeView, text, url, urn);
-
-        mainFormLayout.addViewCanvas(form);
-    }
-
-    private void createEditionForm() {
-        editionForm = new GroupDynamicForm(getConstants().publicationStructureElement());
-
-        RequiredSelectItem type = new RequiredSelectItem(PublicationStructureDS.TYPE, getConstants().publicationStructureElementType());
-        type.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-        ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().publicationStructureElementType());
-        typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
-        ViewTextItem typeViewName = new ViewTextItem(PublicationStructureDS.TYPE_VIEW_NAME, getConstants().publicationStructureElementType());
-
-        MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText(), String.valueOf(FORM_ITEM_CUSTOM_WIDTH));
-        text.setRequired(true);
-        text.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return !PublicationStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
-            }
-        });
-
-        MultilanguageRichTextEditorItem textHtml = new MultilanguageRichTextEditorItem(PublicationStructureDS.TEXT_HTML, getConstants().publicationStructureElementText());
-        textHtml.setRequired(true);
-        textHtml.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-        textHtml.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return PublicationStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
-            }
-        });
-
-        RequiredTextItem url = new RequiredTextItem(PublicationStructureDS.URL, getConstants().publicationStructureElementURL());
-        url.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return PublicationStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
-            }
-        });
-        url.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-
-        RequiredTextItem urn = new RequiredTextItem(PublicationStructureDS.URN, getConstants().publicationStructureElementURN());
-        urn.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return PublicationStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
-                        || PublicationStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
-            }
-        });
-        urn.setWidth(FORM_ITEM_CUSTOM_WIDTH);
-
-        editionForm.setFields(type, typeView, typeViewName, text, textHtml, url, urn);
-
-        mainFormLayout.addEditionCanvas(editionForm);
-    }
+    // private void createEditionForm() {
+    // editionForm = new GroupDynamicForm(getConstants().publicationStructureElement());
+    //
+    // RequiredSelectItem type = new RequiredSelectItem(PublicationStructureDS.TYPE, getConstants().publicationStructureElementType());
+    // type.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+    // ViewTextItem typeView = new ViewTextItem(PublicationStructureDS.TYPE_VIEW, getConstants().publicationStructureElementType());
+    // typeView.setShowIfCondition(FormItemUtils.getFalseFormItemIfFunction());
+    // ViewTextItem typeViewName = new ViewTextItem(PublicationStructureDS.TYPE_VIEW_NAME, getConstants().publicationStructureElementType());
+    //
+    // MultiLanguageTextAreaItem text = new MultiLanguageTextAreaItem(PublicationStructureDS.TEXT, getConstants().publicationStructureElementText(), String.valueOf(FORM_ITEM_CUSTOM_WIDTH));
+    // text.setRequired(true);
+    // text.setShowIfCondition(new FormItemIfFunction() {
+    //
+    // @Override
+    // public boolean execute(FormItem item, Object value, DynamicForm form) {
+    // return !PublicationStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+    // }
+    // });
+    //
+    // MultilanguageRichTextEditorItem textHtml = new MultilanguageRichTextEditorItem(PublicationStructureDS.TEXT_HTML, getConstants().publicationStructureElementText());
+    // textHtml.setRequired(true);
+    // textHtml.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+    // textHtml.setShowIfCondition(new FormItemIfFunction() {
+    //
+    // @Override
+    // public boolean execute(FormItem item, Object value, DynamicForm form) {
+    // return PublicationStructureHierarchyTypeEnum.TEXT.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+    // }
+    // });
+    //
+    // RequiredTextItem url = new RequiredTextItem(PublicationStructureDS.URL, getConstants().publicationStructureElementURL());
+    // url.setShowIfCondition(new FormItemIfFunction() {
+    //
+    // @Override
+    // public boolean execute(FormItem item, Object value, DynamicForm form) {
+    // return PublicationStructureHierarchyTypeEnum.URL.name().equals(form.getValueAsString(PublicationStructureDS.TYPE));
+    // }
+    // });
+    // url.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+    //
+    // RequiredTextItem urn = new RequiredTextItem(PublicationStructureDS.URN, getConstants().publicationStructureElementURN());
+    // urn.setShowIfCondition(new FormItemIfFunction() {
+    //
+    // @Override
+    // public boolean execute(FormItem item, Object value, DynamicForm form) {
+    // return PublicationStructureHierarchyTypeEnum.DATASET.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW))
+    // || PublicationStructureHierarchyTypeEnum.QUERY.name().equals(form.getValueAsString(PublicationStructureDS.TYPE_VIEW));
+    // }
+    // });
+    // urn.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+    //
+    // editionForm.setFields(type, typeView, typeViewName, text, textHtml, url, urn);
+    //
+    // mainFormLayout.addEditionCanvas(editionForm);
+    // }
 
     /*
      * private void setElement(PublicationStructureHierarchyDto publicationStructureHierarchyDto) {
@@ -240,19 +225,19 @@ public class PublicationStructurePanel extends HLayout {
      * }
      */
 
-    private void updateFormElementTypeValueMap(PublicationStructureHierarchyTypeEnum type) {
-        if (PublicationStructureHierarchyTypeEnum.TITLE.equals(type)) {
-            editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTitleValidTypesHashMap());
-        } else if (PublicationStructureHierarchyTypeEnum.CHAPTER.equals(type)) {
-            editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyChapterValidTypesHashMap());
-        } else if (PublicationStructureHierarchyTypeEnum.SUBCHAPTER1.equals(type)) {
-            editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter1ValidTypesHashMap());
-        } else if (PublicationStructureHierarchyTypeEnum.SUBCHAPTER2.equals(type)) {
-            editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter2ValidTypesHashMap());
-        } else {
-            editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTypeHashMap());
-        }
-    }
+    // private void updateFormElementTypeValueMap(PublicationStructureHierarchyTypeEnum type) {
+    // if (PublicationStructureHierarchyTypeEnum.TITLE.equals(type)) {
+    // editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTitleValidTypesHashMap());
+    // } else if (PublicationStructureHierarchyTypeEnum.CHAPTER.equals(type)) {
+    // editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyChapterValidTypesHashMap());
+    // } else if (PublicationStructureHierarchyTypeEnum.SUBCHAPTER1.equals(type)) {
+    // editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter1ValidTypesHashMap());
+    // } else if (PublicationStructureHierarchyTypeEnum.SUBCHAPTER2.equals(type)) {
+    // editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchySubChapter2ValidTypesHashMap());
+    // } else {
+    // editionForm.getItem(PublicationStructureDS.TYPE).setValueMap(CommonUtils.getStructureHierarchyTypeHashMap());
+    // }
+    // }
 
     /*
      * private void updateFormTypeItemVisibility(PublicationStructureHierarchyDto publicationStructureHierarchyDto) {
@@ -265,5 +250,4 @@ public class PublicationStructurePanel extends HLayout {
      * }
      * }
      */
-
 }

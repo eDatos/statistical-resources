@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructurePanel;
@@ -16,8 +17,6 @@ public class PublicationStructureTabViewImpl extends ViewImpl implements Publica
 
     private VLayout                   panel;
     private PublicationStructurePanel structurePanel;
-
-    private PublicationVersionDto     publicationVersionDto;
 
     @Inject
     public PublicationStructureTabViewImpl() {
@@ -35,10 +34,14 @@ public class PublicationStructureTabViewImpl extends ViewImpl implements Publica
     }
 
     @Override
-    public void setPublication(PublicationVersionDto publicationVersionDto) {
-        this.publicationVersionDto = publicationVersionDto;
+    public void setPublicationVersion(PublicationVersionDto publicationVersionDto) {
+        // TODO Auto-generated method stub
 
-        // structurePanel.setPublicationStructure(publicationVersionDto.getStructure());
+    }
+
+    @Override
+    public void setPublicationStructure(PublicationStructureDto publicationStructureDto) {
+        // TODO Auto-generated method stub
     }
 
     @Override
