@@ -115,7 +115,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     }
 
     @Before
-    public void onBeforeTest() throws Exception {
+    public void onBefore() throws Exception {
         // DSD
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG());
 
@@ -165,6 +165,11 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE")).thenReturn(
                 Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
 
+        clearDataBase(); // Clear dirty database
+    }
+
+    // @After
+    public void onAfter() throws Exception {
         clearDataBase(); // Clear dirty database
     }
 
@@ -307,10 +312,16 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
         // Wait until the job is finished
         waitUntilJobFinished();
+        Thread.sleep(15 * 1000);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
-
         assertNotNull(datasetRepositoryDto);
-    }
 
+        // try {
+        // Task task = taskService.retrieveTaskByJob(serviceContext, jobKey);
+        // fail("The task should not exist because the recovery work must be executed");
+        // } catch (Exception e) {
+        // }
+
+    }
 }
