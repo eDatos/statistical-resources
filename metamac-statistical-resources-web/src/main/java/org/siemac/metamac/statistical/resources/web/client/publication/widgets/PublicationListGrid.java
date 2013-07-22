@@ -30,8 +30,8 @@ public class PublicationListGrid extends BaseCustomListGrid {
 
             @Override
             public String hoverHTML(Object value, ListGridRecord record, int rowNum, int colNum) {
-                PublicationRecord collectionRecord = (PublicationRecord) record;
-                return collectionRecord.getIdentifier();
+                PublicationRecord publicationRecord = (PublicationRecord) record;
+                return publicationRecord.getIdentifier();
             }
         });
         titleField.setShowHover(true);
@@ -39,19 +39,19 @@ public class PublicationListGrid extends BaseCustomListGrid {
 
             @Override
             public String hoverHTML(Object value, ListGridRecord record, int rowNum, int colNum) {
-                PublicationRecord collectionRecord = (PublicationRecord) record;
-                return collectionRecord.getName();
+                PublicationRecord publicationRecord = (PublicationRecord) record;
+                return publicationRecord.getName();
             }
         });
         this.setFields(identifierField, titleField);
     }
 
-    public void setPublications(List<PublicationVersionDto> collections) {
+    public void setPublications(List<PublicationVersionDto> publications) {
         removeAllData();
-        if (collections != null) {
-            PublicationRecord[] records = new PublicationRecord[collections.size()];
-            for (int i = 0; i < collections.size(); i++) {
-                records[i] = StatisticalResourcesRecordUtils.getPublicationRecord(collections.get(i));
+        if (publications != null) {
+            PublicationRecord[] records = new PublicationRecord[publications.size()];
+            for (int i = 0; i < publications.size(); i++) {
+                records[i] = StatisticalResourcesRecordUtils.getPublicationRecord(publications.get(i));
             }
             setData(records);
         }

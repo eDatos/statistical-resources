@@ -7,8 +7,8 @@ import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.Ne
 
 public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandlers {
 
-    void createPublication(PublicationVersionDto collectionDto);
+    void createPublication(PublicationVersionDto publicationDto);
     void deletePublication(List<String> urns);
-    void retrievePublications(int firstResult, int maxResults, String collection);
+    void retrievePublications(int firstResult, int maxResults, String criteria);
     void goToPublication(String urn);
 }

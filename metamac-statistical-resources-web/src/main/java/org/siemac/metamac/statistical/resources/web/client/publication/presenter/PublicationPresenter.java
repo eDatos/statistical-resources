@@ -71,8 +71,8 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     }
 
     @Inject
-    public PublicationPresenter(EventBus eventBus, PublicationView collectionView, PublicationProxy collectionProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, collectionView, collectionProxy);
+    public PublicationPresenter(EventBus eventBus, PublicationView publicationView, PublicationProxy publicationProxy, DispatchAsync dispatcher, PlaceManager placeManager) {
+        super(eventBus, publicationView, publicationProxy);
         this.placeManager = placeManager;
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);

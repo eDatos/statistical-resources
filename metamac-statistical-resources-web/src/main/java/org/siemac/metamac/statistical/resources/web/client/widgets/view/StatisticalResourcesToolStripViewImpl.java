@@ -23,7 +23,7 @@ public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewI
         datasetsButton.setID(StatisticalResourcesToolStripButtonEnum.DATASETS.getValue());
 
         collectionsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().collections());
-        collectionsButton.setID(StatisticalResourcesToolStripButtonEnum.COLLECTIONS.getValue());
+        collectionsButton.setID(StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.getValue());
 
         queriesButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().queries());
         queriesButton.setID(StatisticalResourcesToolStripButtonEnum.QUERIES.getValue());

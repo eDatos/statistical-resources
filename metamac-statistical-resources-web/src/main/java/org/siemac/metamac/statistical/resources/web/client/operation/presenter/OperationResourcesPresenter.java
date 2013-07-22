@@ -58,7 +58,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
 
         void setDatasets(List<DatasetVersionDto> datasetDtos);
-        void setPublications(List<PublicationVersionDto> collectionDtos);
+        void setPublications(List<PublicationVersionDto> publicationDtos);
     }
 
     @ProxyCodeSplit
@@ -169,7 +169,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     @Override
     public void goToPublication(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.publicationParam, UrnUtils.removePrefix(urn)));
         }
     }
 }

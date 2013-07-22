@@ -33,7 +33,7 @@ public class PlaceRequestUtils {
     public static String getPublicationParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.publicationPage.equals(request.getNameToken())) {
-                return request.getParameter(PlaceRequestParams.collectionParam, null);
+                return request.getParameter(PlaceRequestParams.publicationParam, null);
             }
         }
         return null;

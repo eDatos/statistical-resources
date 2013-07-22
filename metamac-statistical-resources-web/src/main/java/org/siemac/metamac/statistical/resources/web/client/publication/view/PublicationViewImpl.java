@@ -27,8 +27,8 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     private TitleLabel titleLabel;
 
     private TabSet     tabSet;
-    private Tab        collectionMetadataTab;
-    private Tab        collectionStructureTab;
+    private Tab        publicationMetadataTab;
+    private Tab        publicationStructureTab;
 
     @Inject
     public PublicationViewImpl(PublicationMetadataTabView metadataView, PublicationStructureTabView structureView) {
@@ -43,10 +43,10 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
         tabSet = new TabSet();
         tabSet.setMargin(10);
 
-        collectionMetadataTab = new Tab(getConstants().collectionMetadata());
-        collectionStructureTab = new Tab(getConstants().publicationStructure());
+        publicationMetadataTab = new Tab(getConstants().collectionMetadata());
+        publicationStructureTab = new Tab(getConstants().publicationStructure());
 
-        tabSet.setTabs(collectionMetadataTab, collectionStructureTab);
+        tabSet.setTabs(publicationMetadataTab, publicationStructureTab);
 
         panel.addMember(titleLabel);
         panel.addMember(tabSet);
@@ -54,14 +54,14 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     }
 
     private void bindEvents() {
-        collectionMetadataTab.addTabSelectedHandler(new TabSelectedHandler() {
+        publicationMetadataTab.addTabSelectedHandler(new TabSelectedHandler() {
 
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 getUiHandlers().goToPublicationMetadata();
             }
         });
-        collectionStructureTab.addTabSelectedHandler(new TabSelectedHandler() {
+        publicationStructureTab.addTabSelectedHandler(new TabSelectedHandler() {
 
             @Override
             public void onTabSelected(TabSelectedEvent event) {
@@ -79,16 +79,16 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
 
     @Override
     public void showMetadata() {
-        tabSet.selectTab(collectionMetadataTab);
+        tabSet.selectTab(publicationMetadataTab);
         getUiHandlers().goToPublicationMetadata();
     }
 
     @Override
     public void setInSlot(Object slot, Widget content) {
         if (slot == PublicationPresenter.TYPE_SetContextAreaMetadata) {
-            collectionMetadataTab.setPane((Canvas) content);
+            publicationMetadataTab.setPane((Canvas) content);
         } else if (slot == PublicationPresenter.TYPE_SetContextAreaStructure) {
-            collectionStructureTab.setPane((Canvas) content);
+            publicationStructureTab.setPane((Canvas) content);
         } else {
             super.setInSlot(slot, content);
         }

@@ -139,7 +139,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDatasetDimensionsAction.class, GetDatasetDimensionsActionHandler.class);
         bindHandler(GetDatasetDimensionCoverageAction.class, GetDatasetDimensionCoverageActionHandler.class);
 
-        // COLLECTIONS
+        // PUBLICATIONS
         bindHandler(GetPublicationsAction.class, GetPublicationsActionHandler.class);
         bindHandler(GetPublicationAction.class, GetPublicationActionHandler.class);
         bindHandler(SavePublicationAction.class, SavePublicationActionHandler.class);

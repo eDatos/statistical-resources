@@ -180,7 +180,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     @Override
     public void goToPublication(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.collectionParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.publicationParam, UrnUtils.removePrefix(urn)));
         }
     }
 }

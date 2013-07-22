@@ -140,7 +140,7 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
         if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.datasetsListPage)) {
             toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.DATASETS.name());
         } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.publicationsListPage)) {
-            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.COLLECTIONS.name());
+            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.name());
         } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.queriesListPage)) {
             toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.QUERIES.name());
         } else {

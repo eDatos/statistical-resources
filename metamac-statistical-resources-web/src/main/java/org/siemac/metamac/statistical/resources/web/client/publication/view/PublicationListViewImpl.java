@@ -174,10 +174,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
-    public void setPublicationPaginatedList(List<PublicationVersionDto> collectionDtos, int firstResult, int totalResults) {
-        PublicationRecord[] records = new PublicationRecord[collectionDtos.size()];
+    public void setPublicationPaginatedList(List<PublicationVersionDto> publicationDtos, int firstResult, int totalResults) {
+        PublicationRecord[] records = new PublicationRecord[publicationDtos.size()];
         int index = 0;
-        for (PublicationVersionDto scheme : collectionDtos) {
+        for (PublicationVersionDto scheme : publicationDtos) {
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
         publicationListGrid.getListGrid().setData(records);
@@ -195,7 +195,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
                 Canvas[] canvas = ((ToolStrip) content).getMembers();
                 for (int i = 0; i < canvas.length; i++) {
                     if (canvas[i] instanceof ToolStripButton) {
-                        if (StatisticalResourcesToolStripButtonEnum.COLLECTIONS.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
+                        if (StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
                             ((ToolStripButton) canvas[i]).select();
                         }
                     }
@@ -223,8 +223,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     private List<String> getUrnsFromSelectedPublications() {
         List<String> urns = new ArrayList<String>();
         for (ListGridRecord record : publicationListGrid.getListGrid().getSelectedRecords()) {
-            PublicationRecord collectionRecord = (PublicationRecord) record;
-            urns.add(collectionRecord.getUrn());
+            PublicationRecord publicationRecord = (PublicationRecord) record;
+            urns.add(publicationRecord.getUrn());
         }
         return urns;
     }
