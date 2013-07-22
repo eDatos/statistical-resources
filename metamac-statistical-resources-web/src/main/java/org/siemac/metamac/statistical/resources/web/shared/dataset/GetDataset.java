@@ -10,7 +10,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDataset {
 
     @In(1)
-    String     datasetVersionUrn;
+    String            datasetVersionUrn;
 
     @Out(1)
     DatasetVersionDto datasetVersionDto;

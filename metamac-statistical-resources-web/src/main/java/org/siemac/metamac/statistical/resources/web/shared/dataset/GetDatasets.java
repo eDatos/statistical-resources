@@ -22,7 +22,7 @@ public class GetDatasets {
     VersionableStatisticalResourceWebCriteria criteria;
 
     @Out(1)
-    List<DatasetVersionDto>                          datasetVersionDtos;
+    List<DatasetVersionDto>                   datasetVersionDtos;
 
     @Out(2)
     Integer                                   firstResultOut;

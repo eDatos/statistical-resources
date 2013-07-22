@@ -51,11 +51,11 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         implements
             DatasetDatasourcesTabUiHandlers {
 
-    private DispatchAsync   dispatcher;
-    private PlaceManager    placeManager;
+    private DispatchAsync     dispatcher;
+    private PlaceManager      placeManager;
 
-    private ExternalItemDto operation;
-    private DatasetVersionDto      dataset;
+    private ExternalItemDto   operation;
+    private DatasetVersionDto dataset;
 
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
 

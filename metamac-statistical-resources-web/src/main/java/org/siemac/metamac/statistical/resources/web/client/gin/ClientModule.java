@@ -83,7 +83,7 @@ public class ClientModule extends AbstractPresenterModule {
                 PublicationMetadataTabPresenter.PublicationMetadataTabProxy.class);
         bindPresenter(PublicationStructureTabPresenter.class, PublicationStructureTabPresenter.PublicationStructureTabView.class, PublicationStructureTabViewImpl.class,
                 PublicationStructureTabPresenter.PublicationStructureTabProxy.class);
-        
+
         bindPresenter(QueryListPresenter.class, QueryListPresenter.QueryListView.class, QueryListViewImpl.class, QueryListPresenter.QueryListProxy.class);
         bindPresenter(QueryPresenter.class, QueryPresenter.QueryView.class, QueryViewImpl.class, QueryPresenter.QueryProxy.class);
 

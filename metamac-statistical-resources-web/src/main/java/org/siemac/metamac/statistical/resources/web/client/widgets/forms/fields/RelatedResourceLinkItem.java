@@ -9,7 +9,6 @@ import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavig
 
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
-
 public class RelatedResourceLinkItem extends RelatedResourceBaseLinkItem<RelatedResourceDto> {
 
     public RelatedResourceLinkItem(String name, String title, CustomLinkItemNavigationClickHandler clickHandler) {

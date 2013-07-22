@@ -49,7 +49,6 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.inject.Inject;
@@ -295,7 +294,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
         VersionableStatisticalResourceWebCriteria versionableCriteria = new VersionableStatisticalResourceWebCriteria(criteria.getCriteria());
         versionableCriteria.setOnlyLastVersion(false);
-        
+
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
             @Override

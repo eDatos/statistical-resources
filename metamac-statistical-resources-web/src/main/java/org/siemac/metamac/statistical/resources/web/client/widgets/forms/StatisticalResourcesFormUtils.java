@@ -22,11 +22,11 @@ public class StatisticalResourcesFormUtils {
     public static void setExternalItemValue(FormItem item, ExternalItemDto externalItem) {
         ((ExternalItemLinkItem) item).setExternalItem(externalItem);
     }
-    
+
     public static void setRelatedResourceValue(FormItem item, RelatedResourceDto value) {
         ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).setRelatedResource(value);
     }
-    
+
     public static void setRelatedResourcesValue(FormItem item, List<RelatedResourceDto> values) {
         ((RelatedResourceBaseListItem<RelatedResourceDto>) item).setRelatedResources(values);
     }
@@ -38,11 +38,11 @@ public class StatisticalResourcesFormUtils {
     public static ExternalItemDto getExternalItemValue(FormItem item) {
         return ((ExternalItemLinkItem) item).getExternalItemDto();
     }
-    
+
     public static List<RelatedResourceDto> getRelatedResourcesValue(FormItem item) {
         return ((RelatedResourceBaseListItem<RelatedResourceDto>) item).getRelatedResourceDtos();
     }
-    
+
     public static RelatedResourceDto getRelatedResourceValue(FormItem item) {
         return ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).getRelatedResourceDto();
     }
@@ -51,6 +51,4 @@ public class StatisticalResourcesFormUtils {
         return ((CustomDateItem) item).getValueAsDate();
     }
 
-    
-    
 }

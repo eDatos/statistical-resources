@@ -1,14 +1,15 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.*;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getDate;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemValue;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
@@ -16,9 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
-import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
-import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -28,10 +27,10 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
 public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourcePublicationDescriptorsEditionForm {
-    
+
     private DatasetMetadataTabUiHandlers uiHandlers;
     private SearchExternalItemSimpleItem updateFrequency;
-    
+
     public DatasetPublicationDescriptorsEditionForm() {
         super();
         CustomDateItem dateNextUpdate = createDateNextUpdateItem();
@@ -66,13 +65,14 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
         // TODO STATISTIC_OFFICIALITY
         return datasetDto;
     }
-    
+
     public void setCodesForUpdateFrequency(List<ExternalItemDto> items, int firstResult, int totalResults) {
         updateFrequency.setResources(items, firstResult, totalResults);
     }
 
     private SearchExternalItemSimpleItem createUpdateFrequencyItem() {
         return new SearchExternalItemSimpleItem(DatasetDS.UPDATE_FRECUENCY, getConstants().datasetUpdateFrequency(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
                 uiHandlers.retrieveTemporalCodesForField(firstResult, maxResults, webCriteria, DatasetMetadataExternalField.UPDATE_FREQUENCY);

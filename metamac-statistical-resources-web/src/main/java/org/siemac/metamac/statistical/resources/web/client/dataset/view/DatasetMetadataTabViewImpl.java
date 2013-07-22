@@ -86,7 +86,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private DatasetVersionDto                                                    datasetDto;
+    private DatasetVersionDto                                             datasetDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();

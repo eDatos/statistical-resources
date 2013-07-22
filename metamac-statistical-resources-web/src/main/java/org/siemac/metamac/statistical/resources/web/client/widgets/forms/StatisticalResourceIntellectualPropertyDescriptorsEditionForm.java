@@ -17,7 +17,7 @@ public class StatisticalResourceIntellectualPropertyDescriptorsEditionForm exten
 
         MultiLanguageTextItem accessRights = new MultiLanguageTextItem(StatisticalResourceDS.ACCESS_RIGHTS, getConstants().siemacMetadataStatisticalResourceAccessRights());
         ViewTextItem copyrightDate = new ViewTextItem(StatisticalResourceDS.COPYRIGHT_DATE, getConstants().siemacMetadataStatisticalResourceCopyrightedDate());
-        
+
         addFields(copyrightDate, accessRights);
     }
 

@@ -12,7 +12,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewImpl implements StatisticalResourcesToolStripPresenterWidget.StatisticalResourcesToolStripView {
 
     private CustomToolStripButton datasetsButton;
-    private CustomToolStripButton collectionsButton;
+    private CustomToolStripButton publicationsButton;
     private CustomToolStripButton queriesButton;
 
     @Inject
@@ -22,14 +22,14 @@ public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewI
         datasetsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().datasets());
         datasetsButton.setID(StatisticalResourcesToolStripButtonEnum.DATASETS.getValue());
 
-        collectionsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().collections());
-        collectionsButton.setID(StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.getValue());
+        publicationsButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().collections());
+        publicationsButton.setID(StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.getValue());
 
         queriesButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().queries());
         queriesButton.setID(StatisticalResourcesToolStripButtonEnum.QUERIES.getValue());
 
         toolStrip.addButton(datasetsButton);
-        toolStrip.addButton(collectionsButton);
+        toolStrip.addButton(publicationsButton);
         toolStrip.addButton(queriesButton);
     }
 
@@ -40,7 +40,7 @@ public class StatisticalResourcesToolStripViewImpl extends MetamacToolStripViewI
 
     @Override
     public HasClickHandlers getGoCollectionsList() {
-        return collectionsButton;
+        return publicationsButton;
     }
 
     @Override

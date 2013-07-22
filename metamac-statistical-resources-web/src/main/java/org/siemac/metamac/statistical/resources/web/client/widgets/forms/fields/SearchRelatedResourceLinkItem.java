@@ -9,14 +9,12 @@ import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavig
 
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
-
 public class SearchRelatedResourceLinkItem extends SearchRelatedResourceBaseLinkItem<RelatedResourceDto> {
 
-    
     public SearchRelatedResourceLinkItem(String name, String title, CustomLinkItemNavigationClickHandler clickHandler) {
         super(name, title, clickHandler);
     }
-    
+
     @Override
     protected List<PlaceRequest> buildLocation(RelatedResourceDto relatedResourceDto) {
         return PlaceRequestUtils.buildAbsoluteResourcePlaceRequest(relatedResourceDto);

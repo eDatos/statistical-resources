@@ -66,7 +66,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
     public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {
 
-        void setPublication(PublicationVersionDto collectionDto);
+        void setPublication(PublicationVersionDto publicationDto);
         void showMetadata();
     }
 

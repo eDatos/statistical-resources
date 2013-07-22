@@ -33,7 +33,8 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
         super(getConstants().formResourceRelationDescriptors());
 
         SearchRelatedResourceLinkItem replaces = createReplacesItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
-        RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(), getCustomLinkItemNavigationClickHandler()); 
+        RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(),
+                getCustomLinkItemNavigationClickHandler());
         RelatedResourceListItem requires = new RelatedResourceListItem(StatisticalResourceDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false, getRecordNavigationHandler());
         RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(StatisticalResourceDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
@@ -51,10 +52,10 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         setRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES), dto.getReplaces());
         setRelatedResourceValue(getItem(StatisticalResourceDS.IS_REPLACED_BY), dto.getIsReplacedBy());
-        
+
         setRelatedResourcesValue(getItem(StatisticalResourceDS.REQUIRES), dto.getRequires());
         setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
-        
+
         setRelatedResourcesValue(getItem(StatisticalResourceDS.HAS_PART), dto.getHasPart());
         setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_PART_OF), dto.getIsPartOf());
     }
@@ -62,7 +63,6 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
     private void setReplaces(RelatedResourceDto relatedResourceDto) {
         setValue(StatisticalResourceDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(relatedResourceDto));
     }
-
 
     public void setRelatedResourcesForReplaces(List<RelatedResourceDto> relatedResourceDtos, int firstResult, int elementsInPage, int totalResults) {
         if (searchReplacesWindow != null) {
@@ -82,9 +82,9 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
     // GETTER
     //
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        
+
         dto.setReplaces(getRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES)));
-        
+
         return dto;
     }
 
@@ -93,7 +93,7 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
     //
     private SearchRelatedResourceLinkItem createReplacesItem(String name, String title) {
         final SearchRelatedResourceLinkItem replacesItem = new SearchRelatedResourceLinkItem(name, title, getCustomLinkItemNavigationClickHandler());
-        
+
         replacesItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
             @Override
@@ -127,7 +127,6 @@ public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm 
         });
         return replacesItem;
     }
-
 
     public abstract void setUiHandlers(UiHandlers uiHandlers);
     public abstract void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria);

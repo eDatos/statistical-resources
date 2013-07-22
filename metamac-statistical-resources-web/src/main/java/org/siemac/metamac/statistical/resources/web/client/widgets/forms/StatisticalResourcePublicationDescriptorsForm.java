@@ -1,8 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.*;
-
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemsValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
@@ -15,15 +14,15 @@ public class StatisticalResourcePublicationDescriptorsForm extends GroupDynamicF
     public StatisticalResourcePublicationDescriptorsForm() {
         super(getConstants().formPublicationDescriptors());
 
-        ExternalItemListItem publisher = new ExternalItemListItem(StatisticalResourceDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(), false); 
-        
+        ExternalItemListItem publisher = new ExternalItemListItem(StatisticalResourceDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(), false);
+
         ExternalItemListItem publisherContributor = new ExternalItemListItem(StatisticalResourceDS.PUBLISHER_CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourcePublisherContributor(), false);
-        
+
         ExternalItemListItem mediator = new ExternalItemListItem(StatisticalResourceDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(), false);
-        
+
         ViewTextItem dateNewnessUntil = new ViewTextItem(StatisticalResourceDS.NEWNESS_UNTIL_DATE, getConstants().siemacMetadataStatisticalResourceNewnessUntilDate());
 
-        setFields(publisher, publisherContributor, mediator, dateNewnessUntil );
+        setFields(publisher, publisherContributor, mediator, dateNewnessUntil);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {

@@ -13,7 +13,7 @@ public class SaveDataset {
     DatasetVersionDto datasetVersion;
 
     @In(2)
-    String     statisticalOperationCode;
+    String            statisticalOperationCode;
 
     @Out(1)
     DatasetVersionDto savedDatasetVersion;

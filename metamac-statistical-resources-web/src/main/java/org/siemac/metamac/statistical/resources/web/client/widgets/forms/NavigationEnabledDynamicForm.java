@@ -20,10 +20,10 @@ public abstract class NavigationEnabledDynamicForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected CustomLinkItemNavigationClickHandler getCustomLinkItemNavigationClickHandler() {
         return new CustomLinkItemNavigationClickHandler() {
-            
+
             @Override
             public BaseUiHandlers getBaseUiHandlers() {
                 return NavigationEnabledDynamicForm.this.getBaseUiHandlers();
