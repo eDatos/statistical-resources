@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,7 +13,12 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +29,9 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFi
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
+import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,7 +176,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         clearDataBase(); // Clear dirty database
     }
 
-    // @After
+    @After
     public void onAfter() throws Exception {
         clearDataBase(); // Clear dirty database
     }
@@ -317,11 +325,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
         assertNotNull(datasetRepositoryDto);
 
-        // try {
-        // Task task = taskService.retrieveTaskByJob(serviceContext, jobKey);
-        // fail("The task should not exist because the recovery work must be executed");
-        // } catch (Exception e) {
-        // }
-
+        List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey).build();
+        PagedResult<Task> pagedResult = taskService.findTasksByCondition(serviceContext, conditionList, PagingParameter.noLimits());
+        assertTrue(pagedResult.getValues().isEmpty());
     }
 }
