@@ -223,7 +223,6 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setAbstract(toInternationalString(source.getAbstractLogic(), selectedLanguages));
         target.setKeywords(toInternationalString(source.getKeywords(), selectedLanguages));
         target.setType(toStatisticalResourceType(source.getType()));
-        target.setMaintainer(toResourceExternalItemSrm(source.getMaintainer(), selectedLanguages));
         target.setCreator(toResourceExternalItemSrm(source.getCreator(), selectedLanguages));
         target.setContributors(toResourcesExternalItemsSrm(source.getContributor(), selectedLanguages));
         target.setCreatedDate(toDate(source.getResourceCreatedDate()));
@@ -289,7 +288,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             return;
         }
 
-        // TODO lifecycle?
+        target.setPublicationDate(toDate(source.getPublicationDate()));
+        target.setReplacesVersion(toResource(source.getReplacesVersion(), selectedLanguages));
+        target.setIsReplacedByVersion(toResource(source.getIsReplacedByVersion(), selectedLanguages));
+        target.setMaintainer(toResourceExternalItemSrm(source.getMaintainer(), selectedLanguages));
 
         // Versionable
         toMetadataVersionableStatisticalResource(source, target, selectedLanguages);

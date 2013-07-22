@@ -1,7 +1,10 @@
 package org.siemac.metamac.rest.statistical_resources.v1_0.dataset.utils;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -51,27 +54,7 @@ public class DatasetsRestDoMocks {
         target.setDateNextUpdate(new DateTime(2013, 12, 2, 3, 4, 5, 0));
         target.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem("updateFrequency01"));
         target.setStatisticOfficiality(coreDoMocks.mockStatisticOfficiality("statisticOfficiality01"));
-        target.getSiemacMetadataStatisticalResource().addStatisticalOperationInstance(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceExternalItem("instance01"));
-        target.getSiemacMetadataStatisticalResource().addStatisticalOperationInstance(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceExternalItem("instance02"));
-        target.getSiemacMetadataStatisticalResource().setResourceCreatedDate(new DateTime(2012, 1, 2, 3, 4, 5, 0));
-        target.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
-        target.getSiemacMetadataStatisticalResource().setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
-        target.getSiemacMetadataStatisticalResource().setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
-        target.getSiemacMetadataStatisticalResource().setIsReplacedBy(mockDatasetRelatedResource(agencyID, "replacedBy01", "02.000"));
-        target.getSiemacMetadataStatisticalResource().addRequire(mockDatasetRelatedResource(agencyID, "require01", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addRequire(mockDatasetRelatedResource(agencyID, "require02", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy01", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy02", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
-        target.getSiemacMetadataStatisticalResource().addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf02", "01.000"));
-        target.getSiemacMetadataStatisticalResource().setCopyrightedDate(new DateTime(2014, 2, 15, 3, 4, 12, 0));
-        target.getSiemacMetadataStatisticalResource().setVersionRationale(StatisticalResourcesDoMocks.mockInternationalString("versionRationale"));
-        target.getSiemacMetadataStatisticalResource().addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
-        target.getSiemacMetadataStatisticalResource().addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_METADATA));
-        target.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime(2013, 1, 1, 3, 4, 12, 0));
-        target.getSiemacMetadataStatisticalResource().setValidTo(new DateTime(2013, 2, 16, 14, 4, 12, 0));
+        mockSiemacMetadataStatisticalResource(agencyID, resourceID, version, target.getSiemacMetadataStatisticalResource());
         return target;
     }
 
@@ -88,4 +71,38 @@ public class DatasetsRestDoMocks {
         return codeDimension;
     }
 
+    private void mockSiemacMetadataStatisticalResource(String agencyID, String resourceID, String version, SiemacMetadataStatisticalResource target) {
+        target.addStatisticalOperationInstance(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceExternalItem("instance01"));
+        target.addStatisticalOperationInstance(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceExternalItem("instance02"));
+        target.setResourceCreatedDate(new DateTime(2012, 1, 2, 3, 4, 5, 0));
+        target.setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
+        target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
+        target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
+        target.setIsReplacedBy(mockDatasetRelatedResource(agencyID, "replacedBy01", "02.000"));
+        target.addRequire(mockDatasetRelatedResource(agencyID, "require01", "01.000"));
+        target.addRequire(mockDatasetRelatedResource(agencyID, "require02", "01.000"));
+        target.addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy01", "01.000"));
+        target.addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy02", "01.000"));
+        target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
+        target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
+        target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
+        target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf02", "01.000"));
+        target.setCopyrightedDate(new DateTime(2014, 2, 15, 3, 4, 12, 0));
+        mockLifeCycleStatisticalResource(agencyID, resourceID, version, target);
+    }
+
+    private void mockLifeCycleStatisticalResource(String agencyID, String resourceID, String version, LifeCycleStatisticalResource target) {
+        target.setPublicationDate(new DateTime(2013, 1, 1, 3, 4, 13, 0));
+        target.setReplacesVersion(mockDatasetRelatedResource(agencyID, version, "00.001"));
+        target.setIsReplacedByVersion(mockDatasetRelatedResource(agencyID, version, "02.000"));
+        mockVersionableStatisticalResource(agencyID, resourceID, version, target);
+    }
+
+    private void mockVersionableStatisticalResource(String agencyID, String resourceID, String version, VersionableStatisticalResource target) {
+        target.setVersionRationale(StatisticalResourcesDoMocks.mockInternationalString("versionRationale"));
+        target.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
+        target.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_METADATA));
+        target.setValidFrom(new DateTime(2013, 1, 1, 3, 4, 12, 0));
+        target.setValidTo(new DateTime(2013, 2, 16, 14, 4, 12, 0));
+    }
 }
