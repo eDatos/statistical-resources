@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 
@@ -8,24 +7,25 @@ import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 
+@Deprecated
 public class PublicationStructurePanel extends HLayout {
 
-    private static final int             FORM_ITEM_CUSTOM_WIDTH = 250;
+    // private static final int FORM_ITEM_CUSTOM_WIDTH = 250;
 
-    private PublicationStructureTreeGrid publicationStructureTreeGrid;
+    // private PublicationStructureTreeGrid publicationStructureTreeGrid;
 
-    private InternationalMainFormLayout  mainFormLayout;
-    private GroupDynamicForm             form;
-    private GroupDynamicForm             editionForm;
+    private InternationalMainFormLayout mainFormLayout;
+    private GroupDynamicForm            form;
+    private GroupDynamicForm            editionForm;
 
-    private PublicationStructureDto      selectedNode;
+    // private PublicationStructureDto selectedNode;
 
     public PublicationStructurePanel() {
 
         // TreeGrid
 
-        publicationStructureTreeGrid = new PublicationStructureTreeGrid();
-        publicationStructureTreeGrid.setWidth("40%");
+        // publicationStructureTreeGrid = new PublicationStructureTreeGrid();
+        // publicationStructureTreeGrid.setWidth("40%");
 
         /*
          * publicationStructureTreeGrid.getCreateElementMenuItem().addClickHandler(new ClickHandler() {
@@ -83,7 +83,7 @@ public class PublicationStructurePanel extends HLayout {
         // createViewForm();
         // createEditionForm();
 
-        addMember(publicationStructureTreeGrid);
+        // addMember(publicationStructureTreeGrid);
         addMember(mainFormLayout);
     }
 

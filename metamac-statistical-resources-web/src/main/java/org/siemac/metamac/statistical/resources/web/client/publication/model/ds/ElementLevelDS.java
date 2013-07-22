@@ -13,6 +13,8 @@ public class ElementLevelDS extends DataSource {
     public static final String PARENT_CHAPTER_URN = "str-parent-chap-urn";
     public static final String URN                = "str-urn";
 
+    public static final String INFO               = "str-info";
+
     public static final String DTO                = "str-dto";
 
     public ElementLevelDS() {

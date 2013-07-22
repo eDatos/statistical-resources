@@ -19,7 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.TemporalCodeRecord;
-import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelNode;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -51,9 +51,10 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
         return record;
     }
 
-    public static ElementLevelNode getElementLevelNode(ElementLevelDto elementLevelDto) {
-        ElementLevelNode elementLevelNode = new ElementLevelNode();
+    public static ElementLevelTreeNode getElementLevelNode(ElementLevelDto elementLevelDto) {
+        ElementLevelTreeNode elementLevelNode = new ElementLevelTreeNode();
         NameableStatisticalResourceDto element = elementLevelDto.getChapter() != null ? elementLevelDto.getChapter() : elementLevelDto.getCube();
+        elementLevelNode.setID(element.getUrn());
         elementLevelNode.setUrn(element.getId());
         elementLevelNode.setTitle(InternationalStringUtils.getLocalisedString(element.getTitle()));
         elementLevelNode.setDescription(InternationalStringUtils.getLocalisedString(element.getDescription()));
@@ -65,6 +66,13 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
             elementLevelNode.setParentChapterUrn(((CubeDto) element).getParentChapterUrn());
         }
         return elementLevelNode;
+    }
+
+    public static ElementLevelTreeNode getPublicationVersionRootNode(String schemeNodeName, PublicationVersionDto publicationVersionDto) {
+        ElementLevelTreeNode elementLevelTreeNode = new ElementLevelTreeNode();
+        elementLevelTreeNode.setID(schemeNodeName);
+        elementLevelTreeNode.setTitle(InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
+        return elementLevelTreeNode;
     }
 
     //

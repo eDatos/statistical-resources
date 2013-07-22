@@ -3,9 +3,9 @@ package org.siemac.metamac.statistical.resources.web.client.publication.model.re
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.web.common.client.widgets.NavigableTreeNode;
 
-public class ElementLevelNode extends NavigableTreeNode {
+public class ElementLevelTreeNode extends NavigableTreeNode {
 
-    public ElementLevelNode() {
+    public ElementLevelTreeNode() {
     }
 
     public void setUrn(Long value) {
