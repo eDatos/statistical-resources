@@ -99,7 +99,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+            retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
 
             retrieveDefaultLanguage();
             retrieveDefaultAgency();
@@ -131,11 +131,12 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults) {
+    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, String criteria) {
         final String statisticalOperationUrn = operationUrn;
-        VersionableStatisticalResourceWebCriteria criteria = new VersionableStatisticalResourceWebCriteria();
-        criteria.setStatisticalOperationUrn(statisticalOperationUrn);
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
+        VersionableStatisticalResourceWebCriteria webCriteria = new VersionableStatisticalResourceWebCriteria();
+        webCriteria.setStatisticalOperationUrn(statisticalOperationUrn);
+        webCriteria.setCriteria(criteria);
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
@@ -151,7 +152,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(SaveDatasetResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
                 getView().goToDatasetListLastPageAfterCreate();
             }
         });
@@ -164,7 +165,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(DeleteDatasetListResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
-                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }

@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsRe
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
+import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -33,6 +34,8 @@ import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -46,7 +49,9 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
 
     private VLayout                  panel;
-
+    
+    private SearchSectionStack       searchSectionStack;
+    
     private ToolStripButton          newDatasetButton;
     private ToolStripButton          deleteDatasetButton;
 
@@ -101,12 +106,23 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         toolStrip.addButton(newDatasetButton);
         toolStrip.addButton(deleteDatasetButton);
+        
+        // Search
+
+        searchSectionStack = new SearchSectionStack();
+        searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
+            }
+        });
 
         datasetsList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults);
+                getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults, null);
             }
         });
         datasetsList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
@@ -145,6 +161,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         panel = new VLayout();
         panel.addMember(toolStrip);
+        panel.addMember(searchSectionStack);
         panel.addMember(datasetsList);
 
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());

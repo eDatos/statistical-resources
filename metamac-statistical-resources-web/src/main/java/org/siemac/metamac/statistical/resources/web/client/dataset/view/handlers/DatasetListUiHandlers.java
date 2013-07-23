@@ -11,7 +11,7 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
     void goToDataset(String code);
     void createDataset(DatasetVersionDto datasetDto);
     void deleteDatasets(List<String> urnsFromSelected);
-    void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults);
+    void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, String criteria);
 
     // Dsd related actions
     void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria);
