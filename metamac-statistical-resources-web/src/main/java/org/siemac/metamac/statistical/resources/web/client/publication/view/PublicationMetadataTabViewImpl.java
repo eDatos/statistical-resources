@@ -40,7 +40,6 @@ import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResource
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -82,15 +81,18 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     @Inject
     public PublicationMetadataTabViewImpl() {
         panel = new VLayout();
-        panel.setHeight100();
-        panel.setOverflow(Overflow.SCROLL);
+        // panel.setAutoHeight();
+        // panel.setOverflow(Overflow.SCROLL);
 
         mainFormLayout = new PublicationMainFormLayout(PublicationClientSecurityUtils.canUpdatePublication());
         bindMainFormLayoutEvents();
         createViewForm();
         createEditionForm();
 
-        panel.addMember(mainFormLayout);
+        VLayout subPanel = new VLayout();
+        subPanel.addMember(mainFormLayout);
+
+        panel.addMember(subPanel);
     }
 
     @Override

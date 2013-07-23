@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
@@ -13,22 +14,22 @@ import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
-import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandlers> implements PublicationPresenter.PublicationView {
 
-    private VLayout    panel;
-    private TitleLabel titleLabel;
+    private VLayout      panel;
+    private TitleLabel   titleLabel;
 
-    private TabSet     tabSet;
-    private Tab        publicationMetadataTab;
-    private Tab        publicationStructureTab;
+    private CustomTabSet tabSet;
+    private Tab          publicationMetadataTab;
+    private Tab          publicationStructureTab;
 
     @Inject
     public PublicationViewImpl(PublicationMetadataTabView metadataView, PublicationStructureTabView structureView) {
@@ -36,20 +37,21 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
         panel = new VLayout();
 
         titleLabel = new TitleLabel(new String());
-        titleLabel.setStyleName("sectionTitleLeftMargin");
         titleLabel.setVisibility(Visibility.HIDDEN);
 
-        // TABS
-        tabSet = new TabSet();
-        tabSet.setMargin(10);
-
+        tabSet = new CustomTabSet();
         publicationMetadataTab = new Tab(getConstants().publicationMetadata());
         publicationStructureTab = new Tab(getConstants().publicationStructure());
-
         tabSet.setTabs(publicationMetadataTab, publicationStructureTab);
 
-        panel.addMember(titleLabel);
-        panel.addMember(tabSet);
+        VLayout subPanel = new VLayout();
+        subPanel.setOverflow(Overflow.SCROLL);
+        subPanel.setMargin(15);
+        subPanel.addMember(titleLabel);
+        subPanel.addMember(tabSet);
+
+        panel.addMember(subPanel);
+
         bindEvents();
     }
 
