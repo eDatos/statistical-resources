@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NavigableTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.smartgwt.client.data.Record;
@@ -20,6 +23,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitEvent;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitHandler;
@@ -35,7 +39,7 @@ import com.smartgwt.client.widgets.tree.events.LeafClickHandler;
 import com.smartgwt.client.widgets.viewer.DetailViewer;
 import com.smartgwt.client.widgets.viewer.DetailViewerField;
 
-public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
+public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected static final String   SCHEME_NODE_NAME = "scheme-node";
 
@@ -49,7 +53,8 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected PublicationVersionDto publicationVersionDto;
 
     protected Tree                  tree;
-    protected TreeGridField         nameField;
+    protected TreeGridField         titleField;
+    protected TreeGridField         orderField;
     protected TreeGridField         infoField;
 
     protected HandlerRegistration   filterEditionHandler;
@@ -75,8 +80,14 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
         setShowHoverComponents(true);
         setShowHeaderContextMenu(false); // do not show context menu in trees (avoid to show columns that should not be shown)
 
-        nameField = new TreeGridField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
-        nameField.setShowHover(false); // only show hover in info field
+        titleField = new TreeGridField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
+        titleField.setShowHover(false); // only show hover in info field
+        titleField.setCanFilter(true);
+
+        orderField = new TreeGridField(ElementLevelDS.ORDER_IN_LEVEL, getConstants().publicationStructureElementOrderInLevel());
+        orderField.setShowIfCondition(ListGridUtils.getFalseListGridFieldIfFunction());
+        orderField.setCanSort(true);
+        orderField.setShowHover(false);
 
         infoField = new TreeGridField(ElementLevelDS.INFO, " ");
         infoField.setType(ListGridFieldType.IMAGE);
@@ -85,7 +96,11 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
         infoField.setCanFilter(false);
         infoField.setShowHover(true);
 
-        setFields(nameField, infoField);
+        setFields(titleField, orderField, infoField);
+
+        // Order by ORDER field
+        setCanSort(true);
+        setSortField(ElementLevelDS.ORDER_IN_LEVEL);
 
         setShowFilterEditor(true);
 
@@ -152,7 +167,7 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
         leafClickHandlerRegistration.removeHandler();
     }
 
-    public void updateItemScheme(PublicationVersionDto publicationVersionDto) {
+    public void updatePublicationVersionRootNode(PublicationVersionDto publicationVersionDto) {
         this.publicationVersionDto = publicationVersionDto;
         // Update item scheme node
         TreeNode node = getTree().find(SCHEME_NODE_NAME);
@@ -160,6 +175,35 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
             node.setAttribute(ElementLevelDS.TITLE, InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
             markForRedraw();
         }
+    }
+
+    public void setElements(PublicationVersionDto publicationVersionDto, List<ElementLevelDto> elementLevelDtos) {
+        this.publicationVersionDto = publicationVersionDto;
+
+        // Clear filter editor
+        setFilterEditorCriteria(null);
+
+        ElementLevelTreeNode publicationVersionRootNode = createPublicationVersionRootNode(publicationVersionDto);
+        publicationVersionRootNode.setChildren(createElementLevelsTreeNodes(elementLevelDtos));
+
+        addTreeNodesToTreeGrid(new ElementLevelTreeNode[]{publicationVersionRootNode});
+    }
+
+    public ElementLevelTreeNode[] createElementLevelsTreeNodes(List<ElementLevelDto> elementLevelDtos) {
+        ElementLevelTreeNode[] treeNodes = new ElementLevelTreeNode[elementLevelDtos.size()];
+        for (int i = 0; i < elementLevelDtos.size(); i++) {
+            treeNodes[i] = StatisticalResourcesRecordUtils.getElementLevelNode(elementLevelDtos.get(i));
+            treeNodes[i].setChildren(createElementLevelsTreeNodes(elementLevelDtos.get(i).getSubelements()));
+        }
+        return treeNodes;
+    }
+
+    public void addTreeNodesToTreeGrid(ElementLevelTreeNode[] treeNodes) {
+        tree = new Tree();
+        tree.setModelType(TreeModelType.CHILDREN);
+        tree.linkNodes(treeNodes);
+        setData(tree);
+        getData().openAll();
     }
 
     public void selectItem(String urn) {
@@ -173,7 +217,7 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
         contextMenu.showContextMenu();
     }
 
-    protected TreeNode createItemSchemeTreeNode(PublicationVersionDto publicationVersionDto) {
+    protected ElementLevelTreeNode createPublicationVersionRootNode(PublicationVersionDto publicationVersionDto) {
         return StatisticalResourcesRecordUtils.getPublicationVersionRootNode(SCHEME_NODE_NAME, publicationVersionDto);
     }
 
@@ -211,6 +255,14 @@ public abstract class PublicationStructureTreeGrid extends NavigableTreeGrid {
         return super.getCellHoverComponent(record, rowNum, colNum);
     }
 
-    protected abstract void onNodeClick(String nodeName, String elementUrn);
-    protected abstract DetailViewerField[] getDetailViewerFields();
+    protected void onNodeClick(String nodeName, String elementUrn) {
+
+    }
+
+    protected DetailViewerField[] getDetailViewerFields() {
+        DetailViewerField titleField = new DetailViewerField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
+        DetailViewerField descriptionField = new DetailViewerField(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
+        // TODO
+        return new DetailViewerField[]{titleField, descriptionField};
+    }
 }

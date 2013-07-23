@@ -15,8 +15,6 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -46,8 +44,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     public interface PublicationStructureTabView extends View {
 
-        void setPublicationVersion(PublicationVersionDto publicationVersionDto);
-        void setPublicationStructure(PublicationStructureDto publicationStructureDto);
+        void setPublicationStructure(PublicationVersionDto publicationVersionDto, PublicationStructureDto publicationStructureDto);
     }
 
     @ProxyCodeSplit
@@ -82,7 +79,6 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
             String publicationVersionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
-            retrievePublicationVersion(publicationVersionUrn);
             retrievePublicationStructure(publicationVersionUrn);
         } else {
             StatisticalResourcesWeb.showErrorPage();
@@ -106,20 +102,6 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         }
     }
 
-    private void retrievePublicationVersion(String publicationVersionUrn) {
-        dispatcher.execute(new GetPublicationAction(publicationVersionUrn), new WaitingAsyncCallback<GetPublicationResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(GetPublicationResult result) {
-                getView().setPublicationVersion(result.getPublicationVersionDto());
-            }
-        });
-    }
-
     private void retrievePublicationStructure(String publicationVersionUrn) {
         dispatcher.execute(new GetPublicationStructureAction(publicationVersionUrn), new WaitingAsyncCallback<GetPublicationStructureResult>() {
 
@@ -129,7 +111,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             }
             @Override
             public void onWaitSuccess(GetPublicationStructureResult result) {
-                getView().setPublicationStructure(result.getPublicationStructureDto());
+                getView().setPublicationStructure(result.getPublicationVersionDto(), result.getPublicationStructureDto());
             }
         });
     }

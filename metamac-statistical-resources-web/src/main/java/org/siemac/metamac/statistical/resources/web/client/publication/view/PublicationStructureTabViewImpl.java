@@ -1,12 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
-import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructurePanel;
-import org.siemac.metamac.web.common.client.widgets.TitleLabel;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureTreeGrid;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -15,33 +12,22 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationStructureTabViewImpl extends ViewImpl implements PublicationStructureTabView {
 
-    private VLayout                   panel;
-    private PublicationStructurePanel structurePanel;
+    private VLayout                      panel;
+    private PublicationStructureTreeGrid publicationStructureTreeGrid;
 
     @Inject
     public PublicationStructureTabViewImpl() {
         panel = new VLayout();
         panel.setMargin(15);
 
-        structurePanel = new PublicationStructurePanel();
+        publicationStructureTreeGrid = new PublicationStructureTreeGrid();
 
-        VLayout publicationStructureLayout = new VLayout();
-        publicationStructureLayout.setMargin(15);
-        publicationStructureLayout.addMember(new TitleLabel(getConstants().publicationStructure()));
-        publicationStructureLayout.addMember(structurePanel);
-
-        panel.addMember(structurePanel);
+        panel.addMember(publicationStructureTreeGrid);
     }
 
     @Override
-    public void setPublicationVersion(PublicationVersionDto publicationVersionDto) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setPublicationStructure(PublicationStructureDto publicationStructureDto) {
-        // TODO Auto-generated method stub
+    public void setPublicationStructure(PublicationVersionDto publicationVersionDto, PublicationStructureDto publicationStructureDto) {
+        publicationStructureTreeGrid.setElements(publicationVersionDto, publicationStructureDto.getElements());
     }
 
     @Override
