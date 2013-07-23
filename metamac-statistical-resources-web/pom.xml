@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>METAMAC :: STATISTICAL RESOURCES :: WEB</name>
- 
+
     <properties>
         <!-- Convenience property to set the GWT version -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
@@ -25,22 +25,6 @@
             <artifactId>metamac-statistical-resources-core</artifactId>
             <version>${project.version}</version>
             <classifier>client</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
-            <artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
-            <version>${metamac-statistical-operations-rest-internal-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac.metamac-common-metadata</groupId>
-            <artifactId>metamac-common-metadata-rest-external-api</artifactId>
-            <version>${metamac-common-metadata-rest-external-api.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-rest-common</artifactId>
-            <version>${metamac-rest-common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -94,7 +78,7 @@
                 <exclusion>
                     <groupId>com.gwtplatform</groupId>
                     <artifactId>gwtp-crawler-service</artifactId>
-                </exclusion>            
+                </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-core</artifactId>
