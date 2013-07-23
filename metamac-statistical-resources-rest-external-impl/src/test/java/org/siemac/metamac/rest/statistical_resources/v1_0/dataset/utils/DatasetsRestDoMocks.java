@@ -99,7 +99,7 @@ public class DatasetsRestDoMocks {
     }
 
     private void mockVersionableStatisticalResource(String agencyID, String resourceID, String version, VersionableStatisticalResource target) {
-        target.setVersionRationale(StatisticalResourcesDoMocks.mockInternationalString("versionRationale"));
+        target.setVersionRationale(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "versionRationale"));
         target.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
         target.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_METADATA));
         target.setValidFrom(new DateTime(2013, 1, 1, 3, 4, 12, 0));
