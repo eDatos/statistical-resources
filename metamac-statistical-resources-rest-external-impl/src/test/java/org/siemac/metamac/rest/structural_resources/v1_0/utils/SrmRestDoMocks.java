@@ -1,5 +1,7 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
+import java.math.BigInteger;
+
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
@@ -28,6 +30,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecisions;
 
 public class SrmRestDoMocks {
 
@@ -38,6 +42,7 @@ public class SrmRestDoMocks {
         dataStructure.setAgencyID(agencyID);
         dataStructure.setId(resourceID);
         dataStructure.setVersion(version);
+        dataStructure.setAutoOpen(Boolean.TRUE);
 
         dataStructure.setDataStructureComponents(new DataStructureComponentsType());
         dataStructure.getDataStructureComponents().setDimensionList(new DimensionListType());
@@ -45,7 +50,19 @@ public class SrmRestDoMocks {
         dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockTimeDimension("TIME_PERIOD"));
         dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockMeasureDimension("measure01"));
         dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimension("dim01", Boolean.FALSE));
+
+        dataStructure.setShowDecimals(BigInteger.valueOf(2));
+        dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
+        dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "conceptScheme01", "01.000", "measure01-conceptScheme01-concept01", 4));
+        dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "conceptScheme01", "01.000", "measure01-conceptScheme01-concept05", 1));
         return dataStructure;
+    }
+
+    private static ShowDecimalPrecision mockShowDecimalPrecision(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, int value) {
+        ShowDecimalPrecision showDecimalPrecision = new ShowDecimalPrecision();
+        showDecimalPrecision.setConcept(mockConceptReferenceType(agencyID, maintainableParentID, maintainableVersionID, resourceID));
+        showDecimalPrecision.setShowDecimals(BigInteger.valueOf(value));
+        return showDecimalPrecision;
     }
 
     public static Codelist mockCodelist(String agencyID, String resourceID, String version) {

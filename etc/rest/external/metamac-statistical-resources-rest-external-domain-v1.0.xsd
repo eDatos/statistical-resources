@@ -136,6 +136,8 @@
                 <xs:sequence>
                     <xs:element name="heading" type="tns:DimensionsId" />
                     <xs:element name="stub" type="tns:DimensionsId"  />
+                    <xs:element name="autoOpen" type="xs:boolean" minOccurs="0" />
+                    <xs:element name="showDecimals" type="xs:integer" minOccurs="0"  />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -194,6 +196,7 @@
             <xs:extension base="common:Resource">
                 <xs:sequence>
                     <xs:element name="parent" type="xs:string" minOccurs="0" />
+                    <xs:element name="showDecimalsPrecision" type="xs:integer" minOccurs="0"  />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -204,7 +207,7 @@
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
         </xs:sequence>
-    </xs:complexType>      
+    </xs:complexType>
     
     <!-- Lists -->
     <xs:complexType name="Datasets">
@@ -215,7 +218,7 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>
+    </xs:complexType>     
     
     <!-- Enums -->
     <xs:simpleType name="DimensionType">
