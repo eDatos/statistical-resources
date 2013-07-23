@@ -43,7 +43,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         query.setIdentifiableStatisticalResource(identifiable);
 
         if (withVersion) {
-            query.addVersion(mockQueryVersion(query, mockDatasetVersion(), true));
+            mockQueryVersion(query, mockDatasetVersion(), true);
         }
         return query;
     }
@@ -163,7 +163,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         if (publication != null) {
             publicationVersion.setPublication(publication);
         } else {
-            Publication pub = mockPublicationWithoutGeneratedPublicationVersions();
+            Publication pub = mockPublicationWithoutGeneratedPublicationVersion();
             publicationVersion.setPublication(pub);
             pub.addVersion(publicationVersion);
         }
@@ -203,6 +203,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         resource.setResourceCreatedDate(today.minusDays(1));
         resource.setLastUpdate(today);
     }
+
     @Override
     protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
         resource.setProcStatus(ProcStatusEnum.DRAFT);

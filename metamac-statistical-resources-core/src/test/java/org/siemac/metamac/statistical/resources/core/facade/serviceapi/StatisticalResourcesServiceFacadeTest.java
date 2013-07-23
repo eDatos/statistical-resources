@@ -13,8 +13,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsCube;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublication;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationStructure;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuerySelection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionDoAndDtoCollection;
@@ -38,6 +40,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_02_BASIC_NAME;
@@ -58,6 +61,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
@@ -118,11 +122,13 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationVersionCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.enums.PublicationVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryVersionCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryVersionCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemRepository;
@@ -218,7 +224,49 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     // ------------------------------------------------------------------------
-    // QUERIES
+    // QUERIES 
+    // ------------------------------------------------------------------------
+    
+    @Override
+    @Test
+    @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
+    public void testFindQueriesByCondition() throws Exception {
+        QueryVersion latestQueryVersionQuery02 = queryMockFactory.retrieveMock(QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME).getVersions().get(0);
+        QueryVersion latestQueryVersionQuery03 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME);
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(2, results.size());
+
+        assertEqualsQuery(latestQueryVersionQuery02, results.get(0));
+        assertEqualsQuery(latestQueryVersionQuery03, results.get(1));
+    }
+
+    @Test
+    @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
+    public void testFindQueriesByConditionTitle() throws Exception {
+        QueryVersion latestQueryVersionQuery03 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        String title = latestQueryVersionQuery03.getLifeCycleStatisticalResource().getTitle().getLocalisedLabel("es");
+        setCriteriaStringPropertyRestriction(metamacCriteria, QueryCriteriaPropertyEnum.QUERY_VERSION_TITLE, OperationType.LIKE, title);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(latestQueryVersionQuery03, results.get(0));
+    }
+
+    
+    
+    // ------------------------------------------------------------------------
+    // QUERIES VERSIONS
     // ------------------------------------------------------------------------
 
     @Override
@@ -631,7 +679,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDataset(latestDatasetVersionDataset03, results.get(0));
         assertEqualsDataset(latestDatasetVersionDataset04, results.get(1));
     }
-    
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME})
     public void testFindDatasetsByConditionTitle() throws Exception {
@@ -640,7 +688,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Restrictions
         MetamacCriteria metamacCriteria = new MetamacCriteria();
         String title = latestDatasetVersionDataset03.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel("es");
-        setCriteriaStringPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.LATEST_DATASET_VERSION_TITLE, OperationType.LIKE, title);
+        setCriteriaStringPropertyRestriction(metamacCriteria, DatasetCriteriaPropertyEnum.DATASET_VERSION_TITLE, OperationType.LIKE, title);
 
         MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
         assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
@@ -1102,6 +1150,50 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         fail("testRetrieveCoverageForDatasetVersionDimension not implemented");
     }
+
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS
+    // ------------------------------------------------------------------------
+
+    @Override
+    @Test
+    @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
+    public void testFindPublicationsByCondition() throws Exception {
+        PublicationVersion latestPublicationVersionPublication02 = publicationMockFactory.retrieveMock(PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME).getVersions().get(0);
+        PublicationVersion latestPublicationVersionPublication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME);
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(2, results.size());
+
+        assertEqualsPublication(latestPublicationVersionPublication02, results.get(0));
+        assertEqualsPublication(latestPublicationVersionPublication03, results.get(1));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
+    public void testFindPublicationsByConditionTitle() throws Exception {
+        PublicationVersion latestPublicationVersionPublication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        String title = latestPublicationVersionPublication03.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel("es");
+        setCriteriaStringPropertyRestriction(metamacCriteria, PublicationCriteriaPropertyEnum.PUBLICATION_VERSION_TITLE, OperationType.LIKE, title);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(latestPublicationVersionPublication03, results.get(0));
+    }
+
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS VERSIONS
+    // ------------------------------------------------------------------------
 
     @Override
     @Test

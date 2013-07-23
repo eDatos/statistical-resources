@@ -256,6 +256,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
             // not last version
             queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(2));
             queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+            queryVersion.getLifeCycleStatisticalResource().setLastVersion(Boolean.FALSE);
 
             // Relations
             QUERY_VERSION_21_FOR_QUERY_03 = queryVersion;
@@ -274,7 +275,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
             // Is last version
             queryVersion.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            queryVersion.getLifeCycleStatisticalResource().setLastVersion(true);
+            queryVersion.getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
 
             // Relations
             QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION = queryVersion;

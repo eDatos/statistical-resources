@@ -163,6 +163,8 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+            
+            publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(Boolean.FALSE);
             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
 
             // Relations
@@ -180,6 +182,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
 
             // Last version
+            publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(Boolean.TRUE);
             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
 
             // Relations

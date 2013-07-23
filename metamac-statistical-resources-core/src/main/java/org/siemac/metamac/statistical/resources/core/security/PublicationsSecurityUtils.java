@@ -10,6 +10,16 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------
+    
+    public static void canFindPublicationsByCondition(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canFindPublications(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+    
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS VERSIONS
+    // ------------------------------------------------------------------------
 
     public static void canCreatePublication(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canCreatePublication(getMetamacPrincipal(ctx))) {
@@ -18,25 +28,25 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     }
 
     public static void canUpdatePublicationVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canUpdatePublication(getMetamacPrincipal(ctx))) {
+        if (!SharedPublicationsSecurityUtils.canUpdatePublicationVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canDeletePublicationVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canDeletePublication(getMetamacPrincipal(ctx))) {
+        if (!SharedPublicationsSecurityUtils.canDeletePublicationVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canFindPublicationsVersionsByCondition(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canFindPublicationsByCondition(getMetamacPrincipal(ctx))) {
+        if (!SharedPublicationsSecurityUtils.canFindPublicationsVersionsByCondition(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canRetrievePublicationVersionByUrn(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canRetrievePublicationByUrn(getMetamacPrincipal(ctx))) {
+        if (!SharedPublicationsSecurityUtils.canRetrievePublicationVersionByUrn(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
@@ -66,7 +76,25 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     }
 
     public static void canRetrievePublicationVersionStructure(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canRetrievePublicationStructure(getMetamacPrincipal(ctx))) {
+        if (!SharedPublicationsSecurityUtils.canRetrievePublicationVersionStructure(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+    
+    public static void canSendPublicationVersionToProductionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canSendPublicationVersionToDiffusionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canSendPublicationVersionToValidationRejected(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
@@ -135,24 +163,6 @@ public class PublicationsSecurityUtils extends SecurityUtils {
 
     public static void canDeleteCube(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canDeleteCube(getMetamacPrincipal(ctx))) {
-            throwExceptionIfOperationNotAllowed(ctx);
-        }
-    }
-
-    public static void canSendToProductionValidation(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canSendToProductionValidation(getMetamacPrincipal(ctx))) {
-            throwExceptionIfOperationNotAllowed(ctx);
-        }
-    }
-
-    public static void canSendPublicationVersionToDiffusionValidation(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(getMetamacPrincipal(ctx))) {
-            throwExceptionIfOperationNotAllowed(ctx);
-        }
-    }
-
-    public static void canSendPublicationVersionToValidationRejected(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

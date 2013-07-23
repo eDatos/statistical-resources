@@ -145,7 +145,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         if (publication != null) {
             publicationVersion.setPublication(publication);
         } else {
-            Publication pub = statisticalResourcesPersistedDoMocks.mockPublicationWithoutGeneratedPublicationVersions();
+            Publication pub = statisticalResourcesPersistedDoMocks.mockPublicationWithoutGeneratedPublicationVersion();
             publicationVersion.setPublication(pub);
             pub.addVersion(publicationVersion);
         }

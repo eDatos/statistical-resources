@@ -8,12 +8,21 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     // QUERIES
     // ------------------------------------------------------------------------
 
-    public static boolean canRetrieveQueryByUrn(MetamacPrincipal metamacPrincipal) {
+    public static boolean canFindQueriesByCondition(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canRetrieveQueries(MetamacPrincipal metamacPrincipal) {
+    // ------------------------------------------------------------------------
+    // QUERIES VERSIONS
+    // ------------------------------------------------------------------------
+
+    public static boolean canRetrieveQueryVersionByUrn(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canRetrieveQueriesVersions(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
@@ -23,22 +32,22 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canFindQueriesByCondition(MetamacPrincipal metamacPrincipal) {
+    public static boolean canFindQueriesVersionsByCondition(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canUpdateQuery(MetamacPrincipal metamacPrincipal) {
+    public static boolean canUpdateQueryVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canMarkQueryAsDiscontinued(MetamacPrincipal metamacPrincipal) {
+    public static boolean canMarkQueryVersionAsDiscontinued(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canDeleteQuery(MetamacPrincipal metamacPrincipal) {
+    public static boolean canDeleteQueryVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }

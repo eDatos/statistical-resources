@@ -32,7 +32,7 @@ Application FacadeStatisticalResources {
 			> @DatasetLifecycleService
 			> @PublicationLifecycleService
 			
-			// QUERIES
+			// QUERY VERSION
 			"Retrieves a query scheme by URN"
             @QueryVersionDto retrieveQueryVersionByUrn(String urn) throws MetamacException;
             "Retrieve queries"
@@ -51,6 +51,10 @@ Application FacadeStatisticalResources {
     		@QueryVersionDto retrieveLatestQueryVersion(String queryUrn) throws MetamacException;
     		"Retrieve latest published queryVersion providing queryUrn"
     		@QueryVersionDto retrieveLatestPublishedQueryVersion(String queryUrn) throws MetamacException
+    		
+    		// QUERIES
+	   		"Find all queries"
+	   		MetamacCriteriaResult<@RelatedResourceDto> findQueriesByCondition(MetamacCriteria criteria) throws MetamacException; 
     		 			
 			// DATASOURCES
 			"Creates a datasource"
@@ -98,7 +102,11 @@ Application FacadeStatisticalResources {
     		"Retrieve the coverage for a given dimension"
     		List<@CodeItemDto> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		
-    		// PUBLICATIONS & PUBLICATION VERSION
+    		// PUBLICATIONS
+	   		"Find all publications"
+	   		MetamacCriteriaResult<@RelatedResourceDto> findPublicationsByCondition(MetamacCriteria criteria) throws MetamacException; 
+    		
+    		// PUBLICATION VERSION
 	   		"Creates publication"
 	   		@PublicationVersionDto createPublication(@PublicationVersionDto publicationVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates publication"

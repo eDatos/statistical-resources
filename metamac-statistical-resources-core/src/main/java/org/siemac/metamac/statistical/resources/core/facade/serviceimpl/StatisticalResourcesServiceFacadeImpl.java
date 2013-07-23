@@ -35,17 +35,23 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapper;
+import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QuerySculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
@@ -85,6 +91,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private QueryVersionSculptorCriteria2MetamacCriteriaMapper       queryVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
+    private QueryMetamacCriteria2SculptorCriteriaMapper              queryMetamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
+    private QuerySculptorCriteria2MetamacCriteriaMapper              querySculptorCriteria2MetamacCriteriaMapper;
+
+    @Autowired
     private DatasetVersionMetamacCriteria2SculptorCriteriaMapper     datasetVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
@@ -100,6 +112,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private PublicationVersionMetamacCriteria2SculptorCriteriaMapper publicationVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
+    private PublicationSculptorCriteria2MetamacCriteriaMapper        publicationSculptorCriteria2MetamacCriteriaMapper;
+
+    @Autowired
+    private PublicationMetamacCriteria2SculptorCriteriaMapper        publicationMetamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
     private PublicationVersionSculptorCriteria2MetamacCriteriaMapper publicationVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
@@ -113,6 +131,33 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     // ------------------------------------------------------------------------
     // QUERIES
+    // ------------------------------------------------------------------------
+
+    @Override
+    public MetamacCriteriaResult<RelatedResourceDto> findQueriesByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canFindQueriesByCondition(ctx);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Add condition for latest queryVersion
+        ConditionalCriteria latestQueryVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion()).eq(Boolean.TRUE).buildSingle();
+        sculptorCriteria.getConditions().add(latestQueryVersionRestriction);
+
+        // Find
+        PagedResult<QueryVersion> result = getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = querySculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQueryRelatedResourceDto(result,
+                sculptorCriteria.getPageSize());
+
+        return metamacCriteriaResult;
+    }
+
+    // ------------------------------------------------------------------------
+    // QUERY VERSION
     // ------------------------------------------------------------------------
 
     @Override
@@ -536,6 +581,33 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     // ------------------------------------------------------------------------
 
     @Override
+    public MetamacCriteriaResult<RelatedResourceDto> findPublicationsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canFindPublicationsByCondition(ctx);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = publicationMetamacCriteria2SculptorCriteriaMapper.getPublicationCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Add condition for latest queryVersion
+        ConditionalCriteria latestPublicationVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class)
+                .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE).buildSingle();
+        sculptorCriteria.getConditions().add(latestPublicationVersionRestriction);
+
+        // Find
+        PagedResult<PublicationVersion> result = getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = publicationSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationRelatedResourceDto(result,
+                sculptorCriteria.getPageSize());
+
+        return metamacCriteriaResult;
+    }
+
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS VERSIONS
+    // ------------------------------------------------------------------------
+
+    @Override
     public PublicationVersionDto createPublication(ServiceContext ctx, PublicationVersionDto publicationVersionDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canCreatePublication(ctx);
@@ -682,7 +754,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto sendPublicationVersionToProductionValidation(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendToProductionValidation(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx);
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);

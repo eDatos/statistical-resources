@@ -880,6 +880,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // no optimistic locking in this operation
     }
 
+    @Override
+    public void testFindQueriesByCondition() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testFindPublicationsByCondition() throws Exception {
+        // no optimistic locking in this operation
+    }
+
     // ------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------

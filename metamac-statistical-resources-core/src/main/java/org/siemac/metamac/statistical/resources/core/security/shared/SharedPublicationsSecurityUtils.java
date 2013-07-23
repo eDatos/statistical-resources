@@ -8,27 +8,36 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     // PUBLICATIONS
     // ------------------------------------------------------------------------
 
+    public static boolean canFindPublications(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    // ------------------------------------------------------------------------
+    // PUBLICATIONS VERSIONS
+    // ------------------------------------------------------------------------
+
     public static boolean canCreatePublication(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canUpdatePublication(MetamacPrincipal metamacPrincipal) {
+    public static boolean canUpdatePublicationVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canDeletePublication(MetamacPrincipal metamacPrincipal) {
+    public static boolean canDeletePublicationVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canFindPublicationsByCondition(MetamacPrincipal metamacPrincipal) {
+    public static boolean canFindPublicationsVersionsByCondition(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canRetrievePublicationByUrn(MetamacPrincipal metamacPrincipal) {
+    public static boolean canRetrievePublicationVersionByUrn(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
@@ -53,7 +62,22 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canRetrievePublicationStructure(MetamacPrincipal metamacPrincipal) {
+    public static boolean canRetrievePublicationVersionStructure(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendPublicationVersionToProductionValidation(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendPublicationVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendPublicationVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
@@ -117,21 +141,6 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
 
     public static boolean canDeleteCube(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
-        return isAnyResourcesRole(metamacPrincipal);
-    }
-
-    public static boolean canSendToProductionValidation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyResourcesRole(metamacPrincipal);
-    }
-
-    public static boolean canSendPublicationVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyResourcesRole(metamacPrincipal);
-    }
-
-    public static boolean canSendPublicationVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
-     // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 }

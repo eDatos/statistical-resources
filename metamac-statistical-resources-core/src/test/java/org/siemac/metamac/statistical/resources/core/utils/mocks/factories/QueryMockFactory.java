@@ -29,21 +29,23 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     protected static Query getQuery01Simple() {
         if (QUERY_01_SIMPLE == null) {
-            QUERY_01_SIMPLE = createQuery();
+            QUERY_01_SIMPLE = createQueryWithGeneratedVersion();
         }
         return QUERY_01_SIMPLE;
     }
     
     protected static Query getQuery02BasicWithGeneratedVersion() {
         if (QUERY_02_BASIC_WITH_GENERATED_VERSION == null) {
-            QUERY_02_BASIC_WITH_GENERATED_VERSION = createQuery();
+            Query query = createQueryWithGeneratedVersion();
+            query.getVersions().get(0).getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
+            QUERY_02_BASIC_WITH_GENERATED_VERSION = query;
         }
         return QUERY_02_BASIC_WITH_GENERATED_VERSION;
     }
 
     protected static Query getQuery03With2QueryVersions() {
         if (QUERY_03_BASIC_WITH_2_QUERY_VERSIONS == null) {
-            Query query = createQuery();
+            Query query = createQueryWithoutGeneratedVersion();
             QUERY_03_BASIC_WITH_2_QUERY_VERSIONS = query;
             setQuery03Versions(QUERY_03_BASIC_WITH_2_QUERY_VERSIONS);
         }
@@ -65,7 +67,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     protected static Query getQuery04With1QueryVersions() {
         if (QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS == null) {
-            Query query = createQuery();
+            Query query = createQueryWithoutGeneratedVersion();
             // Query version relation is set in version factory
             QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS = query;
             setQuery04Versions(query);
@@ -82,7 +84,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     protected static Query getQuery05WithMultiplePublishedVersions() {
         if (QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS == null) {
-            Query query = createQuery();
+            Query query = createQueryWithoutGeneratedVersion();
             QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS = query;
             setQuery05Versions(QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS);
         }
@@ -110,7 +112,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     
     protected static Query getQuery06WithMultiplePublishedVersionsAndLatestNoVisible() {
         if (QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE == null) {
-            Query query = createQuery();
+            Query query = createQueryWithoutGeneratedVersion();
             QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE = query;
             setQuery06Versions(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE);
         }
@@ -130,7 +132,11 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
     }
 
-    private static Query createQuery() {
+    private static Query createQueryWithGeneratedVersion() {
+        return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersions();
+    }
+    
+    private static Query createQueryWithoutGeneratedVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithoutGeneratedQueryVersions();
     }
 }

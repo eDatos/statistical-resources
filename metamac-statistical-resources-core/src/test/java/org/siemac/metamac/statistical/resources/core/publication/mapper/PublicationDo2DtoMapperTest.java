@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.publication.mapper;
 import static org.junit.Assert.assertEquals;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsCube;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublication;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionDoAndDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsElementLevelCollection;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
@@ -145,6 +147,14 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         List<ElementLevelDto> actual = publicationDo2DtoMapper.elementsLevelDoListToDtoList(expected);
         
         assertRelaxedEqualsElementLevelCollection(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME)
+    public void testPublicationVersionDoToPublicationRelatedResourceDto() throws MetamacException {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME);
+        RelatedResourceDto actual = publicationDo2DtoMapper.publicationVersionDoToPublicationRelatedResourceDto(expected);
+        assertEqualsPublication(expected, actual);
     }
 
 }

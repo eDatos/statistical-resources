@@ -8,17 +8,27 @@ import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueri
 public class QueriesSecurityUtils extends SecurityUtils {
 
     // ------------------------------------------------------------------------
-    // QUERIES
+    // QUERIES VERSIONS
+    // ------------------------------------------------------------------------
+
+    public static void canFindQueriesByCondition(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canFindQueriesByCondition(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // QUERIES VERSIONS
     // ------------------------------------------------------------------------
 
     public static void canRetrieveQueryVersionByUrn(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canRetrieveQueryByUrn(getMetamacPrincipal(ctx))) {
+        if (!SharedQueriesSecurityUtils.canRetrieveQueryVersionByUrn(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canRetrieveQueriesVersions(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canRetrieveQueries(getMetamacPrincipal(ctx))) {
+        if (!SharedQueriesSecurityUtils.canRetrieveQueriesVersions(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
@@ -30,33 +40,33 @@ public class QueriesSecurityUtils extends SecurityUtils {
     }
 
     public static void canFindQueriesVersionsByCondition(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canFindQueriesByCondition(getMetamacPrincipal(ctx))) {
+        if (!SharedQueriesSecurityUtils.canFindQueriesVersionsByCondition(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canUpdateQueryVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canUpdateQuery(getMetamacPrincipal(ctx))) {
+        if (!SharedQueriesSecurityUtils.canUpdateQueryVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
 
     public static void canMarkQueryVersionAsDiscontinued(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canMarkQueryAsDiscontinued(getMetamacPrincipal(ctx))) {
+        if (!SharedQueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
-        }        
+        }
     }
 
     public static void canDeleteQueryVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canDeleteQuery(getMetamacPrincipal(ctx))) {
+        if (!SharedQueriesSecurityUtils.canDeleteQueryVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
-        } 
+        }
     }
 
     public static void canRetrieveLatestQueryVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
-        } 
+        }
     }
 
     public static void canRetrieveLatestPublishedQueryVersion(ServiceContext ctx) throws MetamacException {
@@ -64,5 +74,4 @@ public class QueriesSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-
 }

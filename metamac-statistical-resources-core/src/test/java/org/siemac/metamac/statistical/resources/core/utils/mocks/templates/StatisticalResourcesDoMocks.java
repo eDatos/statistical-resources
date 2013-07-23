@@ -105,11 +105,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     // PUBLICATION
     // -----------------------------------------------------------------
-    public Publication mockPublicationWithoutGeneratedPublicationVersions() {
+    public Publication mockPublicationWithoutGeneratedPublicationVersion() {
         return mockPublication(false);
     }
 
-    public Publication mockPublicationWithGeneratedPublicationVersions() {
+    public Publication mockPublicationWithGeneratedPublicationVersion() {
         return mockPublication(true);
     }
 

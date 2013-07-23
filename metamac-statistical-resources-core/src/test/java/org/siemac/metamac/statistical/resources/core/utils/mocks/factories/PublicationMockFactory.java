@@ -45,7 +45,9 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
 
     protected static Publication getPublication02BasicWithGeneratedVersion() {
         if (PUBLICATION_02_BASIC_WITH_GENERATED_VERSION == null) {
-            PUBLICATION_02_BASIC_WITH_GENERATED_VERSION = createPublicationWithGeneratedPublicationVersions();
+            Publication publication = createPublicationWithGeneratedPublicationVersions();
+            publication.getVersions().get(0).getSiemacMetadataStatisticalResource().setLastVersion(Boolean.TRUE);
+            PUBLICATION_02_BASIC_WITH_GENERATED_VERSION = publication;
         }
         return PUBLICATION_02_BASIC_WITH_GENERATED_VERSION;
     }
@@ -61,17 +63,6 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS;
     }
 
-    protected static Publication getPublication04StructuredWith2PublicationVersions() {
-        if (PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS == null) {
-            Publication publication = createPublication();
-
-            // Relations
-            PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS = publication;
-            setPublication04Versions(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS);
-        }
-        return PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS;
-    }
-
     private static void setPublication03Versions(Publication publication) {
         PublicationVersion publicationV1 = getPublicationVersion03ForPublication03();
         PublicationVersion publicationV2 = getPublicationVersion04ForPublication03AndLastVersion();
@@ -81,6 +72,17 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
 
         publication.addVersion(publicationV2);
         publicationV2.setPublication(publication);
+    }
+    
+    protected static Publication getPublication04StructuredWith2PublicationVersions() {
+        if (PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS == null) {
+            Publication publication = createPublication();
+
+            // Relations
+            PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS = publication;
+            setPublication04Versions(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS);
+        }
+        return PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS;
     }
 
     private static void setPublication04Versions(Publication publication) {
@@ -145,11 +147,11 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
     }
 
     private static Publication createPublication() {
-        return getStatisticalResourcesPersistedDoMocks().mockPublicationWithoutGeneratedPublicationVersions();
+        return getStatisticalResourcesPersistedDoMocks().mockPublicationWithoutGeneratedPublicationVersion();
     }
 
     private static Publication createPublicationWithGeneratedPublicationVersions() {
-        return getStatisticalResourcesPersistedDoMocks().mockPublicationWithGeneratedPublicationVersions();
+        return getStatisticalResourcesPersistedDoMocks().mockPublicationWithGeneratedPublicationVersion();
     }
 
 }
