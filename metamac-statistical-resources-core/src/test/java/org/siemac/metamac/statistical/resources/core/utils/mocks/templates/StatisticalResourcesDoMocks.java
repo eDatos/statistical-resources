@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import org.joda.time.DateTime;
@@ -382,14 +383,16 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static InternationalString mockInternationalStringMetadata(String resource, String metadata) {
+        assertNotNull(metadata);
+
         InternationalString internationalString = new InternationalString();
         internationalString.setVersion(Long.valueOf(0));
         {
             LocalisedString es = new LocalisedString();
-            if (metadata != null) {
+            if (resource != null) {
                 es.setLabel(metadata + "-" + resource + " en Espanol");
             } else {
-                es.setLabel(resource + " en Espanol");
+                es.setLabel(metadata + " en Espanol");
             }
             es.setLocale("es");
             es.setVersion(Long.valueOf(0));
@@ -397,10 +400,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         }
         {
             LocalisedString en = new LocalisedString();
-            if (metadata != null) {
+            if (resource != null) {
                 en.setLabel(metadata + "-" + resource + " in English");
             } else {
-                en.setLabel(resource + " in English");
+                en.setLabel(metadata + " in English");
             }
             en.setLocale("en");
             en.setVersion(Long.valueOf(0));
