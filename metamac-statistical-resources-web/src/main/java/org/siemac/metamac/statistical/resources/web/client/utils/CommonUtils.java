@@ -20,12 +20,6 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
 
-    private static LinkedHashMap<String, String> statisticalResourceTypeHashMap                 = null;
-    private static LinkedHashMap<String, String> statisticalResourceVersionRationaleTypeHashMap = null;
-    // private static LinkedHashMap<String, String> statisticalResourceFormatHashMap = null;
-    private static LinkedHashMap<String, String> versionTypeHashMap                             = null;
-    private static LinkedHashMap<String, String> statisticalResourceNextVersionHashMap          = null;
-
     // -----------------------------------------------------------------------------------------
     // PROC STATUS
     // -----------------------------------------------------------------------------------------
@@ -48,13 +42,11 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static LinkedHashMap<String, String> getStatisticalResourceTypeHashMap() {
-        if (statisticalResourceTypeHashMap == null) {
-            statisticalResourceTypeHashMap = new LinkedHashMap<String, String>();
-            statisticalResourceTypeHashMap.put(new String(), new String());
-            for (StatisticalResourceTypeEnum c : StatisticalResourceTypeEnum.values()) {
-                String value = getCoreMessages().getString(getCoreMessages().statisticalResourceTypeEnum() + c.getName());
-                statisticalResourceTypeHashMap.put(c.toString(), value);
-            }
+        LinkedHashMap<String, String> statisticalResourceTypeHashMap = new LinkedHashMap<String, String>();
+        statisticalResourceTypeHashMap.put(new String(), new String());
+        for (StatisticalResourceTypeEnum c : StatisticalResourceTypeEnum.values()) {
+            String value = getCoreMessages().getString(getCoreMessages().statisticalResourceTypeEnum() + c.getName());
+            statisticalResourceTypeHashMap.put(c.toString(), value);
         }
         return statisticalResourceTypeHashMap;
     }
@@ -68,12 +60,10 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static LinkedHashMap<String, String> getVersionRationaleTypeHashMap() {
-        if (statisticalResourceVersionRationaleTypeHashMap == null) {
-            statisticalResourceVersionRationaleTypeHashMap = new LinkedHashMap<String, String>();
-            statisticalResourceVersionRationaleTypeHashMap.put(new String(), new String());
-            for (VersionRationaleTypeEnum v : VersionRationaleTypeEnum.values()) {
-                statisticalResourceVersionRationaleTypeHashMap.put(v.toString(), getVersionRationaleTypeName(v));
-            }
+        LinkedHashMap<String, String> statisticalResourceVersionRationaleTypeHashMap = new LinkedHashMap<String, String>();
+        statisticalResourceVersionRationaleTypeHashMap.put(new String(), new String());
+        for (VersionRationaleTypeEnum v : VersionRationaleTypeEnum.values()) {
+            statisticalResourceVersionRationaleTypeHashMap.put(v.toString(), getVersionRationaleTypeName(v));
         }
         return statisticalResourceVersionRationaleTypeHashMap;
     }
@@ -95,12 +85,10 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static LinkedHashMap<String, String> getVersionTypeHashMap() {
-        if (versionTypeHashMap == null) {
-            versionTypeHashMap = new LinkedHashMap<String, String>();
-            versionTypeHashMap.put(new String(), new String());
-            for (VersionTypeEnum v : VersionTypeEnum.values()) {
-                versionTypeHashMap.put(v.toString(), getVersionTypeName(v));
-            }
+        LinkedHashMap<String, String> versionTypeHashMap = new LinkedHashMap<String, String>();
+        versionTypeHashMap.put(new String(), new String());
+        for (VersionTypeEnum v : VersionTypeEnum.values()) {
+            versionTypeHashMap.put(v.toString(), getVersionTypeName(v));
         }
         return versionTypeHashMap;
     }
@@ -114,12 +102,10 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static LinkedHashMap<String, String> getStatisticalResourceNextVersionHashMap() {
-        if (statisticalResourceNextVersionHashMap == null) {
-            statisticalResourceNextVersionHashMap = new LinkedHashMap<String, String>();
-            statisticalResourceNextVersionHashMap.put(new String(), new String());
-            for (NextVersionTypeEnum s : NextVersionTypeEnum.values()) {
-                statisticalResourceNextVersionHashMap.put(s.name(), getStatisticalResourceNextVersionName(s));
-            }
+        LinkedHashMap<String, String> statisticalResourceNextVersionHashMap = new LinkedHashMap<String, String>();
+        statisticalResourceNextVersionHashMap.put(new String(), new String());
+        for (NextVersionTypeEnum s : NextVersionTypeEnum.values()) {
+            statisticalResourceNextVersionHashMap.put(s.name(), getStatisticalResourceNextVersionName(s));
         }
         return statisticalResourceNextVersionHashMap;
     }
