@@ -114,14 +114,19 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         }
         return result.get(0);
     }
-    
+
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> retrieveDimensionsIds(DatasetVersion datasetVersion) throws MetamacException {
         Query query = getEntityManager().createQuery(
-                "select distinct(code.dsdComponentId) "+
-                "from CodeDimension code " +
-                "where code.datasetVersion = :datasetVersion "+
-                "order by code.dsdComponentId");
+                        "select code.dsdComponentId " +
+                        "from CodeDimension code " +
+                        "where id in " +
+                        "  (select max(id) " +
+                        "  from CodeDimension c " +
+                        "  where c.dsdComponentId = code.dsdComponentId " +
+                        "  and datasetVersion = :datasetVersion) " +
+                        "order by code.id");
         query.setParameter("datasetVersion", datasetVersion);
         return query.getResultList();
     }
