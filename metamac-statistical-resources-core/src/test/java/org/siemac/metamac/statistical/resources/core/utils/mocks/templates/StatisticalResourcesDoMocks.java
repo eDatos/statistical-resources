@@ -378,7 +378,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public static InternationalString mockInternationalString() {
-        return mockInternationalStringMetadata(mockString(10), null);
+        return mockInternationalStringMetadata(null, mockString(10));
     }
 
     public static InternationalString mockInternationalStringMetadata(String resource, String metadata) {

@@ -31,7 +31,10 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setSubtitle(copyInternationalString(source.getSubtitle()));
         target.setTitleAlternative(copyInternationalString(source.getTitleAlternative()));
         target.setAbstractLogic(copyInternationalString(source.getAbstractLogic()));
-        // TODO: KEYWORDS?
+
+        // TODO: Falta comprobar si se deben heredar o no en función de un metadato adicional que debe meterse. Este metadato
+        // debe indicar si esas keywords han sido toqueteadas manualmente y, en ese caso, sí se heredarán.
+        target.setKeywords(copyInternationalString(source.getKeywords()));
 
         // Class descriptor
         target.setType(source.getType());
