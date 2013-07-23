@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
@@ -71,10 +72,10 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
         return elementLevelNode;
     }
 
-    public static ElementLevelTreeNode getPublicationVersionRootNode(String schemeNodeName, PublicationVersionDto publicationVersionDto) {
+    public static ElementLevelTreeNode getPublicationVersionRootNode(String schemeNodeName, RelatedResourceDto publicationVersion) {
         ElementLevelTreeNode elementLevelTreeNode = new ElementLevelTreeNode();
         elementLevelTreeNode.setID(schemeNodeName);
-        elementLevelTreeNode.setTitle(InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
+        elementLevelTreeNode.setTitle(InternationalStringUtils.getLocalisedString(publicationVersion.getTitle()));
         return elementLevelTreeNode;
     }
 

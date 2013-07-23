@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NavigableTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -58,7 +58,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected HandlerRegistration               leafClickHandlerRegistration;
     protected HandlerRegistration               folderDropHandlerRegistration;
 
-    protected PublicationVersionDto             publicationVersionDto;
+    protected RelatedResourceDto                publicationVersion;
 
     protected Tree                              tree;
     protected TreeGridField                     titleField;
@@ -253,24 +253,14 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         leafClickHandlerRegistration.removeHandler();
     }
 
-    public void updatePublicationVersionRootNode(PublicationVersionDto publicationVersionDto) {
-        this.publicationVersionDto = publicationVersionDto;
-        // Update item scheme node
-        TreeNode node = getTree().find(SCHEME_NODE_NAME);
-        if (node != null) {
-            node.setAttribute(ElementLevelDS.TITLE, InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
-            markForRedraw();
-        }
-    }
-
-    public void setElements(PublicationVersionDto publicationVersionDto, List<ElementLevelDto> elementLevelDtos) {
-        this.publicationVersionDto = publicationVersionDto;
+    public void setPublicationStructure(PublicationStructureDto publicationStructureDto) {
+        this.publicationVersion = publicationStructureDto.getPublicationVersion();
 
         // Clear filter editor
         setFilterEditorCriteria(null);
 
-        ElementLevelTreeNode publicationVersionRootNode = createPublicationVersionRootNode(publicationVersionDto);
-        publicationVersionRootNode.setChildren(createElementLevelsTreeNodes(elementLevelDtos));
+        ElementLevelTreeNode publicationVersionRootNode = createPublicationVersionRootNode(publicationVersion);
+        publicationVersionRootNode.setChildren(createElementLevelsTreeNodes(publicationStructureDto.getElements()));
 
         addTreeNodesToTreeGrid(new ElementLevelTreeNode[]{publicationVersionRootNode});
     }
@@ -303,8 +293,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         contextMenu.showContextMenu();
     }
 
-    protected ElementLevelTreeNode createPublicationVersionRootNode(PublicationVersionDto publicationVersionDto) {
-        return StatisticalResourcesRecordUtils.getPublicationVersionRootNode(SCHEME_NODE_NAME, publicationVersionDto);
+    protected ElementLevelTreeNode createPublicationVersionRootNode(RelatedResourceDto publicationVersion) {
+        return StatisticalResourcesRecordUtils.getPublicationVersionRootNode(SCHEME_NODE_NAME, publicationVersion);
     }
 
     protected void addItemsToContextMenu(MenuItem... menuItems) {
@@ -319,8 +309,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected void disableItemSchemeNode() {
         RecordList recordList = getRecordList();
-        if (recordList != null && publicationVersionDto != null) {
-            Record record = recordList.find(ElementLevelDS.URN, publicationVersionDto.getUrn());
+        if (recordList != null && publicationVersion != null) {
+            Record record = recordList.find(ElementLevelDS.URN, publicationVersion.getUrn());
             if (record != null) {
                 int index = getRecordIndex(record);
                 if (index != -1) {

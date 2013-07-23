@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.publication
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnParserUtils;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
@@ -34,12 +33,9 @@ public class UpdatePublicationStructureElementLocationActionHandler extends Secu
             } else if (StatisticalResourcesUrnParserUtils.isPublicationCubeUrn(elementUrn)) {
                 statisticalResourcesServiceFacade.updateCubeLocation(ServiceContextHolder.getCurrentServiceContext(), elementUrn, action.getParentTargetUrn(), action.getOrderInLevel());
             }
-            // TODO do not retrieve publicationVersion
-            PublicationVersionDto publicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(ServiceContextHolder.getCurrentServiceContext(),
-                    action.getPublicationVersionUrn());
             PublicationStructureDto publicationStructureDto = statisticalResourcesServiceFacade.retrievePublicationVersionStructure(ServiceContextHolder.getCurrentServiceContext(),
                     action.getPublicationVersionUrn());
-            return new UpdatePublicationStructureElementLocationResult(publicationVersionDto, publicationStructureDto);
+            return new UpdatePublicationStructureElementLocationResult(publicationStructureDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

@@ -9,7 +9,6 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -52,7 +51,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     public interface PublicationStructureTabView extends View, HasUiHandlers<PublicationStructureTabUiHandlers> {
 
-        void setPublicationStructure(PublicationVersionDto publicationVersionDto, PublicationStructureDto publicationStructureDto);
+        void setPublicationStructure(PublicationStructureDto publicationStructureDto);
     }
 
     @ProxyCodeSplit
@@ -119,7 +118,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             }
             @Override
             public void onWaitSuccess(GetPublicationStructureResult result) {
-                getView().setPublicationStructure(result.getPublicationVersionDto(), result.getPublicationStructureDto());
+                getView().setPublicationStructure(result.getPublicationStructureDto());
             }
         });
     }
@@ -135,7 +134,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                     }
                     @Override
                     public void onWaitSuccess(UpdatePublicationStructureElementLocationResult result) {
-                        getView().setPublicationStructure(result.getPublicationVersionDto(), result.getPublicationStructureDto());
+                        getView().setPublicationStructure(result.getPublicationStructureDto());
                     }
                 });
     }
