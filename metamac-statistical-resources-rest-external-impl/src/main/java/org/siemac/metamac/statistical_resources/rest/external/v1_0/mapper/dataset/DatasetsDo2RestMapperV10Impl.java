@@ -91,7 +91,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
     private DatasetService                   datasetService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade statisticsDatasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
     private QueriesDo2RestMapperV10          queriesDo2RestMapper;
@@ -649,7 +649,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
 
         // Search observations in repository
         List<ConditionDimensionDto> conditions = generateConditions(dimensionsSelected);
-        Map<String, ObservationExtendedDto> datas = statisticsDatasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(source.getDatasetRepositoryId(), conditions);
+        Map<String, ObservationExtendedDto> datas = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(source.getDatasetRepositoryId(), conditions);
 
         // Observation Size
         int sizeObservation = 1;

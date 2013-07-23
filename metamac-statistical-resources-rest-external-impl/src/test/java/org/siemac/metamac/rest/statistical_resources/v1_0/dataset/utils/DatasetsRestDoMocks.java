@@ -12,6 +12,9 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
+import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+
 public class DatasetsRestDoMocks {
 
     public StatisticalResourcesPersistedDoMocks coreDoMocks;
@@ -33,6 +36,7 @@ public class DatasetsRestDoMocks {
         DatasetVersion target = mockDatasetVersionBasic(agencyID, resourceID, version);
         // TODO Robert: ¿puedo pasar algo al mock del core?
 
+        target.setDatasetRepositoryId("datasetRepository01");
         target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("GEO_DIM-codelist01-code01"));
         target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("GEO_DIM-codelist01-code02"));
         target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
@@ -69,6 +73,16 @@ public class DatasetsRestDoMocks {
         codeDimension.setIdentifier(id);
         codeDimension.setTitle(codeDimension.getIdentifier() + " en Español");
         return codeDimension;
+    }
+
+    public ObservationExtendedDto mockObservation(String valueGeoDimension, String valueTimePeriod, String valueMeasure01, String valueDimension01, int primaryMeasure) {
+        ObservationExtendedDto observationExtendedDto = new ObservationExtendedDto();
+        observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("GEO_DIM", valueGeoDimension));
+        observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", valueTimePeriod));
+        observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("measure01", valueMeasure01));
+        observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("dim01", valueDimension01));
+        observationExtendedDto.setPrimaryMeasure(String.valueOf(primaryMeasure));
+        return observationExtendedDto;
     }
 
     private void mockSiemacMetadataStatisticalResource(String agencyID, String resourceID, String version, SiemacMetadataStatisticalResource target) {

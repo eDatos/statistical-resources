@@ -13,7 +13,10 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.Response.Status;
 
@@ -42,10 +45,14 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetS
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
 
-    private DatasetService        datasetService;
-    private SrmRestExternalFacade srmRestExternalFacade;
+    private DatasetService                   datasetService;
+    private SrmRestExternalFacade            srmRestExternalFacade;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Test
     public void testFindDatasetsXml() throws Exception {
@@ -160,6 +167,36 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private void mockFindObservationsExtendedByDimensions() throws Exception {
+        when(datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(any(String.class), any(List.class))).thenAnswer(new Answer<Map<String, ObservationExtendedDto>>() {
+
+            @Override
+            public Map<String, ObservationExtendedDto> answer(InvocationOnMock invocation) throws Throwable {
+
+                List<String> geoDimensionValues = Arrays.asList("GEO_DIM-codelist01-code01", "GEO_DIM-codelist01-code03", "GEO_DIM-codelist01-code04");
+                List<String> timeDimensionValues = Arrays.asList("2011", "2012", "2013");
+                List<String> measureDimensionValues = Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05");
+                List<String> dimension1DimensionValues = Arrays.asList("dim01-codelist01-code01", "dim01-codelist01-code03", "dim01-codelist01-code04");
+                Map<String, ObservationExtendedDto> observationsMap = new HashMap<String, ObservationExtendedDto>();
+                for (String geoDimensionValue : geoDimensionValues) {
+                    for (String timeDimensionValue : timeDimensionValues) {
+                        for (String measureDimensionValue : measureDimensionValues) {
+                            for (String dimension1DimensionValue : dimension1DimensionValues) {
+                                ObservationExtendedDto observation = datasetDoMocks.mockObservation(geoDimensionValue, timeDimensionValue, measureDimensionValue, dimension1DimensionValue,
+                                        observationsMap.size() + 1);
+                                observationsMap.put(observation.getUniqueKey(), observation);
+                            }
+                        }
+                    }
+                }
+                // Test one observation empty
+                observationsMap.remove("GEO_DIM-codelist01-code01#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code04");
+
+                return observationsMap;
+            };
+        });
+    }
     private void mockRetrieveDataStructureByUrn() throws MetamacException {
         when(srmRestExternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
 
@@ -227,15 +264,18 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
     }
 
     @Override
-    protected void resetMocks() throws MetamacException {
+    protected void resetMocks() throws Exception {
         datasetService = applicationContext.getBean(DatasetService.class);
         reset(datasetService);
         srmRestExternalFacade = applicationContext.getBean(SrmRestExternalFacade.class);
         reset(srmRestExternalFacade);
+        datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
+        reset(datasetRepositoriesServiceFacade);
 
         mockFindDatasetsByCondition();
         mockRetrieveDatasetVersionDimensionsIds();
         mockRetrieveCoverageForDatasetVersionDimension();
+        mockFindObservationsExtendedByDimensions();
         mockRetrieveDataStructureByUrn();
         mockRetrieveCodelistByUrn();
         mockRetrieveConceptSchemeByUrn();

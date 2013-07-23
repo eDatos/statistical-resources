@@ -14,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
-import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
@@ -32,7 +31,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private static String                                 apiEndpointv10;
 
     protected static StatisticalResourcesPersistedDoMocks coreDoMocks;
-    protected static DatasetsRestDoMocks                      datasetDoMocks;
+    protected static DatasetsRestDoMocks                  datasetDoMocks;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -56,7 +55,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     @Before
-    public void setUp() throws MetamacException {
+    public void setUp() throws Exception {
         ConfigurationService configurationService = applicationContext.getBean(ConfigurationService.class);
         apiEndpointv10 = configurationService.getProperty(ConfigurationConstants.ENDPOINT_STATISTICAL_RESOURCES_EXTERNAL_API) + "/v1.0";
 
@@ -94,5 +93,5 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         return apiEndpointv10;
     }
 
-    protected abstract void resetMocks() throws MetamacException;
+    protected abstract void resetMocks() throws Exception;
 }
