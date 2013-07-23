@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -98,6 +99,61 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         // Other
         target.setFormatExtentResources(source.getFormatExtentResources());
         return target;
+    }
+
+    
+    @Override
+    public RelatedResourceDto publicationVersionDoToPublicationVersionRelatedResourceDto(PublicationVersion source) {
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        publicationVersionDoToPublicationVersionRelatedResourceDto(source, target);
+        return target;
+    }
+
+    private RelatedResourceDto publicationVersionDoToPublicationVersionRelatedResourceDto(PublicationVersion source, RelatedResourceDto target) {
+        if (source == null) {
+            return null;
+        }
+
+        // Identity
+        target.setId(source.getId());
+        target.setUuid(source.getUuid());
+        target.setVersion(source.getVersion());
+
+        // Type
+        target.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
+
+        // Identifiable Fields
+        target.setCode(source.getSiemacMetadataStatisticalResource().getCode());
+        target.setCodeNested(null);
+        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Nameable Fields
+        target.setTitle(internationalStringDoToDto(source.getSiemacMetadataStatisticalResource().getTitle()));
+
+        return target;
+    }
+    
+    // --------------------------------------------------------------------------------------
+    // PUBLICATION STRUCTURE
+    // --------------------------------------------------------------------------------------
+
+    @Override
+    public PublicationStructureDto publicationVersionStructureDoToDto(PublicationVersion publicationVersion) throws MetamacException {
+        if (publicationVersion == null) {
+            return null;
+        }
+        
+        PublicationStructureDto publicationStructureDto = new PublicationStructureDto();
+        publicationStructureDto.setPublicationVersion(publicationVersionDoToPublicationVersionRelatedResourceDto(publicationVersion));
+        
+        if (!publicationVersion.getChildrenFirstLevel().isEmpty()) {
+            publicationStructureDto.getElements().addAll(elementsLevelDoListToDtoList(publicationVersion.getChildrenFirstLevel()));
+        }
+        
+        return publicationStructureDto;
     }
 
     // --------------------------------------------------------------------------------------

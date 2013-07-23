@@ -202,6 +202,23 @@ public class PublicationsAsserts extends BaseAsserts {
     // PUBLICATION VERSION: DTO & DO
     // -----------------------------------------------------------------
 
+    public static void assertEqualsPublicationVersion(PublicationVersion entity, RelatedResourceDto dto) {
+        assertNotNull(entity.getId());
+        assertEquals(entity.getId(), dto.getId());
+
+        assertNotNull(entity.getUuid());
+        assertEquals(entity.getUuid(), dto.getUuid());
+
+        assertNotNull(entity.getVersion());
+        assertEquals(entity.getVersion(), dto.getVersion());
+
+        assertEquals(TypeRelatedResourceEnum.PUBLICATION_VERSION, dto.getType());
+        assertEquals(entity.getSiemacMetadataStatisticalResource().getCode(), dto.getCode());
+        assertNull(dto.getCodeNested());
+        assertEquals(entity.getSiemacMetadataStatisticalResource().getUrn(), dto.getUrn());
+        assertEqualsInternationalString(entity.getSiemacMetadataStatisticalResource().getTitle(), dto.getTitle());
+    }
+    
     public static void assertEqualsPublicationVersion(PublicationVersion entity, PublicationVersionDto dto) throws MetamacException {
         assertEqualsPublicationVersion(dto, entity, MapperEnum.DO2DTO);
     }
@@ -320,8 +337,8 @@ public class PublicationsAsserts extends BaseAsserts {
         assertRelaxedEqualsObject(expected.getCube(), actual.getCube());
     }
 
-    public static void assertEqualsPublicationStructure(PublicationVersion expected, PublicationStructureDto actual) {
-        assertEquals(expected.getSiemacMetadataStatisticalResource().getUrn(), actual.getPublicationUrn());
+    public static void assertEqualsPublicationVersionStructure(PublicationVersion expected, PublicationStructureDto actual) {
+        assertEqualsPublicationVersion(expected, actual.getPublicationVersion());
         assertEqualsChildren(expected.getChildrenFirstLevel(), actual.getElements());
     }
 

@@ -22,5 +22,5 @@ public class StatisticalResourcesConfigurationConstants extends ConfigurationCon
     public static final String DB_REPOSITORY_USERNAME    = "metamac.statistical.resources.repo.db.username";
     public static final String DB_REPOSITORY_PASSWORD    = "metamac.statistical.resources.repo.db.password";
     public static final String DB_REPOSITORY_DIALECT     = "metamac.statistical.resources.repo.db.dialect";
-    public static final String DB_REPOSITORY_DRIVER_NAME = "metamac.statistical.resources.repo.db.dialect";
+    public static final String DB_REPOSITORY_DRIVER_NAME = "metamac.statistical.resources.repo.db.driver_name";
 }

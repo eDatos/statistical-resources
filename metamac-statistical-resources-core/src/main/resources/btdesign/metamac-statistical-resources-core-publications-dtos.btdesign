@@ -1,7 +1,7 @@
-
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-common-dtos.btdesign"
 
 Application PublicationsStatisticalResourcesDto {
 	basePackage=unused
@@ -16,7 +16,7 @@ Application PublicationsStatisticalResourcesDto {
 		"Dto for structure of publication"
 		DataTransferObject PublicationStructureDto {
 			- List<@ElementLevelDto> elements;
-			String publicationUrn;
+			- @RelatedResourceDto publicationVersion;
 		}
 
 		"Dto for element of level. Can be a chapter or a cube"

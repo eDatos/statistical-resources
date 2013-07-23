@@ -739,15 +739,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Retrieve
         PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
-        List<ElementLevel> elementsLevelFirstLevel = publicationVersion.getChildrenFirstLevel();
 
         // Build structure
-        PublicationStructureDto publicationStructureDto = new PublicationStructureDto();
-        publicationStructureDto.setPublicationUrn(publicationVersionUrn);
-        if (!elementsLevelFirstLevel.isEmpty()) {
-            publicationStructureDto.getElements().addAll(publicationDo2DtoMapper.elementsLevelDoListToDtoList(elementsLevelFirstLevel));
-        }
-
+        PublicationStructureDto publicationStructureDto = publicationDo2DtoMapper.publicationVersionStructureDoToDto(publicationVersion);
+        
         return publicationStructureDto;
     }
 
