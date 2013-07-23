@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NavigableTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
+import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -34,30 +35,40 @@ import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 import com.smartgwt.client.widgets.tree.events.FolderClickEvent;
 import com.smartgwt.client.widgets.tree.events.FolderClickHandler;
+import com.smartgwt.client.widgets.tree.events.FolderContextClickEvent;
+import com.smartgwt.client.widgets.tree.events.FolderContextClickHandler;
+import com.smartgwt.client.widgets.tree.events.FolderDropEvent;
+import com.smartgwt.client.widgets.tree.events.FolderDropHandler;
 import com.smartgwt.client.widgets.tree.events.LeafClickEvent;
 import com.smartgwt.client.widgets.tree.events.LeafClickHandler;
+import com.smartgwt.client.widgets.tree.events.LeafContextClickEvent;
+import com.smartgwt.client.widgets.tree.events.LeafContextClickHandler;
 import com.smartgwt.client.widgets.viewer.DetailViewer;
 import com.smartgwt.client.widgets.viewer.DetailViewerField;
 
 public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
-    protected static final String   SCHEME_NODE_NAME = "scheme-node";
+    protected static final String               SCHEME_NODE_NAME = "scheme-node";
 
-    protected Menu                  contextMenu;
+    protected Menu                              contextMenu;
 
-    protected HandlerRegistration   folderContextHandlerRegistration;
-    protected HandlerRegistration   leafContextHandlerRegistration;
-    protected HandlerRegistration   folderClickHandlerRegistration;
-    protected HandlerRegistration   leafClickHandlerRegistration;
+    protected HandlerRegistration               folderContextHandlerRegistration;
+    protected HandlerRegistration               leafContextHandlerRegistration;
+    protected HandlerRegistration               folderClickHandlerRegistration;
+    protected HandlerRegistration               leafClickHandlerRegistration;
+    protected HandlerRegistration               folderDropHandlerRegistration;
 
-    protected PublicationVersionDto publicationVersionDto;
+    protected PublicationVersionDto             publicationVersionDto;
 
-    protected Tree                  tree;
-    protected TreeGridField         titleField;
-    protected TreeGridField         orderField;
-    protected TreeGridField         infoField;
+    protected Tree                              tree;
+    protected TreeGridField                     titleField;
+    protected TreeGridField                     urnField;
+    protected TreeGridField                     orderField;
+    protected TreeGridField                     infoField;
 
-    protected HandlerRegistration   filterEditionHandler;
+    protected HandlerRegistration               filterEditionHandler;
+
+    protected PublicationStructureTabUiHandlers uiHandlers;
 
     public PublicationStructureTreeGrid() {
         setHeight(175);
@@ -84,6 +95,10 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         titleField.setShowHover(false); // only show hover in info field
         titleField.setCanFilter(true);
 
+        urnField = new TreeGridField(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
+        urnField.setShowHover(false); // only show hover in info field
+        urnField.setCanFilter(true);
+
         orderField = new TreeGridField(ElementLevelDS.ORDER_IN_LEVEL, getConstants().publicationStructureElementOrderInLevel());
         orderField.setShowIfCondition(ListGridUtils.getFalseListGridFieldIfFunction());
         orderField.setCanSort(true);
@@ -96,7 +111,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         infoField.setCanFilter(false);
         infoField.setShowHover(true);
 
-        setFields(titleField, orderField, infoField);
+        setFields(titleField, urnField, orderField, infoField);
 
         // Order by ORDER field
         setCanSort(true);
@@ -111,19 +126,26 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                 event.cancel();
                 TreeNode[] treeNodes = tree.getAllNodes();
 
-                String titleCriteria = event.getCriteria().getAttribute(ElementLevelDS.TITLE);
+                // TODO
 
-                if (StringUtils.isBlank(titleCriteria)) {
+                String titleCriteria = event.getCriteria().getAttribute(ElementLevelDS.TITLE);
+                String urnCriteria = event.getCriteria().getAttribute(ElementLevelDS.URN);
+
+                if (StringUtils.isBlank(titleCriteria) && StringUtils.isBlank(urnCriteria)) {
                     setData(tree);
                     return;
                 } else {
                     List<TreeNode> matchingNodes = new ArrayList<TreeNode>();
                     for (TreeNode treeNode : treeNodes) {
                         if (!SCHEME_NODE_NAME.equals(treeNode.getName())) {
-                            String name = treeNode.getAttributeAsString(ElementLevelDS.TITLE);
+                            String title = treeNode.getAttributeAsString(ElementLevelDS.TITLE);
+                            String urn = treeNode.getAttributeAsString(ElementLevelDS.URN);
 
                             boolean matches = true;
-                            if (titleCriteria != null && !StringUtils.containsIgnoreCase(name, titleCriteria)) {
+                            if (titleCriteria != null && !StringUtils.containsIgnoreCase(title, titleCriteria)) {
+                                matches = false;
+                            }
+                            if (urnCriteria != null && !StringUtils.containsIgnoreCase(urn, urnCriteria)) {
                                 matches = false;
                             }
                             if (matches) {
@@ -156,6 +178,70 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
             @Override
             public void onLeafClick(LeafClickEvent event) {
                 onNodeClick(event.getLeaf().getName(), event.getLeaf().getAttribute(ElementLevelDS.URN));
+            }
+        });
+        folderContextHandlerRegistration = addFolderContextClickHandler(new FolderContextClickHandler() {
+
+            @Override
+            public void onFolderContextClick(final FolderContextClickEvent event) {
+                onNodeContextClick(event.getFolder().getName(), (ElementLevelDto) event.getFolder().getAttributeAsObject(ElementLevelDS.DTO));
+            }
+        });
+        leafContextHandlerRegistration = addLeafContextClickHandler(new LeafContextClickHandler() {
+
+            @Override
+            public void onLeafContextClick(LeafContextClickEvent event) {
+                onNodeContextClick(event.getLeaf().getName(), (ElementLevelDto) event.getLeaf().getAttributeAsObject(ElementLevelDS.DTO));
+            }
+        });
+
+        folderDropHandlerRegistration = addFolderDropHandler(new FolderDropHandler() {
+
+            @Override
+            public void onFolderDrop(FolderDropEvent event) {
+                TreeNode dropFolder = event.getFolder();
+                TreeNode droppedNode = event.getNodes().length > 0 ? event.getNodes()[0] : null;
+                int position = event.getIndex(); // Absolute position
+                if (isDroppable(dropFolder)) {
+                    TreeNode[] siblings = getData().getChildren(dropFolder);
+
+                    // We find out the position of the node under the dropFolder
+                    int relativePosition = position; // Used to update position
+                    int pos = -1;
+                    for (int i = 0; i < siblings.length; i++) {
+                        if (siblings[i] == droppedNode) {
+                            pos = i;
+                        }
+                    }
+                    if (pos >= 0 && pos < position) { // If moved node is before final position, the position must be updated
+                        relativePosition--;
+                    }
+
+                    String oldItemParent = droppedNode.getAttribute(ElementLevelDS.PARENT_CHAPTER_URN);
+                    String newItemParent = SCHEME_NODE_NAME.equals(dropFolder.getName()) ? SCHEME_NODE_NAME : dropFolder.getAttribute(ElementLevelDS.URN);
+
+                    if (!StringUtils.equals(oldItemParent, newItemParent)) {
+
+                        // UPDATE CODE PARENT
+
+                        // TODO Security
+
+                        if (SCHEME_NODE_NAME.equals(newItemParent)) {
+                            // The code will be moved to the first level. The parent is null.
+                            newItemParent = null;
+                        }
+                        // TODO getBaseCodeUiHandlers().updateCodeParent(droppedNode.getAttribute(ElementLevelDS.URN), newItemParent);
+
+                    } else {
+
+                        // UPDATE ORDER
+
+                        // TODO Security
+
+                        // TODO getBaseCodeUiHandlers().updateCodeInOrder(droppedNode.getAttribute(CodeDS.URN), codelistVisualisationDto.getUrn(), relativePosition);
+                    }
+                }
+                event.cancel();
             }
         });
     }
@@ -255,14 +341,31 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         return super.getCellHoverComponent(record, rowNum, colNum);
     }
 
-    protected void onNodeClick(String nodeName, String elementUrn) {
+    protected boolean isDroppable(TreeNode dropFolder) {
+        return !("/".equals(getDropFolder().getName()));
+    }
 
+    protected void onNodeClick(String nodeName, String elementUrn) {
+        // TODO
+    }
+
+    protected void onNodeContextClick(String nodeName, ElementLevelDto elementLevelDto) {
+        // TODO
     }
 
     protected DetailViewerField[] getDetailViewerFields() {
         DetailViewerField titleField = new DetailViewerField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         DetailViewerField descriptionField = new DetailViewerField(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
+        DetailViewerField urnField = new DetailViewerField(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         // TODO
-        return new DetailViewerField[]{titleField, descriptionField};
+        return new DetailViewerField[]{titleField, descriptionField, urnField};
+    }
+
+    public PublicationStructureTabUiHandlers getUiHandlers() {
+        return uiHandlers;
+    }
+
+    public void setUiHandlers(PublicationStructureTabUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
     }
 }

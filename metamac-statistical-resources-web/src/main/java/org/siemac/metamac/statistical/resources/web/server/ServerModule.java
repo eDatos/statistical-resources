@@ -37,9 +37,8 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SaveChapterActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SaveCubeActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdateChapterLocationActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdateCubeLocationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationStructureElementLocationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.DeleteQueriesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueriesActionHandler;
@@ -81,9 +80,8 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.SaveChapterAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SaveCubeAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.UpdateChapterLocationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.UpdateCubeLocationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
@@ -161,10 +159,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetPublicationStructureAction.class, GetPublicationStructureActionHandler.class);
         bindHandler(DeleteChapterAction.class, DeleteChapterActionHandler.class);
         bindHandler(SaveChapterAction.class, SaveChapterActionHandler.class);
-        bindHandler(UpdateChapterLocationAction.class, UpdateChapterLocationActionHandler.class);
+        bindHandler(UpdatePublicationStructureElementLocationAction.class, UpdatePublicationStructureElementLocationActionHandler.class);
         bindHandler(DeleteCubeAction.class, DeleteCubeActionHandler.class);
         bindHandler(SaveCubeAction.class, SaveCubeActionHandler.class);
-        bindHandler(UpdateCubeLocationAction.class, UpdateCubeLocationActionHandler.class);
 
         // QUERIES
         bindHandler(GetQueriesAction.class, GetQueriesActionHandler.class);

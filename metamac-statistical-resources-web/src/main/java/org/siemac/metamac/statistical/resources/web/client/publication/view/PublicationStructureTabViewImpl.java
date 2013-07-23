@@ -3,14 +3,15 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
+import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureTreeGrid;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class PublicationStructureTabViewImpl extends ViewImpl implements PublicationStructureTabView {
+public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<PublicationStructureTabUiHandlers> implements PublicationStructureTabView {
 
     private VLayout                      panel;
     private PublicationStructureTreeGrid publicationStructureTreeGrid;
@@ -33,5 +34,11 @@ public class PublicationStructureTabViewImpl extends ViewImpl implements Publica
     @Override
     public Widget asWidget() {
         return panel;
+    }
+
+    @Override
+    public void setUiHandlers(PublicationStructureTabUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        publicationStructureTreeGrid.setUiHandlers(uiHandlers);
     }
 }

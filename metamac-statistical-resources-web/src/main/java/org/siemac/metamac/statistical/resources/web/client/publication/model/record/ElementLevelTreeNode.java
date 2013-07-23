@@ -8,7 +8,7 @@ public class ElementLevelTreeNode extends NavigableTreeNode {
     public ElementLevelTreeNode() {
     }
 
-    public void setUrn(Long value) {
+    public void setUrn(String value) {
         setAttribute(ElementLevelDS.URN, value);
     }
 

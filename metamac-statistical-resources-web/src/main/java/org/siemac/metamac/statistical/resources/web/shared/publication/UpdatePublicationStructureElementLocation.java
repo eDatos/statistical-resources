@@ -1,19 +1,20 @@
 package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class UpdateChapterLocation {
+public class UpdatePublicationStructureElementLocation {
 
     @In(1)
     String                  publicationVersionUrn;
 
     @In(2)
-    String                  chapterUrn;
+    String                  elementUrn;
 
     @In(3)
     String                  parentTargetUrn;
@@ -22,5 +23,8 @@ public class UpdateChapterLocation {
     Long                    orderInLevel;
 
     @Out(1)
+    PublicationVersionDto   publicationVersionDto;
+
+    @Out(2)
     PublicationStructureDto publicationStructureDto;
 }
