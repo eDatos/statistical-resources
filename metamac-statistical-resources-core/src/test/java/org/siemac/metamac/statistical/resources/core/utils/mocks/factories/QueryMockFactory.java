@@ -1,10 +1,18 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion21ForQuery03;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion22ForQuery03AndLastVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion23ForQuery04;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion24V1PublishedForQuery05;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion25V2PublishedForQuery05;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion26V3PublishedForQuery05;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion27V1PublishedForQuery06;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion28V2PublishedNoVisibleForQuery06;
+
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.stereotype.Component;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.*;
 
 @Component
 public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {

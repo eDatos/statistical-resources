@@ -1,12 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.dataset.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 

@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
