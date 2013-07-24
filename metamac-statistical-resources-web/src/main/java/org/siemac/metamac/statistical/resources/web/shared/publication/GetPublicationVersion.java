@@ -7,7 +7,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetPublication {
+public class GetPublicationVersion {
 
     @In(1)
     String                urn;

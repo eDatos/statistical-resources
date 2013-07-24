@@ -8,7 +8,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class SavePublication {
+public class SavePublicationVersion {
 
     @In(1)
     PublicationVersionDto publicationVersionDto;
