@@ -6,7 +6,7 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 
 @GenDispatch(isSecure = false)
-public class DeleteDatasourceList {
+public class DeleteDatasetVersions {
 
     @In(1)
     List<String> urns;

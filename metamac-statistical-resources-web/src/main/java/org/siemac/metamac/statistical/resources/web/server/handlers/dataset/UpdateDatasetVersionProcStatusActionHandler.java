@@ -3,8 +3,8 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -14,17 +14,17 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<UpdateDatasetProcStatusAction, UpdateDatasetProcStatusResult> {
+public class UpdateDatasetVersionProcStatusActionHandler extends SecurityActionHandler<UpdateDatasetVersionProcStatusAction, UpdateDatasetVersionProcStatusResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
-    public UpdateDatasetProcStatusActionHandler() {
-        super(UpdateDatasetProcStatusAction.class);
+    public UpdateDatasetVersionProcStatusActionHandler() {
+        super(UpdateDatasetVersionProcStatusAction.class);
     }
 
     @Override
-    public UpdateDatasetProcStatusResult executeSecurityAction(UpdateDatasetProcStatusAction action) throws ActionException {
+    public UpdateDatasetVersionProcStatusResult executeSecurityAction(UpdateDatasetVersionProcStatusAction action) throws ActionException {
         DatasetVersionDto datasetDto = action.getDatasetVersionDto();
         try {
             switch (action.getNextProcStatus()) {
@@ -60,7 +60,7 @@ public class UpdateDatasetProcStatusActionHandler extends SecurityActionHandler<
              * }
              */
 
-            return new UpdateDatasetProcStatusResult(datasetDto);
+            return new UpdateDatasetVersionProcStatusResult(datasetDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

@@ -6,8 +6,8 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -17,17 +17,17 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetQueriesActionHandler extends SecurityActionHandler<GetQueriesAction, GetQueriesResult> {
+public class GetQueryVersionsActionHandler extends SecurityActionHandler<GetQueryVersionsAction, GetQueryVersionsResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
-    public GetQueriesActionHandler() {
-        super(GetQueriesAction.class);
+    public GetQueryVersionsActionHandler() {
+        super(GetQueryVersionsAction.class);
     }
 
     @Override
-    public GetQueriesResult executeSecurityAction(GetQueriesAction action) throws ActionException {
+    public GetQueryVersionsResult executeSecurityAction(GetQueryVersionsAction action) throws ActionException {
         try {
 
             MetamacCriteria criteria = new MetamacCriteria();
@@ -40,7 +40,7 @@ public class GetQueriesActionHandler extends SecurityActionHandler<GetQueriesAct
             criteria.getPaginator().setCountTotalResults(true);
 
             MetamacCriteriaResult<QueryVersionDto> result = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
-            return new GetQueriesResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
+            return new GetQueryVersionsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

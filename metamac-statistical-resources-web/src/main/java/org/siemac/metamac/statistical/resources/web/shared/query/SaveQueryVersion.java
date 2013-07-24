@@ -7,11 +7,11 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetQuery {
+public class SaveQueryVersion {
 
     @In(1)
-    String          queryUrn;
+    QueryVersionDto queryVersionDto;
 
     @Out(1)
-    QueryVersionDto queryVersionDto;
+    QueryVersionDto savedQueryVersionDto;
 }

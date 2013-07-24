@@ -5,8 +5,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetAction, SaveDatasetResult> {
+public class SaveDatasetVersionActionHandler extends SecurityActionHandler<SaveDatasetVersionAction, SaveDatasetVersionResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
@@ -24,12 +24,12 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
     @Autowired
     StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
 
-    public SaveDatasetActionHandler() {
-        super(SaveDatasetAction.class);
+    public SaveDatasetVersionActionHandler() {
+        super(SaveDatasetVersionAction.class);
     }
 
     @Override
-    public SaveDatasetResult executeSecurityAction(SaveDatasetAction action) throws ActionException {
+    public SaveDatasetVersionResult executeSecurityAction(SaveDatasetVersionAction action) throws ActionException {
         try {
             DatasetVersionDto savedDataset = null;
             if (action.getDatasetVersion().getUuid() == null) {
@@ -38,7 +38,7 @@ public class SaveDatasetActionHandler extends SecurityActionHandler<SaveDatasetA
             } else {
                 savedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersion());
             }
-            return new SaveDatasetResult(savedDataset);
+            return new SaveDatasetVersionResult(savedDataset);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

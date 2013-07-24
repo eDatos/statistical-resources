@@ -7,14 +7,11 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class SaveDataset {
+public class GetDatasetVersion {
 
     @In(1)
-    DatasetVersionDto datasetVersion;
-
-    @In(2)
-    String            statisticalOperationCode;
+    String            datasetVersionUrn;
 
     @Out(1)
-    DatasetVersionDto savedDatasetVersion;
+    DatasetVersionDto datasetVersionDto;
 }

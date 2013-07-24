@@ -8,8 +8,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -19,17 +19,17 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetDatasetsActionHandler extends SecurityActionHandler<GetDatasetsAction, GetDatasetsResult> {
+public class GetDatasetVersionsActionHandler extends SecurityActionHandler<GetDatasetVersionsAction, GetDatasetVersionsResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
-    public GetDatasetsActionHandler() {
-        super(GetDatasetsAction.class);
+    public GetDatasetVersionsActionHandler() {
+        super(GetDatasetVersionsAction.class);
     }
 
     @Override
-    public GetDatasetsResult executeSecurityAction(GetDatasetsAction action) throws ActionException {
+    public GetDatasetVersionsResult executeSecurityAction(GetDatasetVersionsAction action) throws ActionException {
 
         MetamacCriteria criteria = new MetamacCriteria();
 
@@ -48,7 +48,7 @@ public class GetDatasetsActionHandler extends SecurityActionHandler<GetDatasetsA
 
         try {
             MetamacCriteriaResult<DatasetVersionDto> result = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
-            return new GetDatasetsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
+            return new GetDatasetVersionsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

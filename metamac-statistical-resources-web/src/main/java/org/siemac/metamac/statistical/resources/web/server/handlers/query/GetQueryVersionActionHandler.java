@@ -1,9 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.query;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -13,22 +14,20 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class DeleteQueriesActionHandler extends SecurityActionHandler<DeleteQueriesAction, DeleteQueriesResult> {
+public class GetQueryVersionActionHandler extends SecurityActionHandler<GetQueryVersionAction, GetQueryVersionResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
-    public DeleteQueriesActionHandler() {
-        super(DeleteQueriesAction.class);
+    public GetQueryVersionActionHandler() {
+        super(GetQueryVersionAction.class);
     }
 
     @Override
-    public DeleteQueriesResult executeSecurityAction(DeleteQueriesAction action) throws ActionException {
+    public GetQueryVersionResult executeSecurityAction(GetQueryVersionAction action) throws ActionException {
         try {
-            for (String urn : action.getUrns()) {
-                statisticalResourcesServiceFacade.deleteQueryVersion(ServiceContextHolder.getCurrentServiceContext(), urn);
-            }
-            return new DeleteQueriesResult();
+            QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getQueryUrn());
+            return new GetQueryVersionResult(queryVersionDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
