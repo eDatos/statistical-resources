@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
@@ -41,6 +42,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.DeleteQueryVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueriesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
@@ -50,6 +52,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
@@ -84,6 +87,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
@@ -141,6 +145,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveDatasetVersionAction.class, SaveDatasetVersionActionHandler.class);
         bindHandler(DeleteDatasetVersionsAction.class, DeleteDatasetVersionsActionHandler.class);
         bindHandler(GetDatasetVersionsAction.class, GetDatasetVersionsActionHandler.class);
+        bindHandler(GetDatasetsAction.class, GetDatasetsActionHandler.class);
         bindHandler(UpdateDatasetVersionProcStatusAction.class, UpdateDatasetVersionProcStatusActionHandler.class);
         bindHandler(VersionDatasetVersionAction.class, VersionDatasetVersionActionHandler.class);
         bindHandler(GetDatasourcesByDatasetAction.class, GetDatasourcesByDatasetActionHandler.class);
@@ -164,6 +169,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveCubeAction.class, SaveCubeActionHandler.class);
 
         // QUERIES
+        bindHandler(GetQueriesAction.class, GetQueriesActionHandler.class);
         bindHandler(GetQueryVersionsAction.class, GetQueryVersionsActionHandler.class);
         bindHandler(SaveQueryVersionAction.class, SaveQueryVersionActionHandler.class);
         bindHandler(GetQueryVersionAction.class, GetQueryVersionActionHandler.class);
