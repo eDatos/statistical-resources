@@ -29,14 +29,12 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.external.Get
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationInstancesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetTemporalGranularitiesListActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeleteChapterActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeleteCubeActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationStructureElementActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationStructureActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationVersionsActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SaveChapterActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SaveCubeActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationStructureElementActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationStructureElementLocationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationVersionProcStatusActionHandler;
@@ -74,14 +72,12 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationInstancesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeleteChapterAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeleteCubeAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.SaveChapterAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.SaveCubeAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
@@ -162,11 +158,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(UpdatePublicationVersionProcStatusAction.class, UpdatePublicationVersionProcStatusActionHandler.class);
         bindHandler(VersionPublicationVersionAction.class, VersionPublicationVersionActionHandler.class);
         bindHandler(GetPublicationStructureAction.class, GetPublicationStructureActionHandler.class);
-        bindHandler(DeleteChapterAction.class, DeleteChapterActionHandler.class);
-        bindHandler(SaveChapterAction.class, SaveChapterActionHandler.class);
+        bindHandler(SavePublicationStructureElementAction.class, SavePublicationStructureElementActionHandler.class);
         bindHandler(UpdatePublicationStructureElementLocationAction.class, UpdatePublicationStructureElementLocationActionHandler.class);
-        bindHandler(DeleteCubeAction.class, DeleteCubeActionHandler.class);
-        bindHandler(SaveCubeAction.class, SaveCubeActionHandler.class);
+        bindHandler(DeletePublicationStructureElementAction.class, DeletePublicationStructureElementActionHandler.class);
 
         // QUERIES
         bindHandler(GetQueriesAction.class, GetQueriesActionHandler.class);
