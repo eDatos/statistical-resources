@@ -14,7 +14,7 @@ public class GetQueryVersions {
     @In(1)
     int                   firstResult;
 
-    @In(3)
+    @In(2)
     int                   maxResults;
 
     @Out(1)
