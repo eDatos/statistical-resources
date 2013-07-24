@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
@@ -17,8 +18,12 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -52,6 +57,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     public interface PublicationStructureTabView extends View, HasUiHandlers<PublicationStructureTabUiHandlers> {
 
         void setPublicationStructure(PublicationStructureDto publicationStructureDto);
+        void setPublicationStructure(PublicationStructureDto publicationStructureDto, NameableStatisticalResourceDto selectedElement);
     }
 
     @ProxyCodeSplit
@@ -65,6 +71,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
+        getView().setUiHandlers(this);
     }
 
     @TitleFunction
@@ -118,6 +125,36 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             }
             @Override
             public void onWaitSuccess(GetPublicationStructureResult result) {
+                getView().setPublicationStructure(result.getPublicationStructureDto());
+            }
+        });
+    }
+
+    @Override
+    public void saveElement(String publicationVersionUrn, NameableStatisticalResourceDto element) {
+        dispatcher.execute(new SavePublicationStructureElementAction(publicationVersionUrn, element), new WaitingAsyncCallback<SavePublicationStructureElementResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(SavePublicationStructureElementResult result) {
+                getView().setPublicationStructure(result.getPublicationStructureDto(), result.getSavedElement());
+            }
+        });
+    }
+
+    @Override
+    public void deleteElement(String publicationVersionUrn, String elementUrn) {
+        dispatcher.execute(new DeletePublicationStructureElementAction(publicationVersionUrn, elementUrn), new WaitingAsyncCallback<DeletePublicationStructureElementResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(DeletePublicationStructureElementResult result) {
                 getView().setPublicationStructure(result.getPublicationStructureDto());
             }
         });

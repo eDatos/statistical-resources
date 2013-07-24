@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
@@ -50,6 +51,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected static final String               SCHEME_NODE_NAME = "scheme-node";
 
+    protected TreeNodeClickAction               treeNodeClickAction;
+
     protected Menu                              contextMenu;
 
     protected HandlerRegistration               folderContextHandlerRegistration;
@@ -70,7 +73,9 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected PublicationStructureTabUiHandlers uiHandlers;
 
-    public PublicationStructureTreeGrid() {
+    public PublicationStructureTreeGrid(TreeNodeClickAction treeNodeClickAction) {
+        this.treeNodeClickAction = treeNodeClickAction;
+
         setHeight(175);
         setAutoFitData(Autofit.VERTICAL);
         setShowOpenIcons(false);
@@ -170,14 +175,18 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
             @Override
             public void onFolderClick(FolderClickEvent event) {
-                onNodeClick(event.getFolder().getName(), event.getFolder().getAttribute(ElementLevelDS.URN));
+                if (event.getFolder() instanceof ElementLevelTreeNode) {
+                    onNodeClick(((ElementLevelTreeNode) event.getFolder()).getElementLevelDto());
+                }
             }
         });
         leafClickHandlerRegistration = addLeafClickHandler(new LeafClickHandler() {
 
             @Override
             public void onLeafClick(LeafClickEvent event) {
-                onNodeClick(event.getLeaf().getName(), event.getLeaf().getAttribute(ElementLevelDS.URN));
+                if (event.getLeaf() instanceof ElementLevelTreeNode) {
+                    onNodeClick(((ElementLevelTreeNode) event.getLeaf()).getElementLevelDto());
+                }
             }
         });
         folderContextHandlerRegistration = addFolderContextClickHandler(new FolderContextClickHandler() {
@@ -282,10 +291,13 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         getData().openAll();
     }
 
-    public void selectItem(String urn) {
+    public void selectElement(NameableStatisticalResourceDto element) {
+        String urn = element.getUrn();
         RecordList nodes = getDataAsRecordList();
         Record record = nodes.find(ElementLevelDS.URN, urn);
-        selectRecord(record);
+        if (record != null) {
+            selectRecord(record);
+        }
     }
 
     protected void showContextMenu() {
@@ -335,8 +347,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         return !("/".equals(getDropFolder().getName()));
     }
 
-    protected void onNodeClick(String nodeName, String elementUrn) {
-        // TODO
+    protected void onNodeClick(ElementLevelDto elementLevelDto) {
+        this.treeNodeClickAction.onNodeClick(elementLevelDto);
     }
 
     protected void onNodeContextClick(String nodeName, ElementLevelDto elementLevelDto) {

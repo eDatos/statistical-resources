@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.model.record;
 
+import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.web.common.client.widgets.NavigableTreeNode;
 
@@ -27,5 +28,13 @@ public class ElementLevelTreeNode extends NavigableTreeNode {
 
     public void setParentChapterUrn(String value) {
         setAttribute(ElementLevelDS.PARENT_CHAPTER_URN, value);
+    }
+
+    public void setElementLevelDto(ElementLevelDto elementLevelDto) {
+        setAttribute(ElementLevelDS.DTO, elementLevelDto);
+    }
+
+    public ElementLevelDto getElementLevelDto() {
+        return (ElementLevelDto) getAttributeAsObject(ElementLevelDS.DTO);
     }
 }

@@ -26,8 +26,9 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.rec
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 
-public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.common.client.utils.RecordUtils {
+public class StatisticalResourcesRecordUtils extends RecordUtils {
 
     //
     // DATASETS
@@ -68,6 +69,7 @@ public class StatisticalResourcesRecordUtils extends org.siemac.metamac.web.comm
             elementLevelNode.setOrderInLevel(((CubeDto) element).getOrderInLevel());
             elementLevelNode.setParentChapterUrn(((CubeDto) element).getParentChapterUrn());
         }
+        elementLevelNode.setElementLevelDto(elementLevelDto);
         elementLevelNode.setAttribute(ElementLevelDS.INFO, GlobalResources.RESOURCE.info().getURL());
         return elementLevelNode;
     }
