@@ -8,4 +8,5 @@ public interface PublicationStructureTabUiHandlers extends BaseUiHandlers {
     void saveElement(String publicationVersionUrn, NameableStatisticalResourceDto element);
     void deleteElement(String publicationVersionUrn, String elementUrn);
     void updateElementLocation(String publicationVersionUrn, String elementUrn, String parentTargetUrn, Long orderInLevel);
+    void goToLastVersion(String urn);
 }

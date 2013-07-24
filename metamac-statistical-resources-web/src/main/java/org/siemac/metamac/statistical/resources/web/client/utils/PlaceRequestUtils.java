@@ -85,5 +85,4 @@ public class PlaceRequestUtils {
         // FIXME: se debe generar la ruta absoluta
         return new ArrayList<PlaceRequest>();
     }
-
 }

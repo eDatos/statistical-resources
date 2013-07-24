@@ -3,9 +3,9 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
@@ -13,6 +13,7 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -20,6 +21,9 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationStructureElementPanel extends VLayout {
@@ -76,7 +80,15 @@ public class PublicationStructureElementPanel extends VLayout {
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         urn.setColSpan(2);
 
-        form.setFields(title, description, urn);
+        ViewTextItem dataset = new ViewTextItem(ElementLevelDS.DATASET, getConstants().dataset());
+        dataset.setColSpan(2);
+        dataset.setShowIfCondition(getIsNotEmptyFormItemIfFunction());
+
+        ViewTextItem query = new ViewTextItem(ElementLevelDS.QUERY, getConstants().query());
+        query.setColSpan(2);
+        query.setShowIfCondition(getIsNotEmptyFormItemIfFunction());
+
+        form.setFields(title, description, urn, dataset, query);
         mainFormLayout.addViewCanvas(form);
     }
 
@@ -91,7 +103,31 @@ public class PublicationStructureElementPanel extends VLayout {
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         urn.setColSpan(2);
 
-        editionForm.setFields(title, description, urn);
+        final CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset(), null);
+        dataset.getClickHandlerRegistration().removeHandler();
+        dataset.setColSpan(2);
+        dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+            @Override
+            public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                String datasetUrn = editionForm.getValueAsString(ElementLevelDS.DATASET);
+                getUiHandlers().goToLastVersion(datasetUrn);
+            }
+        });
+
+        CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query(), null);
+        query.getClickHandlerRegistration().removeHandler();
+        query.setColSpan(2);
+        query.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+            @Override
+            public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                String queryUrn = editionForm.getValueAsString(ElementLevelDS.QUERY);
+                getUiHandlers().goToLastVersion(queryUrn);
+            }
+        });
+
+        editionForm.setFields(title, description, urn, dataset, query);
         mainFormLayout.addEditionCanvas(editionForm);
     }
 
@@ -111,12 +147,12 @@ public class PublicationStructureElementPanel extends VLayout {
         form.setValue(ElementLevelDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(element.getDescription()));
         form.setValue(ElementLevelDS.URN, element.getUrn());
 
-        // TODO
-
-        if (element instanceof ChapterDto) {
-
-        } else if (element instanceof CubeDto) {
-
+        if (element instanceof CubeDto) {
+            form.setValue(ElementLevelDS.DATASET, ((CubeDto) element).getDatasetUrn());
+            form.setValue(ElementLevelDS.QUERY, ((CubeDto) element).getQueryUrn());
+        } else {
+            form.setValue(ElementLevelDS.DATASET, StringUtils.EMPTY);
+            form.setValue(ElementLevelDS.QUERY, StringUtils.EMPTY);
         }
     }
 
@@ -126,12 +162,12 @@ public class PublicationStructureElementPanel extends VLayout {
         editionForm.setValue(ElementLevelDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(element.getDescription()));
         editionForm.setValue(ElementLevelDS.URN, element.getUrn());
 
-        // TODO
-
-        if (element instanceof ChapterDto) {
-
-        } else if (element instanceof CubeDto) {
-
+        if (element instanceof CubeDto) {
+            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).setValue(((CubeDto) element).getDatasetUrn(), null);
+            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.QUERY)).setValue(((CubeDto) element).getQueryUrn(), null);
+        } else {
+            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).clearValue();
+            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.QUERY)).clearValue();
         }
     }
 
@@ -140,7 +176,11 @@ public class PublicationStructureElementPanel extends VLayout {
         element.setTitle((InternationalStringDto) editionForm.getValue(ElementLevelDS.TITLE));
         element.setDescription((InternationalStringDto) editionForm.getValue(ElementLevelDS.DESCRIPTION));
 
-        // TODO
+        if (element instanceof CubeDto) {
+            ((CubeDto) element).setDatasetUrn(editionForm.getValueAsString(ElementLevelDS.DATASET));
+            ((CubeDto) element).setQueryUrn(editionForm.getValueAsString(ElementLevelDS.QUERY));
+        }
+
         return element;
     }
 
@@ -154,5 +194,15 @@ public class PublicationStructureElementPanel extends VLayout {
 
     public void setUiHandlers(PublicationStructureTabUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
+    }
+
+    private FormItemIfFunction getIsNotEmptyFormItemIfFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !StringUtils.isBlank(value.toString());
+            }
+        };
     }
 }

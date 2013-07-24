@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourcesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionCoverageActionHandler;
@@ -44,6 +45,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQue
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
@@ -168,6 +170,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveQueryVersionAction.class, SaveQueryVersionActionHandler.class);
         bindHandler(GetQueryVersionAction.class, GetQueryVersionActionHandler.class);
         bindHandler(DeleteQueryVersionsAction.class, DeleteQueryVersionsActionHandler.class);
+
+        // COMMON
+        bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

@@ -198,5 +198,4 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             placeManager.revealRelativePlace(new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn)));
         }
     }
-
 }

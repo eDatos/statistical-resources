@@ -16,6 +16,8 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
@@ -184,6 +186,23 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     public void goTo(List<PlaceRequest> location) {
         if (location != null && !location.isEmpty()) {
             placeManager.revealPlaceHierarchy(location);
+        }
+    }
+
+    @Override
+    public void goToLastVersion(String urn) {
+        if (!StringUtils.isBlank(urn)) {
+            dispatcher.execute(new GetLatestResourceVersionAction(urn), new WaitingAsyncCallback<GetLatestResourceVersionResult>() {
+
+                @Override
+                public void onWaitFailure(Throwable caught) {
+                    ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
+                }
+                @Override
+                public void onWaitSuccess(GetLatestResourceVersionResult result) {
+                    // TODO
+                }
+            });
         }
     }
 }
