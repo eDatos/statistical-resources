@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.shared;
 
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_CHAPTER_PREFIX;
+import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_CUBE_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX;
@@ -11,6 +12,10 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 public class StatisticalResourcesUrnParserUtils {
 
     // PUBLICATIONS
+
+    public static boolean isPublicationUrn(String urn) {
+        return matches(URN_SIEMAC_CLASS_COLLECTION_PREFIX, UrnUtils.extractPrefix(urn));
+    }
 
     public static boolean isPublicationChapterUrn(String urn) {
         return matches(URN_SIEMAC_CLASS_CHAPTER_PREFIX, UrnUtils.extractPrefix(urn));

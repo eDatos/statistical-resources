@@ -10,6 +10,12 @@ import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalRes
 public class StatisticalResourcesUrnParserUtilsTest {
 
     @Test
+    public void testIsPublicationUrn() throws Exception {
+        assertTrue(StatisticalResourcesUrnParserUtils.isPublicationUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(new String[]{"maintainerAgencyId"}, "publicationCode")));
+        assertFalse(StatisticalResourcesUrnParserUtils.isPublicationUrn("dummy=dummy"));
+    }
+
+    @Test
     public void testIsPublicationChapterUrn() throws Exception {
         assertTrue(StatisticalResourcesUrnParserUtils.isPublicationChapterUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionChapterUrn("chapterCode")));
         assertFalse(StatisticalResourcesUrnParserUtils.isPublicationChapterUrn("dummy=dummy"));
