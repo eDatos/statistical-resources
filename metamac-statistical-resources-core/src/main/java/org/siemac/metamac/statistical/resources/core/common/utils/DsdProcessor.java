@@ -12,12 +12,12 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodededTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
@@ -84,11 +84,12 @@ public class DsdProcessor {
 
     public abstract static class DsdComponent {
 
-        protected DsdComponentType      type                           = null;
-        protected String                codelistRepresentationUrn      = null;
-        protected String                conceptSchemeRepresentationUrn = null;
-        protected CodededTextFormatType textFormatType                 = null;
-        protected String                conceptIdentityUrn             = null;
+        protected DsdComponentType              type                           = null;
+        protected String                        codelistRepresentationUrn      = null;
+        protected String                        conceptSchemeRepresentationUrn = null;
+        // protected CodededTextFormatType textFormatType = null;
+        protected String                        conceptIdentityUrn             = null;
+        protected SimpleComponentTextFormatType textFormat                     = null;
 
         protected void setConceptIdentityUrn(ConceptReferenceType conceptIdentityRef) {
             if (conceptIdentityRef.getRef() != null) {
@@ -104,10 +105,9 @@ public class DsdProcessor {
             if (localRepresentation.getEnumeration() != null) {
                 extractCodelistUrnFromRef(localRepresentation.getEnumeration().getRef());
             } else {
-                textFormatType = localRepresentation.getEnumerationFormat();
+                textFormat = localRepresentation.getTextFormat();
             }
         }
-
         protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) throws MetamacException {
             Concept concept = null;
             if (conceptIdentityRef.getRef() != null) {
@@ -126,7 +126,7 @@ public class DsdProcessor {
                     extractCodelistUrnFromRef(concept.getCoreRepresentation().getEnumeration().getRef());
 
                 } else {
-                    textFormatType = concept.getCoreRepresentation().getEnumerationFormat();
+                    // textFormatType = concept.getCoreRepresentation().getEnumerationFormat();
                 }
             } else {
                 throw new IllegalArgumentException("Found a dimension with concept identity with core representation null");
@@ -163,6 +163,10 @@ public class DsdProcessor {
 
         public String getConceptSchemeRepresentationUrn() {
             return conceptSchemeRepresentationUrn;
+        }
+
+        public SimpleComponentTextFormatType getTextFormatRepresentation() {
+            return textFormat;
         }
 
         public String getEnumeratedRepresentationUrn() {
@@ -236,7 +240,7 @@ public class DsdProcessor {
             setConceptIdentityUrn(dim.getConceptIdentity());
         }
 
-        public TimeTextFormatType getTimeTextFormatType() {
+        public TimeTextFormatType getTimeTextFormatRepresentation() {
             return timeTextFormatType;
         }
 
@@ -249,7 +253,7 @@ public class DsdProcessor {
     public static class DsdAttribute extends DsdComponent {
 
         private String                              attributeId;
-        private ReportingYearStartDayTextFormatType timeTextFormatType;
+        private ReportingYearStartDayTextFormatType reportingYearStartDayTextFormatType;
         private boolean                             isAttributeAtObservationLevel;
         private AttributeRelationshipType           attributeRelationship;
         private boolean                             isMandatory;
@@ -263,6 +267,7 @@ public class DsdProcessor {
             } else {
                 type = DsdComponentType.OTHER;
             }
+
             if (attr.getLocalRepresentation() != null) {
                 setRepresentationFromLocalRepresentation(attr.getLocalRepresentation());
             } else {
@@ -281,7 +286,7 @@ public class DsdProcessor {
             type = DsdComponentType.TEMPORAL;
 
             if (attr.getLocalRepresentation() != null) {
-                timeTextFormatType = attr.getLocalRepresentation().getTextFormat();
+                reportingYearStartDayTextFormatType = attr.getLocalRepresentation().getTextFormat();
             } else {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
             }
@@ -306,8 +311,8 @@ public class DsdProcessor {
             return attributeRelationship;
         }
 
-        public ReportingYearStartDayTextFormatType getTimeTextFormatType() {
-            return timeTextFormatType;
+        public ReportingYearStartDayTextFormatType getReportingYearStartDayTextFormatRepresentation() {
+            return reportingYearStartDayTextFormatType;
         }
 
         public boolean isMandatory() {

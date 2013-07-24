@@ -363,26 +363,25 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
             // Number of dimensions
             if (retrieveDimensionsInfo().size() != overExtendedDto.getCodesDimension().size()) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_KEY_CARDINALITY_NOT_MATCH).build();
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_KEY_CARDINALITY_NOT_MATCH));
             }
 
             // The used dimension if correct
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 if (!this.dimensionsCodeSet.contains(codeDimensionDto.getDimensionId())) {
-                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_NOT_MATCH).withMessageParameters(codeDimensionDto.getDimensionId()).build();
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_NOT_MATCH, codeDimensionDto.getDimensionId()));
                 }
             }
 
             // Number of attributes at observation level, can not exceed the maximum cardinality.
             if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size() + 1) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED).build();
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED));
             }
 
             // The used attribute if correct
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !Metamac2StatRepoMapperImpl.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
-                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH).withMessageParameters(attributeBasicDto.getAttributeId())
-                            .build();
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH, attributeBasicDto.getAttributeId()));
                 }
             }
 
@@ -393,45 +392,33 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             }
             for (String attributeId : this.mandatoryAttributeIdsAtObservationLevel) {
                 if (!attributesInCurrentObservation.contains(attributeId)) {
-                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_ATTR_NOT_FOUND).withMessageParameters(attributeId).build();
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_ATTR_NOT_FOUND, attributeId));
                 }
             }
 
-            // The codes of dimensions must be defined in the enumerated representation
+            // Representation of codes of dimensions
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
-                String enumeratedRepresentationUrn = dimensionsProcessorMap.get(codeDimensionDto.getDimensionId()).getEnumeratedRepresentationUrn();
-                if (enumeratedRepresentationUrn != null) {
-                    Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
-                    if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
-                        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID)
-                                .withMessageParameters(codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId(), enumeratedRepresentationUrn).build();
-                    }
-                }
+                // Enumerated representation
+                checkDimensionEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(), exceptions);
+
+                // Non Enumerated representation
+                checkDimensionNonEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(), exceptions);
             }
 
             // The codes of attributes must be defined in the enumerated representation
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!Metamac2StatRepoMapperImpl.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
-                    checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue());
+                    // Enumerated representation
+                    checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue(), exceptions);
+
+                    // Non Enumerated representation
+                    // checkAttributeNonEnumeratedRepresentation(attributeBasicDto, exceptions);
                 }
             }
         }
 
         ExceptionUtils.throwIfException(exceptions);
     }
-
-    @SuppressWarnings("unchecked")
-    private void checkAttributeEnumeratedRepresentation(String attributeId, InternationalStringDto value) throws MetamacException {
-        String enumeratedRepresentationUrn = attributesProcessorMap.get(attributeId).getEnumeratedRepresentationUrn();
-        if (enumeratedRepresentationUrn != null) {
-            Set<String> validAttributeCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
-            if (!validAttributeCodes.contains(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE))) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_ATTR_CODE_ENUM_NOT_VALID)
-                        .withMessageParameters(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE), attributeId, enumeratedRepresentationUrn).build();
-            }
-        }
-    }
-
     private void checkAttributes(List<AttributeDto> attributeDtos) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
 
@@ -439,14 +426,63 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
             // The used attribute if correct
             if (!this.attributesCodeSet.contains(attributeDto.getAttributeId()) || this.attributeIdsAtObservationLevelSet.contains(attributeDto.getAttributeId())) {
-
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH).withMessageParameters(attributeDto.getAttributeId()).build();
             }
 
-            // The codes of attributes must be defined in the enumerated representation
-            checkAttributeEnumeratedRepresentation(attributeDto.getAttributeId(), attributeDto.getValue());
+            // Enumerated representation of attributes
+            checkAttributeEnumeratedRepresentation(attributeDto.getAttributeId(), attributeDto.getValue(), exceptions);
+
+            // Non Enumerated representation
+            checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), attributeDto.getValue(), exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
+    @SuppressWarnings("unchecked")
+    private void checkDimensionEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        // Enumerated representation
+        String enumeratedRepresentationUrn = dimensionsProcessorMap.get(dimensionId).getEnumeratedRepresentationUrn();
+        if (enumeratedRepresentationUrn != null) {
+            // The codes of dimensions must be defined in the enumerated representation
+            Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+            if (!validDimensionCodes.contains(value)) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID, value, dimensionId, enumeratedRepresentationUrn));
+            }
+        }
+    }
+
+    private void checkDimensionNonEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        DsdProcessor.DsdDimension dsdDimension = dimensionsProcessorMap.get(dimensionId);
+
+        if (dsdDimension.getTextFormatRepresentation() != null) {
+            // NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdDimension.getTextFormatRepresentation(), key, value, exceptions);
+        } else if (dsdDimension.getTimeTextFormatRepresentation() != null) {
+            // NonEnumeratedRepresentationValidator.checkTimeTextFormatType(dsdDimension.getTimeTextFormatRepresentation(), key, value, exceptions);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void checkAttributeEnumeratedRepresentation(String attributeId, InternationalStringDto value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        String enumeratedRepresentationUrn = attributesProcessorMap.get(attributeId).getEnumeratedRepresentationUrn();
+        if (enumeratedRepresentationUrn != null) {
+            Set<String> validAttributeCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+            if (!validAttributeCodes.contains(value.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE))) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_ATTR_CODE_ENUM_NOT_VALID, value
+                        .getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE), attributeId, enumeratedRepresentationUrn));
+            }
+        }
+    }
+
+    private void checkAttributeNonEnumeratedRepresentation(String attributeId, InternationalStringDto value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        DsdProcessor.DsdAttribute dsdAttribute = attributesProcessorMap.get(attributeId);
+
+        if (dsdAttribute.getTextFormatRepresentation() != null) {
+            // NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
+        } else if (dsdAttribute.getReportingYearStartDayTextFormatRepresentation() != null) {
+            // NonEnumeratedRepresentationValidator.checkReportingYearStartDayTextFormatType(dsdAttribute.getReportingYearStartDayTextFormatRepresentation(), key, value, exceptions);
+        }
+    }
+
 }
