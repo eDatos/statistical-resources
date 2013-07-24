@@ -16,8 +16,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
@@ -123,14 +123,14 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     }
 
     private void retrievePublication(String urn) {
-        dispatcher.execute(new GetPublicationAction(urn), new WaitingAsyncCallback<GetPublicationResult>() {
+        dispatcher.execute(new GetPublicationVersionAction(urn), new WaitingAsyncCallback<GetPublicationVersionResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fireErrorMessage(PublicationPresenter.this, caught);
             }
             @Override
-            public void onWaitSuccess(GetPublicationResult result) {
+            public void onWaitSuccess(GetPublicationVersionResult result) {
                 getView().setPublication(result.getPublicationVersionDto());
             }
         });

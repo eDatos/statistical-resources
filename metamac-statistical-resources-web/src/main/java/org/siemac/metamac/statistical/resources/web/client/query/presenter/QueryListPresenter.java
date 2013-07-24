@@ -13,10 +13,10 @@ import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
-import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueriesResult;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
@@ -63,7 +63,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
 
     public interface QueryListView extends View, HasUiHandlers<QueryListUiHandlers> {
 
-        void setQueryPaginatedList(GetQueriesResult queriesPaginatedList);
+        void setQueryPaginatedList(GetQueryVersionsResult queriesPaginatedList);
         void goToQueryListLastPageAfterCreate();
     }
 
@@ -95,7 +95,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
 
     @Override
     public void retrieveQueries(int firstResult, int maxResults) {
-        dispatcher.execute(new GetQueriesAction(firstResult, maxResults), new WaitingAsyncCallback<GetQueriesResult>() {
+        dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults), new WaitingAsyncCallback<GetQueryVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -103,7 +103,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
             }
 
             @Override
-            public void onWaitSuccess(GetQueriesResult result) {
+            public void onWaitSuccess(GetQueryVersionsResult result) {
                 getView().setQueryPaginatedList(result);
             }
         });
@@ -112,7 +112,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
 
     @Override
     public void deleteQueries(List<String> urnsFromSelected) {
-        dispatcher.execute(new DeleteQueriesAction(urnsFromSelected), new WaitingAsyncCallback<DeleteQueriesResult>() {
+        dispatcher.execute(new DeleteQueryVersionsAction(urnsFromSelected), new WaitingAsyncCallback<DeleteQueryVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -120,7 +120,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
             }
 
             @Override
-            public void onWaitSuccess(DeleteQueriesResult result) {
+            public void onWaitSuccess(DeleteQueryVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }

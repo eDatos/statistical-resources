@@ -22,12 +22,12 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
@@ -129,14 +129,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria();
         datasetWebCriteria.setStatisticalOperationUrn(urn);
 
-        dispatcher.execute(new GetDatasetsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+        dispatcher.execute(new GetDatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
             }
             @Override
-            public void onWaitSuccess(GetDatasetsResult result) {
+            public void onWaitSuccess(GetDatasetVersionsResult result) {
                 getView().setDatasets(result.getDatasetVersionDtos());
             }
         });
@@ -146,14 +146,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
         publicationWebCriteria.setStatisticalOperationUrn(urn);
 
-        dispatcher.execute(new GetPublicationsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationsResult>() {
+        dispatcher.execute(new GetPublicationVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
             }
             @Override
-            public void onWaitSuccess(GetPublicationsResult result) {
+            public void onWaitSuccess(GetPublicationVersionsResult result) {
                 getView().setPublications(result.getPublicationDtos());
             }
         });

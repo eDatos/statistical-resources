@@ -24,16 +24,16 @@ import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCal
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetProcStatusResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
@@ -76,8 +76,8 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         void setDataset(DatasetVersionDto datasetDto);
 
         // metadata fill methods
-        void setDatasetsForReplaces(GetDatasetsResult result);
-        void setDatasetsForIsReplacedBy(GetDatasetsResult result);
+        void setDatasetsForReplaces(GetDatasetVersionsResult result);
+        void setDatasetsForIsReplacedBy(GetDatasetVersionsResult result);
 
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
@@ -142,10 +142,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     @Override
     public void retrieveDataset(String datasetIdentifier) {
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
-        dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetResult>(this) {
+        dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetResult result) {
+            public void onWaitSuccess(GetDatasetVersionResult result) {
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -153,10 +153,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void saveDataset(DatasetVersionDto datasetDto) {
-        dispatcher.execute(new SaveDatasetAction(datasetDto, datasetDto.getStatisticalOperation().getCode()), new WaitingAsyncCallbackHandlingError<SaveDatasetResult>(this) {
+        dispatcher.execute(new SaveDatasetVersionAction(datasetDto, datasetDto.getStatisticalOperation().getCode()), new WaitingAsyncCallbackHandlingError<SaveDatasetVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(SaveDatasetResult result) {
+            public void onWaitSuccess(SaveDatasetVersionResult result) {
                 getView().setDataset(result.getSavedDatasetVersion());
             }
         });
@@ -164,10 +164,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void sendToProductionValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
-            public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
                 getView().setDataset(result.getResultDatasetVersionDto());
             }
@@ -176,10 +176,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void sendToDiffusionValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
-            public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
                 getView().setDataset(result.getResultDatasetVersionDto());
             }
@@ -188,10 +188,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void rejectValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.VALIDATION_REJECTED), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.VALIDATION_REJECTED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
-            public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                 getView().setDataset(result.getResultDatasetVersionDto());
             }
@@ -251,10 +251,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void publish(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetProcStatusAction(dataset, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
-            public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                 getView().setDataset(result.getResultDatasetVersionDto());
             }
@@ -279,10 +279,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void version(DatasetVersionDto dataset, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersionDatasetAction(dataset, versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetResult>(this) {
+        dispatcher.execute(new VersionDatasetVersionAction(dataset, versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(VersionDatasetResult result) {
+            public void onWaitSuccess(VersionDatasetVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
                 getView().setDataset(result.getResultDatasetVersionDto());
             }
@@ -295,10 +295,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         VersionableStatisticalResourceWebCriteria versionableCriteria = new VersionableStatisticalResourceWebCriteria(criteria.getCriteria());
         versionableCriteria.setOnlyLastVersion(false);
 
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
+        dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetsResult result) {
+            public void onWaitSuccess(GetDatasetVersionsResult result) {
                 getView().setDatasetsForReplaces(result);
             }
         });

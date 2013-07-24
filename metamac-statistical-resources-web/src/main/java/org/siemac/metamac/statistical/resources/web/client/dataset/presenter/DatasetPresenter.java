@@ -17,8 +17,8 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 
@@ -120,10 +120,10 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     public void retrieveDataset(String datasetIdentifier) {
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
-        dispatcher.execute(new GetDatasetAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetResult>(this) {
+        dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetResult result) {
+            public void onWaitSuccess(GetDatasetVersionResult result) {
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });

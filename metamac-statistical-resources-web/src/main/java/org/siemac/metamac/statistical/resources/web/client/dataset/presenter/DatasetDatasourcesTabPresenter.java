@@ -19,10 +19,10 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourceListResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
@@ -117,10 +117,10 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     public void retrieveDataset(String datasetUrn) {
-        dispatcher.execute(new GetDatasetAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetResult>(this) {
+        dispatcher.execute(new GetDatasetVersionAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetResult result) {
+            public void onWaitSuccess(GetDatasetVersionResult result) {
                 setDataset(result.getDatasetVersionDto());
             }
         });
@@ -151,15 +151,14 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     public void deleteDatasources(List<String> datasourcesUrns) {
-        dispatcher.execute(new DeleteDatasourceListAction(datasourcesUrns), new WaitingAsyncCallbackHandlingError<DeleteDatasourceListResult>(this) {
+        dispatcher.execute(new DeleteDatasourcesAction(datasourcesUrns), new WaitingAsyncCallbackHandlingError<DeleteDatasourcesResult>(this) {
 
             @Override
-            public void onWaitSuccess(DeleteDatasourceListResult result) {
+            public void onWaitSuccess(DeleteDatasourcesResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesDeleted());
                 retrieveDatasourcesByDataset(dataset.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
-
     }
 
     @Override

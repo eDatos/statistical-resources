@@ -25,12 +25,12 @@ import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCal
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationsResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
@@ -132,10 +132,10 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
         VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
         publicationWebCriteria.setStatisticalOperationUrn(operationUrn);
 
-        dispatcher.execute(new GetPublicationsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationsResult>(this) {
+        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetPublicationsResult result) {
+            public void onWaitSuccess(GetPublicationVersionsResult result) {
                 getView().setPublicationPaginatedList(result.getPublicationDtos(), result.getFirstResultOut(), result.getTotalResults());
             }
         });
@@ -143,10 +143,10 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void createPublication(PublicationVersionDto publicationDto) {
-        dispatcher.execute(new SavePublicationAction(publicationDto, operation), new WaitingAsyncCallbackHandlingError<SavePublicationResult>(this) {
+        dispatcher.execute(new SavePublicationVersionAction(publicationDto, operation), new WaitingAsyncCallbackHandlingError<SavePublicationVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(SavePublicationResult result) {
+            public void onWaitSuccess(SavePublicationVersionResult result) {
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
@@ -154,10 +154,10 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void deletePublication(List<String> urns) {
-        dispatcher.execute(new DeletePublicationsAction(urns), new WaitingAsyncCallbackHandlingError<DeletePublicationsResult>(this) {
+        dispatcher.execute(new DeletePublicationVersionsAction(urns), new WaitingAsyncCallbackHandlingError<DeletePublicationVersionsResult>(this) {
 
             @Override
-            public void onWaitSuccess(DeletePublicationsResult result) {
+            public void onWaitSuccess(DeletePublicationVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().publicationDeleted());
                 retrievePublications(PublicationListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             };

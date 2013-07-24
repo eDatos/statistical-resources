@@ -35,7 +35,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationsResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -445,13 +445,13 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     }
 
     @Override
-    public void setPublicationsForReplaces(GetPublicationsResult result) {
+    public void setPublicationsForReplaces(GetPublicationVersionsResult result) {
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationDtosAsRelatedResourceDtos(result.getPublicationDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 
     @Override
-    public void setPublicationsForIsReplacedBy(GetPublicationsResult result) {
+    public void setPublicationsForIsReplacedBy(GetPublicationVersionsResult result) {
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationDtosAsRelatedResourceDtos(result.getPublicationDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }

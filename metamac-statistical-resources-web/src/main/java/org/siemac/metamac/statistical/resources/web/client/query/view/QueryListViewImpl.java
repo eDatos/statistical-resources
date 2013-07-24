@@ -15,7 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.presenter.Query
 import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -70,7 +70,7 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
     }
 
     @Override
-    public void setQueryPaginatedList(GetQueriesResult queriesPaginatedList) {
+    public void setQueryPaginatedList(GetQueryVersionsResult queriesPaginatedList) {
         queriesListPanel.setQueriesPaginatedList(queriesPaginatedList);
     }
 
@@ -198,7 +198,7 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
             });
         }
 
-        public void setQueriesPaginatedList(GetQueriesResult result) {
+        public void setQueriesPaginatedList(GetQueryVersionsResult result) {
             QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
             int index = 0;
             for (QueryVersionDto queryDto : result.getQueriesList()) {

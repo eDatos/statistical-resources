@@ -22,14 +22,14 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryResult;
-import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -77,7 +77,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
         void setQueryDto(QueryVersionDto queryDto);
         void newQueryDto();
-        void setDatasetsForQuery(GetDatasetsResult result);
+        void setDatasetsForQuery(GetDatasetVersionsResult result);
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
         void setDatasetDimensionsIds(List<String> datasetDimensionsIds);
         void setDatasetDimensionCodes(String dimensionId, List<CodeItemDto> codesDimension);
@@ -110,10 +110,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     public void retrieveQuery(String queryCode) {
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryCode);
-        dispatcher.execute(new GetQueryAction(urn), new WaitingAsyncCallbackHandlingError<GetQueryResult>(this) {
+        dispatcher.execute(new GetQueryVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetQueryVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetQueryResult result) {
+            public void onWaitSuccess(GetQueryVersionResult result) {
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -121,10 +121,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void saveQuery(QueryVersionDto queryDto) {
-        dispatcher.execute(new SaveQueryAction(queryDto), new WaitingAsyncCallbackHandlingError<SaveQueryResult>(this) {
+        dispatcher.execute(new SaveQueryVersionAction(queryDto), new WaitingAsyncCallbackHandlingError<SaveQueryVersionResult>(this) {
 
             @Override
-            public void onWaitSuccess(SaveQueryResult result) {
+            public void onWaitSuccess(SaveQueryVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().querySaved());
                 getView().setQueryDto(result.getSavedQueryVersionDto());
                 updateUrlIfNeeded(result.getSavedQueryVersionDto());
@@ -142,10 +142,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void retrieveDatasetsForQuery(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
+        dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetsResult result) {
+            public void onWaitSuccess(GetDatasetVersionsResult result) {
                 getView().setDatasetsForQuery(result);
             }
 
