@@ -17,7 +17,19 @@ public class StatisticalResourcesUrnParserUtilsTest {
 
     @Test
     public void testIsPublicationCubeUrn() throws Exception {
-        assertTrue(StatisticalResourcesUrnParserUtils.isPublicationCubeUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn("chapterCode")));
+        assertTrue(StatisticalResourcesUrnParserUtils.isPublicationCubeUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn("cubeCode")));
         assertFalse(StatisticalResourcesUrnParserUtils.isPublicationCubeUrn("dummy=dummy"));
+    }
+
+    @Test
+    public void testIsDatasetUrn() throws Exception {
+        assertTrue(StatisticalResourcesUrnParserUtils.isDatasetUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(new String[]{"maintainerAgencyId"}, "datasetCode")));
+        assertFalse(StatisticalResourcesUrnParserUtils.isDatasetUrn("dummy=dummy"));
+    }
+
+    @Test
+    public void testIsQueryUrn() throws Exception {
+        assertTrue(StatisticalResourcesUrnParserUtils.isQueryUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(new String[]{"maintainerAgencyId"}, "datasetCode")));
+        assertFalse(StatisticalResourcesUrnParserUtils.isQueryUrn("dummy=dummy"));
     }
 }

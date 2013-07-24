@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.core.utils.shared;
 
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_CHAPTER_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_CUBE_PREFIX;
+import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX;
+import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -16,6 +18,18 @@ public class StatisticalResourcesUrnParserUtils {
 
     public static boolean isPublicationCubeUrn(String urn) {
         return matches(URN_SIEMAC_CLASS_CUBE_PREFIX, UrnUtils.extractPrefix(urn));
+    }
+
+    // DATASETS
+
+    public static boolean isDatasetUrn(String urn) {
+        return matches(URN_SIEMAC_CLASS_DATASET_PREFIX, UrnUtils.extractPrefix(urn));
+    }
+
+    // QUERIES
+
+    public static boolean isQueryUrn(String urn) {
+        return matches(URN_SIEMAC_CLASS_QUERY_PREFIX, UrnUtils.extractPrefix(urn));
     }
 
     // Generic methods
