@@ -278,6 +278,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
 
         resource.setType(type);
+        
+        resource.setCommonMetadata(mockCommonConfigurationExternalItem());
 
         resource.setCreator(mockOrganizationUnitExternalItem("creator"));
         resource.addContributor(mockOrganizationUnitExternalItem("contributor01"));
@@ -290,9 +292,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor02"));
         resource.addMediator(mockOrganizationUnitExternalItem("mediator01"));
         resource.addMediator(mockOrganizationUnitExternalItem("mediator02"));
-        resource.setRightsHolder(mockOrganizationUnitExternalItem("rightsHolder"));
         resource.setCopyrightedDate(new DateTime());
-        resource.setLicense(mockInternationalStringMetadata(resourceCode, "license"));
         resource.setAccessRights(mockInternationalStringMetadata(resourceCode, "accessRights"));
 
         setSpecialCasesSiemacMetadataStatisticalResourceMock(resource);
@@ -448,6 +448,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // EXTERNAL ITEM
     // -----------------------------------------------------------------
 
+    public static ExternalItem mockCommonConfigurationExternalItem() {
+        String code = mockCode();
+        return mockExternalItem(code, mockCommonConfigurationUrn(code), TypeExternalArtefactsEnum.CONFIGURATION);
+    }
+    
     public static ExternalItem mockStatisticalOperationExternalItem() {
         String code = mockCode();
         return mockStatisticalOperationExternalItem(code);

@@ -16,6 +16,7 @@ public class FillMetadataForVersioningResourceUtils {
     public static void fillMetadataForVersioningSiemacResource(ServiceContext ctx, SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResource next, VersionTypeEnum versionType) {
         fillMetadataForVersioningLifecycleResource(ctx, previous, next, versionType);
         
+        next.setLastUpdate(next.getCreationDate());
     }
     
     private static void fillMetadataForVersioningLifecycleResource(ServiceContext ctx, LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next, VersionTypeEnum versionType) {
@@ -32,7 +33,6 @@ public class FillMetadataForVersioningResourceUtils {
     private static void fillMetadataForVersioningVersionableResource(ServiceContext ctx,VersionableStatisticalResource previous, VersionableStatisticalResource next, VersionTypeEnum versionType) {
         String newVersion = VersionUtil.createNextVersion(previous.getVersionLogic(), VersionPatternEnum.XX_YYY, versionType);
         next.setVersionLogic(newVersion);
-        
     }
     
 }

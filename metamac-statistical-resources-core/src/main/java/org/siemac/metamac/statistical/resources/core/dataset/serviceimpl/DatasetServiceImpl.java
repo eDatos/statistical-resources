@@ -13,6 +13,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
@@ -309,8 +310,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // TODO: DATE_NEXT_UPDATE
 
-        // TODO: set lastVersion true and set lastVersion = false to previous lastVersion
-
         datasetNewVersion = getDatasetVersionRepository().save(datasetNewVersion);
 
         return datasetNewVersion;
@@ -370,12 +369,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private void addDatasourceForDatasetVersion(Datasource datasource, DatasetVersion datasetVersion) {
         datasetVersion.addDatasource(datasource);
+        datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
         getDatasetVersionRepository().save(datasetVersion);
     }
 
     private void deleteDatasourceToDataset(Datasource datasource) {
         DatasetVersion parent = datasource.getDatasetVersion();
         parent.removeDatasource(datasource);
+        parent.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
         getDatasetVersionRepository().save(parent);
     }
 

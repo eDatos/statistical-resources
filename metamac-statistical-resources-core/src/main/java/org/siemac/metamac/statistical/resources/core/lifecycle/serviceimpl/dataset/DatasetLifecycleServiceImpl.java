@@ -368,7 +368,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {
-        ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getRightsHolder();
+        ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getCreator();
         String version = resource.getSiemacMetadataStatisticalResource().getVersionLogic();
         InternationalString publisherName = resource.getSiemacMetadataStatisticalResource().getPublisher().get(0).getTitle();
         // FIXME: GET PUBLIC URL
@@ -376,7 +376,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         InternationalString bibliographicInternational = new InternationalString();
         for (LocalisedString localisedTitle : resource.getSiemacMetadataStatisticalResource().getTitle().getTexts()) {
             String locale = localisedTitle.getLocale();
-
+            //FIXME: WHO IS THE RIGHT HOLDER?
             StringBuilder bibliographicCitation = new StringBuilder();
             bibliographicCitation.append(rightsHolder.getCode()).append(" (").append("").append(") ");
             bibliographicCitation.append(localisedTitle.getLabel()).append(" (v").append(version).append(") [dataset].");

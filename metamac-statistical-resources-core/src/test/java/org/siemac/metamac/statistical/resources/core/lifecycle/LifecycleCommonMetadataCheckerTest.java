@@ -223,8 +223,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                             new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.CREATOR)), 
                             new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.LAST_UPDATE)), 
                             new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.PUBLISHER)), 
-                            new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.RIGHTS_HOLDER)), 
-                            new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.LICENSE)))));
+                            new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.COMMON_METADATA)))));
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleCommonMetadataChecker.checkSiemacCommonMetadata(mockedResource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);

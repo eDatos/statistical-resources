@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
@@ -31,6 +32,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,13 +97,14 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
+        DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
         Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn(), expected);
-        expected.setDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME));
+        expected.setDatasetVersion(expectedDatasetVersion);
         assertEqualsDatasource(expected, actual);
     }
-
+    
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testCreateDatasourceErrorIdentifiableResourceRequired() throws Exception {
@@ -200,6 +203,39 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             assertEqualsDatasourceCollection(expected, actual);
         }
     }
+    
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testUpdateLastUpdateDateOnDatasourceCreation() throws Exception {
+        DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DateTime oldLastUpdate = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate();
+        
+        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn(), expected);
+        
+        //retrieve dataset version, lastupdate must have been changed
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate());
+        assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate().equals(oldLastUpdate));
+    }
+    
+    @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
+    public void testUpdateLastUpdateDateOnDatasourceDeletion() throws Exception {
+        Datasource datasource = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        String datasourceUrn = datasource.getIdentifiableStatisticalResource().getUrn();
+        
+        DateTime oldLastUpdate = datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getLastUpdate();
+        
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        
+        //retrieve dataset version, lastupdate must have been changed
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate());
+        assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate().equals(oldLastUpdate));
+    }
 
     // ------------------------------------------------------------------------
     // DATASETS
@@ -246,6 +282,10 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsDatasetVersionNotChecksDataset(expected, actual);
+        assertNotNull(actual.getSiemacMetadataStatisticalResource().getCreatedDate());
+        assertNotNull(actual.getSiemacMetadataStatisticalResource().getCreatedBy());
+        assertTrue(actual.getSiemacMetadataStatisticalResource().getCreatedDate().equals(actual.getSiemacMetadataStatisticalResource().getCreationDate()));
+        assertTrue(actual.getSiemacMetadataStatisticalResource().getCreatedBy().equals(actual.getSiemacMetadataStatisticalResource().getCreationUser()));
     }
 
     @Test

@@ -27,6 +27,8 @@ public class FillMetadataForCreateResourceUtils {
         resource.setProcStatus(ProcStatusEnum.DRAFT);
         resource.setCreatedDate(new DateTime());
         resource.setCreatedBy(ctx.getUserId());
+        resource.setCreationDate(resource.getCreatedDate());
+        resource.setCreationUser(ctx.getUserId());
         resource.setLastVersion(true);
     }
 

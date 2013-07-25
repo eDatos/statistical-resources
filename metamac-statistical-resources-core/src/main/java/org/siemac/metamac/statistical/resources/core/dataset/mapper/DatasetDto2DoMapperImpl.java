@@ -118,9 +118,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             datasetVersionDtoRelatedDsdToDo(source, target);
         }
             
-        if (DatasetMetadataEditionChecks.canDateNextUpdateBeEdited()) {
-            target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
-        }
+        target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
 
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
         target.setStatisticOfficiality(statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));

@@ -76,8 +76,7 @@ public class LifecycleCommonMetadataChecker {
         
         checkMetadataRequired(siemacMetadataStatisticalResource.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER), exceptionItems);
         
-        checkMetadataRequired(siemacMetadataStatisticalResource.getRightsHolder(), addParameter(metadataName, ServiceExceptionSingleParameters.RIGHTS_HOLDER), exceptionItems);
-        checkMetadataRequired(siemacMetadataStatisticalResource.getLicense(), addParameter(metadataName, ServiceExceptionSingleParameters.LICENSE), exceptionItems);
+        checkMetadataRequired(siemacMetadataStatisticalResource.getCommonMetadata(), addParameter(metadataName, ServiceExceptionSingleParameters.COMMON_METADATA), exceptionItems);
     }
     
     public void checkDatasetVersionCommonMetadata(DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {

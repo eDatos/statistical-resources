@@ -27,7 +27,6 @@ public class DatasetVersioningCopyUtils {
     public static void copyDatasetVersion(DatasetVersion source, DatasetVersion target) {
         copySiemacMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target.getSiemacMetadataStatisticalResource());
                
-        //TODO: granularities inherited?
         target.getGeographicGranularities().clear();
         target.getGeographicGranularities().addAll(copyListExternalItem(source.getGeographicGranularities()));
         
@@ -44,14 +43,12 @@ public class DatasetVersioningCopyUtils {
         
         target.setDataset(source.getDataset());
         
-        //TODO: datasources inherited?
         target.getDatasources().clear();
         for (Datasource datasource : source.getDatasources()) {
             Datasource newDatasource = new Datasource();
             copyDatasource(datasource, newDatasource);
             target.addDatasource(newDatasource);
         }
-
     }
     
     private static void copyDatasource(Datasource source, Datasource target) {

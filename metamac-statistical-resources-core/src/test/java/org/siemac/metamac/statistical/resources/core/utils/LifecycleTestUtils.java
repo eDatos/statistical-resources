@@ -102,15 +102,13 @@ public class LifecycleTestUtils {
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
 
+        resource.getSiemacMetadataStatisticalResource().setCommonMetadata(StatisticalResourcesPersistedDoMocks.mockCommonConfigurationExternalItem());
+        
         resource.getSiemacMetadataStatisticalResource().setCreator(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime().minusMinutes(10));
 
         resource.getSiemacMetadataStatisticalResource().getPublisher().clear();
         resource.getSiemacMetadataStatisticalResource().addPublisher(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
-
-        resource.getSiemacMetadataStatisticalResource().setRightsHolder(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
-        resource.getSiemacMetadataStatisticalResource().setLicense(StatisticalResourcesPersistedDoMocks.mockInternationalString());
-
     }
 
     private static void prepareToLifecycleCommonLifeCycleResource(HasLifecycle resource) {

@@ -9,6 +9,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -213,7 +214,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create element level
         ElementLevel elementLevel = createChapterElementLevel(ctx, publicationVersion, chapter);
-
+        
         return elementLevel.getChapter();
     }
 
@@ -232,7 +233,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdateChapter(ctx, chapter);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
-
+        
+        updateLastUpdateMetadata(publicationVersion);
+        
         // Save
         return getChapterRepository().save(chapter);
     }
@@ -288,7 +291,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create element level
         ElementLevel elementLevel = createCubeElementLevel(ctx, publicationVersion, cube);
-
+        
         return elementLevel.getCube();
     }
 
@@ -308,7 +311,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdateCube(ctx, cube);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, cube.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
-
+        
+        updateLastUpdateMetadata(publicationVersion);
+        
         // Save
         return getCubeRepository().save(cube);
     }
@@ -404,6 +409,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         } else {
             elementLevel = addToParentLevel(ctx, publicationVersion, elementLevel);
         }
+        
+        updateLastUpdateMetadata(publicationVersion);
+        
         return elementLevel;
     }
 
@@ -666,5 +674,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Delete
         getElementLevelRepository().delete(elementLevel);
+        
+        updateLastUpdateMetadata(publicationVersion);
+    }
+    
+    private void updateLastUpdateMetadata(PublicationVersion publicationVersion) {
+        publicationVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
+        getPublicationVersionRepository().save(publicationVersion);
     }
 }

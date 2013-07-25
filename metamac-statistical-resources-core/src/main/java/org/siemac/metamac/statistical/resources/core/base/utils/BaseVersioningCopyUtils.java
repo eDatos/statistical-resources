@@ -38,6 +38,8 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         // Class descriptor
         target.setType(source.getType());
 
+        target.setCommonMetadata(copyExternalItem(source.getCommonMetadata()));
+        
         // Production descriptors
         target.setCreator(copyExternalItem(source.getCreator()));
         target.getContributor().clear();
@@ -62,8 +64,6 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.getIsRequiredBy().addAll(copyListRelatedResource(source.getIsRequiredBy()));
 
         // Intellectual ownership descriptors
-        target.setRightsHolder(copyExternalItem(source.getRightsHolder()));
-        target.setLicense(copyInternationalString(source.getLicense()));
         target.setAccessRights(copyInternationalString(source.getAccessRights()));
     }
 

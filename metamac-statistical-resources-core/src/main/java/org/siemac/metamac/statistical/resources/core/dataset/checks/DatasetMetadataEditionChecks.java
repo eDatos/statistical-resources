@@ -26,10 +26,4 @@ public class DatasetMetadataEditionChecks extends MetadataEditionChecks {
         return false;
     }
 
-    public static boolean canDateNextUpdateBeEdited() {
-        //FIXME: When can his be edited?, only when there is no px in
-        return false;
-    }
-
-
 }

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -39,7 +40,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsVersioningLifecycle(previous, next);
 
         // Not inherited
-        assertNull(next.getLastUpdate());
         assertNull(next.getNewnessUntilDate());
         assertNull(next.getReplaces());
         assertNull(next.getIsReplacedBy());
@@ -61,12 +61,17 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(previous.getKeywords(), next.getKeywords());
         
         assertEquals(previous.getType(), next.getType());
+        
+        assertEqualsExternalItem(previous.getCommonMetadata(), next.getCommonMetadata());
 
         assertEqualsExternalItem(previous.getCreator(), next.getCreator());
         assertEqualsExternalItemCollection(previous.getContributor(), next.getContributor());
         assertEqualsDate(previous.getCreatedDate(), next.getCreatedDate());
         assertEqualsInternationalString(previous.getConformsTo(), next.getConformsTo());
         assertEqualsInternationalString(previous.getConformsToInternal(), next.getConformsToInternal());
+        assertNotNull(next.getLastUpdate());
+        assertTrue(next.getLastUpdate().isAfter(previous.getLastUpdate().getMillis()));
+        
 
         assertEqualsExternalItemCollection(previous.getPublisher(), next.getPublisher());
         assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
@@ -75,8 +80,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResourceCollection(previous.getRequires(), next.getRequires());
         assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
 
-        assertEqualsExternalItem(previous.getRightsHolder(), next.getRightsHolder());
-        assertEqualsInternationalString(previous.getLicense(), next.getLicense());
         assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
     }
 
@@ -155,11 +158,12 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(expected.getKeywords(), actual.getKeywords());
 
         assertEquals(expected.getType(), actual.getType());
+        
+        assertEqualsExternalItem(expected.getCommonMetadata(), actual.getCommonMetadata());
 
         assertEqualsExternalItem(expected.getCreator(), actual.getCreator());
         assertEqualsExternalItemList(expected.getContributor(), actual.getContributor());
         assertEqualsDate(expected.getResourceCreatedDate(), actual.getResourceCreatedDate());
-        assertEqualsDate(expected.getLastUpdate(), actual.getLastUpdate());
         assertEqualsInternationalString(expected.getConformsTo(), actual.getConformsTo());
         assertEqualsInternationalString(expected.getConformsToInternal(), actual.getConformsToInternal());
 
@@ -177,9 +181,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
         assertEqualsRelatedResourceCollection(expected.getIsPartOf(), actual.getIsPartOf());
 
-        assertEqualsExternalItem(expected.getRightsHolder(), actual.getRightsHolder());
         assertEqualsDate(expected.getCopyrightedDate(), actual.getCopyrightedDate());
-        assertEqualsInternationalString(expected.getLicense(), actual.getLicense());
         assertEqualsInternationalString(expected.getAccessRights(), actual.getAccessRights());
 
         assertEqualsLifeCycleStatisticalResource(expected, actual);
