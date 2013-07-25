@@ -7,9 +7,9 @@ import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.query.criteria.enums.QueryCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
      **************************************************************************/
 
     public QueryMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<QueryVersion>(QueryVersion.class, QueryCriteriaOrderEnum.class, QueryCriteriaPropertyEnum.class, new QueryCriteriaCallback());
+        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<QueryVersion>(QueryVersion.class, StatisticalResourcesCriteriaOrderEnum.class, StatisticalResourcesCriteriaPropertyEnum.class, new QueryCriteriaCallback());
     }
 
     /**************************************************************************
@@ -44,36 +44,53 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
 
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            QueryCriteriaPropertyEnum propertyEnum = QueryCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
+            StatisticalResourcesCriteriaPropertyEnum propertyEnum = StatisticalResourcesCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
+                // From Query
                 case CODE:
                     return new SculptorPropertyCriteria(QueryVersionProperties.query().identifiableStatisticalResource().code(), propertyRestriction.getStringValue());
                 case URN:
                     return new SculptorPropertyCriteria(QueryVersionProperties.query().identifiableStatisticalResource().urn(), propertyRestriction.getStringValue());
-                case QUERY_VERSION_TITLE:
+                case STATISTICAL_OPERATION_URN:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.query().identifiableStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
+                    
+                // From Query Version
+                case TITLE:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
-                    // case STATISTICAL_OPERATION_URN:
-                    // TODO: Pendiente de añadir la operación estadística a las queries
-                    // return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
+                case DESCRIPTION:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                case PROC_STATUS:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                case QUERY_STATUS:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue());
                 default:
+                    // LAST_VERSION
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
 
         @Override
         public Property<QueryVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            QueryCriteriaOrderEnum propertyOrderEnum = QueryCriteriaOrderEnum.fromValue(order.getPropertyName());
+            StatisticalResourcesCriteriaOrderEnum propertyOrderEnum = StatisticalResourcesCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
+                // From Query
                 case CODE:
                     return QueryVersionProperties.query().identifiableStatisticalResource().code();
                 case URN:
                     return QueryVersionProperties.query().identifiableStatisticalResource().urn();
-                case QUERY_VERSION_TITLE:
+                case STATISTICAL_OPERATION_URN:
+                    return QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn();
+                    
+                // From Query Version
+                case TITLE:
                     return QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label();
-                    // case STATISTICAL_OPERATION_URN:
-                    // TODO: Pendiente de añadir la operación estadística a las queries
-                    // return QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn();
+                case PROC_STATUS:
+                    return QueryVersionProperties.lifeCycleStatisticalResource().procStatus();
+                case QUERY_STATUS:
+                    return QueryVersionProperties.status();
+                    
                 default:
+                    // LAST_VERSION
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
         }

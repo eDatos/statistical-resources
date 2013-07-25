@@ -7,8 +7,8 @@ import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetVersionCriteriaOrderEnum;
-import org.siemac.metamac.statistical.resources.core.dataset.criteria.enums.DatasetVersionCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
+import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -24,7 +24,7 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
      **************************************************************************/
 
     public DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        datasetVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<DatasetVersion>(DatasetVersion.class, DatasetVersionCriteriaOrderEnum.class, DatasetVersionCriteriaPropertyEnum.class, new DatasetVersionCriteriaCallback());
+        datasetVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<DatasetVersion>(DatasetVersion.class, StatisticalResourcesCriteriaOrderEnum.class, StatisticalResourcesCriteriaPropertyEnum.class, new DatasetVersionCriteriaCallback());
     }
 
     /**************************************************************************
@@ -44,7 +44,7 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
 
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            DatasetVersionCriteriaPropertyEnum propertyEnum = DatasetVersionCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
+            StatisticalResourcesCriteriaPropertyEnum propertyEnum = StatisticalResourcesCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case CODE:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().code(), propertyRestriction.getStringValue());
@@ -52,6 +52,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().urn(), propertyRestriction.getStringValue());
                 case TITLE:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                case DESCRIPTION:
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
                 case PROC_STATUS:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
                 case STATISTICAL_OPERATION_URN:    
@@ -59,13 +61,14 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                 case LAST_VERSION:    
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue());
                 default:
+                    // QUERY_STATUS
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
 
         @Override
         public Property<DatasetVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            DatasetVersionCriteriaOrderEnum propertyOrderEnum = DatasetVersionCriteriaOrderEnum.fromValue(order.getPropertyName());
+            StatisticalResourcesCriteriaOrderEnum propertyOrderEnum = StatisticalResourcesCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyOrderEnum) {
                 case CODE:
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().code();
@@ -77,7 +80,10 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn();
                 case LAST_VERSION:
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion();
+                case PROC_STATUS:
+                    return DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus();
                 default:
+                    // QUERY_STATUS
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
         }
