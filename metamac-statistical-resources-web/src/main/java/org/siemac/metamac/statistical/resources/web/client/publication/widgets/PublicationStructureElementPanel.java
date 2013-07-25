@@ -7,13 +7,16 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -24,6 +27,8 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationStructureElementPanel extends VLayout {
@@ -119,6 +124,18 @@ public class PublicationStructureElementPanel extends VLayout {
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         urn.setColSpan(2);
 
+        CustomSelectItem resourceTypeToLink = new CustomSelectItem(ElementLevelDS.RESOURCE_TYPE_TO_LINK, getConstants().publicationStructureElementResourceTypeToLink());
+        resourceTypeToLink.setValueMap(CommonUtils.getStatisticalResourceTypeThatCanBeAddIntoACubeHashMap());
+        resourceTypeToLink.setColSpan(2);
+        resourceTypeToLink.setRequired(true);
+        resourceTypeToLink.addChangedHandler(new ChangedHandler() {
+
+            @Override
+            public void onChanged(ChangedEvent event) {
+                editionForm.markForRedraw();
+            }
+        });
+
         CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
         dataset.setColSpan(2);
         dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
@@ -127,6 +144,13 @@ public class PublicationStructureElementPanel extends VLayout {
             public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                 String datasetUrn = editionForm.getValueAsString(ElementLevelDS.DATASET);
                 getUiHandlers().goToLastVersion(datasetUrn);
+            }
+        });
+        dataset.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return StringUtils.equals(StatisticalResourceTypeEnum.DATASET.name(), editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK));
             }
         });
 
@@ -140,8 +164,15 @@ public class PublicationStructureElementPanel extends VLayout {
                 getUiHandlers().goToLastVersion(queryUrn);
             }
         });
+        query.setShowIfCondition(new FormItemIfFunction() {
 
-        editionForm.setFields(title, description, urn, dataset, query);
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return StringUtils.equals(StatisticalResourceTypeEnum.QUERY.name(), editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK));
+            }
+        });
+
+        editionForm.setFields(title, description, urn, resourceTypeToLink, dataset, query);
         mainFormLayout.addEditionCanvas(editionForm);
     }
 
@@ -162,8 +193,9 @@ public class PublicationStructureElementPanel extends VLayout {
         form.setValue(ElementLevelDS.URN, element.getUrn());
 
         if (element instanceof CubeDto) {
-            form.setValue(ElementLevelDS.DATASET, ((CubeDto) element).getDatasetUrn());
-            form.setValue(ElementLevelDS.QUERY, ((CubeDto) element).getQueryUrn());
+            CubeDto cubeDto = (CubeDto) element;
+            form.setValue(ElementLevelDS.DATASET, cubeDto.getDatasetUrn());
+            form.setValue(ElementLevelDS.QUERY, cubeDto.getQueryUrn());
         } else {
             form.setValue(ElementLevelDS.DATASET, StringUtils.EMPTY);
             form.setValue(ElementLevelDS.QUERY, StringUtils.EMPTY);
@@ -177,12 +209,24 @@ public class PublicationStructureElementPanel extends VLayout {
         editionForm.setValue(ElementLevelDS.URN, element.getUrn());
 
         if (element instanceof CubeDto) {
-            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).setValue(((CubeDto) element).getDatasetUrn(), null);
-            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.QUERY)).setValue(((CubeDto) element).getQueryUrn(), null);
+            CubeDto cubeDto = (CubeDto) element;
+
+            String resourceTypeToLink = StringUtils.EMPTY;
+            if (!StringUtils.isBlank(cubeDto.getDatasetUrn())) {
+                resourceTypeToLink = StatisticalResourceTypeEnum.DATASET.name();
+            } else if (!StringUtils.isBlank(cubeDto.getQueryUrn())) {
+                resourceTypeToLink = StatisticalResourceTypeEnum.QUERY.name();
+            }
+            editionForm.setValue(ElementLevelDS.RESOURCE_TYPE_TO_LINK, resourceTypeToLink);
+            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).setValue(cubeDto.getDatasetUrn(), null);
+            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.QUERY)).setValue(cubeDto.getQueryUrn(), null);
         } else {
+            editionForm.setValue(ElementLevelDS.RESOURCE_TYPE_TO_LINK, StringUtils.EMPTY);
             ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).clearValue();
             ((CustomLinkItem) editionForm.getItem(ElementLevelDS.QUERY)).clearValue();
         }
+
+        editionForm.markForRedraw();
     }
 
     public NameableStatisticalResourceDto getSelectedElement() {
