@@ -109,6 +109,22 @@ public class PlaceRequestUtils {
         return new PlaceRequest(NameTokens.queriesListPage);
     }
 
+    public static PlaceRequest buildRelativeQueryPlaceRequest(String urn) {
+        return new PlaceRequest(NameTokens.queryPage).with(PlaceRequestParams.queryParam, UrnUtils.removePrefix(urn));
+    }
+
+    public static List<PlaceRequest> buildAbsoluteQueriesPlaceRequest(String operationUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativeQueriesPlaceRequest());
+        return placeRequests;
+    }
+
+    public static List<PlaceRequest> buildAbsoluteQueryPlaceRequest(String operationUrn, String queryUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteDatasetsPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativeQueryPlaceRequest(queryUrn));
+        return placeRequests;
+    }
+
     // ---------------------------------------------------------------------------
     // GENERIC METHODS
     // ---------------------------------------------------------------------------

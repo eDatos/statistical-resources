@@ -204,12 +204,12 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                 @Override
                 public void onWaitSuccess(GetLatestResourceVersionResult result) {
                     LifeCycleStatisticalResourceDto resourceVersion = result.getResourceVersion();
+                    String operationUrn = resourceVersion.getStatisticalOperation().getUrn();
+                    String resourceUrn = resourceVersion.getUrn();
                     if (resourceVersion instanceof DatasetVersionDto) {
-                        String operationUrn = ((DatasetVersionDto) resourceVersion).getStatisticalOperation().getUrn();
-                        String datasetUrn = resourceVersion.getUrn();
-                        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(operationUrn, datasetUrn));
+                        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(operationUrn, resourceUrn));
                     } else if (resourceVersion instanceof QueryVersionDto) {
-                        // FIXME go to the queryVersion page
+                        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(operationUrn, resourceUrn));
                     }
                 }
             });
