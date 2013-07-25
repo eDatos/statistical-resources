@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.statistical.resources.core.base.checks.SiemacMetadataEditionChecks;
+import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
@@ -57,7 +57,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return SiemacMetadataEditionChecks.canKeywordsBeEdited(resource.getProcStatus());
+                return MetadataEditionChecks.canKeywordsBeEdited(resource.getProcStatus());
             }
         };
     }
@@ -66,7 +66,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return !SiemacMetadataEditionChecks.canKeywordsBeEdited(resource.getProcStatus());
+                return !MetadataEditionChecks.canKeywordsBeEdited(resource.getProcStatus());
             }
         };
     }
