@@ -12,6 +12,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
@@ -87,9 +88,9 @@ public class DsdProcessor {
         protected DsdComponentType              type                           = null;
         protected String                        codelistRepresentationUrn      = null;
         protected String                        conceptSchemeRepresentationUrn = null;
-        // protected CodededTextFormatType textFormatType = null;
         protected String                        conceptIdentityUrn             = null;
         protected SimpleComponentTextFormatType textFormat                     = null;
+        protected BasicComponentTextFormatType  textFormatConceptId            = null;
 
         protected void setConceptIdentityUrn(ConceptReferenceType conceptIdentityRef) {
             if (conceptIdentityRef.getRef() != null) {
@@ -126,7 +127,7 @@ public class DsdProcessor {
                     extractCodelistUrnFromRef(concept.getCoreRepresentation().getEnumeration().getRef());
 
                 } else {
-                    // textFormatType = concept.getCoreRepresentation().getEnumerationFormat();
+                    textFormatConceptId = concept.getCoreRepresentation().getTextFormat();
                 }
             } else {
                 throw new IllegalArgumentException("Found a dimension with concept identity with core representation null");
@@ -167,6 +168,10 @@ public class DsdProcessor {
 
         public SimpleComponentTextFormatType getTextFormatRepresentation() {
             return textFormat;
+        }
+
+        public BasicComponentTextFormatType getTextFormatConceptId() {
+            return textFormatConceptId;
         }
 
         public String getEnumeratedRepresentationUrn() {

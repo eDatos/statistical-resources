@@ -73,4 +73,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_MAXVALUE         = create("exception.resources.dataset.importation.observation.nonenumerated.maxvalue");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_PATTERN          = create("exception.resources.dataset.importation.observation.nonenumerated.pattern");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN = create("exception.resources.dataset.importation.observation.nonenumerated.temporal_pattern");
+    public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_DECIMAL          = create("exception.resources.dataset.importation.observation.nonenumerated.decimal");
+    public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_STARTTIMES       = create("exception.resources.dataset.importation.observation.nonenumerated.starttimes");
+    public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_ENDTIMES         = create("exception.resources.dataset.importation.observation.nonenumerated.endtimes");
+
 }
