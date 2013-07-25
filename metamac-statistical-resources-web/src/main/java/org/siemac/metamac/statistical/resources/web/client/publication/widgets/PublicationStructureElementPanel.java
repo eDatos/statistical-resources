@@ -77,16 +77,16 @@ public class PublicationStructureElementPanel extends VLayout {
 
     private void createViewForm() {
         form = new GroupDynamicForm(getConstants().publicationStructureElement());
+        form.setNumCols(2);
+        form.setColWidths("30%", "70%");
 
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
 
         ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
 
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
-        urn.setColSpan(2);
 
         CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
-        dataset.setColSpan(2);
         dataset.setShowIfCondition(getIsNotEmptyFormItemIfFunction());
         dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -98,7 +98,6 @@ public class PublicationStructureElementPanel extends VLayout {
         });
 
         CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query());
-        query.setColSpan(2);
         query.setShowIfCondition(getIsNotEmptyFormItemIfFunction());
         query.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -115,6 +114,8 @@ public class PublicationStructureElementPanel extends VLayout {
 
     private void createEditionForm() {
         editionForm = new GroupDynamicForm(getConstants().publicationStructureElement());
+        editionForm.setNumCols(2);
+        editionForm.setColWidths("30%", "70%");
 
         MultiLanguageTextItem title = new MultiLanguageTextItem(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         title.setRequired(true);
@@ -122,11 +123,9 @@ public class PublicationStructureElementPanel extends VLayout {
         MultilanguageRichTextEditorItem description = new MultilanguageRichTextEditorItem(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
 
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
-        urn.setColSpan(2);
 
         CustomSelectItem resourceTypeToLink = new CustomSelectItem(ElementLevelDS.RESOURCE_TYPE_TO_LINK, getConstants().publicationStructureElementResourceTypeToLink());
         resourceTypeToLink.setValueMap(CommonUtils.getStatisticalResourceTypeThatCanBeAddIntoACubeHashMap());
-        resourceTypeToLink.setColSpan(2);
         resourceTypeToLink.setRequired(true);
         resourceTypeToLink.addChangedHandler(new ChangedHandler() {
 
@@ -135,9 +134,16 @@ public class PublicationStructureElementPanel extends VLayout {
                 editionForm.markForRedraw();
             }
         });
+        resourceTypeToLink.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                // Only show the the form containts a cube
+                return element != null && element instanceof CubeDto;
+            }
+        });
 
         CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
-        dataset.setColSpan(2);
         dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
             @Override
@@ -155,7 +161,6 @@ public class PublicationStructureElementPanel extends VLayout {
         });
 
         CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query());
-        query.setColSpan(2);
         query.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
             @Override
@@ -200,6 +205,8 @@ public class PublicationStructureElementPanel extends VLayout {
             form.setValue(ElementLevelDS.DATASET, StringUtils.EMPTY);
             form.setValue(ElementLevelDS.QUERY, StringUtils.EMPTY);
         }
+
+        form.markForRedraw();
     }
 
     private void setElementEditionMode(NameableStatisticalResourceDto element) {
