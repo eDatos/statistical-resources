@@ -27,5 +27,4 @@ public class GetStatisticalOperationActionHandler extends SecurityActionHandler<
         ExternalItemDto externalItemDto = statisticalOperationsRestInternalFacade.retrieveOperation(code);
         return new GetStatisticalOperationResult(externalItemDto);
     }
-
 }
