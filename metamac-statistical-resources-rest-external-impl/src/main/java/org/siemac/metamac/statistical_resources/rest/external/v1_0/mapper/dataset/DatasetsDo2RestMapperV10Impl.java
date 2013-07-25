@@ -401,8 +401,8 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), selectedLanguages);
         } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), selectedLanguages);
-        } else if (dimension.getTimeTextFormatType() != null) {
-            targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatType(), selectedLanguages);
+        } else if (dimension.getTimeTextFormatRepresentation() != null) {
+            targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatRepresentation(), selectedLanguages);
         }
 
         return targets;
