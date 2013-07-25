@@ -214,7 +214,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
             QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01 = createQueryWithGeneratedDatasetVersion();
             QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().setCode(queryCode);
             String[] maintainer = new String[]{QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().getMaintainer().getCode()};
-            QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainer, queryCode));
+            QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryCode, INIT_VERSION));
         }
         return QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01;
     }
@@ -225,7 +225,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
             QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02 = createQueryWithGeneratedDatasetVersion();
             QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02.getLifeCycleStatisticalResource().setCode(queryCode);
             String[] maintainer = new String[]{QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01.getLifeCycleStatisticalResource().getMaintainer().getCode()};
-            QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainer, queryCode));
+            QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryCode, INIT_VERSION));
         }
         return QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02;
     }

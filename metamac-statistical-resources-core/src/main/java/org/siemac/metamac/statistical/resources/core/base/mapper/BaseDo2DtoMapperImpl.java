@@ -40,7 +40,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.getLanguages().clear();
         target.getLanguages().addAll(externalItemDoCollectionToDtoCollection(source.getLanguages()));
 
-        target.setStatisticalOperation(externalItemDoToDto(source.getStatisticalOperation()));
         target.getStatisticalOperationInstances().clear();
         target.getStatisticalOperationInstances().addAll(externalItemDoCollectionToDtoCollection(source.getStatisticalOperationInstances()));
 
@@ -112,7 +111,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
     }
 
     @Override
-    public void versionableStatisticalResourceDoToDto(VersionableStatisticalResource source, VersionableStatisticalResourceDto target) {
+    public void versionableStatisticalResourceDoToDto(VersionableStatisticalResource source, VersionableStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
             return;
         }
@@ -129,7 +128,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
     }
 
     @Override
-    public void nameableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) {
+    public void nameableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
             return;
         }
@@ -140,7 +139,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
     }
 
     @Override
-    public void identifiableStatisticalResourceDoToDto(IdentifiableStatisticalResource source, IdentifiableStatisticalResourceDto target) {
+    public void identifiableStatisticalResourceDoToDto(IdentifiableStatisticalResource source, IdentifiableStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
             return;
         }
@@ -152,11 +151,14 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
     }
 
     @Override
-    public void statisticalResourceDoToDto(StatisticalResource source, StatisticalResourceDto target) {
+    public void statisticalResourceDoToDto(StatisticalResource source, StatisticalResourceDto target) throws MetamacException {
         if (source == null) {
             return;
         }
 
+        // Statistical Operation
+        target.setStatisticalOperation(externalItemDoToDto(source.getStatisticalOperation()));
+        
         // Optimistic locking
         target.setOptimisticLockingVersion(source.getVersion());
 

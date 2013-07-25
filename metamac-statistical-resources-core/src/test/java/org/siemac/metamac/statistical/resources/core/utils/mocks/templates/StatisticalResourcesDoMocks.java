@@ -340,7 +340,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected static StatisticalResource mockStatisticalResource(StatisticalResource resource) {
+    protected StatisticalResource mockStatisticalResource(StatisticalResource resource) {
+        setSpecialCasesStatisticalResourceMock(resource);
         return resource;
     }
 
@@ -369,6 +370,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
 
     protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource);
+    
+    protected abstract void setSpecialCasesStatisticalResourceMock(StatisticalResource resource);
 
     protected abstract void setSpecialCasesQueryVersionMock(QueryVersion query);
 

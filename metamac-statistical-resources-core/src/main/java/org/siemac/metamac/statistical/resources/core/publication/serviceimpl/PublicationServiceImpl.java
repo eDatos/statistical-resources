@@ -61,16 +61,16 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create publication
         Publication publication = new Publication();
-        publication.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        fillMetadataForCreatePublication(publication, statisticalOperation, ctx);
 
         // Fill metadata
-        fillMetadataForCreatePublicationVersion(publicationVersion, publication, statisticalOperation, ctx);
+        fillMetadataForCreatePublicationVersion(publicationVersion, statisticalOperation, ctx);
 
-        // Save version
+        // Add version to publication and Save version
         publicationVersion.setPublication(publication);
-
-        // Add version to publication
         assignCodeAndSavePublicationVersion(publication, publicationVersion);
+
+        // Retrieve publicationVersion
         publicationVersion = getPublicationVersionRepository().retrieveByUrn(publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         return publicationVersion;
@@ -209,7 +209,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         // Fill metadata for create chapter
-        fillMetadataForCreateChapter(ctx, chapter);
+        fillMetadataForCreateChapter(ctx, chapter, publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
         // Create element level
         ElementLevel elementLevel = createChapterElementLevel(ctx, publicationVersion, chapter);
@@ -217,7 +217,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return elementLevel.getChapter();
     }
 
-    private Chapter fillMetadataForCreateChapter(ServiceContext ctx, Chapter chapter) {
+    private Chapter fillMetadataForCreateChapter(ServiceContext ctx, Chapter chapter, ExternalItem statisticalOperation) {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateNameableResource(chapter.getNameableStatisticalResource(), statisticalOperation);
         String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
         chapter.getNameableStatisticalResource().setCode(code);
         chapter.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionChapterUrn(code));
@@ -282,8 +283,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
-        // Fill metadata for create chapter
-        fillMetadataForCreateCube(ctx, cube);
+        // Fill metadata for create cube
+        fillMetadataForCreateCube(ctx, cube, publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
         // Create element level
         ElementLevel elementLevel = createCubeElementLevel(ctx, publicationVersion, cube);
@@ -291,7 +292,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         return elementLevel.getCube();
     }
 
-    private Cube fillMetadataForCreateCube(ServiceContext ctx, Cube cube) {
+    private Cube fillMetadataForCreateCube(ServiceContext ctx, Cube cube, ExternalItem statisticalOperation) {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateNameableResource(cube.getNameableStatisticalResource(), statisticalOperation);
+        
         String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
         cube.getNameableStatisticalResource().setCode(code);
         cube.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
@@ -348,8 +351,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-    private static void fillMetadataForCreatePublicationVersion(PublicationVersion publicationVersion, Publication publication, ExternalItem statisticalOperation, ServiceContext ctx) {
-        publicationVersion.setPublication(publication);
+    private static void fillMetadataForCreatePublication(Publication publication, ExternalItem statisticalOperation, ServiceContext ctx) {
+        publication.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateIdentifiableResource(publication.getIdentifiableStatisticalResource(), statisticalOperation);
+    }
+
+    private static void fillMetadataForCreatePublicationVersion(PublicationVersion publicationVersion, ExternalItem statisticalOperation, ServiceContext ctx) {
         FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(publicationVersion.getSiemacMetadataStatisticalResource(), statisticalOperation,
                 StatisticalResourceTypeEnum.COLLECTION, ctx);
     }

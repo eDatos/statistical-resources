@@ -41,7 +41,6 @@ import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
-import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapper;
@@ -215,15 +214,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public QueryVersionDto createQuery(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
+    public QueryVersionDto createQuery(ServiceContext ctx, QueryVersionDto queryVersionDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
         QueriesSecurityUtils.canCreateQuery(ctx);
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionSingleParameters.STATISTICAL_OPERATION);
 
         // Create
-        queryVersion = getQueryService().createQueryVersion(ctx, queryVersion);
+        queryVersion = getQueryService().createQueryVersion(ctx, queryVersion, statisticalOperation);
 
         // Transform to DTO
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);

@@ -24,7 +24,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
     // ---------------------------------------------------------------------------------------------------------
 
     @Override
-    public DatasourceDto datasourceDoToDto(Datasource source) {
+    public DatasourceDto datasourceDoToDto(Datasource source) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -34,7 +34,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
     }
 
     @Override
-    public List<DatasourceDto> datasourceDoListToDtoList(List<Datasource> sources) {
+    public List<DatasourceDto> datasourceDoListToDtoList(List<Datasource> sources) throws MetamacException {
         List<DatasourceDto> targets = new ArrayList<DatasourceDto>();
         for (Datasource source : sources) {
             targets.add(datasourceDoToDto(source));
@@ -42,7 +42,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         return targets;
     }
 
-    private DatasourceDto datasourceDoToDto(Datasource source, DatasourceDto target) {
+    private DatasourceDto datasourceDoToDto(Datasource source, DatasourceDto target) throws MetamacException {
         if (source == null) {
             return null;
         }

@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.Data
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DataManipulateTest;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
@@ -38,11 +39,13 @@ import org.siemac.metamac.statistical.resources.core.publication.mapper.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.ChapterRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.CubeRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryVersionRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 
 
@@ -85,6 +88,9 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      CommonDo2DtoMapperTest.class,
                      DataManipulateTest.class,
                      ExternalItemCheckerTest.class,
+                     DatasetIntegrationServiceTest.class,
+                     PublicationIntegrationServiceTest.class,
+                     QueryIntegrationServiceTest.class,
                      RestCriteriaUtilsTest.class,
                      StatisticalOperationsRestInternalServiceTest.class,
                      CommonMetadataRestExternalServiceTest.class,

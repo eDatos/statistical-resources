@@ -1,11 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.dataset.checks;
 
-import org.siemac.metamac.statistical.resources.core.base.checks.SiemacMetadataEditionChecks;
+import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
 
 
-public class DatasetMetadataEditionChecks extends SiemacMetadataEditionChecks {
+public class DatasetMetadataEditionChecks extends MetadataEditionChecks {
 
     public static boolean canDsdBeEdited(Long datasetId, ProcStatusEnum procStatus) {
         if (datasetId == null) {

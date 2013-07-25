@@ -14,8 +14,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsCube;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublication;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionStructure;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionStructure;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuerySelection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
@@ -73,6 +73,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_11_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_21_FOR_QUERY_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
@@ -224,9 +227,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     // ------------------------------------------------------------------------
-    // QUERIES 
+    // QUERIES
     // ------------------------------------------------------------------------
-    
+
     @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
@@ -263,8 +266,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQuery(latestQueryVersionQuery03, results.get(0));
     }
 
-    
-    
     // ------------------------------------------------------------------------
     // QUERIES VERSIONS
     // ------------------------------------------------------------------------
@@ -323,8 +324,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQuery() throws Exception {
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
+
         QueryVersionDto persistedQuery = statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(),
-                StatisticalResourcesDtoMocks.mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME)));
+                StatisticalResourcesDtoMocks.mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME)), statisticalOperation);
         assertNotNull(persistedQuery);
         assertNotNull(persistedQuery.getUrn());
     }
@@ -394,6 +397,43 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         QueryVersionDto updatedQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDto);
         assertNotNull(updatedQuery);
         assertEquals(originalMaintainerCode, updatedQuery.getMaintainer().getCode());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
+    public void testUpdateQueryVersionIgnoreChangeStatisticalOperation() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME);
+        String originalStatisticalOperationCode = queryVersion.getLifeCycleStatisticalResource().getStatisticalOperation().getCode();
+
+        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
+        queryVersionDto.setStatisticalOperation(statisticalOperation);
+
+        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDto);
+        assertNotNull(updatedQueryVersion);
+        assertEquals(originalStatisticalOperationCode, updatedQueryVersion.getStatisticalOperation().getCode());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME, QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME})
+    public void testUpdateQueryVersionIgnoreChangeCodeForNonPublishedQueryVersion() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME);
+        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+        
+        queryVersion.getLifeCycleStatisticalResource().setCode("newCode");
+        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDto);
+        assertEquals(queryVersionDto.getCode(), updatedQueryVersion.getCode());
+    }
+    
+    @Test
+    @MetamacMock({QUERY_VERSION_15_PUBLISHED_NAME})
+    public void testUpdateQueryVersionIgnoreChangeCodeForPublishedQueryVersion() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+
+        queryVersion.getLifeCycleStatisticalResource().setCode("newCode");
+        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDto);
+        assertEquals(queryVersionDto.getCode(), updatedQueryVersion.getCode());
     }
 
     @Override

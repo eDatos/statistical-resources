@@ -27,6 +27,9 @@ public class LifecycleCommonMetadataChecker {
     public void checkLifecycleCommonMetadata(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
         
+        // StatisticalResource
+        checkMetadataRequired(lifeCycleStatisticalResource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptionItems);
+        
         // IdentifiableResource
         checkMetadataRequired(lifeCycleStatisticalResource.getCode(), addParameter(metadataName, ServiceExceptionSingleParameters.CODE), exceptionItems);
         checkMetadataRequired(lifeCycleStatisticalResource.getUrn(), addParameter(metadataName, ServiceExceptionSingleParameters.URN), exceptionItems);
@@ -63,8 +66,6 @@ public class LifecycleCommonMetadataChecker {
         
         checkMetadataRequired(siemacMetadataStatisticalResource.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE), exceptionItems);
         checkMetadataRequired(siemacMetadataStatisticalResource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptionItems);
-        
-        checkMetadataRequired(siemacMetadataStatisticalResource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptionItems);
         
         // TODO: Robert, Comprobar si aquí deberían estar las KEYWORDS
         

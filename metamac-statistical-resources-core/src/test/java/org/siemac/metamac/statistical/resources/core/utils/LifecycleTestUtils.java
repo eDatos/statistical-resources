@@ -102,9 +102,6 @@ public class LifecycleTestUtils {
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
         resource.getSiemacMetadataStatisticalResource().addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
 
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem();
-        resource.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
-
         resource.getSiemacMetadataStatisticalResource().setCreator(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime().minusMinutes(10));
 
@@ -117,6 +114,9 @@ public class LifecycleTestUtils {
     }
 
     private static void prepareToLifecycleCommonLifeCycleResource(HasLifecycle resource) {
+        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem();
+        resource.getLifeCycleStatisticalResource().setStatisticalOperation(operation);
+        
         resource.getLifeCycleStatisticalResource().setVersionLogic("001.000");
         resource.getLifeCycleStatisticalResource().getVersionRationaleTypes().clear();
         resource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));

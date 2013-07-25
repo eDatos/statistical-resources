@@ -24,7 +24,7 @@ Application QueriesStatisticalResources {
     		"Find queries by criteria"
     		PagedResult<@QueryVersion> findQueryVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
     		"Create query"
-            @QueryVersion createQueryVersion(@QueryVersion queryVersion) throws MetamacException;
+            @QueryVersion createQueryVersion(@QueryVersion queryVersion, @ExternalItem statisticalOperation) throws MetamacException;
             "Update query"
             @QueryVersion updateQueryVersion(@QueryVersion queryVersion) throws MetamacException;
             "Mark query as discontinued because the data is not going to be updated"

@@ -27,10 +27,10 @@ public interface BaseDo2DtoMapper extends CommonDo2DtoMapper {
     // Base Hierarchy
     public void siemacMetadataStatisticalResourceDoToDto(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResourceDto target) throws MetamacException;
     public void lifeCycleStatisticalResourceDoToDto(LifeCycleStatisticalResource source, LifeCycleStatisticalResourceDto target)  throws MetamacException;
-    public void versionableStatisticalResourceDoToDto(VersionableStatisticalResource source, VersionableStatisticalResourceDto target);
-    public void nameableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target);
-    public void identifiableStatisticalResourceDoToDto(IdentifiableStatisticalResource source, IdentifiableStatisticalResourceDto target);
-    public void statisticalResourceDoToDto(StatisticalResource source, StatisticalResourceDto target);
+    public void versionableStatisticalResourceDoToDto(VersionableStatisticalResource source, VersionableStatisticalResourceDto target) throws MetamacException;
+    public void nameableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) throws MetamacException;
+    public void identifiableStatisticalResourceDoToDto(IdentifiableStatisticalResource source, IdentifiableStatisticalResourceDto target) throws MetamacException;
+    public void statisticalResourceDoToDto(StatisticalResource source, StatisticalResourceDto target) throws MetamacException;
 
     // Version rationale type
     public Collection<VersionRationaleTypeDto> versionRationaleTypeDoCollectionToDtoCollection(Collection<VersionRationaleType> source);

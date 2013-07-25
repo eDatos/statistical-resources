@@ -32,9 +32,10 @@ Application BaseStatisticalResources {
 			inheritanceType=SINGLE_TABLE
 
 			discriminatorType=STRING
-
 			discriminatorColumn="STAT_RESOURCE_TYPE"
 			discriminatorLength="255"
+			
+			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
 			
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
@@ -117,7 +118,6 @@ Application BaseStatisticalResources {
 			- Bag<@ExternalItem> languages cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_LANGUAGES" databaseColumn="LANGUAGE_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//THEMATIC CONTENT CLASSIFIER
-			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
 			- Bag<@ExternalItem> statisticalOperationInstances cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STAT_OPER_INSTANCES" databaseColumn="STAT_OPERATION_INSTANCE_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//CONTENT DESCRIPTORS

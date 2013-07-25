@@ -70,9 +70,6 @@ public class SiemacLifecycleChecker {
 
         // Languages
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptionItems);
-        
-        // Statistical Operation
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptionItems);
 
         // Statistical Operation Instance 
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperationInstances(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES),

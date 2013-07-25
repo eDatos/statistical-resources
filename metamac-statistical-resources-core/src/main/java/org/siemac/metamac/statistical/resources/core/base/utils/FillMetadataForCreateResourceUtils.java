@@ -16,14 +16,13 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesV
 public class FillMetadataForCreateResourceUtils {
     
     public static void fillMetadataForCretateSiemacResource(SiemacMetadataStatisticalResource resource, ExternalItem statisticalOperation, StatisticalResourceTypeEnum type, ServiceContext ctx) {
-        fillMetadataForCreateLifeCycleResource(resource, ctx);
+        fillMetadataForCreateLifeCycleResource(resource, statisticalOperation, ctx);
 
-        resource.setStatisticalOperation(statisticalOperation);
         resource.setType(type);
     }
 
-    public static void fillMetadataForCreateLifeCycleResource(LifeCycleStatisticalResource resource, ServiceContext ctx) {
-        fillMetadataForCreateVersionableResource(resource);
+    public static void fillMetadataForCreateLifeCycleResource(LifeCycleStatisticalResource resource, ExternalItem statisticalOperation, ServiceContext ctx) {
+        fillMetadataForCreateVersionableResource(resource, statisticalOperation);
 
         resource.setProcStatus(ProcStatusEnum.DRAFT);
         resource.setCreatedDate(new DateTime());
@@ -31,17 +30,29 @@ public class FillMetadataForCreateResourceUtils {
         resource.setLastVersion(true);
     }
 
-    private static void fillMetadataForCreateVersionableResource(VersionableStatisticalResource resource) {
-        fillMetadataForCreateIdentifiableResource(resource);
+    public static void fillMetadataForCreateVersionableResource(VersionableStatisticalResource resource, ExternalItem statisticalOperation) {
+        fillMetadataForCreateNameableResource(resource, statisticalOperation);
 
         resource.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
         resource.getVersionRationaleTypes().clear();
         resource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
     }
 
-    private static void fillMetadataForCreateIdentifiableResource(IdentifiableStatisticalResource resource) {
-        resource.setUri(null);
-        // QUERY VERSIONS: URN is set in fillMetadataForCreateQuery
-        // DATASETS AND PUBLICATIONS: CODE and URN are set just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block
+    public static void fillMetadataForCreateNameableResource(IdentifiableStatisticalResource resource, ExternalItem statisticalOperation) {
+        fillMetadataForCreateIdentifiableResource(resource, statisticalOperation);
     }
+    
+    public static void fillMetadataForCreateIdentifiableResource(IdentifiableStatisticalResource resource, ExternalItem statisticalOperation) {
+        fillMetadataForCreateStatistiscalResource(resource, statisticalOperation);
+        resource.setUri(null);
+        
+        // CODE and URN are setting in specific methods for each entity.
+        // - Query Versions: fillMetadataForCreateQuery
+        // - Datasets Versions and Publications Versions: just before saving, because the computation for code must be synchronized and this way, we minimize the synchronized block
+    }
+
+    public static void fillMetadataForCreateStatistiscalResource(IdentifiableStatisticalResource resource, ExternalItem statisticalOperation) {
+        resource.setStatisticalOperation(statisticalOperation);
+    }
+    
 }

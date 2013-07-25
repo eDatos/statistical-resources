@@ -38,7 +38,7 @@ Application FacadeStatisticalResources {
             "Retrieve queries"
             List<@QueryVersionDto> retrieveQueriesVersions() throws MetamacException;
             "Create a query"
-            @QueryVersionDto createQuery(@QueryVersionDto queryVersionDto) throws MetamacException;
+            @QueryVersionDto createQuery(@QueryVersionDto queryVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
             "Update a query"
             @QueryVersionDto updateQueryVersion(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Find queries by criteria"

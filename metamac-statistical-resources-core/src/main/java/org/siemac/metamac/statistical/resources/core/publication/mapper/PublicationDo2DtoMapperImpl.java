@@ -171,7 +171,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         return target;
     }
 
-    private ChapterDto chapterDoToDto(Chapter source, ChapterDto target) {
+    private ChapterDto chapterDoToDto(Chapter source, ChapterDto target) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -204,7 +204,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         return target;
     }
 
-    private CubeDto cubeDoToDto(Cube source, CubeDto target) {
+    private CubeDto cubeDoToDto(Cube source, CubeDto target) throws MetamacException {
         if (source == null) {
             return null;
         }

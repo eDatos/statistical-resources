@@ -7,15 +7,14 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
-import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForUpdateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -77,39 +76,48 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     }
 
     @Override
-    public QueryVersion createQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
+    public QueryVersion createQueryVersion(ServiceContext ctx, QueryVersion queryVersion, ExternalItem statisticalOperation) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkCreateQueryVersion(ctx, queryVersion);
+        queryServiceInvocationValidator.checkCreateQueryVersion(ctx, queryVersion, statisticalOperation);
 
-        Query query = createQueryResourceFromQueryVersion(queryVersion);
-        query = getQueryRepository().save(query);
+        // Create query
+        Query query = new Query();
+        fillMetadataForCreateQuery(query, queryVersion, statisticalOperation);
 
         // Fill metadata
-        fillMetadataForCreateQueryVersion(ctx, queryVersion);
+        fillMetadataForCreateQueryVersion(ctx, queryVersion, statisticalOperation);
 
+        // Check unique URN
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
+        
         // Checks
         // TODO: Comprobar si hay que hacer alguno más
         // TODO: Comprobar si pueden ser comunes al resto de artefactos
-        identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
 
-        // Save version
+        // Save query
+        // queryVersion.setQuery(query);
+//        query.addVersion(queryVersion);
+        query = getQueryRepository().save(query);
+        
+//         queryVersion = getQueryVersionRepository().retrieveByUrn(queryVersion.getLifeCycleStatisticalResource().getUrn());
+        
         queryVersion.setQuery(query);
         queryVersion = getQueryVersionRepository().save(queryVersion);
-
         return queryVersion;
     }
 
     @Override
     public QueryVersion updateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkUpdateQueryVersion(ctx, queryVersion);
-
+        queryServiceInvocationValidator.checkUpdateQueryVersion(ctx, queryVersion); 
+        
         // Fill metadata
-        fillMetadataForUpdateQuery(queryVersion);
-
+        fillMetadataForUpdateQueryVersion(queryVersion);
+                
         // Check that could be update
         // TODO: Comprobar si hay que hacer alguno más
-        // TODO: Comprobar si pueden ser comunes al resto de artefactos
+        // Check URN duplicated. We have to do it right now because later the fillMetadata method change the hibernate cache
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
 
         // Repository operation
@@ -149,20 +157,19 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         getQueryVersionRepository().delete(queryVersion);
     }
 
-    private Query createQueryResourceFromQueryVersion(QueryVersion queryVersion) throws MetamacException {
-        Query query = new Query();
+    private void fillMetadataForCreateQuery(Query query, QueryVersion queryVersion, ExternalItem statisticalOperation) throws MetamacException {
         query.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
         query.getIdentifiableStatisticalResource().setCode(queryVersion.getLifeCycleStatisticalResource().getCode());
 
         String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode());
         query.getIdentifiableStatisticalResource().setUrn(urn);
-        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
-        return query;
+
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateIdentifiableResource(query.getIdentifiableStatisticalResource(), statisticalOperation);
     }
 
-    private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
-        FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), ctx);
+    private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion, ExternalItem statisticalOperation) throws MetamacException {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), statisticalOperation, ctx);
         queryVersion.setStatus(determineQueryStatus(queryVersion));
         String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
@@ -178,9 +185,14 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         }
     }
 
-    private void fillMetadataForUpdateQuery(QueryVersion queryVersion) throws MetamacException {
+    private void fillMetadataForUpdateQueryVersion(QueryVersion queryVersion) throws MetamacException {
         queryVersion.setStatus(determineQueryStatus(queryVersion));
-        FillMetadataForUpdateResourceUtils.fillMetadataForUpdateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), StatisticalResourceTypeEnum.QUERY);
+        
+        // Update URN
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
+                .getLifeCycleStatisticalResource().getVersionLogic());
+        queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
     }
 
     @Override

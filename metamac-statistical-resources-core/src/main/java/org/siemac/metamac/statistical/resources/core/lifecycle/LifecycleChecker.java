@@ -28,7 +28,7 @@ public class LifecycleChecker {
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
-    
+
     @Autowired
     private ExternalItemChecker            externalItemChecker;
 
@@ -88,9 +88,14 @@ public class LifecycleChecker {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM)));
         }
 
+        // Statistical Operation
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION),
+                exceptionItems);
+
         // Maintainer
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER), exceptionItems);
-        
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER),
+                exceptionItems);
+
         // TODO: Metadatos de relaciones entre recursos
     }
 

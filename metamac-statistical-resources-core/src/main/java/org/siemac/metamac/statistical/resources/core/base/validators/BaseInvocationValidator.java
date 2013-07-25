@@ -35,6 +35,7 @@ public abstract class BaseInvocationValidator {
         StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getCreatedBy(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATED_BY), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getLastUpdated(), addParameter(metadataName, ServiceExceptionSingleParameters.LAST_UPDATED), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getLastUpdatedBy(), addParameter(metadataName, ServiceExceptionSingleParameters.LAST_UPDATED_BY), exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptions);
     }
 
     protected static void checkExistingStatisticalResource(StatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
@@ -52,6 +53,7 @@ public abstract class BaseInvocationValidator {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getCreatedBy(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATED_BY), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getLastUpdated(), addParameter(metadataName, ServiceExceptionSingleParameters.LAST_UPDATED), exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getLastUpdatedBy(), addParameter(metadataName, ServiceExceptionSingleParameters.LAST_UPDATED_BY), exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptions);
     }
 
     private static void checkStatisticalResource(StatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
@@ -202,7 +204,6 @@ public abstract class BaseInvocationValidator {
             return;
         }
 
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptions);
         checkSiemacMetadataStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
         checkNewLifeCycleStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
     }
@@ -212,8 +213,7 @@ public abstract class BaseInvocationValidator {
         if (resource == null) {
             return;
         }
-
-        StatisticalResourcesValidationUtils.checkMetadataRequired(resource.getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptions);
+        
         checkSiemacMetadataStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
         checkExistingLifeCycleStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
     }

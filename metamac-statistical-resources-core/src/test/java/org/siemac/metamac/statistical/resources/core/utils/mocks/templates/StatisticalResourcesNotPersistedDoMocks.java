@@ -4,6 +4,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -211,6 +212,11 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
     @Override
     protected void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource) {
+        // NOTHING
+    }
+    
+    @Override
+    protected void setSpecialCasesStatisticalResourceMock(StatisticalResource resource) {
         // NOTHING
     }
 

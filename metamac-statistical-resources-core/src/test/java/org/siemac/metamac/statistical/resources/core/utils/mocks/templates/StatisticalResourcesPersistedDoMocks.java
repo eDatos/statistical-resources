@@ -5,6 +5,7 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -197,8 +198,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     @Override
     protected void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource) {
-        resource.setStatisticalOperation(mockStatisticalOperationExternalItem("statisticalOperation01"));
-
         DateTime today = new DateTime();
         resource.setResourceCreatedDate(today.minusDays(1));
         resource.setLastUpdate(today);
@@ -220,6 +219,11 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     @Override
     protected void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource) {
         resource.setCode("resource-" + mockString(10));
+    }
+    
+    @Override
+    protected void setSpecialCasesStatisticalResourceMock(StatisticalResource resource) {
+        resource.setStatisticalOperation(mockStatisticalOperationExternalItem("statisticalOperation01"));
     }
 
     @Override

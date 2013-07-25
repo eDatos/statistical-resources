@@ -51,7 +51,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsExternalItem(previous.getLanguage(), next.getLanguage());
         assertEqualsExternalItemCollection(previous.getLanguages(), next.getLanguages());
 
-        assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
         assertEqualsExternalItemCollection(previous.getStatisticalOperationInstances(), next.getStatisticalOperationInstances());
 
         assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
@@ -126,11 +125,19 @@ public class BaseAsserts extends CommonAsserts {
     }
 
     private static void assertEqualsVersioningIdentifiable(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
+        assertEqualsVersioningStatisticalResource(previous, next);
+        
         assertEquals(previous.getCode(), next.getCode());
         assertNotNull(next.getUrn());
         assertFalse(next.getUrn().equals(previous.getUrn()));
         assertNull(next.getUri());
     }
+    
+    private static void assertEqualsVersioningStatisticalResource(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
+        assertNotNull(next.getStatisticalOperation());
+        assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
+    }
+
 
     // -----------------------------------------------------------------
     // MAIN HERITANCE: DO & DO
@@ -140,7 +147,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsExternalItem(expected.getLanguage(), actual.getLanguage());
         assertEqualsExternalItemList(expected.getLanguages(), actual.getLanguages());
 
-        assertEqualsExternalItem(expected.getStatisticalOperation(), actual.getStatisticalOperation());
         assertEqualsExternalItemCollection(expected.getStatisticalOperationInstances(), actual.getStatisticalOperationInstances());
 
         assertEqualsInternationalString(expected.getSubtitle(), actual.getSubtitle());
@@ -229,7 +235,7 @@ public class BaseAsserts extends CommonAsserts {
     }
 
     protected static void assertEqualsStatisticalResource(StatisticalResource expected, StatisticalResource actual) {
-
+        assertEqualsExternalItem(expected.getStatisticalOperation(), actual.getStatisticalOperation());
     }
 
     // -----------------------------------------------------------------
@@ -242,7 +248,6 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
 
-                assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalOperationInstances(), dto.getStatisticalOperationInstances());
 
                 assertEqualsInternationalString(entity.getSubtitle(), dto.getSubtitle());
@@ -271,8 +276,8 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata(), mapperEnum);
                 assertEqualsDate(entity.getCopyrightedDate(), dto.getCopyrightedDate());
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
-
                 break;
+                
             case DTO2DO:
                 assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
@@ -364,6 +369,7 @@ public class BaseAsserts extends CommonAsserts {
     protected static void assertEqualsStatisticalResouce(StatisticalResource entity, StatisticalResourceDto dto, MapperEnum mapperEnum) {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getVersion(), dto.getOptimisticLockingVersion());
+            assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation(), mapperEnum);
         }
     }
 

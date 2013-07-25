@@ -17,11 +17,11 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
 
     // Datasource
-    public DatasourceDto datasourceDoToDto(Datasource datasource);
-    public List<DatasourceDto> datasourceDoListToDtoList(List<Datasource> sources);
+    public DatasourceDto datasourceDoToDto(Datasource datasource) throws MetamacException;
+    public List<DatasourceDto> datasourceDoListToDtoList(List<Datasource> sources) throws MetamacException;
 
     // StatisticOfficiality
-    public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source);
+    public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source) throws MetamacException;
 
     // Dataset
     public RelatedResourceDto datasetVersionDoToDatasetRelatedResourceDto(DatasetVersion source) throws MetamacException;

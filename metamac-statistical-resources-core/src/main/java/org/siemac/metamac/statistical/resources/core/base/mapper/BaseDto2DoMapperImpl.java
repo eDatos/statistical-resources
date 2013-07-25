@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
-import org.siemac.metamac.statistical.resources.core.base.checks.SiemacMetadataEditionChecks;
+import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -46,14 +46,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
-        // Only modifiable in creation
-        if (SiemacMetadataEditionChecks.canStatisticalOperationBeEdited(target.getId())) {
-            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
-                    + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
-        }
-        
         // Not always modifiable
-        if (SiemacMetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
+        if (MetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
             target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
         }
 
@@ -67,8 +61,6 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         target.setTitleAlternative(internationalStringDtoToDo(source.getTitleAlternative(), target.getTitleAlternative(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.TITLE_ALTERNATIVE)));
         target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
-
-
 
         target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR)));
         externalItemDtoListToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
@@ -96,10 +88,10 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         versionableStatisticalResourceDtoToDo(source, target, metadataName);
 
         // Only modifiable in creation
-        if (SiemacMetadataEditionChecks.canMaintainerBeEdited(target.getId())) {
+        if (MetadataEditionChecks.canMaintainerBeEdited(target.getId())) {
             target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
         }
-        
+
         // Other attributes are automatic, non modifiable
 
         return target;
@@ -118,7 +110,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         // Attributes modifiable
         target.setNextVersion(source.getNextVersion());
 
-        if (SiemacMetadataEditionChecks.canNextVersionDateBeEdited(target.getNextVersion())) {
+        if (MetadataEditionChecks.canNextVersionDateBeEdited(target.getNextVersion())) {
             target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
         }
 
@@ -163,16 +155,20 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
             OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
         }
 
+        // Only modifiable in creation
+        if (MetadataEditionChecks.canStatisticalOperationBeEdited(target.getId())) {
+            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
+                    + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
+        }
+
         // Optimistic locking: Update "update date" attribute to force update to root entity, to increment "version" attribute
         target.setUpdateDate(new DateTime());
     }
 
-    
-    
     // ------------------------------------------------------------
     // VERSION RATIONALE TYPE
     // ------------------------------------------------------------
-    
+
     @Override
     public VersionRationaleType versionRationaleTypeDtoToDo(VersionRationaleTypeDto source, VersionRationaleType target, String metadataName) throws MetamacException {
         if (source == null) {

@@ -23,7 +23,6 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.getLanguages().addAll(copyListExternalItem(source.getLanguages()));
 
         // Theme content classifiers
-        target.setStatisticalOperation(copyExternalItem(source.getStatisticalOperation()));
         target.getStatisticalOperationInstances().clear();
         target.getStatisticalOperationInstances().addAll(copyListExternalItem(source.getStatisticalOperationInstances()));
 
@@ -116,5 +115,6 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
     // --------------------------------------------------------------------------
 
     private static void copyStatisticalResource(StatisticalResource source, StatisticalResource target) {
+        target.setStatisticalOperation(copyExternalItem(source.getStatisticalOperation()));
     }
 }

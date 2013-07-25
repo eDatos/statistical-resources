@@ -48,7 +48,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock(DATASOURCE_01_BASIC_NAME)
-    public void testDatasourceDo2Dto() {
+    public void testDatasourceDo2Dto() throws Exception {
         Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
         DatasourceDto actual = datasetDo2DtoMapper.datasourceDoToDto(expected);
         assertEqualsDatasource(expected, actual);
@@ -56,7 +56,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock({DATASET_VERSION_03_FOR_DATASET_03_NAME})
-    public void testDatasourceDoListToDtoList() {
+    public void testDatasourceDoListToDtoList() throws Exception {
         List<Datasource> expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
         List<DatasourceDto> actual = datasetDo2DtoMapper.datasourceDoListToDtoList(expected);
 

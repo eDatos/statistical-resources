@@ -93,7 +93,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // TODO: Comprobar que se puede asociar el datasource al dataset
 
         // Fill metadata
-        fillMetadataForDatasource(datasource, datasetVersion);
+        fillMetadataForCreateDatasource(datasource, datasetVersion);
 
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasource.getIdentifiableStatisticalResource());
 
@@ -172,10 +172,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Create dataset
         Dataset dataset = new Dataset();
-        dataset.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        fillMetadataForCreateDataset(ctx, dataset, statisticalOperation);
 
         // Fill metadata
-        fillMetadataForCreateDatasetVersion(ctx, datasetVersion, dataset, statisticalOperation);
+        fillMetadataForCreateDatasetVersion(ctx, datasetVersion, statisticalOperation);
 
         // Save version
         datasetVersion.setDataset(dataset);
@@ -360,9 +360,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-    private static void fillMetadataForDatasource(Datasource datasource, DatasetVersion datasetVersion) {
+    private static void fillMetadataForCreateDatasource(Datasource datasource, DatasetVersion datasetVersion) {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateIdentifiableResource(datasource.getIdentifiableStatisticalResource(), datasetVersion.getSiemacMetadataStatisticalResource()
+                .getStatisticalOperation());
+
         datasource.setDatasetVersion(datasetVersion);
-        datasource.getIdentifiableStatisticalResource().setUri(null);
         datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(datasource.getIdentifiableStatisticalResource().getCode()));
     }
 
@@ -377,8 +379,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         getDatasetVersionRepository().save(parent);
     }
 
-    private void fillMetadataForCreateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, Dataset dataset, ExternalItem statisticalOperation) {
-        datasetVersion.setDataset(dataset);
+    private void fillMetadataForCreateDataset(ServiceContext ctx, Dataset dataset, ExternalItem statisticalOperation) {
+        dataset.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateIdentifiableResource(dataset.getIdentifiableStatisticalResource(), statisticalOperation);
+    }
+
+    private void fillMetadataForCreateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, ExternalItem statisticalOperation) {
         FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(datasetVersion.getSiemacMetadataStatisticalResource(), statisticalOperation, StatisticalResourceTypeEnum.DATASET, ctx);
     }
 

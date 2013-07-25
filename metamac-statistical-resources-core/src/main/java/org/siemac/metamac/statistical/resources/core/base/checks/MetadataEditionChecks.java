@@ -4,7 +4,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 
 
-public class SiemacMetadataEditionChecks {
+public class MetadataEditionChecks {
 
     public static boolean canStatisticalOperationBeEdited(Long id) {
         if (id == null) {

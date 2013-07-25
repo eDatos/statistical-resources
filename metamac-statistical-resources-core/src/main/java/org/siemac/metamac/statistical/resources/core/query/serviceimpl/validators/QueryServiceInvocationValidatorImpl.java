@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
@@ -40,7 +41,8 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         // NOTHING
     }
 
-    public static void checkCreateQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateQueryVersion(QueryVersion queryVersion, ExternalItem statisticalOperation, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.STATISTICAL_OPERATION, exceptions);
         checkNewQuery(queryVersion, exceptions);
     }
 
