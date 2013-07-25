@@ -42,12 +42,6 @@ public class PlaceRequestUtils {
         return placeRequests;
     }
 
-    public static List<PlaceRequest> buildAbsoluteOperationResourcesPlaceRequest(String urn) {
-        List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(urn);
-        placeRequests.add(new PlaceRequest(NameTokens.operationResourcesPage));
-        return placeRequests;
-    }
-
     // ---------------------------------------------------------------------------
     // DATASETS
     // ---------------------------------------------------------------------------
@@ -65,8 +59,18 @@ public class PlaceRequestUtils {
         return new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn));
     }
 
+    public static PlaceRequest buildRelativeDatasetsPlaceRequest() {
+        return new PlaceRequest(NameTokens.datasetsListPage);
+    }
+
+    public static List<PlaceRequest> buildAbsoluteDatasetsPlaceRequest(String operationUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativeDatasetsPlaceRequest());
+        return placeRequests;
+    }
+
     public static List<PlaceRequest> buildAbsoluteDatasetPlaceRequest(String operationUrn, String datasetUrn) {
-        List<PlaceRequest> placeRequests = buildAbsoluteOperationResourcesPlaceRequest(operationUrn);
+        List<PlaceRequest> placeRequests = buildAbsoluteDatasetsPlaceRequest(operationUrn);
         placeRequests.add(buildRelativeDatasetPlaceRequest(datasetUrn));
         return placeRequests;
     }
@@ -84,6 +88,10 @@ public class PlaceRequestUtils {
         return null;
     }
 
+    public static PlaceRequest buildRelativePublicationsPlaceRequest() {
+        return new PlaceRequest(NameTokens.publicationsListPage);
+    }
+
     // ---------------------------------------------------------------------------
     // QUERIES
     // ---------------------------------------------------------------------------
@@ -95,6 +103,10 @@ public class PlaceRequestUtils {
             }
         }
         return null;
+    }
+
+    public static PlaceRequest buildRelativeQueriesPlaceRequest() {
+        return new PlaceRequest(NameTokens.queriesListPage);
     }
 
     // ---------------------------------------------------------------------------

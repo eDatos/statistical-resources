@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.presenter;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.web.common.client.widgets.toolstrip.presenter.MetamacToolStripPresenterWidget;
 
 import com.google.inject.Inject;
@@ -36,7 +37,7 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
             @Override
             public void onClick(ClickEvent event) {
                 List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
-                operationHierarchy.add(new PlaceRequest(NameTokens.datasetsListPage));
+                operationHierarchy.add(PlaceRequestUtils.buildRelativeDatasetsPlaceRequest());
                 getPlaceManager().revealPlaceHierarchy(operationHierarchy);
             }
         }));
@@ -46,7 +47,7 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
             @Override
             public void onClick(ClickEvent event) {
                 List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
-                operationHierarchy.add(new PlaceRequest(NameTokens.publicationsListPage));
+                operationHierarchy.add(PlaceRequestUtils.buildRelativePublicationsPlaceRequest());
                 getPlaceManager().revealPlaceHierarchy(operationHierarchy);
             }
         }));
@@ -56,10 +57,9 @@ public class StatisticalResourcesToolStripPresenterWidget extends MetamacToolStr
             @Override
             public void onClick(ClickEvent event) {
                 List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
-                operationHierarchy.add(new PlaceRequest(NameTokens.queriesListPage));
+                operationHierarchy.add(PlaceRequestUtils.buildRelativeQueriesPlaceRequest());
                 getPlaceManager().revealPlaceHierarchy(operationHierarchy);
             }
         }));
     }
-
 }
