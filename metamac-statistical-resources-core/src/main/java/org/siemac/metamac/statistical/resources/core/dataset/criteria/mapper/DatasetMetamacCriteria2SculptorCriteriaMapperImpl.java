@@ -12,7 +12,6 @@ import org.siemac.metamac.statistical.resources.core.common.criteria.enums.Stati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -92,6 +91,7 @@ public class DatasetMetamacCriteria2SculptorCriteriaMapperImpl implements Datase
                 default:
                     // LAST_VERSION
                     // QUERY_STATUS
+                    // LAST_UPDATED
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
         }

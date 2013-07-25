@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.common.criteria.enums;
 
 public enum StatisticalResourcesCriteriaOrderEnum {
 
-    CODE, URN, TITLE, LAST_VERSION, PROC_STATUS, STATISTICAL_OPERATION_URN, QUERY_STATUS;
+    CODE, URN, TITLE, LAST_VERSION, PROC_STATUS, STATISTICAL_OPERATION_URN, LAST_UPDATED, QUERY_STATUS;
 
     public String value() {
         return name();

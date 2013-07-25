@@ -90,6 +90,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
                     return QueryVersionProperties.status();
                     
                 default:
+                    // LAST_UPDATED
                     // LAST_VERSION
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }

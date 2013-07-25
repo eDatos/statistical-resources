@@ -88,6 +88,7 @@ public class PublicationMetamacCriteria2SculptorCriteriaMapperImpl implements Pu
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus();
                     
                 default:
+                    // LAST_UPDATED
                     // LAST_VERSION
                     // QUERY_STATUS
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());

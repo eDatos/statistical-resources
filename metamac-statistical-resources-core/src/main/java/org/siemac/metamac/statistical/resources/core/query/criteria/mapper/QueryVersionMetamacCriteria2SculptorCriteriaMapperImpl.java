@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.criteria.mapper;
 
+import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
+import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
@@ -10,7 +12,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.springframework.stereotype.Component;
@@ -86,6 +87,8 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
                     QueryVersionProperties.status();
                 case STATISTICAL_OPERATION_URN:
                     QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn();
+                case LAST_UPDATED:
+                    return new LeafProperty<QueryVersion>(QueryVersionProperties.lifeCycleStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, QueryVersion.class);
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
@@ -93,7 +96,7 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
 
         @Override
         public Property<QueryVersion> retrievePropertyOrderDefault() throws MetamacException {
-            return QueryVersionProperties.id();
+            return new LeafProperty<QueryVersion>(QueryVersionProperties.lifeCycleStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, QueryVersion.class);
         }
     }
 }

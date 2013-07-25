@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.publication.criteria.mapper;
 
+import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
+import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
@@ -9,11 +11,9 @@ import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCr
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -84,6 +84,8 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn();
                 case LAST_VERSION:
                     return PublicationVersionProperties.siemacMetadataStatisticalResource().lastVersion();
+                case LAST_UPDATED:
+                    return new LeafProperty<PublicationVersion>(PublicationVersionProperties.siemacMetadataStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, PublicationVersion.class);
                 default:
                     // QUERY_STATUS
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
@@ -92,7 +94,7 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
 
         @Override
         public Property<PublicationVersion> retrievePropertyOrderDefault() throws MetamacException {
-            return PublicationVersionProperties.id();
+            return new LeafProperty<PublicationVersion>(PublicationVersionProperties.siemacMetadataStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, PublicationVersion.class);
         }
     }
 }
