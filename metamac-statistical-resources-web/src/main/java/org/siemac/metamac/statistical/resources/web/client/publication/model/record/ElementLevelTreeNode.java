@@ -13,6 +13,10 @@ public class ElementLevelTreeNode extends NavigableTreeNode {
         setAttribute(ElementLevelDS.URN, value);
     }
 
+    public String getUrn() {
+        return getAttributeAsString(ElementLevelDS.URN);
+    }
+
     @Override
     public void setTitle(String value) {
         setAttribute(ElementLevelDS.TITLE, value);
@@ -36,9 +40,5 @@ public class ElementLevelTreeNode extends NavigableTreeNode {
 
     public ElementLevelDto getElementLevelDto() {
         return (ElementLevelDto) getAttributeAsObject(ElementLevelDS.DTO);
-    }
-
-    public void setNodeIcon(String value) {
-        setAttribute(ElementLevelDS.TREE_NODE_ICON, value);
     }
 }

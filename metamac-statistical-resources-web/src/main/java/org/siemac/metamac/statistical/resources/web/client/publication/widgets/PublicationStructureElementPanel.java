@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleStatisticalRelatedResourcePaginatedWindow;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -33,14 +34,16 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationStructureElementPanel extends VLayout {
 
-    private InternationalMainFormLayout       mainFormLayout;
-    private GroupDynamicForm                  form;
-    private GroupDynamicForm                  editionForm;
+    private InternationalMainFormLayout                           mainFormLayout;
+    private GroupDynamicForm                                      form;
+    private GroupDynamicForm                                      editionForm;
 
-    private RelatedResourceDto                publicationVersion;
-    private NameableStatisticalResourceDto    element;
+    private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetWindow; // TODO 
 
-    private PublicationStructureTabUiHandlers uiHandlers;
+    private RelatedResourceDto                                    publicationVersion;
+    private NameableStatisticalResourceDto                        element;
+
+    private PublicationStructureTabUiHandlers                     uiHandlers;
 
     public PublicationStructureElementPanel() {
 
@@ -70,6 +73,17 @@ public class PublicationStructureElementPanel extends VLayout {
             public void onClick(ClickEvent event) {
                 if (editionForm.validate(false)) {
                     getUiHandlers().saveElement(publicationVersion.getUrn(), getSelectedElement());
+                }
+            }
+        });
+
+        mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // Hide panel if the creation of a new element is canceled
+                if (element != null && element.getId() == null) {
+                    hide();
                 }
             }
         });
@@ -269,5 +283,9 @@ public class PublicationStructureElementPanel extends VLayout {
                 return value != null && !StringUtils.isBlank(value.toString());
             }
         };
+    }
+
+    public void setMainFormLayoutEditionMode() {
+        mainFormLayout.setEditionMode();
     }
 }

@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
@@ -14,6 +16,8 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.events.ClickHandler;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<PublicationStructureTabUiHandlers> implements PublicationStructureTabView {
 
@@ -33,6 +37,38 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
                 if (elementLevelDto != null) {
                     setElementInPanel(elementLevelDto.getChapter() != null ? elementLevelDto.getChapter() : elementLevelDto.getCube());
                 }
+            }
+        });
+
+        publicationStructureTreeGrid.addCreateChapterMenuItemClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                ElementLevelDto selectedContextClickElement = publicationStructureTreeGrid.getSelectedContextClickElement();
+
+                ChapterDto chapterDto = new ChapterDto();
+                chapterDto.setOrderInLevel(1L); // TODO create in the first position or in the last one?
+                if (selectedContextClickElement != null && selectedContextClickElement.getChapter() != null) {
+                    chapterDto.setParentChapterUrn(selectedContextClickElement.getChapter().getUrn());
+                }
+
+                setNewElementInPanel(chapterDto);
+            }
+        });
+
+        publicationStructureTreeGrid.addCreateCubeMenuItemClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                ElementLevelDto selectedContextClickElement = publicationStructureTreeGrid.getSelectedContextClickElement();
+
+                CubeDto cubeDto = new CubeDto();
+                cubeDto.setOrderInLevel(1L); // TODO create in the first position or in the last one?
+                if (selectedContextClickElement != null && selectedContextClickElement.getChapter() != null) {
+                    cubeDto.setParentChapterUrn(selectedContextClickElement.getChapter().getUrn());
+                }
+
+                setNewElementInPanel(cubeDto);
             }
         });
 
@@ -79,5 +115,10 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
     private void setElementInPanel(NameableStatisticalResourceDto element) {
         publicationStructureElementPanel.setElement(element);
         publicationStructureElementPanel.show();
+    }
+
+    private void setNewElementInPanel(NameableStatisticalResourceDto element) {
+        setElementInPanel(element);
+        publicationStructureElementPanel.setMainFormLayoutEditionMode();
     }
 }

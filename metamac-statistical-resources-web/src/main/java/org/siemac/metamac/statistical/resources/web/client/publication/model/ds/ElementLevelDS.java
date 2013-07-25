@@ -18,9 +18,6 @@ public class ElementLevelDS extends DataSource {
     public static final String DATASET               = "str-dataset";
     public static final String QUERY                 = "str-query";
 
-    // to show icons in the tree
-    public static final String TREE_NODE_ICON        = "str-node-icon";
-
     public static final String INFO                  = "str-info";
 
     public static final String DTO                   = "str-dto";

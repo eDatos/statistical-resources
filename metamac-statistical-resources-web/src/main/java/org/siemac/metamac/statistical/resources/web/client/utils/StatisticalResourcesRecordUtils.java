@@ -65,11 +65,10 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         if (element instanceof ChapterDto) {
             elementLevelNode.setOrderInLevel(((ChapterDto) element).getOrderInLevel());
             elementLevelNode.setParentChapterUrn(((ChapterDto) element).getParentChapterUrn());
-            elementLevelNode.setNodeIcon(org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources.RESOURCE.treeFolder().getURL());
         } else if (element instanceof CubeDto) {
             elementLevelNode.setOrderInLevel(((CubeDto) element).getOrderInLevel());
             elementLevelNode.setParentChapterUrn(((CubeDto) element).getParentChapterUrn());
-            elementLevelNode.setNodeIcon(org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources.RESOURCE.treeFile().getURL());
+            elementLevelNode.setIcon(org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources.RESOURCE.treeFile().getURL());
         }
         elementLevelNode.setElementLevelDto(elementLevelDto);
         elementLevelNode.setAttribute(ElementLevelDS.INFO, GlobalResources.RESOURCE.info().getURL());
@@ -80,7 +79,6 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         ElementLevelTreeNode elementLevelTreeNode = new ElementLevelTreeNode();
         elementLevelTreeNode.setID(schemeNodeName);
         elementLevelTreeNode.setTitle(InternationalStringUtils.getLocalisedString(publicationVersion.getTitle()));
-        elementLevelTreeNode.setNodeIcon(org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources.RESOURCE.treeFolder().getURL());
         return elementLevelTreeNode;
     }
 

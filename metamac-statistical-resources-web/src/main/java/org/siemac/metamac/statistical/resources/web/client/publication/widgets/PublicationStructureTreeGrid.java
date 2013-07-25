@@ -23,6 +23,7 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
+import com.smartgwt.client.types.DragDataAction;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
@@ -31,6 +32,8 @@ import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitEvent;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.ClickHandler;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
@@ -54,6 +57,9 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected TreeNodeClickAction               treeNodeClickAction;
 
     protected Menu                              contextMenu;
+    private MenuItem                            createChapterMenuItem;
+    private MenuItem                            createCubeMenuItem;
+    private MenuItem                            deleteElementMenuItem;
 
     protected HandlerRegistration               folderContextHandlerRegistration;
     protected HandlerRegistration               leafContextHandlerRegistration;
@@ -72,6 +78,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected HandlerRegistration               filterEditionHandler;
 
     protected PublicationStructureTabUiHandlers uiHandlers;
+
+    protected ElementLevelDto                   selectedContextClickElement;
 
     public PublicationStructureTreeGrid(TreeNodeClickAction treeNodeClickAction) {
         this.treeNodeClickAction = treeNodeClickAction;
@@ -97,8 +105,12 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         setShowHeaderContextMenu(false); // do not show context menu in trees (avoid to show columns that should not be shown)
         setCanDragSelectText(false); // do not allow text selection! (strange behavior when dragging nodes)
 
-        // to show a custom icon (depending on the node type: chapter or cube)
-        setCustomIconProperty(ElementLevelDS.TREE_NODE_ICON);
+        setCanReorderRecords(true);
+        setCanAcceptDroppedRecords(true);
+        setCanDragRecordsOut(false);
+        setDragDataAction(DragDataAction.MOVE);
+        setShowOpenIcons(true);
+        setShowDropIcons(true);
 
         titleField = new TreeGridField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         titleField.setShowHover(false); // only show hover in info field
@@ -135,8 +147,6 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                 event.cancel();
                 TreeNode[] treeNodes = tree.getAllNodes();
 
-                // TODO
-
                 String titleCriteria = event.getCriteria().getAttribute(ElementLevelDS.TITLE);
                 String urnCriteria = event.getCriteria().getAttribute(ElementLevelDS.URN);
 
@@ -169,11 +179,31 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
             }
         });
 
-        // Context menu
+        //
+        // CONTEXT MENU
+        //
 
         contextMenu = new Menu();
 
+        createChapterMenuItem = new MenuItem(getConstants().publicationStructureCreateChapter());
+        contextMenu.addItem(createChapterMenuItem);
+
+        createCubeMenuItem = new MenuItem(getConstants().publicationStructureCreateCube());
+        contextMenu.addItem(createCubeMenuItem);
+
+        deleteElementMenuItem = new MenuItem(getConstants().publicationStructureDeleteElement());
+        deleteElementMenuItem.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                getUiHandlers().deleteElement(publicationVersion.getUrn(), getElementLevelUrn(selectedContextClickElement));
+            }
+        });
+        contextMenu.addItem(deleteElementMenuItem);
+
+        //
         // Bind events
+        //
 
         folderClickHandlerRegistration = addFolderClickHandler(new FolderClickHandler() {
 
@@ -233,25 +263,13 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                     String oldItemParent = droppedNode.getAttribute(ElementLevelDS.PARENT_CHAPTER_URN);
                     String newItemParent = SCHEME_NODE_NAME.equals(dropFolder.getName()) ? SCHEME_NODE_NAME : dropFolder.getAttribute(ElementLevelDS.URN);
 
-                    if (!StringUtils.equals(oldItemParent, newItemParent)) {
+                    if (SCHEME_NODE_NAME.equals(newItemParent)) {
+                        // The code will be moved to the first level. The parent is null.
+                        newItemParent = null;
+                    }
 
-                        // UPDATE CODE PARENT
-
-                        // TODO Security
-
-                        if (SCHEME_NODE_NAME.equals(newItemParent)) {
-                            // The code will be moved to the first level. The parent is null.
-                            newItemParent = null;
-                        }
-                        // TODO getBaseCodeUiHandlers().updateCodeParent(droppedNode.getAttribute(ElementLevelDS.URN), newItemParent);
-
-                    } else {
-
-                        // UPDATE ORDER
-
-                        // TODO Security
-
-                        // TODO getBaseCodeUiHandlers().updateCodeInOrder(droppedNode.getAttribute(CodeDS.URN), codelistVisualisationDto.getUrn(), relativePosition);
+                    if (droppedNode instanceof ElementLevelTreeNode) {
+                        getUiHandlers().updateElementLocation(publicationVersion.getUrn(), ((ElementLevelTreeNode) droppedNode).getUrn(), newItemParent, Long.valueOf(relativePosition));
                     }
                 }
                 event.cancel();
@@ -356,7 +374,9 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     protected void onNodeContextClick(String nodeName, ElementLevelDto elementLevelDto) {
-        // TODO
+        this.selectedContextClickElement = elementLevelDto;
+        // TODO enable/disable menu items
+        showContextMenu();
     }
 
     protected DetailViewerField[] getDetailViewerFields() {
@@ -367,11 +387,31 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         return new DetailViewerField[]{titleField, descriptionField, urnField};
     }
 
+    public void addCreateChapterMenuItemClickHandler(ClickHandler clickHandler) {
+        createChapterMenuItem.addClickHandler(clickHandler);
+    }
+
+    public void addCreateCubeMenuItemClickHandler(ClickHandler clickHandler) {
+        createCubeMenuItem.addClickHandler(clickHandler);
+    }
+
     public PublicationStructureTabUiHandlers getUiHandlers() {
         return uiHandlers;
     }
 
     public void setUiHandlers(PublicationStructureTabUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
+    }
+
+    private String getElementLevelUrn(ElementLevelDto elementLevelDto) {
+        if (elementLevelDto.getChapter() != null) {
+            return elementLevelDto.getChapter().getUrn();
+        } else {
+            return elementLevelDto.getCube().getUrn();
+        }
+    }
+
+    public ElementLevelDto getSelectedContextClickElement() {
+        return selectedContextClickElement;
     }
 }
