@@ -12,7 +12,6 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
@@ -195,7 +194,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     @Override
     public void goToDataset(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeDatasetPlaceRequest(urn));
         }
     }
 }

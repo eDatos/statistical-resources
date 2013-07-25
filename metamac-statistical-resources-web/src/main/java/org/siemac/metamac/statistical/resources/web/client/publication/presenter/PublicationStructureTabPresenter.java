@@ -8,8 +8,11 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -190,7 +193,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     }
 
     @Override
-    public void goToLastVersion(String urn) {
+    public void goToLastVersion(final String urn) {
         if (!StringUtils.isBlank(urn)) {
             dispatcher.execute(new GetLatestResourceVersionAction(urn), new WaitingAsyncCallback<GetLatestResourceVersionResult>() {
 
@@ -200,7 +203,14 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                 }
                 @Override
                 public void onWaitSuccess(GetLatestResourceVersionResult result) {
-                    // TODO
+                    LifeCycleStatisticalResourceDto resourceVersion = result.getResourceVersion();
+                    if (resourceVersion instanceof DatasetVersionDto) {
+                        String operationUrn = ((DatasetVersionDto) resourceVersion).getStatisticalOperation().getUrn();
+                        String datasetUrn = resourceVersion.getUrn();
+                        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(operationUrn, datasetUrn));
+                    } else if (resourceVersion instanceof QueryVersionDto) {
+                        // FIXME go to the queryVersion page
+                    }
                 }
             });
         }

@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -11,6 +12,10 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class PlaceRequestUtils {
+
+    // ---------------------------------------------------------------------------
+    // OPERATIONS
+    // ---------------------------------------------------------------------------
 
     public static String getOperationParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
@@ -21,6 +26,32 @@ public class PlaceRequestUtils {
         return null;
     }
 
+    public static PlaceRequest buildRelativeOperationPlaceRequest(String urn) {
+        return new PlaceRequest(NameTokens.operationPage).with(PlaceRequestParams.operationParam, UrnUtils.removePrefix(urn));
+    }
+
+    public static List<PlaceRequest> buildAbsoluteOperationsPlaceRequest(String urn) {
+        List<PlaceRequest> placeRequests = new ArrayList<PlaceRequest>();
+        placeRequests.add(new PlaceRequest(NameTokens.operationsListPage));
+        return placeRequests;
+    }
+
+    public static List<PlaceRequest> buildAbsoluteOperationPlaceRequest(String urn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationsPlaceRequest(urn);
+        placeRequests.add(buildRelativeOperationPlaceRequest(urn));
+        return placeRequests;
+    }
+
+    public static List<PlaceRequest> buildAbsoluteOperationResourcesPlaceRequest(String urn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(urn);
+        placeRequests.add(new PlaceRequest(NameTokens.operationResourcesPage));
+        return placeRequests;
+    }
+
+    // ---------------------------------------------------------------------------
+    // DATASETS
+    // ---------------------------------------------------------------------------
+
     public static String getDatasetParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.datasetPage.equals(request.getNameToken())) {
@@ -29,6 +60,20 @@ public class PlaceRequestUtils {
         }
         return null;
     }
+
+    public static PlaceRequest buildRelativeDatasetPlaceRequest(String urn) {
+        return new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn));
+    }
+
+    public static List<PlaceRequest> buildAbsoluteDatasetPlaceRequest(String operationUrn, String datasetUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationResourcesPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativeDatasetPlaceRequest(datasetUrn));
+        return placeRequests;
+    }
+
+    // ---------------------------------------------------------------------------
+    // PUBLICATIONS
+    // ---------------------------------------------------------------------------
 
     public static String getPublicationParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
@@ -39,6 +84,10 @@ public class PlaceRequestUtils {
         return null;
     }
 
+    // ---------------------------------------------------------------------------
+    // QUERIES
+    // ---------------------------------------------------------------------------
+
     public static String getQueryParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.queryPage.equals(request.getNameToken())) {
@@ -47,6 +96,10 @@ public class PlaceRequestUtils {
         }
         return null;
     }
+
+    // ---------------------------------------------------------------------------
+    // GENERIC METHODS
+    // ---------------------------------------------------------------------------
 
     public static boolean isNameTokenInPlaceHierarchy(PlaceManager placeManager, String nameToken) {
         for (PlaceRequest placeReq : placeManager.getCurrentPlaceHierarchy()) {

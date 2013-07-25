@@ -3,13 +3,12 @@ package org.siemac.metamac.statistical.resources.web.client.operation.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
+import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
@@ -28,7 +27,6 @@ import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
@@ -92,9 +90,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     @Override
     public void goToOperation(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            // placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage));
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.operationPage).with(PlaceRequestParams.operationParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeOperationPlaceRequest(urn));
         }
     }
-
 }

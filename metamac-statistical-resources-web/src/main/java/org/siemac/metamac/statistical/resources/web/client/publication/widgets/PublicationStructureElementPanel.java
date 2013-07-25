@@ -80,13 +80,29 @@ public class PublicationStructureElementPanel extends VLayout {
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         urn.setColSpan(2);
 
-        ViewTextItem dataset = new ViewTextItem(ElementLevelDS.DATASET, getConstants().dataset());
+        CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
         dataset.setColSpan(2);
         dataset.setShowIfCondition(getIsNotEmptyFormItemIfFunction());
+        dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
-        ViewTextItem query = new ViewTextItem(ElementLevelDS.QUERY, getConstants().query());
+            @Override
+            public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                String datasetUrn = editionForm.getValueAsString(ElementLevelDS.DATASET);
+                getUiHandlers().goToLastVersion(datasetUrn);
+            }
+        });
+
+        CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query());
         query.setColSpan(2);
         query.setShowIfCondition(getIsNotEmptyFormItemIfFunction());
+        query.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+            @Override
+            public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                String queryUrn = editionForm.getValueAsString(ElementLevelDS.QUERY);
+                getUiHandlers().goToLastVersion(queryUrn);
+            }
+        });
 
         form.setFields(title, description, urn, dataset, query);
         mainFormLayout.addViewCanvas(form);
@@ -103,8 +119,7 @@ public class PublicationStructureElementPanel extends VLayout {
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         urn.setColSpan(2);
 
-        final CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset(), null);
-        dataset.getClickHandlerRegistration().removeHandler();
+        CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
         dataset.setColSpan(2);
         dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -115,8 +130,7 @@ public class PublicationStructureElementPanel extends VLayout {
             }
         });
 
-        CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query(), null);
-        query.getClickHandlerRegistration().removeHandler();
+        CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query());
         query.setColSpan(2);
         query.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
