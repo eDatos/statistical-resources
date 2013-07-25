@@ -95,6 +95,10 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         setShowHover(true);
         setShowHoverComponents(true);
         setShowHeaderContextMenu(false); // do not show context menu in trees (avoid to show columns that should not be shown)
+        setCanDragSelectText(false); // do not allow text selection! (strange behavior when dragging nodes)
+
+        // to show a custom icon (depending on the node type: chapter or cube)
+        setCustomIconProperty(ElementLevelDS.TREE_NODE_ICON);
 
         titleField = new TreeGridField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         titleField.setShowHover(false); // only show hover in info field

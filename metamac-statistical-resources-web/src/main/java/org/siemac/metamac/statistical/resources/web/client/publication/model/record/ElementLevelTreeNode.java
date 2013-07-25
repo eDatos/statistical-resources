@@ -37,4 +37,8 @@ public class ElementLevelTreeNode extends NavigableTreeNode {
     public ElementLevelDto getElementLevelDto() {
         return (ElementLevelDto) getAttributeAsObject(ElementLevelDS.DTO);
     }
+
+    public void setNodeIcon(String value) {
+        setAttribute(ElementLevelDS.TREE_NODE_ICON, value);
+    }
 }
