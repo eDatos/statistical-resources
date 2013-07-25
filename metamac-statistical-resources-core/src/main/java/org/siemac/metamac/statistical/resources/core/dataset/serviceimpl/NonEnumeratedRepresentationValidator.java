@@ -314,7 +314,7 @@ public class NonEnumeratedRepresentationValidator {
 
         // Check valid time format.
         if (!SdmxTimeUtils.isObservationalTimePeriod(value)) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN, key + ": " + value));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN, value, key));
             return;
         }
 
@@ -351,7 +351,7 @@ public class NonEnumeratedRepresentationValidator {
 
         // Check valid time format.
         if (!SdmxTimeUtils.isObservationalTimePeriod(value)) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN, key + ": " + value));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN, value, key));
             return;
         }
 
@@ -389,7 +389,7 @@ public class NonEnumeratedRepresentationValidator {
 
         // Check valid time format.
         if (!SdmxTimeUtils.isObservationalTimePeriod(value)) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN, key + ": " + value));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_TEMPORAL_PATTERN, value, key));
             return;
         }
 
@@ -429,13 +429,13 @@ public class NonEnumeratedRepresentationValidator {
 
     private static void validateMinLength(BigInteger representationMinLength, String key, String value, List<MetamacExceptionItem> exceptions) {
         if (representationMinLength != null && representationMinLength.toString().length() > value.length()) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MINLENGTH, key + ": " + value, representationMinLength.toString().length()));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MINLENGTH, value, representationMinLength.toString().length(), key));
         }
     }
 
     private static void validateMaxLength(BigInteger representationMaxLength, String key, String value, List<MetamacExceptionItem> exceptions) {
         if (representationMaxLength != null && representationMaxLength.toString().length() > value.length()) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MAXLENGTH, key + ": " + value, representationMaxLength.toString().length()));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MAXLENGTH, value, representationMaxLength.toString().length(), key));
         }
     }
 
@@ -443,7 +443,7 @@ public class NonEnumeratedRepresentationValidator {
         if (representationMinValue != null) {
             BigDecimal representationMinValueDecimal = new BigDecimal(representationMinValue);
             if (representationMinValueDecimal.compareTo(bigDecimalValue) == 1) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MINVALUE, key + ": " + value, representationMinValueDecimal.toString()));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MINVALUE, value, representationMinValueDecimal.toString(), key));
             }
         }
     }
@@ -451,7 +451,7 @@ public class NonEnumeratedRepresentationValidator {
     private static void validateMinValue(BigDecimal representationMinValue, String key, String value, BigDecimal bigDecimalValue, List<MetamacExceptionItem> exceptions) {
         if (representationMinValue != null) {
             if (representationMinValue.compareTo(bigDecimalValue) == 1) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MINVALUE, key + ": " + value, representationMinValue.toString()));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MINVALUE, value, representationMinValue.toString(), key));
             }
         }
     }
@@ -460,7 +460,7 @@ public class NonEnumeratedRepresentationValidator {
         if (representationMaxValue != null) {
             BigDecimal representationMaxValueDecimal = new BigDecimal(representationMaxValue);
             if (representationMaxValueDecimal.compareTo(bigDecimalValue) == -1) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MAXVALUE, key + ": " + value, representationMaxValueDecimal.toString()));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MAXVALUE, value, representationMaxValueDecimal.toString(), key));
             }
         }
     }
@@ -468,7 +468,7 @@ public class NonEnumeratedRepresentationValidator {
     private static void validateMaxValue(BigDecimal representationMaxValue, String key, String value, BigDecimal bigDecimalValue, List<MetamacExceptionItem> exceptions) {
         if (representationMaxValue != null) {
             if (representationMaxValue.compareTo(bigDecimalValue) == -1) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MAXVALUE, key + ": " + value, representationMaxValue.toString()));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_MAXVALUE, value, representationMaxValue.toString(), key));
             }
         }
     }
@@ -478,7 +478,7 @@ public class NonEnumeratedRepresentationValidator {
             String subStrAfterDecimalPoint = StringUtils.substringAfter(value, ".");
             int numberPlacesOfDecimal = (subStrAfterDecimalPoint == null) ? 0 : subStrAfterDecimalPoint.length();
             if (representationDecimals.compareTo(new BigInteger(String.valueOf(numberPlacesOfDecimal))) != 0) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_DECIMAL, key + ": " + value, representationDecimals.toString()));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_DECIMAL, value, representationDecimals.toString(), key));
             }
         }
     }
@@ -488,7 +488,7 @@ public class NonEnumeratedRepresentationValidator {
             Pattern p = Pattern.compile(representationPattern);
             Matcher m = p.matcher(value);
             if (!m.matches()) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_PATTERN, key + ": " + value, representationPattern));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_PATTERN, value, representationPattern, key));
             }
         }
     }
@@ -500,7 +500,7 @@ public class NonEnumeratedRepresentationValidator {
             String flattenRepresentation = CoreCommonUtil.flattenListString(representationStartTimes);
             DateTime[] representationDateTimes = SdmxTimeUtils.calculatePeriodStart(flattenRepresentation);
             if (representationDateTimes == null || representationDateTimes[0] == null || representationDateTimes[0].isAfter(valueDateTimes[0])) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_STARTTIMES, key + ": " + value, flattenRepresentation));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_STARTTIMES, value, flattenRepresentation, key));
             }
         }
 
@@ -509,7 +509,7 @@ public class NonEnumeratedRepresentationValidator {
             String flattenRepresentation = CoreCommonUtil.flattenListString(representationEndTimes);
             DateTime[] representationDateTimes = SdmxTimeUtils.calculatePeriodStart(flattenRepresentation);
             if (representationDateTimes == null || representationDateTimes[0] == null || representationDateTimes[0].isBefore(valueDateTimes[0])) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_ENDTIMES, key + ": " + value, flattenRepresentation));
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_ENDTIMES, value, flattenRepresentation, key));
             }
         }
     }
