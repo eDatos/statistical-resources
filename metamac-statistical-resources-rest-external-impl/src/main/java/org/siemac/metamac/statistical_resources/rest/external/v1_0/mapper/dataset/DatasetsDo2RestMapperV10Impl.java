@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -403,6 +404,12 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), selectedLanguages);
         } else if (dimension.getTimeTextFormatRepresentation() != null) {
             targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatRepresentation(), selectedLanguages);
+        } else if (dimension.getTextFormatRepresentation() != null) {
+            targets = toNonEnumeratedDimensionValuesFromTextFormatType(coveragesById, dimension.getTextFormatRepresentation(), selectedLanguages);
+        } else {
+            logger.error("Dimension definition unsupported for dimension: " + dimension.getComponentId());
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
 
         return targets;
@@ -463,6 +470,22 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         if (timeTextFormatType == null) {
             return null;
         }
+        // note: timeTextFormatType definition is not necessary to define dimension values
+        NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
+        for (String coverageId : coveragesById.keySet()) {
+            CodeDimension codeDimension = coveragesById.get(coverageId);
+            targets.getValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
+        return targets;
+    }
+
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(Map<String, CodeDimension> coveragesById, SimpleComponentTextFormatType textFormatType,
+            List<String> selectedLanguages) throws MetamacException {
+        if (textFormatType == null) {
+            return null;
+        }
+        // note: textFormatType definition is not necessary to define dimension values
         NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
         for (String coverageId : coveragesById.keySet()) {
             CodeDimension codeDimension = coveragesById.get(coverageId);
