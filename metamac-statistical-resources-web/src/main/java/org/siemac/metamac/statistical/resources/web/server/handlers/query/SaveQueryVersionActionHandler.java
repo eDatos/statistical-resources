@@ -28,7 +28,8 @@ public class SaveQueryVersionActionHandler extends SecurityActionHandler<SaveQue
         try {
             QueryVersionDto savedQueryVersion = null;
             if (action.getQueryVersionDto().getId() == null) {
-                savedQueryVersion = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto());
+                // FIXME specify the statistical operation!!!!!
+                savedQueryVersion = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto(), null);
             } else {
                 savedQueryVersion = statisticalResourcesServiceFacade.updateQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto());
             }
