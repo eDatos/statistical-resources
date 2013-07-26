@@ -31,9 +31,12 @@ public class GetQueryVersionsActionHandler extends SecurityActionHandler<GetQuer
     @Override
     public GetQueryVersionsResult executeSecurityAction(GetQueryVersionsAction action) throws ActionException {
         try {
-
             MetamacCriteria criteria = new MetamacCriteria();
 
+            // Order
+            criteria.getOrdersBy().add(MetamacWebCriteriaUtils.buildMetamacCriteriaLastUpdatedOrder());
+
+            // Criteria
             MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
             restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
             criteria.setRestriction(restriction);

@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
@@ -23,6 +25,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
+import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -35,28 +38,37 @@ public class MetamacWebCriteriaUtils {
 
     public static MetamacCriteriaRestriction buildMetamacCriteriaFromWebcriteria(MetamacWebCriteria webCriteria) {
         MetamacCriteriaConjunctionRestriction criteria = new MetamacCriteriaConjunctionRestriction();
-        
+
         if (webCriteria instanceof HasSimpleCriteria) {
             addRestrictionIfExists(criteria, buildSimpleCriteria(webCriteria));
         }
-        
+
         if (webCriteria instanceof HasStatisticalOperationCriteria) {
-            addRestrictionIfExists(criteria, buildStatisticalOperationCriteria((HasStatisticalOperationCriteria)webCriteria));
+            addRestrictionIfExists(criteria, buildStatisticalOperationCriteria((HasStatisticalOperationCriteria) webCriteria));
         }
-        
+
         if (webCriteria instanceof HasLastVersionCriteria) {
-            addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasLastVersionCriteria)webCriteria));
+            addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasLastVersionCriteria) webCriteria));
         }
-        
+
         return criteria;
     }
-    
+
+    public static MetamacCriteriaOrder buildMetamacCriteriaLastUpdatedOrder() {
+        MetamacCriteriaOrder order = new MetamacCriteriaOrder();
+        order.setType(OrderTypeEnum.DESC);
+        order.setPropertyName(StatisticalResourcesCriteriaOrderEnum.LAST_UPDATED.name());
+        return order;
+    }
+
+    // Private methods
+
     private static void addRestrictionIfExists(MetamacCriteriaConjunctionRestriction criteria, MetamacCriteriaRestriction restriction) {
         if (restriction != null) {
             criteria.getRestrictions().add(restriction);
         }
     }
-    
+
     private static MetamacCriteriaRestriction buildSimpleCriteria(HasSimpleCriteria criteria) {
         if (StringUtils.isNotBlank(criteria.getCriteria())) {
             MetamacCriteriaDisjunctionRestriction criteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
@@ -67,21 +79,20 @@ public class MetamacWebCriteriaUtils {
         }
         return null;
     }
-    
+
     private static MetamacCriteriaRestriction buildStatisticalOperationCriteria(HasStatisticalOperationCriteria criteria) {
         if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ);
         }
         return null;
     }
-    
+
     private static MetamacCriteriaRestriction buildOnlyLastVersionCriteria(HasLastVersionCriteria criteria) {
         if (criteria.isOnlyLastVersion()) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ);
         }
         return null;
     }
-
 
     // -------------------------------------------------------------------------------------------------------------
     // STATISTICAL OPERATION
@@ -240,5 +251,4 @@ public class MetamacWebCriteriaUtils {
             appendConditionToQuery(queryBuilder, conditionBuilder.toString());
         }
     }
-
 }

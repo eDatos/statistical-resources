@@ -33,7 +33,8 @@ public class GetPublicationVersionsActionHandler extends SecurityActionHandler<G
 
         MetamacCriteria criteria = new MetamacCriteria();
 
-        // TODO order by LAST_UPDATED?
+        // Order
+        criteria.getOrdersBy().add(MetamacWebCriteriaUtils.buildMetamacCriteriaLastUpdatedOrder());
 
         // Criteria
         MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
