@@ -22,7 +22,7 @@ public class SaveDatasetVersionActionHandler extends SecurityActionHandler<SaveD
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
+    private StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
 
     public SaveDatasetVersionActionHandler() {
         super(SaveDatasetVersionAction.class);
