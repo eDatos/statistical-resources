@@ -431,16 +431,17 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             DimensionListType dimensions = dataStructure.getDataStructureComponents().getDimensionList();
 
             if (dimensions != null) {
+                List<String> dimOrder = computeDimensionOrder(dimensions);
                 Map<String, List<String>> dimensionCodes = computeDimensionsCodes(dimensions);
 
-                List<ObservationExtendedDto> observations = buildObservations(dimensionCodes);
+                List<ObservationExtendedDto> observations = buildObservations(dimensionCodes, dimOrder);
 
                 DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
                 datasetRepositoryDto.setDatasetId("dataset_" + UUID.randomUUID().toString());
                 datasetRepositoryDto.setMaxAttributesObservation(1);
                 datasetRepositoryDto.getLanguages().add("es");
                 datasetRepositoryDto.getLanguages().add("en");
-                for (String dimensionId : dimensionCodes.keySet()) {
+                for (String dimensionId : dimOrder) {
                     datasetRepositoryDto.getDimensions().add(dimensionId);
                 }
 
@@ -465,8 +466,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
-    private List<ObservationExtendedDto> buildObservations(Map<String, List<String>> dimensionCodes) {
-        List<String> dimOrder = new ArrayList<String>(dimensionCodes.keySet());
+    private List<ObservationExtendedDto> buildObservations(Map<String, List<String>> dimensionCodes, List<String> dimOrder) {
         CodeSelectionGenerator codeGen = new CodeSelectionGenerator(dimOrder, dimensionCodes);
 
         List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
@@ -479,6 +479,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 CodeDimensionDto codeDimensionDto = new CodeDimensionDto(dimensionId, code);
                 observation.addCodesDimension(codeDimensionDto);
             }
+            observation.setPrimaryMeasure(String.valueOf(Math.random()*10000));
             observations.add(observation);
         }
         return observations;
@@ -493,7 +494,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             indexes = new int[dimensionCodes.size()];
             max = new int[dimensionCodes.size()];
             int i = 0;
-            for (String dimensionId : dimensionCodes.keySet()) {
+            for (String dimensionId : dimensionOrder) {
                 indexes[i] = 0;
                 max[i] = dimensionCodes.get(dimensionId).size();
                 i++;
@@ -537,6 +538,23 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             }
         }
         return dimensionCodes;
+    }
+    
+    private List<String> computeDimensionOrder(DimensionListType dimensions) throws MetamacException {
+        List<String> order = new ArrayList<String>();
+        for (Object dimensionObj : dimensions.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
+            if (dimensionObj instanceof DimensionType) {
+                DimensionType dim = (DimensionType) dimensionObj;
+                order.add(dim.getId());
+            } else if (dimensionObj instanceof TimeDimensionType) {
+                TimeDimensionType dim = (TimeDimensionType) dimensionObj;
+                order.add(dim.getId());
+            } else if (dimensionObj instanceof MeasureDimensionType) {
+                MeasureDimensionType dim = (MeasureDimensionType) dimensionObj;
+                order.add(dim.getId());
+            }
+        }
+        return order;
     }
 
     private List<String> getCodesForDimension(DimensionType dimension) throws MetamacException {
