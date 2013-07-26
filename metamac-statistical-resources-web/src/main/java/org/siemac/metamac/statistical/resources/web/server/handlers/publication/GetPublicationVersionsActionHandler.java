@@ -37,7 +37,7 @@ public class GetPublicationVersionsActionHandler extends SecurityActionHandler<G
 
         // Criteria
         MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
-        restriction.getRestrictions().add(MetamacWebCriteriaUtils.getPublicationCriteriaRestriction(action.getCriteria()));
+        restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
         criteria.setRestriction(restriction);
 
         // Pagination

@@ -37,7 +37,7 @@ public class GetDatasetVersionsActionHandler extends SecurityActionHandler<GetDa
 
         // Criteria
         MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
-        restriction.getRestrictions().add(MetamacWebCriteriaUtils.getStatisticalResourceCriteriaRestriction(action.getCriteria()));
+        restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
         criteria.setRestriction(restriction);
 
         // Pagination

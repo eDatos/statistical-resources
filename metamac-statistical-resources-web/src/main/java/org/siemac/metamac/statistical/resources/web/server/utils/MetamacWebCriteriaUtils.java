@@ -26,112 +26,62 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organis
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.base.HasLastVersionCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 public class MetamacWebCriteriaUtils {
 
-    // -------------------------------------------------------------------------------------------------------------
-    // PUBLICATIONS
-    // -------------------------------------------------------------------------------------------------------------
-
-    public static MetamacCriteriaRestriction getPublicationCriteriaRestriction(VersionableStatisticalResourceWebCriteria criteria) {
-        MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
-
-        if (criteria != null) {
-
-            // General criteria
-
-            MetamacCriteriaDisjunctionRestriction publicationCriteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
-            if (StringUtils.isNotBlank(criteria.getCriteria())) {
-                publicationCriteriaDisjuction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
-                publicationCriteriaDisjuction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
-                publicationCriteriaDisjuction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.URN.name(), criteria.getCriteria(), OperationType.ILIKE));
-            }
-            conjunctionRestriction.getRestrictions().add(publicationCriteriaDisjuction);
-
-            // Specific criteria
-
-            if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
-                conjunctionRestriction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ));
-            }
-
-            if (criteria.isOnlyLastVersion()) {
-
-            }
-
+    public static MetamacCriteriaRestriction buildMetamacCriteriaFromWebcriteria(MetamacWebCriteria webCriteria) {
+        MetamacCriteriaConjunctionRestriction criteria = new MetamacCriteriaConjunctionRestriction();
+        
+        if (webCriteria instanceof HasSimpleCriteria) {
+            addRestrictionIfExists(criteria, buildSimpleCriteria(webCriteria));
         }
-        return conjunctionRestriction;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------
-    // DATASETS
-    // -------------------------------------------------------------------------------------------------------------
-
-    public static MetamacCriteriaRestriction getDatasetStatisticalResourceCriteriaRestriction(VersionableStatisticalResourceWebCriteria criteria) {
-        MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
-
-        if (criteria != null) {
-
-            // General criteria
-            MetamacCriteriaRestriction simpleCriteria = addSimpleCriteria(criteria, StatisticalResourcesCriteriaPropertyEnum.CODE, StatisticalResourcesCriteriaPropertyEnum.TITLE,
-                    StatisticalResourcesCriteriaPropertyEnum.URN);
-            if (simpleCriteria != null) {
-                conjunctionRestriction.getRestrictions().add(simpleCriteria);
-            }
-
-            // Specific criteria
-
-            if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
-                conjunctionRestriction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ));
-            }
-
-            if (criteria.isOnlyLastVersion()) {
-                conjunctionRestriction.getRestrictions().add(
-                        new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ));
-            }
-
+        
+        if (webCriteria instanceof HasStatisticalOperationCriteria) {
+            addRestrictionIfExists(criteria, buildStatisticalOperationCriteria((HasStatisticalOperationCriteria)webCriteria));
         }
-        return conjunctionRestriction;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------
-    // QUERIES
-    // -------------------------------------------------------------------------------------------------------------
-
-    public static MetamacCriteriaRestriction getQueryStatisticalResourceCriteriaRestriction(StatisticalResourceWebCriteria criteria) {
-        MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
-
-        if (criteria != null) {
-            // General criteria
-            MetamacCriteriaRestriction simpleCriteria = addSimpleCriteria(criteria, StatisticalResourcesCriteriaPropertyEnum.CODE, StatisticalResourcesCriteriaPropertyEnum.TITLE, StatisticalResourcesCriteriaPropertyEnum.URN);
-            if (simpleCriteria != null) {
-                conjunctionRestriction.getRestrictions().add(simpleCriteria);
-            }
-            
-            //FIXME: add statistical operation urn
+        
+        if (webCriteria instanceof HasLastVersionCriteria) {
+            addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasLastVersionCriteria)webCriteria));
         }
-        return conjunctionRestriction;
+        
+        return criteria;
     }
-
-    @SuppressWarnings({"unused", "rawtypes"})
-    private static MetamacCriteriaRestriction addSimpleCriteria(HasSimpleCriteria criteria, Enum... fields) {
+    
+    private static void addRestrictionIfExists(MetamacCriteriaConjunctionRestriction criteria, MetamacCriteriaRestriction restriction) {
+        if (restriction != null) {
+            criteria.getRestrictions().add(restriction);
+        }
+    }
+    
+    private static MetamacCriteriaRestriction buildSimpleCriteria(HasSimpleCriteria criteria) {
         if (StringUtils.isNotBlank(criteria.getCriteria())) {
             MetamacCriteriaDisjunctionRestriction criteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
-            for (Enum field : fields) {
-                criteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(field.name(), criteria.getCriteria(), OperationType.ILIKE));
-            }
+            criteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
+            criteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.URN.name(), criteria.getCriteria(), OperationType.ILIKE));
+            criteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
             return criteriaDisjuction;
         }
         return null;
     }
+    
+    private static MetamacCriteriaRestriction buildStatisticalOperationCriteria(HasStatisticalOperationCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN.name(), criteria.getStatisticalOperationUrn(), OperationType.EQ);
+        }
+        return null;
+    }
+    
+    private static MetamacCriteriaRestriction buildOnlyLastVersionCriteria(HasLastVersionCriteria criteria) {
+        if (criteria.isOnlyLastVersion()) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ);
+        }
+        return null;
+    }
+
 
     // -------------------------------------------------------------------------------------------------------------
     // STATISTICAL OPERATION
