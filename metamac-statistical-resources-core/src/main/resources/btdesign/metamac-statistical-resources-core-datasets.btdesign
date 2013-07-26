@@ -18,6 +18,7 @@ Application DatasetsStatisticalResources {
 			> @DatasetRepository
 			> @DatasetVersionRepository
 			> @CodeDimensionRepository
+			> @StatisticOfficialityRepository
 			
 			// Datasources
 			@Datasource createDatasource(String datasetVersionUrn, @Datasource datasource) throws MetamacException;
@@ -55,6 +56,9 @@ Application DatasetsStatisticalResources {
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
+    		
+    		// Statistic officialities
+    		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;
 		}  
 
 

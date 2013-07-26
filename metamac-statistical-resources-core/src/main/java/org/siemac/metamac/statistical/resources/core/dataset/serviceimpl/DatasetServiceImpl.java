@@ -44,6 +44,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -353,6 +354,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         PagedResult<Dataset> datasetsPagedResult = getDatasetRepository().findByCondition(conditions, pagingParameter);
         return datasetsPagedResult;
+    }
+    
+    
+    @Override
+    public List<StatisticOfficiality> findStatisticOfficialities(ServiceContext ctx) throws MetamacException {
+        datasetServiceInvocationValidator.checkFindStatisticOfficialities(ctx);
+        return getStatisticOfficialityRepository().findAll();
     }
 
     // ------------------------------------------------------------------------

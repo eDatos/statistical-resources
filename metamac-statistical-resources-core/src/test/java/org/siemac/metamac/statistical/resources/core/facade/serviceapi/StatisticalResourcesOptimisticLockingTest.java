@@ -764,6 +764,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testVersioningDatasetVersion() throws Exception {
         // no optimistic locking in this operation
     }
+    
+    @Override
+    public void testFindStatisticOfficialities() throws Exception {
+        // no optimistic locking in this operation
+    }
 
     @Override
     public void testDeleteQueryVersion() throws Exception {

@@ -22,11 +22,13 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
@@ -574,6 +576,18 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(dataset);
         return datasetVersionDto;
+    }
+    
+    @Override
+    public List<StatisticOfficialityDto> findStatisticOfficialities(ServiceContext ctx) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canFindStatisticOfficialities(ctx);
+        
+        // Retrieve
+        List<StatisticOfficiality> statisticOfficialities = getDatasetService().findStatisticOfficialities(ctx);
+
+        // Transform
+        return datasetDo2DtoMapper.statisticOfficialityDoList2DtoList(statisticOfficialities);
     }
 
     // ------------------------------------------------------------------------

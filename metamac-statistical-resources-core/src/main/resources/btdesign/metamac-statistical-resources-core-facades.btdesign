@@ -102,6 +102,9 @@ Application FacadeStatisticalResources {
     		"Retrieve the coverage for a given dimension"
     		List<@CodeItemDto> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		
+    		// Statistic officialities
+    		List<@StatisticOfficialityDto> findStatisticOfficialities() throws MetamacException;
+    		
     		// PUBLICATIONS
 	   		"Find all publications"
 	   		MetamacCriteriaResult<@RelatedResourceDto> findPublicationsByCondition(MetamacCriteria criteria) throws MetamacException; 

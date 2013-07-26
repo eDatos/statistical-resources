@@ -14,9 +14,11 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 public class DatasetsAsserts extends BaseAsserts {
@@ -224,6 +226,7 @@ public class DatasetsAsserts extends BaseAsserts {
         }
     }
 
+
     // -----------------------------------------------------------------
     // DATASOURCE: DO & DO
     // -----------------------------------------------------------------
@@ -305,4 +308,6 @@ public class DatasetsAsserts extends BaseAsserts {
             assertNull(entities);
         }
     }
+    
+    
 }
