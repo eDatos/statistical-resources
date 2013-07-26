@@ -35,15 +35,15 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
-    private QueryUiHandlers                                       uiHandlers;
+    private QueryUiHandlers                                                  uiHandlers;
 
     private SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow searchDatasetWindow;
-    private RelatedResourceDto                                    selectedDatasetResource;
+    private RelatedResourceDto                                               selectedDatasetResource;
 
-    private Map<String, SearchMultipleCodeItemWindow>             dimensionCodeSelectionWindow;
-    private Map<String, CodeItemListItem>                         selectionFields;
+    private Map<String, SearchMultipleCodeItemWindow>                        dimensionCodeSelectionWindow;
+    private Map<String, CodeItemListItem>                                    selectionFields;
 
-    private Map<String, List<CodeItemDto>>                        dtoSelection;
+    private Map<String, List<CodeItemDto>>                                   dtoSelection;
 
     // FIXME add selection
     public QueryProductionDescriptorsEditionForm() {
@@ -231,5 +231,4 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     public void setUiHandlers(QueryUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-
 }

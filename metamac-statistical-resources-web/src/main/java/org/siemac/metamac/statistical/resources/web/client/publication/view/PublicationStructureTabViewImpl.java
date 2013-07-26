@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureElementPanel;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.TreeNodeClickAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -120,5 +121,11 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
     private void setNewElementInPanel(NameableStatisticalResourceDto element) {
         setElementInPanel(element);
         publicationStructureElementPanel.setMainFormLayoutEditionMode();
+    }
+
+    @Override
+    public void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result) {
+        // TODO Auto-generated method stub
+
     }
 }

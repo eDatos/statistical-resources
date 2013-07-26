@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -13,20 +13,20 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasets {
 
     @In(1)
-    int                      firstResult;
+    int                            firstResult;
 
     @In(2)
-    int                      maxResults;
+    int                            maxResults;
 
     @In(3)
-    MetamacWebCriteria       criteria;
+    StatisticalResourceWebCriteria criteria;
 
     @Out(1)
-    List<RelatedResourceDto> datasets;
+    List<RelatedResourceDto>       datasets;
 
     @Out(2)
-    Integer                  firstResultOut;
+    Integer                        firstResultOut;
 
     @Out(3)
-    Integer                  totalResults;
+    Integer                        totalResults;
 }

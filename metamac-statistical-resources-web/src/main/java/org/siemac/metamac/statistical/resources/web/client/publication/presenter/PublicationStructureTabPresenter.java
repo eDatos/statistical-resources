@@ -19,10 +19,16 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
@@ -63,6 +69,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
         void setPublicationStructure(PublicationStructureDto publicationStructureDto);
         void setPublicationStructure(PublicationStructureDto publicationStructureDto, NameableStatisticalResourceDto selectedElement);
+
+        void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
     }
 
     @ProxyCodeSplit
@@ -179,6 +187,37 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                         getView().setPublicationStructure(result.getPublicationStructureDto());
                     }
                 });
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    @Override
+    public void retrieveDatasets(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(GetDatasetsResult result) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForDatasetSelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForDatasetSelection(result);
+            }
+        });
     }
 
     //

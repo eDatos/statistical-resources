@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.SearchCustomLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -38,7 +39,7 @@ public class PublicationStructureElementPanel extends VLayout {
     private GroupDynamicForm                                      form;
     private GroupDynamicForm                                      editionForm;
 
-    private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetWindow; // TODO 
+    private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetWindow; // TODO
 
     private RelatedResourceDto                                    publicationVersion;
     private NameableStatisticalResourceDto                        element;
@@ -157,7 +158,10 @@ public class PublicationStructureElementPanel extends VLayout {
             }
         });
 
-        CustomLinkItem dataset = new CustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
+        // Dataset
+
+        SearchCustomLinkItem dataset = new SearchCustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
+        dataset.setRequired(true);
         dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
             @Override
@@ -174,7 +178,9 @@ public class PublicationStructureElementPanel extends VLayout {
             }
         });
 
-        CustomLinkItem query = new CustomLinkItem(ElementLevelDS.QUERY, getConstants().query());
+        // Query
+
+        SearchCustomLinkItem query = new SearchCustomLinkItem(ElementLevelDS.QUERY, getConstants().query());
         query.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
             @Override
@@ -248,6 +254,7 @@ public class PublicationStructureElementPanel extends VLayout {
         }
 
         editionForm.markForRedraw();
+        editionForm.validate(false);
     }
 
     public NameableStatisticalResourceDto getSelectedElement() {
@@ -288,4 +295,45 @@ public class PublicationStructureElementPanel extends VLayout {
     public void setMainFormLayoutEditionMode() {
         mainFormLayout.setEditionMode();
     }
+
+    //
+    // FORM ITEMS
+    //
+
+    // private SearchViewTextItem createSearchDatasetItem(String name, String title) {
+    //
+    // final SearchViewTextItem datasetItem = new SearchViewTextItem(name, title);
+    // datasetItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+    //
+    // @Override
+    // public void onFormItemClick(FormItemIconClickEvent event) {
+    //
+    // searchDatasetWindow = new SearchSingleStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+    // new SearchPaginatedAction<StatisticalResourceWebCriteria>() {
+    //
+    // @Override
+    // public void retrieveResultSet(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+    // getUiHandlers().retrieveDatasets(firstResult, maxResults, criteria);
+    // }
+    // });
+    //
+    // retrieveStatisticalOperationsForDatasetSelection();
+    //
+    // searchDatasetWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+    //
+    // @Override
+    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+    // RelatedResourceDto selectedResource = searchDatasetWindow.getSelectedResource();
+    // searchDatasetWindow.markForDestroy();
+    // // Set selected resource in form
+    // // TODO setSelectedDataset(selectedResource);
+    // editionForm.validate(false);
+    // }
+    // });
+    // }
+    //
+    // });
+    // datasetItem.setRequired(true);
+    // return datasetItem;
+    // }
 }
