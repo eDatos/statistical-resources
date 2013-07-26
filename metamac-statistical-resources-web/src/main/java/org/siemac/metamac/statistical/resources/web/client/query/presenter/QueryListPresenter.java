@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
@@ -78,7 +79,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+        retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
     }
 
     @Override
@@ -93,8 +94,8 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
     }
 
     @Override
-    public void retrieveQueries(int firstResult, int maxResults) {
-        dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults), new WaitingAsyncCallback<GetQueryVersionsResult>() {
+    public void retrieveQueries(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -121,7 +122,7 @@ public class QueryListPresenter extends Presenter<QueryListPresenter.QueryListVi
             @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());
-                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }

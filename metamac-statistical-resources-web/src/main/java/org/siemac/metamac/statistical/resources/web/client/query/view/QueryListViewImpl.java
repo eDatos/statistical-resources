@@ -50,11 +50,9 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
         super();
 
         panel = new VLayout();
-        panel.setMargin(5);
         panel.setHeight100();
 
         queriesListPanel = new QueriesListPanel();
-        queriesListPanel.setWidth("99%");
 
         panel.addMember(queriesListPanel);
     }
@@ -124,7 +122,7 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
 
                 @Override
                 public void retrieveResultSet(int firstResult, int maxResults) {
-                    getUiHandlers().retrieveQueries(firstResult, maxResults);
+                    getUiHandlers().retrieveQueries(firstResult, maxResults, null);
                 }
             });
             queriesList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
