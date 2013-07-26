@@ -1,18 +1,26 @@
 package org.siemac.metamac.statistical.resources.web.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesResult;
 import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
 import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
+    private static Logger                                logger           = Logger.getLogger(StatisticalResourcesWeb.class.getName());
     private static final boolean                         SECURITY_ENABLED = true;
 
     private static MetamacPrincipal                      principal;
@@ -27,6 +35,22 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
         setUncaughtExceptionHandler();
 
         prepareApplication(SECURITY_ENABLED);
+    }
+
+    @Override
+    protected void onBeforeLoadApplication() {
+        super.onBeforeLoadApplication();
+        ginjector.getDispatcher().execute(new GetStatisticOfficialitiesAction(), new AsyncCallback<GetStatisticOfficialitiesResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error retrieving statistic officialities");
+            }
+            @Override
+            public void onSuccess(GetStatisticOfficialitiesResult result) {
+                CommonUtils.setStatisticOfficialities(result.getStatisticOfficialities());
+            }
+        });
     }
 
     public static MetamacPrincipal getCurrentUser() {

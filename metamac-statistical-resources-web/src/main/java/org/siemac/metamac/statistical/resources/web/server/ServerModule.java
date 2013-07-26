@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetStatisticOfficialitiesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
@@ -54,6 +55,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
@@ -151,6 +153,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteDatasourcesAction.class, DeleteDatasourcesActionHandler.class);
         bindHandler(GetDatasetDimensionsAction.class, GetDatasetDimensionsActionHandler.class);
         bindHandler(GetDatasetDimensionCoverageAction.class, GetDatasetDimensionCoverageActionHandler.class);
+        bindHandler(GetStatisticOfficialitiesAction.class, GetStatisticOfficialitiesActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);

@@ -8,6 +8,7 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -18,10 +19,11 @@ import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
+import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -35,7 +37,11 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
         super();
         CustomDateItem dateNextUpdate = createDateNextUpdateItem();
         updateFrequency = createUpdateFrequencyItem();
-        ViewTextItem statisticOfficiality = new ViewTextItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality()); // TODO editable!
+        
+        CustomSelectItem statisticOfficiality = new CustomSelectItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
+        statisticOfficiality.setValueMap(CommonUtils.getStatisticOfficialityHashMap());
+        statisticOfficiality.addChangedHandler(FormItemUtils.getMarkForRedrawChangedHandler(this));
+        
         ViewMultiLanguageTextItem bibliographicCitation = new ViewMultiLanguageTextItem(DatasetDS.BIBLIOGRAPHIC_CITATION, getConstants().datasetBibliographicCitation());
 
         addFields(dateNextUpdate, updateFrequency, statisticOfficiality, bibliographicCitation);
@@ -54,15 +60,24 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         setValue(DatasetDS.DATE_NEXT_UPDATE, datasetDto.getDateNextUpdate());
         setExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY), datasetDto.getUpdateFrequency());
-        setValue(DatasetDS.STATISTIC_OFFICIALITY, CommonUtils.getStatisticOfficialityName(datasetDto.getStatisticOfficiality())); // TODO editable!
         setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, RecordUtils.getInternationalStringRecord(datasetDto.getBibliographicCitation()));
+        
+        if (datasetDto.getStatisticOfficiality() != null) {
+            setValue(DatasetDS.STATISTIC_OFFICIALITY, datasetDto.getStatisticOfficiality().getIdentifier());
+        }
     }
 
     public DatasetVersionDto getDatasetVersionDto(DatasetVersionDto datasetDto) {
         datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
         datasetDto.setDateNextUpdate(getDate(getItem(DatasetDS.DATE_NEXT_UPDATE)));
         datasetDto.setUpdateFrequency(getExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY)));
-        // TODO STATISTIC_OFFICIALITY
+        
+        String statisticOfficialityIdentifier = getValueAsString(DatasetDS.STATISTIC_OFFICIALITY);
+        if (!StringUtils.isEmpty(statisticOfficialityIdentifier)) {
+            datasetDto.setStatisticOfficiality(CommonUtils.getStatisticOfficialityByIdentifier(statisticOfficialityIdentifier));
+        } else {
+            datasetDto.setStatisticOfficiality(null);
+        }
         return datasetDto;
     }
 
