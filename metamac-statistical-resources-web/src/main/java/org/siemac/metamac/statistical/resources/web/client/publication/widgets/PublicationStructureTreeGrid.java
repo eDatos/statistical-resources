@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
+import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.smartgwt.client.data.Record;
@@ -28,6 +30,7 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitEvent;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitHandler;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -196,7 +199,16 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
             @Override
             public void onClick(MenuItemClickEvent event) {
-                getUiHandlers().deleteElement(publicationVersion.getUrn(), getElementLevelUrn(selectedContextClickElement));
+                DeleteConfirmationWindow deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationStructureElementDeleteConfirmationTitle(), getMessages()
+                        .publicationStructureElementDeleteConfirmation());
+                deleteConfirmationWindow.show();
+                deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        getUiHandlers().deleteElement(publicationVersion.getUrn(), getElementLevelUrn(selectedContextClickElement));
+                    }
+                });
             }
         });
         contextMenu.addItem(deleteElementMenuItem);
@@ -260,7 +272,6 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                         relativePosition--;
                     }
 
-                    String oldItemParent = droppedNode.getAttribute(ElementLevelDS.PARENT_CHAPTER_URN);
                     String newItemParent = SCHEME_NODE_NAME.equals(dropFolder.getName()) ? SCHEME_NODE_NAME : dropFolder.getAttribute(ElementLevelDS.URN);
 
                     if (SCHEME_NODE_NAME.equals(newItemParent)) {
