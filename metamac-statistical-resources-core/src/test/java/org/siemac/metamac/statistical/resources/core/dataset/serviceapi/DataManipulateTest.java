@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -89,6 +91,9 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     public static final String               DATA_STR_ECB_EXR_RG_XS          = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
     public static final String               DATA_GEN_ECB_EXR_RG_FLAT        = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
     public static final String               DATA_GEN_ECB_EXR_RG_FLAT_FAILED = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat_failed.xml";
+
+    public static final String               DATA_PX_ECB_EXR_RG              = "/px/ecb_exr_rg.px";
+
     public static final String               URN_DSD_ECB_EXR_RG              = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
 
     @Autowired
@@ -244,7 +249,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
-                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_STR_ECB_EXR_RG_XS));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_STR_ECB_EXR_RG_XS).toURI()));
                         fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
@@ -253,7 +258,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
-                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_GEN_ECB_EXR_RG_FLAT).toURI()));
                         fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
@@ -261,6 +266,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
 
                 } catch (MetamacException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
                 logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
@@ -294,7 +301,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
-                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_STR_ECB_EXR_RG_XS));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_STR_ECB_EXR_RG_XS).toURI()));
                         fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
@@ -303,7 +310,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     {
                         FileDescriptor fileDescriptorDto = new FileDescriptor();
                         fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT_FAILED, "/"));
-                        fileDescriptorDto.setInputMessage(DataManipulateTest.class.getResourceAsStream(DATA_GEN_ECB_EXR_RG_FLAT_FAILED));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_GEN_ECB_EXR_RG_FLAT_FAILED).toURI()));
                         fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
@@ -311,6 +318,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
 
                 } catch (MetamacException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
                 logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
@@ -327,5 +336,57 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey).build();
         PagedResult<Task> pagedResult = taskService.findTasksByCondition(serviceContext, conditionList, PagingParameter.noLimits());
         assertTrue(pagedResult.getValues().isEmpty());
+    }
+
+    // @Test
+    public void testImportPxDatasource() throws Exception {
+        // New Transaction: Because the job needs persisted data
+        final TransactionTemplate tt = new TransactionTemplate(transactionManager);
+        tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        tt.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            public void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+
+                    // File 01
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_PX_ECB_EXR_RG, "/"));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_PX_ECB_EXR_RG).toURI()));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.PX);
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    // // File 02
+                    // {
+                    // FileDescriptor fileDescriptorDto = new FileDescriptor();
+                    // fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
+                    // fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_GEN_ECB_EXR_RG_FLAT).toURI()));
+                    // fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                    // taskInfoDataset.addFile(fileDescriptorDto);
+                    // }
+
+                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+
+                } catch (MetamacException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
+            }
+        });
+
+        // Wait until the job is finished
+        waitUntilJobFinished();
+
+        // DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+
+        // assertNotNull(datasetRepositoryDto);
     }
 }

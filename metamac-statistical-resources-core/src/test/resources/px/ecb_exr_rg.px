@@ -1,0 +1,29 @@
+CHARSET="ANSI";
+CREATION-DATE="20130725 00:00";
+DECIMALS=5;
+MATRIX="ecb_exr_rg";
+SUBJECT-CODE="EXR";
+SUBJECT-AREA="EXR";
+DESCRIPTION="Sample Data Structure Definition for exchange rates, with sibling and rate groups defined.";
+TITLE="Sample Data Structure Definition for exchange rates, with sibling and rate groups defined. by FREQ, CURRENCY, CURRENCY_DENOM, EXR_TYPE, EXR_VAR and TIME_PERIOD";
+CONTENTS="Sample Data Structure Definition for exchange rates, with sibling and rate groups defined.";
+UNITS="Puntos";
+STUB="FREQ","CURRENCY","CURRENCY_DENOM","EXR_TYPE","EXR_VAR";
+HEADING="TIME_PERIOD";
+VALUES("FREQ")="M";
+VALUES("CURRENCY")="CHF","GBP","USD","JPY";
+VALUES("CURRENCY_DENOM")="EUR";
+VALUES("EXR_TYPE")="SP00";
+VALUES("EXR_VAR")="E";
+VALUES("TIME_PERIOD")="2010-08","2010-09","2010-10";
+CODES("FREQ")="M";
+CODES("CURRENCY")="CHF","GBP","USD","JPY";
+CODES("CURRENCY_DENOM")="EUR";
+CODES("EXR_TYPE")="SP00";
+CODES("EXR_VAR")="E";
+CODES("TIME_PERIOD")="2010-08","2010-09","2010-10";
+DATA=
+1.3413 1.3089 1.3452 
+0.82363 0.83987 0.87637 
+110.04 110.26 113.67 
+1.2894 1.3067 1.3898; 

@@ -5,18 +5,15 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -40,9 +37,10 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapper;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.Metamac2StatRepoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacSdmx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacSdmx2StatRepoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulatePxDataService;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
@@ -55,6 +53,7 @@ import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.exception.TaskNotFoundException;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,13 +84,16 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     private TaskServiceInvocationValidator   taskServiceInvocationValidator;
 
     @Autowired
-    private Metamac2StatRepoMapper           metamac2StatRepoMapper;
+    private MetamacSdmx2StatRepoMapper       metamac2StatRepoMapper;
 
     @Autowired
     private SrmRestInternalService           srmRestInternalService;
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+
+    @Autowired
+    private ManipulatePxDataService          manipulatePxDataService;
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
@@ -124,12 +126,12 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         TriggerKey triggerKey = createTriggerKeyForImportationDataset(taskInfoDataset.getRepoDatasetId());
 
         Task task = null;
-        OutputStream os = null;
         try {
             // Save InputStream (TempFile)
             StringBuilder filePaths = new StringBuilder();
             StringBuilder fileNames = new StringBuilder();
-            os = cacheFiles(taskInfoDataset, os, filePaths, fileNames);
+            StringBuilder fileFormats = new StringBuilder();
+            serializeFilePathsAndNames(taskInfoDataset, filePaths, fileNames, fileFormats);
 
             // Scheduler an importation job
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
@@ -141,8 +143,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
-                    .usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString()).usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
-                    .usingJobData(ImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId()).usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
+                    .usingJobData(ImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString())
+                    .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId())
+                    .usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
             // Mark importation in progress
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey.getName()).distinctRoot().build();
@@ -155,7 +158,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 // No existing Job
                 task = new Task(jobKey.getName());
                 task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-                task.setExtensionPoint(taskInfoDataset.getRepoDatasetId() + ImportDatasetJob.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
+                task.setExtensionPoint(taskInfoDataset.getRepoDatasetId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
                 createTask(ctx, task);
                 SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
                 sched.scheduleJob(job, trigger);
@@ -169,7 +172,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
                 task.setCreatedDate(new DateTime());
                 task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-                task.setExtensionPoint(taskInfoDataset.getRepoDatasetId() + ImportDatasetJob.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
+                task.setExtensionPoint(taskInfoDataset.getRepoDatasetId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
                 updateTask(ctx, task);
 
                 sched.addJob(job, false);
@@ -178,11 +181,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         } catch (Exception e) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
                     .build(); // Error
-        } finally {
-            for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
-                IOUtils.closeQuietly(fileDescriptorDto.getInputMessage());
-            }
-            IOUtils.closeQuietly(os);
         }
 
         return jobKey.getName();
@@ -315,7 +313,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             Task task = retrieveTaskByJob(ctx, createJobKeyForImportationDataset(taskInfoDataset.getRepoDatasetId()).getName());
 
             String fileNames = task.getExtensionPoint();
-            String[] names = fileNames.split("\\" + ImportDatasetJob.SERIALIZATION_SEPARATOR);
+            String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
             for (int i = 1; i < names.length; i++) {
                 String dataSourceId = generateDataSourceId(names[i], task.getCreatedDate());
 
@@ -325,7 +323,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
                 internationalStringDto.addText(localisedStringDto);
 
-                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(Metamac2StatRepoMapperImpl.DATA_SOURCE_ID, internationalStringDto);
+                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(MetamacSdmx2StatRepoMapperImpl.DATA_SOURCE_ID, internationalStringDto);
 
                 datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeBasicDto);
             }
@@ -384,24 +382,23 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return StringUtils.substringAfter(jobImportKeyName, PREFIX_JOB_IMPORT_DATA);
     }
 
-    protected OutputStream cacheFiles(TaskInfoDataset taskInfoDataset, OutputStream os, StringBuilder filePaths, StringBuilder fileNames) throws IOException, FileNotFoundException {
+    protected void serializeFilePathsAndNames(TaskInfoDataset taskInfoDataset, StringBuilder filePaths, StringBuilder fileNames, StringBuilder fileFormats) throws IOException, FileNotFoundException {
         for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
-            File file = File.createTempFile("data_", "_" + fileDescriptorDto.getDatasetFileFormatEnum() + ".imp");
-            file.deleteOnExit();
-            os = new FileOutputStream(file);
-            IOUtils.copy(fileDescriptorDto.getInputMessage(), os);
-
             if (filePaths.length() > 0) {
-                filePaths.append(ImportDatasetJob.SERIALIZATION_SEPARATOR);
+                filePaths.append(JobUtil.SERIALIZATION_SEPARATOR);
             }
-            filePaths.append(file.getAbsolutePath());
+            filePaths.append(fileDescriptorDto.getFile().getAbsolutePath());
 
             if (fileNames.length() > 0) {
-                fileNames.append(ImportDatasetJob.SERIALIZATION_SEPARATOR);
+                fileNames.append(JobUtil.SERIALIZATION_SEPARATOR);
             }
             fileNames.append(fileDescriptorDto.getFileName());
+
+            if (fileFormats.length() > 0) {
+                fileFormats.append(JobUtil.SERIALIZATION_SEPARATOR);
+            }
+            fileFormats.append(fileDescriptorDto.getDatasetFileFormatEnum());
         }
-        return os;
     }
 
     private void processDatasets(TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
@@ -420,10 +417,13 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 }
 
                 callback.setDataSourceID(dataSourceId);
-                Sdmx21Parser.parseData(fileDescriptor.getInputMessage(), callback); // Parse and import
+                Sdmx21Parser.parseData(new FileInputStream(fileDescriptor.getFile()), callback); // Parse and import
 
             } else if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                throw new UnsupportedOperationException("Import PX");
+
+                // TODO arreglar el service ctx
+                ServiceContext serviceContext = new ServiceContext("TODO", "TODO", "sdmx-srm-core");
+                manipulatePxDataService.importPx(serviceContext, fileDescriptor.getFile(), taskInfoDataset.getRepoDatasetId());
             } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 throw new UnsupportedOperationException("Import CSV");
             }

@@ -23,7 +23,7 @@ public class TaskServiceInvocationValidatorImpl {
         StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getRepoDatasetId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
 
         for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
-            StatisticalResourcesValidationUtils.checkMetadataRequired(fileDescriptorDto.getInputMessage(), ServiceExceptionParameters.FILE_DESCRIPTOR_INPUT_MESSAGE, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(fileDescriptorDto.getFile(), ServiceExceptionParameters.FILE_DESCRIPTOR_INPUT_MESSAGE, exceptions);
             StatisticalResourcesValidationUtils.checkMetadataRequired(fileDescriptorDto.getFileName(), ServiceExceptionParameters.FILE_DESCRIPTOR_FILE_NAME, exceptions);
             StatisticalResourcesValidationUtils.checkMetadataRequired(fileDescriptorDto.getDatasetFileFormatEnum(), ServiceExceptionParameters.FILE_DESCRIPTOR_FORMAT, exceptions);
         }

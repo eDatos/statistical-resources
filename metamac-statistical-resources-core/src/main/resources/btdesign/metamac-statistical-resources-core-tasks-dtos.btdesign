@@ -14,7 +14,8 @@ Application DatasetsStatisticalResourcesDto {
 		}
 		
 		DataTransferObject FileDescriptor {
-			java.io.InputStream inputMessage;
+			gap
+			java.io.File file;
 			String fileName;
 			- @DatasetFileFormatEnum datasetFileFormatEnum;
 		}

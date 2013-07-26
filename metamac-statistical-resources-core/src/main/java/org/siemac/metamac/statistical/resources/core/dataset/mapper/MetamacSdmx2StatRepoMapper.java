@@ -15,7 +15,7 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Group;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
-public interface Metamac2StatRepoMapper {
+public interface MetamacSdmx2StatRepoMapper {
 
     /**
      * Convert Datas and Attributes into statistic-dataset-repository-model

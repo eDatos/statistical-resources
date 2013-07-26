@@ -29,8 +29,8 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Observation;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
 
-@Component(value = "metamac2StatRepoMapper")
-public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
+@Component(value = "metamacSdmx2StatRepoMapper")
+public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMapper {
 
     public static String DATA_SOURCE_ID              = "DATA_SOURCE_ID";
     public static String ATTRIBUTE_GEN_KEY_SEPARATOR = ":";
@@ -312,7 +312,7 @@ public class Metamac2StatRepoMapperImpl implements Metamac2StatRepoMapper {
      */
     private List<CodeDimensionDto> processKeyOfObservation(List<IdValuePair> sliceKey, Observation observation) {
 
-        List<CodeDimensionDto> codeDimensionDtos = new ArrayList<CodeDimensionDto>();
+        List<CodeDimensionDto> codeDimensionDtos = new LinkedList<CodeDimensionDto>();
 
         // Add slice key of Observation
         if (sliceKey != null) {
