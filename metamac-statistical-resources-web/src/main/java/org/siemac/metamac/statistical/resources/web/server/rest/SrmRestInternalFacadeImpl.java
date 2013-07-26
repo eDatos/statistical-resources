@@ -203,6 +203,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(resource.getId());
+        externalItemDto.setCodeNested(resource.getNestedId());
         externalItemDto.setUri(resource.getSelfLink().getHref());
         externalItemDto.setUrn(resource.getUrn());
         externalItemDto.setUrnInternal(resource.getUrnInternal());
@@ -215,6 +216,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     private ExternalItemDto buildExternalItemDtoFromAgency(Agency agency) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(agency.getId());
+        externalItemDto.setCodeNested(agency.getNestedId());
         externalItemDto.setUri(agency.getSelfLink().getHref());
         externalItemDto.setUrn(agency.getUrn());
         externalItemDto.setUrnInternal(agency.getUrnInternal());

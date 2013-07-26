@@ -74,6 +74,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(resource.getId());
+        externalItemDto.setCodeNested(resource.getNestedId());
         externalItemDto.setUri(resource.getSelfLink().getHref());
         externalItemDto.setUrn(resource.getUrn());
         externalItemDto.setType(type);
