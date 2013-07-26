@@ -9,11 +9,11 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableS
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchRelatedResourceBasePaginatedWindow;
 
-public class SearchSingleStatisticalRelatedResourcePaginatedWindow extends SearchRelatedResourceBasePaginatedWindow<RelatedResourceDto, VersionableStatisticalResourceWebCriteria> {
+public class SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow extends SearchRelatedResourceBasePaginatedWindow<RelatedResourceDto, VersionableStatisticalResourceWebCriteria> {
 
     private VersionableStatisticalResourceFilterForm<VersionableStatisticalResourceWebCriteria> filterForm;
 
-    public SearchSingleStatisticalRelatedResourcePaginatedWindow(String title, int maxResults, SearchPaginatedAction<VersionableStatisticalResourceWebCriteria> action) {
+    public SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow(String title, int maxResults, SearchPaginatedAction<VersionableStatisticalResourceWebCriteria> action) {
         super(title, maxResults, new VersionableStatisticalResourceFilterForm<VersionableStatisticalResourceWebCriteria>(), action);
         filterForm = (VersionableStatisticalResourceFilterForm<VersionableStatisticalResourceWebCriteria>) getFilterForm();
     }
@@ -25,5 +25,4 @@ public class SearchSingleStatisticalRelatedResourcePaginatedWindow extends Searc
     public VersionableStatisticalResourceWebCriteria getSearchCriteria() {
         return getFilterForm().getSearchCriteria();
     }
-
 }

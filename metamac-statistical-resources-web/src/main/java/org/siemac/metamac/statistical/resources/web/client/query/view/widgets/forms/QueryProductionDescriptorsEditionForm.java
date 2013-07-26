@@ -19,7 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.Q
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleCodeItemWindow;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleStatisticalRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
@@ -37,7 +37,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     private QueryUiHandlers                                       uiHandlers;
 
-    private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetWindow;
+    private SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow searchDatasetWindow;
     private RelatedResourceDto                                    selectedDatasetResource;
 
     private Map<String, SearchMultipleCodeItemWindow>             dimensionCodeSelectionWindow;
@@ -180,7 +180,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchDatasetWindow = new SearchSingleStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                searchDatasetWindow = new SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<VersionableStatisticalResourceWebCriteria>() {
 
                             @Override
