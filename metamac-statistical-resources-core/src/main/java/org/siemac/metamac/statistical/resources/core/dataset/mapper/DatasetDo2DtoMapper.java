@@ -22,6 +22,7 @@ public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
 
     // StatisticOfficiality
     public StatisticOfficialityDto statisticOfficialityDo2Dto(StatisticOfficiality source) throws MetamacException;
+    public List<StatisticOfficialityDto> statisticOfficialityDoList2DtoList(List<StatisticOfficiality> sources) throws MetamacException;
 
     // Dataset
     public RelatedResourceDto datasetVersionDoToDatasetRelatedResourceDto(DatasetVersion source) throws MetamacException;

@@ -10,6 +10,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.*;
 
 import java.util.List;
 
@@ -22,9 +24,12 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,6 +50,9 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
     private DatasourceMockFactory     datasourceMockFactory;
+    
+    @Autowired
+    private StatisticOfficialityMockFactory statisticOfficialityMockFactory;
 
     @Test
     @MetamacMock(DATASOURCE_01_BASIC_NAME)
@@ -86,5 +94,13 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
         RelatedResourceDto actual = datasetDo2DtoMapper.datasetVersionDoToDatasetRelatedResourceDto(expected);
         assertEqualsDataset(expected, actual);
+    }
+    
+    @Test
+    @MetamacMock(STATISTIC_OFFICIALITY_01_BASIC_NAME)
+    public void testStatisticOfficialityDoToDto() throws MetamacException {
+        StatisticOfficiality expected = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
+        StatisticOfficialityDto actual = datasetDo2DtoMapper.statisticOfficialityDo2Dto(expected);
+        assertEqualsStatisticOfficiality(expected, actual);
     }
 }

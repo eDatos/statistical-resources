@@ -186,6 +186,15 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         return target;
     }
+    
+    @Override
+    public List<StatisticOfficialityDto> statisticOfficialityDoList2DtoList(List<StatisticOfficiality> sources) throws MetamacException {
+        List<StatisticOfficialityDto> targets = new ArrayList<StatisticOfficialityDto>();
+        for (StatisticOfficiality source : sources) {
+            targets.add(statisticOfficialityDo2Dto(source));
+        }
+        return targets;
+    }
 
     // ---------------------------------------------------------------------------------------------------------
     // CODE ITEM
