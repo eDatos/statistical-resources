@@ -81,7 +81,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected Datasource mockDatasource() {
         Datasource datasource = new Datasource();
-        datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
+        datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
 
         // TODO: ELiminar cuando el código del datasource se esté generando
         // We can not set code in Identifiable becasuse thera are some resources that have generated code
@@ -115,7 +115,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private Publication mockPublication(boolean withVersion) {
         Publication publication = new Publication();
-        publication.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
+        publication.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION));
         if (withVersion) {
             publication.addVersion(mockPublicationVersion(publication));
         }
@@ -154,7 +154,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         elementLevel.setChapter(chapter);
 
         // Metadata
-        chapter.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        chapter.setNameableStatisticalResource(mockNameableStatisticalResorce(TypeRelatedResourceEnum.CHAPTER));
 
         return chapter;
     }
@@ -172,7 +172,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         elementLevel.setCube(cube);
 
         // Metadata
-        cube.setNameableStatisticalResource(mockNameableStatisticalResorce());
+        cube.setNameableStatisticalResource(mockNameableStatisticalResorce(TypeRelatedResourceEnum.CUBE));
         return cube;
     }
 
@@ -263,9 +263,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // BASE HIERARCHY
     // -----------------------------------------------------------------
 
-    protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum type) {
+    protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum artefactType) {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
-        mockLifeCycleStatisticalResource(resource);
+        mockLifeCycleStatisticalResource(resource, artefactType);
+        
         String resourceCode = resource.getCode();
 
         resource.setLanguage(mockCodeExternalItem("language01"));
@@ -277,7 +278,28 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setAbstractLogic(mockInternationalStringMetadata(resourceCode, "abstract"));
         resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
 
-        resource.setType(type);
+        switch (artefactType) {
+            case DATASET:
+                resource.setType(StatisticalResourceTypeEnum.DATASET);
+                break;
+            case DATASET_VERSION:
+                resource.setType(StatisticalResourceTypeEnum.DATASET);
+                break;
+            case PUBLICATION:
+                resource.setType(StatisticalResourceTypeEnum.COLLECTION);
+                break;
+            case PUBLICATION_VERSION:
+                resource.setType(StatisticalResourceTypeEnum.COLLECTION);
+                break;
+            case QUERY:
+                resource.setType(StatisticalResourceTypeEnum.QUERY);
+                break;
+            case QUERY_VERSION:
+                resource.setType(StatisticalResourceTypeEnum.QUERY);
+                break;
+            default:
+                break;
+        } 
         
         resource.setCommonMetadata(mockCommonConfigurationExternalItem());
 
@@ -300,8 +322,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource) {
-        mockVersionableStatisticalResource(resource);
+    protected LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
+        mockVersionableStatisticalResource(resource, artefactType);
 
         resource.setMaintainer(mockAgencyExternalItem("agency01"));
 
@@ -309,22 +331,22 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected VersionableStatisticalResource mockVersionableStatisticalResource(VersionableStatisticalResource resource) {
-        mockNameableStatisticalResorce(resource);
+    protected VersionableStatisticalResource mockVersionableStatisticalResource(VersionableStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
+        mockNameableStatisticalResorce(resource, artefactType);
 
         setSpecialCasesVersionableStatisticalResourceMock(resource);
         return resource;
     }
 
-    protected NameableStatisticalResource mockNameableStatisticalResorce() {
+    protected NameableStatisticalResource mockNameableStatisticalResorce(TypeRelatedResourceEnum artefactType) {
         NameableStatisticalResource nameableResource = new NameableStatisticalResource();
-        mockNameableStatisticalResorce(nameableResource);
+        mockNameableStatisticalResorce(nameableResource, artefactType);
 
         return nameableResource;
     }
 
-    protected NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource) {
-        mockIdentifiableStatisticalResource(resource);
+    protected NameableStatisticalResource mockNameableStatisticalResorce(NameableStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
+        mockIdentifiableStatisticalResource(resource, artefactType);
         String resourceCode = resource.getCode();
 
         resource.setTitle(mockInternationalStringMetadata(resourceCode, "title"));
@@ -333,10 +355,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    protected IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource) {
+    protected IdentifiableStatisticalResource mockIdentifiableStatisticalResource(IdentifiableStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
         mockStatisticalResource(resource);
 
-        setSpecialCasesIdentifiableStatisticalResourceMock(resource);
+        setSpecialCasesIdentifiableStatisticalResourceMock(resource, artefactType);
         return resource;
     }
 
@@ -369,7 +391,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
 
-    protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource);
+    protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource, TypeRelatedResourceEnum artefactType);
     
     protected abstract void setSpecialCasesStatisticalResourceMock(StatisticalResource resource);
 

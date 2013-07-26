@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -12,7 +13,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -40,7 +41,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     private Query mockQuery(boolean withVersion) {
         Query query = new Query();
 
-        IdentifiableStatisticalResource identifiable = mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        IdentifiableStatisticalResource identifiable = mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.QUERY);
         query.setIdentifiableStatisticalResource(identifiable);
 
         if (withVersion) {
@@ -60,7 +61,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public QueryVersion mockQueryVersion(Query query, DatasetVersion datasetVersion, boolean isDatasetLastVersion) {
         QueryVersion queryVersion = new QueryVersion();
 
-        queryVersion.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource()));
+        queryVersion.setLifeCycleStatisticalResource(mockLifeCycleStatisticalResource(new LifeCycleStatisticalResource(), TypeRelatedResourceEnum.QUERY_VERSION));
 
         if (query == null) {
             query = mockQueryWithoutGeneratedQueryVersions();
@@ -111,7 +112,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     private Dataset mockDataset(boolean withVersion) {
         Dataset dataset = new Dataset();
-        dataset.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource()));
+        dataset.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASET));
         if (withVersion) {
             dataset.addVersion(mockDatasetVersion(dataset));
         }
@@ -128,7 +129,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     public DatasetVersion mockDatasetVersion(Dataset dataset) {
         DatasetVersion datasetVersion = mockDatasetVersionMetadata();
-        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.DATASET));
+        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION));
         String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getCode();
 
         datasetVersion.setBibliographicCitation(mockInternationalStringMetadata(datasetCode, "bibliographicCitation"));
@@ -160,7 +161,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public PublicationVersion mockPublicationVersion(Publication publication) {
         PublicationVersion publicationVersion = mockPublicationVersionMetadata();
 
-        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(StatisticalResourceTypeEnum.COLLECTION));
+        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.PUBLICATION_VERSION));
         if (publication != null) {
             publicationVersion.setPublication(publication);
         } else {
@@ -217,8 +218,39 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     }
 
     @Override
-    protected void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource) {
-        resource.setCode("resource-" + mockString(10));
+    protected void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
+        String code = "resource-" + mockString(10);
+        String[] maintainerAgencyId = new String[]{"agency01"};
+        String version = "001.000";
+        
+        // CODE
+        resource.setCode(code);
+        
+        // URN
+        switch (artefactType) {
+            case DATASET:
+                resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(maintainerAgencyId, code)); 
+                break;
+            case DATASET_VERSION:
+                resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(maintainerAgencyId, code, version));
+                break;
+            case PUBLICATION:
+                resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainerAgencyId, code));
+                break;
+            case PUBLICATION_VERSION:
+                resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainerAgencyId, code, version));
+                break;
+            case QUERY:
+                resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerAgencyId, code));
+                break;
+            case QUERY_VERSION:
+                resource.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerAgencyId, code, version));
+                break;
+
+            default:
+                // It's setting by fillIdentiyAndAuditMetadata in DBMockPersisterBase
+                break;
+        }
     }
     
     @Override

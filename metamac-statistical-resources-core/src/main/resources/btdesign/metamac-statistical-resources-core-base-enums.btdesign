@@ -65,7 +65,10 @@ Application StatisticalResourcesEnums {
     		QUERY_VERSION,
     		DATASET,
     		QUERY,
-    		PUBLICATION
+    		PUBLICATION,
+    		CHAPTER,
+    		CUBE,
+    		DATASOURCE
     	}
     }
 }

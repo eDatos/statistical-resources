@@ -32,10 +32,10 @@ public abstract class MockFactory<EntityMock> {
         } catch (NoSuchMethodException e) {
             return null;
         } catch (Exception e) {
-            throw new RuntimeException("Error creating mock "+id+" accesing to method "+methodName,e);
+            throw new RuntimeException("Error creating mock " + id + " accesing to method " + methodName, e);
         }
     }
-    
+
     protected List<EntityMock> getMocks(String... ids) {
         List<EntityMock> list = new ArrayList<EntityMock>();
         for (String id : ids) {
@@ -74,6 +74,7 @@ public abstract class MockFactory<EntityMock> {
         }
         return builder.toString();
     }
+
     private String toProperCase(String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
