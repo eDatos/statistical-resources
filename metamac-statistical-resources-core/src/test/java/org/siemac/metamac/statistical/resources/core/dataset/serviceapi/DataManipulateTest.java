@@ -338,7 +338,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         assertTrue(pagedResult.getValues().isEmpty());
     }
 
-    // @Test
+    @Test
     public void testImportPxDatasource() throws Exception {
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
@@ -385,8 +385,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished();
 
-        // DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
 
-        // assertNotNull(datasetRepositoryDto);
+        assertNotNull(datasetRepositoryDto);
     }
 }

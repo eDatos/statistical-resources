@@ -39,9 +39,8 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     private ValidateDataVersusDsd            validateDataVersusDsd            = null;
 
     public ManipulateSdmx21DataCallbackImpl(DataStructure dataStructure, SrmRestInternalService srmRestInternalService, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper,
-            DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, String datasetID) throws MetamacException {
-
-        this.validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService);
+            DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, String datasetID, ValidateDataVersusDsd validateDataVersusDsd) throws MetamacException {
+        this.validateDataVersusDsd = validateDataVersusDsd;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
         this.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
         this.repoDatasetID = datasetID;

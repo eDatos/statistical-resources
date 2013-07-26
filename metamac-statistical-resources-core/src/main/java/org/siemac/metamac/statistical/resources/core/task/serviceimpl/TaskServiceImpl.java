@@ -43,6 +43,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportD
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulatePxDataService;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.RecoveryImportDatasetJob;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -403,6 +404,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     private void processDatasets(TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
+
+        // Validator
+        ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService);
+
         // Callbacks
         ManipulateSdmx21DataCallbackImpl callback = null;
 
@@ -413,7 +418,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 if (callback == null) {
                     // Create the callback in the first appearance of a SDMX dataset
-                    callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade, taskInfoDataset.getRepoDatasetId());
+                    callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade,
+                            taskInfoDataset.getRepoDatasetId(), validateDataVersusDsd);
                 }
 
                 callback.setDataSourceID(dataSourceId);
@@ -423,7 +429,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
                 // TODO arreglar el service ctx
                 ServiceContext serviceContext = new ServiceContext("TODO", "TODO", "sdmx-srm-core");
-                manipulatePxDataService.importPx(serviceContext, fileDescriptor.getFile(), taskInfoDataset.getRepoDatasetId());
+                manipulatePxDataService.importPx(serviceContext, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getRepoDatasetId(), validateDataVersusDsd);
             } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 throw new UnsupportedOperationException("Import CSV");
             }
@@ -433,7 +439,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         // TODO llamar a un callback (o un metodo de rober) para que haga algo con la lista de datasources que se han importado
     }
-
     private String generateDataSourceId(String fileName, DateTime dateTime) {
         return fileName + "_" + dateTime.toString();
     }
