@@ -386,15 +386,16 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected void onNodeContextClick(String nodeName, ElementLevelDto elementLevelDto) {
         this.selectedContextClickElement = elementLevelDto;
-        // TODO enable/disable menu items
+        this.createChapterMenuItem.setEnabled(canCreateChapter());
+        this.createCubeMenuItem.setEnabled(canCreateCube());
+        this.deleteElementMenuItem.setEnabled(canDeleteElement(nodeName));
         showContextMenu();
-    }
 
+    }
     protected DetailViewerField[] getDetailViewerFields() {
         DetailViewerField titleField = new DetailViewerField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         DetailViewerField descriptionField = new DetailViewerField(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
         DetailViewerField urnField = new DetailViewerField(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
-        // TODO
         return new DetailViewerField[]{titleField, descriptionField, urnField};
     }
 
@@ -424,5 +425,29 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     public ElementLevelDto getSelectedContextClickElement() {
         return selectedContextClickElement;
+    }
+
+    private boolean canCreateChapter() {
+        // TODO Security
+
+        // Chapters cannot be created under a cube
+        if (selectedContextClickElement != null && selectedContextClickElement.getCube() != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean canCreateCube() {
+        // TODO Security
+        return true;
+    }
+
+    private boolean canDeleteElement(String nodeName) {
+        // TODO Security
+        if (SCHEME_NODE_NAME.equals(nodeName)) {
+            return false;
+        }
+        return true;
     }
 }
