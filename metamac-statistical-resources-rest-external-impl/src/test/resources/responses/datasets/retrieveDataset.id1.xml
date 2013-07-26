@@ -521,18 +521,7 @@
                 </cdomain:name>
             </cdomain:resource>
         </stat:isPartOf>
-        <stat:rightsHolder kind="structuralResources#organisationUnit">
-            <cdomain:id>rightsHolder</cdomain:id>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).rightsHolder</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/rightsHolder"/>
-            <cdomain:name>
-                <cdomain:text xml:lang="es">title-rightsHolder en Espanol</cdomain:text>
-            </cdomain:name>
-        </stat:rightsHolder>
         <stat:copyrightDate>2014-02-15T03:04:12Z</stat:copyrightDate>
-        <stat:license>
-            <cdomain:text xml:lang="es">license-resource-uqLIyu580w en Espanol</cdomain:text>
-        </stat:license>
         <stat:accessRights>
             <cdomain:text xml:lang="es">accessRights-resource-uqLIyu580w en Espanol</cdomain:text>
         </stat:accessRights>

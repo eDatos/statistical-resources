@@ -243,9 +243,9 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
         target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
 
-        target.setRightsHolder(toResourceExternalItemSrm(source.getRightsHolder(), selectedLanguages));
+        // target.setRightsHolder(toResourceExternalItemSrm(source.getRightsHolder(), selectedLanguages)); // TODO common-metadata
         target.setCopyrightDate(toDate(source.getCopyrightedDate()));
-        target.setLicense(toInternationalString(source.getLicense(), selectedLanguages));
+        // target.setLicense(toInternationalString(source.getLicense(), selectedLanguages)); // TODO common-metadata
         target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
 
         // Lifecycle
