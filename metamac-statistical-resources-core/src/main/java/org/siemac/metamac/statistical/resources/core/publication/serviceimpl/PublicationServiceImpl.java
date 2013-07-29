@@ -517,7 +517,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             Chapter targetParentChapter = retrieveChapter(ctx, targetParentChapterUrn);
             checkIfParentChapterIsInTheSamePublicationVersion(elementLevel, targetParentChapter);
 
-            // Check target parent is not children of this dimension (only when element is a dimension)
+            // Check target parent is not children of this chapter (only when element is a chapter)
             if (elementLevel.getChapter() != null) {
                 checkChapterIsNotChildren(ctx, elementLevel.getChapter(), targetParentChapter);
             }
@@ -592,16 +592,16 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
      */
     private void checkChapterIsNotChildren(ServiceContext ctx, Chapter chapter, Chapter parentChapter) throws MetamacException {
         // Set parent
-        Chapter chapterParent = null;
+        ElementLevel chapterParentElementLevel = null;
         if (parentChapter.getElementLevel().getParent() != null) {
-            chapterParent = parentChapter.getElementLevel().getParent().getChapter();
+            chapterParentElementLevel = parentChapter.getElementLevel().getParent();
         }
 
-        while (chapterParent != null) {
-            if (chapterParent.getNameableStatisticalResource().getUrn().equals(chapter.getNameableStatisticalResource().getUrn())) {
+        while (chapterParentElementLevel != null) {
+            if (chapterParentElementLevel.isChapter() && chapterParentElementLevel.getChapter().getNameableStatisticalResource().getUrn().equals(chapter.getNameableStatisticalResource().getUrn())) {
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PARENT);
             }
-            chapterParent = chapterParent.getElementLevel().getParent().getChapter();
+            chapterParentElementLevel = chapterParentElementLevel.getParent();
         }
     }
 

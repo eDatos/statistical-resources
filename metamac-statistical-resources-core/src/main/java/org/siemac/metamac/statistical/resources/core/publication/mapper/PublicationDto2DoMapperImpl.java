@@ -183,8 +183,6 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
                     exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getUrn(), target.getNameableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__NAMEABLE_STATISTICAL_RESOURCE__URN,
                     exceptions);
-            // ValidationUtils.checkMetadataUnmodifiable(source.getQueryUrn(), target.getQueryUrn(), ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
-            // ValidationUtils.checkMetadataUnmodifiable(source.getDatasetUrn(), target.getDatasetUrn(), ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 
@@ -201,14 +199,22 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         if (source.getParentChapterUrn() != null) {
             Chapter parentChapter = chapterRepository.retrieveChapterByUrn(source.getParentChapterUrn());
             target.getElementLevel().setParent(parentChapter.getElementLevel());
+        } else {
+            target.getElementLevel().setParent(null);
         }
+        
         if (source.getDatasetUrn() != null) {
             Dataset dataset = datasetRepository.retrieveByUrn(source.getDatasetUrn());
             target.setDataset(dataset);
+        } else {
+            target.setDataset(null);
         }
+        
         if (source.getQueryUrn() != null) {
             Query query = queryRepository.retrieveByUrn(source.getQueryUrn());
             target.setQuery(query);
+        } else {
+            target.setQuery(null);
         }
 
         return target;
