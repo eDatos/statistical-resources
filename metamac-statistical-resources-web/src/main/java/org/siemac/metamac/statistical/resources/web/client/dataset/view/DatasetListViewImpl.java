@@ -49,9 +49,9 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
 
     private VLayout                  panel;
-    
+
     private SearchSectionStack       searchSectionStack;
-    
+
     private ToolStripButton          newDatasetButton;
     private ToolStripButton          deleteDatasetButton;
 
@@ -106,7 +106,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         toolStrip.addButton(newDatasetButton);
         toolStrip.addButton(deleteDatasetButton);
-        
+
         // Search
 
         searchSectionStack = new SearchSectionStack();

@@ -7,10 +7,9 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetStatisticOfficialities {
 
     @Out(1)
     List<StatisticOfficialityDto> statisticOfficialities;
-    
 }

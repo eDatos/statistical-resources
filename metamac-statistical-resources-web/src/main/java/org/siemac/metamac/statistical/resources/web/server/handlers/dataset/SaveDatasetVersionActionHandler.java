@@ -19,10 +19,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 public class SaveDatasetVersionActionHandler extends SecurityActionHandler<SaveDatasetVersionAction, SaveDatasetVersionResult> {
 
     @Autowired
-    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+    private StatisticalResourcesServiceFacade       statisticalResourcesServiceFacade;
 
     @Autowired
-    private StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
+    private StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 
     public SaveDatasetVersionActionHandler() {
         super(SaveDatasetVersionAction.class);

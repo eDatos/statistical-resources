@@ -37,11 +37,11 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
         super();
         CustomDateItem dateNextUpdate = createDateNextUpdateItem();
         updateFrequency = createUpdateFrequencyItem();
-        
+
         CustomSelectItem statisticOfficiality = new CustomSelectItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
         statisticOfficiality.setValueMap(CommonUtils.getStatisticOfficialityHashMap());
         statisticOfficiality.addChangedHandler(FormItemUtils.getMarkForRedrawChangedHandler(this));
-        
+
         ViewMultiLanguageTextItem bibliographicCitation = new ViewMultiLanguageTextItem(DatasetDS.BIBLIOGRAPHIC_CITATION, getConstants().datasetBibliographicCitation());
 
         addFields(dateNextUpdate, updateFrequency, statisticOfficiality, bibliographicCitation);
@@ -61,7 +61,7 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
         setValue(DatasetDS.DATE_NEXT_UPDATE, datasetDto.getDateNextUpdate());
         setExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY), datasetDto.getUpdateFrequency());
         setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, RecordUtils.getInternationalStringRecord(datasetDto.getBibliographicCitation()));
-        
+
         if (datasetDto.getStatisticOfficiality() != null) {
             setValue(DatasetDS.STATISTIC_OFFICIALITY, datasetDto.getStatisticOfficiality().getIdentifier());
         }
@@ -71,7 +71,7 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
         datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
         datasetDto.setDateNextUpdate(getDate(getItem(DatasetDS.DATE_NEXT_UPDATE)));
         datasetDto.setUpdateFrequency(getExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY)));
-        
+
         String statisticOfficialityIdentifier = getValueAsString(DatasetDS.STATISTIC_OFFICIALITY);
         if (!StringUtils.isEmpty(statisticOfficialityIdentifier)) {
             datasetDto.setStatisticOfficiality(CommonUtils.getStatisticOfficialityByIdentifier(statisticOfficialityIdentifier));

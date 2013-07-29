@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 @Component
-public class GetStatisticOfficialitiesActionHandler extends SecurityActionHandler<GetStatisticOfficialitiesAction, GetStatisticOfficialitiesResult>{
+public class GetStatisticOfficialitiesActionHandler extends SecurityActionHandler<GetStatisticOfficialitiesAction, GetStatisticOfficialitiesResult> {
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-        
+
     public GetStatisticOfficialitiesActionHandler() {
         super(GetStatisticOfficialitiesAction.class);
     }
-    
+
     @Override
     public GetStatisticOfficialitiesResult executeSecurityAction(GetStatisticOfficialitiesAction action) throws ActionException {
         try {

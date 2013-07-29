@@ -146,17 +146,18 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
         publicationWebCriteria.setStatisticalOperationUrn(urn);
 
-        dispatcher.execute(new GetPublicationVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationWebCriteria), new WaitingAsyncCallback<GetPublicationVersionsResult>() {
+        dispatcher.execute(new GetPublicationVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationWebCriteria),
+                new WaitingAsyncCallback<GetPublicationVersionsResult>() {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(GetPublicationVersionsResult result) {
-                getView().setPublications(result.getPublicationDtos());
-            }
-        });
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
+                    }
+                    @Override
+                    public void onWaitSuccess(GetPublicationVersionsResult result) {
+                        getView().setPublications(result.getPublicationDtos());
+                    }
+                });
     }
 
     @Override

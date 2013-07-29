@@ -24,7 +24,7 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 public class CommonUtils {
 
     private static Map<String, StatisticOfficialityDto> statisticOfficialitiesMap;
-    
+
     // -----------------------------------------------------------------------------------------
     // PROC STATUS
     // -----------------------------------------------------------------------------------------
@@ -136,16 +136,16 @@ public class CommonUtils {
         }
         return StringUtils.EMPTY;
     }
-    
+
     public static LinkedHashMap<String, String> getStatisticOfficialityHashMap() {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put(new String(), new String());
-        for (Entry<String,StatisticOfficialityDto> entry: statisticOfficialitiesMap.entrySet()) {
+        for (Entry<String, StatisticOfficialityDto> entry : statisticOfficialitiesMap.entrySet()) {
             map.put(entry.getKey(), getStatisticOfficialityName(entry.getValue()));
         }
         return map;
     }
-    
+
     public static StatisticOfficialityDto getStatisticOfficialityByIdentifier(String identifier) {
         return statisticOfficialitiesMap.get(identifier);
     }
@@ -172,14 +172,13 @@ public class CommonUtils {
         return StringUtils.EMPTY;
     }
 
-    
     public static void setStatisticOfficialities(List<StatisticOfficialityDto> statisticOfficialities) {
         CommonUtils.statisticOfficialitiesMap = new HashMap<String, StatisticOfficialityDto>();
         for (StatisticOfficialityDto officiality : statisticOfficialities) {
             CommonUtils.statisticOfficialitiesMap.put(officiality.getIdentifier(), officiality);
         }
     }
-    
+
     // TODO: FORMAT WILL NOT BE USED in STAT REOSURCES
     // public static LinkedHashMap<String, String> getStatisticalResourceFormatHashMap() {
     // if (statisticalResourceFormatHashMap == null) {
