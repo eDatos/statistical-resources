@@ -28,7 +28,7 @@ public class RestMapper {
         // target.setCodeNested(source.getNestedId()); // TODO nestedId
         externalItem.setUri(resource.getSelfLink().getHref());
         externalItem.setUrn(resource.getUrn());
-        externalItem.setUrnInternal(resource.getUrnInternal());
+        externalItem.setUrnInternal(resource.getUrnSiemac());
         externalItem.setType(type);
         externalItem.setManagementAppUrl(resource.getManagementAppLink()); // TODO no falta quitar endpoint??
         externalItem.setTitle(getInternationalStringFromInternationalStringResource(resource.getName()));

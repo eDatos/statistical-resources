@@ -29,8 +29,6 @@ import org.siemac.metamac.statistical.resources.core.invocation.constants.RestCo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
-
 @Component
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
@@ -71,7 +69,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             DataStructures dsds = findDsds(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : dsds.getDataStructures()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -101,7 +99,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             ConceptSchemes conceptSchemes = findConceptSchemes(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : conceptSchemes.getConceptSchemes()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -171,7 +169,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Concepts concepts = findConcepts(null, firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : concepts.getConcepts()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -201,7 +199,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Codelists codelists = findCodelists(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : codelists.getCodelists()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -256,16 +254,16 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Codes codes = findCodes(null, firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : codes.getCodes()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
     }
-    
+
     @Override
-    public Code retrieveCodeByUrn(String urn)  throws MetamacException {
+    public Code retrieveCodeByUrn(String urn) throws MetamacException {
         try {
             String[] params = UrnUtils.splitUrnItem(urn);
             String agencyId = params[0];
@@ -277,7 +275,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-    
+
     /*
      * Organisation Schemes
      */
@@ -300,7 +298,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             OrganisationSchemes organisationSchemes = findOrganisationSchemes(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : organisationSchemes.getOrganisationSchemes()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -329,7 +327,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Organisations organisations = findOrganisations(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : organisations.getOrganisations()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -337,7 +335,6 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    
     /*
      * CATEGORY SCHEMES
      */
@@ -360,7 +357,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             CategorySchemes categorySchemes = findCategorySchemes(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : categorySchemes.getCategorySchemes()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
@@ -390,14 +387,13 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Categories categories = findCategories(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : categories.getCategories()) {
-                urns.add(resource.getUrnInternal());
+                urns.add(resource.getUrnSiemac());
             }
             return urns;
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
     }
-    
 
     @Override
     public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException {
@@ -412,7 +408,6 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-    
 
     private MetamacException manageSrmInternalRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_SRM_INTERNAL, restApiLocator.getSrmRestInternalFacadeV10());
