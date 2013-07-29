@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
@@ -54,7 +55,7 @@ public class FillMetadataForCreateResourceUtils {
     }
 
     public static void fillMetadataForCreateStatistiscalResource(IdentifiableStatisticalResource resource, ExternalItem statisticalOperation) {
-        resource.setStatisticalOperation(statisticalOperation);
+        resource.setStatisticalOperation(CommonVersioningCopyUtils.copyExternalItem(statisticalOperation));
     }
     
 }
