@@ -2076,7 +2076,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         // Check updatedChapter
         assertNull(updatedCube.getElementLevel().getParent());
         assertEquals(Long.valueOf(5), updatedCube.getElementLevel().getOrderInLevel());
-
+ 
         // Commit
         transactionManager.commit(status);
 

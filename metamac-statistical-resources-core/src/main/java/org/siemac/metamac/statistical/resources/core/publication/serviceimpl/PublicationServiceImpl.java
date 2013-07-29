@@ -214,7 +214,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create element level
         ElementLevel elementLevel = createChapterElementLevel(ctx, publicationVersion, chapter);
-        
+
         return elementLevel.getChapter();
     }
 
@@ -233,9 +233,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdateChapter(ctx, chapter);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
-        
+
         updateLastUpdateMetadata(publicationVersion);
-        
+
         // Save
         return getChapterRepository().save(chapter);
     }
@@ -291,13 +291,13 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Create element level
         ElementLevel elementLevel = createCubeElementLevel(ctx, publicationVersion, cube);
-        
+
         return elementLevel.getCube();
     }
 
     private Cube fillMetadataForCreateCube(ServiceContext ctx, Cube cube, ExternalItem statisticalOperation) {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateNameableResource(cube.getNameableStatisticalResource(), statisticalOperation);
-        
+
         String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
         cube.getNameableStatisticalResource().setCode(code);
         cube.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
@@ -311,9 +311,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdateCube(ctx, cube);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, cube.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
-        
+
         updateLastUpdateMetadata(publicationVersion);
-        
+
         // Save
         return getCubeRepository().save(cube);
     }
@@ -409,9 +409,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         } else {
             elementLevel = addToParentLevel(ctx, publicationVersion, elementLevel);
         }
-        
+
         updateLastUpdateMetadata(publicationVersion);
-        
+
         return elementLevel;
     }
 
@@ -662,6 +662,15 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
+        // Get order of the element that will be deleted
+        Long orderInLevelOfDeletedElement = elementLevel.getOrderInLevel();
+        
+        // Delete
+        getElementLevelRepository().delete(elementLevel);
+
+        // Update publicationVersion
+        publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
+        
         // Update orders of other elements in level
         List<ElementLevel> elementsAtLevel = null;
         if (elementLevel.getParent() == null) {
@@ -669,15 +678,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         } else {
             elementsAtLevel = elementLevel.getParent().getChildren();
         }
-        elementsAtLevel.remove(elementLevel);
-        updatePublicationVersionElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, elementLevel, elementLevel.getOrderInLevel());
 
-        // Delete
-        getElementLevelRepository().delete(elementLevel);
-        
+        updatePublicationVersionElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, elementLevel, orderInLevelOfDeletedElement);
+
         updateLastUpdateMetadata(publicationVersion);
     }
-    
+
     private void updateLastUpdateMetadata(PublicationVersion publicationVersion) {
         publicationVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
         getPublicationVersionRepository().save(publicationVersion);
