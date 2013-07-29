@@ -52,7 +52,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 
 public class SrmMockUtils {
 
@@ -419,43 +419,43 @@ public class SrmMockUtils {
         return conceptRepresentation;
     }
 
-    private static List<ResourceInternal> buildResourcesInternalCodes(List<CodeType> codes) {
-        List<ResourceInternal> resources = new ArrayList<ResourceInternal>();
+    private static List<ItemResourceInternal> buildResourcesInternalCodes(List<CodeType> codes) {
+        List<ItemResourceInternal> resources = new ArrayList<ItemResourceInternal>();
         for (CodeType code : codes) {
             resources.add(buildResourceInternalFromCode(code));
         }
         return resources;
     }
 
-    private static List<ResourceInternal> buildResourcesInternalConcepts(List<ConceptType> concepts) {
-        List<ResourceInternal> resources = new ArrayList<ResourceInternal>();
+    private static List<ItemResourceInternal> buildResourcesInternalConcepts(List<ConceptType> concepts) {
+        List<ItemResourceInternal> resources = new ArrayList<ItemResourceInternal>();
         for (ConceptType concept : concepts) {
             resources.add(buildResourceInternalFromConcept(concept));
         }
         return resources;
     }
 
-    private static ResourceInternal buildResourceInternalFromCode(CodeType code) {
-        ResourceInternal resource = new ResourceInternal();
+    private static ItemResourceInternal buildResourceInternalFromCode(CodeType code) {
+        ItemResourceInternal resource = new ItemResourceInternal();
         ResourceLink link = new ResourceLink();
         link.setHref(code.getUri());
         resource.setSelfLink(link);
         resource.setId(code.getId());
         resource.setUrn(code.getUrn());
-        resource.setUrnInternal(code.getUrn());
+        resource.setUrnSiemac(code.getUrn());
         resource.setName(buildInternationalStringFromTextType(code.getNames()));
         resource.setManagementAppLink("http://" + code.getId());
         return resource;
     }
 
-    private static ResourceInternal buildResourceInternalFromConcept(ConceptType concept) {
-        ResourceInternal resource = new ResourceInternal();
+    private static ItemResourceInternal buildResourceInternalFromConcept(ConceptType concept) {
+        ItemResourceInternal resource = new ItemResourceInternal();
         ResourceLink link = new ResourceLink();
         link.setHref(concept.getUri());
         resource.setSelfLink(link);
         resource.setId(concept.getId());
         resource.setUrn(concept.getUrn());
-        resource.setUrnInternal(concept.getUrn());
+        resource.setUrnSiemac(concept.getUrn());
         resource.setName(buildInternationalStringFromTextType(concept.getNames()));
         resource.setManagementAppLink("http://" + concept.getId());
         return resource;
