@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
@@ -359,41 +360,56 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     }
 
     private void setPublicationEditionMode(PublicationVersionDto publicationDto) {
+
+        String[] requiredFieldsToNextProcStatus = RequiredFieldUtils.getPublicationRequiredFieldsToNextProcStatus(publicationDto.getProcStatus());
+
         // Identifiers form
         identifiersEditionForm.setNameableStatisticalResourceDto(publicationDto);
+        identifiersEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Content descriptors form
         contentDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        contentDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Common metadata
         commonMetadataEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        commonMetadataEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Thematic content classifiers
         thematicContentClassifiersEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        thematicContentClassifiersEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Languages
         languageEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        languageEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Production descriptors
         productionDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        productionDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Class descriptors
         classDescriptorsEditionForm.setPublicationDto(publicationDto);
+        classDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Resource relation descriptors
         resourceRelationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        resourceRelationDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Publication descriptors
         publicationDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        publicationDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Life cycle
         lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
+        lifeCycleEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Version
         versionEditionForm.setLifeCycleStatisticalResourceDto(publicationDto);
+        versionEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Intellectual property descriptors
         intellectualPropertyDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        intellectualPropertyDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
     }
 
     @Override

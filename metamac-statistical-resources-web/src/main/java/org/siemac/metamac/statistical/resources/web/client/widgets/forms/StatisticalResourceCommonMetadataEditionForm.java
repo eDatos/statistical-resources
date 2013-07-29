@@ -33,7 +33,6 @@ public class StatisticalResourceCommonMetadataEditionForm extends NavigationEnab
         super(getConstants().formCommonMetadata());
 
         commonConfiguration = createCommonMetadataItem(StatisticalResourceDS.COMMON_METADATA, getConstants().commonMetadata());
-        commonConfiguration.setRequired(true);
 
         setFields(commonConfiguration);
     }

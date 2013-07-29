@@ -2,9 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.model.ds;
 
 public class LifeCycleResourceDS extends VersionableResourceDS {
 
-    // CONTENT DESCRIPTORS
-    public static final String DESCRIPTION                = "lc-desc";
-
     // LIFE CYCLE
     public static final String PROC_STATUS                = "lc-proc-status";
     public static final String CREATION_DATE              = "lc-creat-date";
