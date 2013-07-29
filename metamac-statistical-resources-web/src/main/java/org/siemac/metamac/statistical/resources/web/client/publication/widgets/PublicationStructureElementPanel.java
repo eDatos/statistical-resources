@@ -9,12 +9,17 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.SearchCustomLinkItem;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleStatisticalRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
+import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomLinkItem;
@@ -31,6 +36,8 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationStructureElementPanel extends VLayout {
@@ -39,7 +46,7 @@ public class PublicationStructureElementPanel extends VLayout {
     private GroupDynamicForm                                      form;
     private GroupDynamicForm                                      editionForm;
 
-    private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetWindow; // TODO
+    private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetWindow;
 
     private RelatedResourceDto                                    publicationVersion;
     private NameableStatisticalResourceDto                        element;
@@ -160,7 +167,7 @@ public class PublicationStructureElementPanel extends VLayout {
 
         // Dataset
 
-        SearchCustomLinkItem dataset = new SearchCustomLinkItem(ElementLevelDS.DATASET, getConstants().dataset());
+        SearchCustomLinkItem dataset = createSearchDatasetItem(ElementLevelDS.DATASET, getConstants().dataset());
         dataset.setRequired(true);
         dataset.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -245,7 +252,7 @@ public class PublicationStructureElementPanel extends VLayout {
                 resourceTypeToLink = StatisticalResourceTypeEnum.QUERY.name();
             }
             editionForm.setValue(ElementLevelDS.RESOURCE_TYPE_TO_LINK, resourceTypeToLink);
-            ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).setValue(cubeDto.getDatasetUrn(), null);
+            setDatasetInEditionForm(cubeDto.getDatasetUrn());
             ((CustomLinkItem) editionForm.getItem(ElementLevelDS.QUERY)).setValue(cubeDto.getQueryUrn(), null);
         } else {
             editionForm.setValue(ElementLevelDS.RESOURCE_TYPE_TO_LINK, StringUtils.EMPTY);
@@ -254,7 +261,16 @@ public class PublicationStructureElementPanel extends VLayout {
         }
 
         editionForm.markForRedraw();
-        editionForm.validate(false);
+
+        if (element.getId() == null) {
+            editionForm.clearErrors(true);
+        } else {
+            editionForm.validate(false);
+        }
+    }
+
+    private void setDatasetInEditionForm(String datasetUrn) {
+        ((CustomLinkItem) editionForm.getItem(ElementLevelDS.DATASET)).setValue(datasetUrn, null);
     }
 
     public NameableStatisticalResourceDto getSelectedElement() {
@@ -300,40 +316,58 @@ public class PublicationStructureElementPanel extends VLayout {
     // FORM ITEMS
     //
 
-    // private SearchViewTextItem createSearchDatasetItem(String name, String title) {
+    private SearchCustomLinkItem createSearchDatasetItem(String name, String title) {
+
+        final SearchCustomLinkItem datasetItem = new SearchCustomLinkItem(name, title);
+        datasetItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+
+                searchDatasetWindow = new SearchSingleStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<StatisticalResourceWebCriteria>() {
+
+                            @Override
+                            public void retrieveResultSet(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+                                getUiHandlers().retrieveDatasets(firstResult, maxResults, criteria);
+                            }
+                        });
+
+                // Load statistical operations to filter datasets
+                getUiHandlers().retrieveStatisticalOperationsForDatasetSelection();
+
+                searchDatasetWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        RelatedResourceDto selectedResource = searchDatasetWindow.getSelectedResource();
+                        searchDatasetWindow.markForDestroy();
+                        // Set selected resource in form
+                        setDatasetInEditionForm(selectedResource != null ? selectedResource.getUrn() : StringUtils.EMPTY);
+                        editionForm.validate(false);
+                    }
+                });
+            }
+        });
+        datasetItem.setRequired(true);
+        return datasetItem;
+    }
+
     //
-    // final SearchViewTextItem datasetItem = new SearchViewTextItem(name, title);
-    // datasetItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+    // RELATED RESOURCES
     //
-    // @Override
-    // public void onFormItemClick(FormItemIconClickEvent event) {
-    //
-    // searchDatasetWindow = new SearchSingleStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-    // new SearchPaginatedAction<StatisticalResourceWebCriteria>() {
-    //
-    // @Override
-    // public void retrieveResultSet(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
-    // getUiHandlers().retrieveDatasets(firstResult, maxResults, criteria);
-    // }
-    // });
-    //
-    // retrieveStatisticalOperationsForDatasetSelection();
-    //
-    // searchDatasetWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-    //
-    // @Override
-    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-    // RelatedResourceDto selectedResource = searchDatasetWindow.getSelectedResource();
-    // searchDatasetWindow.markForDestroy();
-    // // Set selected resource in form
-    // // TODO setSelectedDataset(selectedResource);
-    // editionForm.validate(false);
-    // }
-    // });
-    // }
-    //
-    // });
-    // datasetItem.setRequired(true);
-    // return datasetItem;
-    // }
+
+    public void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result) {
+        if (searchDatasetWindow != null) {
+            searchDatasetWindow.setStatisticalOperations(result.getOperationsList());
+            getUiHandlers().retrieveDatasets(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchDatasetWindow.getSearchCriteria());
+        }
+    }
+
+    public void setDatasetsForCubes(GetDatasetsResult result) {
+        if (searchDatasetWindow != null) {
+            searchDatasetWindow.setResources(result.getDatasets());
+            searchDatasetWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), result.getDatasets().size(), result.getTotalResults());
+        }
+    }
 }
