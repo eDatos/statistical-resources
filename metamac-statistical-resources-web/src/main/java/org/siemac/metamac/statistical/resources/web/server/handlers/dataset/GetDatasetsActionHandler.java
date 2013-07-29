@@ -6,7 +6,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -31,9 +30,6 @@ public class GetDatasetsActionHandler extends SecurityActionHandler<GetDatasetsA
     public GetDatasetsResult executeSecurityAction(GetDatasetsAction action) throws ActionException {
 
         MetamacCriteria criteria = new MetamacCriteria();
-
-        // Order
-        criteria.getOrdersBy().add(MetamacWebCriteriaUtils.buildMetamacCriteriaLastUpdatedOrder());
 
         // Criteria
         // TODO criteria
