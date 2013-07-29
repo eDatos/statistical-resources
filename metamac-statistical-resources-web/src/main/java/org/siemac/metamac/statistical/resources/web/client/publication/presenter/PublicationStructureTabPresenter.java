@@ -37,6 +37,8 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.SavePubli
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
@@ -73,6 +75,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         // Related resources
         void setDatasetsForCubes(GetDatasetsResult result);
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
+        void setQueriesForCubes(GetQueriesResult result);
+        void setStatisticalOperationsForQuerySelection(GetStatisticalOperationsPaginatedListResult result);
     }
 
     @ProxyCodeSplit
@@ -196,7 +200,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     //
 
     @Override
-    public void retrieveDatasets(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+    public void retrieveDatasetsForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
         dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
 
             @Override
@@ -217,6 +221,32 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForDatasetSelection(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveQueriesForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetQueriesAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueriesResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(GetQueriesResult result) {
+                getView().setQueriesForCubes(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForQuerySelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForQuerySelection(result);
             }
         });
     }

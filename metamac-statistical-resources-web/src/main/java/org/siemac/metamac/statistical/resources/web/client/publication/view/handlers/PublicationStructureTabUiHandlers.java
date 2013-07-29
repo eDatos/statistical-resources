@@ -11,6 +11,9 @@ public interface PublicationStructureTabUiHandlers extends BaseUiHandlers {
     void updateElementLocation(String publicationVersionUrn, String elementUrn, String parentTargetUrn, Long orderInLevel);
     void goToLastVersion(String urn);
 
-    void retrieveDatasets(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
+    void retrieveDatasetsForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
     void retrieveStatisticalOperationsForDatasetSelection();
+
+    void retrieveQueriesForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
+    void retrieveStatisticalOperationsForQuerySelection();
 }

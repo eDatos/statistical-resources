@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.P
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.TreeNodeClickAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -138,5 +139,15 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
     @Override
     public void setDatasetsForCubes(GetDatasetsResult result) {
         publicationStructureElementPanel.setDatasetsForCubes(result);
+    }
+
+    @Override
+    public void setStatisticalOperationsForQuerySelection(GetStatisticalOperationsPaginatedListResult result) {
+        publicationStructureElementPanel.setStatisticalOperationsForQuerySelection(result);
+    }
+
+    @Override
+    public void setQueriesForCubes(GetQueriesResult result) {
+        publicationStructureElementPanel.setQueriesForCubes(result);
     }
 }
