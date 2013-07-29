@@ -272,6 +272,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                         relativePosition--;
                     }
 
+                    relativePosition++;
+
                     String newItemParent = SCHEME_NODE_NAME.equals(dropFolder.getName()) ? SCHEME_NODE_NAME : dropFolder.getAttribute(ElementLevelDS.URN);
 
                     if (SCHEME_NODE_NAME.equals(newItemParent)) {
