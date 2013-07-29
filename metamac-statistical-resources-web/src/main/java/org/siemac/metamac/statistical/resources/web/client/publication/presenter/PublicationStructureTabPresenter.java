@@ -70,6 +70,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         void setPublicationStructure(PublicationStructureDto publicationStructureDto);
         void setPublicationStructure(PublicationStructureDto publicationStructureDto, NameableStatisticalResourceDto selectedElement);
 
+        // Related resources
+        void setDatasetsForCubes(GetDatasetsResult result);
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
     }
 
@@ -203,8 +205,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
-                // TODO Auto-generated method stub
-
+                getView().setDatasetsForCubes(result);
             }
         });
     }

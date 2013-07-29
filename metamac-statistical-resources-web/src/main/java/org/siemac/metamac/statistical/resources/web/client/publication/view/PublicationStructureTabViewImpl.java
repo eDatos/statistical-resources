@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureElementPanel;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.TreeNodeClickAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -21,6 +22,8 @@ import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<PublicationStructureTabUiHandlers> implements PublicationStructureTabView {
+
+    public static Long                       FIST_TREE_ELEMENT_POSITION = 1L;
 
     private VLayout                          panel;
     private PublicationStructureTreeGrid     publicationStructureTreeGrid;
@@ -48,7 +51,7 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
                 ElementLevelDto selectedContextClickElement = publicationStructureTreeGrid.getSelectedContextClickElement();
 
                 ChapterDto chapterDto = new ChapterDto();
-                chapterDto.setOrderInLevel(1L); // TODO create in the first position or in the last one?
+                chapterDto.setOrderInLevel(FIST_TREE_ELEMENT_POSITION);
                 if (selectedContextClickElement != null && selectedContextClickElement.getChapter() != null) {
                     chapterDto.setParentChapterUrn(selectedContextClickElement.getChapter().getUrn());
                 }
@@ -64,7 +67,7 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
                 ElementLevelDto selectedContextClickElement = publicationStructureTreeGrid.getSelectedContextClickElement();
 
                 CubeDto cubeDto = new CubeDto();
-                cubeDto.setOrderInLevel(1L); // TODO create in the first position or in the last one?
+                cubeDto.setOrderInLevel(FIST_TREE_ELEMENT_POSITION);
                 if (selectedContextClickElement != null && selectedContextClickElement.getChapter() != null) {
                     cubeDto.setParentChapterUrn(selectedContextClickElement.getChapter().getUrn());
                 }
@@ -123,9 +126,17 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
         publicationStructureElementPanel.setMainFormLayoutEditionMode();
     }
 
+    //
+    // RELATED RESOURCES
+    //
+
     @Override
     public void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result) {
-        // TODO Auto-generated method stub
+        publicationStructureElementPanel.setStatisticalOperationsForDatasetSelection(result);
+    }
 
+    @Override
+    public void setDatasetsForCubes(GetDatasetsResult result) {
+        publicationStructureElementPanel.setDatasetsForCubes(result);
     }
 }
