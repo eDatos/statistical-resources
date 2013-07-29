@@ -19,7 +19,7 @@ public class RestMapper {
         for (ResourceInternal resource : resources) {
             externalItems.add(buildExternalItemFromSrmResource(resource, type));
         }
-        return externalItems;
+        return externalItems; 
     }
 
     public static ExternalItem buildExternalItemFromSrmResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {

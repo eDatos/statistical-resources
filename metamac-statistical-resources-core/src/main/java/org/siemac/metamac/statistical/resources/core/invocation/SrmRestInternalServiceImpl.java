@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.invocation.constants.RestCo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+
 @Component
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
@@ -261,9 +263,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-
+    
     @Override
-    public Code retrieveCodeByUrn(String urn) throws MetamacException {
+    public Code retrieveCodeByUrn(String urn)  throws MetamacException {
         try {
             String[] params = UrnUtils.splitUrnItem(urn);
             String agencyId = params[0];
@@ -275,7 +277,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-
+    
     /*
      * Organisation Schemes
      */
@@ -335,6 +337,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
+    
     /*
      * CATEGORY SCHEMES
      */
@@ -394,6 +397,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
+    
 
     @Override
     public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException {
@@ -408,6 +412,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
+    
 
     private MetamacException manageSrmInternalRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_SRM_INTERNAL, restApiLocator.getSrmRestInternalFacadeV10());
