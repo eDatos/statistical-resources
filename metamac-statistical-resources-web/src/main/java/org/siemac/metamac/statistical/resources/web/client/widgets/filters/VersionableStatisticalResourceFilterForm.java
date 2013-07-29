@@ -39,6 +39,7 @@ public class VersionableStatisticalResourceFilterForm<T extends VersionableStati
     }
 
     // IMPORTANT: This method must be inherited if you change the WebCriteria in T
+    @SuppressWarnings("unchecked")
     @Override
     public T getSearchCriteria() {
         VersionableStatisticalResourceWebCriteria searchCriteria = new VersionableStatisticalResourceWebCriteria();
@@ -55,5 +56,4 @@ public class VersionableStatisticalResourceFilterForm<T extends VersionableStati
     public List<FacetFilter> getFacets() {
         return Arrays.asList(statisticalOperationFacet, onlyLastVersionFacet, criteriaFacet);
     }
-
 }
