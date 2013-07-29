@@ -94,6 +94,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     public static final String               DATA_PX_ECB_EXR_RG              = "/px/ecb_exr_rg.px";
 
+    public static final String               DATA_TSV_ECB_EXR_RG             = "/csv/ecb_exr_rg.tsv";
+
     public static final String               URN_DSD_ECB_EXR_RG              = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
 
     @Autowired
@@ -389,4 +391,57 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
         assertNotNull(datasetRepositoryDto);
     }
+
+    @Test
+    public void testImportCsvDatasource() throws Exception {
+        // New Transaction: Because the job needs persisted data
+        final TransactionTemplate tt = new TransactionTemplate(transactionManager);
+        tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        tt.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            public void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+
+                    // File 01
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_TSV_ECB_EXR_RG, "/"));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_TSV_ECB_EXR_RG).toURI()));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.CSV);
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    // // File 02
+                    // {
+                    // FileDescriptor fileDescriptorDto = new FileDescriptor();
+                    // fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
+                    // fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_GEN_ECB_EXR_RG_FLAT).toURI()));
+                    // fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                    // taskInfoDataset.addFile(fileDescriptorDto);
+                    // }
+
+                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+
+                } catch (MetamacException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
+            }
+        });
+
+        // Wait until the job is finished
+        waitUntilJobFinished();
+
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+
+        assertNotNull(datasetRepositoryDto);
+    }
+
 }

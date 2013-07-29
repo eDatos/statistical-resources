@@ -10,11 +10,9 @@ import org.apache.commons.lang.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
@@ -32,7 +30,6 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
 @Component(value = "metamacSdmx2StatRepoMapper")
 public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMapper {
 
-    public static String DATA_SOURCE_ID              = "DATA_SOURCE_ID";
     public static String ATTRIBUTE_GEN_KEY_SEPARATOR = ":";
 
     @Override
@@ -64,7 +61,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
             dataDto.setPrimaryMeasure(observation.getObservationValue().getValue());
 
             // Attributes *************************
-            dataDto.addAttribute(createDataSourceIdentificationAttribute(dataDto.getCodesDimension(), datasourceId)); // Add identification datasource attribute
+            dataDto.addAttribute(ManipulateDataUtils.createDataSourceIdentificationAttribute(dataDto.getCodesDimension(), datasourceId)); // Add identification datasource attribute
 
             for (IdValuePair idValuePair : observation.getAttributes()) {
                 AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
@@ -99,7 +96,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
                 dataDto.setPrimaryMeasure(observation.getObservationValue().getValue());
 
                 // Attributes *************************
-                dataDto.addAttribute(createDataSourceIdentificationAttribute(dataDto.getCodesDimension(), datasourceId)); // Add identification datasource attribute
+                dataDto.addAttribute(ManipulateDataUtils.createDataSourceIdentificationAttribute(dataDto.getCodesDimension(), datasourceId)); // Add identification datasource attribute
 
                 for (IdValuePair idValuePair : observation.getAttributes()) {
                     AttributeDto attributeDto = processAttribute(dataDto.getCodesDimension(), idValuePair);
@@ -331,36 +328,4 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
         return codeDimensionDtos;
     }
 
-    /**
-     * Create a data source extra identification attribute
-     * 
-     * @param keys
-     * @param dataSourceId
-     * @return AttributeDto
-     */
-    private AttributeDto createDataSourceIdentificationAttribute(List<CodeDimensionDto> keys, String dataSourceId) throws MetamacException {
-        AttributeDto attributeDto = new AttributeDto();
-
-        if (StringUtils.isEmpty(dataSourceId)) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.TASK_DATASOURCE_ID).build();
-        }
-
-        // Keys
-        attributeDto.getCodesDimension().addAll(keys);
-
-        // Data
-        InternationalStringDto internationalStringDto = new InternationalStringDto();
-        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-        localisedStringDto.setLabel(dataSourceId);
-        // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
-        // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
-        localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
-        internationalStringDto.addText(localisedStringDto);
-
-        attributeDto.setValue(internationalStringDto);
-
-        // Attribute Id
-        attributeDto.setAttributeId(DATA_SOURCE_ID);
-        return attributeDto;
-    }
 }

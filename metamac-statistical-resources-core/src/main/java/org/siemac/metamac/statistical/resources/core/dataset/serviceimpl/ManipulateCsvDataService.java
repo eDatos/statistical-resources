@@ -7,10 +7,10 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
 
 // TODO mover la definición de este servicio al btdesign de sculptor
-public interface ManipulatePxDataService {
+public interface ManipulateCsvDataService {
 
-    public static final String BEAN_ID = "manipulatePxDataService";
+    public static final String BEAN_ID = "manipulateCsvDataService";
 
-    public void importPx(ServiceContext ctx, File pxFile, DataStructure dataStructure, String datasetID, String dataSourceID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception;
+    public void importCsv(ServiceContext ctx, File csvFile, DataStructure dataStructure, String datasetID, String dataSourceID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception;
 
 }

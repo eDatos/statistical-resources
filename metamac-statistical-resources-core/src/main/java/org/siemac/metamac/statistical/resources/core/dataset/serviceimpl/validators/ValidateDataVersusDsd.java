@@ -31,8 +31,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacSdmx2StatRepoMapperImpl;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.NonEnumeratedRepresentationValidator;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 
@@ -128,7 +127,7 @@ public class ValidateDataVersusDsd {
 
             // The used attribute if correct
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !MetamacSdmx2StatRepoMapperImpl.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH, attributeBasicDto.getAttributeId()));
                 }
             }
@@ -155,7 +154,7 @@ public class ValidateDataVersusDsd {
 
             // The codes of attributes must be defined in the enumerated representation
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                if (!MetamacSdmx2StatRepoMapperImpl.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+                if (!ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
 
                     String value = attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
 

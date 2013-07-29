@@ -1,17 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.parser.px.PxParser.PxDataByDimensionsIterator;
 import com.arte.statistic.parser.px.domain.PxAttribute;
 import com.arte.statistic.parser.px.domain.PxAttributeCodes;
 import com.arte.statistic.parser.px.domain.PxAttributeDimension;
@@ -19,7 +18,7 @@ import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.px.domain.PxObservation;
 import com.arte.statistic.parser.px.domain.PxObservationCodeDimension;
 
-@Component(value = "metamacPx2StatRepoMapper")
+@Component(MetamacPx2StatRepoMapper.BEAN_ID)
 public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
 
     /**
@@ -34,35 +33,29 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
     }
 
     @Override
-    public ObservationExtendedDto toObservation(PxDataByDimensionsIterator iterator) throws MetamacException {
+    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId) throws MetamacException {
 
-        PxObservation observation = null;
         ObservationExtendedDto observationExtendedDto = null;
 
-        try {
-            observation = iterator.next();
-
-            if (observation == null) {
-                return null; // Reached end of file
-            }
-
-            observationExtendedDto = new ObservationExtendedDto();
-
-            // Key
-            observationExtendedDto.getCodesDimension().addAll(processKeyOfObservation(observation.getCodesDimensions()));
-
-            // Data
-            observationExtendedDto.setPrimaryMeasure(observation.getObservationValue());
-
-            // Attributes
-            // TODO añadir atributos a nivel de observación
-            // if (this.attributesObservations.containsKey(observationExtendedDto.getUniqueKey())) {
-            // observationExtendedDto.getAttributes().addAll(this.attributesObservations.get(observationExtendedDto.getUniqueKey()));
-            // }
-        } catch (IOException e) {
-            // TODO Lanzar excepción
-            e.printStackTrace();
+        if (observation == null) {
+            return null; // Reached end of file
         }
+
+        observationExtendedDto = new ObservationExtendedDto();
+
+        // Key
+        observationExtendedDto.getCodesDimension().addAll(processKeyOfObservation(observation.getCodesDimensions()));
+
+        // Data
+        observationExtendedDto.setPrimaryMeasure(observation.getObservationValue());
+
+        // Attributes
+        observationExtendedDto.addAttribute(ManipulateDataUtils.createDataSourceIdentificationAttribute(observationExtendedDto.getCodesDimension(), datasourceId)); // Add identification datasource
+
+        // TODO añadir atributos a nivel de observación in PX
+        // if (this.attributesObservations.containsKey(observationExtendedDto.getUniqueKey())) {
+        // observationExtendedDto.getAttributes().addAll(this.attributesObservations.get(observationExtendedDto.getUniqueKey()));
+        // }
 
         return observationExtendedDto;
     }

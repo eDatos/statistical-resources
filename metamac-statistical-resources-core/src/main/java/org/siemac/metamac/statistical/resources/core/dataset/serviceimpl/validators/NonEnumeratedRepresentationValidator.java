@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
+package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

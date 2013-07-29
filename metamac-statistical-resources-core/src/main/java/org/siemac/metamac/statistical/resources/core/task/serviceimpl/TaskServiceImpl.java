@@ -38,12 +38,13 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacSdmx2StatRepoMapper;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacSdmx2StatRepoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ImportDatasetJob;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateCsvDataService;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulatePxDataService;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -95,6 +96,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Autowired
     private ManipulatePxDataService          manipulatePxDataService;
+
+    @Autowired
+    private ManipulateCsvDataService         manipulateCsvDataService;
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
@@ -195,7 +199,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, importationJobKey);
 
         try {
-            processDatasets(taskInfoDataset, task.getCreatedDate());
+            processDatasets(ctx, taskInfoDataset, task.getCreatedDate());
         } catch (Exception e) {
             // Convert parser exception to metamac exception
             MetamacException throwableMetamacException = null;
@@ -324,7 +328,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
                 internationalStringDto.addText(localisedStringDto);
 
-                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(MetamacSdmx2StatRepoMapperImpl.DATA_SOURCE_ID, internationalStringDto);
+                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
 
                 datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeBasicDto);
             }
@@ -402,7 +406,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         }
     }
 
-    private void processDatasets(TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
+    private void processDatasets(ServiceContext ctx, TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
         // Validator
@@ -426,12 +430,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 Sdmx21Parser.parseData(new FileInputStream(fileDescriptor.getFile()), callback); // Parse and import
 
             } else if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
+                manipulatePxDataService.importPx(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getRepoDatasetId(), dataSourceId, validateDataVersusDsd);
 
-                // TODO arreglar el service ctx
-                ServiceContext serviceContext = new ServiceContext("TODO", "TODO", "sdmx-srm-core");
-                manipulatePxDataService.importPx(serviceContext, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getRepoDatasetId(), validateDataVersusDsd);
             } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                throw new UnsupportedOperationException("Import CSV");
+                manipulateCsvDataService.importCsv(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getRepoDatasetId(), dataSourceId, validateDataVersusDsd);
+
             }
 
             linkedList.add(dataSourceId);
@@ -439,6 +442,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         // TODO llamar a un callback (o un metodo de rober) para que haga algo con la lista de datasources que se han importado
     }
+
     private String generateDataSourceId(String fileName, DateTime dateTime) {
         return fileName + "_" + dateTime.toString();
     }

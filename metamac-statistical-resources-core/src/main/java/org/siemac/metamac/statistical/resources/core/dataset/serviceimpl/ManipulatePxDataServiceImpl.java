@@ -14,7 +14,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacPx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,17 +35,14 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    @Autowired
-    private SrmRestInternalService           srmRestInternalService;
-
     private static final String              PX_METADATA_CHARSET = PxAttributeCodes.CHARSET + "=";
     private static int                       SPLIT_DATA_FACTOR   = 5000;
 
     @Override
-    public void importPx(ServiceContext ctx, File pxFile, DataStructure dataStructure, String datasetID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
+    public void importPx(ServiceContext ctx, File pxFile, DataStructure dataStructure, String datasetID, String dataSourceID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
 
         // Create or Update DatasetRepository
-        DatasetRepositoryDto datasetRepositoryDto = createDatasetRepository(datasetID, validateDataVersusDsd);
+        createDatasetRepository(datasetID, validateDataVersusDsd);
 
         // Parse PX
         PxModel pxModel = readPxModel(pxFile);
@@ -58,7 +54,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
         boolean processData = true;
         while (processData) {
             for (int i = 0; i < SPLIT_DATA_FACTOR; i++) {
-                observationExtendedDto = metamacPx2StatRepoMapper.toObservation(pxDataByDimensionsIterator);
+                observationExtendedDto = metamacPx2StatRepoMapper.toObservation(pxDataByDimensionsIterator.next(), dataSourceID);
                 if (observationExtendedDto == null) {
                     // Insert incomplete slice
                     insertDataAndAttributes(datasetID, dataDtos, validateDataVersusDsd);
@@ -104,47 +100,15 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
     private void insertDataAndAttributes(String datasetID, List<ObservationExtendedDto> dataDtos, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
 
-        // List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
-
-        // Transform Data y Attributes (series or observation level) into repository model
-        // this.metamac2StatRepoMapper.populateDatas(dataContainer, validateDataVersusDsd.getAttributesProcessorMap(), dataDtos, attributeDtos, datasetID);
-
-        // Transform Attributes (group level) into repository model
-        // metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos, this.validateDataVersusDsd.getMandatoryAttributeIdsAtObservationLevel());
-
-        // Transform Attributes (dataset level) into repository model
-        // metamac2StatRepoMapper.processDatasetAttribute(dataContainer.getAttributes(), attributeDtos);
-
-        // Process attributes: The attributes can appears flat on the XML. So you have to group them. According to the DSD definition.
-        // Note: The observation level attributes need not be flattened.
-        // List<AttributeDto> compactedAttributes = new ArrayList<AttributeDto>();
-        // for (AttributeDto attributeDto : attributeDtos) {
-        //
-        // if (this.validateDataVersusDsd.getAttributesProcessorMap().containsKey(attributeDto.getAttributeId())) {
-        // String attributeCustomKey = metamac2StatRepoMapper.generateAttributeKeyInAttachmentLevel(attributeDto,
-        // this.validateDataVersusDsd.getAttributesProcessorMap().get(attributeDto.getAttributeId()).getAttributeRelationship(), this.validateDataVersusDsd.getGroupDimensionMapInfo());
-        //
-        // // If attribute is not processed
-        // if (!this.keyAttributesAdded.contains(attributeCustomKey)) {
-        // this.keyAttributesAdded.add(attributeCustomKey);
-        // compactedAttributes.add(attributeDto);
-        // }
-        // } else {
-        // // This is a validation error but for performance improvements the validation runs later
-        // }
-        // }
-
-        // Persist Observations and attributes
+        // Persist Observations and observation level attributes
         if (!dataDtos.isEmpty()) {
             // TODO sin validación contra DSD hasta que se decida la reunión de atributos
             // validateDataVersusDsd.checkObservation(dataDtos);
             datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetID, dataDtos);
         }
 
-        // if (!compactedAttributes.isEmpty()) {
-        // this.validateDataVersusDsd.checkAttributes(compactedAttributes);
-        // datasetRepositoriesServiceFacade.createAttributes(datasetRepositoryDto.getDatasetId(), compactedAttributes);
-        // }
+        // TODO Other attributes
+
     }
 
     /**
