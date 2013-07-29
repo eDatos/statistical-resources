@@ -177,28 +177,28 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().sendToProductionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().sendToProductionValidation(publicationDto);
             }
         });
         mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().sendToDiffusionValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().sendToDiffusionValidation(publicationDto);
             }
         });
         mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().rejectValidation(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().rejectValidation(publicationDto);
             }
         });
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().publish(publicationDto.getUrn(), publicationDto.getProcStatus());
+                getUiHandlers().publish(publicationDto);
             }
         });
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {

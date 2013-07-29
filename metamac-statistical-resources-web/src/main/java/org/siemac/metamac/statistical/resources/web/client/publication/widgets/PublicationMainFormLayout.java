@@ -39,13 +39,11 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
 
-        /*
-         * toolStrip.addButton(productionValidation);
-         * toolStrip.addButton(diffusionValidation);
-         * toolStrip.addButton(rejectValidation);
-         * toolStrip.addButton(publish);
-         * toolStrip.addButton(versioning);
-         */
+        toolStrip.addButton(productionValidation);
+        toolStrip.addButton(diffusionValidation);
+        toolStrip.addButton(rejectValidation);
+        toolStrip.addButton(publish);
+        toolStrip.addButton(versioning);
     }
 
     @Override
@@ -67,22 +65,21 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
     private void updateVisibility() {
         // Hide all buttons
         hideAllLifeCycleButtons();
+
         // Show buttons depending on the status
-        /*
-         * if (ProcStatusEnum.DRAFT.equals(status)) {
-         * showProductionValidationButton();
-         * } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
-         * showProductionValidationButton();
-         * } else if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
-         * showDiffusionValidationButton();
-         * showRejectValidationButton();
-         * } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-         * showRejectValidationButton();
-         * showPublishButton();
-         * } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
-         * showVersioningButton();
-         * }
-         */
+        if (ProcStatusEnum.DRAFT.equals(status)) {
+            showProductionValidationButton();
+        } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
+            showProductionValidationButton();
+        } else if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+            showDiffusionValidationButton();
+            showRejectValidationButton();
+        } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
+            showRejectValidationButton();
+            showPublishButton();
+        } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
+            showVersioningButton();
+        }
     }
 
     private void hideAllLifeCycleButtons() {
@@ -94,22 +91,27 @@ public class PublicationMainFormLayout extends InternationalMainFormLayout {
     }
 
     private void showProductionValidationButton() {
+        // TODO Security
         productionValidation.show();
     }
 
     private void showDiffusionValidationButton() {
+        // TODO Security
         diffusionValidation.show();
     }
 
     private void showRejectValidationButton() {
+        // TODO Security
         rejectValidation.show();
     }
 
     private void showPublishButton() {
+        // TODO Security
         publish.show();
     }
 
     private void showVersioningButton() {
+        // TODO Security
         versioning.show();
     }
 

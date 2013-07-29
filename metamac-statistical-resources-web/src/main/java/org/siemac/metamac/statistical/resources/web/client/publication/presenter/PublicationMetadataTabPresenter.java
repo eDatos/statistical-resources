@@ -137,8 +137,8 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void sendToProductionValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(urn, ProcStatusEnum.PRODUCTION_VALIDATION, currentProcStatus),
+    public void sendToProductionValidation(PublicationVersionDto publicationVersionDto) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.PRODUCTION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -150,8 +150,8 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void sendToDiffusionValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(urn, ProcStatusEnum.DIFFUSION_VALIDATION, currentProcStatus),
+    public void sendToDiffusionValidation(PublicationVersionDto publicationVersionDto) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.DIFFUSION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -163,28 +163,29 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void rejectValidation(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(urn, ProcStatusEnum.VALIDATION_REJECTED, currentProcStatus), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(
-                this) {
+    public void rejectValidation(PublicationVersionDto publicationVersionDto) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.VALIDATION_REJECTED),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                getView().setPublication(result.getPublicationVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                        getView().setPublication(result.getPublicationVersionDto());
+                    }
+                });
     }
 
     @Override
-    public void publish(String urn, ProcStatusEnum currentProcStatus) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(urn, ProcStatusEnum.PUBLISHED, currentProcStatus), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+    public void publish(PublicationVersionDto publicationVersionDto) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.PUBLISHED),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setPublication(result.getPublicationVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                        getView().setPublication(result.getPublicationVersionDto());
+                    }
+                });
     }
 
     @Override
@@ -213,5 +214,4 @@ public class PublicationMetadataTabPresenter
             }
         });
     }
-
 }

@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view.han
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
@@ -17,9 +16,9 @@ public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiH
 
     // LIFECYCLE
 
-    void sendToProductionValidation(String urn, ProcStatusEnum currentProcStatus);
-    void sendToDiffusionValidation(String urn, ProcStatusEnum currentProcStatus);
-    void rejectValidation(String urn, ProcStatusEnum currentProcStatus);
-    void publish(String urn, ProcStatusEnum currentProcStatus);
+    void sendToProductionValidation(PublicationVersionDto publicationVersionDto);
+    void sendToDiffusionValidation(PublicationVersionDto publicationVersionDto);
+    void rejectValidation(PublicationVersionDto publicationVersionDto);
+    void publish(PublicationVersionDto publicationVersionDto);
     void version(String urn, VersionTypeEnum versionType);
 }

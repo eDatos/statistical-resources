@@ -11,13 +11,10 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class UpdatePublicationVersionProcStatus {
 
     @In(1)
-    String                urn;
+    PublicationVersionDto publicationVersionToUpdateProcStatus;
 
     @In(2)
     ProcStatusEnum        nextProcStatus;
-
-    @In(3)
-    ProcStatusEnum        currentProcStatus;
 
     @Out(1)
     PublicationVersionDto publicationVersionDto;
