@@ -129,7 +129,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
-import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevelRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
