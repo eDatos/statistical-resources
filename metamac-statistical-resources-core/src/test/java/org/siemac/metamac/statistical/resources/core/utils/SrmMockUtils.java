@@ -45,6 +45,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
@@ -419,8 +420,8 @@ public class SrmMockUtils {
         return conceptRepresentation;
     }
 
-    private static List<ItemResourceInternal> buildResourcesInternalCodes(List<CodeType> codes) {
-        List<ItemResourceInternal> resources = new ArrayList<ItemResourceInternal>();
+    private static List<CodeResource> buildResourcesInternalCodes(List<CodeType> codes) {
+        List<CodeResource> resources = new ArrayList<CodeResource>();
         for (CodeType code : codes) {
             resources.add(buildResourceInternalFromCode(code));
         }
@@ -435,8 +436,8 @@ public class SrmMockUtils {
         return resources;
     }
 
-    private static ItemResourceInternal buildResourceInternalFromCode(CodeType code) {
-        ItemResourceInternal resource = new ItemResourceInternal();
+    private static CodeResource buildResourceInternalFromCode(CodeType code) {
+        CodeResource resource = new CodeResource();
         ResourceLink link = new ResourceLink();
         link.setHref(code.getUri());
         resource.setSelfLink(link);
