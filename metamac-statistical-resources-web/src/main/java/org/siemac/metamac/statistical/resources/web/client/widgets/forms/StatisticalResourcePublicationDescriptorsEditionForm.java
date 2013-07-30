@@ -8,17 +8,22 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmItemListWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class StatisticalResourcePublicationDescriptorsEditionForm extends GroupDynamicForm {
+
+    protected ProcStatusEnum                      procStatus;
 
     private StatisticalResourceUiHandlers         uiHandlers;
 
@@ -30,6 +35,15 @@ public class StatisticalResourcePublicationDescriptorsEditionForm extends GroupD
         super(getConstants().formPublicationDescriptors());
 
         publisherItem = createPublisherItem();
+        publisherItem.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                List<ExternalItemDto> values = getExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER));
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? (values != null && values.size() > 0) : true;
+            }
+        });
+
         publisherContributorItem = createPublisherContributorItem();
         mediatorItem = createMediatorItem();
         CustomDateItem newnessUntilDate = new CustomDateItem(StatisticalResourceDS.NEWNESS_UNTIL_DATE, getConstants().siemacMetadataStatisticalResourceNewnessUntilDate());
@@ -38,6 +52,8 @@ public class StatisticalResourcePublicationDescriptorsEditionForm extends GroupD
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
+        this.procStatus = dto.getProcStatus();
+
         setExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER), dto.getPublisher());
         setExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER_CONTRIBUTOR), dto.getPublisherContributor());
         setExternalItemsValue(getItem(StatisticalResourceDS.MEDIATOR), dto.getMediator());

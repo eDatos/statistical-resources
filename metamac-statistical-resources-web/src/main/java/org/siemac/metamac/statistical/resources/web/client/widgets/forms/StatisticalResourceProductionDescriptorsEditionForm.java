@@ -11,13 +11,16 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmItemListWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
@@ -26,6 +29,8 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDynamicForm {
+
+    protected ProcStatusEnum                      procStatus;
 
     private StatisticalResourceUiHandlers         uiHandlers;
 
@@ -39,6 +44,13 @@ public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDy
         ExternalItemLinkItem maintainer = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer());
 
         creatorItem = createCreatorItem();
+        creatorItem.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? getExternalItemValue(getItem(StatisticalResourceDS.CREATOR)) != null : true;
+            }
+        });
 
         contributorItem = createContributorItem();
 
@@ -52,6 +64,8 @@ public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDy
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
+        this.procStatus = siemacMetadataStatisticalResourceDto.getProcStatus();
+
         setExternalItemValue(getItem(StatisticalResourceDS.MAINTAINER), siemacMetadataStatisticalResourceDto.getMaintainer());
         setExternalItemValue(getItem(StatisticalResourceDS.CREATOR), siemacMetadataStatisticalResourceDto.getCreator());
         setExternalItemsValue(getItem(StatisticalResourceDS.CONTRIBUTOR), siemacMetadataStatisticalResourceDto.getContributor());

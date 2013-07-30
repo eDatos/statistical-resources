@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
@@ -194,4 +195,12 @@ public class CommonUtils {
     // public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
     // return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
     // }
+
+    //
+    // COMMON UTILITIES
+    //
+
+    public static boolean isResourceInProductionValidationOrGreaterProcStatus(ProcStatusEnum procStatus) {
+        return ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus) || ProcStatusEnum.PUBLISHED.equals(procStatus);
+    }
 }

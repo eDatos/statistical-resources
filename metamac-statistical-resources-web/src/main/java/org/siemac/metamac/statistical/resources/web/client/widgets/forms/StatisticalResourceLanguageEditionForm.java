@@ -9,15 +9,20 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class StatisticalResourceLanguageEditionForm extends GroupDynamicForm {
+
+    protected ProcStatusEnum                  procStatus;
 
     private StatisticalResourceUiHandlers     uiHandlers;
 
@@ -27,12 +32,23 @@ public class StatisticalResourceLanguageEditionForm extends GroupDynamicForm {
         super(getConstants().formLanguages());
 
         ExternalItemLinkItem language = new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
+
         languagesItem = createLanguagesItem();
+        languagesItem.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                List<ExternalItemDto> values = getExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES));
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? (values != null && values.size() > 0) : true;
+            }
+        });
 
         setFields(language, languagesItem);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
+        this.procStatus = dto.getProcStatus();
+
         setExternalItemValue(getItem(StatisticalResourceDS.LANGUAGE), dto.getLanguage());
         setExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES), dto.getLanguages());
     }
@@ -62,5 +78,4 @@ public class StatisticalResourceLanguageEditionForm extends GroupDynamicForm {
     public void setUiHandlers(StatisticalResourceUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-
 }

@@ -6,8 +6,10 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -21,6 +23,8 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
+
+    protected ProcStatusEnum procStatus;
 
     public LifeCycleResourceVersionEditionForm() {
         super(getConstants().formVersion());
@@ -36,9 +40,16 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
         ViewTextItem validTo = new ViewTextItem(VersionableResourceDS.VALID_TO, getConstants().versionableStatisticalResourceValidTo());
 
-        CustomSelectItem nextVersion = new CustomSelectItem(VersionableResourceDS.NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersion());
+        final CustomSelectItem nextVersion = new CustomSelectItem(VersionableResourceDS.NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersion());
         nextVersion.setValueMap(CommonUtils.getStatisticalResourceNextVersionHashMap());
         nextVersion.addChangedHandler(FormItemUtils.getMarkForRedrawChangedHandler(this));
+        nextVersion.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? !StringUtils.isBlank(nextVersion.getValueAsString()) : true;
+            }
+        });
 
         CustomDateItem nextVersionDate = new CustomDateItem(VersionableResourceDS.DATE_NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersionDate());
         nextVersionDate.setShowIfCondition(getNextVersionDateFormItemIfFunction());
@@ -47,6 +58,8 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
     }
 
     public void setLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
+        this.procStatus = lifeCycleStatisticalResourceDto.getProcStatus();
+
         setValue(VersionableResourceDS.VERSION, lifeCycleStatisticalResourceDto.getVersionLogic());
         setValue(VersionableResourceDS.VERSION_RATIONALE_TYPES, CommonUtils.getStatisticalResourceVersionRationaleTypeNames(lifeCycleStatisticalResourceDto.getVersionRationaleTypes())); // TODO may be
                                                                                                                                                                                           // editable

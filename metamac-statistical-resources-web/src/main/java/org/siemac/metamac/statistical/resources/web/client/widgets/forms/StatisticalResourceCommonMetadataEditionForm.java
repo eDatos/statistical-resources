@@ -6,11 +6,14 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleCommonConfigurationWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
@@ -21,6 +24,8 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class StatisticalResourceCommonMetadataEditionForm extends NavigationEnabledDynamicForm {
+
+    protected ProcStatusEnum                      procStatus;
 
     private ExternalItemDto                       commonConfigurationDto;
     private SearchSingleCommonConfigurationWindow searchCommonConfigurationWindow;
@@ -33,6 +38,13 @@ public class StatisticalResourceCommonMetadataEditionForm extends NavigationEnab
         super(getConstants().formCommonMetadata());
 
         commonConfiguration = createCommonMetadataItem(StatisticalResourceDS.COMMON_METADATA, getConstants().commonMetadata());
+        commonConfiguration.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? commonConfiguration.getExternalItemDto() != null : true;
+            }
+        });
 
         setFields(commonConfiguration);
     }
@@ -50,6 +62,8 @@ public class StatisticalResourceCommonMetadataEditionForm extends NavigationEnab
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
+        this.procStatus = siemacMetadataStatisticalResourceDto.getProcStatus();
+
         setCommonConfiguration(siemacMetadataStatisticalResourceDto.getCommonMetadata());
     }
 
