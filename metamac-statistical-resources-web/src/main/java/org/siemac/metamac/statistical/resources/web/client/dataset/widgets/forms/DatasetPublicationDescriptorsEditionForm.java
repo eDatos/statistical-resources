@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
@@ -35,12 +36,35 @@ public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourc
 
     public DatasetPublicationDescriptorsEditionForm() {
         super();
-        CustomDateItem dateNextUpdate = createDateNextUpdateItem();
-        updateFrequency = createUpdateFrequencyItem();
 
-        CustomSelectItem statisticOfficiality = new CustomSelectItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
+        final CustomDateItem dateNextUpdate = createDateNextUpdateItem();
+        dateNextUpdate.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? dateNextUpdate.getValueAsDate() != null : true;
+            }
+        });
+
+        updateFrequency = createUpdateFrequencyItem();
+        updateFrequency.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? getExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY)) != null : true;
+            }
+        });
+
+        final CustomSelectItem statisticOfficiality = new CustomSelectItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
         statisticOfficiality.setValueMap(CommonUtils.getStatisticOfficialityHashMap());
         statisticOfficiality.addChangedHandler(FormItemUtils.getMarkForRedrawChangedHandler(this));
+        statisticOfficiality.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? !StringUtils.isBlank(statisticOfficiality.getValueAsString()) : true;
+            }
+        });
 
         ViewMultiLanguageTextItem bibliographicCitation = new ViewMultiLanguageTextItem(DatasetDS.BIBLIOGRAPHIC_CITATION, getConstants().datasetBibliographicCitation());
 
