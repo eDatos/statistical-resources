@@ -13,10 +13,12 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
@@ -25,7 +27,6 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
@@ -42,30 +43,46 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
     public DatasetContentDescriptorsEditionForm() {
         super();
 
-        HiddenItem procStatusHidden = new HiddenItem(DatasetDS.PROC_STATUS);
-
         ExternalItemListItem geographicCoverage = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_COVERAGE, getConstants().datasetGeographicCoverage(), false);
         geographicCoverage.setShowIfCondition(getCanShowCoveragesFunction());
+
         ExternalItemListItem temporalCoverage = new ExternalItemListItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().datasetTemporalCoverage(), false);
         temporalCoverage.setShowIfCondition(getCanShowCoveragesFunction());
+
         ExternalItemListItem measures = new ExternalItemListItem(DatasetDS.MEASURES, getConstants().datasetMeasures(), false);
         measures.setShowIfCondition(getCanShowCoveragesFunction());
 
         geographicalGranularitiesItem = createGeographicGranularitiesItem();
+        geographicalGranularitiesItem.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                List<ExternalItemDto> values = getExternalItemsValue(getItem(DatasetDS.GEOGRAPHIC_GRANULARITY));
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? (values != null && values.size() > 0) : true;
+            }
+        });
+
         temporalGranularitiesItem = createTemporalGranularitiesItem();
+        temporalGranularitiesItem.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                List<ExternalItemDto> values = getExternalItemsValue(getItem(DatasetDS.TEMPORAL_GRANULARITY));
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? (values != null && values.size() > 0) : true;
+            }
+        });
 
         ViewTextItem dateStart = new ViewTextItem(DatasetDS.DATE_START, getConstants().datasetDateStart());
+
         ViewTextItem dateEnd = new ViewTextItem(DatasetDS.DATE_END, getConstants().datasetDateEnd());
 
         ExternalItemListItem statisticalUnit = createStatisticalUnitItem();
 
-        addFields(procStatusHidden, dateStart, dateEnd, statisticalUnit, geographicCoverage, temporalCoverage, measures, geographicalGranularitiesItem, temporalGranularitiesItem);
+        addFields(dateStart, dateEnd, statisticalUnit, geographicCoverage, temporalCoverage, measures, geographicalGranularitiesItem, temporalGranularitiesItem);
     }
 
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
-
-        setValue(DatasetDS.PROC_STATUS, datasetDto.getProcStatus().name());
 
         setExternalItemsValue(getItem(DatasetDS.GEOGRAPHIC_GRANULARITY), datasetDto.getGeographicGranularities());
 
@@ -217,10 +234,8 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                Object valueObject = form.getItem(DatasetDS.PROC_STATUS).getValue();
-                return DatasetMetadataShowChecks.canCoveragesBeShown(valueObject);
+                return DatasetMetadataShowChecks.canCoveragesBeShown(procStatus);
             }
         };
     }
-
 }

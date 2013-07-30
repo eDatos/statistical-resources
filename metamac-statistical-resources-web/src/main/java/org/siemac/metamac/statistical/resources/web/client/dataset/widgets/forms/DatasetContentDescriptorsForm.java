@@ -15,14 +15,11 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.external.Externa
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.HiddenItem;
 
 public class DatasetContentDescriptorsForm extends StatisticalResourceContentDescriptorsForm {
 
     public DatasetContentDescriptorsForm() {
         super();
-
-        HiddenItem procStatusHidden = new HiddenItem(DatasetDS.PROC_STATUS);
 
         ExternalItemListItem geographicCoverage = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_COVERAGE, getConstants().datasetGeographicCoverage(), false);
         geographicCoverage.setShowIfCondition(getCanShowCoveragesFunction());
@@ -39,13 +36,11 @@ public class DatasetContentDescriptorsForm extends StatisticalResourceContentDes
 
         ExternalItemListItem statisticalUnit = new ExternalItemListItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(), false);
 
-        addFields(procStatusHidden, dateStart, dateEnd, statisticalUnit, geographicCoverage, temporalCoverage, measures, geographicGranularities, temporalGranularities);
+        addFields(dateStart, dateEnd, statisticalUnit, geographicCoverage, temporalCoverage, measures, geographicGranularities, temporalGranularities);
     }
 
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
-
-        setValue(DatasetDS.PROC_STATUS, datasetDto.getProcStatus().name());
 
         ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_GRANULARITY)).setExternalItems(datasetDto.getGeographicGranularities());
         ((ExternalItemListItem) getItem(DatasetDS.TEMPORAL_GRANULARITY)).setExternalItems(datasetDto.getTemporalGranularities());
@@ -67,8 +62,7 @@ public class DatasetContentDescriptorsForm extends StatisticalResourceContentDes
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                Object valueObject = form.getItem(DatasetDS.PROC_STATUS).getValue();
-                return DatasetMetadataShowChecks.canCoveragesBeShown(valueObject);
+                return DatasetMetadataShowChecks.canCoveragesBeShown(procStatus);
             }
         };
     }
