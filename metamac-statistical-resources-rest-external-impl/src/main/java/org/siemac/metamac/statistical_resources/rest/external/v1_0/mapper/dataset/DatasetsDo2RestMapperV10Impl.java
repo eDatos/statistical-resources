@@ -20,8 +20,10 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.Item;
 import org.siemac.metamac.rest.common.v1_0.domain.Items;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.common.v1_0.domain.Resources;
@@ -63,6 +65,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -174,7 +177,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setDateNextUpdate(toDate(source.getDateNextUpdate()));
         target.setUpdateFrequency(toResourceExternalItemSrm(source.getUpdateFrequency(), selectedLanguages));
         target.setStatisticOfficiality(toStatisticOfficiality(source.getStatisticOfficiality(), selectedLanguages));
-        target.setBibliographicCitation(toInternationalString(source.getBibliographicCitation(), selectedLanguages));
+        target.setBibliographicCitation(toBibliographicCitation(source.getBibliographicCitation(), toDatasetLink(source), selectedLanguages));
 
         // StatisticalResource and other
         toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
@@ -784,6 +787,22 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
         String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
         return toResourceLink(resourceSubpath, agencyID, resourceID, version);
+    }
+
+    private InternationalString toBibliographicCitation(org.siemac.metamac.core.common.ent.domain.InternationalString sources, String selfLink, List<String> selectedLanguages) {
+        if (sources == null) {
+            return null;
+        }
+        InternationalString targets = new InternationalString();
+        for (org.siemac.metamac.core.common.ent.domain.LocalisedString source : sources.getTexts()) {
+            if (selectedLanguages.contains(source.getLocale())) {
+                LocalisedString target = new LocalisedString();
+                target.setLang(source.getLocale());
+                target.setValue(source.getLabel().replace(StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN, selfLink));
+                targets.getTexts().add(target);
+            }
+        }
+        return targets;
     }
 
     private class OrderingStackElement {

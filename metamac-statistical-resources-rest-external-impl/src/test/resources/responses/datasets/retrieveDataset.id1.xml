@@ -309,7 +309,7 @@
             </cdomain:name>
         </stat:statisticOfficiality>
         <stat:bibliographicCitation>
-            <cdomain:text xml:lang="es">bibliographicCitation-resource-69tWCEzxGU en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">bibliographicCitation. More info: http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000</cdomain:text>
         </stat:bibliographicCitation>
         <stat:language kind="structuralResources#code">
             <cdomain:id>language01</cdomain:id>

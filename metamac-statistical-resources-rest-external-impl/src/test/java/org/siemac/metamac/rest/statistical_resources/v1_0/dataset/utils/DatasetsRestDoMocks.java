@@ -1,6 +1,8 @@
 package org.siemac.metamac.rest.statistical_resources.v1_0.dataset.utils;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -34,6 +36,9 @@ public class DatasetsRestDoMocks {
 
     public DatasetVersion mockDatasetVersion(String agencyID, String resourceID, String version) {
         DatasetVersion target = mockDatasetVersionBasic(agencyID, resourceID, version);
+        target.setBibliographicCitation(new InternationalString());
+        target.getBibliographicCitation().addText(new LocalisedString("es", "bibliographicCitation. More info: #URI#"));
+
         // TODO Robert: ¿puedo pasar algo al mock del core?
 
         target.setDatasetRepositoryId("datasetRepository01");
