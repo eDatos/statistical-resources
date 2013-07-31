@@ -187,17 +187,43 @@ public class PublicationMetadataTabPresenter
                     }
                 });
     }
+    
+    @Override
+    public void programPublication(PublicationVersionDto publication) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(
+                this) {
+            @Override
+            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                getView().setPublication(result.getPublicationVersionDto());
+            }
+        });
+    }
+
+
 
     @Override
-    public void version(String urn, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersionPublicationVersionAction(urn, versionType), new WaitingAsyncCallbackHandlingError<VersionPublicationVersionResult>(this) {
+    public void version(PublicationVersionDto publication, VersionTypeEnum versionType) {
+        dispatcher.execute(new VersionPublicationVersionAction(publication, versionType), new WaitingAsyncCallbackHandlingError<VersionPublicationVersionResult>(this) {
 
             @Override
             public void onWaitSuccess(VersionPublicationVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setPublication(result.getPublicationVersionDto());
+                getView().setPublication(result.getResultPublicationVersionDto());
             }
         });
+    }
+    
+    @Override
+    public void cancelProgrammedPublication(PublicationVersionDto publication) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void sendToPendingPublication(PublicationVersionDto publication) {
+        // TODO Auto-generated method stub
+        
     }
 
     @Override

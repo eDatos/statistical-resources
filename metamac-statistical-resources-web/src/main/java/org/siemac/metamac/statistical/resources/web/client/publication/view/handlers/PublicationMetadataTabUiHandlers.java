@@ -16,9 +16,12 @@ public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiH
 
     // LIFECYCLE
 
-    void sendToProductionValidation(PublicationVersionDto publicationVersionDto);
-    void sendToDiffusionValidation(PublicationVersionDto publicationVersionDto);
-    void rejectValidation(PublicationVersionDto publicationVersionDto);
-    void publish(PublicationVersionDto publicationVersionDto);
-    void version(String urn, VersionTypeEnum versionType);
+    void sendToProductionValidation(PublicationVersionDto publication);
+    void sendToDiffusionValidation(PublicationVersionDto publication);
+    void rejectValidation(PublicationVersionDto publication);
+    void sendToPendingPublication(PublicationVersionDto publication);
+    void programPublication(PublicationVersionDto publication);
+    void cancelProgrammedPublication(PublicationVersionDto publication);
+    void publish(PublicationVersionDto publication);
+    void version(PublicationVersionDto publication, VersionTypeEnum versionType);
 }

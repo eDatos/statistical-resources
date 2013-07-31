@@ -15,11 +15,10 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void sendToProductionValidation(DatasetVersionDto dataset);
     void sendToDiffusionValidation(DatasetVersionDto dataset);
     void rejectValidation(DatasetVersionDto dataset);
-    // void sendToPendingPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
-    // void programPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
-    // void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
+    void sendToPendingPublication(DatasetVersionDto dataset);
+    void programPublication(DatasetVersionDto dataset);
+    void cancelProgrammedPublication(DatasetVersionDto dataset);
     void publish(DatasetVersionDto dataset);
-    // void archive(String urn, StatisticalResourceProcStatusEnum currentProcStatus);
     void version(DatasetVersionDto dataset, VersionTypeEnum versionType);
 
     void retrieveDataset(String datasetIdentifier);
