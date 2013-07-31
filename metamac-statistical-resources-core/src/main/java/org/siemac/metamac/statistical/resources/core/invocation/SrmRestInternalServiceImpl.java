@@ -71,7 +71,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             DataStructures dsds = findDsds(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : dsds.getDataStructures()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             ConceptSchemes conceptSchemes = findConceptSchemes(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : conceptSchemes.getConceptSchemes()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -171,7 +171,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Concepts concepts = findConcepts(null, firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : concepts.getConcepts()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -201,7 +201,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Codelists codelists = findCodelists(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : codelists.getCodelists()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -256,7 +256,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Codes codes = findCodes(null, firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : codes.getCodes()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -300,7 +300,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             OrganisationSchemes organisationSchemes = findOrganisationSchemes(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : organisationSchemes.getOrganisationSchemes()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -329,7 +329,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Organisations organisations = findOrganisations(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : organisations.getOrganisations()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -359,7 +359,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             CategorySchemes categorySchemes = findCategorySchemes(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : categorySchemes.getCategorySchemes()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
@@ -389,7 +389,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Categories categories = findCategories(firstResult, maxResult, query);
             List<String> urns = new ArrayList<String>();
             for (ResourceInternal resource : categories.getCategories()) {
-                urns.add(resource.getUrnSiemac());
+                urns.add(resource.getUrn());
             }
             return urns;
         } catch (Exception e) {
