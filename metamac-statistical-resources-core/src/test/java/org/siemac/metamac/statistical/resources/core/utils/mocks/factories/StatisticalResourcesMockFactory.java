@@ -7,7 +7,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
-import com.arte.libs.lang.ObjectUtils;
+import com.arte.lang.ObjectUtils;
 
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {
 

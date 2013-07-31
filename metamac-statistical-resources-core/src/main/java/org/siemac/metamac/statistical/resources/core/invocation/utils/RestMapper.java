@@ -28,7 +28,7 @@ public class RestMapper {
         // target.setCodeNested(source.getNestedId()); // TODO nestedId
         externalItem.setUri(resource.getSelfLink().getHref());
         externalItem.setUrn(resource.getUrn());
-        externalItem.setUrnInternal(resource.getUrnSiemac());
+        externalItem.setUrnProvider(resource.getUrnProvider());
         externalItem.setType(type);
         externalItem.setManagementAppUrl(resource.getManagementAppLink()); // TODO no falta quitar endpoint??
         externalItem.setTitle(getInternationalStringFromInternationalStringResource(resource.getName()));
@@ -51,7 +51,7 @@ public class RestMapper {
         // target.setCodeNested(source.getNestedId()); // TODO nestedId
         externalItem.setUri(code.getUri());
         externalItem.setUrn(code.getUrn());
-        externalItem.setUrnInternal(code.getUrn()); // TODO puede no corresponder a ésta
+        externalItem.setUrnProvider(code.getUrnProvider());
         externalItem.setType(TypeExternalArtefactsEnum.CODE);
         externalItem.setTitle(getInternationalStringFromTextTypes(code.getNames()));
         return externalItem;
@@ -63,7 +63,7 @@ public class RestMapper {
         // target.setCodeNested(source.getNestedId()); // TODO nestedId
         externalItem.setUri(concept.getUri());
         externalItem.setUrn(concept.getUrn());
-        externalItem.setUrnInternal(concept.getUrn()); // TODO puede no corresponder a ésta
+        externalItem.setUrnProvider(concept.getUrnProvider()); // TODO puede no corresponder a ésta
         externalItem.setType(TypeExternalArtefactsEnum.CONCEPT);
         externalItem.setTitle(getInternationalStringFromTextTypes(concept.getNames()));
         return externalItem;

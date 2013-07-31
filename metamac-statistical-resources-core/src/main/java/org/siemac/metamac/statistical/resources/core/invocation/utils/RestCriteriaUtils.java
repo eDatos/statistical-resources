@@ -63,12 +63,5 @@ public class RestCriteriaUtils {
         }
         return urns;
     }
-    
-    public static List<String> processExternalItemsUrnsInternal(List<ExternalItem> externalItems) {
-        List<String> urns = new ArrayList<String>();
-        for (ExternalItem item : externalItems) {
-            urns.add(item.getUrnInternal());
-        }
-        return urns;
-    }
+
 }

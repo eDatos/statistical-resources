@@ -95,7 +95,7 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         target.setCodeNested(source.getCodeNested());
         target.setUri(source.getUri());
         target.setUrn(source.getUrn());
-        target.setUrnInternal(source.getUrnInternal());
+        target.setUrnProvider(source.getUrnProvider());
         target.setType(source.getType());
         target.setManagementAppUrl(source.getManagementAppUrl());
         target.setTitle(internationalStringDoToDto(source.getTitle()));

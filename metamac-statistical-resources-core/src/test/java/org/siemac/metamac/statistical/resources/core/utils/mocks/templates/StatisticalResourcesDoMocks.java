@@ -558,21 +558,21 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return mockExternalItem(code, mockCommonConfigurationUrn(code), TypeExternalArtefactsEnum.CONFIGURATION);
     }
 
-    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type) {
+    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urnProvider, String urn, TypeExternalArtefactsEnum type) {
         ExternalItem target = new ExternalItem();
         target.setVersion(Long.valueOf(0));
         target.setCode(code);
         target.setCodeNested(codeNested);
         target.setUri(uri);
         target.setUrn(urn);
-        target.setUrnInternal(urnInternal);
+        target.setUrnProvider(urnProvider);
         target.setType(type);
         return target;
     }
 
-    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type, InternationalString title,
+    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urnProvider, String urn, TypeExternalArtefactsEnum type, InternationalString title,
             String managementAppUrl) {
-        ExternalItem target = mockExternalItem(code, codeNested, uri, urn, urnInternal, type);
+        ExternalItem target = mockExternalItem(code, codeNested, uri, urnProvider, urn, type);
         target.setTitle(title);
         target.setManagementAppUrl(managementAppUrl);
         return target;
@@ -581,14 +581,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     private static ExternalItem mockExternalItem(String code, String urn, TypeExternalArtefactsEnum type) {
         String codeNested = null;
         String uri = CoreCommonConstants.API_LATEST_WITH_SLASHES + code;
-        String urnInternal = urn + ":internal";
+        String urnProvider = urn + ":provider";
         InternationalString title = mockInternationalStringMetadata(code, "title");
         String managementAppUrl = CoreCommonConstants.URL_SEPARATOR + code;
 
         if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type)) {
-            urnInternal = null;
+            urnProvider = null;
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(type)) {
-            urnInternal = null;
+            urnProvider = null;
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(type)) {
             // nothing to do with urnInternal because it's ok for SrmExternalItems
             if (TypeExternalArtefactsEnum.AGENCY.equals(type) || TypeExternalArtefactsEnum.CATEGORY.equals(type)) {
@@ -598,7 +598,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             fail("Unexpected type of ExternalItem:" + type);
         }
 
-        ExternalItem item = mockExternalItem(code, codeNested, uri, urn, urnInternal, type, title, managementAppUrl);
+        ExternalItem item = mockExternalItem(code, codeNested, uri, urnProvider, urn, type, title, managementAppUrl);
         return item;
     }
 

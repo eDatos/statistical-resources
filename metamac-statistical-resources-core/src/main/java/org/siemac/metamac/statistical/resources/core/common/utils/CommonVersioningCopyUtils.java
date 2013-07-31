@@ -52,7 +52,7 @@ public class CommonVersioningCopyUtils {
         target.setCode(source.getCode());
         target.setCodeNested(source.getCodeNested());
         target.setUrn(source.getUrn());
-        target.setUrnInternal(source.getUrnInternal());
+        target.setUrnProvider(source.getUrnProvider());
         target.setUri(source.getUri());
         target.setType(source.getType());
         target.setTitle(copyInternationalString(source.getTitle()));

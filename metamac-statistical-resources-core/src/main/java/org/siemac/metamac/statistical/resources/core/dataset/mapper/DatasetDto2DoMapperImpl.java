@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
@@ -152,7 +153,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
     }
     
     private boolean areSameDsdDifferentVersion(ExternalItem dsd, ExternalItemDto dsdDto) {
-        return dsd.getCode().equals(dsdDto.getCode()) && !dsd.getUrnInternal().equals(dsdDto.getUrnInternal());
+        //FIXME: WATCH OUT! MAINTAINER CODE CAN BE DIFFERENT IT SHOULDNT BE
+        return StringUtils.equals(dsd.getCode(),dsdDto.getCode()) && !StringUtils.equals(dsd.getUrn(), dsdDto.getUrn());
     }
 
     public StatisticOfficiality statisticOfficialityDtoToDo(StatisticOfficialityDto source, StatisticOfficiality target, String metadataName) throws MetamacException {

@@ -282,13 +282,13 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     // EXTERNAL ITEMS DTOs
 
-    public static ExternalItemDto mockExternalItemDto(String code, String codeNested, String uri, String urn, String urnInternal, TypeExternalArtefactsEnum type) {
+    public static ExternalItemDto mockExternalItemDto(String code, String codeNested, String uri, String urnProvider, String urn, TypeExternalArtefactsEnum type) {
         ExternalItemDto target = new ExternalItemDto();
         target.setCode(code);
         target.setCodeNested(codeNested);
         target.setUri(uri);
         target.setUrn(urn);
-        target.setUrnInternal(urnInternal);
+        target.setUrnProvider(urnProvider);
         target.setType(type);
         return target;
     }

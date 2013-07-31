@@ -82,13 +82,13 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
     private static void checkUrnExternalItemRequired(ExternalItem parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(parameter.getType())) {
             checkMetadataRequired(parameter.getUrn(), parameterName, exceptions);
-            checkMetadataEmpty(parameter.getUrnInternal(), parameterName, exceptions);
+            checkMetadataEmpty(parameter.getUrnProvider(), parameterName, exceptions);
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(parameter.getType())) {
             checkMetadataRequired(parameter.getUrn(), parameterName, exceptions);
-            checkMetadataEmpty(parameter.getUrnInternal(), parameterName, exceptions);
+            checkMetadataEmpty(parameter.getUrnProvider(), parameterName, exceptions);
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(parameter.getType())) {
-            checkMetadataRequired(parameter.getUrnInternal(), parameterName, exceptions);
-            checkMetadataOptionalIsValid(parameter.getUrn(), parameterName, exceptions);
+            checkMetadataRequired(parameter.getUrn(), parameterName, exceptions);
+            checkMetadataOptionalIsValid(parameter.getUrnProvider(), parameterName, exceptions);
         } else {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.UNKNOWN, "Unknown type of ExternalItem"));
         }

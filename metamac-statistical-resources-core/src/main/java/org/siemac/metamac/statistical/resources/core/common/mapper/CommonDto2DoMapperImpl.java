@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
@@ -158,7 +159,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         target.setCode(source.getCode());
         target.setCodeNested(source.getCodeNested());
         target.setUrn(source.getUrn());
-        target.setUrnInternal(source.getUrnInternal());
+        target.setUrnProvider(source.getUrnProvider());
         target.setType(source.getType());
         target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), metadataName));
         return target;
@@ -211,7 +212,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         for (ExternalItem oldTarget : targetsBefore) {
             boolean found = false;
             for (ExternalItem newTarget : newTargets) {
-                found = found || (oldTarget.getUrn().equals(newTarget.getUrn()));
+                found = found || (StringUtils.equals(oldTarget.getUrn(), newTarget.getUrn()));
             }
             if (!found) {
                 // Delete
