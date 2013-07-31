@@ -6,15 +6,15 @@
     <!-- Import more custom beans for test -->
 
     <bean id="srmRestInternalService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService" />
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService" />
     </bean>
 
     <bean id="statisticalOperationsRestInternalService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.StatisticalOperationsRestInternalService" />
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.StatisticalOperationsRestInternalService" />
     </bean>
 
     <bean id="commonMetadataRestExternalService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.CommonMetadataRestExternalService" />
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService" />
     </bean>
 
 </beans>

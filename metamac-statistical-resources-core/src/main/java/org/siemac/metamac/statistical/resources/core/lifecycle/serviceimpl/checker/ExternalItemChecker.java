@@ -31,9 +31,9 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organis
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.CommonMetadataRestExternalService;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.invocation.StatisticalOperationsRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.StatisticalOperationsRestInternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

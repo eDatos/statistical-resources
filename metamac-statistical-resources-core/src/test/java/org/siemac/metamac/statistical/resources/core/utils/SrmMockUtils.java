@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,9 +22,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptRepresentation;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
@@ -39,12 +35,12 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionRepresentat
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -57,26 +53,213 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemRes
 
 public class SrmMockUtils {
 
-    public static ConceptScheme buildConceptSchemeWithConcepts(String id, String urn, String lang, int numConcepts) {
-        ConceptScheme conceptScheme = SrmMockUtils.buildConceptScheme(id, "title", lang, urn);
+    private static final String DEFAULT_LOCALE = "es";
+
+    // -------------------------------------------------------------------------------------
+    // COMMON
+    // -------------------------------------------------------------------------------------
+
+    private static ResourceLink buildResourceLink(TypeExternalArtefactsEnum type) {
+        ResourceLink resourceLink = new ResourceLink();
+        resourceLink.setHref(UUID.randomUUID().toString());
+        resourceLink.setKind(type.getName());
+        return resourceLink;
+    }
+
+    public static InternationalString buildInternationalStringResource(String label, String lang) {
+        InternationalString internationalString = new InternationalString();
+        internationalString.getTexts().add(buildLocalisedStringResource(label, lang));
+        return internationalString;
+    }
+    
+    public static LocalisedString buildLocalisedStringResource(String label, String lang) {
+        LocalisedString text = new LocalisedString();
+        text.setLang(lang);
+        text.setValue(label);
+        return text;
+    }
+
+    public static TextType buildTextType(String label, String lang) {
+        TextType text = new TextType();
+        text.setLang(lang);
+        text.setValue(label);
+        return text;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // CONCEPT SCHEME
+    // -------------------------------------------------------------------------------------
+
+    public static ConceptScheme buildConceptScheme(String id, String name, String lang, String urn) {
+        ConceptScheme scheme = new ConceptScheme();
+        scheme.setId(id);
+        scheme.setUrn(urn);
+        scheme.getNames().add(buildTextType(name, lang));
+        return scheme;
+    }
+
+    public static ConceptSchemeReferenceType buildConceptSchemeRef(String conceptSchemeUrn) {
+        ConceptSchemeReferenceType ref = new ConceptSchemeReferenceType();
+        ref.setRef(buildConceptSchemeRefType(conceptSchemeUrn));
+        ref.setURN(conceptSchemeUrn);
+        return ref;
+    }
+
+    public static ConceptSchemeReferenceType buildConceptSchemeRef(ConceptScheme scheme) {
+        if (scheme != null) {
+            ConceptSchemeReferenceType ref = new ConceptSchemeReferenceType();
+            ref.setRef(buildConceptSchemeRefType(scheme.getUrn()));
+            ref.setURN(scheme.getUrn());
+            return ref;
+        }
+        return null;
+    }
+
+    protected static ConceptSchemeRefType buildConceptSchemeRefType(String codelistUrn) {
+        ConceptSchemeRefType conceptSchemeRefType = new ConceptSchemeRefType();
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        conceptSchemeRefType.setAgencyID(params[0]);
+        conceptSchemeRefType.setId(params[1]);
+        conceptSchemeRefType.setVersion(params[2]);
+        return conceptSchemeRefType;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // CONCEPTS
+    // -------------------------------------------------------------------------------------
+
+    public static Concepts buildConcepts(int numConcepts) {
+        Concepts concepts = new Concepts();
         for (int i = 1; i <= numConcepts; i++) {
-            conceptScheme.getConcepts().add(SrmMockUtils.buildConcept("concept-0" + i, "Concept 0" + i, lang));
+            concepts.getConcepts().add(buildConcept("concept-0" + i, "Concept 0" + i));
         }
-        return conceptScheme;
+        return concepts;
     }
 
-    public static Codelist buildCodelistWithCodes(String id, String urn, String lang, int numCodes) {
-        Codelist codelist = SrmMockUtils.buildCodelist(id, "title", lang, urn);
+    public static ConceptReferenceType buildConceptReferenceTypeWithURN(String conceptIdentityURN) {
+        ConceptReferenceType conceptReferenceType = new ConceptReferenceType();
+        conceptReferenceType.setURN(conceptIdentityURN);
+        conceptReferenceType.setRef(buildConceptRefType(conceptIdentityURN));
+        return conceptReferenceType;
+    }
+
+    protected static ConceptRefType buildConceptRefType(String codelistUrn) {
+        ConceptRefType conceptRefType = new ConceptRefType();
+        String[] params = UrnUtils.splitUrnItem(codelistUrn);
+        conceptRefType.setAgencyID(params[0]);
+        conceptRefType.setMaintainableParentID(params[1]);
+        conceptRefType.setMaintainableParentVersion(params[2]);
+        conceptRefType.setId(params[3]);
+        return conceptRefType;
+    }
+
+    public static Concept buildConcept(String id, String urn, String name, ConceptRepresentation conceptRepresentation) {
+        Concept concept = new Concept();
+        concept.setId(id);
+        concept.setUrn(urn);
+        concept.setUri(UUID.randomUUID().toString());
+        concept.getNames().add(buildTextType(name, DEFAULT_LOCALE));
+        concept.setCoreRepresentation(conceptRepresentation);
+        return concept;
+    }
+
+    public static ItemResourceInternal buildConcept(String id, String name) {
+        ItemResourceInternal concept = new ItemResourceInternal();
+        concept.setId(id);
+        concept.setUrn("urn:uuid" + id);
+        concept.setUrnProvider("urn:uuid:provider" + id);
+        concept.setSelfLink(buildResourceLink(TypeExternalArtefactsEnum.CONCEPT));
+        concept.setManagementAppLink("http://srm/concepts/" + id);
+        concept.setName(buildInternationalStringResource(name, DEFAULT_LOCALE));
+        concept.setKind(TypeExternalArtefactsEnum.CONCEPT.getValue());
+        return concept;
+    }
+
+    public static ConceptRepresentation buildConceptRepresentation(String codelistUrn) {
+        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
+        conceptRepresentation.setEnumeration(buildCodelistRef(codelistUrn));
+        return conceptRepresentation;
+    }
+
+    public static ConceptRepresentation buildConceptRepresentation(BasicComponentDataType textType) {
+        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
+        BasicComponentTextFormatType basicComponentTextFormatType = new BasicComponentTextFormatType();
+        basicComponentTextFormatType.setTextType(textType);
+        conceptRepresentation.setTextFormat(basicComponentTextFormatType);
+        return conceptRepresentation;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // CODELIST
+    // -------------------------------------------------------------------------------------
+
+    public static Codelist buildCodelist(String id, String name, String lang, String urn) {
+        Codelist scheme = new Codelist();
+        scheme.setId(id);
+        scheme.setUrn(urn);
+        scheme.getNames().add(buildTextType(name, lang));
+        return scheme;
+    }
+
+    public static CodelistReferenceType buildCodelistRef(Codelist scheme) {
+        if (scheme != null) {
+            CodelistReferenceType ref = new CodelistReferenceType();
+            ref.setRef(buildCodelistRefType(scheme.getUrn()));
+            ref.setURN(scheme.getUrn());
+
+            return ref;
+        }
+        return null;
+    }
+
+    public static CodelistReferenceType buildCodelistRef(String codelistUrn) {
+        CodelistReferenceType ref = new CodelistReferenceType();
+        ref.setRef(buildCodelistRefType(codelistUrn));
+        ref.setURN(codelistUrn);
+        return ref;
+    }
+
+    protected static CodelistRefType buildCodelistRefType(String codelistUrn) {
+        CodelistRefType codelistRefType = new CodelistRefType();
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        codelistRefType.setAgencyID(params[0]);
+        codelistRefType.setId(params[1]);
+        codelistRefType.setVersion(params[2]);
+        return codelistRefType;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // CODES
+    // -------------------------------------------------------------------------------------
+
+    public static Codes buildCodes(int numCodes) {
+        Codes codes = new Codes();
         for (int i = 1; i <= numCodes; i++) {
-            codelist.getCodes().add(SrmMockUtils.buildCode("code-0" + i, "Code 0" + i, lang));
+            codes.getCodes().add(buildCode("code-0" + i, "Code 0" + i, DEFAULT_LOCALE));
         }
-        return codelist;
+        return codes;
     }
 
-    public static DataStructure mockDsdWithGeoTimeAndMeasureDimensions(String urn, String geoId, String timeId, String measureId, ConceptScheme measureConceptScheme, Codelist geoCodelist) {
-        MeasureDimensionType measureDim = SrmMockUtils.buildMeasureDimension(measureId, measureConceptScheme);
+    public static CodeResource buildCode(String id, String name, String lang) {
+        CodeResource code = new CodeResource();
+        code.setId(id);
+        code.setUrn("urn:uuid:" + id);
+        code.setUrnProvider("urn:uuid:provider:" + id);
+        code.setSelfLink(buildResourceLink(TypeExternalArtefactsEnum.CODE));
+        code.setName(buildInternationalStringResource(name, lang));
+        code.setKind(TypeExternalArtefactsEnum.CODE.getValue());
+        return code;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // DSD
+    // -------------------------------------------------------------------------------------
+
+    public static DataStructure mockDsdWithGeoTimeAndMeasureDimensions(String urn, String geoId, String timeId, String measureId, ConceptSchemeReferenceType measureConceptSchemeReference,
+            CodelistReferenceType geoCodelistReference) {
+        MeasureDimensionType measureDim = SrmMockUtils.buildMeasureDimension(measureId, measureConceptSchemeReference);
         TimeDimensionType timeDim = SrmMockUtils.buildTimeDimension(timeId, TimeDataType.REPORTING_YEAR);
-        Dimension geoDim = SrmMockUtils.buildGeoDimension(geoId, geoCodelist);
+        Dimension geoDim = SrmMockUtils.buildGeoDimension(geoId, geoCodelistReference);
 
         DataStructure dsd = new DataStructure();
         dsd.setUrn(urn);
@@ -90,13 +273,13 @@ public class SrmMockUtils {
         return dsd;
     }
 
-    public static MeasureDimensionType buildMeasureDimension(String id, ConceptScheme conceptSchemeRepresentation) {
+    public static MeasureDimensionType buildMeasureDimension(String id, ConceptSchemeReferenceType conceptSchemeRepresentationReference) {
         MeasureDimensionType measureDim = new MeasureDimensionType();
         measureDim.setId(id);
         measureDim.setType(DimensionTypeType.MEASURE_DIMENSION);
 
         MeasureDimensionRepresentationType representationType = new MeasureDimensionRepresentationType();
-        representationType.setEnumeration(buildConceptSchemeRef(conceptSchemeRepresentation));
+        representationType.setEnumeration(conceptSchemeRepresentationReference);
 
         measureDim.setLocalRepresentation(representationType);
 
@@ -135,14 +318,14 @@ public class SrmMockUtils {
         return dim;
     }
 
-    public static Dimension buildGeoDimension(String id, Codelist codelist) {
+    public static Dimension buildGeoDimension(String id, CodelistReferenceType codelistReference) {
         Dimension dim = new Dimension();
         dim.setId(id);
         dim.setIsSpatial(true);
         dim.setType(DimensionTypeType.DIMENSION);
 
         SimpleDataStructureRepresentationType representation = new SimpleDataStructureRepresentationType();
-        representation.setEnumeration(buildCodelistRef(codelist));
+        representation.setEnumeration(codelistReference);
 
         dim.setLocalRepresentation(representation);
 
@@ -272,205 +455,6 @@ public class SrmMockUtils {
         }
 
         return primaryMeasureType;
-    }
-
-    public static ConceptReferenceType buildConceptReferenceTypeWithURN(String conceptIdentityURN) {
-        ConceptReferenceType conceptReferenceType = new ConceptReferenceType();
-        conceptReferenceType.setURN(conceptIdentityURN);
-        conceptReferenceType.setRef(buildConceptRefType(conceptIdentityURN));
-        return conceptReferenceType;
-    }
-
-    protected static ConceptRefType buildConceptRefType(String codelistUrn) {
-        ConceptRefType conceptRefType = new ConceptRefType();
-        String[] params = UrnUtils.splitUrnItem(codelistUrn);
-        conceptRefType.setAgencyID(params[0]);
-        conceptRefType.setMaintainableParentID(params[1]);
-        conceptRefType.setMaintainableParentVersion(params[2]);
-        conceptRefType.setId(params[3]);
-        return conceptRefType;
-    }
-
-    public static ConceptScheme buildConceptScheme(String id, String name, String lang, String urn) {
-        ConceptScheme scheme = new ConceptScheme();
-        scheme.setId(id);
-        scheme.setUrn(urn);
-        scheme.getNames().add(buildTextType(name, lang));
-        return scheme;
-    }
-
-    public static ConceptSchemeReferenceType buildConceptSchemeRef(ConceptScheme scheme) {
-        if (scheme != null) {
-            ConceptSchemeReferenceType ref = new ConceptSchemeReferenceType();
-            ref.setRef(buildConceptSchemeRefType(scheme.getUrn()));
-            ref.setURN(scheme.getUrn());
-            return ref;
-        }
-        return null;
-    }
-    public static Concept buildConcept(String id, String name, String lang) {
-        Concept concept = new Concept();
-        concept.setId(id);
-        concept.setUrn("urn:uuid" + id);
-        concept.setUri(UUID.randomUUID().toString());
-        concept.getNames().add(buildTextType(name, lang));
-        return concept;
-    }
-
-    public static Concept buildConcept(String id, String urn, String name, String lang, ConceptRepresentation conceptRepresentation) {
-        Concept concept = new Concept();
-        concept.setId(id);
-        concept.setUrn(urn);
-        concept.setUri(UUID.randomUUID().toString());
-        concept.getNames().add(buildTextType(name, lang));
-        concept.setCoreRepresentation(conceptRepresentation);
-        return concept;
-    }
-
-    public static Codelist buildCodelist(String id, String name, String lang, String urn) {
-        Codelist scheme = new Codelist();
-        scheme.setId(id);
-        scheme.setUrn(urn);
-        scheme.getNames().add(buildTextType(name, lang));
-        return scheme;
-    }
-
-    public static CodelistReferenceType buildCodelistRef(Codelist scheme) {
-        if (scheme != null) {
-            CodelistReferenceType ref = new CodelistReferenceType();
-            ref.setRef(buildCodelistRefType(scheme.getUrn()));
-            ref.setURN(scheme.getUrn());
-
-            return ref;
-        }
-        return null;
-    }
-
-    public static CodelistReferenceType buildCodelistRef(String codelistUrn) {
-        CodelistReferenceType ref = new CodelistReferenceType();
-
-        ref.setRef(buildCodelistRefType(codelistUrn));
-
-        ref.setURN(codelistUrn);
-
-        return ref;
-    }
-
-    protected static CodelistRefType buildCodelistRefType(String codelistUrn) {
-        CodelistRefType codelistRefType = new CodelistRefType();
-        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
-        codelistRefType.setAgencyID(params[0]);
-        codelistRefType.setId(params[1]);
-        codelistRefType.setVersion(params[2]);
-        return codelistRefType;
-    }
-
-    protected static ConceptSchemeRefType buildConceptSchemeRefType(String codelistUrn) {
-        ConceptSchemeRefType conceptSchemeRefType = new ConceptSchemeRefType();
-        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
-        conceptSchemeRefType.setAgencyID(params[0]);
-        conceptSchemeRefType.setId(params[1]);
-        conceptSchemeRefType.setVersion(params[2]);
-        return conceptSchemeRefType;
-    }
-
-    public static Code buildCode(String id, String name, String lang) {
-        Code code = new Code();
-        code.setId(id);
-        code.setUrn("urn:uuid" + id);
-        code.setUri(UUID.randomUUID().toString());
-        code.getNames().add(buildTextType(name, lang));
-        return code;
-    }
-
-    public static TextType buildTextType(String label, String lang) {
-        TextType text = new TextType();
-        text.setLang(lang);
-        text.setValue(label);
-        return text;
-    }
-
-    public static Codes mockCodesResult(List<CodeType> codes) {
-        Codes codesList = new Codes();
-        codesList.getCodes().addAll(buildResourcesInternalCodes(codes));
-        codesList.setTotal(BigInteger.valueOf(codes.size()));
-        codesList.setOffset(BigInteger.ZERO);
-        return codesList;
-    }
-
-    public static Concepts mockConceptsResult(List<ConceptType> concepts) {
-        Concepts conceptsList = new Concepts();
-        conceptsList.getConcepts().addAll(buildResourcesInternalConcepts(concepts));
-        conceptsList.setTotal(BigInteger.valueOf(concepts.size()));
-        conceptsList.setOffset(BigInteger.ZERO);
-        return conceptsList;
-    }
-
-    public static ConceptRepresentation buildConceptRepresentation(String codelistUrn) {
-        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
-        conceptRepresentation.setEnumeration(buildCodelistRef(codelistUrn));
-        return conceptRepresentation;
-    }
-
-    public static ConceptRepresentation buildConceptRepresentation(BasicComponentDataType textType) {
-        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
-        BasicComponentTextFormatType basicComponentTextFormatType = new BasicComponentTextFormatType();
-        basicComponentTextFormatType.setTextType(textType);
-        conceptRepresentation.setTextFormat(basicComponentTextFormatType);
-        return conceptRepresentation;
-    }
-
-    private static List<CodeResource> buildResourcesInternalCodes(List<CodeType> codes) {
-        List<CodeResource> resources = new ArrayList<CodeResource>();
-        for (CodeType code : codes) {
-            resources.add(buildResourceInternalFromCode(code));
-        }
-        return resources;
-    }
-
-    private static List<ItemResourceInternal> buildResourcesInternalConcepts(List<ConceptType> concepts) {
-        List<ItemResourceInternal> resources = new ArrayList<ItemResourceInternal>();
-        for (ConceptType concept : concepts) {
-            resources.add(buildResourceInternalFromConcept(concept));
-        }
-        return resources;
-    }
-
-    private static CodeResource buildResourceInternalFromCode(CodeType code) {
-        CodeResource resource = new CodeResource();
-        ResourceLink link = new ResourceLink();
-        link.setHref(code.getUri());
-        resource.setSelfLink(link);
-        resource.setId(code.getId());
-        resource.setUrn(code.getUrn());
-        resource.setUrnSiemac(code.getUrn());
-        resource.setName(buildInternationalStringFromTextType(code.getNames()));
-        resource.setManagementAppLink("http://" + code.getId());
-        return resource;
-    }
-
-    private static ItemResourceInternal buildResourceInternalFromConcept(ConceptType concept) {
-        ItemResourceInternal resource = new ItemResourceInternal();
-        ResourceLink link = new ResourceLink();
-        link.setHref(concept.getUri());
-        resource.setSelfLink(link);
-        resource.setId(concept.getId());
-        resource.setUrn(concept.getUrn());
-        resource.setUrnSiemac(concept.getUrn());
-        resource.setName(buildInternationalStringFromTextType(concept.getNames()));
-        resource.setManagementAppLink("http://" + concept.getId());
-        return resource;
-    }
-
-    private static InternationalString buildInternationalStringFromTextType(List<TextType> texts) {
-        InternationalString intString = new InternationalString();
-        for (TextType text : texts) {
-            LocalisedString loc = new LocalisedString();
-            loc.setLang(text.getLang());
-            loc.setValue(text.getValue());
-            intString.getTexts().add(loc);
-        }
-        return intString;
     }
 
 }

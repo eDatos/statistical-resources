@@ -9,301 +9,259 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsT
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
 
 public class Mocks {
 
-    public static Codelist mock_CL_DECIMALS() {
-        Codelist codelist = new Codelist();
+    // --------------------------------------------------------------------
+    // LIST OF CODES
+    // --------------------------------------------------------------------
 
-        // Codelist attributes
-        codelist.setAgencyID("SDMX");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_DECIMALS");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DECIMALS(1.0)");
+    public static Codes mock_CL_DECIMALS() {
+        Codes codes = new Codes();
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("Code list for Decimals (DECIMALS)", "en"));
-        codelist.getDescriptions().add(SrmMockUtils.buildTextType("It provides a list of values showing the number of decimal digits used in the data.", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("0", "Zero", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("1", "One", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("2", "Two", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("3", "Three", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("4", "Four", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("5", "Five", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("6", "Six", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("7", "Seven", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("8", "Eight", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("9", "Nine", "en"));
 
-        codelist.getCodes().add(SrmMockUtils.buildCode("0", "Zero", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("1", "One", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("2", "Two", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("3", "Three", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("4", "Four", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("5", "Five", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("6", "Six", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("7", "Seven", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("8", "Eight", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("9", "Nine", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_FREQ() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_FREQ() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("SDMX");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_FREQ");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_FREQ(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("A", "Annual", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("B", "Daily - business week", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("D", "Daily", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("M", "Monthly", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("N", "Minutely", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("Q", "Quarterly", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("S", "Half Yearly, semester", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("W", "Weekly", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("Code list for Frequency (FREQ)", "en"));
-        codelist.getDescriptions()
-                .add(SrmMockUtils
-                        .buildTextType(
-                                "It provides a list of values indicating the \"frequency\" of the data (e.g. monthly) and, thus, indirectly, also implying the type of \"time reference\" that could be used for identifying the data with respect time.",
-                                "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("A", "Annual", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("B", "Daily - business week", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("D", "Daily", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("M", "Monthly", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("N", "Minutely", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("Q", "Quarterly", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("S", "Half Yearly, semester", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("W", "Weekly", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_CONF_STATUS() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_CONF_STATUS() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("SDMX");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_CONF_STATUS");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_CONF_STATUS(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("C", "Confidential statistical information", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("D", "Secondary confidentiality set by the sender, not for   publication", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("F", "Free", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("N", "Not for publication, restricted for internal use only", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("S", "Secondary confidentiality set and managed by the receiver, not for publication", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("code list for Confidentiality Status (CONF_STATUS)", "en"));
-        codelist.getDescriptions().add(SrmMockUtils.buildTextType("this code list provides coded information about the sensitivity and confidentiality status of the data.", "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("C", "Confidential statistical information", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("D", "Secondary confidentiality set by the sender, not for   publication", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("F", "Free", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("N", "Not for publication, restricted for internal use only", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("S", "Secondary confidentiality set and managed by the receiver, not for publication", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_OBS_STATUS() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_OBS_STATUS() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("SDMX");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_OBS_STATUS");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_OBS_STATUS(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("A", "Normal", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("B", "Break", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("E", "Estimated value", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("F", "Forecast value", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("I", "Imputed value (CCSA definition)", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("M", "Missing value", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("P", "Provisional value", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("S", "Strike", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("code list for Confidentiality Status (CONF_STATUS)", "en"));
-        codelist.getDescriptions().add(SrmMockUtils.buildTextType("this code list provides coded information about the sensitivity and confidentiality status of the data.", "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("A", "Normal", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("B", "Break", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("E", "Estimated value", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("F", "Forecast value", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("I", "Imputed value (CCSA definition)", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("M", "Missing value", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("P", "Provisional value", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("S", "Strike", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_UNIT_MULT() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_UNIT_MULT() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("SDMX");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_UNIT_MULT");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_UNIT_MULT(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("0", "Units", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("1", "Tens", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("2", "Hundreds", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("3", "Thousands", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("4", "Tens of thousands", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("6", "Millions", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("9", "Billions", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("12", "Trillions", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("15", "Quadrillions", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("code list for the Unit Multiplier (UNIT_MULT)", "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("0", "Units", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("1", "Tens", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("2", "Hundreds", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("3", "Thousands", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("4", "Tens of thousands", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("6", "Millions", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("9", "Billions", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("12", "Trillions", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("15", "Quadrillions", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_EXR_TYPE() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_EXR_TYPE() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("ECB");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_EXR_TYPE");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_TYPE(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("CR00", "Official fixing", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("RR00", "Reference rate", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("SP00", "Spot", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("code list for the exchange rates types", "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("CR00", "Official fixing", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("RR00", "Reference rate", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("SP00", "Spot", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_EXR_VAR() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_EXR_VAR() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("ECB");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_EXR_VAR");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_VAR(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("E", "End-of-period", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("P", "Growth rate over previous period", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("code list for the exchange rate series variation", "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("E", "End-of-period", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("P", "Growth rate over previous period", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static Codelist mock_CL_CURRENCY() {
-        Codelist codelist = new Codelist();
+    public static Codes mock_CL_CURRENCY() {
+        Codes codes = new Codes();
 
-        // Codelist attributes
-        codelist.setAgencyID("ISO");
-        codelist.setVersion("1.0");
-        codelist.setId("CL_CURRENCY");
-        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)");
+        codes.getCodes().add(SrmMockUtils.buildCode("CHF", "Swiss franc", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("EUR", "Euro", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("GBP", "Pound sterling", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("JPY", "Japanese yen", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("USD", "United States dollar", "en"));
 
-        codelist.getNames().add(SrmMockUtils.buildTextType("code list for the exchange rate series variation", "en"));
-
-        codelist.getCodes().add(SrmMockUtils.buildCode("CHF", "Swiss franc", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("EUR", "Euro", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("GBP", "Pound sterling", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("JPY", "Japanese yen", "en"));
-        codelist.getCodes().add(SrmMockUtils.buildCode("USD", "United States dollar", "en"));
-
-        return codelist;
+        return codes;
     }
 
-    public static ConceptScheme mock_CROSS_DOMAIN_CONCEPTS() {
-        ConceptScheme conceptScheme = new ConceptScheme();
+    // --------------------------------------------------------------------
+    // LIST OF CONCEPTS
+    // --------------------------------------------------------------------
 
-        // Codelist attributes
-        conceptScheme.setAgencyID("SDMX");
-        conceptScheme.setVersion("1.0");
-        conceptScheme.setId("CROSS_DOMAIN_CONCEPTS");
-        conceptScheme.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)");
+    public static Concepts mock_CROSS_DOMAIN_CONCEPTS() {
+        Concepts concepts = new Concepts();
 
-        conceptScheme.getNames().add(SrmMockUtils.buildTextType("SDMX Cross Domain Concept Scheme", "en"));
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD());
+        concepts.getConcepts().add(SrmMockUtils.buildConcept("CONF", "Confidentiality"));
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS());
+        concepts.getConcepts().add(SrmMockUtils.buildConcept("CURRENCY", "Currency"));
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS());
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ());
+        concepts.getConcepts().add(SrmMockUtils.buildConcept("OBS_VALUE", "Observation value"));
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS());
+        concepts.getConcepts().add(SrmMockUtils.buildConcept("TIME_PERIOD", "Time Period"));
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_1_0_TITLE());
+        concepts.getConcepts().add(mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT());
+        concepts.getConcepts().add(SrmMockUtils.buildConcept("UNIT_MEASURE", "Unit of Measure"));
 
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD());
-
-        conceptScheme.getConcepts().add(
-                SrmMockUtils.buildConcept("CONF", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF", "Confidentiality", "en",
-                        SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING)));
-
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS());
-
-        conceptScheme.getConcepts().add(SrmMockUtils.buildConcept("CURRENCY", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CURRENCY", "Currency", "en", null));
-
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS());
-
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ());
-
-        conceptScheme.getConcepts().add(
-                SrmMockUtils.buildConcept("OBS_VALUE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE", "Observation value", "en",
-                        SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING)));
-
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS());
-
-        conceptScheme.getConcepts().add(
-                SrmMockUtils.buildConcept("TIME_PERIOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TIME_PERIOD", "Time Period", "en",
-                        SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.OBSERVATIONAL_TIME_PERIOD)));
-
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
-
-        conceptScheme.getConcepts().add(mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT());
-
-        conceptScheme.getConcepts().add(
-                SrmMockUtils.buildConcept("UNIT_MEASURE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MEASURE", "Unit of Measure", "en", null));
-
-        return conceptScheme;
+        return concepts;
     }
+
+    public static Concepts mock_ECB_CONCEPTS() {
+        Concepts concepts = new Concepts();
+
+        concepts.getConcepts().add(mock_resource_ECB_CONCEPTS_1_0_CURRENCY_DENOM());
+        concepts.getConcepts().add(mock_resource_ECB_CONCEPTS_1_0_EXR_VAR());
+        concepts.getConcepts().add(mock_resource_ECB_CONCEPTS_1_0_EXR_TYPE());
+
+        return concepts;
+    }
+
+    // --------------------------------------------------------------------
+    // CONCEPTS: RESOURCE INTERNAL (for retrieveConceptsOfConceptScheme)
+    // --------------------------------------------------------------------
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_1_0_TITLE() {
+        return SrmMockUtils.buildConcept("TITLE", "Title");
+    }
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS() {
+        return SrmMockUtils.buildConcept("OBS_STATUS", "Observation value");
+    }
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS() {
+        return SrmMockUtils.buildConcept("CONF_STATUS", "Confidentiality - status");
+    }
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT() {
+        return SrmMockUtils.buildConcept("UNIT_MULT", "Unit Multiplier");
+    }
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD() {
+        return SrmMockUtils.buildConcept("COLL_METHOD", "Data Collection Method");
+    }
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ() {
+        return SrmMockUtils.buildConcept("FREQ", "Frequency");
+    }
+
+    public static ItemResourceInternal mock_resource_ECB_CONCEPTS_1_0_EXR_VAR() {
+        return SrmMockUtils.buildConcept("EXR_VAR", "Series variation - EXR context");
+    }
+
+    public static ItemResourceInternal mock_resource_ECB_CONCEPTS_1_0_EXR_TYPE() {
+        return SrmMockUtils.buildConcept("EXR_TYPE", "Exchange rate type");
+    }
+
+    public static ItemResourceInternal mock_resource_ECB_CONCEPTS_1_0_CURRENCY_DENOM() {
+        return SrmMockUtils.buildConcept("CURRENCY_DENOM", "Currency denominator");
+    }
+
+    public static ItemResourceInternal mock_resource_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS() {
+        return SrmMockUtils.buildConcept("DECIMALS", "Decimals");
+    }
+
+    // --------------------------------------------------------------------
+    // CONCEPTS (for retrieveConcept)
+    // --------------------------------------------------------------------
 
     public static Concept mock_SDMX_CROSS_DOMAIN_1_0_TITLE() {
-        return SrmMockUtils.buildConcept("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", "Title", "en",
+        return SrmMockUtils.buildConcept("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", "Title",
                 SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS() {
-        return SrmMockUtils.buildConcept("OBS_STATUS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS", "Observation value", "en",
+        return SrmMockUtils.buildConcept("OBS_STATUS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS", "Observation value",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_OBS_STATUS(1.0)"));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS() {
-        return SrmMockUtils.buildConcept("CONF_STATUS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", "Confidentiality - status", "en",
+        return SrmMockUtils.buildConcept("CONF_STATUS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", "Confidentiality - status",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_CONF_STATUS(1.0)"));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT() {
-        return SrmMockUtils.buildConcept("UNIT_MULT", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT", "Unit Multiplier", "en",
+        return SrmMockUtils.buildConcept("UNIT_MULT", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT", "Unit Multiplier",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_UNIT_MULT(1.0)"));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD() {
-        return SrmMockUtils.buildConcept("COLL_METHOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD", "Data Collection Method", "en",
+        return SrmMockUtils.buildConcept("COLL_METHOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD", "Data Collection Method",
                 SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ() {
-        return SrmMockUtils.buildConcept("FREQ", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ", "Frequency", "en",
+        return SrmMockUtils.buildConcept("FREQ", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ", "Frequency",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_FREQ(1.0)"));
     }
 
-    public static ConceptScheme mock_ECB_CONCEPTS() {
-        ConceptScheme conceptScheme = new ConceptScheme();
-
-        // Codelist attributes
-        conceptScheme.setAgencyID("ECB");
-        conceptScheme.setVersion("1.0");
-        conceptScheme.setId("ECB_CONCEPTS");
-        conceptScheme.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=ECB:ECB_CONCEPTS(1.0)");
-
-        conceptScheme.getNames().add(SrmMockUtils.buildTextType("Concepts maintained by the ECB", "en"));
-
-        conceptScheme.getConcepts().add(mock_ECB_CONCEPTS_1_0_CURRENCY_DENOM());
-
-        conceptScheme.getConcepts().add(mock_ECB_CONCEPTS_1_0_EXR_VAR());
-
-        conceptScheme.getConcepts().add(mock_ECB_CONCEPTS_1_0_EXR_TYPE());
-
-        return conceptScheme;
+    public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS() {
+        return SrmMockUtils.buildConcept("DECIMALS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS", "Decimals",
+                SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DECIMALS(1.0)"));
     }
 
     public static Concept mock_ECB_CONCEPTS_1_0_EXR_VAR() {
-        return SrmMockUtils.buildConcept("EXR_VAR", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_VAR", "Series variation - EXR context", "en",
+        return SrmMockUtils.buildConcept("EXR_VAR", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_VAR", "Series variation - EXR context",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_VAR(1.0)"));
     }
 
     public static Concept mock_ECB_CONCEPTS_1_0_EXR_TYPE() {
-        return SrmMockUtils.buildConcept("EXR_TYPE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE", "Exchange rate type", "en",
+        return SrmMockUtils.buildConcept("EXR_TYPE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE", "Exchange rate type",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_TYPE(1.0)"));
     }
 
     public static Concept mock_ECB_CONCEPTS_1_0_CURRENCY_DENOM() {
-        return SrmMockUtils.buildConcept("CURRENCY_DENOM", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM", "Currency denominator", "en",
+        return SrmMockUtils.buildConcept("CURRENCY_DENOM", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM", "Currency denominator",
                 SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)"));
     }
+
+    // --------------------------------------------------------------------
+    // DSD
+    // --------------------------------------------------------------------
 
     public static DataStructure mock_DSD_ECB_EXR_RG() {
         DataStructure dataStructure = new DataStructure();
@@ -385,10 +343,5 @@ public class Mocks {
         dataStructure.getDataStructureComponents().setMeasureList(measureListType);
 
         return dataStructure;
-    }
-
-    public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS() {
-        return SrmMockUtils.buildConcept("DECIMALS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS", "Decimals", "en",
-                SrmMockUtils.buildConceptRepresentation("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DECIMALS(1.0)"));
     }
 }

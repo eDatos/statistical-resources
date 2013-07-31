@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.invocation;
+package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.util.List;
 
@@ -35,6 +35,7 @@ public interface SrmRestInternalService {
     public Concept retrieveConceptByUrn(String urn) throws MetamacException;
     public Concepts findConcepts(String conceptSchemeUrn, int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findConceptsUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public Concepts retrieveConceptsOfConceptSchemeEfficiently(String conceptSchemeUrn) throws MetamacException;
 
     // CODELIST
     public Codelists findCodelists(int firstResult, int maxResult, String query) throws MetamacException;
@@ -42,6 +43,7 @@ public interface SrmRestInternalService {
     public Codelist retrieveCodelistByUrn(String urn) throws MetamacException;
 
     // CODES
+    public Codes retrieveCodesOfCodelistEfficiently(String codelistUrn) throws MetamacException;
     public Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findCodesUrns(int firstResult, int maxResult, String query) throws MetamacException;
     public Code retrieveCodeByUrn(String urn) throws MetamacException;
@@ -51,16 +53,18 @@ public interface SrmRestInternalService {
     public List<String> findOrganisationSchemesUrns(int firstResult, int maxResult, String query) throws MetamacException;
     
     // ORGANISATION
+    public Organisations retrieveOrganisationsOfOrganisationSchemeEfficiently(String organisationSchemeUrn) throws MetamacException;
     public Organisations findOrganisations(int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findOrganisationsUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    
+    public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException;
     
     // CATEGORY SCHEMES
     public CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findCategorySchemesUrns(int firstResult, int maxResult, String query) throws MetamacException;
     
     // CATEGORY
+    public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException;
     public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findCategoriesUrns(int firstResult, int maxResult, String query) throws MetamacException;
-
-    public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException;
 }

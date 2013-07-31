@@ -10,8 +10,6 @@ import java.util.Set;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
@@ -22,10 +20,12 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
@@ -33,7 +33,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
@@ -101,7 +101,6 @@ public class ValidateDataVersusDsd {
     /**************************************************************************
      * VALIDATORS
      **************************************************************************/
-    @SuppressWarnings("unchecked")
     public void checkObservation(List<ObservationExtendedDto> dataDtos) throws Exception {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
         List<ComponentInfo> dimensionsInfos = new ArrayList<ComponentInfo>(this.dimensionsInfoMap.values());
@@ -359,9 +358,9 @@ public class ValidateDataVersusDsd {
             // Codelist: If is not currently cached
             String codelistRepresentationUrn = dsdComponent.getCodelistRepresentationUrn();
             if (codelistRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
-                Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codelistRepresentationUrn);
+                Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
 
-                for (CodeType codeType : codelist.getCodes()) {
+                for (CodeResource codeType : codes.getCodes()) {
                     enumerationRepresentationsMultimap.put(codelistRepresentationUrn, codeType.getId());
                 }
             }
@@ -371,9 +370,9 @@ public class ValidateDataVersusDsd {
             // ConceptScheme:
             String conceptSchemeRepresentationUrn = dsdComponent.getConceptSchemeRepresentationUrn();
             if (conceptSchemeRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(conceptSchemeRepresentationUrn)) {
-                ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRepresentationUrn);
+                Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeRepresentationUrn);
 
-                for (ConceptType conceptType : conceptScheme.getConcepts()) {
+                for (ItemResourceInternal conceptType : concepts.getConcepts()) {
                     enumerationRepresentationsMultimap.put(conceptSchemeRepresentationUrn, conceptType.getId());
                 }
             }

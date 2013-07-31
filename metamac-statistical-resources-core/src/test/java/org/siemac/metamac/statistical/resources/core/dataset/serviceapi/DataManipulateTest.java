@@ -27,7 +27,7 @@ import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
@@ -134,20 +134,20 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG());
 
         // CODELIST
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DECIMALS(1.0)")).thenReturn(Mocks.mock_CL_DECIMALS());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_FREQ(1.0)")).thenReturn(Mocks.mock_CL_FREQ());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_CONF_STATUS(1.0)")).thenReturn(Mocks.mock_CL_CONF_STATUS());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_OBS_STATUS(1.0)")).thenReturn(Mocks.mock_CL_OBS_STATUS());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_UNIT_MULT(1.0)")).thenReturn(Mocks.mock_CL_UNIT_MULT());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_TYPE(1.0)")).thenReturn(Mocks.mock_CL_EXR_TYPE());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_VAR(1.0)")).thenReturn(Mocks.mock_CL_EXR_VAR());
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)")).thenReturn(Mocks.mock_CL_CURRENCY());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DECIMALS(1.0)")).thenReturn(Mocks.mock_CL_DECIMALS());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_FREQ(1.0)")).thenReturn(Mocks.mock_CL_FREQ());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_CONF_STATUS(1.0)")).thenReturn(Mocks.mock_CL_CONF_STATUS());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_OBS_STATUS(1.0)")).thenReturn(Mocks.mock_CL_OBS_STATUS());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_UNIT_MULT(1.0)")).thenReturn(Mocks.mock_CL_UNIT_MULT());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_TYPE(1.0)")).thenReturn(Mocks.mock_CL_EXR_TYPE());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_VAR(1.0)")).thenReturn(Mocks.mock_CL_EXR_VAR());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)")).thenReturn(Mocks.mock_CL_CURRENCY());
 
         // CONCEPT SCHEME
-        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)")).thenReturn(
+        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)")).thenReturn(
                 Mocks.mock_CROSS_DOMAIN_CONCEPTS());
 
-        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=ECB:ECB_CONCEPTS(1.0)")).thenReturn(Mocks.mock_ECB_CONCEPTS());
+        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=ECB:ECB_CONCEPTS(1.0)")).thenReturn(Mocks.mock_ECB_CONCEPTS());
 
         // CONCEPT
         Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ")).thenReturn(

@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.invocation;
+package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +24,11 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organis
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-// TODO revisar tras cambios API SRM
 
 @Component
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
@@ -166,6 +165,23 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
+    public Concepts retrieveConceptsOfConceptSchemeEfficiently(String conceptSchemeUrn) throws MetamacException {
+        if (StringUtils.isBlank(conceptSchemeUrn)) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CONCEPT_SCHEME_URN);
+        }
+
+        try {
+            String[] params = UrnUtils.splitUrnItemScheme(conceptSchemeUrn);
+            String agencyId = params[0];
+            String resourceId = params[1];
+            String version = params[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyId, resourceId, version, null, null, null, null);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
     public List<String> findConceptsUrns(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             Concepts concepts = findConcepts(null, firstResult, maxResult, query);
@@ -225,6 +241,23 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     /*
      * Codes
      */
+    @Override
+    public Codes retrieveCodesOfCodelistEfficiently(String codelistUrn) throws MetamacException {
+        if (StringUtils.isBlank(codelistUrn)) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CODELIST_URN);
+        }
+
+        try {
+            String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+            String agencyId = params[0];
+            String resourceId = params[1];
+            String version = params[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+    
     @Override
     public Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException {
         try {
@@ -312,6 +345,24 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
      * ORGANISATIONS
      */
     @Override
+    public Organisations retrieveOrganisationsOfOrganisationSchemeEfficiently(String organisationSchemeUrn) throws MetamacException {
+        if (StringUtils.isBlank(organisationSchemeUrn)) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.ORGANISATION_SCHEME_URN);
+        }
+
+        try {
+            String[] params = UrnUtils.splitUrnItemScheme(organisationSchemeUrn);
+            String agencyId = params[0];
+            String resourceId = params[1];
+            String version = params[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().findOrganisations(agencyId, resourceId, version, null, null, null, null);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+    
+    
+    @Override
     public Organisations findOrganisations(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
@@ -370,7 +421,23 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     /*
      * CATEGORY
      */
+    @Override
+    public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException {
+        if (StringUtils.isBlank(categorySchemeUrn)) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CATEGORY_SCHEME_URN);
+        }
 
+        try {
+            String[] params = UrnUtils.splitUrnItemScheme(categorySchemeUrn);
+            String agencyId = params[0];
+            String resourceId = params[1];
+            String version = params[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(agencyId, resourceId, version, null, null, null, null);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+    
     @Override
     public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException {
         try {

@@ -91,6 +91,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
@@ -104,7 +106,9 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
@@ -126,7 +130,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -2020,7 +2024,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         propertyRestriction.setStringValue(stringValue);
         metamacCriteria.setRestriction(propertyRestriction);
     }
-
+    
     private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
         List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
 
@@ -2034,19 +2038,17 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         // Mock codelist and concept Scheme
 
-        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)", StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE,
-                3);
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
+        CodelistReferenceType codelistReference = SrmMockUtils.buildCodelistRef("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)");
+        Codes codes = SrmMockUtils.buildCodes(3);
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistReference.getURN())).thenReturn(codes);
 
-        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)",
-                StatisticalResourcesDoMocks.DEFAULT_DATA_LOCALE, 3);
-        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
+        ConceptSchemeReferenceType conceptSchemeReference = SrmMockUtils.buildConceptSchemeRef("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)"); 
+        Concepts concepts = SrmMockUtils.buildConcepts(3);
+        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeReference.getURN())).thenReturn(concepts);
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD",
-                "MEAS_DIM", conceptScheme, codelist);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptSchemeReference, codelistReference);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
     }
-
 }

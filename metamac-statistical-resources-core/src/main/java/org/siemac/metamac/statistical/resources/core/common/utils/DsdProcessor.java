@@ -31,7 +31,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribu
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 
 public class DsdProcessor {
 

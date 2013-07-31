@@ -77,7 +77,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
     @Test
     @MetamacMock({DATASET_VERSION_06_FOR_QUERIES_NAME, QUERY_01_SIMPLE_NAME})
-    public void testCreateQueryErrorQueryDimensionUnique() throws Exception {
+    public void testCreateQueryErrorQuerySelectionMustHaveDimensionUnique() throws Exception {
         thrown.expect(HibernateSystemException.class);
 
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
@@ -133,10 +133,10 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
     }
 
     @Test
-    @MetamacMock({DATASET_VERSION_06_FOR_QUERIES_NAME,QUERY_01_SIMPLE_NAME})
-    public void testCreateQueryErrorDimensionCodeUnique() throws Exception {
+    @MetamacMock({DATASET_VERSION_06_FOR_QUERIES_NAME, QUERY_01_SIMPLE_NAME})
+    public void testCreateQueryErrorQuerySelectionItemMustHaveDimensionCodeUnique() throws Exception {
         thrown.expect(HibernateSystemException.class);
-        
+
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
         QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
 
@@ -156,7 +156,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         CodeItem codeItem012 = new CodeItem();
         codeItem012.setCode("CODE_01");
-        codeItem012.setTitle("Code 01B");
+        codeItem012.setTitle("Code 01 B");
         codeItem012.setQuerySelectionItem(querySelectionItem01);
 
         querySelectionItem01.setDimension("DIMESNION_01");
@@ -188,7 +188,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         // Save
         queryVersionRepository.save(queryVersion);
     }
-    
+
     @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
@@ -198,7 +198,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion actual = queryVersionRepository.retrieveLastVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME})
     public void testRetrieveLastVersionWithAllVersionsPublished() throws Exception {
@@ -207,9 +207,10 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion actual = queryVersionRepository.retrieveLastVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
     }
-    
+
     @Test
-    @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME,
+            QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
     public void testRetrieveLastVersionWithLatestVersionNoVisible() throws Exception {
         String queryUrn = queryMockFactory.retrieveMock(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
         QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
@@ -226,7 +227,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion actual = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
     public void testRetrieveLastPublishedVersionWithAllVersionsPublished() throws Exception {
@@ -235,7 +236,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion actual = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_VERSION_11_DRAFT_NAME})
     public void testRetrieveLastPublishedVersionWithoutVersionsPublished() throws Exception {
@@ -244,9 +245,10 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion actual = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
     }
-    
+
     @Test
-    @MetamacMock({QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_VERSION_11_DRAFT_NAME, QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    @MetamacMock({QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_VERSION_11_DRAFT_NAME,
+            QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
     public void testRetrieveLastPublishedVersionWithLatestVersionNoVisible() throws Exception {
         String queryUrn = queryMockFactory.retrieveMock(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
         QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME);

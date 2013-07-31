@@ -7,16 +7,16 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
@@ -30,7 +30,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
@@ -61,6 +61,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private DatasetRepositoriesServiceFacade           statisticsDatasetRepositoriesServiceFacade;
+
+    @Autowired
+    private RestMapper                                 restMapper;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -218,12 +221,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInCodelist(List<CodeDimension> codeDimensions, String codelistRepresentationUrn) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
 
-        Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codelistRepresentationUrn);
+        Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
 
-        for (CodeType code : codelist.getCodes()) {
+        for (CodeResource code : codes.getCodes()) {
             for (CodeDimension codeDim : codeDimensions) {
                 if (codeDim.getIdentifier().equals(code.getId())) {
-                    externalItems.add(RestMapper.buildExternalItemFromCode(code));
+                    externalItems.add(restMapper.buildExternalItemFromCode(code));
                 }
             }
         }
@@ -238,12 +241,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInConceptScheme(List<CodeDimension> codeDimensions, String conceptSchemeRepresentationUrn) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
 
-        ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRepresentationUrn);
+        Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeRepresentationUrn);
 
-        for (ConceptType concept : conceptScheme.getConcepts()) {
+        for (ItemResourceInternal concept : concepts.getConcepts()) {
             for (CodeDimension codeDim : codeDimensions) {
                 if (codeDim.getIdentifier().equals(concept.getId())) {
-                    externalItems.add(RestMapper.buildExternalItemFromConcept(concept));
+                    externalItems.add(restMapper.buildExternalItemFromSrmItemResourceInternal(concept));
                 }
             }
         }

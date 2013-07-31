@@ -21,17 +21,24 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -40,7 +47,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
@@ -54,12 +62,7 @@ import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
-/**
- * Spring based transactional test with DbUnit support.
- */
 public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
-
-    private static final String                        DEFAULT_LOCALE          = "es";
 
     @InjectMocks
     protected DatasetLifecycleServiceImpl              datasetLifecycleService = new DatasetLifecycleServiceImpl();
@@ -69,6 +72,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Mock
     private SiemacLifecycleFiller                      siemacLifecycleFiller;
+
+    @Mock(answer = Answers.CALLS_REAL_METHODS)
+    private RestMapperTestImpl                         restMapper;
 
     @Mock
     private LifecycleCommonMetadataChecker             lifecycleCommonMetadataChecker;
@@ -187,12 +193,12 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         assertEquals(3, datasetVersion.getTemporalCoverage().size());
         assertEquals(3, datasetVersion.getMeasureCoverage().size());
     }
-    
+
     @Override
     @Test
     public void testCheckSendToProductionValidationResource() throws Exception {
         fail("not implemented");
-        
+
     }
 
     @Override
@@ -234,7 +240,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(DatasetVersion.class), Mockito.anyString(),
                 Mockito.anyListOf(MetamacExceptionItem.class));
     }
-    
 
     @Override
     @Test
@@ -282,7 +287,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     public void testApplySendToValidationRejectedResource() throws Exception {
         fail("not implemented");
     }
-    
+
     // ------------------------------------------------------------------------------------------------------
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
@@ -295,7 +300,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
         datasetLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersion);
     }
-    
 
     @Override
     @Test
@@ -327,17 +331,16 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 
-
     @Override
     @Test
     public void testCheckVersioningResource() throws Exception {
-        fail("not implemented");        
+        fail("not implemented");
     }
 
     @Override
     @Test
     public void testApplyVersioningResource() throws Exception {
-        fail("not implemented");        
+        fail("not implemented");
     }
 
     @Override
@@ -351,9 +354,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplyVersioningLinkedStatisticalResource() throws Exception {
         // TODO: Esto debería desaparecer
-        fail("not implemented");        
+        fail("not implemented");
     }
-    
+
     /**
      * UTILS
      */
@@ -370,17 +373,49 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         // Mock codelist and concept Scheme
 
-        Codelist codelist = SrmMockUtils.buildCodelistWithCodes("codelist-01", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)", DEFAULT_LOCALE, 3);
-        Mockito.when(srmRestInternalService.retrieveCodelistByUrn(codelist.getUrn())).thenReturn(codelist);
+        CodelistReferenceType codelistReference = SrmMockUtils.buildCodelistRef("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)");
+        Codes codes = SrmMockUtils.buildCodes(3);
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistReference.getURN())).thenReturn(codes);
 
-        ConceptScheme conceptScheme = SrmMockUtils.buildConceptSchemeWithConcepts("csch-01", "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)", DEFAULT_LOCALE, 3);
-        Mockito.when(srmRestInternalService.retrieveConceptSchemeByUrn(conceptScheme.getUrn())).thenReturn(conceptScheme);
+        ConceptSchemeReferenceType conceptSchemeReference = SrmMockUtils.buildConceptSchemeRef("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)");
+        Concepts concepts = SrmMockUtils.buildConcepts(3);
+        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeReference.getURN())).thenReturn(concepts);
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptScheme, codelist);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD",
+                "MEAS_DIM", conceptSchemeReference, codelistReference);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
-
     }
 
+    private class RestMapperTestImpl extends RestMapper {
+
+        @Override
+        public ExternalItem buildExternalItemFromSrmItemResourceInternal(ItemResourceInternal itemResourceInternal) throws MetamacException {
+            ExternalItem externalItem = new ExternalItem();
+            externalItem.setCode(itemResourceInternal.getId());
+            externalItem.setCodeNested(itemResourceInternal.getNestedId());
+            externalItem.setUri(itemResourceInternal.getSelfLink().getHref());
+            externalItem.setUrn(itemResourceInternal.getUrn());
+            externalItem.setUrnProvider(itemResourceInternal.getUrnProvider());
+            externalItem.setType(TypeExternalArtefactsEnum.fromValue(itemResourceInternal.getKind()));
+            externalItem.setManagementAppUrl(itemResourceInternal.getManagementAppLink());
+            externalItem.setTitle(getInternationalStringFromInternationalStringResource(itemResourceInternal.getName()));
+            return externalItem;
+        }
+
+        @Override
+        public ExternalItem buildExternalItemFromCode(CodeResource code) throws MetamacException {
+            ExternalItem externalItem = new ExternalItem();
+            externalItem.setCode(code.getId());
+            externalItem.setCodeNested(code.getNestedId());
+            externalItem.setUri(code.getSelfLink().getHref());
+            externalItem.setUrn(code.getUrn());
+            externalItem.setUrnProvider(code.getUrnProvider());
+            externalItem.setType(TypeExternalArtefactsEnum.fromValue(code.getKind()));
+            externalItem.setManagementAppUrl(code.getManagementAppLink());
+            externalItem.setTitle(getInternationalStringFromInternationalStringResource(code.getName()));
+            return externalItem;
+        }
+    }
 }

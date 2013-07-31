@@ -17,8 +17,6 @@ import org.joda.time.DateTime;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CodeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
@@ -29,10 +27,12 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -49,7 +49,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validato
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -594,10 +594,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private List<String> getCodesFromConceptScheme(ConceptSchemeReferenceType conceptSchemeRef) throws MetamacException {
-        ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(conceptSchemeRef.getURN());
+        Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeRef.getURN());
 
         List<String> codes = new ArrayList<String>();
-        for (ConceptType concept : conceptScheme.getConcepts()) {
+        for (ItemResourceInternal concept : concepts.getConcepts()) {
             codes.add(concept.getId());
         }
         return codes;
@@ -625,10 +625,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private List<String> getCodesFromCodelist(CodelistReferenceType codeListRef) throws MetamacException {
-        Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(codeListRef.getURN());
+        Codes codelistCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codeListRef.getURN());
 
         List<String> codes = new ArrayList<String>();
-        for (CodeType code : codelist.getCodes()) {
+        for (CodeResource code : codelistCodes.getCodes()) {
             codes.add(code.getId());
         }
         return codes;
