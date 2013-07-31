@@ -206,7 +206,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         externalItemDto.setCodeNested(resource.getNestedId());
         externalItemDto.setUri(resource.getSelfLink().getHref());
         externalItemDto.setUrn(resource.getUrn());
-        externalItemDto.setUrnInternal(resource.getUrnSiemac());
+        externalItemDto.setUrnProvider(resource.getUrnProvider());
         externalItemDto.setType(type);
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
         externalItemDto.setManagementAppUrl(resource.getManagementAppLink());
@@ -219,7 +219,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         externalItemDto.setCodeNested(agency.getNestedId());
         externalItemDto.setUri(agency.getSelfLink().getHref());
         externalItemDto.setUrn(agency.getUrn());
-        externalItemDto.setUrnInternal(agency.getUrnSiemac());
+        externalItemDto.setUrnProvider(agency.getUrnProvider());
         externalItemDto.setType(TypeExternalArtefactsEnum.AGENCY);
         externalItemDto.setTitle(toInternationalStringDto(agency.getNames()));
         externalItemDto.setManagementAppUrl(agency.getManagementAppLink());
@@ -231,7 +231,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         externalItemDto.setCode(code.getId());
         externalItemDto.setUri(code.getSelfLink().getHref());
         externalItemDto.setUrn(code.getUrn());
-        externalItemDto.setUrnInternal(code.getUrnSiemac());
+        externalItemDto.setUrnProvider(code.getUrnProvider());
         externalItemDto.setType(TypeExternalArtefactsEnum.CODE);
         externalItemDto.setTitle(toInternationalStringDto(code.getNames()));
         externalItemDto.setManagementAppUrl(code.getManagementAppLink());
