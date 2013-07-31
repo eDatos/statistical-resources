@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.base.presenter;
 
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -8,10 +7,6 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesP
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesResult;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
@@ -35,22 +30,9 @@ public abstract class StatisticalResourceBaseListPresenter<V extends Statistical
 
     public interface StatisticalResourceBaseListView extends View {
 
-        void setDefaultLanguage(ExternalItemDto defaultLanguage);
         void setLanguagesCodes(GetLanguagesCodesResult result);
-        void setDefaultAgency(ExternalItemDto agency);
         void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result);
         void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result);
-    }
-
-    @Override
-    public void retrieveDefaultLanguage() {
-        dispatcher.execute(new GetDefaultLanguageInfoAction(), new WaitingAsyncCallbackHandlingError<GetDefaultLanguageInfoResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetDefaultLanguageInfoResult result) {
-                getView().setDefaultLanguage(result.getDefaultLanguage());
-            }
-        });
     }
 
     @Override
@@ -63,17 +45,6 @@ public abstract class StatisticalResourceBaseListPresenter<V extends Statistical
             }
         });
 
-    }
-
-    @Override
-    public void retrieveDefaultAgency() {
-        dispatcher.execute(new GetDefaultAgencyAction(), new WaitingAsyncCallbackHandlingError<GetDefaultAgencyResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetDefaultAgencyResult result) {
-                getView().setDefaultAgency(result.getAgency());
-            }
-        });
     }
 
     @Override

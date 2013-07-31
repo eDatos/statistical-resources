@@ -9,6 +9,10 @@ import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResour
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoResult;
 import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
 import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
 
@@ -40,6 +44,13 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
     @Override
     protected void onBeforeLoadApplication() {
         super.onBeforeLoadApplication();
+
+        retrieveStatisticOfficialities();
+
+        retrieveDefaults();
+    }
+
+    private void retrieveStatisticOfficialities() {
         ginjector.getDispatcher().execute(new GetStatisticOfficialitiesAction(), new AsyncCallback<GetStatisticOfficialitiesResult>() {
 
             @Override
@@ -51,6 +62,37 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
                 CommonUtils.setStatisticOfficialities(result.getStatisticOfficialities());
             }
         });
+    }
+
+    private void retrieveDefaults() {
+        ginjector.getDispatcher().execute(new GetDefaultAgencyAction(), new AsyncCallback<GetDefaultAgencyResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error retrieving default agency");
+                StatisticalResourcesDefaults.defaultAgency = null;
+            }
+
+            @Override
+            public void onSuccess(GetDefaultAgencyResult result) {
+                StatisticalResourcesDefaults.defaultAgency = result.getAgency();
+            }
+        });
+
+        ginjector.getDispatcher().execute(new GetDefaultLanguageInfoAction(), new AsyncCallback<GetDefaultLanguageInfoResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error retrieving default language");
+                StatisticalResourcesDefaults.defaultLanguage = null;
+            }
+
+            @Override
+            public void onSuccess(GetDefaultLanguageInfoResult result) {
+                StatisticalResourcesDefaults.defaultLanguage = result.getDefaultLanguage();
+            }
+        });
+
     }
 
     public static MetamacPrincipal getCurrentUser() {

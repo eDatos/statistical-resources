@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.base.view;
 
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
@@ -13,19 +12,6 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 public abstract class StatisticalResourceBaseListViewImpl<H extends NewStatisticalResourceUiHandlers> extends ViewWithUiHandlers<H>
         implements
             StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView {
-
-    protected ExternalItemDto defaultLanguage;
-    protected ExternalItemDto defaultAgency;
-
-    @Override
-    public void setDefaultLanguage(ExternalItemDto defaultLanguage) {
-        this.defaultLanguage = defaultLanguage;
-    }
-
-    @Override
-    public void setDefaultAgency(ExternalItemDto agency) {
-        defaultAgency = agency;
-    }
 
     @Override
     public void setLanguagesCodes(GetLanguagesCodesResult result) {
