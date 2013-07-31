@@ -11,11 +11,11 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class UpdateDatasetVersionProcStatus {
 
     @In(1)
-    DatasetVersionDto datasetVersionDto;
+    DatasetVersionDto datasetVersionToUpdateProcStatus;
 
     @In(2)
     ProcStatusEnum    nextProcStatus;
 
     @Out(1)
-    DatasetVersionDto resultDatasetVersionDto;
+    DatasetVersionDto datasetVersionDto;
 }

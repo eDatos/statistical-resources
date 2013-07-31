@@ -99,9 +99,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
             retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-
-            retrieveDefaultLanguage();
-            retrieveDefaultAgency();
         }
     }
 

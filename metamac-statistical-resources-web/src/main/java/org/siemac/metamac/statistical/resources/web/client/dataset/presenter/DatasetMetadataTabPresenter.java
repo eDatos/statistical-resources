@@ -169,7 +169,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
-                getView().setDataset(result.getResultDatasetVersionDto());
+                getView().setDataset(result.getDatasetVersionDto());
             }
         });
     }
@@ -181,7 +181,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
-                getView().setDataset(result.getResultDatasetVersionDto());
+                getView().setDataset(result.getDatasetVersionDto());
             }
         });
     }
@@ -193,9 +193,27 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                getView().setDataset(result.getResultDatasetVersionDto());
+                getView().setDataset(result.getDatasetVersionDto());
             }
         });
+    }
+    
+    @Override
+    public void cancelProgrammedPublication(DatasetVersionDto dataset) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void programPublication(DatasetVersionDto dataset) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void sendToPendingPublication(DatasetVersionDto dataset) {
+        // TODO Auto-generated method stub
+        
     }
     // FIXME ADD LIFECYCLE OPERATIONS
     // @Override
@@ -256,7 +274,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setDataset(result.getResultDatasetVersionDto());
+                getView().setDataset(result.getDatasetVersionDto());
             }
         });
     }
