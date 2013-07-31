@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
@@ -152,9 +153,23 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         return !dsd.getCode().equals(dsdDto.getCode());
     }
     
-    private boolean areSameDsdDifferentVersion(ExternalItem dsd, ExternalItemDto dsdDto) {
-        //FIXME: WATCH OUT! MAINTAINER CODE CAN BE DIFFERENT IT SHOULDNT BE
-        return StringUtils.equals(dsd.getCode(),dsdDto.getCode()) && !StringUtils.equals(dsd.getUrn(), dsdDto.getUrn());
+    private boolean areSameDsdDifferentVersion(ExternalItem oldDsd, ExternalItemDto newDsdDto) {
+        String[] oldDsdIdentifiers = UrnUtils.splitUrnStructure(oldDsd.getUrn()); 
+        String[] newDsdIdentifiers = UrnUtils.splitUrnStructure(newDsdDto.getUrn());
+        
+        String newDsdAgency = oldDsdIdentifiers[0];
+        String oldDsdAgency = newDsdIdentifiers[0];
+        
+        String newDsdCode = oldDsdIdentifiers[1];
+        String oldDsdCode = newDsdIdentifiers[1];
+        
+        String newDsdVersion = oldDsdIdentifiers[2];
+        String oldDsdVersion = newDsdIdentifiers[2];
+        
+        boolean sameDsd = StringUtils.equals(oldDsdAgency,newDsdAgency) && StringUtils.equals(oldDsdCode, newDsdCode); 
+        boolean differentDsdVersion = !StringUtils.equals(oldDsdVersion, newDsdVersion); 
+        
+        return  sameDsd && differentDsdVersion;
     }
 
     public StatisticOfficiality statisticOfficialityDtoToDo(StatisticOfficialityDto source, StatisticOfficiality target, String metadataName) throws MetamacException {
