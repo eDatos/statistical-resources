@@ -16,7 +16,7 @@ public class RestExternalConstants extends RestApiConstants {
     public static String KIND_QUERY                        = API_NAME + KIND_SEPARATOR + "query";
     public static String KIND_QUERIES                      = API_NAME + KIND_SEPARATOR + "queries";
     public static String KIND_COLLECTION                   = API_NAME + KIND_SEPARATOR + "collection";
-    public static String KIND_COLLECTIONs                  = API_NAME + KIND_SEPARATOR + "collectionS";
+    public static String KIND_COLLECTIONS                  = API_NAME + KIND_SEPARATOR + "collections";
 
     public static String LINK_SUBPATH_DATASETS             = "datasets";
     public static String LINK_SUBPATH_QUERIES              = "queries";
