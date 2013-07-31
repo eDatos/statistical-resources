@@ -73,6 +73,22 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
         verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
     }
+    
+    @Test
+    public void testSiemacResourceApplySendToProductionValidationActionsNoKeywordsBuildingOnUserDefinedKeywords() throws Exception {
+        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToProductionValidation();
+        mockedResource.getSiemacMetadataStatisticalResource().setKeywords(new InternationalString(new String[]{"es", "en"}, new String[]{"IPC CANARIAS", "IPC CANARY ISLAND"}));
+        mockedResource.getSiemacMetadataStatisticalResource().setTitle(new InternationalString(new String[]{"es", "en"}, new String[]{"Paro en España", "Unemployment in Spain"}));
+        mockedResource.getSiemacMetadataStatisticalResource().setDescription(new InternationalString(new String[]{"es", "en"}, new String[]{"Medido en miles", "Measured in thousands"}));
+        
+        siemacLifecycleFiller.applySendToProductionValidationActions(getServiceContextAdministrador(), mockedResource);
+        
+        asssertContainsKeywordsInLocale(mockedResource, "es", "IPC", "CANARIAS");
+        asssertContainsKeywordsInLocale(mockedResource, "en", "IPC", "CANARY", "ISLAND");
+        assertEquals(2, mockedResource.getSiemacMetadataStatisticalResource().getKeywords().getLocales().size());
+        
+        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
+    }
 
     private void asssertContainsKeywordsInLocale(HasSiemacMetadata resource, String locale, String... keywords) {
         assertNotNull(resource.getSiemacMetadataStatisticalResource().getKeywords());
