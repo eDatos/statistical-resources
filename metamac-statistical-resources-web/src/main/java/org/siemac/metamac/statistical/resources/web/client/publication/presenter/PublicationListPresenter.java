@@ -103,8 +103,6 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
             retrievePublications(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-            retrieveDefaultAgency();
-            retrieveDefaultLanguage();
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -84,8 +85,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
                         }
                     }
                 });
-                newPublicationWindow.setDefaultLanguage(defaultLanguage);
-                newPublicationWindow.setDefaultMaintainer(defaultAgency);
+                newPublicationWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
+                newPublicationWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
             }
         });
         newPublicationButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
