@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -88,8 +89,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
                         }
                     }
                 });
-                newDatasetWindow.setDefaultLanguage(defaultLanguage);
-                newDatasetWindow.setDefaultMaintainer(defaultAgency);
+                newDatasetWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
+                newDatasetWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
             }
         });
         newDatasetButton.setVisibility(DatasetClientSecurityUtils.canCreateDataset() ? Visibility.VISIBLE : Visibility.HIDDEN);
