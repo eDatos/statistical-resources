@@ -8,10 +8,10 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsEditionForm;
@@ -49,7 +49,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     private VLayout                                                       panel;
 
-    private PublicationMainFormLayout                                     mainFormLayout;
+    private LifecycleMainFormLayout                                     mainFormLayout;
 
     private NameableResourceIdentifiersForm                               identifiersForm;
     private StatisticalResourceContentDescriptorsForm                     contentDescriptorsForm;
@@ -85,7 +85,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         // panel.setAutoHeight();
         // panel.setOverflow(Overflow.SCROLL);
 
-        mainFormLayout = new PublicationMainFormLayout(PublicationClientSecurityUtils.canUpdatePublication());
+        mainFormLayout = new LifecycleMainFormLayout(PublicationClientSecurityUtils.canUpdatePublication());
         bindMainFormLayoutEvents();
         createViewForm();
         createEditionForm();
@@ -212,7 +212,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (versionWindow.validateForm()) {
-                            getUiHandlers().version(publicationDto.getUrn(), versionWindow.getSelectedVersion());
+                            getUiHandlers().version(publicationDto, versionWindow.getSelectedVersion());
                             versionWindow.destroy();
                         }
                     }
