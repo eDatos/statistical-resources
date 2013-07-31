@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
+package org.siemac.metamac.statistical.resources.web.client.base.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
@@ -9,7 +9,8 @@ import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLa
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 
-public class DatasetMainFormLayout extends InternationalMainFormLayout {
+
+public class LifecycleMainFormLayout extends InternationalMainFormLayout {
 
     private MainFormLayoutButton productionValidation;
     private MainFormLayoutButton diffusionValidation;
@@ -19,16 +20,15 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
     private MainFormLayoutButton cancelProgrammedPublication;
     private MainFormLayoutButton publish;
     private MainFormLayoutButton versioning;
-    private MainFormLayoutButton archive;
 
     private ProcStatusEnum       status;
 
-    public DatasetMainFormLayout() {
+    public LifecycleMainFormLayout() {
         super();
         common();
     }
 
-    public DatasetMainFormLayout(boolean canEdit) {
+    public LifecycleMainFormLayout(boolean canEdit) {
         super(canEdit);
         common();
     }
@@ -45,7 +45,6 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         cancelProgrammedPublication = new MainFormLayoutButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
-        archive = new MainFormLayoutButton(getConstants().lifeCycleArchive(), GlobalResources.RESOURCE.archive().getURL());
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
@@ -55,7 +54,6 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(cancelProgrammedPublication);
         toolStrip.addButton(publish);
         toolStrip.addButton(versioning);
-        toolStrip.addButton(archive);
     }
 
     @Override
@@ -97,7 +95,6 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
             // // showPublishButton();
         } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
-            showArchiveButton();
         }
     }
 
@@ -110,7 +107,6 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         cancelProgrammedPublication.hide();
         publish.hide();
         versioning.hide();
-        archive.hide();
     }
 
     private void showProductionValidationButton() {
@@ -145,9 +141,6 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
         versioning.show();
     }
 
-    private void showArchiveButton() {
-        archive.show();
-    }
 
     public HasClickHandlers getProductionValidationButton() {
         return productionValidation;
@@ -179,10 +172,6 @@ public class DatasetMainFormLayout extends InternationalMainFormLayout {
 
     public HasClickHandlers getVersioningButton() {
         return versioning;
-    }
-
-    public HasClickHandlers getArchiveButton() {
-        return archive;
     }
 
 }
