@@ -13,12 +13,11 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguag
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
-public class StatisticalResourceProductionDescriptorsForm extends GroupDynamicForm {
+public class StatisticalResourceProductionDescriptorsForm extends LifeCycleResourceProductionDescriptorsForm {
 
     public StatisticalResourceProductionDescriptorsForm() {
-        super(getConstants().formProductionDescriptors());
+        super();
 
-        ExternalItemLinkItem maintainer = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer());
         ExternalItemLinkItem creator = new ExternalItemLinkItem(StatisticalResourceDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator());
         ExternalItemListItem contributor = new ExternalItemListItem(StatisticalResourceDS.CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourceContributor(), false);
 
@@ -27,11 +26,12 @@ public class StatisticalResourceProductionDescriptorsForm extends GroupDynamicFo
         ViewMultiLanguageTextItem conformsTo = new ViewMultiLanguageTextItem(StatisticalResourceDS.CONFORMS_TO, getConstants().siemacMetadataStatisticalResourceConformsTo());
         ViewMultiLanguageTextItem conformsToInternal = new ViewMultiLanguageTextItem(StatisticalResourceDS.CONFORMS_TO_INTERNAL, getConstants().siemacMetadataStatisticalResourceConformsToInternal());
 
-        setFields(dateCreated, lastUpdate, maintainer, creator, contributor, conformsTo, conformsToInternal);
+        addFields(dateCreated, lastUpdate, creator, contributor, conformsTo, conformsToInternal);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        setExternalItemValue(getItem(StatisticalResourceDS.MAINTAINER), dto.getMaintainer());
+        setLifeCycleResourceDto(dto);
+        
         setExternalItemValue(getItem(StatisticalResourceDS.CREATOR), dto.getCreator());
         setExternalItemsValue(getItem(StatisticalResourceDS.CONTRIBUTOR), dto.getContributor());
 
