@@ -26,8 +26,10 @@ public class SiemacLifecycleFiller {
 
     public void applySendToProductionValidationActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToProductionValidationActions(ctx, resource);
-        // FIXME: Computed fields based on data
-        resource.getSiemacMetadataStatisticalResource().setKeywords(buildKeywords(resource));
+
+        if (resource.getSiemacMetadataStatisticalResource().getKeywords() == null) {
+            resource.getSiemacMetadataStatisticalResource().setKeywords(buildKeywords(resource));
+        }
     }
 
     private InternationalString buildKeywords(HasSiemacMetadata resource) {

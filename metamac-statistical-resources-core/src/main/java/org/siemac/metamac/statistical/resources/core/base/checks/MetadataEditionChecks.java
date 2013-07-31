@@ -21,9 +21,6 @@ public class MetadataEditionChecks {
     }
     
     public static boolean canKeywordsBeEdited(ProcStatusEnum procStatus) {
-        if (ProcStatusEnum.DRAFT.equals(procStatus)) {
-            return false;
-        }
         return true;
     }
 

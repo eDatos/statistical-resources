@@ -5,7 +5,11 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
@@ -48,7 +52,13 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
 
         // Not always modifiable
         if (MetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
-            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
+            boolean modified = hasInternationalStringBeModified(target.getKeywords(), source.getKeywords());
+            if (modified) {
+                target.setUserMofifiedKeywords(true);
+                target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
+            } else if (target.getUserMofifiedKeywords() == null){
+                target.setUserMofifiedKeywords(false);
+            }
         }
 
         // Always Modifiable
@@ -81,6 +91,37 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
 
         return target;
     }
+
+    private boolean hasInternationalStringBeModified(InternationalString previous, InternationalStringDto current) {
+        if ((previous == null && current != null) || (previous != null && current == null)) {
+            return true;
+        }
+        if (previous == null && current == null) {
+            return false;
+        }
+        
+        if (previous.getTexts().size() != current.getTexts().size()) {
+            return true;
+        }
+        
+        for (String locale : previous.getLocales()) {
+            if (hasLocalisedStringBeModified(previous.getLocalisedLabelEntity(locale), current.getLocalised(locale))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean hasLocalisedStringBeModified(org.siemac.metamac.core.common.ent.domain.LocalisedString previous, LocalisedStringDto current) {
+        if ((previous == null && current != null) || (previous != null && current == null)) {
+            return true;
+        }
+        if (previous == null && current == null) {
+            return false;
+        }
+        return !(StringUtils.equals(previous.getLocale(),current.getLocale()) && StringUtils.equals(previous.getLabel(),current.getLabel()));
+    }
+    
 
     @Override
     public LifeCycleStatisticalResource lifeCycleStatisticalResourceDtoToDo(LifeCycleStatisticalResourceDto source, LifeCycleStatisticalResource target, String metadataName) throws MetamacException {

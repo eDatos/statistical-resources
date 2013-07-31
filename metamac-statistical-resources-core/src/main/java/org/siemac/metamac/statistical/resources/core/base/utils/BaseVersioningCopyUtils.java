@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.base.utils;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -31,9 +32,13 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setTitleAlternative(copyInternationalString(source.getTitleAlternative()));
         target.setAbstractLogic(copyInternationalString(source.getAbstractLogic()));
 
-        // TODO: Falta comprobar si se deben heredar o no en función de un metadato adicional que debe meterse. Este metadato
-        // debe indicar si esas keywords han sido toqueteadas manualmente y, en ese caso, sí se heredarán.
-        target.setKeywords(copyInternationalString(source.getKeywords()));
+        if (BooleanUtils.isTrue(source.getUserMofifiedKeywords())) {
+            target.setUserMofifiedKeywords(true);
+            target.setKeywords(copyInternationalString(source.getKeywords()));
+        } else {
+            target.setUserMofifiedKeywords(false);
+            target.setKeywords(null);
+        }
 
         // Class descriptor
         target.setType(source.getType());
