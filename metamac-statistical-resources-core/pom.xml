@@ -21,6 +21,12 @@
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
             <version>${metamac-sso.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>metamac-core-common</artifactId>
+                    <groupId>org.siemac.metamac</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -61,7 +67,7 @@
             </exclusions>
         </dependency>
 
-		<!-- STATISTIC -->
+        <!-- STATISTIC -->
         <dependency>
             <groupId>com.arte.statistic</groupId>
             <artifactId>statistic-parser</artifactId>
@@ -73,10 +79,10 @@
             <version>${statistic-dataset-repository.version}</version>
             <classifier>client</classifier>
             <exclusions>
-            	<exclusion>
-            		<artifactId>fornax-cartridges-sculptor-framework</artifactId>
-            		<groupId>org.fornax.cartridges</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>fornax-cartridges-sculptor-framework</artifactId>
+                    <groupId>org.fornax.cartridges</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -280,17 +286,17 @@
             <version>${oracle.version}</version>
             <scope>test</scope>
         </dependency>
-                
+
         <!-- ******* Quartz ******** -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>${quartz.version}</version>
             <exclusions>
-            	<exclusion>
-            		<artifactId>c3p0</artifactId>
-            		<groupId>c3p0</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>c3p0</artifactId>
+                    <groupId>c3p0</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
@@ -355,7 +361,7 @@
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
-                    </execution>                             
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -377,7 +383,7 @@
                         <modelFile>src/main/resources/btdesing/model-statistical-resources-core.btdesign</modelFile>
                         <appProject>${project.artifactId}</appProject>
                     </properties>
-                    
+
                     <jvmSettings>
                         <copySysProperties>true</copySysProperties>
                         <jvmArgs>
@@ -387,7 +393,7 @@
                             <jvmArg>-Dlogback.configurationFile=generator/logback-sculptor.xml</jvmArg>
                         </jvmArgs>
                     </jvmSettings>
-                    
+
                 </configuration>
                 <executions>
                     <execution>
