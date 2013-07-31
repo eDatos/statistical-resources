@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.CodeItemDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.form.fields.BaseListItem;
 
@@ -23,11 +23,10 @@ public class CodeItemListItem extends BaseListItem {
         createItem();
     }
 
-    // FIXME: messages
     private void createItem() {
 
-        CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, MetamacWebCommon.getConstants().relatedResourceCode());
-        CustomListGridField nameField = new CustomListGridField(CodeItemDS.TITLE, MetamacWebCommon.getConstants().relatedResourceTitle());
+        CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, StatisticalResourcesWeb.getConstants().codeItemCode());
+        CustomListGridField nameField = new CustomListGridField(CodeItemDS.TITLE, StatisticalResourcesWeb.getConstants().codeItemTitle());
 
         listGrid.setFields(codeField, nameField);
     }
