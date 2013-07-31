@@ -371,12 +371,10 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getCreator();
         String version = resource.getSiemacMetadataStatisticalResource().getVersionLogic();
         InternationalString publisherName = resource.getSiemacMetadataStatisticalResource().getPublisher().get(0).getTitle();
-        // FIXME: GET PUBLIC URL
-        String publicUrl = "http://";
+        String publicUrl = StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN; //This will be replaced by the API
         InternationalString bibliographicInternational = new InternationalString();
         for (LocalisedString localisedTitle : resource.getSiemacMetadataStatisticalResource().getTitle().getTexts()) {
             String locale = localisedTitle.getLocale();
-            //FIXME: WHO IS THE RIGHT HOLDER?
             StringBuilder bibliographicCitation = new StringBuilder();
             bibliographicCitation.append(rightsHolder.getCode()).append(" (").append("").append(") ");
             bibliographicCitation.append(localisedTitle.getLabel()).append(" (v").append(version).append(") [dataset].");
@@ -431,7 +429,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToPublishedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
+        buildBibliographicCitation(resource);
         throw new UnsupportedOperationException("Not implemented");
     }
 
