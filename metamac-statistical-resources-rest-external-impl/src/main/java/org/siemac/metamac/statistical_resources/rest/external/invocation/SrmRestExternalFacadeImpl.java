@@ -4,9 +4,9 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,26 +38,26 @@ public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
     }
 
     @Override
-    public Codelist retrieveCodelistByUrn(String urn) {
+    public Codes retrieveCodesByCodelistUrn(String urn) {
         try {
             String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
             String agencyID = urnSplited[0];
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
-            return restApiLocator.getSrmRestExternalFacadeV10().retrieveCodelist(agencyID, resourceID, version);
+            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, null, null);
         } catch (Exception e) {
             throw toRestException(e);
         }
     }
 
     @Override
-    public ConceptScheme retrieveConceptSchemeByUrn(String urn) {
+    public Concepts retrieveConceptsByConceptSchemeByUrn(String urn) {
         try {
             String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
             String agencyID = urnSplited[0];
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
-            return restApiLocator.getSrmRestExternalFacadeV10().retrieveConceptScheme(agencyID, resourceID, version);
+            return restApiLocator.getSrmRestExternalFacadeV10().findConcepts(agencyID, resourceID, version, null, null, null, null);
         } catch (Exception e) {
             throw toRestException(e);
         }

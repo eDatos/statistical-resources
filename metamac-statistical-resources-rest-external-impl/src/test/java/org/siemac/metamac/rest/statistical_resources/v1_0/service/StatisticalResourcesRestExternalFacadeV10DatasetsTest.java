@@ -33,9 +33,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestDoMocks;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -209,26 +209,26 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         });
     }
 
-    private void mockRetrieveCodelistByUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveCodelistByUrn(any(String.class))).thenAnswer(new Answer<Codelist>() {
+    private void mockRetrieveCodesByCodelistUrn() throws MetamacException {
+        when(srmRestExternalFacade.retrieveCodesByCodelistUrn(any(String.class))).thenAnswer(new Answer<Codes>() {
 
             @Override
-            public Codelist answer(InvocationOnMock invocation) throws Throwable {
+            public Codes answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
-                return SrmRestDoMocks.mockCodelist(urnSplited[0], urnSplited[1], urnSplited[2]);
+                return SrmRestDoMocks.mockCodesByCodelist(urnSplited[0], urnSplited[1], urnSplited[2]);
             };
         });
     }
 
-    private void mockRetrieveConceptSchemeByUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveConceptSchemeByUrn(any(String.class))).thenAnswer(new Answer<ConceptScheme>() {
+    private void mockRetrieveConceptsByConceptSchemeUrn() throws MetamacException {
+        when(srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(any(String.class))).thenAnswer(new Answer<Concepts>() {
 
             @Override
-            public ConceptScheme answer(InvocationOnMock invocation) throws Throwable {
+            public Concepts answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
-                return SrmRestDoMocks.mockConceptScheme(urnSplited[0], urnSplited[1], urnSplited[2]);
+                return SrmRestDoMocks.mockConceptsByConceptScheme(urnSplited[0], urnSplited[1], urnSplited[2]);
             };
         });
     }
@@ -277,8 +277,8 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         mockRetrieveCoverageForDatasetVersionDimension();
         mockFindObservationsExtendedByDimensions();
         mockRetrieveDataStructureByUrn();
-        mockRetrieveCodelistByUrn();
-        mockRetrieveConceptSchemeByUrn();
+        mockRetrieveCodesByCodelistUrn();
+        mockRetrieveConceptsByConceptSchemeUrn();
         mockRetrieveConceptByUrn();
     }
 
