@@ -15,6 +15,11 @@ public class RestTestConstants {
     public static String DATASET_3_CODE              = "dataset3";
     public static String DATASET_4_CODE              = "dataset4";
 
+    public static String COLLECTION_1_CODE           = "collection1";
+    public static String COLLECTION_2_CODE           = "collection2";
+    public static String COLLECTION_3_CODE           = "collection3";
+    public static String COLLECTION_4_CODE           = "collection4";
+
     public static String VERSION_1                   = "01.000";
     public static String VERSION_2                   = "02.000";
 

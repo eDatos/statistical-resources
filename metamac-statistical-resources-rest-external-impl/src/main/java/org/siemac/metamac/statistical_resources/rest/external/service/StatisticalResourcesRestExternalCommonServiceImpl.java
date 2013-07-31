@@ -18,9 +18,13 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.srm.rest.internal.RestInternalConstants;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceProperties.SiemacMetadataStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,9 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @Autowired
     private DatasetService        datasetService;
 
+    @Autowired
+    private PublicationService    publicationService;
+
     @Override
     public DatasetVersion retrieveDatasetVersion(String agencyID, String resourceID, String version) {
         try {
@@ -42,7 +49,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
             checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_VERSION, version);
 
-            // Retrieve dataset
+            // Retrieve
             PagedResult<DatasetVersion> entitiesPagedResult = findDatasetsCore(agencyID, resourceID, version, null, pagingParameterOneResult);
             if (entitiesPagedResult.getValues().size() != 1) {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.DATASET_NOT_FOUND, resourceID, version, agencyID);
@@ -55,11 +62,32 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         }
     }
 
+    @Override
+    public PublicationVersion retrievePublicationVersion(String agencyID, String resourceID, String version) {
+        try {
+            // Validations
+            checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+            checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+            checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_VERSION, version);
+
+            // Retrieve
+            PagedResult<PublicationVersion> entitiesPagedResult = findCollectionsCore(agencyID, resourceID, version, null, pagingParameterOneResult);
+            if (entitiesPagedResult.getValues().size() != 1) {
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.COLLECTION_NOT_FOUND, resourceID, version, agencyID);
+                throw new RestException(exception, Status.NOT_FOUND);
+            }
+            PublicationVersion publicationVersion = entitiesPagedResult.getValues().get(0);
+            return publicationVersion;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
     private PagedResult<DatasetVersion> findDatasetsCore(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteriaQuery, PagingParameter pagingParameter)
             throws MetamacException {
 
         // Criteria to find by criteria
-        // TODO PUBLICADOS
+        // TODO publicados y con fecha de validez posterior a ahora
 
         List<ConditionalCriteria> conditionalCriteria = new ArrayList<ConditionalCriteria>();
         if (CollectionUtils.isNotEmpty(conditionalCriteriaQuery)) {
@@ -67,23 +95,60 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         } else {
             conditionalCriteria.addAll(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().build());
         }
-        if (agencyID != null && !RestInternalConstants.WILDCARD_ALL.equals(agencyID)) {
-            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().maintainer().codeNested())
-                    .eq(agencyID).buildSingle());
-        }
-        if (resourceID != null && !RestInternalConstants.WILDCARD_ALL.equals(agencyID)) {
-            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().code()).eq(resourceID)
-                    .buildSingle());
-        }
-        if (RestInternalConstants.WILDCARD_LATEST.equals(version)) {
-            // TODO Latest
-        } else if (version != null && !RestInternalConstants.WILDCARD_ALL.equals(agencyID)) {
-            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic()).eq(version)
-                    .buildSingle());
-        }
+        addConditionalCriteriaAgencyIfApplicable(agencyID, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaResourceIfApplicable(resourceID, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaVersionIfApplicable(version, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
 
         // Find
         PagedResult<DatasetVersion> entitiesPagedResult = datasetService.findDatasetVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
         return entitiesPagedResult;
     }
+
+    private PagedResult<PublicationVersion> findCollectionsCore(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteriaQuery, PagingParameter pagingParameter)
+            throws MetamacException {
+
+        // Criteria to find by criteria
+        // TODO publicados y con fecha de validez posterior a ahora
+
+        List<ConditionalCriteria> conditionalCriteria = new ArrayList<ConditionalCriteria>();
+        if (CollectionUtils.isNotEmpty(conditionalCriteriaQuery)) {
+            conditionalCriteria.addAll(conditionalCriteriaQuery);
+        } else {
+            conditionalCriteria.addAll(ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class).distinctRoot().build());
+        }
+        addConditionalCriteriaAgencyIfApplicable(agencyID, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaResourceIfApplicable(resourceID, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaVersionIfApplicable(version, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+
+        // Find
+        PagedResult<PublicationVersion> entitiesPagedResult = publicationService.findPublicationVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
+        return entitiesPagedResult;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addConditionalCriteriaAgencyIfApplicable(String agencyID, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
+            List<ConditionalCriteria> conditionalCriteria) {
+        if (agencyID != null && !RestInternalConstants.WILDCARD_ALL.equals(agencyID)) {
+            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.maintainer().codeNested()).eq(agencyID).buildSingle());
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addConditionalCriteriaResourceIfApplicable(String resourceID, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
+            List<ConditionalCriteria> conditionalCriteria) {
+        if (resourceID != null && !RestInternalConstants.WILDCARD_ALL.equals(resourceID)) {
+            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.code()).eq(resourceID).buildSingle());
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
+            List<ConditionalCriteria> conditionalCriteria) {
+        if (RestInternalConstants.WILDCARD_LATEST.equals(version)) {
+            // TODO Latest
+        } else if (version != null && !RestInternalConstants.WILDCARD_ALL.equals(version)) {
+            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
+        }
+    }
+
 }

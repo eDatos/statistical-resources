@@ -46,7 +46,6 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimen
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
@@ -109,7 +108,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         if (source == null) {
             return null;
         }
-        selectedLanguages = toSelectedLanguages(selectedLanguages);
+        selectedLanguages = languagesRequestedToEffectiveLanguages(selectedLanguages);
 
         Dataset target = new Dataset();
         target.setKind(RestExternalConstants.KIND_DATASET);
@@ -142,13 +141,6 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setKind(RestExternalConstants.KIND_DATASET);
         target.setSelfLink(toDatasetSelfLink(source));
         target.setName(toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
-        return target;
-    }
-
-    private SelectedLanguages toLanguages(List<String> selectedLanguages) {
-        SelectedLanguages target = new SelectedLanguages();
-        target.getLanguages().addAll(selectedLanguages);
-        target.setTotal(BigInteger.valueOf(target.getLanguages().size()));
         return target;
     }
 

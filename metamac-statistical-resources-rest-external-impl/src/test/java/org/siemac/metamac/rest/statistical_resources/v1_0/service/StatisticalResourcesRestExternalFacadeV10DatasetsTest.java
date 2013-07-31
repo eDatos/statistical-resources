@@ -76,6 +76,11 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
     }
 
     @Test
+    public void testRetrieveDatasetJson() throws Exception {
+        // TODO testRetrieveDatasetJson
+    }
+
+    @Test
     public void testRetrieveDatasetErrorNotExists() throws Exception {
         // TODO testRetrieveDatasetErrorNotExists
     }
@@ -103,7 +108,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
                     if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
                         dataset = null;
                     } else if (AGENCY_1.equals(agencyID) && DATASET_1_CODE.equals(resourceID) && VERSION_1.equals(version)) {
-                        dataset = datasetDoMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        dataset = datasetsDoMocks.mockDatasetVersion(agencyID, resourceID, version);
                     } else {
                         fail();
                     }
@@ -115,10 +120,10 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
                 } else {
                     // any
                     List<DatasetVersion> datasets = new ArrayList<DatasetVersion>();
-                    datasets.add(datasetDoMocks.mockDatasetVersion(AGENCY_1, DATASET_1_CODE, VERSION_1));
-                    datasets.add(datasetDoMocks.mockDatasetVersion(AGENCY_1, DATASET_1_CODE, VERSION_2));
-                    datasets.add(datasetDoMocks.mockDatasetVersion(AGENCY_2, DATASET_1_CODE, VERSION_1));
-                    datasets.add(datasetDoMocks.mockDatasetVersion(AGENCY_1, DATASET_2_CODE, VERSION_1));
+                    datasets.add(datasetsDoMocks.mockDatasetVersion(AGENCY_1, DATASET_1_CODE, VERSION_1));
+                    datasets.add(datasetsDoMocks.mockDatasetVersion(AGENCY_1, DATASET_1_CODE, VERSION_2));
+                    datasets.add(datasetsDoMocks.mockDatasetVersion(AGENCY_2, DATASET_1_CODE, VERSION_1));
+                    datasets.add(datasetsDoMocks.mockDatasetVersion(AGENCY_1, DATASET_2_CODE, VERSION_1));
                     return new PagedResult<DatasetVersion>(datasets, datasets.size(), datasets.size(), datasets.size(), datasets.size() * 10, 0);
                 }
             };
@@ -148,17 +153,17 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
                 String componentId = (String) invocation.getArguments()[2];
                 List<CodeDimension> codeDimensions = new ArrayList<CodeDimension>();
                 if ("GEO_DIM".equals(componentId) || "dim01".equals(componentId)) {
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code01"));
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code03"));
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code04"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code01"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code03"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code04"));
                 } else if ("measure01".equals(componentId)) {
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept01"));
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept02"));
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept05"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept01"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept02"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept05"));
                 } else if ("TIME_PERIOD".equals(componentId)) {
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, "2011"));
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, "2012"));
-                    codeDimensions.add(datasetDoMocks.mockCodeDimension(componentId, "2013"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, "2011"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, "2012"));
+                    codeDimensions.add(datasetsDoMocks.mockCodeDimension(componentId, "2013"));
                 } else {
                     fail(componentId + " unexpected");
                 }
@@ -183,7 +188,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
                     for (String timeDimensionValue : timeDimensionValues) {
                         for (String measureDimensionValue : measureDimensionValues) {
                             for (String dimension1DimensionValue : dimension1DimensionValues) {
-                                ObservationExtendedDto observation = datasetDoMocks.mockObservation(geoDimensionValue, timeDimensionValue, measureDimensionValue, dimension1DimensionValue,
+                                ObservationExtendedDto observation = datasetsDoMocks.mockObservation(geoDimensionValue, timeDimensionValue, measureDimensionValue, dimension1DimensionValue,
                                         observationsMap.size() + 1);
                                 observationsMap.put(observation.getUniqueKey(), observation);
                             }

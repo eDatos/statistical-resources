@@ -19,6 +19,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.common.v1_0.domain.Resources;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
 import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
@@ -189,7 +190,7 @@ public abstract class BaseDo2RestMapperV10Impl {
     /**
      * Create list with requested languages and default language in service
      */
-    protected List<String> toSelectedLanguages(List<String> sources) throws MetamacException {
+    protected List<String> languagesRequestedToEffectiveLanguages(List<String> sources) throws MetamacException {
         List<String> targets = new ArrayList<String>();
         if (!CollectionUtils.isEmpty(sources)) {
             targets.addAll(sources);
@@ -199,6 +200,13 @@ public abstract class BaseDo2RestMapperV10Impl {
             targets.add(languageDefault);
         }
         return targets;
+    }
+
+    protected SelectedLanguages toLanguages(List<String> selectedLanguages) {
+        SelectedLanguages target = new SelectedLanguages();
+        target.getLanguages().addAll(selectedLanguages);
+        target.setTotal(BigInteger.valueOf(target.getLanguages().size()));
+        return target;
     }
 
     protected ResourceLink toResourceLink(String kind, String href) {

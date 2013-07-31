@@ -8,11 +8,14 @@ import static org.siemac.metamac.statistical_resources.rest.external.service.uti
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.service.StatisticalResourcesRestExternalCommonService;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Autowired
     private DatasetsDo2RestMapperV10                      datasetsDo2RestMapper;
+
+    @Autowired
+    private CollectionsDo2RestMapperV10                   collectionsDo2RestMapper;
 
     @Override
     public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
@@ -54,6 +60,17 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             DatasetVersion datasetVersion = commonService.retrieveDatasetVersion(agencyID, resourceID, version);
             Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, lang, includeMetadata, includeData);
             return dataset;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public Collection retrieveCollection(String agencyID, String resourceID, String version, List<String> lang) {
+        try {
+            PublicationVersion publicationVersion = commonService.retrievePublicationVersion(agencyID, resourceID, version);
+            Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, lang);
+            return collection;
         } catch (Exception e) {
             throw manageException(e);
         }

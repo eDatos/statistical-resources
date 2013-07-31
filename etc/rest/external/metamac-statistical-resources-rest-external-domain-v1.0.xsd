@@ -22,6 +22,20 @@
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
 
+    <xs:complexType name="Collection">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" />
+            <xs:element name="urn" type="xs:string" />
+            <xs:element name="selfLink" type="common:ResourceLink" />
+            <xs:element name="parentLink" type="common:ResourceLink" />
+            <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" />
+            <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="kind" type="xs:string" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="SelectedLanguages">
         <xs:sequence>
             <xs:element name="language" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
@@ -216,7 +230,17 @@
         <xs:complexContent>
             <xs:extension base="common:ListBase">
                 <xs:sequence>
-                    <xs:element name="datasets" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="dataset" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>     
+
+    <xs:complexType name="Collections">
+        <xs:complexContent>
+            <xs:extension base="common:ListBase">
+                <xs:sequence>
+                    <xs:element name="collection" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -291,4 +315,6 @@
     <!-- Elements -->
     <xs:element name="dataset" type="tns:Dataset" />
     <xs:element name="datasets" type="tns:Datasets" />
+    <xs:element name="collection" type="tns:Collection" />
+    <xs:element name="collections" type="tns:Collections" />
 </xs:schema>

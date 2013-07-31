@@ -17,6 +17,7 @@ import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
+import org.siemac.metamac.rest.statistical_resources.v1_0.collection.utils.CollectionsRestDoMocks;
 import org.siemac.metamac.rest.statistical_resources.v1_0.dataset.utils.DatasetsRestDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
@@ -31,7 +32,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private static String                                 apiEndpointv10;
 
     protected static StatisticalResourcesPersistedDoMocks coreDoMocks;
-    protected static DatasetsRestDoMocks                  datasetDoMocks;
+    protected static DatasetsRestDoMocks                  datasetsDoMocks;
+    protected static CollectionsRestDoMocks               collectionsDoMocks;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -43,7 +45,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         // Get application context from Jetty
         applicationContext = ApplicationContextProvider.getApplicationContext();
         coreDoMocks = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesPersistedDoMocks.class);
-        datasetDoMocks = new DatasetsRestDoMocks(coreDoMocks);
+        datasetsDoMocks = new DatasetsRestDoMocks(coreDoMocks);
+        collectionsDoMocks = new CollectionsRestDoMocks(coreDoMocks);
 
         // Rest clients
         // xml
