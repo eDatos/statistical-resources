@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_INTERNATIONAL_STRINGS")
 public class InternationalString extends InternationalStringBase {
+
     private static final long serialVersionUID = 1L;
 
     public InternationalString() {
@@ -23,11 +24,11 @@ public class InternationalString extends InternationalStringBase {
             this.addText(new LocalisedString(locales[i], texts[i]));
         }
     }
-    
+
     public InternationalString(String locale, String text) {
-        new InternationalString(new String[]{locale}, new String[]{text});
+        this(new String[]{locale}, new String[]{text});
     }
-    
+
     public LocalisedString getLocalisedLabelEntity(String locale) {
         if (locale == null) {
             return null;
@@ -47,7 +48,7 @@ public class InternationalString extends InternationalStringBase {
         }
         return null;
     }
-    
+
     public Set<String> getLocales() {
         Set<String> locales = new HashSet<String>();
         for (LocalisedString localisedText : getTexts()) {
