@@ -25,7 +25,7 @@ public class UpdateDatasetVersionProcStatusActionHandler extends SecurityActionH
 
     @Override
     public UpdateDatasetVersionProcStatusResult executeSecurityAction(UpdateDatasetVersionProcStatusAction action) throws ActionException {
-        DatasetVersionDto datasetDto = action.getDatasetVersionDto();
+        DatasetVersionDto datasetDto = action.getDatasetVersionToUpdateProcStatus();
         try {
             switch (action.getNextProcStatus()) {
                 case PRODUCTION_VALIDATION:
