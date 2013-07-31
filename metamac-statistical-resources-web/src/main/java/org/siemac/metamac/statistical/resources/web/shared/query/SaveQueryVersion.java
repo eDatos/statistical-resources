@@ -12,6 +12,9 @@ public class SaveQueryVersion {
     @In(1)
     QueryVersionDto queryVersionDto;
 
+    @In(2)
+    String          statisticalOperationCode;
+
     @Out(1)
     QueryVersionDto savedQueryVersionDto;
 }

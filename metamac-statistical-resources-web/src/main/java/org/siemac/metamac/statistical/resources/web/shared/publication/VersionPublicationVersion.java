@@ -11,11 +11,11 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class VersionPublicationVersion {
 
     @In(1)
-    String                urn;
+    PublicationVersionDto publicationVersionDto;
 
     @In(2)
     VersionTypeEnum       versionType;
 
     @Out(1)
-    PublicationVersionDto publicationVersionDto;
+    PublicationVersionDto resultPublicationVersionDto;
 }

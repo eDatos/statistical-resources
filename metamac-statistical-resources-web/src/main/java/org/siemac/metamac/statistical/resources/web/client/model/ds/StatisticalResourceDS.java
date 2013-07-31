@@ -10,7 +10,6 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     public static final String KEYWORDS_VIEW                  = "sr-keywords-view";
 
     // PRODUCTION DESCRIPTORS
-    public static final String MAINTAINER                     = "sr-maintainer";
     public static final String CREATOR                        = "sr-creator";
     public static final String CONTRIBUTOR                    = "sr-contr";
     public static final String DATE_CREATED                   = "sr-date-cr";

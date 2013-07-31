@@ -1,8 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.query;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.server.rest.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -19,6 +21,9 @@ public class SaveQueryVersionActionHandler extends SecurityActionHandler<SaveQue
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
+    @Autowired
+    private StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
+    
     public SaveQueryVersionActionHandler() {
         super(SaveQueryVersionAction.class);
     }
@@ -28,8 +33,8 @@ public class SaveQueryVersionActionHandler extends SecurityActionHandler<SaveQue
         try {
             QueryVersionDto savedQueryVersion = null;
             if (action.getQueryVersionDto().getId() == null) {
-                // FIXME specify the statistical operation!!!!!
-                savedQueryVersion = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto(), null);
+                ExternalItemDto statisticalOperation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getStatisticalOperationCode());
+                savedQueryVersion = statisticalResourcesServiceFacade.createQuery(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto(), statisticalOperation);
             } else {
                 savedQueryVersion = statisticalResourcesServiceFacade.updateQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionDto());
             }

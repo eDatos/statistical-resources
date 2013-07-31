@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
@@ -21,6 +22,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
@@ -64,6 +67,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     public void setUiHandlers(QueryUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
         queryFormPanel.productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        queryFormPanel.productionDescriptorsForm.setUiHandlers(uiHandlers);
     }
 
     @Override
@@ -95,6 +99,16 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     @Override
     public void setDatasetDimensionCodes(String dimensionId, List<CodeItemDto> codesDimension) {
         queryFormPanel.productionDescriptorsEditionForm.setDatasetDimensionCodes(dimensionId, codesDimension);
+    }
+    
+    @Override
+    public void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result) {
+        queryFormPanel.productionDescriptorsEditionForm.setAgencySchemesForMaintainer(result.getAgencySchemes(), result.getFirstResultOut(), result.getAgencySchemes().size(), result.getTotalResults());
+    }
+    
+    @Override
+    public void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result) {
+        queryFormPanel.productionDescriptorsEditionForm.setExternalItemsForMaintainer(result.getAgencies(), result.getFirstResultOut(), result.getAgencies().size(), result.getTotalResults());
     }
 
     @Override
@@ -208,6 +222,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
         private void createQuery() {
             this.queryVersionDto = new QueryVersionDto();
+            this.queryVersionDto.setMaintainer(StatisticalResourcesDefaults.defaultAgency);
 
             mainFormLayout.setTitleLabelContents(getConstants().queryNew());
             mainFormLayout.setEditionMode();
