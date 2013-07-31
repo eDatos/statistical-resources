@@ -41,8 +41,8 @@
             <xs:element name="statisticalUnit" type="common:Resources" minOccurs="0" />
             <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
             <xs:element name="dimensions" type="tns:Dimensions" />
-            <xs:element name="formatExtentObservations" type="xs:integer" />
-            <xs:element name="formatExtentDimensions" type="xs:integer" />
+            <xs:element name="formatExtentObservations" type="xs:int" />
+            <xs:element name="formatExtentDimensions" type="xs:int" />
             <xs:element name="dateNextUpdate" type="xs:dateTime" />
             <xs:element name="updateFrequency" type="common:Resource" />
             <xs:element name="statisticOfficiality" type="common:Item" />
@@ -137,7 +137,7 @@
                     <xs:element name="heading" type="tns:DimensionsId" />
                     <xs:element name="stub" type="tns:DimensionsId"  />
                     <xs:element name="autoOpen" type="xs:boolean" minOccurs="0" />
-                    <xs:element name="showDecimals" type="xs:integer" minOccurs="0"  />
+                    <xs:element name="showDecimals" type="xs:int" minOccurs="0"  />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -196,7 +196,9 @@
             <xs:extension base="common:Resource">
                 <xs:sequence>
                     <xs:element name="parent" type="xs:string" minOccurs="0" />
-                    <xs:element name="showDecimalsPrecision" type="xs:integer" minOccurs="0"  />
+                    <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0"  />
+                    <xs:element name="order" type="xs:int" minOccurs="0"  />
+                    <xs:element name="open" type="xs:boolean" minOccurs="0"  />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

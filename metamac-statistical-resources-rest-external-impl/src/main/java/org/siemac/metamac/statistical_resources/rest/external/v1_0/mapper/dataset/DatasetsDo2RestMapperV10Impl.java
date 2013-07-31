@@ -52,6 +52,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionVisualisation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -154,7 +155,7 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
         DatasetMetadata target = new DatasetMetadata();
 
-        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrnInternal());
+        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrn());
         List<DsdDimension> dimensionsType = DsdProcessor.getDimensions(dataStructure);
 
         // DatasetResource
@@ -168,8 +169,8 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setStatisticalUnit(toResourcesExternalItemsSrm(source.getStatisticalUnit(), selectedLanguages));
         target.setRelatedDsd(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
         target.setDimensions(toDimensions(dataStructure, dimensionsType, source.getSiemacMetadataStatisticalResource().getUrn(), selectedLanguages));
-        target.setFormatExtentObservations(toBigInteger(source.getFormatExtentObservations()));
-        target.setFormatExtentDimensions(toBigInteger(source.getFormatExtentDimensions()));
+        target.setFormatExtentObservations(source.getFormatExtentObservations());
+        target.setFormatExtentDimensions(source.getFormatExtentDimensions());
         target.setDateNextUpdate(toDate(source.getDateNextUpdate()));
         target.setUpdateFrequency(toResourceExternalItemSrm(source.getUpdateFrequency(), selectedLanguages));
         target.setStatisticOfficiality(toStatisticOfficiality(source.getStatisticOfficiality(), selectedLanguages));
@@ -362,15 +363,26 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
             return null;
         }
 
+        // TODO pasar a DsdProcessor?
+        Map<String, DimensionVisualisation> dimensionVisualisationByDimensionId = null;
+        if (dataStructure.getDimensionVisualisations() != null && !CollectionUtils.isEmpty(dataStructure.getDimensionVisualisations().getDimensionVisualisations())) {
+            dimensionVisualisationByDimensionId = new HashMap<String, DimensionVisualisation>(dataStructure.getDimensionVisualisations().getDimensionVisualisations().size());
+            for (DimensionVisualisation dimensionVisualisation : dataStructure.getDimensionVisualisations().getDimensionVisualisations()) {
+                dimensionVisualisationByDimensionId.put(dimensionVisualisation.getDimension().getRef().getId(), dimensionVisualisation);
+            }
+        }
+
         Dimensions targets = new Dimensions();
         for (DsdDimension source : sources) {
-            targets.getDimensions().add(toDimension(datasetVersionUrn, dataStructure, source, selectedLanguages));
+            DimensionVisualisation dimensionVisualisation = dimensionVisualisationByDimensionId != null ? dimensionVisualisationByDimensionId.get(source.getComponentId()) : null;
+            targets.getDimensions().add(toDimension(datasetVersionUrn, dataStructure, source, dimensionVisualisation, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
         return targets;
     }
 
-    private Dimension toDimension(String datasetVersionUrn, DataStructure dataStructure, DsdDimension source, List<String> selectedLanguages) throws MetamacException {
+    private Dimension toDimension(String datasetVersionUrn, DataStructure dataStructure, DsdDimension source, DimensionVisualisation dimensionVisualisation, List<String> selectedLanguages)
+            throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -382,11 +394,12 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setName(toInternationalString(conceptIdentity.getNames(), selectedLanguages));
 
         // Dimension values
-        target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, selectedLanguages));
+        target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, selectedLanguages));
         return target;
     }
 
-    private DimensionValues toDimensionValues(String datasetVersionUrn, DataStructure dataStructure, DsdDimension dimension, List<String> selectedLanguages) throws MetamacException {
+    private DimensionValues toDimensionValues(String datasetVersionUrn, DataStructure dataStructure, DsdDimension dimension, DimensionVisualisation dimensionVisualisation,
+            List<String> selectedLanguages) throws MetamacException {
         if (dimension == null) {
             return null;
         }
@@ -398,9 +411,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         for (CodeDimension coverage : coverages) {
             coveragesById.put(coverage.getIdentifier(), coverage);
         }
+
         DimensionValues targets = null;
         if (dimension.getCodelistRepresentationUrn() != null) {
-            targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), selectedLanguages);
+            targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), dimensionVisualisation, selectedLanguages);
         } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), selectedLanguages);
         } else if (dimension.getTimeTextFormatRepresentation() != null) {
@@ -416,12 +430,15 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         return targets;
     }
 
-    private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionVisualisation dimensionVisualisation,
+            List<String> selectedLanguages) throws MetamacException {
         if (codelistUrn == null) {
             return null;
         }
         EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn);
+        String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
+        String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness);
         for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             if (!coveragesById.containsKey(id)) {
@@ -441,10 +458,10 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         }
         EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
 
-        Map<String, BigInteger> showDecimalPrecisionsById = null;
+        Map<String, Integer> showDecimalPrecisionsById = null;
         if (DsdComponentType.MEASURE.equals(componentType)) {
             if (dataStructure.getShowDecimalsPrecisions() != null && !CollectionUtils.isEmpty(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions())) {
-                showDecimalPrecisionsById = new HashMap<String, BigInteger>(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().size());
+                showDecimalPrecisionsById = new HashMap<String, Integer>(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().size());
                 for (ShowDecimalPrecision showDecimalPrecision : dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions()) {
                     showDecimalPrecisionsById.put(showDecimalPrecision.getConcept().getRef().getId(), showDecimalPrecision.getShowDecimals());
                 }
@@ -505,10 +522,13 @@ public class DatasetsDo2RestMapperV10Impl extends BaseDo2RestMapperV10Impl imple
         target.setParent(source.getParent());
         target.setKind(source.getKind());
         target.setSelfLink(source.getSelfLink());
+
+        target.setOpen(source.isOpen());
+        target.setOrder(source.getOrder());
         return target;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, BigInteger> showDecimalPrecisionsById, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsById, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }

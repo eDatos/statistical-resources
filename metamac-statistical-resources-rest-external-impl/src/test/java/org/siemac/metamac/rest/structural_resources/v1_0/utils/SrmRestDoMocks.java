@@ -1,7 +1,5 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
-import java.math.BigInteger;
-
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
@@ -60,7 +58,7 @@ public class SrmRestDoMocks {
         dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockMeasureDimension("measure01"));
         dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimension("dim01", Boolean.FALSE));
 
-        dataStructure.setShowDecimals(BigInteger.valueOf(2));
+        dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
         dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "conceptScheme01", "01.000", "measure01-conceptScheme01-concept01", 4));
         dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "conceptScheme01", "01.000", "measure01-conceptScheme01-concept05", 1));
@@ -77,17 +75,17 @@ public class SrmRestDoMocks {
     private static ShowDecimalPrecision mockShowDecimalPrecision(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, int value) {
         ShowDecimalPrecision showDecimalPrecision = new ShowDecimalPrecision();
         showDecimalPrecision.setConcept(mockConceptReferenceType(agencyID, maintainableParentID, maintainableVersionID, resourceID));
-        showDecimalPrecision.setShowDecimals(BigInteger.valueOf(value));
+        showDecimalPrecision.setShowDecimals(value);
         return showDecimalPrecision;
     }
 
     public static Codes mockCodesByCodelist(String agencyID, String resourceID, String version) {
         Codes codes = new Codes();
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", codes.getCodes().get(1).getUrn()));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null));
+        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true));
+        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false));
+        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", codes.getCodes().get(1).getUrn(), 4, false));
+        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 5, true));
+        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 3, false));
         return codes;
     }
 
@@ -101,7 +99,7 @@ public class SrmRestDoMocks {
         return concepts;
     }
 
-    public static CodeResource mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn) {
+    public static CodeResource mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
         CodeResource code = new CodeResource();
         code.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Code=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
         code.setId(resourceID);
@@ -110,6 +108,8 @@ public class SrmRestDoMocks {
         code.setKind("structuralResources#code");
         code.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/" + agencyID + "/" + maintainableParentID + "/"
                 + maintainableVersionID + "/codes/" + resourceID));
+        code.setOrder(Integer.valueOf(order));
+        code.setOpen(open);
         return code;
     }
 

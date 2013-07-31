@@ -9,7 +9,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 public interface SrmRestExternalFacade {
 
     public DataStructure retrieveDataStructureByUrn(String urn);
-    public Codes retrieveCodesByCodelistUrn(String urn);
+    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness);
 
     public Concepts retrieveConceptsByConceptSchemeByUrn(String urn);
     public Concept retrieveConceptByUrn(String urn);

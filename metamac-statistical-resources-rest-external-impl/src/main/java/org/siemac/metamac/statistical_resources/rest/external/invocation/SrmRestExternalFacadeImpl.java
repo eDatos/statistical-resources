@@ -38,13 +38,13 @@ public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
     }
 
     @Override
-    public Codes retrieveCodesByCodelistUrn(String urn) {
+    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness) {
         try {
             String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
             String agencyID = urnSplited[0];
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
-            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, null, null);
+            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, order, openness);
         } catch (Exception e) {
             throw toRestException(e);
         }

@@ -186,13 +186,6 @@ public abstract class BaseDo2RestMapperV10Impl {
         return RestCommonUtil.transformDateTimeToDate(source);
     }
 
-    protected BigInteger toBigInteger(Integer source) {
-        if (source == null) {
-            return null;
-        }
-        return BigInteger.valueOf(source.longValue());
-    }
-
     /**
      * Create list with requested languages and default language in service
      */
