@@ -167,7 +167,7 @@ public class SrmMockUtils {
         ItemResourceInternal concept = new ItemResourceInternal();
         concept.setId(id);
         concept.setUrn("urn:uuid" + id);
-        concept.setUrnProvider("urn:uuid:provider" + id);
+        concept.setUrnProvider("urn:uuid:provider:" + id);
         concept.setSelfLink(buildResourceLink(TypeExternalArtefactsEnum.CONCEPT));
         concept.setManagementAppLink("http://srm/concepts/" + id);
         concept.setName(buildInternationalStringResource(name, DEFAULT_LOCALE));
