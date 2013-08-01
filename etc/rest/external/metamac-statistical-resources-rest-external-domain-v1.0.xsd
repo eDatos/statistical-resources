@@ -36,6 +36,21 @@
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
 
+    <xs:complexType name="Query">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" />
+            <xs:element name="urn" type="xs:string" />
+            <xs:element name="selfLink" type="common:ResourceLink" />
+            <xs:element name="parentLink" type="common:ResourceLink" />
+            <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
+            <xs:element name="metadata" type="tns:QueryMetadata" />
+        </xs:sequence>
+        <xs:attribute name="kind" type="xs:string" use="required" />
+    </xs:complexType>
+    
     <xs:complexType name="DatasetMetadata">
         <xs:complexContent>
             <xs:extension base="tns:StatisticalResource">
@@ -81,6 +96,17 @@
     <xs:complexType name="CollectionData">
         <xs:sequence>
             <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="QueryMetadata">
+        <xs:sequence>
+            <xs:element name="relatedDataset" type="common:Resource" minOccurs="1" />
+            <xs:element name="statisticalOperation" type="common:Resource" />
+            <xs:element name="publicationDate" type="xs:dateTime" />
+            <xs:element name="maintainer" type="common:Resource" />
+            <xs:element name="validFrom" type="xs:dateTime" />
+            <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 
@@ -304,6 +330,16 @@
         </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Queries">
+        <xs:complexContent>
+            <xs:extension base="common:ListBase">
+                <xs:sequence>
+                    <xs:element name="query" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
     <!-- Enums -->
     <xs:simpleType name="DimensionType">
         <xs:restriction base="xs:token">
@@ -375,4 +411,6 @@
     <xs:element name="datasets" type="tns:Datasets" />
     <xs:element name="collection" type="tns:Collection" />
     <xs:element name="collections" type="tns:Collections" />
+    <xs:element name="query" type="tns:Query" />
+    <xs:element name="queries" type="tns:Queries" />
 </xs:schema>

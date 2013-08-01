@@ -11,12 +11,15 @@ import java.util.Map;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.service.StatisticalResourcesRestExternalCommonService;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,9 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Autowired
     private CollectionsDo2RestMapperV10                   collectionsDo2RestMapper;
+
+    @Autowired
+    private QueriesDo2RestMapperV10                       queriesDo2RestMapper;
 
     @Override
     public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
@@ -74,6 +80,20 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
             Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, lang, includeMetadata, includeData);
             return collection;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public Query retrieveQuery(String agencyID, String resourceID, List<String> lang, String fields) {
+        try {
+            QueryVersion queryVersion = commonService.retrieveQueryVersion(agencyID, resourceID);
+
+            boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
+            Query query = queriesDo2RestMapper.toQuery(queryVersion, lang, includeMetadata, includeData);
+            return query;
         } catch (Exception e) {
             throw manageException(e);
         }

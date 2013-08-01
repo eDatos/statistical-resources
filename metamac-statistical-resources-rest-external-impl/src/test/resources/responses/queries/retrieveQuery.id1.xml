@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<stat:query xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" kind="statisticalResources#query">
+    <stat:id>query1</stat:id>
+    <stat:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)</stat:urn>
+    <stat:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
+    <stat:parentLink kind="statisticalResources#queries" href="http://data.istac.es/apis/statistical-resources/v1.0/queries"/>
+    <stat:name>
+        <cdomain:text xml:lang="es">title-resource-DDU1cBlahO en Espanol</cdomain:text>
+    </stat:name>
+    <stat:description>
+        <cdomain:text xml:lang="es">description-resource-DDU1cBlahO en Espanol</cdomain:text>
+    </stat:description>
+    <stat:selectedLanguages total="1">
+        <stat:language>es</stat:language>
+    </stat:selectedLanguages>
+</stat:query>

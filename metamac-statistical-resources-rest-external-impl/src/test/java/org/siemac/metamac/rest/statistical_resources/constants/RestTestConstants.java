@@ -20,6 +20,11 @@ public class RestTestConstants {
     public static String COLLECTION_3_CODE           = "collection3";
     public static String COLLECTION_4_CODE           = "collection4";
 
+    public static String QUERY_1_CODE                = "query1";
+    public static String QUERY_2_CODE                = "query2";
+    public static String QUERY_3_CODE                = "query3";
+    public static String QUERY_4_CODE                = "query4";
+
     public static String VERSION_1                   = "01.000";
     public static String VERSION_2                   = "02.000";
 

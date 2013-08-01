@@ -10,11 +10,14 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.srm.rest.internal.RestInternalConstants;
@@ -25,6 +28,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetS
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +38,16 @@ import org.springframework.stereotype.Service;
 @Service("statisticalResourcesRestExternalCommonService")
 public class StatisticalResourcesRestExternalCommonServiceImpl implements StatisticalResourcesRestExternalCommonService {
 
-    private final PagingParameter pagingParameterOneResult = PagingParameter.pageAccess(1, 1, false);
+    private final PagingParameter  pagingParameterOneResult = PagingParameter.pageAccess(1, 1, false);
 
     @Autowired
-    private DatasetService        datasetService;
+    private DatasetService         datasetService;
 
     @Autowired
-    private PublicationService    publicationService;
+    private PublicationService     publicationService;
+
+    @Autowired
+    private QueryVersionRepository queryVersionRepository;
 
     @Override
     public DatasetVersion retrieveDatasetVersion(String agencyID, String resourceID, String version) {
@@ -78,6 +86,27 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             }
             PublicationVersion publicationVersion = entitiesPagedResult.getValues().get(0);
             return publicationVersion;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public QueryVersion retrieveQueryVersion(String agencyID, String resourceID) {
+        try {
+            // Validations
+            checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+            checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+
+            // Retrieve last version published
+            String[] maintainerCodes = StringUtils.splitPreserveAllTokens(agencyID, UrnConstants.DOT);
+            String queryUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, resourceID);
+            QueryVersion queryVersion = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
+            if (queryVersion == null) {
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.QUERY_NOT_FOUND, resourceID, agencyID);
+                throw new RestException(exception, Status.NOT_FOUND);
+            }
+            return queryVersion;
         } catch (Exception e) {
             throw manageException(e);
         }
