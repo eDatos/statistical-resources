@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -13,10 +14,12 @@ import org.siemac.metamac.core.common.io.FileUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacPx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacPx2StatRepoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -46,7 +49,15 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
         // Parse PX
         PxModel pxModel = readPxModel(pxFile);
-        PxDataByDimensionsIterator pxDataByDimensionsIterator = readPxData(pxFile, pxModel);
+        PxDataByDimensionsIterator pxDataByDimensionsIterator = readPxData(pxFile, pxModel); // Data iterator
+
+        // Prepare attribute at observation level
+        Map<String, List<AttributeBasicDto>> attributesObservations = null;
+        if (validateDataVersusDsd.getAttributeIdsAtObservationLevelSet().contains(MetamacPx2StatRepoMapperImpl.ATTR_OBS_NOTE)) {
+            List<ComponentInfo> dimensionsInfo = validateDataVersusDsd.retrieveDimensionsInfo();
+            Map<String, Integer> dimensionsOrderPxMap = metamacPx2StatRepoMapper.generateDimensionsOrderPxMap(pxModel);
+            attributesObservations = metamacPx2StatRepoMapper.toAttributesObservations(pxModel, "es", dimensionsInfo, dimensionsOrderPxMap);
+        }
 
         List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
         ObservationExtendedDto observationExtendedDto = null;
@@ -54,7 +65,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
         boolean processData = true;
         while (processData) {
             for (int i = 0; i < SPLIT_DATA_FACTOR; i++) {
-                observationExtendedDto = metamacPx2StatRepoMapper.toObservation(pxDataByDimensionsIterator.next(), dataSourceID);
+                observationExtendedDto = metamacPx2StatRepoMapper.toObservation(pxDataByDimensionsIterator.next(), dataSourceID, attributesObservations);
                 if (observationExtendedDto == null) {
                     // Insert incomplete slice
                     insertDataAndAttributes(datasetID, dataDtos, validateDataVersusDsd);
@@ -107,8 +118,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
             datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetID, dataDtos);
         }
 
-        // TODO Other attributes
-
+        // Other attributes: In Metamac the attributes that not are in observation level are not imported.
     }
 
     /**
@@ -126,7 +136,8 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
             // Transform
             inputStream = new FileInputStream(pxFile);
-            return PxParser.toPxModel(inputStream, charsetName);
+            PxParser pxParser = new PxParser(false, false);
+            return pxParser.toPxModel(inputStream, charsetName);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error parsing px file", e);
         } finally {
@@ -148,7 +159,8 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
             // Transform
             InputStream inputStream = new FileInputStream(pxFile);
-            PxDataByDimensionsIterator pxDataByDimensionsIterator = PxParser.toPxDataByDimensionsIterator(inputStream, charsetName, pxModel.getStub(), pxModel.getHeading());
+            PxParser pxParser = new PxParser(false, false);
+            PxDataByDimensionsIterator pxDataByDimensionsIterator = pxParser.toPxDataByDimensionsIterator(inputStream, charsetName, pxModel.getStub(), pxModel.getHeading());
             return pxDataByDimensionsIterator;
         } catch (Exception e) {
             throw new IllegalArgumentException("Error parsing px file", e);

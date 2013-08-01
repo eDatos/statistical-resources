@@ -90,6 +90,28 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
 
     @Override
     public void insertDataAndAttributes(DataContainer dataContainer) throws Exception {
+        List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
+        List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
+
+        // Transform Data y Attributes (series or observation level) into repository model
+        metamac2StatRepoMapper.populateDatas(dataContainer, this.validateDataVersusDsd.getAttributesProcessorMap(), dataDtos, attributeDtos, this.dataSourceID);
+
+        // Persist Observations and observation level attributes
+        if (!dataDtos.isEmpty()) {
+            this.validateDataVersusDsd.checkObservation(dataDtos);
+            datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos);
+        }
+    }
+
+    /**
+     * THIS CODE IS UNUSED because in Metamac the attributes that not are in observation level are not imported.
+     * The code is here for demo purposes.
+     * 
+     * @param dataContainer
+     * @throws Exception
+     */
+    @SuppressWarnings("unused")
+    private void _UNUSED_insertDataAndAttributes(DataContainer dataContainer) throws Exception {
 
         List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
         List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
