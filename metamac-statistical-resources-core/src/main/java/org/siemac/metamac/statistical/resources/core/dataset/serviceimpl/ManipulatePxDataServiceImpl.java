@@ -113,8 +113,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
         // Persist Observations and observation level attributes
         if (!dataDtos.isEmpty()) {
-            // TODO sin validación contra DSD hasta que se decida la reunión de atributos
-            // validateDataVersusDsd.checkObservation(dataDtos);
+            validateDataVersusDsd.checkObservation(dataDtos);
             datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetID, dataDtos);
         }
 

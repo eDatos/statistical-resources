@@ -3,12 +3,18 @@ package org.siemac.metamac.statistical.resources.core.mock;
 import java.util.Arrays;
 
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.BasicComponentDataType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.common.SimpleDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureListType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -341,6 +347,39 @@ public class Mocks {
         measureListType.setPrimaryMeasure(SrmMockUtils.buildPrimaryMeasure("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE", null));
 
         dataStructure.getDataStructureComponents().setMeasureList(measureListType);
+
+        return dataStructure;
+    }
+
+    /**
+     * mock the DSD_ECB_EXR_RG dsd's without mandatory in attribute observation and add a attribute observation level with OBS_NOTE code.
+     * 
+     * @return
+     */
+    public static DataStructure mock_DSD_ECB_EXR_RG_for_PX() {
+        DataStructure dataStructure = mock_DSD_ECB_EXR_RG();
+
+        for (Object attribute : dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies()) {
+
+            if (attribute instanceof AttributeType) {
+                ((AttributeType) attribute).setAssignmentStatus(UsageStatusType.CONDITIONAL);
+            } else if (attribute instanceof ReportingYearStartDayType) {
+                ((ReportingYearStartDayType) attribute).setAssignmentStatus(UsageStatusType.CONDITIONAL);
+            }
+
+        }
+
+        Attribute obsNote = SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_NOTE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS",
+                null, UsageStatusType.CONDITIONAL);
+
+        // Not enumerated representation
+        SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
+        SimpleComponentTextFormatType simpleComponentTextFormatType = new SimpleComponentTextFormatType();
+        simpleComponentTextFormatType.setTextType(SimpleDataType.STRING);
+        simpleDataStructureRepresentationType.setTextFormat(simpleComponentTextFormatType);
+        obsNote.setLocalRepresentation(simpleDataStructureRepresentationType);
+
+        dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies().add(obsNote);
 
         return dataStructure;
     }
