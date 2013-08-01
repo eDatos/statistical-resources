@@ -7,7 +7,6 @@ public class StatisticalResourceDS extends LifeCycleResourceDS {
     public static final String TITLE_ALTERNATIVE              = "sr-title-alt";
     public static final String ABSTRACT                       = "sr-abstract";
     public static final String KEYWORDS                       = "sr-keywords";
-    public static final String KEYWORDS_VIEW                  = "sr-keywords-view";
 
     // PRODUCTION DESCRIPTORS
     public static final String CREATOR                        = "sr-creator";

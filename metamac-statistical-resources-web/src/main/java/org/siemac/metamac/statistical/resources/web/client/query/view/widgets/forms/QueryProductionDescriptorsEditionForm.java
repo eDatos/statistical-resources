@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
@@ -23,6 +24,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalR
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
@@ -56,15 +58,13 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     private Map<String, List<CodeItemDto>>                                   dtoSelection;
     
-    private boolean createMode;
-
     public QueryProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
 
         maintainerItem = createMaintainerItem();
         maintainerItem.setShowIfCondition(getFormItemIfFunctionCreateMode());
         
-        ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer());
+        ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER_VIEW, getConstants().siemacMetadataStatisticalResourceMaintainer());
         maintainerViewItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();
@@ -74,7 +74,6 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     
 
     public void setQueryDto(QueryVersionDto queryDto) {
-        createMode = queryDto.getId() == null;
         setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
         setExternalItemValue(getItem(LifeCycleResourceDS.MAINTAINER), queryDto.getMaintainer());
 
@@ -315,7 +314,8 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
              
              @Override
              public boolean execute(FormItem item, Object value, DynamicForm form) {
-                 return !createMode;
+                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER_VIEW));
+                 return MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
              }
          };
      }
@@ -325,7 +325,8 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
              
              @Override
              public boolean execute(FormItem item, Object value, DynamicForm form) {
-                 return createMode;
+                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER_VIEW));
+                 return !MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
              }
          };
      }

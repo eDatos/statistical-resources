@@ -4,6 +4,7 @@ public class LifeCycleResourceDS extends VersionableResourceDS {
 
     // PRODUCTION DESCRIPTORS
     public static final String MAINTAINER                 = "lc-maintainer";
+    public static final String MAINTAINER_VIEW                 = "lc-maintainer-view";
 
     // LIFE CYCLE
     public static final String PROC_STATUS                = "lc-proc-status";
