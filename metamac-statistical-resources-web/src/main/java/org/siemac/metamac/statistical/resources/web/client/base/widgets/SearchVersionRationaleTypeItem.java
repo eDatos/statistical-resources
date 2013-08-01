@@ -38,27 +38,29 @@ public class SearchVersionRationaleTypeItem extends ExternalItemListItem {
         CustomListGridField valueField = new CustomListGridField(VersionRationaleTypeDS.VALUE, getConstants().versionableStatisticalResourceVersionRationaleTypeValue());
         listGrid.setFields(valueField);
 
-        getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        if (editionMode) {
+            getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                searchVersionRationaleTypeWindow = new SearchVersionRationaleTypeWindow(name);
-                searchVersionRationaleTypeWindow.resetValues();
-                searchVersionRationaleTypeWindow.setSourceVersionRationaleTypeDtos(getSourceVersionRationaleTypeDtosWihtoutSelectedTypes());
-                searchVersionRationaleTypeWindow.setTargetVersionRationaleTypeDtos(getSelectedVersionRationaleTypeDtos());
-                searchVersionRationaleTypeWindow.getSaveButton().addClickHandler(new ClickHandler() {
+                @Override
+                public void onFormItemClick(FormItemIconClickEvent event) {
+                    searchVersionRationaleTypeWindow = new SearchVersionRationaleTypeWindow(name);
+                    searchVersionRationaleTypeWindow.resetValues();
+                    searchVersionRationaleTypeWindow.setSourceVersionRationaleTypeDtos(getSourceVersionRationaleTypeDtosWihtoutSelectedTypes());
+                    searchVersionRationaleTypeWindow.setTargetVersionRationaleTypeDtos(getSelectedVersionRationaleTypeDtos());
+                    searchVersionRationaleTypeWindow.getSaveButton().addClickHandler(new ClickHandler() {
 
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        List<VersionRationaleTypeDto> selectedTypeDtos = searchVersionRationaleTypeWindow.getSelectedVersionRationaleTypeDtos();
-                        searchVersionRationaleTypeWindow.markForDestroy();
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            List<VersionRationaleTypeDto> selectedTypeDtos = searchVersionRationaleTypeWindow.getSelectedVersionRationaleTypeDtos();
+                            searchVersionRationaleTypeWindow.markForDestroy();
 
-                        setVersionRationaleTypes(selectedTypeDtos);
-                        SearchVersionRationaleTypeItem.this.validate();
-                    }
-                });
-            }
-        });
+                            setVersionRationaleTypes(selectedTypeDtos);
+                            SearchVersionRationaleTypeItem.this.validate();
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private List<VersionRationaleTypeDto> getSourceVersionRationaleTypeDtosWihtoutSelectedTypes() {
