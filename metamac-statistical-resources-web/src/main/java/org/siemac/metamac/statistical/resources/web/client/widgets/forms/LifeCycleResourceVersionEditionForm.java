@@ -4,9 +4,9 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.SearchVersionRationaleTypeItem;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -25,7 +25,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 
 public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
-    protected ProcStatusEnum procStatus;
+    protected LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto;
 
     public LifeCycleResourceVersionEditionForm() {
         super(getConstants().formVersion());
@@ -34,13 +34,18 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
         SearchVersionRationaleTypeItem versionRationaleTypeItem = new SearchVersionRationaleTypeItem(VersionableResourceDS.VERSION_RATIONALE_TYPES, getConstants()
                 .versionableStatisticalResourceVersionRationaleTypes(), true);
+        versionRationaleTypeItem.setShowIfCondition(getVersionRationaleTypesFormItemIfFunction());
+
+        SearchVersionRationaleTypeItem staticVersionRationaleTypeItem = new SearchVersionRationaleTypeItem(VersionableResourceDS.VERSION_RATIONALE_TYPES_VIEW, getConstants()
+                .versionableStatisticalResourceVersionRationaleTypes(), false);
+        staticVersionRationaleTypeItem.setShowIfCondition(getStaticVersionRationaleTypesFormItemIfFunction());
 
         MultilanguageRichTextEditorItem versionRationale = new MultilanguageRichTextEditorItem(VersionableResourceDS.VERSION_RATIONALE, getConstants().versionableStatisticalResourceVersionRationale());
         versionRationale.setValidators(new CustomRequiredValidator() {
 
             @Override
             protected boolean condition(Object value) {
-                if (CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus)) {
+                if (CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(lifeCycleStatisticalResourceDto.getProcStatus())) {
                     // TODO It is required only if the versionRationaleType == MINOR_ERRATA
                 }
                 return true;
@@ -58,22 +63,23 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
             @Override
             protected boolean condition(Object value) {
-                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? !StringUtils.isBlank(nextVersion.getValueAsString()) : true;
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(lifeCycleStatisticalResourceDto.getProcStatus()) ? !StringUtils.isBlank(nextVersion.getValueAsString()) : true;
             }
         });
 
         CustomDateItem nextVersionDate = new CustomDateItem(VersionableResourceDS.DATE_NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersionDate());
         nextVersionDate.setShowIfCondition(getNextVersionDateFormItemIfFunction());
 
-        setFields(versionLogic, versionRationaleTypeItem, versionRationale, validFrom, validTo, nextVersion, nextVersionDate);
+        setFields(versionLogic, versionRationaleTypeItem, staticVersionRationaleTypeItem, versionRationale, validFrom, validTo, nextVersion, nextVersionDate);
     }
 
     public void setLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        this.procStatus = lifeCycleStatisticalResourceDto.getProcStatus();
+        this.lifeCycleStatisticalResourceDto = lifeCycleStatisticalResourceDto;
 
         setValue(VersionableResourceDS.VERSION, lifeCycleStatisticalResourceDto.getVersionLogic());
 
         ((SearchVersionRationaleTypeItem) getItem(VersionableResourceDS.VERSION_RATIONALE_TYPES)).setVersionRationaleTypes(lifeCycleStatisticalResourceDto.getVersionRationaleTypes());
+        ((SearchVersionRationaleTypeItem) getItem(VersionableResourceDS.VERSION_RATIONALE_TYPES_VIEW)).setVersionRationaleTypes(lifeCycleStatisticalResourceDto.getVersionRationaleTypes());
 
         setValue(VersionableResourceDS.VERSION_RATIONALE, RecordUtils.getInternationalStringRecord(lifeCycleStatisticalResourceDto.getVersionRationale()));
         setValue(VersionableResourceDS.VALID_FROM, lifeCycleStatisticalResourceDto.getValidFrom());
@@ -105,6 +111,32 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
                 // Show item if the next version is SCHEDULED_UPDATE
                 String nextVersionValue = form.getValueAsString(VersionableResourceDS.NEXT_VERSION);
                 return StringUtils.equals(NextVersionTypeEnum.SCHEDULED_UPDATE.toString(), nextVersionValue);
+            }
+        };
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // FORM ITEM IF FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------------
+
+    // VERSION RATIONALE TYPES
+
+    private FormItemIfFunction getVersionRationaleTypesFormItemIfFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return MetadataEditionChecks.canVersionRationaleTypesBeEdited(lifeCycleStatisticalResourceDto.getVersionLogic());
+            }
+        };
+    }
+
+    private FormItemIfFunction getStaticVersionRationaleTypesFormItemIfFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !MetadataEditionChecks.canVersionRationaleTypesBeEdited(lifeCycleStatisticalResourceDto.getVersionLogic());
             }
         };
     }
