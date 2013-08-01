@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.invocation.utils;
 
-import static org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants.BLANK;
-import static org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants.COMMA;
-import static org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants.LEFT_PARENTHESIS;
-import static org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants.QUOTE;
-import static org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants.RIGHT_PARENTHESIS;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.BLANK;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.COMMA;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.LEFT_PARENTHESIS;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.QUOTE;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.RIGHT_PARENTHESIS;
 
 import java.util.ArrayList;
 import java.util.List;

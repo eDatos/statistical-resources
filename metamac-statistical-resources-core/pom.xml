@@ -44,27 +44,39 @@
             <groupId>org.siemac.metamac.metamac-srm</groupId>
             <artifactId>metamac-srm-rest-internal-api</artifactId>
             <version>${metamac-srm-rest-internal-api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>metamac-rest-api</artifactId>
+                    <groupId>org.siemac.metamac</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
             <artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
             <version>${metamac-statistical-operations-rest-internal-api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>metamac-rest-api</artifactId>
+                    <groupId>org.siemac.metamac</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-common-metadata</groupId>
             <artifactId>metamac-common-metadata-rest-external-api</artifactId>
             <version>${metamac-common-metadata-rest-external-api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>metamac-rest-api</artifactId>
+                    <groupId>org.siemac.metamac</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-rest-common</artifactId>
-            <version>${metamac-rest-common.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr-runtime</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>metamac-rest-api</artifactId>
+            <version>${metamac-rest-api.version}</version>
         </dependency>
 
         <!-- STATISTIC -->
@@ -285,6 +297,11 @@
             <artifactId>oracle</artifactId>
             <version>${oracle.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <version>${cxf.version}</version>
         </dependency>
 
         <!-- ******* Quartz ******** -->
