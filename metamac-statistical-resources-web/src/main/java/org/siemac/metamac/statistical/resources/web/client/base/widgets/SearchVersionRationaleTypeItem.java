@@ -32,8 +32,8 @@ public class SearchVersionRationaleTypeItem extends ExternalItemListItem {
     protected SearchVersionRationaleTypeWindow searchVersionRationaleTypeWindow;
     protected List<VersionRationaleTypeDto>    versionRationaleTypeDtos = CommonUtils.getVersionRationaleTypeValues();
 
-    public SearchVersionRationaleTypeItem(final String name, String title) {
-        super(name, title, true);
+    public SearchVersionRationaleTypeItem(final String name, String title, boolean editionMode) {
+        super(name, title, editionMode);
 
         CustomListGridField valueField = new CustomListGridField(VersionRationaleTypeDS.VALUE, getConstants().versionableStatisticalResourceVersionRationaleTypeValue());
         listGrid.setFields(valueField);
