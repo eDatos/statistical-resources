@@ -93,6 +93,16 @@ public class CommonUtils {
         return builder.toString();
     }
 
+    public static List<VersionRationaleTypeDto> getVersionRationaleTypeValues() {
+        List<VersionRationaleTypeDto> versionRationaleTypeDtos = new ArrayList<VersionRationaleTypeDto>();
+        for (VersionRationaleTypeEnum value : VersionRationaleTypeEnum.values()) {
+            VersionRationaleTypeDto versionRationaleTypeDto = new VersionRationaleTypeDto();
+            versionRationaleTypeDto.setValue(value);
+            versionRationaleTypeDtos.add(versionRationaleTypeDto);
+        }
+        return versionRationaleTypeDtos;
+    }
+
     // -----------------------------------------------------------------------------------------
     // VERSION TYPE
     // -----------------------------------------------------------------------------------------

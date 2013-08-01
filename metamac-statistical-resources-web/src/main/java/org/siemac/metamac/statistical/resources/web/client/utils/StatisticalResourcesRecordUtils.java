@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
@@ -16,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLeve
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.base.model.record.VersionRationaleTypeRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
@@ -114,6 +116,25 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         List<TemporalCodeRecord> records = new ArrayList<TemporalCodeRecord>();
         for (TemporalCodeDto dto : dtos) {
             records.add(getTemporalCodeRecord(dto));
+        }
+        return records;
+    }
+
+    //
+    // VERSION RATIONALE TYPES
+    //
+
+    public static VersionRationaleTypeRecord getVersionRationaleTypeRecord(VersionRationaleTypeDto versionRationaleTypeDto) {
+        VersionRationaleTypeRecord record = new VersionRationaleTypeRecord();
+        record.setValue(CommonUtils.getVersionRationaleTypeName(versionRationaleTypeDto.getValue()));
+        record.setVersionRationaleTypeDto(versionRationaleTypeDto);
+        return record;
+    }
+
+    public static VersionRationaleTypeRecord[] getVersionRationaleTypeRecords(List<VersionRationaleTypeDto> versionRationaleTypeDtos) {
+        VersionRationaleTypeRecord[] records = new VersionRationaleTypeRecord[versionRationaleTypeDtos.size()];
+        for (int i = 0; i < versionRationaleTypeDtos.size(); i++) {
+            records[i] = getVersionRationaleTypeRecord(versionRationaleTypeDtos.get(i));
         }
         return records;
     }
