@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
-    targetNamespace="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" 
-    xmlns:tns="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:tns="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
     xmlns:common="http://www.siemac.org/metamac/rest/common/v1.0/domain">
 
     <xs:import namespace="http://www.siemac.org/metamac/rest/common/v1.0/domain" schemaLocation="metamac-rest-api:metamac-rest-common-domain-v1.0.xsd" />
@@ -14,7 +12,7 @@
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
             <xs:element name="name" type="common:InternationalString" />
-            <xs:element name="description" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
             <xs:element name="metadata" type="tns:DatasetMetadata" />
             <xs:element name="data" type="tns:DatasetData" />
@@ -30,19 +28,63 @@
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
             <xs:element name="name" type="common:InternationalString" />
-            <xs:element name="description" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
+            <xs:element name="formatExtentResources" type="xs:int" minOccurs="1" />
+            <xs:element name="structure" type="tns:CollectionStructure" minOccurs="1" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="CollectionStructure">
+        <xs:sequence>
+            <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="CollectionNodes">
+        <xs:sequence>
+            <xs:element name="node" type="tns:CollectionNode" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CollectionNode" abstract="true">
+        <xs:sequence>
+            <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Chapter">
+        <xs:complexContent>
+            <xs:extension base="tns:CollectionNode">
+                <xs:sequence>
+                    <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Table">
+        <xs:complexContent>
+            <xs:extension base="tns:CollectionNode">
+                <xs:choice>
+                    <xs:sequence>
+                        <xs:element name="dataset" type="common:Resource" />
+                        <xs:element name="query" type="common:Resource" />
+                    </xs:sequence>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="SelectedLanguages">
         <xs:sequence>
             <xs:element name="language" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType> 
-    
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="DatasetMetadata">
         <xs:sequence>
             <xs:element name="geographicCoverages" type="common:Resources" />
@@ -90,87 +132,87 @@
             <xs:element name="copyrightDate" type="xs:dateTime" />
             <xs:element name="license" type="common:InternationalString" />
             <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
-            
+
             <xs:element name="publicationDate" type="xs:dateTime" />
-            <xs:element name="replacesVersion" type="common:Resource" minOccurs="0"/>
-            <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0"/>
+            <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
+            <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0" />
             <xs:element name="maintainer" type="common:Resource" />
-            
+
             <xs:element name="version" type="xs:string" />
             <xs:element name="versionRationaleTypes" type="tns:VersionRationaleTypes" />
             <xs:element name="versionRationale" type="common:InternationalString" minOccurs="0" />
             <xs:element name="validFrom" type="xs:dateTime" />
             <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
         </xs:sequence>
-    </xs:complexType>  
-    
+    </xs:complexType>
+
     <xs:complexType name="VersionRationaleTypes">
         <xs:sequence>
             <xs:element name="versionRationaleType" type="tns:VersionRationaleType" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
     </xs:complexType>
-        
+
     <xs:complexType name="DatasetData">
         <xs:sequence>
             <xs:element name="dimensions" type="tns:DimensionRepresentations" />
             <xs:element name="observations" type="xs:string" minOccurs="1" />
         </xs:sequence>
-    </xs:complexType>   
-    
+    </xs:complexType>
+
     <xs:complexType name="DimensionRepresentations">
         <xs:sequence>
             <xs:element name="dimension" type="tns:DimensionRepresentation" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType> 
-    
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="DimensionRepresentation">
         <xs:sequence>
             <xs:element name="dimensionId" type="xs:string" />
             <xs:element name="representations" type="tns:CodeRepresentations" minOccurs="1" />
         </xs:sequence>
-    </xs:complexType> 
-    
+    </xs:complexType>
+
     <xs:complexType name="CodeRepresentations">
         <xs:sequence>
             <xs:element name="representation" type="tns:CodeRepresentation" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType>     
-    
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="CodeRepresentation">
-        <xs:attribute name="code" type="xs:string" use="required"/>
-        <xs:attribute name="index" type="xs:long" use="required"/>
-    </xs:complexType>  
-            
+        <xs:attribute name="code" type="xs:string" use="required" />
+        <xs:attribute name="index" type="xs:long" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="DataStructureDefinition">
         <xs:complexContent>
             <xs:extension base="common:Resource">
                 <xs:sequence>
                     <xs:element name="heading" type="tns:DimensionsId" />
-                    <xs:element name="stub" type="tns:DimensionsId"  />
+                    <xs:element name="stub" type="tns:DimensionsId" />
                     <xs:element name="autoOpen" type="xs:boolean" minOccurs="0" />
-                    <xs:element name="showDecimals" type="xs:int" minOccurs="0"  />
+                    <xs:element name="showDecimals" type="xs:int" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>   
-    
+    </xs:complexType>
+
     <xs:complexType name="DimensionsId">
         <xs:sequence>
             <xs:element name="dimensionId" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType>    
-    
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="Dimensions">
         <xs:sequence>
             <xs:element name="dimension" type="tns:Dimension" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
-    </xs:complexType> 
-        
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="Dimension">
         <xs:sequence>
             <xs:element name="id" type="xs:string" />
@@ -178,8 +220,8 @@
             <xs:element name="type" type="tns:DimensionType" />
             <xs:element name="dimensionValues" type="tns:DimensionValues" />
         </xs:sequence>
-    </xs:complexType>      
-    
+    </xs:complexType>
+
     <xs:complexType name="DimensionValues" abstract="true">
     </xs:complexType>
 
@@ -204,27 +246,27 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="EnumeratedDimensionValue">
         <xs:complexContent>
             <xs:extension base="common:Resource">
                 <xs:sequence>
                     <xs:element name="parent" type="xs:string" minOccurs="0" />
-                    <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0"  />
-                    <xs:element name="order" type="xs:int" minOccurs="0"  />
-                    <xs:element name="open" type="xs:boolean" minOccurs="0"  />
+                    <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0" />
+                    <xs:element name="order" type="xs:int" minOccurs="0" />
+                    <xs:element name="open" type="xs:boolean" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>      
-    
+    </xs:complexType>
+
     <xs:complexType name="NonEnumeratedDimensionValue">
         <xs:sequence>
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
         </xs:sequence>
     </xs:complexType>
-    
+
     <!-- Lists -->
     <xs:complexType name="Datasets">
         <xs:complexContent>
@@ -234,7 +276,7 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>     
+    </xs:complexType>
 
     <xs:complexType name="Collections">
         <xs:complexContent>
@@ -244,8 +286,8 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>     
-    
+    </xs:complexType>
+
     <!-- Enums -->
     <xs:simpleType name="DimensionType">
         <xs:restriction base="xs:token">
@@ -255,7 +297,7 @@
             <xs:enumeration value="DIMENSION" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="StatisticalResourceType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="DATASET" />
@@ -263,7 +305,7 @@
             <xs:enumeration value="QUERY" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="VersionRationaleType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="MAJOR_NEW_RESOURCE" />
@@ -278,7 +320,7 @@
             <xs:enumeration value="MINOR_OTHER" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <!-- Criterias -->
     <xs:simpleType name="DatasetCriteriaPropertyRestriction">
         <xs:restriction base="xs:token">
@@ -311,7 +353,7 @@
             <xs:enumeration value="ID" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <!-- Elements -->
     <xs:element name="dataset" type="tns:Dataset" />
     <xs:element name="datasets" type="tns:Datasets" />

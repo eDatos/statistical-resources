@@ -30,14 +30,21 @@ import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 
 public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
 
-    private PublicationService publicationService;
+    private PublicationService       publicationService;
+    private DatasetVersionRepository datasetVersionRepository;
+    private QueryVersionRepository   queryVersionRepository;
 
     @Test
     public void testRetrieveCollectionXml() throws Exception {
@@ -110,6 +117,30 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
         });
     }
 
+    private void mockRetrieveDatasetLastPublishedVersion() throws MetamacException {
+        when(datasetVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() {
+
+            @Override
+            public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
+                String datasetUrn = (String) invocation.getArguments()[0];
+                String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
+                return datasetsDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
+            };
+        });
+    }
+
+    private void mockRetrieveQueryLastPublishedVersion() throws MetamacException {
+        when(queryVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() {
+
+            @Override
+            public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
+                String queryUrn = (String) invocation.getArguments()[0];
+                String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
+                return queriesDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+            };
+        });
+    }
+
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties
                 .siemacMetadataStatisticalResource().maintainer().codeNested());
@@ -132,8 +163,14 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
     protected void resetMocks() throws Exception {
         publicationService = applicationContext.getBean(PublicationService.class);
         reset(publicationService);
+        datasetVersionRepository = applicationContext.getBean(DatasetVersionRepository.class);
+        reset(datasetVersionRepository);
+        queryVersionRepository = applicationContext.getBean(QueryVersionRepository.class);
+        reset(queryVersionRepository);
 
         mockFindCollectionsByCondition();
+        mockRetrieveDatasetLastPublishedVersion();
+        mockRetrieveQueryLastPublishedVersion();
     }
 
     public String getCollectionUri(String agencyID, String resourceID, String version, String query, String limit, String offset) throws Exception {

@@ -12,6 +12,14 @@
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService" />
     </bean>
     
+    <bean id="datasetVersionRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository" />
+    </bean>
+    
+    <bean id="queryVersionRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository" />
+    </bean>
+    
     <bean id="datasetRepositoriesServiceFacade" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade" />
     </bean>

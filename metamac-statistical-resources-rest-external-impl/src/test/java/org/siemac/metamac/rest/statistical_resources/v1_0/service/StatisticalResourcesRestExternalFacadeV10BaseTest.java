@@ -19,6 +19,7 @@ import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.collection.utils.CollectionsRestDoMocks;
 import org.siemac.metamac.rest.statistical_resources.v1_0.dataset.utils.DatasetsRestDoMocks;
+import org.siemac.metamac.rest.statistical_resources.v1_0.query.utils.QueriesRestDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
@@ -34,6 +35,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     protected static StatisticalResourcesPersistedDoMocks coreDoMocks;
     protected static DatasetsRestDoMocks                  datasetsDoMocks;
     protected static CollectionsRestDoMocks               collectionsDoMocks;
+    protected static QueriesRestDoMocks                   queriesDoMocks;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -47,6 +49,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         coreDoMocks = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesPersistedDoMocks.class);
         datasetsDoMocks = new DatasetsRestDoMocks(coreDoMocks);
         collectionsDoMocks = new CollectionsRestDoMocks(coreDoMocks);
+        queriesDoMocks = new QueriesRestDoMocks(coreDoMocks);
 
         // Rest clients
         // xml
