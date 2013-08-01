@@ -1,4 +1,4 @@
-package org.siemac.metamac.rest.statistical_resources.v1_0.dataset.utils;
+package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -10,27 +10,21 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
-public class DatasetsRestDoMocks {
+public class RestDoMocks {
 
     public StatisticalResourcesPersistedDoMocks coreDoMocks;
 
-    public DatasetsRestDoMocks(StatisticalResourcesPersistedDoMocks coreDoMocks) {
+    public RestDoMocks(StatisticalResourcesPersistedDoMocks coreDoMocks) {
         this.coreDoMocks = coreDoMocks;
-    }
-
-    public DatasetVersion mockDatasetVersionBasic(String agencyID, String resourceID, String version) {
-        DatasetVersion target = coreDoMocks.mockDatasetVersion();
-        target.getSiemacMetadataStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=" + agencyID + ":" + resourceID + "(" + version + ")");
-        target.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
-        target.getSiemacMetadataStatisticalResource().setCode(resourceID);
-        target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
-        return target;
     }
 
     public DatasetVersion mockDatasetVersion(String agencyID, String resourceID, String version) {
@@ -70,6 +64,17 @@ public class DatasetsRestDoMocks {
         return StatisticalResourcesDoMocks.mockDatasetVersionRelated(dataset);
     }
 
+    public PublicationVersion mockPublicationVersion(String agencyID, String resourceID, String version) {
+        PublicationVersion target = mockPublicationVersionBasic(agencyID, resourceID, version);
+        target.setFormatExtentResources(Integer.valueOf(5));
+        return target;
+    }
+
+    public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
+        QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
+        return target;
+    }
+
     public CodeDimension mockCodeDimension(String componentId, String id) {
         CodeDimension codeDimension = new CodeDimension();
         codeDimension.setDsdComponentId(componentId);
@@ -86,6 +91,33 @@ public class DatasetsRestDoMocks {
         observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("dim01", valueDimension01));
         observationExtendedDto.setPrimaryMeasure(String.valueOf(primaryMeasure));
         return observationExtendedDto;
+    }
+
+    private DatasetVersion mockDatasetVersionBasic(String agencyID, String resourceID, String version) {
+        DatasetVersion target = coreDoMocks.mockDatasetVersion();
+        target.getSiemacMetadataStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=" + agencyID + ":" + resourceID + "(" + version + ")");
+        target.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+        target.getSiemacMetadataStatisticalResource().setCode(resourceID);
+        target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+        return target;
+    }
+
+    private PublicationVersion mockPublicationVersionBasic(String agencyID, String resourceID, String version) {
+        PublicationVersion target = PublicationVersionMockFactory.createComplexStructure();
+        target.getSiemacMetadataStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=" + agencyID + ":" + resourceID + "(" + version + ")");
+        target.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+        target.getSiemacMetadataStatisticalResource().setCode(resourceID);
+        target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+        return target;
+    }
+
+    private QueryVersion mockQueryVersionBasic(String agencyID, String resourceID, String version) {
+        QueryVersion target = coreDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
+        target.getLifeCycleStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=" + agencyID + ":" + resourceID + "(" + version + ")");
+        target.getLifeCycleStatisticalResource().getMaintainer().setCodeNested(agencyID);
+        target.getLifeCycleStatisticalResource().setCode(resourceID);
+        target.getLifeCycleStatisticalResource().setVersionLogic(version);
+        return target;
     }
 
     private void mockSiemacMetadataStatisticalResource(String agencyID, String resourceID, String version, SiemacMetadataStatisticalResource target) {

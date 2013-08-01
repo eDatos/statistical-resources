@@ -11,6 +11,7 @@ import javax.ws.rs.QueryParam;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 @Path("v1.0")
 // IMPORTANT: If a new version of API is added, remember change latest url y urlrewrite.xml in war
@@ -45,5 +46,10 @@ public interface StatisticalResourcesV1_0 {
     @Path("collections/{agencyID}/{resourceID}/{version}")
     Collection retrieveCollection(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @PathParam("version") String version, @QueryParam("lang") List<String> lang,
             @QueryParam("fields") String fields);
+
+    @GET
+    @Produces({"application/xml", "application/json"})
+    @Path("queries/{agencyID}/{resourceID}")
+    Query retrieveQuery(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("lang") List<String> lang, @QueryParam("fields") String fields);
 
 }

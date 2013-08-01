@@ -95,7 +95,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
                     if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
                         dataset = null;
                     } else if (AGENCY_1.equals(agencyID) && COLLECTION_1_CODE.equals(resourceID) && VERSION_1.equals(version)) {
-                        dataset = collectionsDoMocks.mockPublicationVersion(agencyID, resourceID, version);
+                        dataset = restDoMocks.mockPublicationVersion(agencyID, resourceID, version);
                     } else {
                         fail();
                     }
@@ -107,10 +107,10 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
                 } else {
                     // any
                     List<PublicationVersion> publications = new ArrayList<PublicationVersion>();
-                    publications.add(collectionsDoMocks.mockPublicationVersion(AGENCY_1, COLLECTION_1_CODE, VERSION_1));
-                    publications.add(collectionsDoMocks.mockPublicationVersion(AGENCY_1, COLLECTION_1_CODE, VERSION_2));
-                    publications.add(collectionsDoMocks.mockPublicationVersion(AGENCY_2, COLLECTION_1_CODE, VERSION_1));
-                    publications.add(collectionsDoMocks.mockPublicationVersion(AGENCY_1, COLLECTION_2_CODE, VERSION_1));
+                    publications.add(restDoMocks.mockPublicationVersion(AGENCY_1, COLLECTION_1_CODE, VERSION_1));
+                    publications.add(restDoMocks.mockPublicationVersion(AGENCY_1, COLLECTION_1_CODE, VERSION_2));
+                    publications.add(restDoMocks.mockPublicationVersion(AGENCY_2, COLLECTION_1_CODE, VERSION_1));
+                    publications.add(restDoMocks.mockPublicationVersion(AGENCY_1, COLLECTION_2_CODE, VERSION_1));
                     return new PagedResult<PublicationVersion>(publications, publications.size(), publications.size(), publications.size(), publications.size() * 10, 0);
                 }
             };
@@ -124,7 +124,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
             public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
                 String datasetUrn = (String) invocation.getArguments()[0];
                 String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
-                return datasetsDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
+                return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
             };
         });
     }
@@ -136,7 +136,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
             public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
                 String queryUrn = (String) invocation.getArguments()[0];
                 String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                return queriesDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+                return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
             };
         });
     }

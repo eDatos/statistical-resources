@@ -65,7 +65,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
             public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
                 String queryUrn = (String) invocation.getArguments()[0];
                 String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                return queriesDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+                return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
             };
         });
     }
