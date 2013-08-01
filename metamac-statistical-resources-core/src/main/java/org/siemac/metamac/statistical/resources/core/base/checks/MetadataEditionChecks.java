@@ -19,6 +19,13 @@ public class MetadataEditionChecks {
         }
         return false;
     }
+    
+    public static boolean canLanguageBeEdited(Long id) {
+        if (id == null) {
+            return true;
+        }
+        return false;
+    }
 
     public static boolean canNextVersionDateBeEdited(NextVersionTypeEnum nextVersion) {
         if (NextVersionTypeEnum.SCHEDULED_UPDATE.equals(nextVersion)) {

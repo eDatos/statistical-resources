@@ -41,8 +41,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 
-public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
+public class StatisticalResourcesDtoMocks extends MetamacMocks {
     private static final String URN_RELATED_RESOURCE_MOCK = "urn:lorem.ipsum.dolor.infomodel.package.Resource=" + mockString(10);
 
     // -----------------------------------------------------------------
