@@ -53,11 +53,11 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     @Override
     public Dataset retrieveDataset(String agencyID, String resourceID, String version, List<String> lang, String fields, String dim) {
         try {
-            Map<String, List<String>> dimensions = parseDimensionExpression(dim);
-            boolean includeMetadata = !hasField(fields, RestExternalConstants.RETRIEVE_DATASET_EXCLUDE_METADATA);
-            boolean includeData = !hasField(fields, RestExternalConstants.RETRIEVE_DATASET_EXCLUDE_DATA);
-
             DatasetVersion datasetVersion = commonService.retrieveDatasetVersion(agencyID, resourceID, version);
+
+            Map<String, List<String>> dimensions = parseDimensionExpression(dim);
+            boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
             Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, lang, includeMetadata, includeData);
             return dataset;
         } catch (Exception e) {
@@ -66,10 +66,13 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     }
 
     @Override
-    public Collection retrieveCollection(String agencyID, String resourceID, String version, List<String> lang) {
+    public Collection retrieveCollection(String agencyID, String resourceID, String version, List<String> lang, String fields) {
         try {
             PublicationVersion publicationVersion = commonService.retrievePublicationVersion(agencyID, resourceID, version);
-            Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, lang);
+
+            boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
+            Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, lang, includeMetadata, includeData);
             return collection;
         } catch (Exception e) {
             throw manageException(e);

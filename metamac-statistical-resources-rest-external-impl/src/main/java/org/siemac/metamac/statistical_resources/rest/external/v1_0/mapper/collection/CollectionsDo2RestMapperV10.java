@@ -8,6 +8,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 
 public interface CollectionsDo2RestMapperV10 {
 
-    public Collection toCollection(PublicationVersion source, List<String> selectedLanguages) throws Exception;
+    public Collection toCollection(PublicationVersion source, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception;
     public Resource toResource(PublicationVersion source, List<String> selectedLanguages);
 }

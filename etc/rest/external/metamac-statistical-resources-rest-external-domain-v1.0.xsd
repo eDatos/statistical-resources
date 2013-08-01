@@ -30,18 +30,116 @@
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
-            <xs:element name="formatExtentResources" type="xs:int" minOccurs="1" />
-            <xs:element name="structure" type="tns:CollectionStructure" minOccurs="1" />
+            <xs:element name="metadata" type="tns:CollectionMetadata" />
+            <xs:element name="data" type="tns:CollectionData" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
 
-    <xs:complexType name="CollectionStructure">
+    <xs:complexType name="DatasetMetadata">
+        <xs:complexContent>
+            <xs:extension base="tns:StatisticalResource">
+                <xs:sequence>
+                    <xs:element name="geographicCoverages" type="common:Resources" />
+                    <xs:element name="temporalCoverages" type="common:Items" />
+                    <xs:element name="measureCoverages" type="common:Resources" />
+                    <xs:element name="geographicGranularities" type="common:Resources" />
+                    <xs:element name="temporalGranularities" type="common:Resources" />
+                    <xs:element name="dateStart" type="xs:dateTime" />
+                    <xs:element name="dateEnd" type="xs:dateTime" />
+                    <xs:element name="statisticalUnit" type="common:Resources" minOccurs="0" />
+                    <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
+                    <xs:element name="dimensions" type="tns:Dimensions" />
+                    <xs:element name="formatExtentObservations" type="xs:int" />
+                    <xs:element name="formatExtentDimensions" type="xs:int" />
+                    <xs:element name="dateNextUpdate" type="xs:dateTime" />
+                    <xs:element name="updateFrequency" type="common:Resource" />
+                    <xs:element name="statisticOfficiality" type="common:Item" />
+                    <xs:element name="bibliographicCitation" type="common:InternationalString" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DatasetData">
+        <xs:sequence>
+            <xs:element name="dimensions" type="tns:DimensionRepresentations" />
+            <xs:element name="observations" type="xs:string" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CollectionMetadata">
+        <xs:complexContent>
+            <xs:extension base="tns:StatisticalResource">
+                <xs:sequence>
+                    <xs:element name="formatExtentResources" type="xs:int" minOccurs="1" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CollectionData">
         <xs:sequence>
             <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
         </xs:sequence>
     </xs:complexType>
-    
+
+    <xs:complexType name="SelectedLanguages">
+        <xs:sequence>
+            <xs:element name="language" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="StatisticalResource" abstract="true">
+        <xs:sequence>
+            <xs:element name="language" type="common:Resource" />
+            <xs:element name="languages" type="common:Resources" />
+            <xs:element name="statisticalOperation" type="common:Resource" />
+            <xs:element name="statisticalOperationInstances" type="common:Resources" minOccurs="0" />
+            <xs:element name="subtitle" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="titleAlternative" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="abstract" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="keywords" type="common:InternationalString" />
+            <xs:element name="type" type="tns:StatisticalResourceType" />
+            <xs:element name="creator" type="common:Resource" />
+            <xs:element name="contributors" type="common:Resources" minOccurs="0" />
+            <xs:element name="createdDate" type="xs:dateTime" />
+            <xs:element name="lastUpdate" type="xs:dateTime" />
+            <xs:element name="conformsTo" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="publishers" type="common:Resources" />
+            <xs:element name="publisherContributors" type="common:Resources" minOccurs="0" />
+            <xs:element name="mediators" type="common:Resources" minOccurs="0" />
+            <xs:element name="newnessUntilDate" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="replaces" type="common:Resource" />
+            <xs:element name="isReplacedBy" type="common:Resource" />
+            <xs:element name="requires" type="common:Resources" />
+            <xs:element name="isRequiredBy" type="common:Resources" />
+            <xs:element name="hasPart" type="common:Resources" />
+            <xs:element name="isPartOf" type="common:Resources" />
+            <xs:element name="rightsHolder" type="common:Resource" />
+            <xs:element name="copyrightDate" type="xs:dateTime" />
+            <xs:element name="license" type="common:InternationalString" />
+            <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="publicationDate" type="xs:dateTime" />
+            <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
+            <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0" />
+            <xs:element name="maintainer" type="common:Resource" />
+            <xs:element name="version" type="xs:string" />
+            <xs:element name="versionRationaleTypes" type="tns:VersionRationaleTypes" />
+            <xs:element name="versionRationale" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="validFrom" type="xs:dateTime" />
+            <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VersionRationaleTypes">
+        <xs:sequence>
+            <xs:element name="versionRationaleType" type="tns:VersionRationaleType" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="CollectionNodes">
         <xs:sequence>
             <xs:element name="node" type="tns:CollectionNode" minOccurs="1" maxOccurs="unbounded" />
@@ -76,88 +174,6 @@
                 </xs:choice>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="SelectedLanguages">
-        <xs:sequence>
-            <xs:element name="language" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
-    </xs:complexType>
-
-    <xs:complexType name="DatasetMetadata">
-        <xs:sequence>
-            <xs:element name="geographicCoverages" type="common:Resources" />
-            <xs:element name="temporalCoverages" type="common:Items" />
-            <xs:element name="measureCoverages" type="common:Resources" />
-            <xs:element name="geographicGranularities" type="common:Resources" />
-            <xs:element name="temporalGranularities" type="common:Resources" />
-            <xs:element name="dateStart" type="xs:dateTime" />
-            <xs:element name="dateEnd" type="xs:dateTime" />
-            <xs:element name="statisticalUnit" type="common:Resources" minOccurs="0" />
-            <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
-            <xs:element name="dimensions" type="tns:Dimensions" />
-            <xs:element name="formatExtentObservations" type="xs:int" />
-            <xs:element name="formatExtentDimensions" type="xs:int" />
-            <xs:element name="dateNextUpdate" type="xs:dateTime" />
-            <xs:element name="updateFrequency" type="common:Resource" />
-            <xs:element name="statisticOfficiality" type="common:Item" />
-            <xs:element name="bibliographicCitation" type="common:InternationalString" />
-
-            <xs:element name="language" type="common:Resource" />
-            <xs:element name="languages" type="common:Resources" />
-            <xs:element name="statisticalOperation" type="common:Resource" />
-            <xs:element name="statisticalOperationInstances" type="common:Resources" minOccurs="0" />
-            <xs:element name="subtitle" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="titleAlternative" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="abstract" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="keywords" type="common:InternationalString" />
-            <xs:element name="type" type="tns:StatisticalResourceType" />
-            <xs:element name="creator" type="common:Resource" />
-            <xs:element name="contributors" type="common:Resources" minOccurs="0" />
-            <xs:element name="createdDate" type="xs:dateTime" />
-            <xs:element name="lastUpdate" type="xs:dateTime" />
-            <xs:element name="conformsTo" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="publishers" type="common:Resources" />
-            <xs:element name="publisherContributors" type="common:Resources" minOccurs="0" />
-            <xs:element name="mediators" type="common:Resources" minOccurs="0" />
-            <xs:element name="newnessUntilDate" type="xs:dateTime" minOccurs="0" />
-            <xs:element name="replaces" type="common:Resource" />
-            <xs:element name="isReplacedBy" type="common:Resource" />
-            <xs:element name="requires" type="common:Resources" />
-            <xs:element name="isRequiredBy" type="common:Resources" />
-            <xs:element name="hasPart" type="common:Resources" />
-            <xs:element name="isPartOf" type="common:Resources" />
-            <xs:element name="rightsHolder" type="common:Resource" />
-            <xs:element name="copyrightDate" type="xs:dateTime" />
-            <xs:element name="license" type="common:InternationalString" />
-            <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
-
-            <xs:element name="publicationDate" type="xs:dateTime" />
-            <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
-            <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0" />
-            <xs:element name="maintainer" type="common:Resource" />
-
-            <xs:element name="version" type="xs:string" />
-            <xs:element name="versionRationaleTypes" type="tns:VersionRationaleTypes" />
-            <xs:element name="versionRationale" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="validFrom" type="xs:dateTime" />
-            <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="VersionRationaleTypes">
-        <xs:sequence>
-            <xs:element name="versionRationaleType" type="tns:VersionRationaleType" minOccurs="1" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
-    </xs:complexType>
-
-    <xs:complexType name="DatasetData">
-        <xs:sequence>
-            <xs:element name="dimensions" type="tns:DimensionRepresentations" />
-            <xs:element name="observations" type="xs:string" minOccurs="1" />
-        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="DimensionRepresentations">
