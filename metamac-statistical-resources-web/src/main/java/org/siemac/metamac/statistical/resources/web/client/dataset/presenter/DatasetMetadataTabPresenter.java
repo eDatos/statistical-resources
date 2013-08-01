@@ -157,6 +157,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(SaveDatasetVersionResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().datasetSaved());
                 getView().setDataset(result.getSavedDatasetVersion());
             }
         });
@@ -197,23 +198,23 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             }
         });
     }
-    
+
     @Override
     public void cancelProgrammedPublication(DatasetVersionDto dataset) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
     public void programPublication(DatasetVersionDto dataset) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
     public void sendToPendingPublication(DatasetVersionDto dataset) {
         // TODO Auto-generated method stub
-        
+
     }
     // FIXME ADD LIFECYCLE OPERATIONS
     // @Override

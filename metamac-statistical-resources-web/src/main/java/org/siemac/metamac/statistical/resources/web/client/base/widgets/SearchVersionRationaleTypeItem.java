@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.web.client.base.model.ds.VersionRationaleTypeDS;
 import org.siemac.metamac.statistical.resources.web.client.base.model.record.VersionRationaleTypeRecord;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.BaseSearchWindow;
@@ -29,7 +30,7 @@ public class SearchVersionRationaleTypeItem extends ExternalItemListItem {
     protected static final int                 FORM_ITEM_CUSTOM_WIDTH   = 500;
 
     protected SearchVersionRationaleTypeWindow searchVersionRationaleTypeWindow;
-    protected List<VersionRationaleTypeDto>    versionRationaleTypeDtos = new ArrayList<VersionRationaleTypeDto>();
+    protected List<VersionRationaleTypeDto>    versionRationaleTypeDtos = CommonUtils.getVersionRationaleTypeValues();
 
     public SearchVersionRationaleTypeItem(final String name, String title) {
         super(name, title, true);
@@ -94,10 +95,6 @@ public class SearchVersionRationaleTypeItem extends ExternalItemListItem {
             versionRationaleTypeDtos.add(((VersionRationaleTypeRecord) record).getVersionRationaleTypeDto());
         }
         return versionRationaleTypeDtos;
-    }
-
-    public void setSourceVersionRationaleTypeDtos(List<VersionRationaleTypeDto> versionRationaleTypeDtos) {
-        this.versionRationaleTypeDtos = versionRationaleTypeDtos;
     }
 
     private class SearchVersionRationaleTypeWindow extends BaseSearchWindow {

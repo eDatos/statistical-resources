@@ -34,7 +34,6 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
         SearchVersionRationaleTypeItem versionRationaleTypeItem = new SearchVersionRationaleTypeItem(VersionableResourceDS.VERSION_RATIONALE_TYPES, getConstants()
                 .versionableStatisticalResourceVersionRationaleTypes());
-        versionRationaleTypeItem.setSourceVersionRationaleTypeDtos(CommonUtils.getVersionRationaleTypeValues());
 
         MultilanguageRichTextEditorItem versionRationale = new MultilanguageRichTextEditorItem(VersionableResourceDS.VERSION_RATIONALE, getConstants().versionableStatisticalResourceVersionRationale());
         versionRationale.setValidators(new CustomRequiredValidator() {
