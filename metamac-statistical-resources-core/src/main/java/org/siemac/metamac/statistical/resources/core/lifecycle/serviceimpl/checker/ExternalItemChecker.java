@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.appendConditionToQuery;
 import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.fieldComparison;
 import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.processExternalItemsUrns;
@@ -29,7 +28,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
@@ -50,11 +48,11 @@ public class ExternalItemChecker {
     private CommonMetadataRestExternalService        commonMetadataRestExternalService;
 
     private enum ResultType {
-        URNS, URNS_INTENRAL
+        URNS, URNS_INTERNAL
     }
 
     public void checkExternalItemsExternallyPublished(ExternalItem externalItem, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        checkExternalItemsExternallyPublished(Arrays.asList(externalItem), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptionItems);
+        checkExternalItemsExternallyPublished(Arrays.asList(externalItem), metadataName, exceptionItems);
     }
 
     public void checkExternalItemsExternallyPublished(List<ExternalItem> externalItems, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
@@ -72,56 +70,56 @@ public class ExternalItemChecker {
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case AGENCY_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationSchemeCriteriaPropertyRestriction.URN, OrganisationSchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CATEGORY:
                 query = createQueryForPublishedResourcesSearchingByUrn(CategoryCriteriaPropertyRestriction.URN, CategoryCriteriaPropertyRestriction.CATEGORY_SCHEME_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findCategoriesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CATEGORY_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(CategorySchemeCriteriaPropertyRestriction.URN, CategorySchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CODE:
                 query = createQueryForPublishedResourcesSearchingByUrn(CodeCriteriaPropertyRestriction.URN, CodeCriteriaPropertyRestriction.CODELIST_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findCodesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CODELIST:
                 query = createQueryForPublishedResourcesSearchingByUrn(CodelistCriteriaPropertyRestriction.URN, CodelistCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findCodelistsAsUrnsList(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CONCEPT:
                 query = createQueryForPublishedResourcesSearchingByUrn(ConceptCriteriaPropertyRestriction.URN, ConceptCriteriaPropertyRestriction.CONCEPT_SCHEME_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findConceptsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CONCEPT_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(ConceptSchemeCriteriaPropertyRestriction.URN, ConceptSchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case CONFIGURATION:
                 query = createQueryForPublishedResourcesSearchingByUrn(ConfigurationCriteriaPropertyRestriction.URN, null, null, expectedUrns);
@@ -134,63 +132,63 @@ public class ExternalItemChecker {
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case DATA_CONSUMER_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationSchemeCriteriaPropertyRestriction.URN, OrganisationSchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case DATA_PROVIDER:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationCriteriaPropertyRestriction.URN, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case DATA_PROVIDER_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationSchemeCriteriaPropertyRestriction.URN, OrganisationSchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case DATASTRUCTURE:
                 query = createQueryForPublishedResourcesSearchingByUrn(DataStructureCriteriaPropertyRestriction.URN, DataStructureCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findDsdsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case ORGANISATION:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationCriteriaPropertyRestriction.URN, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case ORGANISATION_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationSchemeCriteriaPropertyRestriction.URN, OrganisationSchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case ORGANISATION_UNIT:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationCriteriaPropertyRestriction.URN, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationsUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case ORGANISATION_UNIT_SCHEME:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationSchemeCriteriaPropertyRestriction.URN, OrganisationSchemeCriteriaPropertyRestriction.PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesUrns(firstResult, maxResult, query);
-                checkResult(expectedUrns, result, ResultType.URNS_INTENRAL, metadataName, exceptionItems);
+                checkResult(expectedUrns, result, ResultType.URNS_INTERNAL, metadataName, exceptionItems);
                 break;
             case STATISTICAL_OPERATION:
                 query = createQueryForPublishedResourcesSearchingByUrn(OperationCriteriaPropertyRestriction.URN, OperationCriteriaPropertyRestriction.PROC_STATUS,
@@ -224,7 +222,7 @@ public class ExternalItemChecker {
         switch (resultType) {
             case URNS:
                 return new MetamacExceptionItem(ServiceExceptionType.EXTERNAL_ITEM_URN_NOT_PUBLISHED, metadataName, notFoundElement);
-            case URNS_INTENRAL:
+            case URNS_INTERNAL:
                 return new MetamacExceptionItem(ServiceExceptionType.EXTERNAL_ITEM_URN_INTERNAL_NOT_PUBLISHED, metadataName, notFoundElement);
             default:
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "unknown type of resource id for create specific exception item: " + resultType);
