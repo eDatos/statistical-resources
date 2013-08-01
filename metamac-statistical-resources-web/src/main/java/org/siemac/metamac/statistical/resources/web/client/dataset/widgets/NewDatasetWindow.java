@@ -105,6 +105,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
     private SearchExternalItemLinkItem createDsdItem() {
 
         final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
+        item.setExternalItem(null);
         item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
             @Override

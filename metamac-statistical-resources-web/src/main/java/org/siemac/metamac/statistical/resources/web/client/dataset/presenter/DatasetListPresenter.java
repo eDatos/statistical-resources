@@ -188,6 +188,24 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         });
     }
 
+    //
+    // IMPORTATION
+    //
+
+    @Override
+    public void datasourcesImportationSucceed(String fileName) {
+        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasourcesImportationPlanned());
+    }
+
+    @Override
+    public void datasourcesImportationFailed(String errorMessage) {
+        ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, errorMessage);
+    }
+
+    //
+    // NAVIGATION
+    //
+
     @Override
     public void goToDataset(String urn) {
         if (!StringUtils.isBlank(urn)) {

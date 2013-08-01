@@ -43,7 +43,7 @@
 
     <servlet>
         <servlet-name>upload</servlet-name>
-        <servlet-class>org.siemac.metamac.statistical.resources.web.server.servlet.FileUploadServlet</servlet-class>
+        <servlet-class>org.siemac.metamac.statistical.resources.web.server.servlet.DatasourceImportationServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

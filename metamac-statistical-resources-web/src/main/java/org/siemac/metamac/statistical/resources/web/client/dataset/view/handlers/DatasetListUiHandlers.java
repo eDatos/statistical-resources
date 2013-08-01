@@ -16,4 +16,9 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
     // Dsd related actions
     void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria);
     void retrieveStatisticalOperationsForDsdSelection();
+
+    // Importation
+
+    void datasourcesImportationFailed(String errorMessage);
+    void datasourcesImportationSucceed(String fileName);
 }

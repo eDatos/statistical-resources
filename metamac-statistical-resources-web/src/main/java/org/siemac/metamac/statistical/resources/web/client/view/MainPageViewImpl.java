@@ -203,5 +203,4 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         }
         return new String();
     }
-
 }

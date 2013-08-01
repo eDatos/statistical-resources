@@ -17,11 +17,14 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
+import org.siemac.metamac.web.common.client.listener.UploadListener;
+import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
@@ -53,13 +56,16 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     private SearchSectionStack       searchSectionStack;
 
-    private ToolStripButton          newDatasetButton;
-    private ToolStripButton          deleteDatasetButton;
+    private CustomToolStripButton    newDatasetButton;
+    private CustomToolStripButton    deleteDatasetButton;
+    private CustomToolStripButton    importDatasourcesButton;
 
     private PaginatedCheckListGrid   datasetsList;
 
     private NewDatasetWindow         newDatasetWindow;
     private DeleteConfirmationWindow deleteConfirmationWindow;
+
+    private ImportDatasourcesWindow  importDatasourcesWindow;
 
     private String                   operationUrn;
 
@@ -72,41 +78,15 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         ToolStrip toolStrip = new ToolStrip();
         toolStrip.setWidth100();
 
-        newDatasetButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newDatasetButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                newDatasetWindow = new NewDatasetWindow(getConstants().datasetCreate());
-                newDatasetWindow.setUiHandlers(getUiHandlers());
-                newDatasetWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (newDatasetWindow.validateForm()) {
-                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto(operationUrn));
-                            newDatasetWindow.destroy();
-                        }
-                    }
-                });
-                newDatasetWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
-                newDatasetWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
-            }
-        });
-        newDatasetButton.setVisibility(DatasetClientSecurityUtils.canCreateDataset() ? Visibility.VISIBLE : Visibility.HIDDEN);
-
-        deleteDatasetButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteDatasetButton.setVisibility(Visibility.HIDDEN);
-        deleteDatasetButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                deleteConfirmationWindow.show();
-            }
-        });
-
+        newDatasetButton = createCreateDatasetButton();
         toolStrip.addButton(newDatasetButton);
+
+        deleteDatasetButton = createDeleteDatasetButton();
         toolStrip.addButton(deleteDatasetButton);
+
+        importDatasourcesButton = createImportDatasourcesButton();
+        toolStrip.addSeparator();
+        toolStrip.addButton(importDatasourcesButton);
 
         // Search
 
@@ -165,6 +145,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         panel.addMember(searchSectionStack);
         panel.addMember(datasetsList);
 
+        // Delete configuration window
+
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());
         deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
         deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
@@ -174,6 +156,74 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
                 getUiHandlers().deleteDatasets(getUrnsFromSelected());
             }
         });
+
+        // Import datasources window
+
+        importDatasourcesWindow = new ImportDatasourcesWindow();
+        importDatasourcesWindow.setUploadListener(new UploadListener() {
+
+            @Override
+            public void uploadFailed(String errorMessage) {
+                getUiHandlers().datasourcesImportationFailed(errorMessage);
+            }
+            @Override
+            public void uploadComplete(String fileName) {
+                getUiHandlers().datasourcesImportationSucceed(fileName);
+            }
+        });
+    }
+
+    private CustomToolStripButton createCreateDatasetButton() {
+        CustomToolStripButton newDatasetButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
+        newDatasetButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                newDatasetWindow = new NewDatasetWindow(getConstants().datasetCreate());
+                newDatasetWindow.setUiHandlers(getUiHandlers());
+                newDatasetWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (newDatasetWindow.validateForm()) {
+                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto(operationUrn));
+                            newDatasetWindow.destroy();
+                        }
+                    }
+                });
+                newDatasetWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
+                newDatasetWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
+            }
+        });
+        newDatasetButton.setVisibility(DatasetClientSecurityUtils.canCreateDataset() ? Visibility.VISIBLE : Visibility.HIDDEN);
+        return newDatasetButton;
+    }
+
+    private CustomToolStripButton createDeleteDatasetButton() {
+        CustomToolStripButton deleteDatasetButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
+        deleteDatasetButton.setVisibility(Visibility.HIDDEN);
+        deleteDatasetButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteConfirmationWindow.show();
+            }
+        });
+        return deleteDatasetButton;
+    }
+
+    private CustomToolStripButton createImportDatasourcesButton() {
+        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
+                .importResource().getURL());
+        // TODO Security importDatasourcesButton.setVisible(...);
+        importDatasourcesButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                importDatasourcesWindow.show();
+            }
+        });
+        return importDatasourcesButton;
     }
 
     @Override
@@ -210,6 +260,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     public void setOperation(String operationUrn) {
         this.operationUrn = operationUrn;
+        this.importDatasourcesWindow.setStatisticalOperationUrn(operationUrn);
     }
 
     public List<String> getUrnsFromSelected() {
