@@ -16,7 +16,7 @@ import org.siemac.metamac.rest.common_metadata.v1_0.domain.CommonMetadataStatus;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.ConfigurationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configurations;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.ResourceInternal;
-import org.siemac.metamac.statistical.resources.core.invocation.CommonMetadataRestExternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;

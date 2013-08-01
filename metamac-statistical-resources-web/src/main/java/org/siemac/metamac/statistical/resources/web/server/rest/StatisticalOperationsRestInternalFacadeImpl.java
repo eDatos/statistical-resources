@@ -13,7 +13,7 @@ import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Insta
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
-import org.siemac.metamac.statistical.resources.core.invocation.StatisticalOperationsRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.StatisticalOperationsRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
