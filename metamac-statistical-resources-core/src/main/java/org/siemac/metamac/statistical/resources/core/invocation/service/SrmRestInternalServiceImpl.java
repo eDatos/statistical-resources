@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemes;
@@ -26,7 +27,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Resourc
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
-import org.siemac.metamac.statistical.resources.core.invocation.constants.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +36,10 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     @Autowired
     private MetamacApisLocator restApiLocator;
 
-    /*
-     * DSD
-     */
-
+    // -------------------------------------------------------------------------------------------------
+    // DSD
+    // -------------------------------------------------------------------------------------------------
+    
     @Override
     public DataStructure retrieveDsdByUrn(String urn) throws MetamacException {
         try {
@@ -77,10 +77,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
+    
+//    @Override
+//    public List<ResourceInternal> findDsds(String urn) {
+//        try {
+//            Integer limit = RestApiConstants.MAXIMUM_LIMIT;
+//            int offset = 0;
+//            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+//            Concepts concepts = null;
+//            do {
+//                concepts = restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyID, resourceID, version, null, null, limit, String.valueOf(offset));
+//                results.addAll(concepts.getConcepts());
+//                offset += concepts.getConcepts().size(); // next page
+//            } while (concepts.getTotal().intValue() != results.size());
+//            return results;
+//        } catch (Exception e) {
+//            throw manageSrmInternalRestException(e);
+//        }
+//    }
 
-    /*
-     * Concept schemes
-     */
+    // -------------------------------------------------------------------------------------------------
+    // CONCEPT SCHEMES
+    // -------------------------------------------------------------------------------------------------
 
     @Override
     public ConceptSchemes findConceptSchemes(int firstResult, int maxResult, String query) throws MetamacException {
@@ -121,9 +139,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * Concepts
-     */
+    // -------------------------------------------------------------------------------------------------
+    // CONCEPTS
+    // -------------------------------------------------------------------------------------------------
 
     @Override
     public Concept retrieveConceptByUrn(String urn) throws MetamacException {
@@ -149,9 +167,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String version = null;
 
             if (StringUtils.isBlank(conceptSchemeUrn)) {
-                agencyId = RestConstants.WILDCARD_ALL;
-                resourceId = RestConstants.WILDCARD_ALL;
-                version = RestConstants.WILDCARD_ALL;
+                agencyId = RestApiConstants.WILDCARD_ALL;
+                resourceId = RestApiConstants.WILDCARD_ALL;
+                version = RestApiConstants.WILDCARD_ALL;
             } else {
                 String[] params = UrnUtils.splitUrnItemScheme(conceptSchemeUrn);
                 agencyId = params[0];
@@ -195,9 +213,10 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * Code lists
-     */
+    
+    // -------------------------------------------------------------------------------------------------
+    // CODELISTS
+    // -------------------------------------------------------------------------------------------------
 
     @Override
     public Codelists findCodelists(int firstResult, int maxResult, String query) throws MetamacException {
@@ -238,9 +257,10 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * Codes
-     */
+    // -------------------------------------------------------------------------------------------------
+    // CODES
+    // -------------------------------------------------------------------------------------------------
+    
     @Override
     public Codes retrieveCodesOfCodelistEfficiently(String codelistUrn) throws MetamacException {
         if (StringUtils.isBlank(codelistUrn)) {
@@ -268,9 +288,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String version = null;
 
             if (StringUtils.isBlank(codelistUrn)) {
-                agencyId = RestConstants.WILDCARD_ALL;
-                resourceId = RestConstants.WILDCARD_ALL;
-                version = RestConstants.WILDCARD_ALL;
+                agencyId = RestApiConstants.WILDCARD_ALL;
+                resourceId = RestApiConstants.WILDCARD_ALL;
+                version = RestApiConstants.WILDCARD_ALL;
             } else {
                 String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
                 agencyId = params[0];
@@ -311,9 +331,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * Organisation Schemes
-     */
+    // -------------------------------------------------------------------------------------------------
+    // ORGANISATION SCHEMES
+    // -------------------------------------------------------------------------------------------------
 
     @Override
     public OrganisationSchemes findOrganisationSchemes(int firstResult, int maxResult, String query) throws MetamacException {
@@ -341,9 +361,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * ORGANISATIONS
-     */
+    // -------------------------------------------------------------------------------------------------
+    // ORGANISATIONS
+    // -------------------------------------------------------------------------------------------------
     @Override
     public Organisations retrieveOrganisationsOfOrganisationSchemeEfficiently(String organisationSchemeUrn) throws MetamacException {
         if (StringUtils.isBlank(organisationSchemeUrn)) {
@@ -368,7 +388,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
             String orderBy = null;
-            return restApiLocator.getSrmRestInternalFacadeV10().findOrganisations(RestConstants.WILDCARD_ALL, RestConstants.WILDCARD_ALL, RestConstants.WILDCARD_ALL, query, orderBy, limit, offset);
+            return restApiLocator.getSrmRestInternalFacadeV10().findOrganisations(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit, offset);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -388,9 +408,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * CATEGORY SCHEMES
-     */
+    // -------------------------------------------------------------------------------------------------
+    // CATEGORY SCHEMES
+    // -------------------------------------------------------------------------------------------------
 
     @Override
     public CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException {
@@ -418,9 +438,10 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    /*
-     * CATEGORY
-     */
+    
+    // -------------------------------------------------------------------------------------------------
+    // CATEGORIES
+    // -------------------------------------------------------------------------------------------------
     @Override
     public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException {
         if (StringUtils.isBlank(categorySchemeUrn)) {
@@ -444,7 +465,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
             String orderBy = null;
-            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(RestConstants.WILDCARD_ALL, RestConstants.WILDCARD_ALL, RestConstants.WILDCARD_ALL, query, orderBy, limit, offset);
+            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit, offset);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -478,6 +499,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
+    
+    // -------------------------------------------------------------------------------------------------
+    // PRIVATE UTILS
+    // -------------------------------------------------------------------------------------------------
+    
     private MetamacException manageSrmInternalRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_SRM_INTERNAL, restApiLocator.getSrmRestInternalFacadeV10());
     }
