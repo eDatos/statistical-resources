@@ -5,18 +5,12 @@ import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.Ne
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesResult;
 
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
 public abstract class StatisticalResourceBaseListViewImpl<H extends NewStatisticalResourceUiHandlers> extends ViewWithUiHandlers<H>
         implements
             StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView {
-
-    @Override
-    public void setLanguagesCodes(GetLanguagesCodesResult result) {
-        getNewStatisticalResourceWindow().setExternalItemsForLanguage(result.getLanguagesCodes(), result.getFirstResultOut(), result.getLanguagesCodes().size(), result.getTotalResults());
-    }
 
     @Override
     public void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result) {

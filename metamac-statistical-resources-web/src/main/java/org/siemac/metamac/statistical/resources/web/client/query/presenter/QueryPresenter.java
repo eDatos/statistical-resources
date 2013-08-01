@@ -254,4 +254,9 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             placeManager.revealPlaceHierarchy(location);
         }
     }
+    
+    @Override
+    public void goToQueries() {
+        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(operation.getUrn()));   
+    }
 }

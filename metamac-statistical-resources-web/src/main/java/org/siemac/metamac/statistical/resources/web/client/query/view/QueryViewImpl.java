@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
@@ -16,6 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.Q
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryIdentifiersCreationForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
@@ -31,6 +33,7 @@ import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -189,7 +192,8 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                 @Override
                 public void onClick(ClickEvent event) {
                     if (isCreationMode()) {
-                        QueryFormPanel.this.hide();
+	                    QueryFormPanel.this.hide();
+                        QueryViewImpl.this.getUiHandlers().goToQueries();
                     }
                 }
             });

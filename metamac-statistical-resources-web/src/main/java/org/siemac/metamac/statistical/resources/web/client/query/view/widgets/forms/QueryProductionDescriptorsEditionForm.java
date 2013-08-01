@@ -62,10 +62,10 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         super(getConstants().formProductionDescriptors());
 
         maintainerItem = createMaintainerItem();
-        maintainerItem.setShowIfCondition(getFormItemIfFunctionCreateMode());
+        maintainerItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
         
         ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER_VIEW, getConstants().siemacMetadataStatisticalResourceMaintainer());
-        maintainerViewItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
+        maintainerViewItem.setShowIfCondition(getFormItemIfFunctionViewMode());
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();
 
@@ -76,6 +76,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     public void setQueryDto(QueryVersionDto queryDto) {
         setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
         setExternalItemValue(getItem(LifeCycleResourceDS.MAINTAINER), queryDto.getMaintainer());
+        setExternalItemValue(getItem(LifeCycleResourceDS.MAINTAINER_VIEW), queryDto.getMaintainer());
 
         dtoSelection = queryDto.getSelection();
         if (queryDto.getRelatedDatasetVersion() != null) {
@@ -192,7 +193,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         
         ExternalItemDto maintainer = getExternalItemValue(getItem(QueryDS.MAINTAINER));
         maintainerItem = createMaintainerItem();
-        maintainerItem.setShowIfCondition(getFormItemIfFunctionCreateMode());
+        maintainerItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
         fields.add(maintainerItem);
         
         RelatedResourceDto datasetVersion = getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION));
@@ -320,7 +321,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
          };
      }
 
-     private FormItemIfFunction getFormItemIfFunctionCreateMode() {
+     private FormItemIfFunction getFormItemIfFunctionViewMode() {
          return new FormItemIfFunction() {
              
              @Override

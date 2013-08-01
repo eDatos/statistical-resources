@@ -7,9 +7,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface NewStatisticalResourceUiHandlers extends UiHandlers {
 
-    // LANGUAGE
-    void retrieveLanguagesCodes(int firstResult, int maxResults, MetamacWebCriteria criteria);
-
     // AGENCY
     void retrieveAgencySchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria);
     void retrieveAgencies(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria);

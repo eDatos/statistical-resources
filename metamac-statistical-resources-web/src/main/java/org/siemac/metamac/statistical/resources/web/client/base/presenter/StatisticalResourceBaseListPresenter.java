@@ -30,21 +30,8 @@ public abstract class StatisticalResourceBaseListPresenter<V extends Statistical
 
     public interface StatisticalResourceBaseListView extends View {
 
-        void setLanguagesCodes(GetLanguagesCodesResult result);
         void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result);
         void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result);
-    }
-
-    @Override
-    public void retrieveLanguagesCodes(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-        dispatcher.execute(new GetLanguagesCodesAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetLanguagesCodesResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetLanguagesCodesResult result) {
-                getView().setLanguagesCodes(result);
-            }
-        });
-
     }
 
     @Override

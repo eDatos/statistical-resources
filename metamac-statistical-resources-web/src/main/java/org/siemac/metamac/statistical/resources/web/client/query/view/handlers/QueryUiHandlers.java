@@ -8,6 +8,8 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public interface QueryUiHandlers extends BaseUiHandlers {
 
+    void goToQueries();
+    
     void saveQuery(QueryVersionDto query);
 
     void retrieveDatasetsForQuery(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria);

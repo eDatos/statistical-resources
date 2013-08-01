@@ -11,11 +11,11 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchLanguageLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class NewStatisticalResourceWindow extends CustomWindow {
@@ -23,15 +23,13 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     private NewStatisticalResourceUiHandlers        uiHandlers;
 
     protected CustomDynamicForm                     form;
-
-    protected SearchLanguageLinkItem                languageItem;
+    protected ExternalItemLinkItem                    languageItem;
 
     protected SearchSrmLinkItemWithSchemeFilterItem maintainerItem;
 
     public NewStatisticalResourceWindow(String title) {
         super(title);
         languageItem = createLanguageItem();
-        languageItem.setRequired(true);
 
         maintainerItem = createMaintainerItem();
         maintainerItem.setRequired(true);
@@ -39,7 +37,6 @@ public class NewStatisticalResourceWindow extends CustomWindow {
 
     protected void setSiemacUiHandlers(NewStatisticalResourceUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
-        languageItem.setUiHandlers(uiHandlers);
     }
 
     protected void populateSiemacResourceDto(SiemacMetadataStatisticalResourceDto dto) {
@@ -62,14 +59,8 @@ public class NewStatisticalResourceWindow extends CustomWindow {
         }
     }
 
-    public void setExternalItemsForLanguage(List<ExternalItemDto> externalItemsDtos, int firstResult, int elementsInPage, int totalResults) {
-        if (languageItem != null) {
-            languageItem.setResources(externalItemsDtos, firstResult, elementsInPage, totalResults);
-        }
-    }
-
-    private SearchLanguageLinkItem createLanguageItem() {
-        return new SearchLanguageLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS);
+    private ExternalItemLinkItem createLanguageItem() {
+        return new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
     }
 
     // ***********************************************************
