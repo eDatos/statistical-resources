@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.shared;
 
-import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 
 public class StatisticalResourcesUrnUtils extends org.siemac.metamac.core.common.util.shared.UrnUtils {
 
