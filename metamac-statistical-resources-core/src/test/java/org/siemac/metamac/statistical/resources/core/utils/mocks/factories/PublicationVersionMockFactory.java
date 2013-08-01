@@ -163,7 +163,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
             publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-            
+
             publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(Boolean.FALSE);
             publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
 
@@ -634,11 +634,11 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     private static String buildPublicationCode(String operationCode, int sequentialId) {
         return operationCode + "_" + String.format("%06d", sequentialId);
     }
-    
+
     private static String buildPublicationVersionUrn(String code, String version) {
         return GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(new String[]{"maitainer"}, code, version);
     }
-    
+
     // -----------------------------------------------------------------
     // PUBLICATION STRUCTURE
     // -----------------------------------------------------------------
@@ -663,7 +663,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return getStatisticalResourcesPersistedDoMocks().mockChapterElementLevel(publicationVersion);
     }
 
-    private static PublicationVersion createComplexStructure() {
+    public static PublicationVersion createComplexStructure() {
         PublicationVersion publicationVersion = createPublicationVersion();
         publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
         publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
