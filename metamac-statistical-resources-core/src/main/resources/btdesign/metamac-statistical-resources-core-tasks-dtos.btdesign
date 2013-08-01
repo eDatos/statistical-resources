@@ -10,7 +10,7 @@ Application DatasetsStatisticalResourcesDto {
 		DataTransferObject TaskInfoDataset {
 			- List<@FileDescriptor> files;
 			String dataStructureUrn; 
-			String repoDatasetId;
+			String datasetVersionId;
 		}
 		
 		DataTransferObject FileDescriptor {

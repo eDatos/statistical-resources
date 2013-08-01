@@ -32,7 +32,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     // DATASET: Calculated and cache data
     private Set<String>                      keyAttributesAdded               = new HashSet<String>();
     private DatasetRepositoryDto             datasetRepositoryDto             = null;
-    private String                           repoDatasetID                    = null;
+    private String                           datasetVersionId                 = null;
     private String                           dataSourceID                     = null;
 
     // Validator
@@ -43,7 +43,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         this.validateDataVersusDsd = validateDataVersusDsd;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
         this.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
-        this.repoDatasetID = datasetID;
+        this.datasetVersionId = datasetID;
     }
 
     @Override
@@ -52,8 +52,8 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
         DatasetRepositoryDto datasetRepositoryDto = null;
 
         // If is a update Dataset
-        if (StringUtils.isNotEmpty(this.repoDatasetID)) {
-            datasetRepositoryDto = datasetRepositoriesServiceFacade.findDatasetRepository(this.repoDatasetID);
+        if (StringUtils.isNotEmpty(this.datasetVersionId)) {
+            datasetRepositoryDto = datasetRepositoriesServiceFacade.findDatasetRepository(this.datasetVersionId);
         }
 
         // If is a new Dataset
@@ -67,7 +67,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     protected DatasetRepositoryDto createDatasetRepository() throws Exception {
         // Create DatasetRepository
         DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
-        datasetRepositoryDto.setDatasetId(this.repoDatasetID);
+        datasetRepositoryDto.setDatasetId(this.datasetVersionId);
 
         // Dimensions
         for (ComponentInfo componentInfo : retrieveDimensionsInfo()) {

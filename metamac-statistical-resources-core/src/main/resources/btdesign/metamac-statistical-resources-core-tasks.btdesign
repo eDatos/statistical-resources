@@ -38,7 +38,7 @@ Application DatasetsStatisticalResources {
     		processRollbackImportationTask(String recoveryJobKey, @TaskInfoDataset taskInfoDataset);
     		
     		"Check if exists a importation job task in the @param datasetId"
-    		boolean existImportationTaskInDataset(String datasetId) throws MetamacException;
+    		boolean existImportationTaskInDataset(String datasetVersionId) throws MetamacException;
 
     		
     		"Creates a task"
@@ -64,7 +64,7 @@ Application DatasetsStatisticalResources {
 	   	 	databaseTable = "TB_TASKS"
 	 		hint = "idSequence=TASKS"
 
-			String job key;
+			String job length="4000" key;
 			-@TaskStatusTypeEnum status not nullable;
 			String extensionPoint length="4000" nullable;
 				   		      	

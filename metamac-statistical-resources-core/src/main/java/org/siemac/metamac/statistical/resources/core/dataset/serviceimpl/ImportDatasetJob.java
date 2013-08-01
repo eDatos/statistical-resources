@@ -34,7 +34,7 @@ public class ImportDatasetJob implements Job {
     public static final String FILE_NAMES         = "fileNames";
     public static final String FILE_FORMATS       = "fileFormats";
     public static final String DATA_STRUCTURE_URN = "dataStructureUrn";
-    public static final String REPO_DATASET_ID    = "repoDatasetId";
+    public static final String DATASET_VERSION_ID = "datasetVersionId";
 
     private TaskServiceFacade  taskServiceFacade  = null;
 
@@ -69,7 +69,7 @@ public class ImportDatasetJob implements Job {
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES), data.getString(FILE_FORMATS)));
-            taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
+            taskInfoDataset.setDatasetVersionId(data.getString(DATASET_VERSION_ID));
 
             getTaskServiceFacade().executeImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());

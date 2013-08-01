@@ -16,12 +16,12 @@ import org.slf4j.LoggerFactory;
 
 public class RecoveryImportDatasetJob implements Job {
 
-    private static Logger      logger            = LoggerFactory.getLogger(RecoveryImportDatasetJob.class);
+    private static Logger      logger             = LoggerFactory.getLogger(RecoveryImportDatasetJob.class);
 
-    public static final String USER              = "user";
-    public static final String REPO_DATASET_ID   = "repoDatasetId";
+    public static final String USER               = "user";
+    public static final String DATASET_VERSION_ID = "datasetVersionId";
 
-    private TaskServiceFacade  taskServiceFacade = null;
+    private TaskServiceFacade  taskServiceFacade  = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
@@ -52,7 +52,7 @@ public class RecoveryImportDatasetJob implements Job {
             logger.info("RecoveryImportationJob: " + jobKey + " starting at " + new Date());
 
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
-            taskInfoDataset.setRepoDatasetId(data.getString(REPO_DATASET_ID));
+            taskInfoDataset.setDatasetVersionId(data.getString(DATASET_VERSION_ID));
 
             getTaskServiceFacade().executeRecoveryImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
             logger.info("RecoveryImportationJob: " + jobKey + " finished at " + new Date());

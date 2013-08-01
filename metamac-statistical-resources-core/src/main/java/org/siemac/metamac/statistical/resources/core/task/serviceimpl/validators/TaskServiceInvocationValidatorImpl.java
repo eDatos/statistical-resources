@@ -20,7 +20,7 @@ public class TaskServiceInvocationValidatorImpl {
 
         StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getFiles(), ServiceExceptionParameters.TASK_INFO_DATASET_FILES, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDataStructureUrn(), ServiceExceptionParameters.TASK_INFO_DATASET_DSD_URN, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getRepoDatasetId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
 
         for (FileDescriptor fileDescriptorDto : taskInfoDataset.getFiles()) {
             StatisticalResourcesValidationUtils.checkMetadataRequired(fileDescriptorDto.getFile(), ServiceExceptionParameters.FILE_DESCRIPTOR_INPUT_MESSAGE, exceptions);
@@ -36,7 +36,7 @@ public class TaskServiceInvocationValidatorImpl {
 
     public static void checkPlanifyRecoveryImportDataset(TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getRepoDatasetId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
     }
 
     public static void checkProcessRollbackImportationTask(String recoveryJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
@@ -44,8 +44,8 @@ public class TaskServiceInvocationValidatorImpl {
         checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
     }
 
-    public static void checkExistImportationTaskInDataset(String datasetId, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetId, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_ID, exceptions);
+    public static void checkExistImportationTaskInDataset(String datasetVersionId, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionId, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
     }
 
     public static void checkMarkTaskAsFinished(String job, List<MetamacExceptionItem> exceptions) {

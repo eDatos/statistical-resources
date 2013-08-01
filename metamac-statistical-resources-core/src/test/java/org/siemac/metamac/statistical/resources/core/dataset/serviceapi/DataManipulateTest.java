@@ -246,7 +246,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -298,7 +298,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -357,7 +357,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -409,7 +409,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setRepoDatasetId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {

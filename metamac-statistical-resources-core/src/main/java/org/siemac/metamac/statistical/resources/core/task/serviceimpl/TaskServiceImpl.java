@@ -127,8 +127,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         taskServiceInvocationValidator.checkPlanifyImportationDataset(ctx, taskInfoDataset);
 
         // job keys
-        JobKey jobKey = createJobKeyForImportationDataset(taskInfoDataset.getRepoDatasetId());
-        TriggerKey triggerKey = createTriggerKeyForImportationDataset(taskInfoDataset.getRepoDatasetId());
+        JobKey jobKey = createJobKeyForImportationDataset(taskInfoDataset.getDatasetVersionId());
+        TriggerKey triggerKey = createTriggerKeyForImportationDataset(taskInfoDataset.getDatasetVersionId());
 
         Task task = null;
         try {
@@ -149,7 +149,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
                     .usingJobData(ImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString())
-                    .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId())
+                    .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
                     .usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
             // Mark importation in progress
@@ -163,21 +163,21 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 // No existing Job
                 task = new Task(jobKey.getName());
                 task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-                task.setExtensionPoint(taskInfoDataset.getRepoDatasetId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
+                task.setExtensionPoint(taskInfoDataset.getDatasetVersionId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
                 createTask(ctx, task);
                 SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
                 sched.scheduleJob(job, trigger);
 
             } else if (TaskStatusTypeEnum.FAILED.equals(task.getStatus())) {
-                if (!sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId()))) {
+                if (!sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId()))) {
                     TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
-                    recoveryTaskInfo.setRepoDatasetId(taskInfoDataset.getRepoDatasetId());
+                    recoveryTaskInfo.setDatasetVersionId(taskInfoDataset.getDatasetVersionId());
                     planifyRecoveryImportDataset(ctx, recoveryTaskInfo); // Perform a clean recovery
                 }
 
                 task.setCreatedDate(new DateTime());
                 task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-                task.setExtensionPoint(taskInfoDataset.getRepoDatasetId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
+                task.setExtensionPoint(taskInfoDataset.getDatasetVersionId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
                 updateTask(ctx, task);
 
                 sched.addJob(job, false);
@@ -268,7 +268,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         // Plannify a recovery job
         if (jobKey.startsWith(PREFIX_JOB_IMPORT_DATA)) {
             TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
-            recoveryTaskInfo.setRepoDatasetId(extractDatasetIdFormJobKeyImportationDataset(jobKey));
+            recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFormJobKeyImportationDataset(jobKey));
             planifyRecoveryImportDataset(ctx, recoveryTaskInfo);
         }
         // TODO envio al gestor de avisos de fallo de importación
@@ -290,15 +290,16 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset);
 
         // Job keys
-        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId());
-        TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(taskInfoDataset.getRepoDatasetId());
+        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId());
+        TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId());
 
         // Scheduler an importation job
         Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
         // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
         JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
-                .usingJobData(RecoveryImportDatasetJob.REPO_DATASET_ID, taskInfoDataset.getRepoDatasetId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
+                .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery()
+                .build();
 
         SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
@@ -315,7 +316,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
 
         try {
-            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationDataset(taskInfoDataset.getRepoDatasetId()).getName());
+            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationDataset(taskInfoDataset.getDatasetVersionId()).getName());
 
             String fileNames = task.getExtensionPoint();
             String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
@@ -337,7 +338,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             getTaskRepository().delete(task);
 
             // Any
-            executeDormantJobsInThisDataset(taskInfoDataset.getRepoDatasetId());
+            executeDormantJobsInThisDataset(taskInfoDataset.getDatasetVersionId());
         } catch (Exception e) {
             logger.error("Error while perform a recovery in dataset", e);
         }
@@ -423,17 +424,17 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 if (callback == null) {
                     // Create the callback in the first appearance of a SDMX dataset
                     callback = new ManipulateSdmx21DataCallbackImpl(dataStructure, srmRestInternalService, metamac2StatRepoMapper, datasetRepositoriesServiceFacade,
-                            taskInfoDataset.getRepoDatasetId(), validateDataVersusDsd);
+                            taskInfoDataset.getDatasetVersionId(), validateDataVersusDsd);
                 }
 
                 callback.setDataSourceID(dataSourceId);
                 Sdmx21Parser.parseData(new FileInputStream(fileDescriptor.getFile()), callback); // Parse and import
 
             } else if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                manipulatePxDataService.importPx(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getRepoDatasetId(), dataSourceId, validateDataVersusDsd);
+                manipulatePxDataService.importPx(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
 
             } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                manipulateCsvDataService.importCsv(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getRepoDatasetId(), dataSourceId, validateDataVersusDsd);
+                manipulateCsvDataService.importCsv(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
 
             }
 
