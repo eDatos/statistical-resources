@@ -3,13 +3,19 @@ package org.siemac.metamac.statistical.resources.core.base.mapper;
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
@@ -46,18 +52,22 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
     @Override
     public SiemacMetadataStatisticalResource siemacMetadataStatisticalResourceDtoToDo(SiemacMetadataStatisticalResourceDto source, SiemacMetadataStatisticalResource target, String metadataName)
             throws MetamacException {
-
+        
+        InternationalString oldTitle = target.getTitle();
+        InternationalString oldDescription = target.getDescription();
+        
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
-        // Not always modifiable
-        if (MetadataEditionChecks.canKeywordsBeEdited(target.getProcStatus())) {
-            boolean modified = hasInternationalStringBeModified(target.getKeywords(), source.getKeywords());
-            if (modified) {
-                target.setUserMofifiedKeywords(true);
-                target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
-            } else if (target.getUserMofifiedKeywords() == null){
+        //KEYWORDS
+        boolean keywordsModifiedByUser = hasInternationalStringBeModified(target.getKeywords(), source.getKeywords());
+        if (keywordsModifiedByUser) {
+            target.setUserMofifiedKeywords(true);
+            target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
+        } else {
+            if (shouldKeywordsBeRebuilt(oldTitle, oldDescription, target, source)) {
                 target.setUserMofifiedKeywords(false);
+                target.setKeywords(buildKeywords(target));
             }
         }
 
@@ -92,6 +102,12 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         return target;
     }
 
+    private boolean shouldKeywordsBeRebuilt(InternationalString oldTitle, InternationalString oldDescription, SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResourceDto current) {
+        boolean titleChanged = hasInternationalStringBeModified(oldTitle, current.getTitle());
+        boolean descriptionChanged = hasInternationalStringBeModified(oldDescription, current.getDescription()); 
+        return BooleanUtils.isNotTrue(previous.getUserMofifiedKeywords()) && (titleChanged || descriptionChanged);
+    }
+
     private boolean hasInternationalStringBeModified(InternationalString previous, InternationalStringDto current) {
         if ((previous == null && current != null) || (previous != null && current == null)) {
             return true;
@@ -99,11 +115,9 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         if (previous == null && current == null) {
             return false;
         }
-        
         if (previous.getTexts().size() != current.getTexts().size()) {
             return true;
         }
-        
         for (String locale : previous.getLocales()) {
             if (hasLocalisedStringBeModified(previous.getLocalisedLabelEntity(locale), current.getLocalised(locale))) {
                 return true;
@@ -122,6 +136,50 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         return !(StringUtils.equals(previous.getLocale(),current.getLocale()) && StringUtils.equals(previous.getLabel(),current.getLabel()));
     }
     
+    
+    private InternationalString buildKeywords(SiemacMetadataStatisticalResource resource) {
+        Set<String> locales = new HashSet<String>();
+        if (resource.getTitle() != null) {
+            locales.addAll(resource.getTitle().getLocales());
+        }
+        if (resource.getDescription() != null) {
+            locales.addAll(resource.getDescription().getLocales());
+        }
+        InternationalString keywords = new InternationalString();
+        for (String locale : locales) {
+            Set<String> words = new HashSet<String>();
+            words.addAll(splitLocalisedText(resource.getTitle(), locale));
+            words.addAll(splitLocalisedText(resource.getDescription(), locale));
+            words = filterKeywords(words);
+            if (words.size() > 0) {
+                LocalisedString localisedText = new LocalisedString(locale, StringUtils.join(words, " "));
+                keywords.addText(localisedText);
+            }
+        }
+        if (keywords.getTexts().size() > 0) {
+            return keywords;
+        }
+        return null;
+    }
+
+    private Collection<String> splitLocalisedText(InternationalString intString, String locale) {
+        String text = intString.getLocalisedLabel(locale);
+        Set<String> words = new HashSet<String>();
+        if (text != null) {
+            words.addAll(Arrays.asList(text.trim().split("\\s+")));
+        }
+        return words;
+    }
+
+    private Set<String> filterKeywords(Set<String> words) {
+        Set<String> filteredWords = new HashSet<String>();
+        for (String word : words) {
+            if (word.length() > 3) {
+                filteredWords.add(word);
+            }
+        }
+        return filteredWords;
+    }
 
     @Override
     public LifeCycleStatisticalResource lifeCycleStatisticalResourceDtoToDo(LifeCycleStatisticalResourceDto source, LifeCycleStatisticalResource target, String metadataName) throws MetamacException {

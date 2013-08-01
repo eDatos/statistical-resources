@@ -20,10 +20,6 @@ public class MetadataEditionChecks {
         return false;
     }
 
-    public static boolean canKeywordsBeEdited(ProcStatusEnum procStatus) {
-        return true;
-    }
-
     public static boolean canNextVersionDateBeEdited(NextVersionTypeEnum nextVersion) {
         if (NextVersionTypeEnum.SCHEDULED_UPDATE.equals(nextVersion)) {
             return true;

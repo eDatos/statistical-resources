@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -27,6 +28,8 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 
 /*
  * No spring context, we set the SUT (Software under test) dependencies with mocked objects. Unit testing style ;)
@@ -59,46 +62,6 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
         verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
     }
 
-    @Test
-    public void testSiemacResourceApplySendToProductionValidationActionsKeywordsBuilding() throws Exception {
-        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToProductionValidation();
-        mockedResource.getSiemacMetadataStatisticalResource().setTitle(new InternationalString(new String[]{"es", "en"}, new String[]{"Paro en España", "Unemployment in Spain"}));
-        mockedResource.getSiemacMetadataStatisticalResource().setDescription(new InternationalString(new String[]{"es", "en"}, new String[]{"Medido en miles", "Measured in thousands"}));
-
-        siemacLifecycleFiller.applySendToProductionValidationActions(getServiceContextAdministrador(), mockedResource);
-
-        asssertContainsKeywordsInLocale(mockedResource, "es", "Paro", "España", "Medido", "miles");
-        asssertContainsKeywordsInLocale(mockedResource, "en", "Unemployment", "Spain", "Measured", "thousands");
-        assertEquals(2, mockedResource.getSiemacMetadataStatisticalResource().getKeywords().getLocales().size());
-
-        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
-    }
-    
-    @Test
-    public void testSiemacResourceApplySendToProductionValidationActionsNoKeywordsBuildingOnUserDefinedKeywords() throws Exception {
-        HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToProductionValidation();
-        mockedResource.getSiemacMetadataStatisticalResource().setKeywords(new InternationalString(new String[]{"es", "en"}, new String[]{"IPC CANARIAS", "IPC CANARY ISLAND"}));
-        mockedResource.getSiemacMetadataStatisticalResource().setTitle(new InternationalString(new String[]{"es", "en"}, new String[]{"Paro en España", "Unemployment in Spain"}));
-        mockedResource.getSiemacMetadataStatisticalResource().setDescription(new InternationalString(new String[]{"es", "en"}, new String[]{"Medido en miles", "Measured in thousands"}));
-        
-        siemacLifecycleFiller.applySendToProductionValidationActions(getServiceContextAdministrador(), mockedResource);
-        
-        asssertContainsKeywordsInLocale(mockedResource, "es", "IPC", "CANARIAS");
-        asssertContainsKeywordsInLocale(mockedResource, "en", "IPC", "CANARY", "ISLAND");
-        assertEquals(2, mockedResource.getSiemacMetadataStatisticalResource().getKeywords().getLocales().size());
-        
-        verify(lifecycleFiller, times(1)).applySendToProductionValidationActions(any(ServiceContext.class), any(HasLifecycle.class));
-    }
-
-    private void asssertContainsKeywordsInLocale(HasSiemacMetadata resource, String locale, String... keywords) {
-        assertNotNull(resource.getSiemacMetadataStatisticalResource().getKeywords());
-        String localisedKeywords = resource.getSiemacMetadataStatisticalResource().getKeywords().getLocalisedLabel(locale);
-        assertNotNull(localisedKeywords);
-        List<String> actualKeywords = Arrays.asList(localisedKeywords.split("\\s"));
-        assertEquals(keywords.length, actualKeywords.size());
-        assertTrue(actualKeywords.containsAll(Arrays.asList(keywords)));
-    }
-
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -120,12 +83,13 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testSiemacResourceApplySendToValidationRejectedActions() throws Exception {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToValidationRejected();
-
+        
         siemacLifecycleFiller.applySendToValidationRejectedActions(getServiceContextAdministrador(), mockedResource);
 
         // No specific actions for siemac
         verify(lifecycleFiller, times(1)).applySendToValidationRejectedActions(any(ServiceContext.class), any(HasLifecycle.class));
     }
+    
     
     
     // ------------------------------------------------------------------------------------------------------

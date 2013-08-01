@@ -276,6 +276,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setSubtitle(mockInternationalStringMetadata(resourceCode, "subtitle"));
         resource.setTitleAlternative(mockInternationalStringMetadata(resourceCode, "titleAlternative"));
         resource.setAbstractLogic(mockInternationalStringMetadata(resourceCode, "abstract"));
+        resource.setUserMofifiedKeywords(false);
         resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
 
         switch (artefactType) {

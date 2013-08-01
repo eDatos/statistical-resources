@@ -57,8 +57,8 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
         assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
         
-        // TODO: Falta comprobar si se deben heredar o no en función de un metadato adicional que debe meterse
         assertEqualsInternationalString(previous.getKeywords(), next.getKeywords());
+        assertEquals(previous.getUserMofifiedKeywords(), next.getUserMofifiedKeywords());
         
         assertEquals(previous.getType(), next.getType());
         
