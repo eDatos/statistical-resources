@@ -14,6 +14,7 @@ import static org.siemac.metamac.statistical.resources.web.client.model.ds.Stati
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.LANGUAGES;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.PUBLISHER;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.NEXT_VERSION;
+import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.VERSION_RATIONALE_TYPES;
 import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.RELATED_DATASET_VERSION;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -25,7 +26,7 @@ public class RequiredFieldUtils {
 
     // PUBLICATION VERSION
 
-    private static final String[] publicationFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA};
+    private static final String[] publicationFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA};
     private static final String[] publicationFieldsToDiffusionValidation  = publicationFieldsToProductionValidation;
     private static final String[] publicationFieldsToPublication          = publicationFieldsToDiffusionValidation;
 
@@ -44,8 +45,8 @@ public class RequiredFieldUtils {
 
     // DATASET VERSION
 
-    private static final String[] datasetFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA, GEOGRAPHIC_COVERAGE,
-            GEOGRAPHIC_GRANULARITY, TEMPORAL_COVERAGE, TEMPORAL_GRANULARITY, DATE_NEXT_UPDATE, UPDATE_FRECUENCY, STATISTIC_OFFICIALITY};
+    private static final String[] datasetFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA,
+            GEOGRAPHIC_COVERAGE, GEOGRAPHIC_GRANULARITY, TEMPORAL_COVERAGE, TEMPORAL_GRANULARITY, DATE_NEXT_UPDATE, UPDATE_FRECUENCY, STATISTIC_OFFICIALITY};
     private static final String[] datasetFieldsToDiffusionValidation  = datasetFieldsToProductionValidation;
     private static final String[] datasetFieldsToPublication          = datasetFieldsToDiffusionValidation;
 
@@ -64,7 +65,8 @@ public class RequiredFieldUtils {
 
     // QUERY VERSION
 
-    private static final String[] queryFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA, RELATED_DATASET_VERSION};
+    private static final String[] queryFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA,
+            RELATED_DATASET_VERSION                                 };
     private static final String[] queryFieldsToDiffusionValidation  = queryFieldsToProductionValidation;
     private static final String[] queryFieldsToPublication          = queryFieldsToDiffusionValidation;
 

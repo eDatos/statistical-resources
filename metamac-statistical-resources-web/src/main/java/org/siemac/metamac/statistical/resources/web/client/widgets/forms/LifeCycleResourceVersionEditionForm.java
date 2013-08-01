@@ -32,9 +32,19 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
         ViewTextItem versionLogic = new ViewTextItem(VersionableResourceDS.VERSION, getConstants().versionableStatisticalResourceVersionLogic());
 
-        SearchVersionRationaleTypeItem versionRationaleTypeItem = new SearchVersionRationaleTypeItem(VersionableResourceDS.VERSION_RATIONALE_TYPES, getConstants()
+        final SearchVersionRationaleTypeItem versionRationaleTypeItem = new SearchVersionRationaleTypeItem(VersionableResourceDS.VERSION_RATIONALE_TYPES, getConstants()
                 .versionableStatisticalResourceVersionRationaleTypes(), true);
         versionRationaleTypeItem.setShowIfCondition(getVersionRationaleTypesFormItemIfFunction());
+        versionRationaleTypeItem.setValidators(new CustomRequiredValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                if (CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(lifeCycleStatisticalResourceDto.getProcStatus())) {
+                    return versionRationaleTypeItem.getSelectedVersionRationaleTypeDtos().size() > 0;
+                }
+                return true;
+            }
+        });
 
         SearchVersionRationaleTypeItem staticVersionRationaleTypeItem = new SearchVersionRationaleTypeItem(VersionableResourceDS.VERSION_RATIONALE_TYPES_VIEW, getConstants()
                 .versionableStatisticalResourceVersionRationaleTypes(), false);
