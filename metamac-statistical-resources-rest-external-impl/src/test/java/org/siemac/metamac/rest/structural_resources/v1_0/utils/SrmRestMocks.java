@@ -33,7 +33,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemRes
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecisions;
 
-public class SrmRestDoMocks {
+public class SrmRestMocks {
 
     public static DataStructure mockDataStructure(String agencyID, String resourceID, String version) {
         DataStructure dataStructure = new DataStructure();

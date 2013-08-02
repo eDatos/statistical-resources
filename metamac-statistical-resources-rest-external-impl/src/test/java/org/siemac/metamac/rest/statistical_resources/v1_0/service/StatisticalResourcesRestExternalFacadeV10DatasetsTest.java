@@ -32,7 +32,7 @@ import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.constants.RestConstants;
-import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestDoMocks;
+import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -209,7 +209,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
             public DataStructure answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
-                return SrmRestDoMocks.mockDataStructure(urnSplited[0], urnSplited[1], urnSplited[2]);
+                return SrmRestMocks.mockDataStructure(urnSplited[0], urnSplited[1], urnSplited[2]);
             };
         });
     }
@@ -221,7 +221,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
             public Codes answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
-                return SrmRestDoMocks.mockCodesByCodelist(urnSplited[0], urnSplited[1], urnSplited[2]);
+                return SrmRestMocks.mockCodesByCodelist(urnSplited[0], urnSplited[1], urnSplited[2]);
             };
         });
     }
@@ -233,7 +233,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
             public Concepts answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
-                return SrmRestDoMocks.mockConceptsByConceptScheme(urnSplited[0], urnSplited[1], urnSplited[2]);
+                return SrmRestMocks.mockConceptsByConceptScheme(urnSplited[0], urnSplited[1], urnSplited[2]);
             };
         });
     }
@@ -245,7 +245,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
             public Concept answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItem(urn);
-                return SrmRestDoMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
+                return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
             };
         });
     }
