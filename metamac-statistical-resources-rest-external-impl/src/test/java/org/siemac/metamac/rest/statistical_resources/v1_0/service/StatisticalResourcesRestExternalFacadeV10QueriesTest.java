@@ -1,11 +1,7 @@
 package org.siemac.metamac.rest.statistical_resources.v1_0.service;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
-import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.VERSION_1;
 
 import java.io.InputStream;
 
@@ -13,17 +9,9 @@ import javax.ws.rs.core.Response.Status;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
-import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 
 public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
-
-    private QueryVersionRepository queryVersionRepository;
 
     @Test
     public void testRetrieveQueryMetadataXml() throws Exception {
@@ -65,26 +53,6 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
     // TODO testRetrieveQueryErrorNotExistsXml
     @Test
     public void testRetrieveQueryErrorNotExistsXml() throws Exception {
-    }
-
-    private void mockRetrieveQueryLastPublishedVersion() throws MetamacException {
-        when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion
-
-                    @Override
-                    public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
-                        String queryUrn = (String) invocation.getArguments()[0];
-                        String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
-                    };
-                });
-    }
-
-    @Override
-    protected void resetMocks() throws Exception {
-        queryVersionRepository = applicationContext.getBean(QueryVersionRepository.class);
-        reset(queryVersionRepository);
-
-        mockRetrieveQueryLastPublishedVersion();
     }
 
     public String getRetrieveQueryUri(String agencyID, String resourceID, String fields, String langs) throws Exception {

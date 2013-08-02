@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<stat:query xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" kind="statisticalResources#query">
+    <stat:id>query1</stat:id>
+    <stat:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)</stat:urn>
+    <stat:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
+    <stat:parentLink kind="statisticalResources#queries" href="http://data.istac.es/apis/statistical-resources/v1.0/queries"/>
+    <stat:name>
+        <cdomain:text xml:lang="es">title-resource-Ws08pWVfOj en Espanol</cdomain:text>
+    </stat:name>
+    <stat:description>
+        <cdomain:text xml:lang="es">description-resource-Ws08pWVfOj en Espanol</cdomain:text>
+    </stat:description>
+    <stat:selectedLanguages total="1">
+        <stat:language>es</stat:language>
+    </stat:selectedLanguages>
+    <stat:metadata>
+        <stat:relatedDataset kind="statisticalResources#dataset">
+            <cdomain:id>statisticalOperation01_000001</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency01:resource-tLTsEtmB0s(001.000)</cdomain:urn>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency01/statisticalOperation01_000001/001.000"/>
+            <cdomain:name>
+                <cdomain:text xml:lang="es">title-resource-tLTsEtmB0s en Espanol</cdomain:text>
+            </cdomain:name>
+        </stat:relatedDataset>
+        <stat:status>ACTIVE</stat:status>
+        <stat:type>FIXED</stat:type>
+        <stat:statisticalOperation kind="statisticalOperations#operation">
+            <cdomain:id>statisticalOperation01</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=statisticalOperation01</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/statisticalOperation01"/>
+            <cdomain:name>
+                <cdomain:text xml:lang="es">title-statisticalOperation01 en Espanol</cdomain:text>
+            </cdomain:name>
+        </stat:statisticalOperation>
+        <stat:publicationDate>2013-01-01T03:04:13Z</stat:publicationDate>
+        <stat:maintainer kind="structuralResources#agency">
+            <cdomain:id>agency01</cdomain:id>
+            <cdomain:nestedId>agency1</cdomain:nestedId>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).agency01</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/agency01"/>
+            <cdomain:name>
+                <cdomain:text xml:lang="es">title-agency01 en Espanol</cdomain:text>
+            </cdomain:name>
+        </stat:maintainer>
+        <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
+        <stat:validTo>2013-02-16T14:04:12Z</stat:validTo>
+    </stat:metadata>
+    <stat:data>
+        <stat:dimensions total="4">
+            <stat:dimension>
+                <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                <stat:representations total="3">
+                    <stat:representation code="GEO_DIM-codelist01-code01" index="0"/>
+                    <stat:representation code="GEO_DIM-codelist01-code03" index="1"/>
+                    <stat:representation code="GEO_DIM-codelist01-code04" index="2"/>
+                </stat:representations>
+            </stat:dimension>
+            <stat:dimension>
+                <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
+                <stat:representations total="3">
+                    <stat:representation code="2011" index="0"/>
+                    <stat:representation code="2012" index="1"/>
+                    <stat:representation code="2013" index="2"/>
+                </stat:representations>
+            </stat:dimension>
+            <stat:dimension>
+                <stat:dimensionId>measure01</stat:dimensionId>
+                <stat:representations total="3">
+                    <stat:representation code="measure01-conceptScheme01-concept01" index="0"/>
+                    <stat:representation code="measure01-conceptScheme01-concept02" index="1"/>
+                    <stat:representation code="measure01-conceptScheme01-concept05" index="2"/>
+                </stat:representations>
+            </stat:dimension>
+            <stat:dimension>
+                <stat:dimensionId>dim01</stat:dimensionId>
+                <stat:representations total="3">
+                    <stat:representation code="dim01-codelist01-code01" index="0"/>
+                    <stat:representation code="dim01-codelist01-code03" index="1"/>
+                    <stat:representation code="dim01-codelist01-code04" index="2"/>
+                </stat:representations>
+            </stat:dimension>
+        </stat:dimensions>
+        <stat:observations>1 | 2 |  | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 | 80 | 81</stat:observations>
+    </stat:data>
+</stat:query>
