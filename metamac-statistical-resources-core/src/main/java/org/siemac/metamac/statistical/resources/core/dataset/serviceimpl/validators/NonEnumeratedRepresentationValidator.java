@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
 
+import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.END;
+import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.START;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -24,6 +27,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 public class NonEnumeratedRepresentationValidator {
 
+    protected static final Pattern PATTERN_VALIDATE_OBS = Pattern.compile(START + "\\d*\\.?\\d*" + END);
+
     public static void checkSimpleComponentTextFormatType(SimpleComponentTextFormatType textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkSimpleDataType(textFormat.getTextType(), textFormat, key, value, exceptions);
     }
@@ -39,6 +44,14 @@ public class NonEnumeratedRepresentationValidator {
 
     public static void checkBasicComponentTextFormatType(BasicComponentTextFormatType textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkBasicComponentDataType(textFormat.getTextType(), textFormat, key, value, exceptions);
+    }
+
+    public static void checkExtraValidationForPrimaryMeasure(String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        Matcher matching = PATTERN_VALIDATE_OBS.matcher(value);
+
+        if (!matching.matches()) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NOT_NUMERIC, value, key));
+        }
     }
 
     /**************************************************************************

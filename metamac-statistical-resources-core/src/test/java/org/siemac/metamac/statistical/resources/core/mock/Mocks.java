@@ -215,6 +215,11 @@ public class Mocks {
     // CONCEPTS (for retrieveConcept)
     // --------------------------------------------------------------------
 
+    public static Concept mock_SDMX_CROSS_DOMAIN_1_0_OBS_VALUE() {
+        return SrmMockUtils.buildConcept("OBS_VALUE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE", "Observation value",
+                SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
+    }
+
     public static Concept mock_SDMX_CROSS_DOMAIN_1_0_TITLE() {
         return SrmMockUtils.buildConcept("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", "Title",
                 SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
@@ -369,17 +374,36 @@ public class Mocks {
 
         }
 
-        Attribute obsNote = SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_NOTE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS",
-                null, UsageStatusType.CONDITIONAL);
+        {
+            // Add OBS_NOTE attribute
+            Attribute obsNote = SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_NOTE",
+                    "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, UsageStatusType.CONDITIONAL);
 
-        // Not enumerated representation
-        SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
-        SimpleComponentTextFormatType simpleComponentTextFormatType = new SimpleComponentTextFormatType();
-        simpleComponentTextFormatType.setTextType(SimpleDataType.STRING);
-        simpleDataStructureRepresentationType.setTextFormat(simpleComponentTextFormatType);
-        obsNote.setLocalRepresentation(simpleDataStructureRepresentationType);
+            // Not enumerated representation
+            SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
+            SimpleComponentTextFormatType simpleComponentTextFormatType = new SimpleComponentTextFormatType();
+            simpleComponentTextFormatType.setTextType(SimpleDataType.STRING);
+            simpleDataStructureRepresentationType.setTextFormat(simpleComponentTextFormatType);
+            obsNote.setLocalRepresentation(simpleDataStructureRepresentationType);
 
-        dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies().add(obsNote);
+            dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies().add(obsNote);
+        }
+
+        {
+            // Add OBS_CONF attribute
+            Attribute obsConf = SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_CONF",
+                    "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, UsageStatusType.CONDITIONAL);
+
+            // Not enumerated representation
+            SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
+            SimpleComponentTextFormatType simpleComponentTextFormatType = new SimpleComponentTextFormatType();
+            simpleComponentTextFormatType.setTextType(SimpleDataType.STRING);
+            simpleDataStructureRepresentationType.setTextFormat(simpleComponentTextFormatType);
+            obsConf.setLocalRepresentation(simpleDataStructureRepresentationType);
+
+            dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies().add(obsConf);
+
+        }
 
         return dataStructure;
     }

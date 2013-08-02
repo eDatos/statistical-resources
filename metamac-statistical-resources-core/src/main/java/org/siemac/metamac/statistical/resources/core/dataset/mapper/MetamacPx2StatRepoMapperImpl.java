@@ -1,14 +1,23 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
+import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.END;
+import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.START;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration.KeyDotEnum;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
@@ -31,18 +40,13 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 @Component(MetamacPx2StatRepoMapper.BEAN_ID)
 public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
 
-    public static final String ATTR_OBS_NOTE = "OBS_NOTE";
+    public static final String                ATTR_OBS_NOTE = "OBS_NOTE";
+    public static final String                ATTR_OBS_CONF = "OBS_CONF";
 
-    /**
-     * Transform attributes (global, dimensions, observations...) removing dimensions with '*' as codes, and assigning new attributes identifiers
-     * IMPORTANT: Change pxModel!
-     */
-    @Override
-    public void reviewPxAttributesIdentifiersAndDimensions(PxModel pxModel) {
-        _reviewPxAttributesIdentifiersAndDimensions(pxModel.getAttributesGlobal());
-        _reviewPxAttributesIdentifiersAndDimensions(pxModel.getAttributesDimensions());
-        _reviewPxAttributesIdentifiersAndDimensions(pxModel.getAttributesObservations());
-    }
+    protected final Pattern                   PATTERN_DOT   = Pattern.compile(START + "(\\.{1,6})" + END);
+
+    @Autowired
+    private StatisticalResourcesConfiguration statisticalResourcesConfiguration;
 
     @Override
     public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, List<AttributeBasicDto>> attributesObservations) throws MetamacException {
@@ -59,18 +63,62 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         observationExtendedDto.getCodesDimension().addAll(processKeyOfObservation(observation.getCodesDimensions()));
 
         // Data
-        observationExtendedDto.setPrimaryMeasure(observation.getObservationValue());
+        AttributeBasicDto dotCode2Attribute = transformDotCode2Attribute(observation.getObservationValue());
+        if (dotCode2Attribute == null) {
+            observationExtendedDto.setPrimaryMeasure(observation.getObservationValue());
+        } else {
+            observationExtendedDto.setPrimaryMeasure(null);
+        }
 
         // Attributes: Identification data source attribute
         observationExtendedDto.addAttribute(ManipulateDataUtils.createDataSourceIdentificationAttribute(observationExtendedDto.getCodesDimension(), datasourceId));
 
         // Attributes: Other attributes at observation level (only OBS_NOTE)
-
         addValidAttributesForCurrentObservation(observationExtendedDto.getCodesDimension(), attributesObservations, observationExtendedDto, new LinkedList<String>(), 0);
 
         return observationExtendedDto;
     }
 
+    private AttributeBasicDto transformDotCode2Attribute(String observationValue) throws MetamacException {
+
+        AttributeBasicDto obsConfAttr = null;
+
+        Matcher matching = PATTERN_DOT.matcher(observationValue);
+
+        if (matching.matches()) {
+            obsConfAttr = new AttributeBasicDto();
+            obsConfAttr.setAttributeId(ATTR_OBS_CONF);
+
+            String group = matching.group(1);
+            String value = StringUtils.EMPTY;
+            switch (group.length()) {
+                case 1:
+                    value = statisticalResourcesConfiguration.retrieveDotCodeMapping().get(KeyDotEnum.ONE_DOT);
+                case 2:
+                    value = statisticalResourcesConfiguration.retrieveDotCodeMapping().get(KeyDotEnum.TWO_DOT);
+                case 3:
+                    value = statisticalResourcesConfiguration.retrieveDotCodeMapping().get(KeyDotEnum.THREE_DOT);
+                case 4:
+                    value = statisticalResourcesConfiguration.retrieveDotCodeMapping().get(KeyDotEnum.FOUR_DOT);
+                case 5:
+                    value = statisticalResourcesConfiguration.retrieveDotCodeMapping().get(KeyDotEnum.FIVE_DOT);
+                case 6:
+                    value = statisticalResourcesConfiguration.retrieveDotCodeMapping().get(KeyDotEnum.SIX_DOT);
+            }
+
+            InternationalStringDto internationalStringDto = new InternationalStringDto();
+            LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+            localisedStringDto.setLabel(value);
+            // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
+            // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
+            localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+            internationalStringDto.addText(localisedStringDto);
+
+            obsConfAttr.setValue(internationalStringDto);
+        }
+
+        return obsConfAttr;
+    }
     private List<CodeDimensionDto> processKeyOfObservation(List<PxObservationCodeDimension> observations) {
         List<CodeDimensionDto> codeDimensionDtos = new ArrayList<CodeDimensionDto>(observations.size());
 
@@ -79,79 +127,6 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         }
 
         return codeDimensionDtos;
-    }
-
-    /**
-     * Transform attributes, removing dimensions with '*' as codes, and assigning new attributes identifiers
-     */
-    private void _reviewPxAttributesIdentifiersAndDimensions(List<PxAttribute> pxAttributes) {
-
-        Map<String, Integer> attributesIdentifiers = new HashMap<String, Integer>(); // key: original attribute identifier; value: counter of attributes with same identifier
-        Map<String, PxAttribute> attributesDefinitions = new HashMap<String, PxAttribute>(); // key: dimensionIdentifier; value: existing attribute with same dimensions
-
-        for (PxAttribute pxAttribute : pxAttributes) {
-            // Remove dimensions with '*' as code
-            List<PxAttributeDimension> pxAttributesDimensions = new ArrayList<PxAttributeDimension>();
-            for (PxAttributeDimension pxAttributeDimension : pxAttribute.getDimensions()) {
-                if (!PxAttributeCodes.ALL_DIMENSION_CODES.equals(pxAttributeDimension.getDimensionCode())) {
-                    pxAttributesDimensions.add(pxAttributeDimension);
-                }
-            }
-            // Generate identifier
-            String key = generateKeyAttributeToMap(pxAttribute.getIdentifier(), pxAttributesDimensions);
-            PxAttribute pxAttributeWithSameDimension = attributesDefinitions.get(key);
-            if (pxAttributeWithSameDimension != null) {
-                pxAttribute.setIdentifier(pxAttributeWithSameDimension.getIdentifier());
-            } else {
-                String originalIdentifier = null;
-                if (pxAttributesDimensions.size() == 0) {
-                    // global
-                    originalIdentifier = pxAttribute.getIdentifier().endsWith("X") ? PxAttributeCodes.NOTEX : PxAttributeCodes.NOTE;
-                } else if (pxAttributesDimensions.size() != pxAttribute.getDimensions().size()) {
-                    // dimension
-                    originalIdentifier = pxAttribute.getIdentifier().endsWith("X") ? PxAttributeCodes.VALUENOTEX : PxAttributeCodes.VALUENOTE;
-                } else {
-                    // observation
-                    originalIdentifier = pxAttribute.getIdentifier();
-                }
-                pxAttribute.setIdentifier(generatePxAttributeIdentifier(attributesIdentifiers, originalIdentifier));
-                attributesDefinitions.put(key, pxAttribute);
-            }
-
-            // Reset attachment dimensions
-            pxAttribute.getDimensions().clear();
-            pxAttribute.getDimensions().addAll(pxAttributesDimensions);
-        }
-    }
-
-    /**
-     * Generate unique identifier to attribute
-     */
-    private String generatePxAttributeIdentifier(Map<String, Integer> attributesIdentifiers, String identifierOriginal) {
-
-        String identifier = identifierOriginal;
-        String identifierUnique = null;
-        if (!attributesIdentifiers.containsKey(identifier)) {
-            attributesIdentifiers.put(identifier, Integer.valueOf(0));
-        }
-        Integer count = Integer.valueOf(attributesIdentifiers.get(identifier) + 1);
-        identifierUnique = identifier + "_" + count;
-        attributesIdentifiers.put(identifier, count);
-
-        return identifierUnique;
-    }
-
-    /**
-     * Generate key to attribute with dimensions identifiers
-     */
-    private String generateKeyAttributeToMap(String attributeCode, List<PxAttributeDimension> attributeDimensions) {
-        StringBuilder key = new StringBuilder();
-        key.append(attributeCode);
-        key.append("_");
-        for (PxAttributeDimension pxAttributeDimension : attributeDimensions) {
-            key.append(pxAttributeDimension.getDimension()).append("_");
-        }
-        return key.toString();
     }
 
     /**

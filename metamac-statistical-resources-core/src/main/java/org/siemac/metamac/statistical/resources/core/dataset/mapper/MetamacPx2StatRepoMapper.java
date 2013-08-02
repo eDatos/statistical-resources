@@ -16,12 +16,6 @@ public interface MetamacPx2StatRepoMapper {
     public static final String BEAN_ID = "metamacPx2StatRepoMapper";
 
     /**
-     * Transform attributes (global, dimensions, observations...) removing dimensions with '*' as codes, and assigning new attributes identifiers
-     * IMPORTANT: Change pxModel!
-     */
-    public void reviewPxAttributesIdentifiersAndDimensions(PxModel pxModel);
-
-    /**
      * Transform to observation
      */
     public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, List<AttributeBasicDto>> attributesObservations) throws MetamacException;

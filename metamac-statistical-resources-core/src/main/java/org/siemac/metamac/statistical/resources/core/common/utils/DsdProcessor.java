@@ -16,6 +16,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormat
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.PrimaryMeasureType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
@@ -322,6 +323,28 @@ public class DsdProcessor {
 
         public boolean isMandatory() {
             return isMandatory;
+        }
+    }
+
+    public static class DsdPrimaryMeasure extends DsdComponent {
+
+        private String primaryMeasueId = "OBS_VALUE"; // Fixed
+
+        public DsdPrimaryMeasure(PrimaryMeasureType primaryMeasure) throws MetamacException {
+
+            if (primaryMeasure.getLocalRepresentation() != null) {
+                setRepresentationFromLocalRepresentation(primaryMeasure.getLocalRepresentation());
+            } else if (primaryMeasure.getConceptIdentity() != null) {
+                setRepresentationFromConceptIdentity(primaryMeasure.getConceptIdentity());
+            } else {
+                throw new IllegalArgumentException("Found a primary measure with no representation info ");
+            }
+            setConceptIdentityUrn(primaryMeasure.getConceptIdentity());
+        }
+
+        @Override
+        public String getComponentId() {
+            return primaryMeasueId;
         }
     }
 

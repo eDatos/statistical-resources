@@ -9,9 +9,11 @@ import java.util.Set;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.lang.StringUtils;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.PrimaryMeasureType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -29,6 +31,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdPrimaryMeasure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -43,22 +46,24 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 
 public class ValidateDataVersusDsd {
 
-    private DataStructure                          dataStructure                           = null;
-    private SrmRestInternalService                 srmRestInternalService                  = null;
+    private DataStructure                          dataStructure                              = null;
+    private SrmRestInternalService                 srmRestInternalService                     = null;
 
     // DSD: Calculated and cache data
-    private Map<String, ComponentInfo>             dimensionsInfoMap                       = null;
-    private Map<String, ComponentInfo>             attributesInfoMap                       = null;
-    private List<ComponentInfo>                    dimensionsInfoList                      = null;
-    private List<ComponentInfo>                    attributesInfoList                      = null;
-    private MultiMap                               enumerationRepresentationsMultimap      = null; // Key: URN, Value: Set<String>
-    private Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap                  = null;
-    private Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap                  = null;
-    private Set<String>                            dimensionsCodeSet                       = null;
-    private Set<String>                            attributesCodeSet                       = null;
-    private Set<String>                            attributeIdsAtObservationLevelSet       = null;
-    private Set<String>                            mandatoryAttributeIdsAtObservationLevel = null;
-    private Map<String, List<ComponentInfo>>       groupDimensionMapInfo                   = null;
+    private Map<String, ComponentInfo>             dimensionsInfoMap                          = null;
+    private Map<String, ComponentInfo>             attributesInfoMap                          = null;
+    private List<ComponentInfo>                    dimensionsInfoList                         = null;
+    private List<ComponentInfo>                    attributesInfoList                         = null;
+    private MultiMap                               enumerationRepresentationsMultimap         = null; // Key: URN, Value: Set<String>
+    private Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap                     = null;
+    private Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap                     = null;
+    private DsdProcessor.DsdPrimaryMeasure         dsdPrimaryMeasure                          = null;
+    private Set<String>                            dimensionsCodeSet                          = null;
+    private Set<String>                            attributesCodeSet                          = null;
+    private Set<String>                            attributeIdsAtObservationLevelSet          = null;
+    private Set<String>                            mandatoryAttributeIdsAtObservationLevel    = null;
+    private Map<String, List<ComponentInfo>>       groupDimensionMapInfo                      = null;
+    private boolean                                isExtraValidationForPrimaryMeasureRequired = false;
 
     public ValidateDataVersusDsd(DataStructure dataStructure, SrmRestInternalService srmRestInternalService) throws MetamacException {
         this.srmRestInternalService = srmRestInternalService;
@@ -165,10 +170,27 @@ public class ValidateDataVersusDsd {
                     checkAttributeNonEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, overExtendedDto.getUniqueKey(), exceptions);
                 }
             }
+
+            // Representation of PRIMARY_MEASURE
+            // If the observation is null, not validation is required
+            if (StringUtils.isNotBlank(overExtendedDto.getPrimaryMeasure())) {
+                // Enumerated representation
+                checkPrimaryMeasureEnumeratedRepresentation(this.dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(), exceptions);
+
+                // Non Enumerated representation
+                checkPrimaryMeasureNonEnumeratedRepresentation(this.dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(), overExtendedDto.getUniqueKey(), exceptions);
+
+                // Extra validation for primary measure
+                if (this.isExtraValidationForPrimaryMeasureRequired) {
+                    NonEnumeratedRepresentationValidator.checkExtraValidationForPrimaryMeasure(overExtendedDto.getUniqueKey(), overExtendedDto.getPrimaryMeasure(), exceptions);
+                }
+            }
+
         }
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
     public void checkAttributes(List<AttributeDto> attributeDtos) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
 
@@ -216,6 +238,7 @@ public class ValidateDataVersusDsd {
             NonEnumeratedRepresentationValidator.checkBasicComponentTextFormatType(dsdDimension.getTextFormatConceptId(), key, value, exceptions);
         }
     }
+
     @SuppressWarnings("unchecked")
     private void checkAttributeEnumeratedRepresentation(String attributeId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         String enumeratedRepresentationUrn = attributesProcessorMap.get(attributeId).getEnumeratedRepresentationUrn();
@@ -237,6 +260,27 @@ public class ValidateDataVersusDsd {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private void checkPrimaryMeasureEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        // Enumerated representation
+        String enumeratedRepresentationUrn = this.dsdPrimaryMeasure.getEnumeratedRepresentationUrn();
+        if (enumeratedRepresentationUrn != null) {
+            // The codes of primary measure must be defined in the enumerated representation
+            Set<String> validPrimaryMeasureCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+            if (!validPrimaryMeasureCodes.contains(value)) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_CODE_ENUM_NOT_VALID, value, dimensionId, enumeratedRepresentationUrn));
+            }
+        }
+    }
+
+    private void checkPrimaryMeasureNonEnumeratedRepresentation(String dimensionId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (this.dsdPrimaryMeasure.getTextFormatRepresentation() != null) {
+            NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(this.dsdPrimaryMeasure.getTextFormatRepresentation(), key, value, exceptions);
+        } else if (this.dsdPrimaryMeasure.getTextFormatConceptId() != null) {
+            NonEnumeratedRepresentationValidator.checkBasicComponentTextFormatType(this.dsdPrimaryMeasure.getTextFormatConceptId(), key, value, exceptions);
+        }
+    }
+
     /**************************************************************************
      * PROCESSORS
      **************************************************************************/
@@ -245,6 +289,7 @@ public class ValidateDataVersusDsd {
 
         calculateCacheDimensionInfo(enumerationRepresentationsMultimap);
         calculatedCacheAttributeInfo(enumerationRepresentationsMultimap);
+        calculateCachePrimaryMeasureInfo(enumerationRepresentationsMultimap);
         calculateCacheGroupInfo();
 
         this.enumerationRepresentationsMultimap = enumerationRepresentationsMultimap;
@@ -361,6 +406,29 @@ public class ValidateDataVersusDsd {
         this.dimensionsInfoMap = dimensionsInfoMap;
         this.dimensionsInfoList = dimensionsInfoList;
         this.dimensionsCodeSet = dimensionsInfoMap.keySet();
+
+        return enumerationRepresentationsMultimap;
+    }
+
+    protected MultiMap calculateCachePrimaryMeasureInfo(MultiMap enumerationRepresentationsMultimap) throws MetamacException {
+
+        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getMeasureList() != null) {
+            PrimaryMeasureType primaryMeasure = dataStructure.getDataStructureComponents().getMeasureList().getPrimaryMeasure();
+
+            DsdPrimaryMeasure dsdPrimaryMeasure = new DsdPrimaryMeasure(primaryMeasure);
+
+            // Representation
+            cacheEnumerateRepresentation(dsdPrimaryMeasure, enumerationRepresentationsMultimap);
+
+            boolean isExtraValidationForPrimaryMeasureRequired = false;
+            // Always perform a extra validation if the enumerate representation is NULL.
+            if (dsdPrimaryMeasure.getEnumeratedRepresentationUrn() == null) {
+                isExtraValidationForPrimaryMeasureRequired = true;
+            }
+
+            this.dsdPrimaryMeasure = dsdPrimaryMeasure;
+            this.isExtraValidationForPrimaryMeasureRequired = isExtraValidationForPrimaryMeasureRequired;
+        }
 
         return enumerationRepresentationsMultimap;
     }

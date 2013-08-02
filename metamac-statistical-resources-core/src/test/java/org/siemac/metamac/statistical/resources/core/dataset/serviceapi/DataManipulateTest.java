@@ -180,11 +180,9 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE")).thenReturn(
                 Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
 
-        clearDataBase(); // Clear dirty database
-    }
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE")).thenReturn(
+                Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
 
-    // @After
-    public void onAfter() throws Exception {
         clearDataBase(); // Clear dirty database
     }
 
@@ -368,15 +366,6 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    // // File 02
-                    // {
-                    // FileDescriptor fileDescriptorDto = new FileDescriptor();
-                    // fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
-                    // fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_GEN_ECB_EXR_RG_FLAT).toURI()));
-                    // fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
-                    // taskInfoDataset.addFile(fileDescriptorDto);
-                    // }
-
                     jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
 
                 } catch (MetamacException e) {
@@ -419,15 +408,6 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.CSV);
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
-
-                    // // File 02
-                    // {
-                    // FileDescriptor fileDescriptorDto = new FileDescriptor();
-                    // fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_GEN_ECB_EXR_RG_FLAT, "/"));
-                    // fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_GEN_ECB_EXR_RG_FLAT).toURI()));
-                    // fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
-                    // taskInfoDataset.addFile(fileDescriptorDto);
-                    // }
 
                     jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
 

@@ -27,6 +27,7 @@ import com.arte.statistic.parser.px.PxParser;
 import com.arte.statistic.parser.px.PxParser.PxDataByDimensionsIterator;
 import com.arte.statistic.parser.px.domain.PxAttributeCodes;
 import com.arte.statistic.parser.px.domain.PxModel;
+import com.arte.statistic.parser.px.domain.PxObservation;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 
 @Component(ManipulatePxDataService.BEAN_ID)
@@ -64,18 +65,21 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
         boolean processData = true;
         while (processData) {
-            for (int i = 0; i < SPLIT_DATA_FACTOR; i++) {
-                observationExtendedDto = metamacPx2StatRepoMapper.toObservation(pxDataByDimensionsIterator.next(), dataSourceID, attributesObservations);
-                if (observationExtendedDto == null) {
-                    // Insert incomplete slice
-                    insertDataAndAttributes(datasetID, dataDtos, validateDataVersusDsd);
-                    processData = false;
-                    break;
-                }
+            PxObservation pxObservation = pxDataByDimensionsIterator.next();
+            if (pxObservation == null) {
+                // Insert incomplete slice
+                insertDataAndAttributes(datasetID, dataDtos, validateDataVersusDsd);
+                processData = false;
+                break;
+            }
+
+            observationExtendedDto = metamacPx2StatRepoMapper.toObservation(pxObservation, dataSourceID, attributesObservations);
+            if (observationExtendedDto != null) {
                 dataDtos.add(observationExtendedDto);
             }
+
             // Insert slice
-            if (processData) {
+            if (dataDtos.size() == SPLIT_DATA_FACTOR) {
                 insertDataAndAttributes(datasetID, dataDtos, validateDataVersusDsd);
                 dataDtos.clear();
             }
@@ -100,7 +104,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
             datasetRepositoryDto.setMaxAttributesObservation(validateDataVersusDsd.getAttributeIdsAtObservationLevelSet().size() + 1); // +1 by Extra Attribute with information about data source
 
             // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
-            // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
+            // In this case, in the repository exists the code of enumerated representation, never the i18n of code.
             datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
 
             datasetRepositoryDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);

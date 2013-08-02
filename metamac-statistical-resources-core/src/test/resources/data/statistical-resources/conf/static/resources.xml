@@ -3,4 +3,7 @@
 <properties>
 	<comment>Configurations</comment>
 	<entry key="metamac.ws.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/metamac/statistical/operations/internal/v1.0/metamacStatisticalOperationsInternalInterface</entry>
+
+	<entry key="metamac.statistical_resources.dot_code_mapping">ONE_DOT=CODE_ONE,TWO_DOT=CODE_TWO,THREE_DOT=THREE_DOT,FOUR_DOT=FOUR_CODE,FIVE_DOT=FIVE_CODE,SIX_DOT=SIX_CODE</entry>
+
 </properties>

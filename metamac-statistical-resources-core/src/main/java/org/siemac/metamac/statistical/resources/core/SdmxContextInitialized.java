@@ -23,10 +23,6 @@ public class SdmxContextInitialized implements ApplicationListener<ContextRefres
     @Autowired
     private TaskServiceFacade tasksServiceFacade;
 
-    public void test() throws Exception {
-
-    }
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");

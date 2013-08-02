@@ -160,7 +160,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity.getLanguages().add(StatisticalResourcesDoMocks.mockCodeExternalItem("lang_es"));
 
         dto.setId(1L);
-        dto.setLanguage(StatisticalResourcesDtoMocks.mockCodeExternalItemDto("lang_en"));
+//        dto.setLanguage(StatisticalResourcesDtoMocks.mockCodeExternalItemDto("lang_en"));
 
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
 
