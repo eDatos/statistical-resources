@@ -6,9 +6,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStati
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
 
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-
-public abstract class StatisticalResourceBaseListViewImpl<H extends NewStatisticalResourceUiHandlers> extends ViewWithUiHandlers<H>
+public abstract class StatisticalResourceBaseListViewImpl<H extends NewStatisticalResourceUiHandlers> extends LifeCycleBaseListViewImpl<H>
         implements
             StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView {
 

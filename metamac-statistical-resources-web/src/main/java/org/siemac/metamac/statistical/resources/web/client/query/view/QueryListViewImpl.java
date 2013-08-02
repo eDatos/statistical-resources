@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.base.view.LifeCycleBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
@@ -22,7 +23,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
@@ -35,13 +35,10 @@ import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> implements QueryListPresenter.QueryListView {
-
-    private VLayout                  panel;
+public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHandlers> implements QueryListPresenter.QueryListView {
 
     private ToolStripButton          newQueryButton;
     private ToolStripButton          deleteQueryButton;
@@ -53,14 +50,6 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
     @Inject
     public QueryListViewImpl() {
         super();
-
-        panel = new VLayout();
-        panel.setHeight100();
-
-        // Toolstrip
-
-        ToolStrip toolStrip = new ToolStrip();
-        toolStrip.setWidth100();
 
         newQueryButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
         newQueryButton.setVisibility(QueryClientSecurityUtils.canCreateQuery() ? Visibility.VISIBLE : Visibility.HIDDEN);
@@ -96,7 +85,6 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
 
         bindEvents();
 
-        panel.addMember(toolStrip);
         panel.addMember(queriesList);
     }
 

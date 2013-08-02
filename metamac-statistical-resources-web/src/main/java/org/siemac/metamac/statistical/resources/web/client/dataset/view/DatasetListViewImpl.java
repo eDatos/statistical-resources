@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
@@ -46,19 +47,22 @@ import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
-
-    private VLayout                  panel;
 
     private SearchSectionStack       searchSectionStack;
 
     private CustomToolStripButton    newDatasetButton;
     private CustomToolStripButton    deleteDatasetButton;
     private CustomToolStripButton    importDatasourcesButton;
+    private CustomToolStripButton    sendToProductionValidationButton;
+    private CustomToolStripButton    sendToDiffusionValidationButton;
+    private CustomToolStripButton    rejectValidationButton;
+    private CustomToolStripButton    programPublicationButton;
+    private CustomToolStripButton    cancelProgrammedPublicationButton;
+    private CustomToolStripButton    publishButton;
 
     private PaginatedCheckListGrid   datasetsList;
 
@@ -75,17 +79,33 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         // ToolStrip
 
-        ToolStrip toolStrip = new ToolStrip();
-        toolStrip.setWidth100();
-
         newDatasetButton = createCreateDatasetButton();
         toolStrip.addButton(newDatasetButton);
 
         deleteDatasetButton = createDeleteDatasetButton();
         toolStrip.addButton(deleteDatasetButton);
 
-        importDatasourcesButton = createImportDatasourcesButton();
+        sendToProductionValidationButton = createSendToProductionValidationButton();
+        toolStrip.addButton(sendToProductionValidationButton);
+
+        sendToDiffusionValidationButton = createSendToDiffusionValidation();
+        toolStrip.addButton(sendToDiffusionValidationButton);
+
+        rejectValidationButton = createRejectValidationButton();
+        toolStrip.addButton(rejectValidationButton);
+
+        publishButton = createPublishButton();
+        toolStrip.addButton(publishButton);
+
+        programPublicationButton = createProgramPublicationButton();
+        toolStrip.addButton(programPublicationButton);
+
+        cancelProgrammedPublicationButton = createCancelProgrammedPublicationButton();
+        toolStrip.addButton(cancelProgrammedPublicationButton);
+
         toolStrip.addSeparator();
+
+        importDatasourcesButton = createImportDatasourcesButton();
         toolStrip.addButton(importDatasourcesButton);
 
         // Search
@@ -114,12 +134,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
-                if (datasetsList.getListGrid().getSelectedRecords().length > 0) {
-                    // Show delete button
-                    showListGridDeleteButton();
-                } else {
-                    deleteDatasetButton.hide();
-                }
+                updateListGridButtonsVisibility();
             }
         });
 
@@ -140,8 +155,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         ListGridField status = new ListGridField(DatasetDS.PROC_STATUS, getConstants().datasetProcStatus());
         datasetsList.getListGrid().setFields(fieldCode, fieldName, status);
 
-        panel = new VLayout();
-        panel.addMember(toolStrip);
         panel.addMember(searchSectionStack);
         panel.addMember(datasetsList);
 
@@ -171,59 +184,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
                 getUiHandlers().datasourcesImportationSucceed(fileName);
             }
         });
-    }
-
-    private CustomToolStripButton createCreateDatasetButton() {
-        CustomToolStripButton newDatasetButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newDatasetButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                newDatasetWindow = new NewDatasetWindow(getConstants().datasetCreate());
-                newDatasetWindow.setUiHandlers(getUiHandlers());
-                newDatasetWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (newDatasetWindow.validateForm()) {
-                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto(operationUrn));
-                            newDatasetWindow.destroy();
-                        }
-                    }
-                });
-                newDatasetWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
-                newDatasetWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
-            }
-        });
-        newDatasetButton.setVisibility(DatasetClientSecurityUtils.canCreateDataset() ? Visibility.VISIBLE : Visibility.HIDDEN);
-        return newDatasetButton;
-    }
-
-    private CustomToolStripButton createDeleteDatasetButton() {
-        CustomToolStripButton deleteDatasetButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteDatasetButton.setVisibility(Visibility.HIDDEN);
-        deleteDatasetButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                deleteConfirmationWindow.show();
-            }
-        });
-        return deleteDatasetButton;
-    }
-
-    private CustomToolStripButton createImportDatasourcesButton() {
-        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
-                .importResource().getURL());
-        // TODO Security importDatasourcesButton.setVisible(...);
-        importDatasourcesButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                importDatasourcesWindow.show();
-            }
-        });
-        return importDatasourcesButton;
     }
 
     @Override
@@ -303,9 +263,179 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         return newDatasetWindow;
     }
 
-    private void showListGridDeleteButton() {
-        if (DatasetClientSecurityUtils.canDeleteDataset()) {
-            deleteDatasetButton.show();
+    //
+    // LISTGRID BUTTONS
+    //
+
+    // Create
+
+    private CustomToolStripButton createCreateDatasetButton() {
+        CustomToolStripButton newDatasetButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
+        newDatasetButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                newDatasetWindow = new NewDatasetWindow(getConstants().datasetCreate());
+                newDatasetWindow.setUiHandlers(getUiHandlers());
+                newDatasetWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (newDatasetWindow.validateForm()) {
+                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto(operationUrn));
+                            newDatasetWindow.destroy();
+                        }
+                    }
+                });
+                newDatasetWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
+                newDatasetWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
+            }
+        });
+        newDatasetButton.setVisibility(DatasetClientSecurityUtils.canCreateDataset() ? Visibility.VISIBLE : Visibility.HIDDEN);
+        return newDatasetButton;
+    }
+
+    // Delete
+
+    private CustomToolStripButton createDeleteDatasetButton() {
+        CustomToolStripButton deleteDatasetButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
+        deleteDatasetButton.setVisibility(Visibility.HIDDEN);
+        deleteDatasetButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteConfirmationWindow.show();
+            }
+        });
+        return deleteDatasetButton;
+    }
+
+    private void showDeleteButton() {
+        // TODO Security
+        deleteDatasetButton.show();
+    }
+
+    // Import datasources
+
+    private CustomToolStripButton createImportDatasourcesButton() {
+        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
+                .importResource().getURL());
+        // TODO Security importDatasourcesButton.setVisible(...);
+        importDatasourcesButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                importDatasourcesWindow.show();
+            }
+        });
+        return importDatasourcesButton;
+    }
+
+    // Send to production validation
+
+    private CustomToolStripButton createSendToProductionValidationButton() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        return button;
+    }
+
+    private void showSendtoProductionValidationButton() {
+        // TODO Security
+        sendToProductionValidationButton.show();
+    }
+
+    // Send to diffusion validation
+
+    private CustomToolStripButton createSendToDiffusionValidation() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        return button;
+    }
+
+    private void showSendtoDiffusionValidationButton() {
+        // TODO Security
+        sendToDiffusionValidationButton.show();
+    }
+
+    // Reject validation
+
+    private CustomToolStripButton createRejectValidationButton() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        return button;
+    }
+
+    private void showRejectValidationButton() {
+        // TODO Security
+        rejectValidationButton.show();
+    }
+
+    // Publish
+
+    private CustomToolStripButton createPublishButton() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        return button;
+    }
+
+    private void showPublishButton() {
+        // TODO Security
+        publishButton.show();
+    }
+
+    // Program publication
+
+    private CustomToolStripButton createProgramPublicationButton() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        return button;
+    }
+
+    private void showProgramPublicationButton() {
+        // TODO Security
+        programPublicationButton.show();
+    }
+
+    // Cancel programmed publication
+
+    private CustomToolStripButton createCancelProgrammedPublicationButton() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        return button;
+    }
+
+    private void showCancelProgrammedPublicationButton() {
+        // TODO Security
+        cancelProgrammedPublicationButton.show();
+    }
+
+    // Visibility methods
+
+    private void updateListGridButtonsVisibility() {
+        if (datasetsList.getListGrid().getSelectedRecords().length > 0) {
+            showSelectionDependentButtons();
+        } else {
+            hideSelectionDependentButtons();
         }
+    }
+
+    private void showSelectionDependentButtons() {
+        showDeleteButton();
+        showSendtoProductionValidationButton();
+        showSendtoDiffusionValidationButton();
+        showRejectValidationButton();
+        showPublishButton();
+        showProgramPublicationButton();
+        showCancelProgrammedPublicationButton();
+    }
+
+    private void hideSelectionDependentButtons() {
+        deleteDatasetButton.hide();
+        sendToProductionValidationButton.hide();
+        sendToDiffusionValidationButton.hide();
+        rejectValidationButton.hide();
+        publishButton.hide();
+        programPublicationButton.hide();
+        cancelProgrammedPublicationButton.hide();
     }
 }

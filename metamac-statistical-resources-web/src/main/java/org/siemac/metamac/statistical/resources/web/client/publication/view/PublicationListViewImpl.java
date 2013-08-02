@@ -41,13 +41,10 @@ import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl<PublicationListUiHandlers> implements PublicationListPresenter.PublicationListView {
-
-    private VLayout                  panel;
 
     private SearchSectionStack       searchSectionStack;
     private PaginatedCheckListGrid   publicationListGrid;
@@ -62,12 +59,9 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Inject
     public PublicationListViewImpl() {
         super();
-        panel = new VLayout();
 
         // ToolStrip
 
-        ToolStrip toolStrip = new ToolStrip();
-        toolStrip.setWidth100();
         newPublicationButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
         newPublicationButton.addClickHandler(new ClickHandler() {
 
@@ -169,7 +163,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         ListGridField status = new ListGridField(PublicationDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
         publicationListGrid.getListGrid().setFields(fieldCode, fieldName, status);
 
-        panel.addMember(toolStrip);
         panel.addMember(searchSectionStack);
         panel.addMember(publicationListGrid);
     }

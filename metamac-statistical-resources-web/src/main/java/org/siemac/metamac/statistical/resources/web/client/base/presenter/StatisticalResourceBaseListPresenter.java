@@ -7,17 +7,13 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesP
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesResult;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 
-public abstract class StatisticalResourceBaseListPresenter<V extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, P extends Proxy<?>> extends Presenter<V, P>
+public abstract class StatisticalResourceBaseListPresenter<V extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, P extends Proxy<?>> extends LifeCycleBaseListPresenter<V, P>
         implements
             NewStatisticalResourceUiHandlers {
 
@@ -28,7 +24,7 @@ public abstract class StatisticalResourceBaseListPresenter<V extends Statistical
         this.dispatcher = dispatcher;
     }
 
-    public interface StatisticalResourceBaseListView extends View {
+    public interface StatisticalResourceBaseListView extends LifeCycleBaseListView {
 
         void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result);
         void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result);
