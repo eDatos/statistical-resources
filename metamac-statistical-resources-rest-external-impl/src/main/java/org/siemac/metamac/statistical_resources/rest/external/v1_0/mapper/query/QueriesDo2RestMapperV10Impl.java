@@ -50,8 +50,6 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
-        selectedLanguages = commonDo2RestMapper.languagesRequestedToEffectiveLanguages(selectedLanguages);
-
         Query target = new Query();
         target.setKind(RestExternalConstants.KIND_QUERY);
         target.setId(source.getLifeCycleStatisticalResource().getCode());
@@ -66,7 +64,6 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
             target.setMetadata(toQueryMetadata(source, selectedLanguages));
         }
         // TODO DATA
-        // TODO selection?
         return target;
     }
 

@@ -5,10 +5,14 @@ import static org.siemac.metamac.statistical_resources.rest.external.service.uti
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.manageException;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.parseDimensionExpression;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
@@ -54,6 +58,9 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     @Autowired
     private QueriesRest2DoMapper                          queriesRest2DoMapper;
 
+    @Autowired
+    private ConfigurationService                          configurationService;
+
     @Override
     public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
         return findDatasetsCommon(null, null, null, query, orderBy, limit, offset, lang);
@@ -67,7 +74,6 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Datasets findDatasets(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
         checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
         return findDatasetsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
     }
@@ -80,7 +86,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             Map<String, List<String>> dimensions = parseDimensionExpression(dim);
             boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
             boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
-            Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, lang, includeMetadata, includeData);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, selectedLanguages, includeMetadata, includeData);
             return dataset;
         } catch (Exception e) {
             throw manageException(e);
@@ -100,7 +107,6 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Collections findCollections(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
         checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
         return findCollectionsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
     }
@@ -112,7 +118,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
             boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
             boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
-            Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, lang, includeMetadata, includeData);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, selectedLanguages, includeMetadata, includeData);
             return collection;
         } catch (Exception e) {
             throw manageException(e);
@@ -126,7 +133,6 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Queries findQueries(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
         return findQueriesCommon(agencyID, query, orderBy, limit, offset, lang);
     }
 
@@ -137,7 +143,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
             boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
             boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
-            Query query = queriesDo2RestMapper.toQuery(queryVersion, lang, includeMetadata, includeData);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Query query = queriesDo2RestMapper.toQuery(queryVersion, selectedLanguages, includeMetadata, includeData);
             return query;
         } catch (Exception e) {
             throw manageException(e);
@@ -152,7 +159,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             PagedResult<DatasetVersion> entitiesPagedResult = commonService.findDatasetVersions(agencyID, resourceID, version, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
             // Transform
-            Datasets datasets = datasetsDo2RestMapper.toDatasets(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), lang);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Datasets datasets = datasetsDo2RestMapper.toDatasets(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), selectedLanguages);
             return datasets;
         } catch (Exception e) {
             throw manageException(e);
@@ -168,7 +176,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
                     sculptorCriteria.getPagingParameter());
 
             // Transform
-            Collections collections = collectionsDo2RestMapper.toCollections(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), lang);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Collections collections = collectionsDo2RestMapper.toCollections(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), selectedLanguages);
             return collections;
         } catch (Exception e) {
             throw manageException(e);
@@ -183,10 +192,23 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             PagedResult<QueryVersion> entitiesPagedResult = commonService.findQueryVersions(agencyID, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
             // Transform
-            Queries queries = queriesDo2RestMapper.toQueries(entitiesPagedResult, agencyID, query, orderBy, sculptorCriteria.getLimit(), lang);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Queries queries = queriesDo2RestMapper.toQueries(entitiesPagedResult, agencyID, query, orderBy, sculptorCriteria.getLimit(), selectedLanguages);
             return queries;
         } catch (Exception e) {
             throw manageException(e);
         }
+    }
+
+    private List<String> languagesRequestedToEffectiveLanguages(List<String> sources) throws MetamacException {
+        List<String> targets = new ArrayList<String>();
+        if (!CollectionUtils.isEmpty(sources)) {
+            targets.addAll(sources);
+        }
+        String languageDefault = configurationService.retrieveLanguageDefault();
+        if (!targets.contains(languageDefault)) {
+            targets.add(languageDefault);
+        }
+        return targets;
     }
 }

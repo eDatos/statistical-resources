@@ -29,7 +29,6 @@ public interface CommonDo2RestMapperV10 {
 
     public Date toDate(DateTime source);
 
-    public List<String> languagesRequestedToEffectiveLanguages(List<String> sources) throws MetamacException;
     public SelectedLanguages toLanguages(List<String> selectedLanguages);
 
     public Resources toResourcesExternalItemsSrm(List<ExternalItem> sources, List<String> selectedLanguages);

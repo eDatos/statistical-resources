@@ -118,8 +118,6 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
-        selectedLanguages = commonDo2RestMapper.languagesRequestedToEffectiveLanguages(selectedLanguages);
-
         Dataset target = new Dataset();
         target.setKind(RestExternalConstants.KIND_DATASET);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());

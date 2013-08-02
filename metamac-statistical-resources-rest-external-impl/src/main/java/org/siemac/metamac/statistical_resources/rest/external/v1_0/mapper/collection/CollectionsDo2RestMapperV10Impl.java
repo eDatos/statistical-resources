@@ -72,8 +72,6 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         if (source == null) {
             return null;
         }
-        selectedLanguages = commonDo2RestMapper.languagesRequestedToEffectiveLanguages(selectedLanguages);
-
         Collection target = new Collection();
         target.setKind(RestExternalConstants.KIND_COLLECTION);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
@@ -99,11 +97,11 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
             return null;
         }
         Resource target = new Resource();
-        target.setId(source.getLifeCycleStatisticalResource().getCode());
-        target.setUrn(source.getLifeCycleStatisticalResource().getUrn());
+        target.setId(source.getSiemacMetadataStatisticalResource().getCode());
+        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
         target.setKind(RestExternalConstants.KIND_COLLECTION);
         target.setSelfLink(toCollectionSelfLink(source));
-        target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
+        target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         return target;
     }
 

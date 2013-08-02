@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -257,21 +256,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     @Override
     public Date toDate(DateTime source) {
         return RestCommonUtil.transformDateTimeToDate(source);
-    }
-
-    /**
-     * Create list with requested languages and default language in service
-     */
-    @Override
-    public List<String> languagesRequestedToEffectiveLanguages(List<String> sources) throws MetamacException {
-        List<String> targets = new ArrayList<String>();
-        if (!CollectionUtils.isEmpty(sources)) {
-            targets.addAll(sources);
-        }
-        if (!targets.contains(defaultLanguage)) {
-            targets.add(defaultLanguage);
-        }
-        return targets;
     }
 
     @Override
