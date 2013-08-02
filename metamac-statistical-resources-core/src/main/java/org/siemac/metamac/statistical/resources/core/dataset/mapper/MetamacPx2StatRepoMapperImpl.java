@@ -146,7 +146,12 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
 
                 AttributeDto attributeDto = new AttributeDto();
                 attributeDto.setAttributeId(ATTR_OBS_NOTE);
-                attributeDto.setValue(toInternationalStringStatisticRepository(pxAttributeDto.getValue(), preferredLanguage, pxModel.getLanguage()));
+
+                InternationalStringDto internationalString = toInternationalStringStatisticRepository(pxAttributeDto.getValue(), preferredLanguage, pxModel.getLanguage());
+                if (internationalString == null) {
+                    continue;
+                }
+                attributeDto.setValue(internationalString);
 
                 // key
                 for (ComponentInfo componentInfo : dimensionsInfos) {
@@ -225,12 +230,11 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
 
         // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
         // In this case, in the repository exists the code of enumerated representation, never the i18n of code.
-
         String localisedLabel = source.getLocalisedLabel(preferredLanguage);
-        if (localisedLabel == null) {
+        if (StringUtils.isEmpty(localisedLabel)) {
             // Get in default language
             localisedLabel = source.getLocalisedLabel(defaultLanguage);
-            if (localisedLabel == null) {
+            if (StringUtils.isEmpty(localisedLabel)) {
                 return null;
             }
         }
