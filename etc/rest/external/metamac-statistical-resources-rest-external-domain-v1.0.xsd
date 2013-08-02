@@ -406,6 +406,34 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="CollectionCriteriaPropertyRestriction">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+            <xs:enumeration value="NAME" />
+            <xs:enumeration value="DESCRIPTION" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CollectionCriteriaPropertyOrder">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="QueryCriteriaPropertyRestriction">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+            <xs:enumeration value="NAME" />
+            <xs:enumeration value="DESCRIPTION" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="QueryCriteriaPropertyOrder">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <!-- Elements -->
     <xs:element name="dataset" type="tns:Dataset" />
     <xs:element name="datasets" type="tns:Datasets" />

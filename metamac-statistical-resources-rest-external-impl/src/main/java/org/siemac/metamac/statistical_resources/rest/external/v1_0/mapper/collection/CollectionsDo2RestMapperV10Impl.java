@@ -3,16 +3,19 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.colle
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Chapter;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CollectionData;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CollectionMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CollectionNode;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CollectionNodes;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Table;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
@@ -45,6 +48,24 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
 
     @Autowired
     private QueriesDo2RestMapperV10  queriesDo2RestMapper;
+
+    @Override
+    public Collections toCollections(PagedResult<PublicationVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
+
+        Collections targets = new Collections();
+        targets.setKind(RestExternalConstants.KIND_COLLECTIONS);
+
+        // Pagination
+        String baseLink = toCollectionsLink(agencyID, resourceID, null);
+        SculptorCriteria2RestCriteria.toPagedResult(sources, targets, query, orderBy, limit, baseLink);
+
+        // Values
+        for (PublicationVersion source : sources.getValues()) {
+            Resource target = toResource(source, selectedLanguages);
+            targets.getCollections().add(target);
+        }
+        return targets;
+    }
 
     @Override
     public Collection toCollection(PublicationVersion source, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception {

@@ -96,17 +96,17 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     private CommonDo2RestMapperV10           commonDo2RestMapper;
 
     @Override
-    public Datasets toDatasets(PagedResult<DatasetVersion> sourcesPagedResult, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
+    public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
 
         Datasets targets = new Datasets();
         targets.setKind(RestExternalConstants.KIND_DATASETS);
 
         // Pagination
         String baseLink = toDatasetsLink(agencyID, resourceID, null);
-        SculptorCriteria2RestCriteria.toPagedResult(sourcesPagedResult, targets, query, orderBy, limit, baseLink);
+        SculptorCriteria2RestCriteria.toPagedResult(sources, targets, query, orderBy, limit, baseLink);
 
         // Values
-        for (DatasetVersion source : sourcesPagedResult.getValues()) {
+        for (DatasetVersion source : sources.getValues()) {
             Resource target = toResource(source, selectedLanguages);
             targets.getDatasets().add(target);
         }

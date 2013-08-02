@@ -22,9 +22,11 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.service.StatisticalResourcesRestExternalCommonService;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsRest2DoMapper;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsRest2DoMapper;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesRest2DoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,24 +46,30 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     private CollectionsDo2RestMapperV10                   collectionsDo2RestMapper;
 
     @Autowired
+    private CollectionsRest2DoMapper                      collectionsRest2DoMapper;
+
+    @Autowired
     private QueriesDo2RestMapperV10                       queriesDo2RestMapper;
+
+    @Autowired
+    private QueriesRest2DoMapper                          queriesRest2DoMapper;
 
     @Override
     public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
-        return findDatasets(null, null, null, query, orderBy, limit, offset, lang);
+        return findDatasetsCommon(null, null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Datasets findDatasets(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
         checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
-        return findDatasets(agencyID, null, null, query, orderBy, limit, offset, lang);
+        return findDatasetsCommon(agencyID, null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Datasets findDatasets(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
         checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
         checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
-        return findDatasets(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
+        return findDatasetsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
@@ -81,29 +89,20 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Collections findCollections(String query, String orderBy, String limit, String offset, List<String> lang) {
-        return null;
+        return findCollectionsCommon(null, null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Collections findCollections(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        return null;
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        return findCollectionsCommon(agencyID, null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Collections findCollections(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        return null;
-    }
-
-    @Override
-    public Queries findQueries(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Queries findQueries(String query, String orderBy, String limit, String offset, List<String> lang) {
-        // TODO Auto-generated method stub
-        return null;
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+        return findCollectionsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
@@ -121,6 +120,17 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     }
 
     @Override
+    public Queries findQueries(String query, String orderBy, String limit, String offset, List<String> lang) {
+        return findQueriesCommon(null, query, orderBy, limit, offset, lang);
+    }
+
+    @Override
+    public Queries findQueries(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
+        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        return findQueriesCommon(agencyID, query, orderBy, limit, offset, lang);
+    }
+
+    @Override
     public Query retrieveQuery(String agencyID, String resourceID, List<String> lang, String fields) {
         try {
             QueryVersion queryVersion = commonService.retrieveQueryVersion(agencyID, resourceID);
@@ -134,7 +144,7 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
         }
     }
 
-    private Datasets findDatasets(String agencyID, String resourceID, String version, String query, String orderBy, String limit, String offset, List<String> lang) {
+    private Datasets findDatasetsCommon(String agencyID, String resourceID, String version, String query, String orderBy, String limit, String offset, List<String> lang) {
         try {
             SculptorCriteria sculptorCriteria = datasetsRest2DoMapper.getDatasetCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
 
@@ -144,6 +154,37 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             // Transform
             Datasets datasets = datasetsDo2RestMapper.toDatasets(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), lang);
             return datasets;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    private Collections findCollectionsCommon(String agencyID, String resourceID, String version, String query, String orderBy, String limit, String offset, List<String> lang) {
+        try {
+            SculptorCriteria sculptorCriteria = collectionsRest2DoMapper.getCollectionCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
+
+            // Find
+            PagedResult<PublicationVersion> entitiesPagedResult = commonService.findPublicationVersions(agencyID, resourceID, version, sculptorCriteria.getConditions(),
+                    sculptorCriteria.getPagingParameter());
+
+            // Transform
+            Collections collections = collectionsDo2RestMapper.toCollections(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), lang);
+            return collections;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    private Queries findQueriesCommon(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
+        try {
+            SculptorCriteria sculptorCriteria = queriesRest2DoMapper.getQueryCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
+
+            // Find
+            PagedResult<QueryVersion> entitiesPagedResult = commonService.findQueryVersions(agencyID, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+            // Transform
+            Queries queries = queriesDo2RestMapper.toQueries(entitiesPagedResult, agencyID, query, orderBy, sculptorCriteria.getLimit(), lang);
+            return queries;
         } catch (Exception e) {
             throw manageException(e);
         }

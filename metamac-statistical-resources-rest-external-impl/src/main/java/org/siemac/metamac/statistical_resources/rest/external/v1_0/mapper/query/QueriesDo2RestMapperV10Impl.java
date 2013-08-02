@@ -2,10 +2,13 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -23,6 +26,24 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
     @Autowired
     private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
+
+    @Override
+    public Queries toQueries(PagedResult<QueryVersion> sources, String agencyID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
+
+        Queries targets = new Queries();
+        targets.setKind(RestExternalConstants.KIND_QUERIES);
+
+        // Pagination
+        String baseLink = toQueriesLink(agencyID, null);
+        SculptorCriteria2RestCriteria.toPagedResult(sources, targets, query, orderBy, limit, baseLink);
+
+        // Values
+        for (QueryVersion source : sources.getValues()) {
+            Resource target = toResource(source, selectedLanguages);
+            targets.getQueries().add(target);
+        }
+        return targets;
+    }
 
     @Override
     public Query toQuery(QueryVersion source, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception {

@@ -14,6 +14,9 @@ public interface StatisticalResourcesRestExternalCommonService {
     public PagedResult<DatasetVersion> findDatasetVersions(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter);
     public DatasetVersion retrieveDatasetVersion(String agencyID, String resourceID, String version);
 
+    public PagedResult<PublicationVersion> findPublicationVersions(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter);
     public PublicationVersion retrievePublicationVersion(String agencyID, String resourceID, String version);
+
+    public PagedResult<QueryVersion> findQueryVersions(String agencyID, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter);
     public QueryVersion retrieveQueryVersion(String agencyID, String resourceID);
 }
