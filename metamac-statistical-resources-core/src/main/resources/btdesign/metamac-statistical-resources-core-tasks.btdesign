@@ -1,5 +1,6 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-tasks-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-tasks-enums.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 
 Application DatasetsStatisticalResources { 
 	basePackage=unused
@@ -27,6 +28,7 @@ Application DatasetsStatisticalResources {
 		"Provides access to import data operations"
 		Service TaskService {
 			> @TaskRepository
+			> @DatasetService
 			
 			"Plannify a scheduled task to import"
 			String planifyImportationDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
