@@ -118,27 +118,27 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
     }
 
     private void mockRetrieveDatasetLastPublishedVersion() throws MetamacException {
-        when(datasetVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() {
+        when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() { // TODO retrieveLastPublishedVersion
 
-            @Override
-            public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
-                String datasetUrn = (String) invocation.getArguments()[0];
-                String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
-                return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
-            };
-        });
+                    @Override
+                    public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
+                        String datasetUrn = (String) invocation.getArguments()[0];
+                        String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
+                        return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
+                    };
+                });
     }
 
     private void mockRetrieveQueryLastPublishedVersion() throws MetamacException {
-        when(queryVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() {
+        when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion
 
-            @Override
-            public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
-                String queryUrn = (String) invocation.getArguments()[0];
-                String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
-            };
-        });
+                    @Override
+                    public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
+                        String queryUrn = (String) invocation.getArguments()[0];
+                        String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
+                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+                    };
+                });
     }
 
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {

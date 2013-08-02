@@ -101,7 +101,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             // Retrieve last version published
             String[] maintainerCodes = StringUtils.splitPreserveAllTokens(agencyID, UrnConstants.DOT);
             String queryUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, resourceID);
-            QueryVersion queryVersion = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
+            QueryVersion queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn); // TODO retrieveLastPublishedVersion
             if (queryVersion == null) {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.QUERY_NOT_FOUND, resourceID, agencyID);
                 throw new RestException(exception, Status.NOT_FOUND);

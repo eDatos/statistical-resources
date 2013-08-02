@@ -59,15 +59,15 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
     }
 
     private void mockRetrieveQueryLastPublishedVersion() throws MetamacException {
-        when(queryVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() {
+        when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion
 
-            @Override
-            public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
-                String queryUrn = (String) invocation.getArguments()[0];
-                String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
-            };
-        });
+                    @Override
+                    public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
+                        String queryUrn = (String) invocation.getArguments()[0];
+                        String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
+                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+                    };
+                });
     }
 
     @Override

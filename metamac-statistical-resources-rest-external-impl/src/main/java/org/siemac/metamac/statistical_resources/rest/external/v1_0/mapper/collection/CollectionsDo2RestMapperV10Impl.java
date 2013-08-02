@@ -138,10 +138,10 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         target.setName(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getDescription(), selectedLanguages));
         if (source.getDatasetUrn() != null) {
-            DatasetVersion dataset = datasetVersionRepository.retrieveLastPublishedVersion(source.getDatasetUrn());
+            DatasetVersion dataset = datasetVersionRepository.retrieveLastVersion(source.getDatasetUrn()); // TODO retrieveLastPublishedVersion
             target.setDataset(datasetsDo2RestMapper.toResource(dataset, selectedLanguages)); // TODO devolver latest en selfLink
         } else if (source.getQuery() != null) {
-            QueryVersion query = queryVersionRepository.retrieveLastPublishedVersion(source.getQueryUrn());
+            QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn()); // TODO retrieveLastPublishedVersion
             target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages)); // TODO devolver latest en selfLink si se devuelve versión
         }
         return target;
