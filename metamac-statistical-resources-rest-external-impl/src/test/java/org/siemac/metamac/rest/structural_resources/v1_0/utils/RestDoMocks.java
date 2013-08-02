@@ -1,5 +1,9 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_3_CODE;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -72,12 +76,20 @@ public class RestDoMocks {
         return target;
     }
 
-    public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version, QueryStatusEnum status, QueryTypeEnum type) {
+    public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
-        target.setType(type);
-        target.setStatus(status);
-        if (QueryTypeEnum.LATEST_DATA.equals(type)) {
+        target.setStatus(QueryStatusEnum.ACTIVE);
+        if (QUERY_1_CODE.equals(resourceID)) {
+            target.setType(QueryTypeEnum.FIXED);
+        } else if (QUERY_2_CODE.equals(resourceID)) {
+            target.setType(QueryTypeEnum.AUTOINCREMENTAL);
+        } else if (QUERY_3_CODE.equals(resourceID)) {
+            target.setType(QueryTypeEnum.LATEST_DATA);
+        } else {
+            target.setType(QueryTypeEnum.FIXED);
+        }
+        if (QueryTypeEnum.LATEST_DATA.equals(target.getType())) {
             target.setLatestDataNumber(Integer.valueOf(4));
         }
         return target;

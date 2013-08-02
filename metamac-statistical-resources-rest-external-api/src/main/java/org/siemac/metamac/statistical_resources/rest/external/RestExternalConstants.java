@@ -10,6 +10,8 @@ public class RestExternalConstants extends RestApiConstants {
     public static String PARAMETER_AGENCY_ID      = "agencyID";
     public static String PARAMETER_RESOURCE_ID    = "resourceID";
     public static String PARAMETER_VERSION        = "version";
+    public static String PARAMETER_FIELDS         = "fields";
+    public static String PARAMETER_LANGS          = "langs";
 
     public static String KIND_DATASETS            = API_NAME + KIND_SEPARATOR + "datasets";
     public static String KIND_DATASET             = API_NAME + KIND_SEPARATOR + "dataset";

@@ -3,17 +3,13 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.datas
 import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
@@ -30,16 +26,11 @@ import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentation;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentations;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
@@ -74,26 +65,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 @Component
 public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
-    private static final Logger              logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10Impl.class);
+    private static final Logger    logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10Impl.class);
 
     @Autowired
-    private SrmRestExternalFacade            srmRestExternalFacade;
+    private SrmRestExternalFacade  srmRestExternalFacade;
 
     @Autowired
-    private DatasetService                   datasetService;
+    private DatasetService         datasetService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
-
-    @Autowired
-    private CommonDo2RestMapperV10           commonDo2RestMapper;
+    private CommonDo2RestMapperV10 commonDo2RestMapper;
 
     @Override
     public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -133,7 +117,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
             target.setMetadata(toDatasetMetadata(source, selectedLanguages));
         }
         if (includeData) {
-            target.setData(toDatasetData(source, selectedLanguages, selectedDimensions));
+            target.setData(commonDo2RestMapper.toData(source, selectedLanguages, selectedDimensions));
         }
         return target;
     }
@@ -464,146 +448,6 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         }
     }
 
-    private Data toDatasetData(DatasetVersion source, List<String> languagesSelected, Map<String, List<String>> dimensionValuesSelected) throws Exception {
-        if (source == null) {
-            return null;
-        }
-        Data target = new Data();
-
-        // Filter codeDimension // TODO validate codes in coverage?
-        List<String> dimensions = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, source.getSiemacMetadataStatisticalResource().getUrn());
-        Map<String, List<String>> dimensionsCodesSelectedEffective = buildDimensionsSelectedWithCodes(source, dimensionValuesSelected, dimensions);
-
-        // Observations
-        String observations = toDatasetDataObservations(source, dimensions, dimensionValuesSelected, dimensionsCodesSelectedEffective);
-        target.setObservations(observations);
-
-        // Dimensions
-        target.setDimensions(new DimensionRepresentations());
-
-        for (String dimension : dimensions) {
-            DimensionRepresentation representation = new DimensionRepresentation();
-            representation.setDimensionId(dimension);
-            representation.setRepresentations(new CodeRepresentations());
-
-            int codesSize = 0;
-            for (String dimensionValue : dimensionsCodesSelectedEffective.get(dimension)) {
-                CodeRepresentation codeRepresentation = new CodeRepresentation();
-                codeRepresentation.setCode(dimensionValue);
-                codeRepresentation.setIndex(codesSize);
-                representation.getRepresentations().getRepresentations().add(codeRepresentation);
-                codesSize++;
-            }
-            representation.getRepresentations().setTotal(BigInteger.valueOf(representation.getRepresentations().getRepresentations().size()));
-            target.getDimensions().getDimensions().add(representation);
-        }
-        target.getDimensions().setTotal(BigInteger.valueOf(target.getDimensions().getDimensions().size()));
-
-        return target;
-    }
-
-    /**
-     * Build dimensions selected, with codes selected or all codes if codes are not selected to one dimension
-     */
-    private Map<String, List<String>> buildDimensionsSelectedWithCodes(DatasetVersion source, Map<String, List<String>> dimensionsSelected, List<String> dimensions) throws MetamacException {
-        Map<String, List<String>> dimensionsCodesSelected = new HashMap<String, List<String>>();
-        for (String dimension : dimensions) {
-            List<String> dimensionValues = dimensionsSelected.get(dimension);
-            List<String> dimensionValuesSelected = new ArrayList<String>();
-            if (CollectionUtils.isEmpty(dimensionValues)) {
-                // if dimension is not selected in query, retrieve all codes from coverage
-                List<CodeDimension> codeDimensions = datasetService.retrieveCoverageForDatasetVersionDimension(SERVICE_CONTEXT, source.getSiemacMetadataStatisticalResource().getUrn(), dimension);
-                for (CodeDimension codeDimension : codeDimensions) {
-                    dimensionValuesSelected.add(codeDimension.getIdentifier());
-                }
-            } else {
-                dimensionValuesSelected.addAll(dimensionValues);
-            }
-            dimensionsCodesSelected.put(dimension, dimensionValuesSelected);
-        }
-        return dimensionsCodesSelected;
-    }
-
-    /**
-     * Retrieve observations of selected code
-     * FIXME attributes
-     */
-    private String toDatasetDataObservations(DatasetVersion source, List<String> dimensions, Map<String, List<String>> dimensionsSelected, Map<String, List<String>> dimensionsCodesSelectedEffective)
-            throws Exception {
-
-        if (MapUtils.isEmpty(dimensionsCodesSelectedEffective)) {
-            return null;
-        }
-
-        // Search observations in repository
-        List<ConditionDimensionDto> conditions = generateConditions(dimensionsSelected);
-        Map<String, ObservationExtendedDto> datas = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(source.getDatasetRepositoryId(), conditions);
-
-        // Observation Size
-        int sizeObservation = 1;
-        for (String dimension : dimensionsCodesSelectedEffective.keySet()) {
-            sizeObservation = sizeObservation * dimensionsCodesSelectedEffective.get(dimension).size();
-        }
-        // OBSERVATIONS (return sorted)
-        List<String> dataObservations = new ArrayList<String>(sizeObservation);
-        Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
-        stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
-        ArrayList<String> entryId = new ArrayList<String>(dimensions.size());
-        for (int i = 0; i < dimensions.size(); i++) {
-            entryId.add(i, StringUtils.EMPTY);
-        }
-
-        int lastDimension = dimensions.size() - 1;
-        int current = 0;
-        while (stack.size() > 0) {
-            // POP
-            OrderingStackElement elem = stack.pop();
-            int elemDimension = elem.getDimNum();
-            String elemCode = elem.getCodeId();
-
-            // The first time we don't need a hash (#)
-            if (elemDimension != -1) {
-                entryId.set(elemDimension, elemCode);
-            }
-
-            // The entry is complete
-            if (elemDimension == lastDimension) {
-                String id = StringUtils.join(entryId, "#");
-
-                // We have the full entry here
-                ObservationExtendedDto value = datas.get(id);
-                if (value != null) {
-                    dataObservations.add(value.getPrimaryMeasure());
-                } else {
-                    dataObservations.add(null); // Return observation null
-                }
-                entryId.set(elemDimension, StringUtils.EMPTY);
-                current++;
-            } else {
-                String dimension = dimensions.get(elemDimension + 1);
-                List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
-                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
-                    OrderingStackElement temp = new OrderingStackElement(dimensionValues.get(i), elemDimension + 1);
-                    stack.push(temp);
-                }
-            }
-        }
-        return StringUtils.join(dataObservations.iterator(), " | ");
-    }
-
-    private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {
-        List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
-        for (Map.Entry<String, List<String>> entry : dimensions.entrySet()) {
-            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
-            conditionDimensionDto.setDimensionId(entry.getKey());
-            for (String value : entry.getValue()) {
-                conditionDimensionDto.getCodesDimension().add(value);
-            }
-            conditionDimensionDtos.add(conditionDimensionDto);
-        }
-        return conditionDimensionDtos;
-    }
-
     private ResourceLink toDatasetParentLink(DatasetVersion source) {
         return toDatasetsSelfLink(null, null, null);
     }
@@ -648,25 +492,5 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
             }
         }
         return targets;
-    }
-
-    private class OrderingStackElement {
-
-        private String codeId = null;
-        private int    dimNum = -1;
-
-        public OrderingStackElement(String codeId, int dimNum) {
-            super();
-            this.codeId = codeId;
-            this.dimNum = dimNum;
-        }
-
-        public String getCodeId() {
-            return codeId;
-        }
-
-        public int getDimNum() {
-            return dimNum;
-        }
     }
 }

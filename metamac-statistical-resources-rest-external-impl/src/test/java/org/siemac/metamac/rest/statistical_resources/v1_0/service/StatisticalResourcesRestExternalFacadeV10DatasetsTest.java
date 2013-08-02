@@ -31,13 +31,11 @@ import org.mockito.stubbing.Answer;
 import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -66,7 +64,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testRetrieveDatasetXml() throws Exception {
-        String requestBase = getDatasetUri(AGENCY_1, DATASET_1_CODE, VERSION_1, null, null, null);
+        String requestBase = getRetrieveDatasetUri(AGENCY_1, DATASET_1_CODE, VERSION_1, null, null);
         String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
         for (int i = 0; i < requestUris.length; i++) {
             String requestUri = requestUris[i];
@@ -287,12 +285,12 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         mockRetrieveConceptByUrn();
     }
 
-    public String getDatasetUri(String agencyID, String resourceID, String version, String query, String limit, String offset) throws Exception {
-        String uri = getResourceUri(RestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, version);
-        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_QUERY, RestUtils.encodeParameter(query));
-        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_LIMIT, RestUtils.encodeParameter(limit));
-        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_OFFSET, RestUtils.encodeParameter(offset));
-        return uri.toString();
+    public String getRetrieveDatasetUri(String agencyID, String resourceID, String version, String fields, String langs) throws Exception {
+        return getRetrieveResourceUri(RestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, version, fields, langs);
+    }
+
+    public String getFindDatasetsUri(String agencyID, String resourceID, String query, String limit, String offset, String langs) throws Exception {
+        return getFindResourcesUri(RestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, query, limit, offset, langs);
     }
 
 }

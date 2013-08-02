@@ -17,8 +17,11 @@ import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
+import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
+import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
 
@@ -73,19 +76,35 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         return statisticalResourcesRestExternalFacadeClientXml;
     }
 
-    protected String getResourceUri(String resourcePath, String agencyID, String resourceID, String version) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(baseApi + "/" + resourcePath);
+    protected String getRetrieveResourceUri(String resourcePath, String agencyID, String resourceID, String version, String fields, String langs) throws Exception {
+        String uri = RestUtils.createLink(baseApi, resourcePath);
         if (agencyID != null) {
-            uri.append("/" + agencyID);
+            uri = RestUtils.createLink(uri, agencyID);
             if (resourceID != null) {
-                uri.append("/" + resourceID);
+                uri = RestUtils.createLink(uri, resourceID);
                 if (version != null) {
-                    uri.append("/" + version);
+                    uri = RestUtils.createLink(uri, version);
                 }
             }
         }
-        return uri.toString();
+        uri = RestUtils.createLinkWithQueryParam(uri, RestExternalConstants.PARAMETER_FIELDS, RestUtils.encodeParameter(fields));
+        uri = RestUtils.createLinkWithQueryParam(uri, RestExternalConstants.PARAMETER_LANGS, RestUtils.encodeParameter(langs));
+        return uri;
+    }
+
+    protected String getFindResourcesUri(String resourcePath, String agencyID, String resourceID, String query, String limit, String offset, String langs) throws Exception {
+        String uri = RestUtils.createLink(baseApi, resourcePath);
+        if (agencyID != null) {
+            uri = RestUtils.createLink(uri, agencyID);
+            if (resourceID != null) {
+                uri = RestUtils.createLink(uri, resourceID);
+            }
+        }
+        uri = RestUtils.createLinkWithQueryParam(uri, RestExternalConstants.PARAMETER_LANGS, RestUtils.encodeParameter(langs));
+        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_QUERY, RestUtils.encodeParameter(query));
+        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_LIMIT, RestUtils.encodeParameter(limit));
+        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_OFFSET, RestUtils.encodeParameter(offset));
+        return uri;
     }
 
     protected String getApiEndpoint() {

@@ -28,12 +28,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.constants.RestConstants;
-import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
-import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
@@ -50,7 +46,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
 
     @Test
     public void testRetrieveCollectionXml() throws Exception {
-        String requestBase = getCollectionUri(AGENCY_1, COLLECTION_1_CODE, VERSION_1, null, null, null);
+        String requestBase = getRetrieveCollectionUri(AGENCY_1, COLLECTION_1_CODE, VERSION_1, null, null);
         String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
         for (int i = 0; i < requestUris.length; i++) {
             String requestUri = requestUris[i];
@@ -138,7 +134,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
                     public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
                         String queryUrn = (String) invocation.getArguments()[0];
                         String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1, QueryStatusEnum.ACTIVE, QueryTypeEnum.LATEST_DATA);
+                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
                     };
                 });
     }
@@ -175,12 +171,12 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
         mockRetrieveQueryLastPublishedVersion();
     }
 
-    public String getCollectionUri(String agencyID, String resourceID, String version, String query, String limit, String offset) throws Exception {
-        String uri = getResourceUri(RestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, version);
-        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_QUERY, RestUtils.encodeParameter(query));
-        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_LIMIT, RestUtils.encodeParameter(limit));
-        uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_OFFSET, RestUtils.encodeParameter(offset));
-        return uri.toString();
+    public String getRetrieveCollectionUri(String agencyID, String resourceID, String version, String fields, String langs) throws Exception {
+        return getRetrieveResourceUri(RestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, version, fields, langs);
+    }
+
+    public String getFindCollectionsUri(String agencyID, String resourceID, String query, String limit, String offset, String langs) throws Exception {
+        return getFindResourcesUri(RestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, query, limit, offset, langs);
     }
 
 }
