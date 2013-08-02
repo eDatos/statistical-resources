@@ -72,6 +72,7 @@ public class RestDoMocks {
 
     public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
+        mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
         return target;
     }
 
