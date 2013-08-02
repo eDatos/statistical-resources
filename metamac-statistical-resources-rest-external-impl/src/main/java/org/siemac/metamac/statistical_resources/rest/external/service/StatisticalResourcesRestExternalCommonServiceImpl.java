@@ -71,6 +71,15 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     }
 
     @Override
+    public PagedResult<DatasetVersion> findDatasetVersions(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
+        try {
+            return findDatasetsCore(agencyID, resourceID, version, conditionalCriteria, pagingParameter);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
     public PublicationVersion retrievePublicationVersion(String agencyID, String resourceID, String version) {
         try {
             // Validations

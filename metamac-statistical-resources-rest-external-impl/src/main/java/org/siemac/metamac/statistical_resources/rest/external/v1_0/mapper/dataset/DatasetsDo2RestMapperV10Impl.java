@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
@@ -28,12 +29,14 @@ import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetData;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentations;
@@ -91,6 +94,24 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
     @Autowired
     private CommonDo2RestMapperV10           commonDo2RestMapper;
+
+    @Override
+    public Datasets toDatasets(PagedResult<DatasetVersion> sourcesPagedResult, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
+
+        Datasets targets = new Datasets();
+        targets.setKind(RestExternalConstants.KIND_DATASETS);
+
+        // Pagination
+        String baseLink = toDatasetsLink(agencyID, resourceID, null);
+        SculptorCriteria2RestCriteria.toPagedResult(sourcesPagedResult, targets, query, orderBy, limit, baseLink);
+
+        // Values
+        for (DatasetVersion source : sourcesPagedResult.getValues()) {
+            Resource target = toResource(source, selectedLanguages);
+            targets.getDatasets().add(target);
+        }
+        return targets;
+    }
 
     @Override
     public Dataset toDataset(DatasetVersion source, Map<String, List<String>> selectedDimensions, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception {

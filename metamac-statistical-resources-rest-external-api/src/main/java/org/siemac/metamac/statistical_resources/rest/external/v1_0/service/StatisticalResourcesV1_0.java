@@ -9,8 +9,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 @Path("v1.0")
@@ -42,10 +44,40 @@ public interface StatisticalResourcesV1_0 {
             @QueryParam("fields") String fields, @QueryParam("dim") String dim);
 
     @GET
+    @Produces("application/xml")
+    @Path("collections")
+    Collections findCollections(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+            @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces("application/xml")
+    @Path("collections/{agencyID}")
+    Collections findCollections(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
+            @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces("application/xml")
+    @Path("collections/{agencyID}/{resourceID}")
+    Collections findCollections(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy,
+            @QueryParam("limit") String limit, @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
+
+    @GET
     @Produces({"application/xml", "application/json"})
     @Path("collections/{agencyID}/{resourceID}/{version}")
     Collection retrieveCollection(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @PathParam("version") String version, @QueryParam("lang") List<String> lang,
             @QueryParam("fields") String fields);
+
+    @GET
+    @Produces("application/xml")
+    @Path("queries")
+    Queries findQueries(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+            @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces("application/xml")
+    @Path("queries/{agencyID}")
+    Queries findQueries(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
+            @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
 
     @GET
     @Produces({"application/xml", "application/json"})
