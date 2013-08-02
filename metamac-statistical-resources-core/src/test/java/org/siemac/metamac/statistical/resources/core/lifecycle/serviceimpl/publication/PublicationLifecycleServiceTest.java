@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publ
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
@@ -66,6 +67,7 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
+    @Ignore
     @Override
     @Test
     public void testCheckSendToPublishedResource() throws Exception {
@@ -77,6 +79,7 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
         fail("not implemented");
     }
 
+    @Ignore
     @Override
     @Test
     public void testApplySendToPublishedResource() throws Exception {
@@ -86,24 +89,29 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
         fail("not implemented");
     }
 
+    @Ignore
     @Override
     @Test
     public void testCheckSendToPublishedLinkedStatisticalResource() throws Exception {
         // TODO Auto-generated method stub
         // TODO: esto debe ser eliminado
+        fail("not implemented");
     }
 
+    @Ignore
     @Override
     @Test
     public void testApplySendToPublishedLinkedStatisticalResource() throws Exception {
         // TODO Auto-generated method stub
         // TODO: esto debe ser eliminado
+        fail("not implemented");
     }
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 
+    @Ignore
     @Override
     @Test
     public void testCheckVersioningResource() throws Exception {
@@ -111,6 +119,7 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
         fail("not implemented");
     }
 
+    @Ignore
     @Override
     @Test
     public void testApplyVersioningResource() throws Exception {
@@ -118,17 +127,21 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
         fail("not implemented");
     }
 
+    @Ignore
     @Override
     @Test
     public void testCheckVersioningLinkedStatisticalResource() throws Exception {
         // TODO Auto-generated method stub
         // TODO: esto debe ser eliminado
+        fail("not implemented");
     }
 
+    @Ignore
     @Override
     @Test
     public void testApplyVersioningLinkedStatisticalResource() throws Exception {
         // TODO Auto-generated method stub
         // TODO: esto debe ser eliminado
+        fail("not implemented");
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -121,17 +122,20 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     // ------------------------------------------------------------------------------------------------------
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
-    
+
+    @Ignore
     @Test
     public void testSiemacResourceCheckSendToPublished() throws Exception {
         fail("not implemented");
     }
     
+    @Ignore
     @Test
     public void testSiemacResourceCheckExternalItemsPreviouslyPublished() throws Exception {
         fail("not implemented");
     }
     
+    @Ignore
     @Test
     public void testSiemacResourceCheckRelatedResourcesPreviouslyPublished() throws Exception {
         fail("not implemented");
