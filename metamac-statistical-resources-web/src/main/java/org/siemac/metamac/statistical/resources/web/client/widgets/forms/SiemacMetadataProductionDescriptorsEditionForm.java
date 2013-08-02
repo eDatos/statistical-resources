@@ -99,8 +99,7 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
     }
 
     private SearchSrmLinkItemWithSchemeFilterItem createCreatorItem() {
-        return new SearchSrmLinkItemWithSchemeFilterItem(SiemacMetadataDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator(),
-                StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+        return new SearchSrmLinkItemWithSchemeFilterItem(SiemacMetadataDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {

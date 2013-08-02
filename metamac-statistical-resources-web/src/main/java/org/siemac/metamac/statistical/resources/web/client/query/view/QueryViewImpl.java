@@ -103,12 +103,13 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     public void setDatasetDimensionCodes(String dimensionId, List<CodeItemDto> codesDimension) {
         queryFormPanel.productionDescriptorsEditionForm.setDatasetDimensionCodes(dimensionId, codesDimension);
     }
-    
+
     @Override
     public void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result) {
-        queryFormPanel.productionDescriptorsEditionForm.setAgencySchemesForMaintainer(result.getAgencySchemes(), result.getFirstResultOut(), result.getAgencySchemes().size(), result.getTotalResults());
+        queryFormPanel.productionDescriptorsEditionForm
+                .setAgencySchemesForMaintainer(result.getAgencySchemes(), result.getFirstResultOut(), result.getAgencySchemes().size(), result.getTotalResults());
     }
-    
+
     @Override
     public void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result) {
         queryFormPanel.productionDescriptorsEditionForm.setExternalItemsForMaintainer(result.getAgencies(), result.getFirstResultOut(), result.getAgencies().size(), result.getTotalResults());
@@ -192,7 +193,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                 @Override
                 public void onClick(ClickEvent event) {
                     if (isCreationMode()) {
-	                    QueryFormPanel.this.hide();
+                        QueryFormPanel.this.hide();
                         QueryViewImpl.this.getUiHandlers().goToQueries();
                     }
                 }

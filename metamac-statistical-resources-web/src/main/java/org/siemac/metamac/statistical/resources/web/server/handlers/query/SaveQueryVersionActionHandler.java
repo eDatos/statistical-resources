@@ -19,11 +19,11 @@ import com.gwtplatform.dispatch.shared.ActionException;
 public class SaveQueryVersionActionHandler extends SecurityActionHandler<SaveQueryVersionAction, SaveQueryVersionResult> {
 
     @Autowired
-    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+    private StatisticalResourcesServiceFacade       statisticalResourcesServiceFacade;
 
     @Autowired
-    private StatisticalOperationsRestInternalFacade   statisticalOperationsRestInternalFacade;
-    
+    private StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
+
     public SaveQueryVersionActionHandler() {
         super(SaveQueryVersionAction.class);
     }

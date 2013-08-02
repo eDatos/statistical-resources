@@ -187,11 +187,11 @@ public class PublicationMetadataTabPresenter
                     }
                 });
     }
-    
+
     @Override
     public void programPublication(PublicationVersionDto publication) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(
-                this) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+
             @Override
             public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
@@ -199,8 +199,6 @@ public class PublicationMetadataTabPresenter
             }
         });
     }
-
-
 
     @Override
     public void version(PublicationVersionDto publication, VersionTypeEnum versionType) {
@@ -213,17 +211,17 @@ public class PublicationMetadataTabPresenter
             }
         });
     }
-    
+
     @Override
     public void cancelProgrammedPublication(PublicationVersionDto publication) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
     public void sendToPendingPublication(PublicationVersionDto publication) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

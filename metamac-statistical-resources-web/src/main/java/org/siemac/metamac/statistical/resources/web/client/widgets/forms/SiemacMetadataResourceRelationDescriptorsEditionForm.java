@@ -39,8 +39,7 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
         RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(SiemacMetadataDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
         RelatedResourceListItem hasPart = new RelatedResourceListItem(SiemacMetadataDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
-        RelatedResourceListItem isPartOf = new RelatedResourceListItem(SiemacMetadataDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false,
-                getRecordNavigationHandler());
+        RelatedResourceListItem isPartOf = new RelatedResourceListItem(SiemacMetadataDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false, getRecordNavigationHandler());
 
         setFields(replaces, isReplacedBy, requires, isRequiredBy, hasPart, isPartOf);
     }

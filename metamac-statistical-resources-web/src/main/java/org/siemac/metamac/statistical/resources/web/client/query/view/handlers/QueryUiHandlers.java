@@ -9,7 +9,7 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 public interface QueryUiHandlers extends BaseUiHandlers {
 
     void goToQueries();
-    
+
     void saveQuery(QueryVersionDto query);
 
     void retrieveDatasetsForQuery(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria);
@@ -18,7 +18,7 @@ public interface QueryUiHandlers extends BaseUiHandlers {
     void retrieveDimensionsForDataset(String urn);
 
     void retrieveDimensionCodesForDataset(String urn, String dimensionId, MetamacWebCriteria webCriteria);
-    
+
     void retrieveAgencySchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria);
     void retrieveAgencies(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria);
 }

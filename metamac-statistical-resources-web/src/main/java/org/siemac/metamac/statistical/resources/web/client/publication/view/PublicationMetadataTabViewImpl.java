@@ -47,37 +47,37 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataBaseViewImpl<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
-    private VLayout                                                       panel;
+    private VLayout                                                  panel;
 
-    private LifecycleMainFormLayout                                     mainFormLayout;
+    private LifecycleMainFormLayout                                  mainFormLayout;
 
-    private NameableResourceIdentifiersForm                               identifiersForm;
+    private NameableResourceIdentifiersForm                          identifiersForm;
     private SiemacMetadataContentDescriptorsForm                     contentDescriptorsForm;
     private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
     private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
     private SiemacMetadataLanguageForm                               languageForm;
     private SiemacMetadataProductionDescriptorsForm                  productionDescriptorsForm;
-    private PublicationClassDescriptorsForm                               classDescriptorsForm;
+    private PublicationClassDescriptorsForm                          classDescriptorsForm;
     private SiemacMetadataResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
     private SiemacMetadataPublicationDescriptorsForm                 publicationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                                lifeCycleForm;
-    private LifeCycleResourceVersionForm                                  versionForm;
+    private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
+    private LifeCycleResourceVersionForm                             versionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
-    private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
+    private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
     private SiemacMetadataContentDescriptorsEditionForm              contentDescriptorsEditionForm;
     private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
     private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
     private SiemacMetadataLanguageEditionForm                        languageEditionForm;
     private SiemacMetadataProductionDescriptorsEditionForm           productionDescriptorsEditionForm;
-    private PublicationClassDescriptorsEditionForm                        classDescriptorsEditionForm;
-    private PublicationResourceRelationDescriptorsEditionForm             resourceRelationDescriptorsEditionForm;
+    private PublicationClassDescriptorsEditionForm                   classDescriptorsEditionForm;
+    private PublicationResourceRelationDescriptorsEditionForm        resourceRelationDescriptorsEditionForm;
     private SiemacMetadataPublicationDescriptorsEditionForm          publicationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                                lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                           versionEditionForm;
+    private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                      versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
-    private PublicationVersionDto                                         publicationDto;
+    private PublicationVersionDto                                    publicationDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {

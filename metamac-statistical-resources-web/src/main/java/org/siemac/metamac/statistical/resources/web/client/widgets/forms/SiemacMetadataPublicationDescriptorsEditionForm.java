@@ -87,8 +87,7 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
     }
 
     private SearchSrmItemListWithSchemeFilterItem createPublisherItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(),
-                StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
@@ -143,8 +142,7 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
     }
 
     private SearchSrmItemListWithSchemeFilterItem createMediatorItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(),
-                StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {

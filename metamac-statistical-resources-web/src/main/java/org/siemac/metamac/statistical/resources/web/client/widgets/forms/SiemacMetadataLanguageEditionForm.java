@@ -65,8 +65,7 @@ public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
     }
 
     private SearchMultiExternalItemSimpleItem createLanguagesItem() {
-        return new SearchMultiExternalItemSimpleItem(SiemacMetadataDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(),
-                StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+        return new SearchMultiExternalItemSimpleItem(SiemacMetadataDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {

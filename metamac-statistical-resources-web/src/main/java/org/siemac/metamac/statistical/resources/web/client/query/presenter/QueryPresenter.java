@@ -69,14 +69,12 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
-    
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
 
     public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
-    
-    
+
     private ExternalItemDto                           operation;
 
     @ProxyCodeSplit
@@ -98,7 +96,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
         void setDatasetDimensionsIds(List<String> datasetDimensionsIds);
         void setDatasetDimensionCodes(String dimensionId, List<CodeItemDto> codesDimension);
-        
+
         void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result);
         void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result);
     }
@@ -144,7 +142,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             }
         });
     }
-    
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
@@ -158,7 +156,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         }
     }
 
-    
     @Override
     public void retrieveAgencySchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
         dispatcher.execute(new GetAgencySchemesPaginatedListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetAgencySchemesPaginatedListResult>(this) {
@@ -254,9 +251,9 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             placeManager.revealPlaceHierarchy(location);
         }
     }
-    
+
     @Override
     public void goToQueries() {
-        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(operation.getUrn()));   
+        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(operation.getUrn()));
     }
 }

@@ -57,13 +57,13 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     protected SearchSrmLinkItemWithSchemeFilterItem                          maintainerItem;
 
     private Map<String, List<CodeItemDto>>                                   dtoSelection;
-    
+
     public QueryProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
 
         maintainerItem = createMaintainerItem();
         maintainerItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
-        
+
         ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(SiemacMetadataDS.MAINTAINER_VIEW, getConstants().siemacMetadataStatisticalResourceMaintainer());
         maintainerViewItem.setShowIfCondition(getFormItemIfFunctionViewMode());
 
@@ -71,7 +71,6 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
         setFields(maintainerViewItem, maintainerItem, searchDatasetItem);
     }
-    
 
     public void setQueryDto(QueryVersionDto queryDto) {
         setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
@@ -99,7 +98,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         queryDto.setType(QueryTypeEnum.FIXED);
         return queryDto;
     }
-    
+
     @Override
     public BaseUiHandlers getBaseUiHandlers() {
         return uiHandlers;
@@ -190,12 +189,12 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     public void setDatasetDimensionsIds(List<String> datasetDimensions) {
         List<FormItem> fields = new ArrayList<FormItem>();
-        
+
         ExternalItemDto maintainer = getExternalItemValue(getItem(QueryDS.MAINTAINER));
         maintainerItem = createMaintainerItem();
         maintainerItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
         fields.add(maintainerItem);
-        
+
         RelatedResourceDto datasetVersion = getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION));
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();
@@ -271,7 +270,6 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         uiHandlers.retrieveDimensionsForDataset(urn);
     }
 
-
     // *******************************************************************
     // MAINTAINER
     // *******************************************************************
@@ -309,26 +307,26 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             }
         };
     }
-    
+
     private FormItemIfFunction getFormItemIfFunctionEditionMode() {
         return new FormItemIfFunction() {
-             
-             @Override
-             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
-                 return MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
-             }
-         };
-     }
 
-     private FormItemIfFunction getFormItemIfFunctionViewMode() {
-         return new FormItemIfFunction() {
-             
-             @Override
-             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
-                 return !MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
-             }
-         };
-     }
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
+                return MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
+            }
+        };
+    }
+
+    private FormItemIfFunction getFormItemIfFunctionViewMode() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
+                return !MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
+            }
+        };
+    }
 }

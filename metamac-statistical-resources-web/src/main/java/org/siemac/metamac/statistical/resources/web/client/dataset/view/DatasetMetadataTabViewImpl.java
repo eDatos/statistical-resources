@@ -55,39 +55,39 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseViewImpl<DatasetMetadataTabUiHandlers> implements DatasetMetadataTabView {
 
-    private VLayout                                                       panel;
-    private LifecycleMainFormLayout                                       mainFormLayout;
+    private VLayout                                                  panel;
+    private LifecycleMainFormLayout                                  mainFormLayout;
 
-    private NameableResourceIdentifiersForm                               identifiersForm;
-    private DatasetContentDescriptorsForm                                 contentDescriptorsForm;
+    private NameableResourceIdentifiersForm                          identifiersForm;
+    private DatasetContentDescriptorsForm                            contentDescriptorsForm;
     private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
     private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
     private SiemacMetadataLanguageForm                               languageForm;
-    private DatasetProductionDescriptorsForm                              productionDescriptorsForm;
-    private DatasetClassDescriptorsForm                                   classDescriptorsForm;
+    private DatasetProductionDescriptorsForm                         productionDescriptorsForm;
+    private DatasetClassDescriptorsForm                              classDescriptorsForm;
     private SiemacMetadataResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
-    private DatasetPublicationDescriptorsForm                             publicationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                                lifeCycleForm;
-    private LifeCycleResourceVersionForm                                  versionForm;
+    private DatasetPublicationDescriptorsForm                        publicationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
+    private LifeCycleResourceVersionForm                             versionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
-    private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
-    private DatasetContentDescriptorsEditionForm                          contentDescriptorsEditionForm;
+    private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
+    private DatasetContentDescriptorsEditionForm                     contentDescriptorsEditionForm;
     private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
     private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
     private SiemacMetadataLanguageEditionForm                        languageEditionForm;
-    private DatasetProductionDescriptorsEditionForm                       productionDescriptorsEditionForm;
-    private DatasetClassDescriptorsEditionForm                            classDescriptorsEditionForm;
-    private DatasetResourceRelationDescriptorsEditionForm                 resourceRelationDescriptorsEditionForm;
-    private DatasetPublicationDescriptorsEditionForm                      publicationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                                lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                           versionEditionForm;
+    private DatasetProductionDescriptorsEditionForm                  productionDescriptorsEditionForm;
+    private DatasetClassDescriptorsEditionForm                       classDescriptorsEditionForm;
+    private DatasetResourceRelationDescriptorsEditionForm            resourceRelationDescriptorsEditionForm;
+    private DatasetPublicationDescriptorsEditionForm                 publicationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm                      versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
     // private SearchExternalItemWindow searchAgencyWindow;
     // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
-    private DatasetVersionDto                                             datasetDto;
+    private DatasetVersionDto                                        datasetDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
