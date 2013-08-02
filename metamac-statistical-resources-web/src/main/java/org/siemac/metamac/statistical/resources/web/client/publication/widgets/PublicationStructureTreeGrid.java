@@ -442,6 +442,12 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     private boolean canCreateCube() {
         // TODO Security
+
+        // Cubes cannot be created under a cube
+        if (selectedContextClickElement != null && selectedContextClickElement.getCube() != null) {
+            return false;
+        }
+
         return true;
     }
 
