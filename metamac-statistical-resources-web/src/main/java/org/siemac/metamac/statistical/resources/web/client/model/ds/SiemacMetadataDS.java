@@ -3,54 +3,53 @@ package org.siemac.metamac.statistical.resources.web.client.model.ds;
 public class SiemacMetadataDS extends LifeCycleResourceDS {
 
     // CONTENT DESCRIPTORS
-    public static final String SUBTITLE                       = "sr-subtitle";
-    public static final String TITLE_ALTERNATIVE              = "sr-title-alt";
-    public static final String ABSTRACT                       = "sr-abstract";
-    public static final String KEYWORDS                       = "sr-keywords";
+    public static final String SUBTITLE                       = "siemac-subtitle";
+    public static final String TITLE_ALTERNATIVE              = "siemac-title-alt";
+    public static final String ABSTRACT                       = "siemac-abstract";
+    public static final String KEYWORDS                       = "siemac-keywords";
 
     // PRODUCTION DESCRIPTORS
-    public static final String CREATOR                        = "sr-creator";
-    public static final String CONTRIBUTOR                    = "sr-contr";
-    public static final String DATE_CREATED                   = "sr-date-cr";
-    public static final String LAST_UPDATE                    = "sr-last-up";
-    public static final String CONFORMS_TO                    = "sr-conf";
-    public static final String CONFORMS_TO_INTERNAL           = "sr-conf-int";
+    public static final String CREATOR                        = "siemac-creator";
+    public static final String CONTRIBUTOR                    = "siemac-contr";
+    public static final String DATE_CREATED                   = "siemac-date-cr";
+    public static final String LAST_UPDATE                    = "siemac-last-up";
+    public static final String CONFORMS_TO                    = "siemac-conf";
+    public static final String CONFORMS_TO_INTERNAL           = "siemac-conf-int";
 
-    public static final String COMMON_METADATA                = "sr-common-metadata";
-    public static final String COMMON_METADATA_VIEW           = "sr-common-metadata-view";
+    public static final String COMMON_METADATA                = "siemac-common-metadata";
+    public static final String COMMON_METADATA_VIEW           = "siemac-common-metadata-view";
 
     // CLASS DESCRIPTORS
-    public static final String TYPE                           = "sr-type";
-    public static final String FORMAT                         = "sr-format";
+    public static final String TYPE                           = "siemac-type";
+    public static final String FORMAT                         = "siemac-format";
 
     // RESOURCE RELATION DESCRIPTORS
-    public static final String SOURCE                         = "sr-source";
-    public static final String REPLACES                       = "sr-replaces";
-    public static final String IS_REPLACED_BY                 = "sr-is-rep-by";
-    public static final String REQUIRES                       = "sr-requires";
-    public static final String IS_REQUIRED_BY                 = "sr-is-req-by";
-    public static final String HAS_PART                       = "sr-has-part";
-    public static final String IS_PART_OF                     = "sr-is-part-of";
-    public static final String IS_REFERENCE_BY                = "sr-is-ref-by";
-    public static final String REFERENCES                     = "sr-references";
-    public static final String IS_FORMAT_OF                   = "sr-is-format-of";
-    public static final String HAS_FORMAT                     = "sr-has-format";
+    public static final String SOURCE                         = "siemac-source";
+    public static final String REPLACES                       = "siemac-replaces";
+    public static final String IS_REPLACED_BY                 = "siemac-is-rep-by";
+    public static final String REQUIRES                       = "siemac-requires";
+    public static final String IS_REQUIRED_BY                 = "siemac-is-req-by";
+    public static final String HAS_PART                       = "siemac-has-part";
+    public static final String IS_PART_OF                     = "siemac-is-part-of";
+    public static final String IS_REFERENCE_BY                = "siemac-is-ref-by";
+    public static final String REFERENCES                     = "siemac-references";
+    public static final String IS_FORMAT_OF                   = "siemac-is-format-of";
+    public static final String HAS_FORMAT                     = "siemac-has-format";
 
     // PUBLICATION DESCRIPTORS
-    public static final String PUBLISHER                      = "sr-publisher";
-    public static final String PUBLISHER_CONTRIBUTOR          = "sr-pub-cont";
-    public static final String MEDIATOR                       = "sr-mediator";
-    public static final String NEWNESS_UNTIL_DATE             = "sr-date-new-unt";
+    public static final String PUBLISHER                      = "siemac-publisher";
+    public static final String PUBLISHER_CONTRIBUTOR          = "siemac-pub-cont";
+    public static final String MEDIATOR                       = "siemac-mediator";
+    public static final String NEWNESS_UNTIL_DATE             = "siemac-date-new-unt";
 
     // THEMATIC CONTENT CLASSIFIERS
-    public static final String STATISTICAL_OPERATION          = "sr-ope";
-    public static final String STATISTICAL_OPERATION_INSTANCE = "sr-ope-inst";
+    public static final String STATISTICAL_OPERATION_INSTANCE = "siemac-ope-inst";
 
     // LANGUAGES
-    public static final String LANGUAGE                       = "sr-lang";
-    public static final String LANGUAGES                      = "sr-langs";
+    public static final String LANGUAGE                       = "siemac-lang";
+    public static final String LANGUAGES                      = "siemac-langs";
 
     // intellectual property descriptors
-    public static final String COPYRIGHT_DATE                 = "sr-copyright-date";
-    public static final String ACCESS_RIGHTS                  = "sr-access-rights";
+    public static final String COPYRIGHT_DATE                 = "siemac-copyright-date";
+    public static final String ACCESS_RIGHTS                  = "siemac-access-rights";
 }
