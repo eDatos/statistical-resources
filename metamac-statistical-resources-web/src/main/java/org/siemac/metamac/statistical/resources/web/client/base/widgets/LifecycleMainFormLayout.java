@@ -9,13 +9,11 @@ import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLa
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 
-
 public class LifecycleMainFormLayout extends InternationalMainFormLayout {
 
     private MainFormLayoutButton productionValidation;
     private MainFormLayoutButton diffusionValidation;
     private MainFormLayoutButton rejectValidation;
-    private MainFormLayoutButton pendingPublication;
     private MainFormLayoutButton programPublication;
     private MainFormLayoutButton cancelProgrammedPublication;
     private MainFormLayoutButton publish;
@@ -34,13 +32,9 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
     }
 
     private void common() {
-        // Remove handler from edit button
-        // editHandlerRegistration.removeHandler();
-
         productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
         rejectValidation = new MainFormLayoutButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
-        pendingPublication = new MainFormLayoutButton(getConstants().lifeCycleSendToPendingPublication(), GlobalResources.RESOURCE.pendingPublication().getURL());
         programPublication = new MainFormLayoutButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
         cancelProgrammedPublication = new MainFormLayoutButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
@@ -48,7 +42,6 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
-        toolStrip.addButton(pendingPublication);
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(programPublication);
         toolStrip.addButton(cancelProgrammedPublication);
@@ -84,15 +77,10 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
             showDiffusionValidationButton();
             showRejectValidationButton();
         } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            showPendingPublicationButton();
             showRejectValidationButton();
-            // FIXME add cases for pub pending and publication programmed
-            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PENDING.equals(status)) {
-            // showProgramPublicationButton();
-            // showPublishButton();
-            // } else if (StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED.equals(status)) {
-            // showCancelProgrammedPublication();
-            // // showPublishButton();
+            showProgramPublicationButton();
+            showPublishButton();
+            showCancelProgrammedPublication();
         } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
             showVersioningButton();
         }
@@ -102,7 +90,6 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();
-        pendingPublication.hide();
         programPublication.hide();
         cancelProgrammedPublication.hide();
         publish.hide();
@@ -121,10 +108,6 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
         rejectValidation.show();
     }
 
-    private void showPendingPublicationButton() {
-        pendingPublication.show();
-    }
-
     private void showProgramPublicationButton() {
         programPublication.show();
     }
@@ -141,7 +124,6 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
         versioning.show();
     }
 
-
     public HasClickHandlers getProductionValidationButton() {
         return productionValidation;
     }
@@ -152,10 +134,6 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
 
     public HasClickHandlers getRejectValidationButton() {
         return rejectValidation;
-    }
-
-    public HasClickHandlers getPendingPublicationButton() {
-        return pendingPublication;
     }
 
     public HasClickHandlers getProgramPublicationButton() {
@@ -173,5 +151,4 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
     public HasClickHandlers getVersioningButton() {
         return versioning;
     }
-
 }
