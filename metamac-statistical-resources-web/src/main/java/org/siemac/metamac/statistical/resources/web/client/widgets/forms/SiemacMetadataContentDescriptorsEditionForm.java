@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaItem;
@@ -18,9 +18,9 @@ public class SiemacMetadataContentDescriptorsEditionForm extends LifeCycleResour
 
     public SiemacMetadataContentDescriptorsEditionForm() {
 
-        MultiLanguageTextItem subtitle = new MultiLanguageTextItem(StatisticalResourceDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
-        MultiLanguageTextItem titleAlternative = new MultiLanguageTextItem(StatisticalResourceDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());
-        MultilanguageRichTextEditorItem abstractLogic = new MultilanguageRichTextEditorItem(StatisticalResourceDS.ABSTRACT, getConstants().siemacMetadataStatisticalResourceAbstractLogic());
+        MultiLanguageTextItem subtitle = new MultiLanguageTextItem(SiemacMetadataDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
+        MultiLanguageTextItem titleAlternative = new MultiLanguageTextItem(SiemacMetadataDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());
+        MultilanguageRichTextEditorItem abstractLogic = new MultilanguageRichTextEditorItem(SiemacMetadataDS.ABSTRACT, getConstants().siemacMetadataStatisticalResourceAbstractLogic());
         MultiLanguageTextAreaItem keywords = createKeywordsItem();
 
         addFields(subtitle, titleAlternative, abstractLogic, keywords);
@@ -28,18 +28,18 @@ public class SiemacMetadataContentDescriptorsEditionForm extends LifeCycleResour
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
         setLifeCycleStatisticalResourceDto(siemacMetadataStatisticalResourceDto);
-        setValue(StatisticalResourceDS.SUBTITLE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getSubtitle()));
-        setValue(StatisticalResourceDS.TITLE_ALTERNATIVE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getTitleAlternative()));
-        setValue(StatisticalResourceDS.ABSTRACT, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getAbstractLogic()));
-        setValue(StatisticalResourceDS.KEYWORDS, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getKeywords()));
+        setValue(SiemacMetadataDS.SUBTITLE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getSubtitle()));
+        setValue(SiemacMetadataDS.TITLE_ALTERNATIVE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getTitleAlternative()));
+        setValue(SiemacMetadataDS.ABSTRACT, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getAbstractLogic()));
+        setValue(SiemacMetadataDS.KEYWORDS, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getKeywords()));
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
         siemacMetadataStatisticalResourceDto = (SiemacMetadataStatisticalResourceDto) getLifeCycleStatisticalResourceDto(siemacMetadataStatisticalResourceDto);
-        siemacMetadataStatisticalResourceDto.setSubtitle((InternationalStringDto) getValue(StatisticalResourceDS.SUBTITLE));
-        siemacMetadataStatisticalResourceDto.setTitleAlternative((InternationalStringDto) getValue(StatisticalResourceDS.TITLE_ALTERNATIVE));
-        siemacMetadataStatisticalResourceDto.setAbstractLogic((InternationalStringDto) getValue(StatisticalResourceDS.ABSTRACT));
-        siemacMetadataStatisticalResourceDto.setKeywords((InternationalStringDto) getValue(StatisticalResourceDS.KEYWORDS));
+        siemacMetadataStatisticalResourceDto.setSubtitle((InternationalStringDto) getValue(SiemacMetadataDS.SUBTITLE));
+        siemacMetadataStatisticalResourceDto.setTitleAlternative((InternationalStringDto) getValue(SiemacMetadataDS.TITLE_ALTERNATIVE));
+        siemacMetadataStatisticalResourceDto.setAbstractLogic((InternationalStringDto) getValue(SiemacMetadataDS.ABSTRACT));
+        siemacMetadataStatisticalResourceDto.setKeywords((InternationalStringDto) getValue(SiemacMetadataDS.KEYWORDS));
         return siemacMetadataStatisticalResourceDto;
     }
 
@@ -47,7 +47,7 @@ public class SiemacMetadataContentDescriptorsEditionForm extends LifeCycleResour
         FormItemIcon infoIcon = new FormItemIcon();
         infoIcon.setSrc(GlobalResources.RESOURCE.info().getURL());
         infoIcon.setPrompt(StatisticalResourcesWeb.getMessages().siemacMetadataStatisticalResourceKeywordsInfo());
-        MultiLanguageTextAreaItem keywords = new MultiLanguageTextAreaItem(StatisticalResourceDS.KEYWORDS, getConstants().siemacMetadataStatisticalResourceKeywords());
+        MultiLanguageTextAreaItem keywords = new MultiLanguageTextAreaItem(SiemacMetadataDS.KEYWORDS, getConstants().siemacMetadataStatisticalResourceKeywords());
         keywords.setIcons(infoIcon);
         return keywords;
     }

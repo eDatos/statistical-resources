@@ -12,7 +12,7 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
@@ -31,14 +31,14 @@ public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
     public SiemacMetadataLanguageEditionForm() {
         super(getConstants().formLanguages());
 
-        ExternalItemLinkItem language = new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
+        ExternalItemLinkItem language = new ExternalItemLinkItem(SiemacMetadataDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
 
         languagesItem = createLanguagesItem();
         languagesItem.setValidators(new CustomRequiredValidator() {
 
             @Override
             protected boolean condition(Object value) {
-                List<ExternalItemDto> values = getExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES));
+                List<ExternalItemDto> values = getExternalItemsValue(getItem(SiemacMetadataDS.LANGUAGES));
                 return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? (values != null && values.size() > 0) : true;
             }
         });
@@ -49,13 +49,13 @@ public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         this.procStatus = dto.getProcStatus();
 
-        setExternalItemValue(getItem(StatisticalResourceDS.LANGUAGE), dto.getLanguage());
-        setExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES), dto.getLanguages());
+        setExternalItemValue(getItem(SiemacMetadataDS.LANGUAGE), dto.getLanguage());
+        setExternalItemsValue(getItem(SiemacMetadataDS.LANGUAGES), dto.getLanguages());
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         dto.getLanguages().clear();
-        dto.getLanguages().addAll(getExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES)));
+        dto.getLanguages().addAll(getExternalItemsValue(getItem(SiemacMetadataDS.LANGUAGES)));
         // FIXME: always include language in languages
         return dto;
     }
@@ -65,7 +65,7 @@ public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
     }
 
     private SearchMultiExternalItemSimpleItem createLanguagesItem() {
-        return new SearchMultiExternalItemSimpleItem(StatisticalResourceDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(),
+        return new SearchMultiExternalItemSimpleItem(SiemacMetadataDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override

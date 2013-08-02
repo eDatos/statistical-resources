@@ -12,7 +12,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmItemListWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -39,14 +39,14 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
 
             @Override
             protected boolean condition(Object value) {
-                List<ExternalItemDto> values = getExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER));
+                List<ExternalItemDto> values = getExternalItemsValue(getItem(SiemacMetadataDS.PUBLISHER));
                 return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? (values != null && values.size() > 0) : true;
             }
         });
 
         publisherContributorItem = createPublisherContributorItem();
         mediatorItem = createMediatorItem();
-        CustomDateItem newnessUntilDate = new CustomDateItem(StatisticalResourceDS.NEWNESS_UNTIL_DATE, getConstants().siemacMetadataStatisticalResourceNewnessUntilDate());
+        CustomDateItem newnessUntilDate = new CustomDateItem(SiemacMetadataDS.NEWNESS_UNTIL_DATE, getConstants().siemacMetadataStatisticalResourceNewnessUntilDate());
 
         setFields(publisherItem, publisherContributorItem, mediatorItem, newnessUntilDate);
     }
@@ -54,23 +54,23 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         this.procStatus = dto.getProcStatus();
 
-        setExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER), dto.getPublisher());
-        setExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER_CONTRIBUTOR), dto.getPublisherContributor());
-        setExternalItemsValue(getItem(StatisticalResourceDS.MEDIATOR), dto.getMediator());
-        setValue(StatisticalResourceDS.NEWNESS_UNTIL_DATE, dto.getNewnessUntilDate());
+        setExternalItemsValue(getItem(SiemacMetadataDS.PUBLISHER), dto.getPublisher());
+        setExternalItemsValue(getItem(SiemacMetadataDS.PUBLISHER_CONTRIBUTOR), dto.getPublisherContributor());
+        setExternalItemsValue(getItem(SiemacMetadataDS.MEDIATOR), dto.getMediator());
+        setValue(SiemacMetadataDS.NEWNESS_UNTIL_DATE, dto.getNewnessUntilDate());
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         dto.getPublisher().clear();
-        dto.getPublisher().addAll(getExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER)));
+        dto.getPublisher().addAll(getExternalItemsValue(getItem(SiemacMetadataDS.PUBLISHER)));
 
         dto.getPublisherContributor().clear();
-        dto.getPublisherContributor().addAll(getExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER_CONTRIBUTOR)));
+        dto.getPublisherContributor().addAll(getExternalItemsValue(getItem(SiemacMetadataDS.PUBLISHER_CONTRIBUTOR)));
 
         dto.getMediator().clear();
-        dto.getMediator().addAll(getExternalItemsValue(getItem(StatisticalResourceDS.PUBLISHER_CONTRIBUTOR)));
+        dto.getMediator().addAll(getExternalItemsValue(getItem(SiemacMetadataDS.PUBLISHER_CONTRIBUTOR)));
 
-        dto.setNewnessUntilDate(((CustomDateItem) getItem(StatisticalResourceDS.NEWNESS_UNTIL_DATE)).getValueAsDate());
+        dto.setNewnessUntilDate(((CustomDateItem) getItem(SiemacMetadataDS.NEWNESS_UNTIL_DATE)).getValueAsDate());
         return dto;
     }
 
@@ -87,7 +87,7 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
     }
 
     private SearchSrmItemListWithSchemeFilterItem createPublisherItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(StatisticalResourceDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(),
+        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
@@ -115,7 +115,7 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
     }
 
     private SearchSrmItemListWithSchemeFilterItem createPublisherContributorItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(StatisticalResourceDS.PUBLISHER_CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourcePublisherContributor(),
+        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER_CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourcePublisherContributor(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
@@ -143,7 +143,7 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
     }
 
     private SearchSrmItemListWithSchemeFilterItem createMediatorItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(StatisticalResourceDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(),
+        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override

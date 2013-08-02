@@ -1,8 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.ds;
 
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 
-public class DatasetDS extends StatisticalResourceDS {
+public class DatasetDS extends SiemacMetadataDS {
 
     // CONTENT DESCRIPTORS
     public static final String GEOGRAPHIC_COVERAGE        = "ds-geo-cov";

@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleCommonConfigurationWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
@@ -37,7 +37,7 @@ public class SiemacMetadataCommonMetadataEditionForm extends NavigationEnabledDy
     public SiemacMetadataCommonMetadataEditionForm() {
         super(getConstants().formCommonMetadata());
 
-        commonConfiguration = createCommonMetadataItem(StatisticalResourceDS.COMMON_METADATA, getConstants().commonMetadata());
+        commonConfiguration = createCommonMetadataItem(SiemacMetadataDS.COMMON_METADATA, getConstants().commonMetadata());
         commonConfiguration.setValidators(new CustomRequiredValidator() {
 
             @Override
@@ -50,7 +50,7 @@ public class SiemacMetadataCommonMetadataEditionForm extends NavigationEnabledDy
     }
 
     private void setCommonConfiguration(ExternalItemDto commonConfig) {
-        StatisticalResourcesFormUtils.setExternalItemValue(getItem(StatisticalResourceDS.COMMON_METADATA), commonConfig);
+        StatisticalResourcesFormUtils.setExternalItemValue(getItem(SiemacMetadataDS.COMMON_METADATA), commonConfig);
         commonConfigurationDto = commonConfig;
     }
 

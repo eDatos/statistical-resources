@@ -10,7 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
@@ -40,13 +40,13 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     }
 
     protected void populateSiemacResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        ExternalItemDto language = getExternalItemValue(form.getItem(StatisticalResourceDS.LANGUAGE));
+        ExternalItemDto language = getExternalItemValue(form.getItem(SiemacMetadataDS.LANGUAGE));
         dto.setLanguage(language);
         dto.getLanguages().clear();
         if (language != null) {
             dto.addLanguage(language);
         }
-        dto.setMaintainer(getExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER)));
+        dto.setMaintainer(getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER)));
     }
 
     public boolean validateForm() {
@@ -58,12 +58,12 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     // ***********************************************************
     public void setDefaultLanguage(ExternalItemDto defaultLanguage) {
         if (defaultLanguage != null) {
-            setExternalItemValue(form.getItem(StatisticalResourceDS.LANGUAGE), defaultLanguage);
+            setExternalItemValue(form.getItem(SiemacMetadataDS.LANGUAGE), defaultLanguage);
         }
     }
 
     private ExternalItemLinkItem createLanguageItem() {
-        return new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
+        return new ExternalItemLinkItem(SiemacMetadataDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
     }
 
     // ***********************************************************
@@ -71,7 +71,7 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     // ***********************************************************
     public void setDefaultMaintainer(ExternalItemDto defaultMaintainer) {
         if (defaultMaintainer != null) {
-            setExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER), defaultMaintainer);
+            setExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER), defaultMaintainer);
         }
     }
 
@@ -88,7 +88,7 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     }
 
     private SearchSrmLinkItemWithSchemeFilterItem createMaintainerItem() {
-        return new SearchSrmLinkItemWithSchemeFilterItem(StatisticalResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer(),
+        return new SearchSrmLinkItemWithSchemeFilterItem(SiemacMetadataDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override

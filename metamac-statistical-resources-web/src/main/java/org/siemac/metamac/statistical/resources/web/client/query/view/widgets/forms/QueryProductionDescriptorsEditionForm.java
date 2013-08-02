@@ -20,7 +20,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTyp
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
@@ -64,7 +64,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         maintainerItem = createMaintainerItem();
         maintainerItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
         
-        ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER_VIEW, getConstants().siemacMetadataStatisticalResourceMaintainer());
+        ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(SiemacMetadataDS.MAINTAINER_VIEW, getConstants().siemacMetadataStatisticalResourceMaintainer());
         maintainerViewItem.setShowIfCondition(getFormItemIfFunctionViewMode());
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();
@@ -86,7 +86,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     public QueryVersionDto getQueryDto(QueryVersionDto queryDto) {
 
-        queryDto.setMaintainer(getExternalItemValue(getItem(StatisticalResourceDS.MAINTAINER)));
+        queryDto.setMaintainer(getExternalItemValue(getItem(SiemacMetadataDS.MAINTAINER)));
         queryDto.setRelatedDatasetVersion(getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION)));
 
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();
@@ -315,7 +315,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
              
              @Override
              public boolean execute(FormItem item, Object value, DynamicForm form) {
-                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER_VIEW));
+                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
                  return MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
              }
          };
@@ -326,7 +326,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
              
              @Override
              public boolean execute(FormItem item, Object value, DynamicForm form) {
-                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER_VIEW));
+                 ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
                  return !MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
              }
          };

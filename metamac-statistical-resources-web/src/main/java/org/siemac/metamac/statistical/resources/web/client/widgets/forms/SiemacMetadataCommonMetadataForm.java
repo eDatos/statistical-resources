@@ -4,7 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
@@ -15,13 +15,13 @@ public class SiemacMetadataCommonMetadataForm extends NavigationEnabledDynamicFo
     public SiemacMetadataCommonMetadataForm() {
         super(getConstants().formCommonMetadata());
 
-        ExternalItemLinkItem commonConfigurationView = new ExternalItemLinkItem(StatisticalResourceDS.COMMON_METADATA_VIEW, getConstants().commonMetadata());
+        ExternalItemLinkItem commonConfigurationView = new ExternalItemLinkItem(SiemacMetadataDS.COMMON_METADATA_VIEW, getConstants().commonMetadata());
 
         setFields(commonConfigurationView);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        setExternalItemValue(getItem(StatisticalResourceDS.COMMON_METADATA_VIEW), siemacMetadataStatisticalResourceDto.getCommonMetadata());
+        setExternalItemValue(getItem(SiemacMetadataDS.COMMON_METADATA_VIEW), siemacMetadataStatisticalResourceDto.getCommonMetadata());
     }
 
     public void setBaseUiHandlers(BaseUiHandlers uiHandlers) {

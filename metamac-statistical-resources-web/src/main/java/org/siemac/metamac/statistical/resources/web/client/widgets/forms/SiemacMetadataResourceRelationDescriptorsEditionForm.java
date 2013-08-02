@@ -10,7 +10,7 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
@@ -32,14 +32,14 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
     public SiemacMetadataResourceRelationDescriptorsEditionForm() {
         super(getConstants().formResourceRelationDescriptors());
 
-        SearchRelatedResourceLinkItem replaces = createReplacesItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
-        RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(StatisticalResourceDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(),
+        SearchRelatedResourceLinkItem replaces = createReplacesItem(SiemacMetadataDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
+        RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(SiemacMetadataDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(),
                 getCustomLinkItemNavigationClickHandler());
-        RelatedResourceListItem requires = new RelatedResourceListItem(StatisticalResourceDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false, getRecordNavigationHandler());
-        RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(StatisticalResourceDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
+        RelatedResourceListItem requires = new RelatedResourceListItem(SiemacMetadataDS.REQUIRES, getConstants().siemacMetadataStatisticalResourceRequires(), false, getRecordNavigationHandler());
+        RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(SiemacMetadataDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
-        RelatedResourceListItem hasPart = new RelatedResourceListItem(StatisticalResourceDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
-        RelatedResourceListItem isPartOf = new RelatedResourceListItem(StatisticalResourceDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false,
+        RelatedResourceListItem hasPart = new RelatedResourceListItem(SiemacMetadataDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
+        RelatedResourceListItem isPartOf = new RelatedResourceListItem(SiemacMetadataDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false,
                 getRecordNavigationHandler());
 
         setFields(replaces, isReplacedBy, requires, isRequiredBy, hasPart, isPartOf);
@@ -50,18 +50,18 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
     //
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        setRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES), dto.getReplaces());
-        setRelatedResourceValue(getItem(StatisticalResourceDS.IS_REPLACED_BY), dto.getIsReplacedBy());
+        setRelatedResourceValue(getItem(SiemacMetadataDS.REPLACES), dto.getReplaces());
+        setRelatedResourceValue(getItem(SiemacMetadataDS.IS_REPLACED_BY), dto.getIsReplacedBy());
 
-        setRelatedResourcesValue(getItem(StatisticalResourceDS.REQUIRES), dto.getRequires());
-        setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
+        setRelatedResourcesValue(getItem(SiemacMetadataDS.REQUIRES), dto.getRequires());
+        setRelatedResourcesValue(getItem(SiemacMetadataDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
 
-        setRelatedResourcesValue(getItem(StatisticalResourceDS.HAS_PART), dto.getHasPart());
-        setRelatedResourcesValue(getItem(StatisticalResourceDS.IS_PART_OF), dto.getIsPartOf());
+        setRelatedResourcesValue(getItem(SiemacMetadataDS.HAS_PART), dto.getHasPart());
+        setRelatedResourcesValue(getItem(SiemacMetadataDS.IS_PART_OF), dto.getIsPartOf());
     }
 
     private void setReplaces(RelatedResourceDto relatedResourceDto) {
-        setValue(StatisticalResourceDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(relatedResourceDto));
+        setValue(SiemacMetadataDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(relatedResourceDto));
     }
 
     public void setRelatedResourcesForReplaces(List<RelatedResourceDto> relatedResourceDtos, int firstResult, int elementsInPage, int totalResults) {
@@ -83,7 +83,7 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
     //
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
 
-        dto.setReplaces(getRelatedResourceValue(getItem(StatisticalResourceDS.REPLACES)));
+        dto.setReplaces(getRelatedResourceValue(getItem(SiemacMetadataDS.REPLACES)));
 
         return dto;
     }

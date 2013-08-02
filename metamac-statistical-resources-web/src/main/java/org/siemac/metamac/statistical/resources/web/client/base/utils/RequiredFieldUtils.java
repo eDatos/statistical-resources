@@ -8,11 +8,11 @@ import static org.siemac.metamac.statistical.resources.web.client.dataset.model.
 import static org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS.TEMPORAL_GRANULARITY;
 import static org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS.UPDATE_FRECUENCY;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.NameableResourceDS.DESCRIPTION;
-import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.COMMON_METADATA;
-import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.CREATOR;
-import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.LANGUAGE;
-import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.LANGUAGES;
-import static org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS.PUBLISHER;
+import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.COMMON_METADATA;
+import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.CREATOR;
+import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.LANGUAGE;
+import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.LANGUAGES;
+import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.PUBLISHER;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.NEXT_VERSION;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.VERSION_RATIONALE_TYPES;
 import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.RELATED_DATASET_VERSION;
