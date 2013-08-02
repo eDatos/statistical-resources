@@ -3,8 +3,12 @@ package org.siemac.metamac.statistical.resources.web.client.base.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.LifeCycleBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -18,6 +22,7 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -109,6 +114,15 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().lifeCycleDeleteConfirmationTitle(), getConstants().lifeCycleDeleteConfirmation());
         deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+    }
+
+    protected List<String> getSelectedResourcesUrns() {
+        List<String> urns = new ArrayList<String>();
+        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
+            LifeCycleResourceRecord lifeCycleRecord = (LifeCycleResourceRecord) record;
+            urns.add(lifeCycleRecord.getUrn());
+        }
+        return urns;
     }
 
     //

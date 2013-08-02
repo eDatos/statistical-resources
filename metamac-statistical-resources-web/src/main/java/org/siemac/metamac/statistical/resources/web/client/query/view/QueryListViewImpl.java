@@ -2,9 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.query.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.LifeCycleBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -26,7 +23,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -76,7 +72,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deleteQueries(getUrnsFromSelected());
+                getUiHandlers().deleteQueries(getSelectedResourcesUrns());
             }
         });
     }
@@ -94,15 +90,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         }
         listGrid.getListGrid().setData(records);
         listGrid.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
-    }
-
-    private List<String> getUrnsFromSelected() {
-        List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
-            QueryRecord schemeRecord = (QueryRecord) record;
-            codes.add(schemeRecord.getUrn());
-        }
-        return codes;
     }
 
     @Override

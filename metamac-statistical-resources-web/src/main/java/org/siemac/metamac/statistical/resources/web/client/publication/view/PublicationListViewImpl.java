@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
@@ -27,7 +26,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -77,7 +75,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deletePublication(getUrnsFromSelectedPublications());
+                getUiHandlers().deletePublication(getSelectedResourcesUrns());
                 deleteConfirmationWindow.hide();
             }
         });
@@ -122,15 +120,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Override
     public Widget asWidget() {
         return panel;
-    }
-
-    private List<String> getUrnsFromSelectedPublications() {
-        List<String> urns = new ArrayList<String>();
-        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
-            PublicationRecord publicationRecord = (PublicationRecord) record;
-            urns.add(publicationRecord.getUrn());
-        }
-        return urns;
     }
 
     //

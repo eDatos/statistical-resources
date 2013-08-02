@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -33,7 +32,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -97,7 +95,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deleteDatasets(getUrnsFromSelected());
+                getUiHandlers().deleteDatasets(getSelectedResourcesUrns());
             }
         });
 
@@ -152,15 +150,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     public void setOperation(String operationUrn) {
         this.operationUrn = operationUrn;
         this.importDatasourcesWindow.setStatisticalOperationUrn(operationUrn);
-    }
-
-    public List<String> getUrnsFromSelected() {
-        List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
-            DatasetRecord schemeRecord = (DatasetRecord) record;
-            codes.add(schemeRecord.getUrn());
-        }
-        return codes;
     }
 
     @Override
