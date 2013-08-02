@@ -21,9 +21,6 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
-import org.siemac.metamac.statistical.resources.core.invocation.CommonMetadataRestExternalServiceTest;
-import org.siemac.metamac.statistical.resources.core.invocation.SrmRestInternalServiceTest;
-import org.siemac.metamac.statistical.resources.core.invocation.StatisticalOperationsRestInternalServiceTest;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtilsTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataCheckerTest;
@@ -93,9 +90,6 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetIntegrationServiceTest.class,
                      PublicationIntegrationServiceTest.class,
                      QueryIntegrationServiceTest.class,
-                     RestCriteriaUtilsTest.class,
-                     StatisticalOperationsRestInternalServiceTest.class,
-                     CommonMetadataRestExternalServiceTest.class,
-                     SrmRestInternalServiceTest.class})
+                     RestCriteriaUtilsTest.class})
 public class StatisticalResourcesSuite {
 }
