@@ -32,9 +32,9 @@ import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetData;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
@@ -81,7 +81,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Component
 public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
-    protected static final Logger            logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10Impl.class);
+    private static final Logger              logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10Impl.class);
 
     @Autowired
     private SrmRestExternalFacade            srmRestExternalFacade;
@@ -464,11 +464,11 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         }
     }
 
-    private DatasetData toDatasetData(DatasetVersion source, List<String> languagesSelected, Map<String, List<String>> dimensionValuesSelected) throws Exception {
+    private Data toDatasetData(DatasetVersion source, List<String> languagesSelected, Map<String, List<String>> dimensionValuesSelected) throws Exception {
         if (source == null) {
             return null;
         }
-        DatasetData target = new DatasetData();
+        Data target = new Data();
 
         // Filter codeDimension // TODO validate codes in coverage?
         List<String> dimensions = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, source.getSiemacMetadataStatisticalResource().getUrn());

@@ -10,6 +10,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
@@ -70,9 +72,14 @@ public class RestDoMocks {
         return target;
     }
 
-    public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
+    public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version, QueryStatusEnum status, QueryTypeEnum type) {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
+        target.setType(type);
+        target.setStatus(status);
+        if (QueryTypeEnum.LATEST_DATA.equals(type)) {
+            target.setLatestDataNumber(Integer.valueOf(4));
+        }
         return target;
     }
 

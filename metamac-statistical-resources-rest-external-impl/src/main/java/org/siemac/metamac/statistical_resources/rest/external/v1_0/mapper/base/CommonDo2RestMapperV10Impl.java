@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    protected static final Logger       logger = LoggerFactory.getLogger(CommonDo2RestMapperV10Impl.class);
+    private static final Logger         logger = LoggerFactory.getLogger(CommonDo2RestMapperV10Impl.class);
 
     @Autowired
     private ConfigurationService        configurationService;
@@ -348,6 +348,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private StatisticalResourceType toStatisticalResourceType(StatisticalResourceTypeEnum source) {
+        if (source == null) {
+            return null;
+        }
         switch (source) {
             case DATASET:
                 return StatisticalResourceType.DATASET;
@@ -363,6 +366,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType toVersionRationaleType(VersionRationaleTypeEnum source) {
+        if (source == null) {
+            return null;
+        }
         switch (source) {
             case MAJOR_NEW_RESOURCE:
                 return org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleType.MAJOR_NEW_RESOURCE;

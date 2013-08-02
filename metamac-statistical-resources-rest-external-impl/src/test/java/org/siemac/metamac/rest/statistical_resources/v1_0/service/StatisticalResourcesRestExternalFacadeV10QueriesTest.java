@@ -18,6 +18,8 @@ import org.mockito.stubbing.Answer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
@@ -65,7 +67,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
                     public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
                         String queryUrn = (String) invocation.getArguments()[0];
                         String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1, QueryStatusEnum.ACTIVE, QueryTypeEnum.LATEST_DATA);
                     };
                 });
     }

@@ -14,8 +14,8 @@
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
-            <xs:element name="metadata" type="tns:DatasetMetadata" />
-            <xs:element name="data" type="tns:DatasetData" />
+            <xs:element name="metadata" type="tns:DatasetMetadata" minOccurs="0" />
+            <xs:element name="data" type="tns:Data" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
@@ -30,8 +30,8 @@
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
-            <xs:element name="metadata" type="tns:CollectionMetadata" />
-            <xs:element name="data" type="tns:CollectionData" />
+            <xs:element name="metadata" type="tns:CollectionMetadata" minOccurs="0" />
+            <xs:element name="data" type="tns:CollectionData" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
@@ -46,7 +46,8 @@
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
-            <xs:element name="metadata" type="tns:QueryMetadata" />
+            <xs:element name="metadata" type="tns:QueryMetadata" minOccurs="0" />
+            <xs:element name="data" type="tns:Data" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
@@ -76,7 +77,7 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="DatasetData">
+    <xs:complexType name="Data">
         <xs:sequence>
             <xs:element name="dimensions" type="tns:DimensionRepresentations" />
             <xs:element name="observations" type="xs:string" minOccurs="1" />
@@ -102,6 +103,9 @@
     <xs:complexType name="QueryMetadata">
         <xs:sequence>
             <xs:element name="relatedDataset" type="common:Resource" minOccurs="1" />
+            <xs:element name="status" type="tns:QueryStatus" />
+            <xs:element name="type" type="tns:QueryType" />
+            <xs:element name="latestDataNumber" type="xs:int" minOccurs="0" />
             <xs:element name="statisticalOperation" type="common:Resource" />
             <xs:element name="publicationDate" type="xs:dateTime" />
             <xs:element name="maintainer" type="common:Resource" />
@@ -372,6 +376,21 @@
             <xs:enumeration value="MINOR_OTHER" />
         </xs:restriction>
     </xs:simpleType>
+    
+    <xs:simpleType name="QueryStatus">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ACTIVE" />
+            <xs:enumeration value="DISCONTINUED" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="QueryType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="AUTOINCREMENTAL" />
+            <xs:enumeration value="LATEST_DATA" />
+            <xs:enumeration value="FIXED" />
+        </xs:restriction>
+    </xs:simpleType>        
 
     <!-- Criterias -->
     <xs:simpleType name="DatasetCriteriaPropertyRestriction">
