@@ -13,29 +13,34 @@ public class ExternalItemCheckerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testCheckExternalItemsExternallyPublishedExternalItem() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testCheckExternalItemsExternallyPublishedListExternalItems() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore
     @Test
     public void testCheckResult() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testCreateSpecificExceptionItem() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testCreateQueryForPublishedResourcesSearchingByUrn() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 }

@@ -200,6 +200,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testCheckSendToProductionValidationResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
 
     }
 
@@ -208,6 +209,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplySendToProductionValidationResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -249,6 +251,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testCheckSendToDiffusionValidationResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore
@@ -256,6 +259,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplySendToDiffusionValidationResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -286,6 +290,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testCheckSendToValidationRejectedResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore
@@ -293,6 +298,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplySendToValidationRejectedResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -313,6 +319,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testCheckSendToPublishedResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore
@@ -320,6 +327,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplySendToPublishedResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore
@@ -347,6 +355,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testCheckVersioningResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore
@@ -354,6 +363,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplyVersioningResource() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 
     @Ignore

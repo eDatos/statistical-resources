@@ -127,17 +127,20 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testSiemacResourceCheckSendToPublished() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testSiemacResourceCheckExternalItemsPreviouslyPublished() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testSiemacResourceCheckRelatedResourcesPreviouslyPublished() throws Exception {
         fail("not implemented");
+        // TODO: Implementar
     }
 }
