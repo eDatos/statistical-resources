@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -15,39 +16,38 @@ import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
-import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> implements DatasetPresenter.DatasetView {
 
-    private VLayout    panel;
+    private VLayout      panel;
 
-    private TitleLabel titleLabel;
-    private TabSet     tabSet;
-    private Tab        datasetMetadataTab;
-    private Tab        datasetDatasourcesTab;
+    private TitleLabel   titleLabel;
+    private CustomTabSet tabSet;
+    private Tab          datasetMetadataTab;
+    private Tab          datasetDatasourcesTab;
 
     public DatasetViewImpl() {
         panel = new VLayout();
-        panel.setHeight100();
-        panel.setOverflow(Overflow.AUTO);
 
         titleLabel = new TitleLabel(new String());
-        titleLabel.setStyleName("sectionTitleLeftMargin");
         titleLabel.setVisibility(Visibility.HIDDEN);
 
         // TABS
-        tabSet = new TabSet();
-        tabSet.setMargin(10);
-
+        tabSet = new CustomTabSet();
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());
-
         tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab);
 
-        panel.addMember(titleLabel);
-        panel.addMember(tabSet);
+        VLayout subPanel = new VLayout();
+        subPanel.setOverflow(Overflow.SCROLL);
+        subPanel.setMargin(15);
+        subPanel.addMember(titleLabel);
+        subPanel.addMember(tabSet);
+
+        panel.addMember(subPanel);
+
         bindEvents();
     }
 
