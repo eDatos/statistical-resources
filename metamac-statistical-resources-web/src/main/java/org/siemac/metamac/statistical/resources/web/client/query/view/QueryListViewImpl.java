@@ -41,9 +41,14 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> implements QueryListPresenter.QueryListView {
 
-    private VLayout          panel;
+    private VLayout                  panel;
 
-    private QueriesListPanel queriesListPanel;
+    private ToolStripButton          newQueryButton;
+    private ToolStripButton          deleteQueryButton;
+
+    private PaginatedCheckListGrid   queriesList;
+
+    private DeleteConfirmationWindow deleteConfirmationWindow;
 
     @Inject
     public QueryListViewImpl() {
@@ -52,9 +57,47 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
         panel = new VLayout();
         panel.setHeight100();
 
-        queriesListPanel = new QueriesListPanel();
+        // Toolstrip
 
-        panel.addMember(queriesListPanel);
+        ToolStrip toolStrip = new ToolStrip();
+        toolStrip.setWidth100();
+
+        newQueryButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
+        newQueryButton.setVisibility(QueryClientSecurityUtils.canCreateQuery() ? Visibility.VISIBLE : Visibility.HIDDEN);
+
+        deleteQueryButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
+        deleteQueryButton.setVisibility(Visibility.HIDDEN);
+
+        toolStrip.addButton(newQueryButton);
+        toolStrip.addButton(deleteQueryButton);
+
+        // List
+        queriesList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
+
+            @Override
+            public void retrieveResultSet(int firstResult, int maxResults) {
+                getUiHandlers().retrieveQueries(firstResult, maxResults, null);
+            }
+        });
+        queriesList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+        queriesList.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        queriesList.getListGrid().setDataSource(new QueryDS());
+        queriesList.getListGrid().setUseAllDataSourceFields(false);
+
+        ListGridField fieldCode = new ListGridField(QueryDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        fieldCode.setAlign(Alignment.LEFT);
+        ListGridField fieldName = new ListGridField(QueryDS.TITLE, getConstants().nameableStatisticalResourceTitle());
+        ListGridField status = new ListGridField(QueryDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
+        ListGridField type = new ListGridField(QueryDS.TYPE, getConstants().queryType());
+        queriesList.getListGrid().setFields(fieldCode, fieldName, status, type);
+
+        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());
+        deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+
+        bindEvents();
+
+        panel.addMember(toolStrip);
+        panel.addMember(queriesList);
     }
 
     @Override
@@ -62,14 +105,88 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
         return panel;
     }
 
+    private void bindEvents() {
+        queriesList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+
+            @Override
+            public void onSelectionChanged(SelectionEvent event) {
+                if (queriesList.getListGrid().getSelectedRecords().length > 0) {
+                    // Show delete button
+                    showListGridDeleteButton();
+                } else {
+                    deleteQueryButton.hide();
+                }
+            }
+        });
+
+        queriesList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
+                    QueryRecord record = (QueryRecord) event.getRecord();
+                    getUiHandlers().goToQuery(record.getUrn());
+                }
+            }
+        });
+
+        newQueryButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().goToNewQuery();
+            }
+        });
+        deleteQueryButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteConfirmationWindow.show();
+            }
+        });
+
+        deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().deleteQueries(getUrnsFromSelected());
+            }
+        });
+    }
+
+    public void setQueriesPaginatedList(GetQueryVersionsResult result) {
+        QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
+        int index = 0;
+        for (QueryVersionDto queryDto : result.getQueriesList()) {
+            records[index++] = StatisticalResourcesRecordUtils.getQueryRecord(queryDto);
+        }
+        queriesList.getListGrid().setData(records);
+        queriesList.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
+    }
+
+    private void showListGridDeleteButton() {
+        if (QueryClientSecurityUtils.canDeleteQuery()) {
+            deleteQueryButton.show();
+        }
+    }
+
+    private List<String> getUrnsFromSelected() {
+        List<String> codes = new ArrayList<String>();
+        for (ListGridRecord record : queriesList.getListGrid().getSelectedRecords()) {
+            QueryRecord schemeRecord = (QueryRecord) record;
+            codes.add(schemeRecord.getUrn());
+        }
+        return codes;
+    }
+
     @Override
     public void goToQueryListLastPageAfterCreate() {
-        queriesListPanel.queriesList.goToLastPageAfterCreate();
+        queriesList.goToLastPageAfterCreate();
     }
 
     @Override
     public void setQueryPaginatedList(GetQueryVersionsResult queriesPaginatedList) {
-        queriesListPanel.setQueriesPaginatedList(queriesPaginatedList);
+        setQueriesPaginatedList(queriesPaginatedList);
     }
 
     @Override
@@ -92,134 +209,4 @@ public class QueryListViewImpl extends ViewWithUiHandlers<QueryListUiHandlers> i
             super.setInSlot(slot, content);
         }
     }
-
-    private class QueriesListPanel extends VLayout {
-
-        private ToolStripButton          newQueryButton;
-        private ToolStripButton          deleteQueryButton;
-
-        private PaginatedCheckListGrid   queriesList;
-
-        private DeleteConfirmationWindow deleteConfirmationWindow;
-
-        public QueriesListPanel() {
-            // Toolstrip
-
-            ToolStrip toolStrip = new ToolStrip();
-            toolStrip.setWidth100();
-
-            newQueryButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-            newQueryButton.setVisibility(QueryClientSecurityUtils.canCreateQuery() ? Visibility.VISIBLE : Visibility.HIDDEN);
-
-            deleteQueryButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-            deleteQueryButton.setVisibility(Visibility.HIDDEN);
-
-            toolStrip.addButton(newQueryButton);
-            toolStrip.addButton(deleteQueryButton);
-
-            // List
-            queriesList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
-
-                @Override
-                public void retrieveResultSet(int firstResult, int maxResults) {
-                    getUiHandlers().retrieveQueries(firstResult, maxResults, null);
-                }
-            });
-            queriesList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-            queriesList.getListGrid().setAutoFitData(Autofit.VERTICAL);
-            queriesList.getListGrid().setDataSource(new QueryDS());
-            queriesList.getListGrid().setUseAllDataSourceFields(false);
-
-            ListGridField fieldCode = new ListGridField(QueryDS.CODE, getConstants().identifiableStatisticalResourceCode());
-            fieldCode.setAlign(Alignment.LEFT);
-            ListGridField fieldName = new ListGridField(QueryDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-            ListGridField status = new ListGridField(QueryDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-            ListGridField type = new ListGridField(QueryDS.TYPE, getConstants().queryType());
-            queriesList.getListGrid().setFields(fieldCode, fieldName, status, type);
-
-            deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());
-            deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
-
-            // Panel conf
-            addMember(toolStrip);
-            addMember(queriesList);
-
-            bindEvents();
-        }
-
-        private void bindEvents() {
-            queriesList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
-
-                @Override
-                public void onSelectionChanged(SelectionEvent event) {
-                    if (queriesList.getListGrid().getSelectedRecords().length > 0) {
-                        // Show delete button
-                        showListGridDeleteButton();
-                    } else {
-                        deleteQueryButton.hide();
-                    }
-                }
-            });
-
-            queriesList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
-
-                @Override
-                public void onRecordClick(RecordClickEvent event) {
-                    if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
-                        QueryRecord record = (QueryRecord) event.getRecord();
-                        getUiHandlers().goToQuery(record.getUrn());
-                    }
-                }
-            });
-
-            newQueryButton.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    getUiHandlers().goToNewQuery();
-                }
-            });
-            deleteQueryButton.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    deleteConfirmationWindow.show();
-                }
-            });
-
-            deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    getUiHandlers().deleteQueries(getUrnsFromSelected());
-                }
-            });
-        }
-
-        public void setQueriesPaginatedList(GetQueryVersionsResult result) {
-            QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
-            int index = 0;
-            for (QueryVersionDto queryDto : result.getQueriesList()) {
-                records[index++] = StatisticalResourcesRecordUtils.getQueryRecord(queryDto);
-            }
-            queriesList.getListGrid().setData(records);
-            queriesList.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
-        }
-
-        private void showListGridDeleteButton() {
-            if (QueryClientSecurityUtils.canDeleteQuery()) {
-                deleteQueryButton.show();
-            }
-        }
-
-        private List<String> getUrnsFromSelected() {
-            List<String> codes = new ArrayList<String>();
-            for (ListGridRecord record : queriesListPanel.queriesList.getListGrid().getSelectedRecords()) {
-                QueryRecord schemeRecord = (QueryRecord) record;
-                codes.add(schemeRecord.getUrn());
-            }
-            return codes;
-        }
-    }
-
 }
