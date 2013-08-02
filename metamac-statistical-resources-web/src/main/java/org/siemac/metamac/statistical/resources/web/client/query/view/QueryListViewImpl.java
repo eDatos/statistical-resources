@@ -12,18 +12,14 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
-import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
-import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -33,8 +29,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -57,49 +51,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
         // List
 
-        listGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
-
-            @Override
-            public void retrieveResultSet(int firstResult, int maxResults) {
-                getUiHandlers().retrieveQueries(firstResult, maxResults, null);
-            }
-        });
-        listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         listGrid.getListGrid().setDataSource(new QueryDS());
-        listGrid.getListGrid().setUseAllDataSourceFields(false);
-
-        ListGridField fieldCode = new ListGridField(QueryDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(QueryDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-        ListGridField status = new ListGridField(QueryDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-        ListGridField type = new ListGridField(QueryDS.TYPE, getConstants().queryType());
-        listGrid.getListGrid().setFields(fieldCode, fieldName, status, type);
-
-        bindEvents();
-
-        panel.addMember(listGrid);
-    }
-
-    @Override
-    public Widget asWidget() {
-        return panel;
-    }
-
-    private void bindEvents() {
-        listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
-
-            @Override
-            public void onSelectionChanged(SelectionEvent event) {
-                if (listGrid.getListGrid().getSelectedRecords().length > 0) {
-                    // Show delete button
-                    showListGridDeleteButton();
-                } else {
-                    deleteButton.hide();
-                }
-            }
-        });
-
         listGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
@@ -111,20 +63,14 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
             }
         });
 
-        newButton.addClickHandler(new ClickHandler() {
+        ListGridField fieldCode = new ListGridField(QueryDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        fieldCode.setAlign(Alignment.LEFT);
+        ListGridField fieldName = new ListGridField(QueryDS.TITLE, getConstants().nameableStatisticalResourceTitle());
+        ListGridField status = new ListGridField(QueryDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
+        ListGridField type = new ListGridField(QueryDS.TYPE, getConstants().queryType());
+        listGrid.getListGrid().setFields(fieldCode, fieldName, status, type);
 
-            @Override
-            public void onClick(ClickEvent event) {
-                getUiHandlers().goToNewQuery();
-            }
-        });
-        deleteButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                deleteConfirmationWindow.show();
-            }
-        });
+        // Delete confirmation window
 
         deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 
@@ -135,6 +81,11 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         });
     }
 
+    @Override
+    public Widget asWidget() {
+        return panel;
+    }
+
     public void setQueriesPaginatedList(GetQueryVersionsResult result) {
         QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
         int index = 0;
@@ -143,12 +94,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         }
         listGrid.getListGrid().setData(records);
         listGrid.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
-    }
-
-    private void showListGridDeleteButton() {
-        if (QueryClientSecurityUtils.canDeleteQuery()) {
-            deleteButton.show();
-        }
     }
 
     private List<String> getUrnsFromSelected() {
@@ -192,6 +137,16 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     }
 
     //
+    // LISTGRID
+    //
+
+    @Override
+    public void retrieveResultSet(int firstResult, int maxResults) {
+        // TODO why the criteria is null?
+        getUiHandlers().retrieveQueries(firstResult, maxResults, null);
+    }
+
+    //
     // LISTGRID BUTTONS
     //
 
@@ -199,7 +154,12 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     public ClickHandler getNewButtonClickHandler() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().goToNewQuery();
+            }
+        };
     }
 }

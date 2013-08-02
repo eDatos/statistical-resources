@@ -14,17 +14,13 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationListPresenter;
-import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -34,8 +30,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -59,30 +53,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
         // Publication list
 
-        listGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
-
-            @Override
-            public void retrieveResultSet(int firstResult, int maxResults) {
-                getUiHandlers().retrievePublications(firstResult, maxResults, null);
-            }
-        });
-        listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         listGrid.getListGrid().setDataSource(new PublicationDS());
-        listGrid.getListGrid().setUseAllDataSourceFields(false);
-        listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
-
-            @Override
-            public void onSelectionChanged(SelectionEvent event) {
-                if (listGrid.getListGrid().getSelectedRecords().length > 0) {
-                    // Show delete button
-                    showListGridDeleteButton();
-                } else {
-                    deleteButton.hide();
-                }
-            }
-        });
-
         listGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
@@ -99,8 +70,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         ListGridField fieldName = new ListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         ListGridField status = new ListGridField(PublicationDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
         listGrid.getListGrid().setFields(fieldCode, fieldName, status);
-
-        panel.addMember(listGrid);
 
         // Delete confirmation window
 
@@ -155,12 +124,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         return panel;
     }
 
-    private void showListGridDeleteButton() {
-        if (PublicationClientSecurityUtils.canDeletePublication()) {
-            deleteButton.show();
-        }
-    }
-
     private List<String> getUrnsFromSelectedPublications() {
         List<String> urns = new ArrayList<String>();
         for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
@@ -168,6 +131,16 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
             urns.add(publicationRecord.getUrn());
         }
         return urns;
+    }
+
+    //
+    // LISTGRID
+    //
+
+    @Override
+    public void retrieveResultSet(int firstResult, int maxResults) {
+        // TODO why the criteria is null
+        getUiHandlers().retrievePublications(firstResult, maxResults, null);
     }
 
     //
