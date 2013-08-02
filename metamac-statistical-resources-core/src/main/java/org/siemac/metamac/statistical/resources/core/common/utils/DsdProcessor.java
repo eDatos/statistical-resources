@@ -110,6 +110,7 @@ public class DsdProcessor {
                 textFormat = localRepresentation.getTextFormat();
             }
         }
+
         protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) throws MetamacException {
             Concept concept = null;
             if (conceptIdentityRef.getRef() != null) {

@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -50,6 +51,7 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatu
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
+import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
@@ -65,6 +67,7 @@ import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Parser;
 
 /**
@@ -416,10 +419,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         // Callbacks
         ManipulateSdmx21DataCallbackImpl callback = null;
 
-        List<String> linkedList = new ArrayList<String>(taskInfoDataset.getFiles().size());
+        List<FileDescriptorResult> filesResult = new ArrayList<FileDescriptorResult>(taskInfoDataset.getFiles().size());
 
         for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
             String dataSourceId = generateDataSourceId(fileDescriptor.getFileName(), dateTime);
+            Date nextUpdate = null;
             if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 if (callback == null) {
                     // Create the callback in the first appearance of a SDMX dataset
@@ -431,17 +435,24 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 Sdmx21Parser.parseData(new FileInputStream(fileDescriptor.getFile()), callback); // Parse and import
 
             } else if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                manipulatePxDataService.importPx(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
-
+                PxModel pxModel = manipulatePxDataService.importPx(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
+                nextUpdate = pxModel.getNextUpdate();
             } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 manipulateCsvDataService.importCsv(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
-
             }
 
-            linkedList.add(dataSourceId);
+            FileDescriptorResult fileDescriptorResult = new FileDescriptorResult();
+            fileDescriptorResult.setDatasetFileFormatEnum(fileDescriptor.getDatasetFileFormatEnum());
+            fileDescriptorResult.setFile(fileDescriptor.getFile());
+            fileDescriptorResult.setFileName(fileDescriptor.getFileName());
+            fileDescriptorResult.setDatasourceId(dataSourceId);
+            fileDescriptorResult.setNextUpdate(nextUpdate);
+
+            filesResult.add(fileDescriptorResult);
         }
 
-        // TODO llamar a un callback (o un metodo de rober) para que haga algo con la lista de datasources que se han importado
+        // Callback
+        getDatasetService().proccessDatasetFileImportationResult(ctx, taskInfoDataset.getDatasetVersionId(), filesResult);
     }
 
     private String generateDataSourceId(String fileName, DateTime dateTime) {

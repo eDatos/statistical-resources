@@ -43,7 +43,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
     private static int                       SPLIT_DATA_FACTOR   = 5000;
 
     @Override
-    public void importPx(ServiceContext ctx, File pxFile, DataStructure dataStructure, String datasetID, String dataSourceID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
+    public PxModel importPx(ServiceContext ctx, File pxFile, DataStructure dataStructure, String datasetID, String dataSourceID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
 
         // Create or Update DatasetRepository
         createDatasetRepository(datasetID, validateDataVersusDsd);
@@ -84,6 +84,8 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
                 dataDtos.clear();
             }
         }
+
+        return pxModel;
     }
 
     private DatasetRepositoryDto createDatasetRepository(String datasetID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
