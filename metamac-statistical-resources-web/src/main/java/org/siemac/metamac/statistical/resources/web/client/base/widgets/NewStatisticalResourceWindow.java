@@ -23,7 +23,7 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     private NewStatisticalResourceUiHandlers        uiHandlers;
 
     protected CustomDynamicForm                     form;
-    protected ExternalItemLinkItem                    languageItem;
+    protected ExternalItemLinkItem                  languageItem;
 
     protected SearchSrmLinkItemWithSchemeFilterItem maintainerItem;
 
@@ -40,9 +40,12 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     }
 
     protected void populateSiemacResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        dto.setLanguage(getExternalItemValue(form.getItem(StatisticalResourceDS.LANGUAGE)));
+        ExternalItemDto language = getExternalItemValue(form.getItem(StatisticalResourceDS.LANGUAGE));
+        dto.setLanguage(language);
         dto.getLanguages().clear();
-        dto.addLanguage(getExternalItemValue(form.getItem(StatisticalResourceDS.LANGUAGE)));
+        if (language != null) {
+            dto.addLanguage(language);
+        }
         dto.setMaintainer(getExternalItemValue(form.getItem(StatisticalResourceDS.MAINTAINER)));
     }
 
