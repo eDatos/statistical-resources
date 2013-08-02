@@ -91,7 +91,7 @@ public class DatasetContentDescriptorsEditionForm extends StatisticalResourceCon
         setValue(DatasetDS.DATE_START, datasetDto.getDateStart());
         setValue(DatasetDS.DATE_END, datasetDto.getDateEnd());
 
-        setSelectedConceptsForStatisticalUnit(datasetDto.getTemporalGranularities());
+        setSelectedConceptsForStatisticalUnit(datasetDto.getStatisticalUnit());
     }
 
     public void setCoverages(List<ExternalItemDto> geoItems, List<ExternalItemDto> temporalItems, List<ExternalItemDto> measureItems) {
