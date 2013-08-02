@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;
@@ -20,9 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.utils.Pub
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -46,15 +44,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl<PublicationListUiHandlers> implements PublicationListPresenter.PublicationListView {
 
-    private SearchSectionStack       searchSectionStack;
-    private PaginatedCheckListGrid   publicationListGrid;
-
-    private ToolStripButton          newPublicationButton;
-    private ToolStripButton          deletePublicationButton;
-
-    private DeleteConfirmationWindow deleteConfirmationWindow;
-
-    private NewPublicationWindow     newPublicationWindow;
+    private NewPublicationWindow newPublicationWindow;
 
     @Inject
     public PublicationListViewImpl() {
@@ -62,8 +52,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
         // ToolStrip
 
-        newPublicationButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newPublicationButton.addClickHandler(new ClickHandler() {
+        newButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
+        newButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -83,10 +73,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
                 newPublicationWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
             }
         });
-        newPublicationButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
+        newButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
-        deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationDeleteConfirmationTitle(), getMessages().publicationDeleteConfirmation());
-        deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+        // Delete confirmation window
+
         deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 
             @Override
@@ -96,9 +86,9 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
             }
         });
 
-        deletePublicationButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deletePublicationButton.setVisibility(Visibility.HIDDEN);
-        deletePublicationButton.addClickHandler(new ClickHandler() {
+        deleteButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
+        deleteButton.setVisibility(Visibility.HIDDEN);
+        deleteButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -106,12 +96,11 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
             }
         });
 
-        toolStrip.addButton(newPublicationButton);
-        toolStrip.addButton(deletePublicationButton);
+        toolStrip.addButton(newButton);
+        toolStrip.addButton(deleteButton);
 
         // Search
 
-        searchSectionStack = new SearchSectionStack();
         searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
             @Override
@@ -122,31 +111,31 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
         // Publication list
 
-        publicationListGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
+        listGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 getUiHandlers().retrievePublications(firstResult, maxResults, null);
             }
         });
-        publicationListGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        publicationListGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
-        publicationListGrid.getListGrid().setDataSource(new PublicationDS());
-        publicationListGrid.getListGrid().setUseAllDataSourceFields(false);
-        publicationListGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+        listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        listGrid.getListGrid().setDataSource(new PublicationDS());
+        listGrid.getListGrid().setUseAllDataSourceFields(false);
+        listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
-                if (publicationListGrid.getListGrid().getSelectedRecords().length > 0) {
+                if (listGrid.getListGrid().getSelectedRecords().length > 0) {
                     // Show delete button
                     showListGridDeleteButton();
                 } else {
-                    deletePublicationButton.hide();
+                    deleteButton.hide();
                 }
             }
         });
 
-        publicationListGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+        listGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
@@ -161,10 +150,9 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         ListGridField status = new ListGridField(PublicationDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-        publicationListGrid.getListGrid().setFields(fieldCode, fieldName, status);
+        listGrid.getListGrid().setFields(fieldCode, fieldName, status);
 
-        panel.addMember(searchSectionStack);
-        panel.addMember(publicationListGrid);
+        panel.addMember(listGrid);
     }
 
     @Override
@@ -174,7 +162,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         for (PublicationVersionDto scheme : publicationDtos) {
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
-        publicationListGrid.getListGrid().setData(records);
+        listGrid.getListGrid().setData(records);
     }
 
     @Override
@@ -210,13 +198,13 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
     private void showListGridDeleteButton() {
         if (PublicationClientSecurityUtils.canDeletePublication()) {
-            deletePublicationButton.show();
+            deleteButton.show();
         }
     }
 
     private List<String> getUrnsFromSelectedPublications() {
         List<String> urns = new ArrayList<String>();
-        for (ListGridRecord record : publicationListGrid.getListGrid().getSelectedRecords()) {
+        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
             PublicationRecord publicationRecord = (PublicationRecord) record;
             urns.add(publicationRecord.getUrn());
         }

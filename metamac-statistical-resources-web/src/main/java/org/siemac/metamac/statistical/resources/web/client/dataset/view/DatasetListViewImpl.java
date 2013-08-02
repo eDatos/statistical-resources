@@ -26,9 +26,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
-import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
-import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -52,26 +50,19 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
 
-    private SearchSectionStack       searchSectionStack;
+    private CustomToolStripButton   sendToProductionValidationButton;
+    private CustomToolStripButton   sendToDiffusionValidationButton;
+    private CustomToolStripButton   rejectValidationButton;
+    private CustomToolStripButton   programPublicationButton;
+    private CustomToolStripButton   cancelProgrammedPublicationButton;
+    private CustomToolStripButton   publishButton;
+    private CustomToolStripButton   importDatasourcesButton;
 
-    private CustomToolStripButton    newDatasetButton;
-    private CustomToolStripButton    deleteDatasetButton;
-    private CustomToolStripButton    importDatasourcesButton;
-    private CustomToolStripButton    sendToProductionValidationButton;
-    private CustomToolStripButton    sendToDiffusionValidationButton;
-    private CustomToolStripButton    rejectValidationButton;
-    private CustomToolStripButton    programPublicationButton;
-    private CustomToolStripButton    cancelProgrammedPublicationButton;
-    private CustomToolStripButton    publishButton;
+    private NewDatasetWindow        newDatasetWindow;
 
-    private PaginatedCheckListGrid   datasetsList;
+    private ImportDatasourcesWindow importDatasourcesWindow;
 
-    private NewDatasetWindow         newDatasetWindow;
-    private DeleteConfirmationWindow deleteConfirmationWindow;
-
-    private ImportDatasourcesWindow  importDatasourcesWindow;
-
-    private String                   operationUrn;
+    private String                  operationUrn;
 
     @Inject
     public DatasetListViewImpl() {
@@ -79,11 +70,11 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         // ToolStrip
 
-        newDatasetButton = createCreateDatasetButton();
-        toolStrip.addButton(newDatasetButton);
+        newButton = createCreateDatasetButton();
+        toolStrip.addButton(newButton);
 
-        deleteDatasetButton = createDeleteDatasetButton();
-        toolStrip.addButton(deleteDatasetButton);
+        deleteButton = createDeleteDatasetButton();
+        toolStrip.addButton(deleteButton);
 
         sendToProductionValidationButton = createSendToProductionValidationButton();
         toolStrip.addButton(sendToProductionValidationButton);
@@ -110,7 +101,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         // Search
 
-        searchSectionStack = new SearchSectionStack();
         searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
             @Override
@@ -119,18 +109,18 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
             }
         });
 
-        datasetsList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
+        listGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults, null);
             }
         });
-        datasetsList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        datasetsList.getListGrid().setAutoFitData(Autofit.VERTICAL);
-        datasetsList.getListGrid().setDataSource(new DatasetDS());
-        datasetsList.getListGrid().setUseAllDataSourceFields(false);
-        datasetsList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+        listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        listGrid.getListGrid().setDataSource(new DatasetDS());
+        listGrid.getListGrid().setUseAllDataSourceFields(false);
+        listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
@@ -138,7 +128,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
             }
         });
 
-        datasetsList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+        listGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
@@ -153,15 +143,12 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(DatasetDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         ListGridField status = new ListGridField(DatasetDS.PROC_STATUS, getConstants().datasetProcStatus());
-        datasetsList.getListGrid().setFields(fieldCode, fieldName, status);
+        listGrid.getListGrid().setFields(fieldCode, fieldName, status);
 
-        panel.addMember(searchSectionStack);
-        panel.addMember(datasetsList);
+        panel.addMember(listGrid);
 
         // Delete configuration window
 
-        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());
-        deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
         deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 
             @Override
@@ -190,12 +177,12 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     public void setDatasetPaginatedList(String operationUrn, GetDatasetVersionsResult result) {
         setOperation(operationUrn);
         setDatasetList(result.getDatasetVersionDtos());
-        datasetsList.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetVersionDtos().size(), result.getTotalResults());
+        listGrid.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetVersionDtos().size(), result.getTotalResults());
     }
 
     @Override
     public void goToDatasetListLastPageAfterCreate() {
-        datasetsList.goToLastPageAfterCreate();
+        listGrid.goToLastPageAfterCreate();
     }
 
     @Override
@@ -215,7 +202,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         for (DatasetVersionDto datasetDto : datasetsDtos) {
             records[index++] = StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto);
         }
-        datasetsList.getListGrid().setData(records);
+        listGrid.getListGrid().setData(records);
     }
 
     public void setOperation(String operationUrn) {
@@ -225,7 +212,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     public List<String> getUrnsFromSelected() {
         List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : datasetsList.getListGrid().getSelectedRecords()) {
+        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
             DatasetRecord schemeRecord = (DatasetRecord) record;
             codes.add(schemeRecord.getUrn());
         }
@@ -312,7 +299,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     private void showDeleteButton() {
         // TODO Security
-        deleteDatasetButton.show();
+        deleteButton.show();
     }
 
     // Import datasources
@@ -412,7 +399,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     // Visibility methods
 
     private void updateListGridButtonsVisibility() {
-        if (datasetsList.getListGrid().getSelectedRecords().length > 0) {
+        if (listGrid.getListGrid().getSelectedRecords().length > 0) {
             showSelectionDependentButtons();
         } else {
             hideSelectionDependentButtons();
@@ -430,7 +417,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     }
 
     private void hideSelectionDependentButtons() {
-        deleteDatasetButton.hide();
+        deleteButton.hide();
         sendToProductionValidationButton.hide();
         sendToDiffusionValidationButton.hide();
         rejectValidationButton.hide();

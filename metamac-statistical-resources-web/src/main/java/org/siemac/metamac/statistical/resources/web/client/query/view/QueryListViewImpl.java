@@ -16,8 +16,9 @@ import org.siemac.metamac.statistical.resources.web.client.query.presenter.Query
 import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
-import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
@@ -29,6 +30,8 @@ import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -40,52 +43,54 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHandlers> implements QueryListPresenter.QueryListView {
 
-    private ToolStripButton          newQueryButton;
-    private ToolStripButton          deleteQueryButton;
-
-    private PaginatedCheckListGrid   queriesList;
-
-    private DeleteConfirmationWindow deleteConfirmationWindow;
-
     @Inject
     public QueryListViewImpl() {
         super();
 
-        newQueryButton = new ToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newQueryButton.setVisibility(QueryClientSecurityUtils.canCreateQuery() ? Visibility.VISIBLE : Visibility.HIDDEN);
+        newButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
+        newButton.setVisibility(QueryClientSecurityUtils.canCreateQuery() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
-        deleteQueryButton = new ToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteQueryButton.setVisibility(Visibility.HIDDEN);
+        deleteButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
+        deleteButton.setVisibility(Visibility.HIDDEN);
 
-        toolStrip.addButton(newQueryButton);
-        toolStrip.addButton(deleteQueryButton);
+        toolStrip.addButton(newButton);
+        toolStrip.addButton(deleteButton);
+
+        // Search
+
+        searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                StatisticalResourceWebCriteria criteria = new StatisticalResourceWebCriteria(searchSectionStack.getSearchCriteria());
+                getUiHandlers().retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, criteria);
+            }
+        });
 
         // List
-        queriesList = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
+
+        listGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
                 getUiHandlers().retrieveQueries(firstResult, maxResults, null);
             }
         });
-        queriesList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        queriesList.getListGrid().setAutoFitData(Autofit.VERTICAL);
-        queriesList.getListGrid().setDataSource(new QueryDS());
-        queriesList.getListGrid().setUseAllDataSourceFields(false);
+        listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        listGrid.getListGrid().setDataSource(new QueryDS());
+        listGrid.getListGrid().setUseAllDataSourceFields(false);
 
         ListGridField fieldCode = new ListGridField(QueryDS.CODE, getConstants().identifiableStatisticalResourceCode());
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(QueryDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         ListGridField status = new ListGridField(QueryDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
         ListGridField type = new ListGridField(QueryDS.TYPE, getConstants().queryType());
-        queriesList.getListGrid().setFields(fieldCode, fieldName, status, type);
-
-        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().datasetDeleteConfirmationTitle(), getConstants().datasetDeleteConfirmation());
-        deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+        listGrid.getListGrid().setFields(fieldCode, fieldName, status, type);
 
         bindEvents();
 
-        panel.addMember(queriesList);
+        panel.addMember(listGrid);
     }
 
     @Override
@@ -94,20 +99,20 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     }
 
     private void bindEvents() {
-        queriesList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+        listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
-                if (queriesList.getListGrid().getSelectedRecords().length > 0) {
+                if (listGrid.getListGrid().getSelectedRecords().length > 0) {
                     // Show delete button
                     showListGridDeleteButton();
                 } else {
-                    deleteQueryButton.hide();
+                    deleteButton.hide();
                 }
             }
         });
 
-        queriesList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+        listGrid.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
@@ -118,14 +123,14 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
             }
         });
 
-        newQueryButton.addClickHandler(new ClickHandler() {
+        newButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 getUiHandlers().goToNewQuery();
             }
         });
-        deleteQueryButton.addClickHandler(new ClickHandler() {
+        deleteButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -148,19 +153,19 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         for (QueryVersionDto queryDto : result.getQueriesList()) {
             records[index++] = StatisticalResourcesRecordUtils.getQueryRecord(queryDto);
         }
-        queriesList.getListGrid().setData(records);
-        queriesList.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
+        listGrid.getListGrid().setData(records);
+        listGrid.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
     }
 
     private void showListGridDeleteButton() {
         if (QueryClientSecurityUtils.canDeleteQuery()) {
-            deleteQueryButton.show();
+            deleteButton.show();
         }
     }
 
     private List<String> getUrnsFromSelected() {
         List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : queriesList.getListGrid().getSelectedRecords()) {
+        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
             QueryRecord schemeRecord = (QueryRecord) record;
             codes.add(schemeRecord.getUrn());
         }
@@ -169,7 +174,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     public void goToQueryListLastPageAfterCreate() {
-        queriesList.goToLastPageAfterCreate();
+        listGrid.goToLastPageAfterCreate();
     }
 
     @Override
