@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,9 @@ public class LifecycleChecker {
 
     @Autowired
     private ExternalItemChecker            externalItemChecker;
+
+    @Autowired
+    private RelatedResourceChecker         relatedResourceChecker;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -96,7 +100,10 @@ public class LifecycleChecker {
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER),
                 exceptionItems);
 
-        // TODO: Metadatos de relaciones entre recursos
+        // Replaces Version
+        relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getLifeCycleStatisticalResource().getReplacesVersion(), resource.getLifeCycleStatisticalResource().getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
+        
+        // Is replaced by version: It can be private. API checks that can be returned.
     }
 
     // ------------------------------------------------------------------------------------------------------

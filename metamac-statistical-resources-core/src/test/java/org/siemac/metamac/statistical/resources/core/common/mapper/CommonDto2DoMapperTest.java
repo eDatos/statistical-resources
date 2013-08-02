@@ -58,9 +58,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String                     CODE_01 = "mock01";
+    private static final String                     CODE_01                       = "mock01";
+    private static final String                     CODE_02                       = "mock02";
     private static final String                     URN_01                        = "lorem:ipsum:externalItem:mock01:01";
-    private static final String                     CODE_02 = "mock02";
     private static final String                     URN_02                        = "lorem:ipsum:externalItem:mock02:02";
     private static final String                     METADATA_NAME                 = "LOREM_IPSUM";
 

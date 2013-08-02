@@ -36,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.publication.mapper.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.ChapterRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.CubeRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
@@ -65,6 +66,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetDo2DtoMapperTest.class,
                      DatasetDto2DoMapperTest.class,
                      DatasetServiceTest.class, 
+                     PublicationRepositoryTest.class,
                      PublicationVersionRepositoryTest.class,
                      CubeRepositoryTest.class,
                      ChapterRepositoryTest.class,

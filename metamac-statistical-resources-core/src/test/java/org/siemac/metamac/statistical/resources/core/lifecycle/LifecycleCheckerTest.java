@@ -35,18 +35,22 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @InjectMocks
-    private LifecycleChecker                lifecycleChecker = new LifecycleChecker();
+    private LifecycleChecker               lifecycleChecker = new LifecycleChecker();
 
     @Mock
-    private LifecycleCommonMetadataChecker  lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Mock
-    private ExternalItemChecker             externalItemChecker;
+    private ExternalItemChecker            externalItemChecker;
+
+    @Mock
+    private RelatedResourceChecker         relatedResourceChecker;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION

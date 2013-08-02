@@ -24,10 +24,13 @@ import org.siemac.metamac.core.common.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
@@ -53,6 +56,15 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
 
     @Autowired
     private QueryVersionRepository        queryVersionRepository;
+
+    @Autowired
+    private DatasetRepository             datasetRepository;
+
+    @Autowired
+    private PublicationRepository         publicationRepository;
+
+    @Autowired
+    private QueryRepository               queryRepository;
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -191,7 +203,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         }
 
         List<ExternalItem> targetsBefore = targets;
-        
+
         List<ExternalItem> newTargets = calculateNewExternalItemsToPersit(sources, metadataName, targetsBefore);
 
         // Delete missing
@@ -204,7 +216,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
 
         return targets;
     }
-    
+
     protected void deleteExternalItemsNotFoundInSource(List<ExternalItem> targetBefore, List<ExternalItem> source, String metadataName) throws MetamacException {
         for (ExternalItem oldTarget : targetBefore) {
             boolean found = false;
@@ -261,14 +273,27 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
 
     private void setCorrespondingResourceRelatedBasedOnType(RelatedResource target, RelatedResourceDto source) throws MetamacException {
         switch (source.getType()) {
+            case DATASET:
+                target.setDataset(datasetRepository.retrieveByUrn(source.getUrn()));
+                break;
             case DATASET_VERSION:
                 target.setDatasetVersion(datasetVersionRepository.retrieveByUrn(source.getUrn()));
+                break;
+            case PUBLICATION:
+                target.setPublication(publicationRepository.retrieveByUrn(source.getUrn()));
                 break;
             case PUBLICATION_VERSION:
                 target.setPublicationVersion(publicationVersionRepository.retrieveByUrn(source.getUrn()));
                 break;
+            case QUERY:
+                target.setQuery(queryRepository.retrieveByUrn(source.getUrn()));
+                break;
             case QUERY_VERSION:
                 target.setQueryVersion(queryVersionRepository.retrieveByUrn(source.getUrn()));
+                break;
+            default:
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of relatedResource not supported for relation with other resource");
+
         }
     }
 

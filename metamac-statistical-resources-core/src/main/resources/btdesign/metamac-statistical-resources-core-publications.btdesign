@@ -75,6 +75,7 @@ Application PublicationsStatisticalResources {
 			- Bag<@PublicationVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> publication orderby="id asc";
 			
 			Repository PublicationRepository {
+				@Publication retrieveByUrn(String urn) throws MetamacException;
 				findByCondition;
 				save;
 				delete;

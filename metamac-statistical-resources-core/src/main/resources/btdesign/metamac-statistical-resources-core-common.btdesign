@@ -24,9 +24,12 @@ Application CommonStatisticalResources {
 			
 			- @TypeRelatedResourceEnum type databaseColumn="TYPE" required;
 			
-			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" cascade="none" nullable;
-			- @PublicationVersion publicationVersion databaseColumn="PUBLICATION_VERSION_FK" cascade="none" nullable;
-			- @QueryVersion queryVersion databaseColumn="QUERY_VERSION_FK" cascade="none" nullable; 
+			- @DatasetVersion datasetVersion databaseColumn="DATASET_VERSION_FK" cascade="none" nullable fetch="lazy";
+			- @Dataset dataset databaseColumn="DATASET_FK" cascade="none" nullable fetch="lazy";
+			- @PublicationVersion publicationVersion databaseColumn="PUBLICATION_VERSION_FK" cascade="none" nullable fetch="lazy";
+			- @Publication publication databaseColumn="PUBLICATION_FK" cascade="none" nullable fetch="lazy";
+			- @QueryVersion queryVersion databaseColumn="QUERY_VERSION_FK" cascade="none" nullable fetch="lazy";
+			- @Query query databaseColumn="QUERY_FK" cascade="none" nullable fetch="lazy"; 
     		
     		Repository RelatedResourceRepository {
 				findById;

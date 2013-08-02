@@ -41,6 +41,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Life Cycle Statistical Resource
     public static final CommonServiceExceptionType LIFE_CYCLE_WRONG_PROC_STATUS                           = create("exception.resources.life_cycle.wrong_proc_status");
 
+    // Related resources
+    public static final CommonServiceExceptionType RELATED_RESOURCE_NOT_PUBLISHED                         = create("exception.resources.related_resource.not_published");
+
     // External items
     public static final CommonServiceExceptionType EXTERNAL_ITEM_URN_NOT_PUBLISHED                        = create("exception.resources.external_item.urn.not_published");
     public static final CommonServiceExceptionType EXTERNAL_ITEM_URN_INTERNAL_NOT_PUBLISHED               = create("exception.resources.external_item.urn_internal.not_published");
