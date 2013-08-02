@@ -103,6 +103,11 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         }
     }
 
+    @Override
+    protected void revealInParent() {
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);
+    }
+
     private void retrieveOperation(String urn) {
         if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
             dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
@@ -161,8 +166,17 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         });
     }
 
+    //
+    // IMPORTATION
+    //
+
     @Override
-    protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);
+    public void datasourcesImportationSucceed(String fileName) {
+        ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesImportationPlanned());
+    }
+
+    @Override
+    public void datasourcesImportationFailed(String errorMessage) {
+        ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, errorMessage);
     }
 }
