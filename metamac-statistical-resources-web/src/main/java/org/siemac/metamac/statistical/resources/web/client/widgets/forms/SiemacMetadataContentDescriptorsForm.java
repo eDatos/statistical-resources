@@ -7,9 +7,9 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalR
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 
-public class StatisticalResourceContentDescriptorsForm extends LifeCycleResourceContentDescriptorsForm {
+public class SiemacMetadataContentDescriptorsForm extends LifeCycleResourceContentDescriptorsForm {
 
-    public StatisticalResourceContentDescriptorsForm() {
+    public SiemacMetadataContentDescriptorsForm() {
 
         ViewMultiLanguageTextItem subtitle = new ViewMultiLanguageTextItem(StatisticalResourceDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
         ViewMultiLanguageTextItem titleAlternative = new ViewMultiLanguageTextItem(StatisticalResourceDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());

@@ -6,14 +6,14 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsForm;
 import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
-public class DatasetPublicationDescriptorsForm extends StatisticalResourcePublicationDescriptorsForm {
+public class DatasetPublicationDescriptorsForm extends SiemacMetadataPublicationDescriptorsForm {
 
     public DatasetPublicationDescriptorsForm() {
         super();

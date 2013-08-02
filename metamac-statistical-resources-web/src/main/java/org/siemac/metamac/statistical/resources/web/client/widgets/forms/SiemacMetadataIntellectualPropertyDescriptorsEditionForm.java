@@ -10,9 +10,9 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
-public class StatisticalResourceIntellectualPropertyDescriptorsEditionForm extends GroupDynamicForm {
+public class SiemacMetadataIntellectualPropertyDescriptorsEditionForm extends GroupDynamicForm {
 
-    public StatisticalResourceIntellectualPropertyDescriptorsEditionForm() {
+    public SiemacMetadataIntellectualPropertyDescriptorsEditionForm() {
         super(getConstants().formIntellectualPropertyDescriptors());
 
         MultiLanguageTextItem accessRights = new MultiLanguageTextItem(StatisticalResourceDS.ACCESS_RIGHTS, getConstants().siemacMetadataStatisticalResourceAccessRights());

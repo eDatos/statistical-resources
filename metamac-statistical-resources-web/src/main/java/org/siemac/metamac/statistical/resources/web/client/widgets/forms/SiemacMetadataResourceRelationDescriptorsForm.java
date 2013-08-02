@@ -10,11 +10,11 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
-public class StatisticalResourceResourceRelationDescriptorsForm extends NavigationEnabledDynamicForm {
+public class SiemacMetadataResourceRelationDescriptorsForm extends NavigationEnabledDynamicForm {
 
     private BaseUiHandlers uiHandlers;
 
-    public StatisticalResourceResourceRelationDescriptorsForm() {
+    public SiemacMetadataResourceRelationDescriptorsForm() {
         super(getConstants().formResourceRelationDescriptors());
 
         RelatedResourceLinkItem replaces = new RelatedResourceLinkItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces(),

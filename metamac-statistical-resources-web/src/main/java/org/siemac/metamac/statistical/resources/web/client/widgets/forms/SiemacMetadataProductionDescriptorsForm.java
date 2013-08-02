@@ -7,15 +7,14 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
-public class StatisticalResourceProductionDescriptorsForm extends LifeCycleResourceProductionDescriptorsForm {
+public class SiemacMetadataProductionDescriptorsForm extends LifeCycleResourceProductionDescriptorsForm {
 
-    public StatisticalResourceProductionDescriptorsForm() {
+    public SiemacMetadataProductionDescriptorsForm() {
         super();
 
         ExternalItemLinkItem creator = new ExternalItemLinkItem(StatisticalResourceDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator());
@@ -31,7 +30,7 @@ public class StatisticalResourceProductionDescriptorsForm extends LifeCycleResou
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         setLifeCycleResourceDto(dto);
-        
+
         setExternalItemValue(getItem(StatisticalResourceDS.CREATOR), dto.getCreator());
         setExternalItemsValue(getItem(StatisticalResourceDS.CONTRIBUTOR), dto.getContributor());
 

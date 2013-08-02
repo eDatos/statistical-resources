@@ -8,7 +8,6 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalR
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
-
 public class LifeCycleResourceProductionDescriptorsForm extends GroupDynamicForm {
 
     public LifeCycleResourceProductionDescriptorsForm() {

@@ -20,7 +20,7 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
-public class StatisticalResourceLanguageEditionForm extends GroupDynamicForm {
+public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
 
     protected ProcStatusEnum                  procStatus;
 
@@ -28,7 +28,7 @@ public class StatisticalResourceLanguageEditionForm extends GroupDynamicForm {
 
     private SearchMultiExternalItemSimpleItem languagesItem;
 
-    public StatisticalResourceLanguageEditionForm() {
+    public SiemacMetadataLanguageEditionForm() {
         super(getConstants().formLanguages());
 
         ExternalItemLinkItem language = new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());

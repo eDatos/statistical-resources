@@ -10,20 +10,19 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
-public class StatisticalResourceThematicContentClassifiersForm extends GroupDynamicForm {
+public class SiemacMetadataLanguageForm extends GroupDynamicForm {
 
-    public StatisticalResourceThematicContentClassifiersForm() {
-        super(getConstants().formThematicContentClassifiers());
+    public SiemacMetadataLanguageForm() {
+        super(getConstants().formLanguages());
 
-        ExternalItemLinkItem statisticalOperation = new ExternalItemLinkItem(StatisticalResourceDS.STATISTICAL_OPERATION, getConstants().siemacMetadataStatisticalResourceStatisticalOperation());
-        ExternalItemListItem instances = new ExternalItemListItem(StatisticalResourceDS.STATISTICAL_OPERATION_INSTANCE, getConstants().siemacMetadataStatisticalResourceStatisticalOperationInstance(),
-                false);
+        ExternalItemLinkItem language = new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
+        ExternalItemListItem languages = new ExternalItemListItem(StatisticalResourceDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(), false);
 
-        setFields(statisticalOperation, instances);
+        setFields(language, languages);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        setExternalItemValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
-        setExternalItemsValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION_INSTANCE), dto.getStatisticalOperationInstances());
+        setExternalItemValue(getItem(StatisticalResourceDS.LANGUAGE), dto.getLanguage());
+        setExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES), dto.getLanguages());
     }
 }

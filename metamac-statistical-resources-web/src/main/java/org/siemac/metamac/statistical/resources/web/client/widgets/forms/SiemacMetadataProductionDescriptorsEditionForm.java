@@ -28,7 +28,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRic
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
-public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDynamicForm {
+public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamicForm {
 
     protected ProcStatusEnum                      procStatus;
 
@@ -38,7 +38,7 @@ public class StatisticalResourceProductionDescriptorsEditionForm extends GroupDy
 
     private SearchSrmLinkItemWithSchemeFilterItem creatorItem;
 
-    public StatisticalResourceProductionDescriptorsEditionForm() {
+    public SiemacMetadataProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
 
         ExternalItemLinkItem maintainer = new ExternalItemLinkItem(StatisticalResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer());

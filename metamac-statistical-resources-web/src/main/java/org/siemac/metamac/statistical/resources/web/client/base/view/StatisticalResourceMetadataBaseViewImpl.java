@@ -3,11 +3,11 @@ package org.siemac.metamac.statistical.resources.web.client.base.view;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataLanguageEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetOrganisationUnitSchemesPaginatedListResult;
@@ -77,9 +77,9 @@ public abstract class StatisticalResourceMetadataBaseViewImpl<H extends Statisti
         getLanguageEditionForm().setCodesForLanguages(result.getLanguagesCodes(), result.getFirstResultOut(), result.getTotalResults());
     }
 
-    protected abstract StatisticalResourceProductionDescriptorsEditionForm getProductionDescriptorsEditionForm();
-    protected abstract StatisticalResourcePublicationDescriptorsEditionForm getPublicationDescriptorsEditionForm();
-    protected abstract StatisticalResourceCommonMetadataEditionForm getCommonMetadataEditionForm();
-    protected abstract StatisticalResourceThematicContentClassifiersEditionForm getThematicContentClassifiersEditionForm();
-    protected abstract StatisticalResourceLanguageEditionForm getLanguageEditionForm();
+    protected abstract SiemacMetadataProductionDescriptorsEditionForm getProductionDescriptorsEditionForm();
+    protected abstract SiemacMetadataPublicationDescriptorsEditionForm getPublicationDescriptorsEditionForm();
+    protected abstract SiemacMetadataCommonMetadataEditionForm getCommonMetadataEditionForm();
+    protected abstract SiemacMetadataThematicContentClassifiersEditionForm getThematicContentClassifiersEditionForm();
+    protected abstract SiemacMetadataLanguageEditionForm getLanguageEditionForm();
 }

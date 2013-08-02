@@ -23,7 +23,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
-public class StatisticalResourceCommonMetadataEditionForm extends NavigationEnabledDynamicForm {
+public class SiemacMetadataCommonMetadataEditionForm extends NavigationEnabledDynamicForm {
 
     protected ProcStatusEnum                      procStatus;
 
@@ -34,7 +34,7 @@ public class StatisticalResourceCommonMetadataEditionForm extends NavigationEnab
 
     private StatisticalResourceUiHandlers         uiHandlers;
 
-    public StatisticalResourceCommonMetadataEditionForm() {
+    public SiemacMetadataCommonMetadataEditionForm() {
         super(getConstants().formCommonMetadata());
 
         commonConfiguration = createCommonMetadataItem(StatisticalResourceDS.COMMON_METADATA, getConstants().commonMetadata());

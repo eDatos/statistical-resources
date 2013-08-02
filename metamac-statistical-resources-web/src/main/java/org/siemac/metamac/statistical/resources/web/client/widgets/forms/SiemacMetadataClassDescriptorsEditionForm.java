@@ -8,9 +8,9 @@ import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
-public class StatisticalResourceClassDescriptorsEditionForm extends GroupDynamicForm {
+public class SiemacMetadataClassDescriptorsEditionForm extends GroupDynamicForm {
 
-    public StatisticalResourceClassDescriptorsEditionForm() {
+    public SiemacMetadataClassDescriptorsEditionForm() {
         super(getConstants().formClassDescriptors());
 
         ViewTextItem type = new ViewTextItem(StatisticalResourceDS.TYPE, getConstants().siemacMetadataStatisticalResourceType());

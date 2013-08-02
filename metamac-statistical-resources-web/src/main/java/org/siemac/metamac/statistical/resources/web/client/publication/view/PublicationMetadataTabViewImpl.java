@@ -21,21 +21,21 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceCommonMetadataForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceIntellectualPropertyDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceLanguageForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceResourceRelationDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataIntellectualPropertyDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataIntellectualPropertyDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataLanguageEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataLanguageForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
@@ -52,30 +52,30 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     private LifecycleMainFormLayout                                     mainFormLayout;
 
     private NameableResourceIdentifiersForm                               identifiersForm;
-    private StatisticalResourceContentDescriptorsForm                     contentDescriptorsForm;
-    private StatisticalResourceCommonMetadataForm                         commonMetadataForm;
-    private StatisticalResourceThematicContentClassifiersForm             thematicContentClassifiersForm;
-    private StatisticalResourceLanguageForm                               languageForm;
-    private StatisticalResourceProductionDescriptorsForm                  productionDescriptorsForm;
+    private SiemacMetadataContentDescriptorsForm                     contentDescriptorsForm;
+    private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
+    private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
+    private SiemacMetadataLanguageForm                               languageForm;
+    private SiemacMetadataProductionDescriptorsForm                  productionDescriptorsForm;
     private PublicationClassDescriptorsForm                               classDescriptorsForm;
-    private StatisticalResourceResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
-    private StatisticalResourcePublicationDescriptorsForm                 publicationDescriptorsForm;
+    private SiemacMetadataResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
+    private SiemacMetadataPublicationDescriptorsForm                 publicationDescriptorsForm;
     private LifeCycleResourceLifeCycleForm                                lifeCycleForm;
     private LifeCycleResourceVersionForm                                  versionForm;
-    private StatisticalResourceIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
+    private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
     private NameableResourceIdentifiersEditionForm                        identifiersEditionForm;
-    private StatisticalResourceContentDescriptorsEditionForm              contentDescriptorsEditionForm;
-    private StatisticalResourceCommonMetadataEditionForm                  commonMetadataEditionForm;
-    private StatisticalResourceThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
-    private StatisticalResourceLanguageEditionForm                        languageEditionForm;
-    private StatisticalResourceProductionDescriptorsEditionForm           productionDescriptorsEditionForm;
+    private SiemacMetadataContentDescriptorsEditionForm              contentDescriptorsEditionForm;
+    private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
+    private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
+    private SiemacMetadataLanguageEditionForm                        languageEditionForm;
+    private SiemacMetadataProductionDescriptorsEditionForm           productionDescriptorsEditionForm;
     private PublicationClassDescriptorsEditionForm                        classDescriptorsEditionForm;
     private PublicationResourceRelationDescriptorsEditionForm             resourceRelationDescriptorsEditionForm;
-    private StatisticalResourcePublicationDescriptorsEditionForm          publicationDescriptorsEditionForm;
+    private SiemacMetadataPublicationDescriptorsEditionForm          publicationDescriptorsEditionForm;
     private LifeCycleResourceLifeCycleForm                                lifeCycleEditionForm;
     private LifeCycleResourceVersionEditionForm                           versionEditionForm;
-    private StatisticalResourceIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
+    private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
     private PublicationVersionDto                                         publicationDto;
 
@@ -227,23 +227,23 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addViewCanvas(identifiersForm);
 
         // Content descriptors form
-        contentDescriptorsForm = new StatisticalResourceContentDescriptorsForm();
+        contentDescriptorsForm = new SiemacMetadataContentDescriptorsForm();
         mainFormLayout.addViewCanvas(contentDescriptorsForm);
 
         // Common metadata form
-        commonMetadataForm = new StatisticalResourceCommonMetadataForm();
+        commonMetadataForm = new SiemacMetadataCommonMetadataForm();
         mainFormLayout.addViewCanvas(commonMetadataForm);
 
         // Thematic content classifiers
-        thematicContentClassifiersForm = new StatisticalResourceThematicContentClassifiersForm();
+        thematicContentClassifiersForm = new SiemacMetadataThematicContentClassifiersForm();
         mainFormLayout.addViewCanvas(thematicContentClassifiersForm);
 
         // Languages
-        languageForm = new StatisticalResourceLanguageForm();
+        languageForm = new SiemacMetadataLanguageForm();
         mainFormLayout.addViewCanvas(languageForm);
 
         // Production descriptors
-        productionDescriptorsForm = new StatisticalResourceProductionDescriptorsForm();
+        productionDescriptorsForm = new SiemacMetadataProductionDescriptorsForm();
         mainFormLayout.addViewCanvas(productionDescriptorsForm);
 
         // Class descriptors
@@ -251,11 +251,11 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addViewCanvas(classDescriptorsForm);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsForm = new StatisticalResourceResourceRelationDescriptorsForm();
+        resourceRelationDescriptorsForm = new SiemacMetadataResourceRelationDescriptorsForm();
         mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
 
         // Publication descriptors
-        publicationDescriptorsForm = new StatisticalResourcePublicationDescriptorsForm();
+        publicationDescriptorsForm = new SiemacMetadataPublicationDescriptorsForm();
         mainFormLayout.addViewCanvas(publicationDescriptorsForm);
 
         // Life cycle
@@ -267,7 +267,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addViewCanvas(versionForm);
 
         // Intellectual property descriptors
-        intellectualPropertyDescriptorsForm = new StatisticalResourceIntellectualPropertyDescriptorsForm();
+        intellectualPropertyDescriptorsForm = new SiemacMetadataIntellectualPropertyDescriptorsForm();
         mainFormLayout.addViewCanvas(intellectualPropertyDescriptorsForm);
     }
 
@@ -277,23 +277,23 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
 
         // Content descriptors form
-        contentDescriptorsEditionForm = new StatisticalResourceContentDescriptorsEditionForm();
+        contentDescriptorsEditionForm = new SiemacMetadataContentDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 
         // Common metadata
-        commonMetadataEditionForm = new StatisticalResourceCommonMetadataEditionForm();
+        commonMetadataEditionForm = new SiemacMetadataCommonMetadataEditionForm();
         mainFormLayout.addEditionCanvas(commonMetadataEditionForm);
 
         // Thematic content classifiers
-        thematicContentClassifiersEditionForm = new StatisticalResourceThematicContentClassifiersEditionForm();
+        thematicContentClassifiersEditionForm = new SiemacMetadataThematicContentClassifiersEditionForm();
         mainFormLayout.addEditionCanvas(thematicContentClassifiersEditionForm);
 
         // Languages
-        languageEditionForm = new StatisticalResourceLanguageEditionForm();
+        languageEditionForm = new SiemacMetadataLanguageEditionForm();
         mainFormLayout.addEditionCanvas(languageEditionForm);
 
         // Production descriptors
-        productionDescriptorsEditionForm = new StatisticalResourceProductionDescriptorsEditionForm();
+        productionDescriptorsEditionForm = new SiemacMetadataProductionDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
 
         // Class descriptors
@@ -305,7 +305,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addEditionCanvas(resourceRelationDescriptorsEditionForm);
 
         // Publication descriptors
-        publicationDescriptorsEditionForm = new StatisticalResourcePublicationDescriptorsEditionForm();
+        publicationDescriptorsEditionForm = new SiemacMetadataPublicationDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(publicationDescriptorsEditionForm);
 
         // Life cycle
@@ -317,7 +317,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addEditionCanvas(versionEditionForm);
 
         // Intellectual property descriptors
-        intellectualPropertyDescriptorsEditionForm = new StatisticalResourceIntellectualPropertyDescriptorsEditionForm();
+        intellectualPropertyDescriptorsEditionForm = new SiemacMetadataIntellectualPropertyDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(intellectualPropertyDescriptorsEditionForm);
     }
 
@@ -473,27 +473,27 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     }
 
     @Override
-    protected StatisticalResourceCommonMetadataEditionForm getCommonMetadataEditionForm() {
+    protected SiemacMetadataCommonMetadataEditionForm getCommonMetadataEditionForm() {
         return commonMetadataEditionForm;
     }
 
     @Override
-    protected StatisticalResourceProductionDescriptorsEditionForm getProductionDescriptorsEditionForm() {
+    protected SiemacMetadataProductionDescriptorsEditionForm getProductionDescriptorsEditionForm() {
         return productionDescriptorsEditionForm;
     }
 
     @Override
-    protected StatisticalResourcePublicationDescriptorsEditionForm getPublicationDescriptorsEditionForm() {
+    protected SiemacMetadataPublicationDescriptorsEditionForm getPublicationDescriptorsEditionForm() {
         return publicationDescriptorsEditionForm;
     }
 
     @Override
-    protected StatisticalResourceThematicContentClassifiersEditionForm getThematicContentClassifiersEditionForm() {
+    protected SiemacMetadataThematicContentClassifiersEditionForm getThematicContentClassifiersEditionForm() {
         return thematicContentClassifiersEditionForm;
     }
 
     @Override
-    protected StatisticalResourceLanguageEditionForm getLanguageEditionForm() {
+    protected SiemacMetadataLanguageEditionForm getLanguageEditionForm() {
         return languageEditionForm;
     }
 }

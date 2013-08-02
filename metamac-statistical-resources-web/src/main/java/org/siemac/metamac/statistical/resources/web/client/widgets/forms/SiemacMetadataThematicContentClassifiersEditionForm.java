@@ -17,7 +17,7 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
-public class StatisticalResourceThematicContentClassifiersEditionForm extends GroupDynamicForm {
+public class SiemacMetadataThematicContentClassifiersEditionForm extends GroupDynamicForm {
 
     private StatisticalResourceUiHandlers     uiHandlers;
 
@@ -25,7 +25,7 @@ public class StatisticalResourceThematicContentClassifiersEditionForm extends Gr
 
     private String                            statisticalOperationCode;
 
-    public StatisticalResourceThematicContentClassifiersEditionForm() {
+    public SiemacMetadataThematicContentClassifiersEditionForm() {
         super(getConstants().formThematicContentClassifiers());
 
         ExternalItemLinkItem statisticalOperation = new ExternalItemLinkItem(StatisticalResourceDS.STATISTICAL_OPERATION, getConstants().siemacMetadataStatisticalResourceStatisticalOperation());

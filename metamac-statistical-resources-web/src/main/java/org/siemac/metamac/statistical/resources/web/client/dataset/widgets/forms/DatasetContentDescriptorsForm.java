@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.checks.DatasetMetadataShowChecks;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
@@ -16,7 +16,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
-public class DatasetContentDescriptorsForm extends StatisticalResourceContentDescriptorsForm {
+public class DatasetContentDescriptorsForm extends SiemacMetadataContentDescriptorsForm {
 
     public DatasetContentDescriptorsForm() {
         super();

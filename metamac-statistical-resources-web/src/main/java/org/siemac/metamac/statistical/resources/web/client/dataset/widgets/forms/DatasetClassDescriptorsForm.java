@@ -5,10 +5,10 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceClassDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataClassDescriptorsForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
-public class DatasetClassDescriptorsForm extends StatisticalResourceClassDescriptorsForm {
+public class DatasetClassDescriptorsForm extends SiemacMetadataClassDescriptorsForm {
 
     public DatasetClassDescriptorsForm() {
 

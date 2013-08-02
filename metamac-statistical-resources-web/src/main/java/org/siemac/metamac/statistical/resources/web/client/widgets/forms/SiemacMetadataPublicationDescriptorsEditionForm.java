@@ -21,7 +21,7 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
-public class StatisticalResourcePublicationDescriptorsEditionForm extends GroupDynamicForm {
+public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynamicForm {
 
     protected ProcStatusEnum                      procStatus;
 
@@ -31,7 +31,7 @@ public class StatisticalResourcePublicationDescriptorsEditionForm extends GroupD
     private SearchSrmItemListWithSchemeFilterItem publisherContributorItem;
     private SearchSrmItemListWithSchemeFilterItem mediatorItem;
 
-    public StatisticalResourcePublicationDescriptorsEditionForm() {
+    public SiemacMetadataPublicationDescriptorsEditionForm() {
         super(getConstants().formPublicationDescriptors());
 
         publisherItem = createPublisherItem();

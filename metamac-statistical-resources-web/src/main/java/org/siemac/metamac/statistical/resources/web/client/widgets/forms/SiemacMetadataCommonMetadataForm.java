@@ -8,11 +8,11 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalR
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
-public class StatisticalResourceCommonMetadataForm extends NavigationEnabledDynamicForm {
+public class SiemacMetadataCommonMetadataForm extends NavigationEnabledDynamicForm {
 
     private BaseUiHandlers uiHandlers;
 
-    public StatisticalResourceCommonMetadataForm() {
+    public SiemacMetadataCommonMetadataForm() {
         super(getConstants().formCommonMetadata());
 
         ExternalItemLinkItem commonConfigurationView = new ExternalItemLinkItem(StatisticalResourceDS.COMMON_METADATA_VIEW, getConstants().commonMetadata());

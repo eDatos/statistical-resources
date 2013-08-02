@@ -10,19 +10,20 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
-public class StatisticalResourceLanguageForm extends GroupDynamicForm {
+public class SiemacMetadataThematicContentClassifiersForm extends GroupDynamicForm {
 
-    public StatisticalResourceLanguageForm() {
-        super(getConstants().formLanguages());
+    public SiemacMetadataThematicContentClassifiersForm() {
+        super(getConstants().formThematicContentClassifiers());
 
-        ExternalItemLinkItem language = new ExternalItemLinkItem(StatisticalResourceDS.LANGUAGE, getConstants().siemacMetadataStatisticalResourceLanguage());
-        ExternalItemListItem languages = new ExternalItemListItem(StatisticalResourceDS.LANGUAGES, getConstants().siemacMetadataStatisticalResourceLanguages(), false);
+        ExternalItemLinkItem statisticalOperation = new ExternalItemLinkItem(StatisticalResourceDS.STATISTICAL_OPERATION, getConstants().siemacMetadataStatisticalResourceStatisticalOperation());
+        ExternalItemListItem instances = new ExternalItemListItem(StatisticalResourceDS.STATISTICAL_OPERATION_INSTANCE, getConstants().siemacMetadataStatisticalResourceStatisticalOperationInstance(),
+                false);
 
-        setFields(language, languages);
+        setFields(statisticalOperation, instances);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        setExternalItemValue(getItem(StatisticalResourceDS.LANGUAGE), dto.getLanguage());
-        setExternalItemsValue(getItem(StatisticalResourceDS.LANGUAGES), dto.getLanguages());
+        setExternalItemValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
+        setExternalItemsValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION_INSTANCE), dto.getStatisticalOperationInstances());
     }
 }

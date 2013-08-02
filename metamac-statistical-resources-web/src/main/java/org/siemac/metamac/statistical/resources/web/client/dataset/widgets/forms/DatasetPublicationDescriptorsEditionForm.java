@@ -16,7 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.Data
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcePublicationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
@@ -29,7 +29,7 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
-public class DatasetPublicationDescriptorsEditionForm extends StatisticalResourcePublicationDescriptorsEditionForm {
+public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPublicationDescriptorsEditionForm {
 
     private DatasetMetadataTabUiHandlers uiHandlers;
     private SearchExternalItemSimpleItem updateFrequency;

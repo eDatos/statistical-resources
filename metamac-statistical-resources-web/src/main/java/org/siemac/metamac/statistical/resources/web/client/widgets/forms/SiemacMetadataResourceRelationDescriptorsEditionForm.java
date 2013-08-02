@@ -24,12 +24,12 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
-public abstract class StatisticalResourceResourceRelationDescriptorsEditionForm extends NavigationEnabledDynamicForm {
+public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
     private SearchSingleRelatedResourcePaginatedWindow searchReplacesWindow;
     private SearchSingleRelatedResourcePaginatedWindow searchIsReplacedByWindow;
 
-    public StatisticalResourceResourceRelationDescriptorsEditionForm() {
+    public SiemacMetadataResourceRelationDescriptorsEditionForm() {
         super(getConstants().formResourceRelationDescriptors());
 
         SearchRelatedResourceLinkItem replaces = createReplacesItem(StatisticalResourceDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());

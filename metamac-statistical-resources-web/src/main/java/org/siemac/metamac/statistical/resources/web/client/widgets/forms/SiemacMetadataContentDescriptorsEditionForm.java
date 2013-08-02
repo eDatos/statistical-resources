@@ -14,9 +14,9 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRic
 
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
-public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleResourceContentDescriptorsEditionForm {
+public class SiemacMetadataContentDescriptorsEditionForm extends LifeCycleResourceContentDescriptorsEditionForm {
 
-    public StatisticalResourceContentDescriptorsEditionForm() {
+    public SiemacMetadataContentDescriptorsEditionForm() {
 
         MultiLanguageTextItem subtitle = new MultiLanguageTextItem(StatisticalResourceDS.SUBTITLE, getConstants().siemacMetadataStatisticalResourceSubtitle());
         MultiLanguageTextItem titleAlternative = new MultiLanguageTextItem(StatisticalResourceDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());
@@ -42,7 +42,7 @@ public class StatisticalResourceContentDescriptorsEditionForm extends LifeCycleR
         siemacMetadataStatisticalResourceDto.setKeywords((InternationalStringDto) getValue(StatisticalResourceDS.KEYWORDS));
         return siemacMetadataStatisticalResourceDto;
     }
-    
+
     private MultiLanguageTextAreaItem createKeywordsItem() {
         FormItemIcon infoIcon = new FormItemIcon();
         infoIcon.setSrc(GlobalResources.RESOURCE.info().getURL());

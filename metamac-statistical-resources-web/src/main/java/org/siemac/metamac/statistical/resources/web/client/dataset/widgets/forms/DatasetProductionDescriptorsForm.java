@@ -4,11 +4,11 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
-public class DatasetProductionDescriptorsForm extends StatisticalResourceProductionDescriptorsForm {
+public class DatasetProductionDescriptorsForm extends SiemacMetadataProductionDescriptorsForm {
 
     public DatasetProductionDescriptorsForm() {
 

@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.Data
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceContentDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -32,7 +32,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
-public class DatasetContentDescriptorsEditionForm extends StatisticalResourceContentDescriptorsEditionForm {
+public class DatasetContentDescriptorsEditionForm extends SiemacMetadataContentDescriptorsEditionForm {
 
     private DatasetMetadataTabUiHandlers                         uiHandlers;
     private SearchMultipleSrmItemWithSchemeFilterPaginatedWindow statisticalUnitWindow;
