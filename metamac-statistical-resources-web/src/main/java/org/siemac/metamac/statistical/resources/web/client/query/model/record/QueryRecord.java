@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.model.record;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.web.client.base.model.record.LifeCycleResourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 
 public class QueryRecord extends LifeCycleResourceRecord {

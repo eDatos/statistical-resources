@@ -2,8 +2,8 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.model.record
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.web.client.base.model.record.SiemacMetadataRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
+import org.siemac.metamac.statistical.resources.web.client.model.record.SiemacMetadataRecord;
 
 public class DatasetRecord extends SiemacMetadataRecord {
 

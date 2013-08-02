@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.base.model.ds;
+package org.siemac.metamac.statistical.resources.web.client.model.ds;
 
 import com.smartgwt.client.data.DataSource;
 

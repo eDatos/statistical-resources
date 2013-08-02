@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.client.base.model.record;
+package org.siemac.metamac.statistical.resources.web.client.model.record;
 
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 

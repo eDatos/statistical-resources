@@ -1,7 +1,7 @@
-package org.siemac.metamac.statistical.resources.web.client.base.model.record;
+package org.siemac.metamac.statistical.resources.web.client.model.record;
 
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
-import org.siemac.metamac.statistical.resources.web.client.base.model.ds.VersionRationaleTypeDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionRationaleTypeDS;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 

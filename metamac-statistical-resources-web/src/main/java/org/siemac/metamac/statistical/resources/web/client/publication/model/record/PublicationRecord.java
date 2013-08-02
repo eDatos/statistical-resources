@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.model.re
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.web.client.base.model.record.SiemacMetadataRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.SiemacMetadataRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 
 public class PublicationRecord extends SiemacMetadataRecord {

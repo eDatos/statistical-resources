@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
-import org.siemac.metamac.statistical.resources.web.client.base.model.ds.VersionRationaleTypeDS;
-import org.siemac.metamac.statistical.resources.web.client.base.model.record.VersionRationaleTypeRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionRationaleTypeDS;
+import org.siemac.metamac.statistical.resources.web.client.model.record.VersionRationaleTypeRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
