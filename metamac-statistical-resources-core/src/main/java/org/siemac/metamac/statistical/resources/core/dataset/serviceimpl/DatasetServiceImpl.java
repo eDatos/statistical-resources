@@ -48,8 +48,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -314,6 +316,22 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetNewVersion = getDatasetVersionRepository().save(datasetNewVersion);
 
         return datasetNewVersion;
+    }
+    
+    @Override
+    public void proccessDatasetFileImportationResult(ServiceContext ctx, String datasetImportationId, List<FileDescriptorResult> fileDescriptors) throws MetamacException {
+        
+        datasetServiceInvocationValidator.checkProccessDatasetFileImportationResult(ctx, datasetImportationId, fileDescriptors);
+        
+        for (FileDescriptorResult fileDescriptor : fileDescriptors) {
+            Datasource datasource = new Datasource();
+            datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+            datasource.getIdentifiableStatisticalResource().setCode(fileDescriptor.getDatasourceId());
+            if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
+                datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
+            }
+            createDatasource(ctx, datasetImportationId, datasource);
+        }
     }
 
     @Override

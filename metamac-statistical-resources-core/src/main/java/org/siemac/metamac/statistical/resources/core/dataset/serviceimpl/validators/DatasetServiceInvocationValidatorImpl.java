@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
 public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidator {
@@ -124,8 +125,6 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         if (datasource.getIdentifiableStatisticalResource() != null) {
             StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getIdentifiableStatisticalResource().getCode(),
                     ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE__CODE, exceptions);
-            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(datasource.getIdentifiableStatisticalResource().getCode(),
-                    ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE__CODE, exceptions);
         }
 
         checkDatasource(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
@@ -197,6 +196,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     
     public static void checkFindStatisticOfficialities(List<MetamacExceptionItem> exceptions) {
         //NOTHING
+    }
+
+    public static void checkProccessDatasetFileImportationResult(String datasetImportationId, List<FileDescriptorResult> fileDescriptors, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetImportationId, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(fileDescriptors, ServiceExceptionParameters.FILE_DESCRIPTORS, exceptions);
     }
 
 }

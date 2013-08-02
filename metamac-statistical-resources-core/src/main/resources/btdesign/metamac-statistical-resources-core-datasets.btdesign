@@ -1,5 +1,6 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-tasks-dtos.btdesign"
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
@@ -47,6 +48,8 @@ Application DatasetsStatisticalResources {
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersion versioningDatasetVersion(String datasetVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		
+    		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
+    		
     		// Datasets
     		"Finds datasets by criteria"
     		PagedResult<@Dataset> findDatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
@@ -74,7 +77,7 @@ Application DatasetsStatisticalResources {
 
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
-			"Value of nect update metadata if the source of datasource is a px"
+			"Value of next update metadata if the source of datasource is a px"
 			DateTimeTZ dateNextUpdate nullable;
 			
 			// Relations

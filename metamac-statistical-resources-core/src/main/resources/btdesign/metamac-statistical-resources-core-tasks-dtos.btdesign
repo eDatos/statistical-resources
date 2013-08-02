@@ -20,6 +20,11 @@ Application DatasetsStatisticalResourcesDto {
 			- @DatasetFileFormatEnum datasetFileFormatEnum;
 		}
 		
+		DataTransferObject FileDescriptorResult extends @FileDescriptor {
+			String datasourceId;
+			JAVADATE nextUpdate;
+		}
+		
 	}
 
 }

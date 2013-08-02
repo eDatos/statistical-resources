@@ -58,8 +58,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String                     URN_01                        = "lorem:ipsum:externalItem:mock:01";
-    private static final String                     URN_02                        = "lorem:ipsum:externalItem:mock:02";
+    private static final String                     CODE_01 = "mock01";
+    private static final String                     URN_01                        = "lorem:ipsum:externalItem:mock01:01";
+    private static final String                     CODE_02 = "mock02";
+    private static final String                     URN_02                        = "lorem:ipsum:externalItem:mock02:02";
     private static final String                     METADATA_NAME                 = "LOREM_IPSUM";
 
     protected ConfigurationService                  configurationService          = new ConfigurationServiceMockImpl();
@@ -179,7 +181,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     public void testExternalItemDtoToDoWithExistsDtoAndNullDo() throws Exception {
         // EXISTS, NULL
-        ExternalItemDto externalItemDto = mockExternalItemDtoComplete(URN_01, TypeExternalArtefactsEnum.AGENCY);
+        ExternalItemDto externalItemDto = mockExternalItemDtoComplete(CODE_01, URN_01, TypeExternalArtefactsEnum.AGENCY);
 
         testExternalItemDtoToDo(externalItemDto, null);
         Mockito.verify(externalItemRepository, never()).delete(Mockito.any(ExternalItem.class));
@@ -188,7 +190,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     public void testExternalItemDtoToDoWithExistsDtoAndNullDoAndDtoUrnNull() throws Exception {
         // EXISTS, NULL
-        ExternalItemDto externalItemDto = mockExternalItemDtoComplete(null, TypeExternalArtefactsEnum.AGENCY);
+        ExternalItemDto externalItemDto = mockExternalItemDtoComplete(null, null, TypeExternalArtefactsEnum.AGENCY);
         testExternalItemDtoToDo(externalItemDto, null);
     }
 
@@ -204,7 +206,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     public void testExternalItemDtoToDoWithExistsDtoAndExistsDo() throws Exception {
         // EXISTS, EXISTS
-        ExternalItemDto externalItemDto = MetamacMocks.mockExternalItemDtoComplete(URN_01, TypeExternalArtefactsEnum.AGENCY);
+        ExternalItemDto externalItemDto = MetamacMocks.mockExternalItemDtoComplete(CODE_01, URN_01, TypeExternalArtefactsEnum.AGENCY);
         ExternalItem externalItem = mockAgencyExternalItem();
 
         testExternalItemDtoToDo(externalItemDto, externalItem);
@@ -262,8 +264,8 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testExternalItemDtoListToDoListWithExistsDtoListAndEmptyDoList() throws Exception {
         // EXISTS, EMPTY
         List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(mockExternalItemDtoComplete(URN_01, TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(mockExternalItemDtoComplete(URN_02, TypeExternalArtefactsEnum.AGENCY));
+        dtos.add(mockExternalItemDtoComplete(CODE_01, URN_01, TypeExternalArtefactsEnum.AGENCY));
+        dtos.add(mockExternalItemDtoComplete(CODE_02, URN_02, TypeExternalArtefactsEnum.AGENCY));
         List<ExternalItem> entities = new ArrayList<ExternalItem>();
 
         testExternalItemDtoListToDoList(dtos, entities);
@@ -319,8 +321,8 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     public void testExternalItemDtoListToDoListWithSameListSizeAndDifferentElements() throws Exception {
         // EXISTS, EXISTS: Different elements
         List<ExternalItemDto> dtos = new ArrayList<ExternalItemDto>();
-        dtos.add(mockExternalItemDtoComplete(URN_01, TypeExternalArtefactsEnum.AGENCY));
-        dtos.add(mockExternalItemDtoComplete(URN_02, TypeExternalArtefactsEnum.AGENCY));
+        dtos.add(mockExternalItemDtoComplete(CODE_01, URN_01, TypeExternalArtefactsEnum.AGENCY));
+        dtos.add(mockExternalItemDtoComplete(CODE_02, URN_02, TypeExternalArtefactsEnum.AGENCY));
         List<ExternalItem> entities = new ArrayList<ExternalItem>();
         entities.add(mockAgencyExternalItem());
         entities.add(mockAgencyExternalItem());

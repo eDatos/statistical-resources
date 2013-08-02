@@ -106,7 +106,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME                                 = "DATASET_VERSION_27_WITH_COVERAGE_FILLED";
     private static DatasetVersion DATASET_VERSION_27_WITH_COVERAGE_FILLED;
-    
+
+    public static final String    DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME                   = "DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA";
+    private static DatasetVersion DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA;
     private static final String   INIT_VERSION                                                                 = "001.000";
     private static final String   SECOND_VERSION                                                               = "002.000";
     private static final String   THIRD_VERSION                                                                = "003.000";
@@ -428,19 +430,19 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06;
 
     }
-    
+
     protected static DatasetVersion getDatasetVersion27WithCoverageFilled() {
         if (DATASET_VERSION_27_WITH_COVERAGE_FILLED == null) {
             DatasetVersion datasetVersion = createDatasetVersion(2);
-            
+
             prepareToProductionValidation(datasetVersion);
-            
-            datasetVersion.getCoverages().add(new CodeDimension("dim1","code-d1-1"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim1","code-d1-2"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim2","code-d2-1"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim2","code-d2-2"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim3","code-d3-1"));
-            
+
+            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-1"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-2"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-1"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-2"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim3", "code-d3-1"));
+
             DATASET_VERSION_27_WITH_COVERAGE_FILLED = datasetVersion;
             // Relations
             for (CodeDimension code : datasetVersion.getCoverages()) {
@@ -448,7 +450,15 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             }
         }
         return DATASET_VERSION_27_WITH_COVERAGE_FILLED;
-        
+
+    }
+
+    protected static DatasetVersion getDatasetVersion28WithoutDatasourcesImportingData() {
+        if (DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA == null) {
+            DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA = createDatasetVersion(2);
+        }
+        return DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA;
+
     }
 
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
@@ -521,7 +531,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.setRelatedDsd(dsd);
 
         datasetVersion.setDateNextUpdate(new DateTime().plusDays(10));
-        
+
         ExternalItem codeUpdateFreq = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
         datasetVersion.setUpdateFrequency(codeUpdateFreq);
 
