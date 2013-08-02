@@ -10,6 +10,14 @@ public class QueryRecord extends LifeCycleResourceRecord {
     public QueryRecord() {
     }
 
+    public void setRelatedDataset(String value) {
+        setAttribute(QueryDS.RELATED_DATASET_VERSION, value);
+    }
+
+    public void setStatus(String value) {
+        setAttribute(QueryDS.STATUS, value);
+    }
+
     public void setType(String value) {
         setAttribute(QueryDS.TYPE, value);
     }

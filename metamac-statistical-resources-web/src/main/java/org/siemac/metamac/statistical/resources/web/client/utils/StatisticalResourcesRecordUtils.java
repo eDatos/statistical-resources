@@ -5,9 +5,13 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
@@ -20,31 +24,86 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.IdentifiableResourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.NameableResourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.SiemacMetadataRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.TemporalCodeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.VersionRationaleTypeRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.VersionableResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
+import org.siemac.metamac.web.common.client.utils.DateUtils;
+import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
+import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class StatisticalResourcesRecordUtils extends RecordUtils {
+
+    //
+    // IDENTIFIABLE
+    //
+
+    public static IdentifiableResourceRecord getIdentifiableResourceRecord(IdentifiableResourceRecord record, IdentifiableStatisticalResourceDto dto) {
+        record.setCode(dto.getCode());
+        record.setUrn(dto.getUrn());
+        return record;
+    }
+
+    //
+    // NAMEABLE
+    //
+
+    public static NameableResourceRecord getNameableResourceRecord(NameableResourceRecord record, NameableStatisticalResourceDto dto) {
+        record = (NameableResourceRecord) getIdentifiableResourceRecord(record, dto);
+        record.setTitle(getLocalisedString(dto.getTitle()));
+        return record;
+    }
+
+    //
+    // VERSIONABLE
+    //
+
+    public static VersionableResourceRecord getVersionableResourceRecord(VersionableResourceRecord record, VersionableStatisticalResourceDto dto) {
+        record = (VersionableResourceRecord) getNameableResourceRecord(record, dto);
+        record.setVersionLogic(dto.getVersionLogic());
+        return record;
+    }
+
+    //
+    // LIFECYCLE
+    //
+
+    public static LifeCycleResourceRecord getLifeCycleResourceRecord(LifeCycleResourceRecord record, LifeCycleStatisticalResourceDto dto) {
+        record = (LifeCycleResourceRecord) getVersionableResourceRecord(record, dto);
+        record.setProcStatus(CommonUtils.getProcStatusName(dto));
+        record.setCreationDate(DateUtils.getFormattedDate(dto.getCreationDate()));
+        record.setPublicationDate(DateUtils.getFormattedDate(dto.getPublicationDate()));
+        return record;
+    }
+
+    //
+    // SIEMAC METADATA
+    //
+
+    public static SiemacMetadataRecord getSiemacMetadataRecord(SiemacMetadataRecord record, SiemacMetadataStatisticalResourceDto dto) {
+        return (SiemacMetadataRecord) getLifeCycleResourceRecord(record, dto);
+    }
 
     //
     // DATASETS
     //
 
     public static DatasetRecord getDatasetRecord(DatasetVersionDto datasetDto) {
-        DatasetRecord record = new DatasetRecord();
-        record.setId(datasetDto.getId());
-        record.setCode(datasetDto.getCode());
-        record.setTitle(getLocalisedString(datasetDto.getTitle()));
-        record.setDescription(getLocalisedString(datasetDto.getDescription()));
-        record.setProcStatus(CommonUtils.getProcStatusName(datasetDto));
-        record.setVersionLogic(datasetDto.getVersionLogic());
-        record.setUrn(datasetDto.getUrn());
+        DatasetRecord record = (DatasetRecord) getSiemacMetadataRecord(new DatasetRecord(), datasetDto);
+        record.setRelatedDSD(ExternalItemUtils.getExternalItemName(datasetDto.getRelatedDsd()));
+        if (datasetDto.getStatisticOfficiality() != null) {
+            record.setStatisticOfficiality(getLocalisedString(datasetDto.getStatisticOfficiality().getDescription()));
+        }
         record.setDatasetDto(datasetDto);
         return record;
     }
@@ -59,16 +118,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     //
 
     public static PublicationRecord getPublicationRecord(PublicationVersionDto publicationDto) {
-        PublicationRecord record = new PublicationRecord();
-        record.setId(publicationDto.getId());
-        record.setCode(publicationDto.getCode());
-        record.setTitle(getLocalisedString(publicationDto.getTitle()));
-        record.setDescription(getLocalisedString(publicationDto.getDescription()));
-        record.setProcStatus(CommonUtils.getProcStatusName(publicationDto));
-        record.setVersionLogic(publicationDto.getVersionLogic());
-        record.setUrn(publicationDto.getUrn());
-        record.setPublicationDto(publicationDto);
-        return record;
+        return (PublicationRecord) getSiemacMetadataRecord(new PublicationRecord(), publicationDto);
     }
 
     public static ElementLevelTreeNode getElementLevelNode(ElementLevelDto elementLevelDto) {
@@ -103,16 +153,10 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     //
 
     public static QueryRecord getQueryRecord(QueryVersionDto queryDto) {
-        QueryRecord record = new QueryRecord();
-        record.setId(queryDto.getId());
-        record.setCode(queryDto.getCode());
-        record.setTitle(getLocalisedString(queryDto.getTitle()));
-        record.setDescription(getLocalisedString(queryDto.getDescription()));
-        record.setProcStatus(CommonUtils.getProcStatusName(queryDto));
-        record.setVersionLogic(queryDto.getVersionLogic());
-        record.setUrn(queryDto.getUrn());
+        QueryRecord record = (QueryRecord) getLifeCycleResourceRecord(new QueryRecord(), queryDto);
+        record.setRelatedDataset(RelatedResourceBaseUtils.getRelatedResourceName(queryDto.getRelatedDatasetVersion()));
+        record.setStatus(CommonUtils.getQueryStatusName(queryDto));
         record.setType(CommonUtils.getQueryTypeName(queryDto));
-        record.setQueryDto(queryDto);
         return record;
     }
 

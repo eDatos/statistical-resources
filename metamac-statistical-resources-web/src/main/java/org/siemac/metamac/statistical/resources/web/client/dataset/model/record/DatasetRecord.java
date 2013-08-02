@@ -10,6 +10,14 @@ public class DatasetRecord extends SiemacMetadataRecord {
     public DatasetRecord() {
     }
 
+    public void setRelatedDSD(String value) {
+        setAttribute(DatasetDS.RELATED_DSD, value);
+    }
+
+    public void setStatisticOfficiality(String value) {
+        setAttribute(DatasetDS.STATISTIC_OFFICIALITY, value);
+    }
+
     public void setDatasetDto(DatasetVersionDto datasetDto) {
         setAttribute(DatasetDS.DTO, datasetDto);
     }

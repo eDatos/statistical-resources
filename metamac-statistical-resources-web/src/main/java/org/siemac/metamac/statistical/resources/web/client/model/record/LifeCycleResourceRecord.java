@@ -10,4 +10,12 @@ public class LifeCycleResourceRecord extends VersionableResourceRecord {
     public void setProcStatus(String value) {
         setAttribute(LifeCycleResourceDS.PROC_STATUS, value);
     }
+
+    public void setCreationDate(String value) {
+        setAttribute(LifeCycleResourceDS.CREATION_DATE, value);
+    }
+
+    public void setPublicationDate(String value) {
+        setAttribute(LifeCycleResourceDS.PUBLICATION_DATE, value);
+    }
 }

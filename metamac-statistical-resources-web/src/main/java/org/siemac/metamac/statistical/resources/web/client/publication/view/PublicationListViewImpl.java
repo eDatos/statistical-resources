@@ -15,17 +15,16 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.rec
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
+import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
-import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -62,12 +61,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
                 }
             }
         });
-
-        ListGridField fieldCode = new ListGridField(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-        ListGridField status = new ListGridField(PublicationDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-        listGrid.getListGrid().setFields(fieldCode, fieldName, status);
+        listGrid.getListGrid().setFields(ResourceFieldUtils.getPublicationListGridFields());
 
         // Delete confirmation window
 

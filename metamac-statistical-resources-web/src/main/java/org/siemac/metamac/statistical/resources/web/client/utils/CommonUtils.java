@@ -44,6 +44,14 @@ public class CommonUtils {
     }
 
     // -----------------------------------------------------------------------------------------
+    // QUERY STATUS
+    // -----------------------------------------------------------------------------------------
+
+    public static String getQueryStatusName(QueryVersionDto queryDto) {
+        return queryDto != null && queryDto.getStatus() != null ? getCoreMessages().getString(getCoreMessages().queryStatusEnum() + queryDto.getStatus().name()) : null;
+    }
+
+    // -----------------------------------------------------------------------------------------
     // STATISTICAL RESOURCE TYPE
     // -----------------------------------------------------------------------------------------
 

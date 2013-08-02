@@ -10,8 +10,4 @@ public class NameableResourceRecord extends IdentifiableResourceRecord {
     public void setTitle(String value) {
         setAttribute(NameableResourceDS.TITLE, value);
     }
-
-    public void setDescription(String value) {
-        setAttribute(NameableResourceDS.DESCRIPTION, value);
-    }
 }
