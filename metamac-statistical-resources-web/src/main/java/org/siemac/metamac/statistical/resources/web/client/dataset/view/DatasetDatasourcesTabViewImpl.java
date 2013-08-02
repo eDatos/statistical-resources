@@ -97,7 +97,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
     private class DatasourcesListPanel extends VLayout {
 
-        private CustomToolStripButton    newDatasourceButton;
         private CustomToolStripButton    deleteDatasourceButton;
         private CustomToolStripButton    importDatasourcesButton;
         private CustomListGrid           datasourcesList;
@@ -110,9 +109,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.setWidth100();
-
-            newDatasourceButton = createCreateDatasourceButton();
-            toolStrip.addButton(newDatasourceButton);
 
             deleteDatasourceButton = createDeleteDatasourcesButton();
             toolStrip.addButton(deleteDatasourceButton);
@@ -156,19 +152,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
-        }
-
-        private CustomToolStripButton createCreateDatasourceButton() {
-            CustomToolStripButton newDatasourceButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-            newDatasourceButton.setVisibility(DatasetClientSecurityUtils.canCreateDatasource() ? Visibility.VISIBLE : Visibility.HIDDEN);
-            newDatasourceButton.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    datasourceFormPanel.createDatasource();
-                }
-            });
-            return newDatasourceButton;
         }
 
         private CustomToolStripButton createDeleteDatasourcesButton() {
