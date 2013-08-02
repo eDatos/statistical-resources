@@ -116,7 +116,7 @@
 				<generic:Value value="E" id="EXR_VAR"/>
 				<generic:Value value="2010-10" id="TIME_PERIOD"/>
 			</generic:ObsKey>
-			<generic:ObsValue value="1.3452"/>
+			<generic:ObsValue value=""/>
 			<generic:Attributes>
 				<generic:Value value="A" id="OBS_STATUS"/>
 				<generic:Value value="F" id="CONF_STATUS_OBS"/>
@@ -236,7 +236,7 @@
 				<generic:Value value="E" id="EXR_VAR"/>
 				<generic:Value value="2010-09" id="TIME_PERIOD"/>
 			</generic:ObsKey>
-			<generic:ObsValue value="1.3067"/>
+			<generic:ObsValue value=""/>
 			<generic:Attributes>
 				<generic:Value value="A" id="OBS_STATUS"/>
 				<generic:Value value="F" id="CONF_STATUS_OBS"/>
