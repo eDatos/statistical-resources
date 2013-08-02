@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.Q
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
-import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
@@ -26,7 +24,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
-import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -46,15 +43,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Inject
     public QueryListViewImpl() {
         super();
-
-        newButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newButton.setVisibility(QueryClientSecurityUtils.canCreateQuery() ? Visibility.VISIBLE : Visibility.HIDDEN);
-
-        deleteButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteButton.setVisibility(Visibility.HIDDEN);
-
-        toolStrip.addButton(newButton);
-        toolStrip.addButton(deleteButton);
 
         // Search
 
@@ -201,5 +189,17 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
             // Who knows, maybe the parent class knows what to do with this slot.
             super.setInSlot(slot, content);
         }
+    }
+
+    //
+    // LISTGRID BUTTONS
+    //
+
+    // Create
+
+    @Override
+    public ClickHandler getNewButtonClickHandler() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

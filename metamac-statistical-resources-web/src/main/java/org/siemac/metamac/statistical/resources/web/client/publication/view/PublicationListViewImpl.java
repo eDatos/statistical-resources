@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.siemac.metamac.statistical.resources.web.client.publication.utils.Pub
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
@@ -27,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
-import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -49,55 +46,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Inject
     public PublicationListViewImpl() {
         super();
-
-        // ToolStrip
-
-        newButton = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
-        newButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                newPublicationWindow = new NewPublicationWindow(getConstants().publicationCreate());
-                newPublicationWindow.setUiHandlers(getUiHandlers());
-                newPublicationWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (newPublicationWindow.validateForm()) {
-                            getUiHandlers().createPublication(newPublicationWindow.getNewPublicationDto());
-                            newPublicationWindow.destroy();
-                        }
-                    }
-                });
-                newPublicationWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
-                newPublicationWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
-            }
-        });
-        newButton.setVisibility(PublicationClientSecurityUtils.canCreatePublication() ? Visibility.VISIBLE : Visibility.HIDDEN);
-
-        // Delete confirmation window
-
-        deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                getUiHandlers().deletePublication(getUrnsFromSelectedPublications());
-                deleteConfirmationWindow.hide();
-            }
-        });
-
-        deleteButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteButton.setVisibility(Visibility.HIDDEN);
-        deleteButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                deleteConfirmationWindow.show();
-            }
-        });
-
-        toolStrip.addButton(newButton);
-        toolStrip.addButton(deleteButton);
 
         // Search
 
@@ -153,6 +101,17 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         listGrid.getListGrid().setFields(fieldCode, fieldName, status);
 
         panel.addMember(listGrid);
+
+        // Delete confirmation window
+
+        deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().deletePublication(getUrnsFromSelectedPublications());
+                deleteConfirmationWindow.hide();
+            }
+        });
     }
 
     @Override
@@ -209,5 +168,35 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
             urns.add(publicationRecord.getUrn());
         }
         return urns;
+    }
+
+    //
+    // LISTGRID BUTTONS
+    //
+
+    // Create
+
+    @Override
+    public ClickHandler getNewButtonClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                newPublicationWindow = new NewPublicationWindow(getConstants().publicationCreate());
+                newPublicationWindow.setUiHandlers(getUiHandlers());
+                newPublicationWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (newPublicationWindow.validateForm()) {
+                            getUiHandlers().createPublication(newPublicationWindow.getNewPublicationDto());
+                            newPublicationWindow.destroy();
+                        }
+                    }
+                });
+                newPublicationWindow.setDefaultLanguage(StatisticalResourcesDefaults.defaultLanguage);
+                newPublicationWindow.setDefaultMaintainer(StatisticalResourcesDefaults.defaultAgency);
+            }
+        };
     }
 }
