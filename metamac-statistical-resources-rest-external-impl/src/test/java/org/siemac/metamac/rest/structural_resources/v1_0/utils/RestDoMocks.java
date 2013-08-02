@@ -4,6 +4,9 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_3_CODE;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -17,6 +20,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
@@ -92,6 +97,13 @@ public class RestDoMocks {
         if (QueryTypeEnum.LATEST_DATA.equals(target.getType())) {
             target.setLatestDataNumber(Integer.valueOf(4));
         }
+
+        target.getSelection().clear();
+        target.addSelection(mockQuerySelectionItem("GEO_DIM", Arrays.asList("GEO_DIM-codelist01-code01", "GEO_DIM-codelist01-code03")));
+        target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
+        target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
+        target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
+
         return target;
     }
 
@@ -173,5 +185,20 @@ public class RestDoMocks {
         target.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_METADATA));
         target.setValidFrom(new DateTime(2013, 1, 1, 3, 4, 12, 0));
         target.setValidTo(new DateTime(2013, 2, 16, 14, 4, 12, 0));
+    }
+
+    private QuerySelectionItem mockQuerySelectionItem(String dimensionId, List<String> codes) {
+        QuerySelectionItem querySelectionItem = new QuerySelectionItem();
+        querySelectionItem.setDimension(dimensionId);
+        for (String code : codes) {
+            querySelectionItem.addCode(mockCodeItem(code));
+        }
+        return querySelectionItem;
+    }
+
+    private CodeItem mockCodeItem(String codeId) {
+        CodeItem codeItem = new CodeItem();
+        codeItem.setCode(codeId);
+        return codeItem;
     }
 }
