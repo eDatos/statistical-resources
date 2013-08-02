@@ -29,7 +29,7 @@ public class CommonMetadataRestExternalServiceImpl implements CommonMetadataRest
     }
 
     @Override
-    public List<String> findConfigurationsUrns(String query) throws MetamacException {
+    public List<String> findConfigurationsAsUrnsList(String query) throws MetamacException {
         try {
             Configurations configurations = findConfigurations(query);
             List<String> urns = new ArrayList<String>();

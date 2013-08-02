@@ -7,16 +7,20 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instances;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 
 public interface StatisticalOperationsRestInternalService {
 
     public Operation retrieveOperationById(String operationCode) throws MetamacException;
 
+    public List<ResourceInternal> findOperations(String query) throws MetamacException;
     public Operations findOperations(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findOperationsUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findOperationsAsUrnsList(String query) throws MetamacException;
     public List<ExternalItem> findOperationsAsExternalItems(int firstResult, int maxResult, String query) throws MetamacException;
     
+    public List<ResourceInternal> findInstances(String query) throws MetamacException;
+    public Instances findInstances(int firstResult, int maxResult, String query) throws MetamacException;
     public Instances findInstances(String operationId, int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findInstancesUrns(String operationId, int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findInstancesAsUrnsList(String query) throws MetamacException;
 
 }

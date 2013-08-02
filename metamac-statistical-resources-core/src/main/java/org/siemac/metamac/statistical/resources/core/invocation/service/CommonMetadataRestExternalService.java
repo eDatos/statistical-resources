@@ -9,7 +9,7 @@ import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configurations;
 public interface CommonMetadataRestExternalService {
 
     public Configurations findConfigurations(String query) throws MetamacException;
-    public List<String> findConfigurationsUrns(String query) throws MetamacException;
+    public List<String> findConfigurationsAsUrnsList(String query) throws MetamacException;
 
     public Configuration retrieveConfigurationById(String id) throws MetamacException;
 }

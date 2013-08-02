@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.invocation.service;
 
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.DEFAULT_OFFSET;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.MAXIMUM_LIMIT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +42,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     // -------------------------------------------------------------------------------------------------
     // DSD
     // -------------------------------------------------------------------------------------------------
-    
+
     @Override
     public DataStructure retrieveDsdByUrn(String urn) throws MetamacException {
         try {
@@ -56,8 +59,8 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     @Override
     public DataStructures findDsds(int firstResult, int maxResult, String query) throws MetamacException {
         try {
-            String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
+            String limit = String.valueOf(maxResult);
             return restApiLocator.getSrmRestInternalFacadeV10().findDataStructures(query, null, limit, offset);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
@@ -65,11 +68,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public List<String> findDsdsUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findDsds(String query) throws MetamacException {
         try {
-            DataStructures dsds = findDsds(firstResult, maxResult, query);
+            Integer offset = DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            DataStructures dsds = null;
+            do {
+                dsds = findDsds(offset, MAXIMUM_LIMIT, query);
+                results.addAll(dsds.getDataStructures());
+                offset += dsds.getDataStructures().size(); // next page
+            } while (dsds.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findDsdsAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> dsds = findDsds(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : dsds.getDataStructures()) {
+            for (ResourceInternal resource : dsds) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -77,24 +97,6 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-    
-//    @Override
-//    public List<ResourceInternal> findDsds(String urn) {
-//        try {
-//            Integer limit = RestApiConstants.MAXIMUM_LIMIT;
-//            int offset = 0;
-//            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
-//            Concepts concepts = null;
-//            do {
-//                concepts = restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyID, resourceID, version, null, null, limit, String.valueOf(offset));
-//                results.addAll(concepts.getConcepts());
-//                offset += concepts.getConcepts().size(); // next page
-//            } while (concepts.getTotal().intValue() != results.size());
-//            return results;
-//        } catch (Exception e) {
-//            throw manageSrmInternalRestException(e);
-//        }
-//    }
 
     // -------------------------------------------------------------------------------------------------
     // CONCEPT SCHEMES
@@ -113,11 +115,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public List<String> findConceptSchemesUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findConceptSchemes(String query) throws MetamacException {
         try {
-            ConceptSchemes conceptSchemes = findConceptSchemes(firstResult, maxResult, query);
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            ConceptSchemes conceptSchemes = null;
+            do {
+                conceptSchemes = findConceptSchemes(offset, MAXIMUM_LIMIT, query);
+                results.addAll(conceptSchemes.getConceptSchemes());
+                offset += conceptSchemes.getConceptSchemes().size(); // next page
+            } while (conceptSchemes.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findConceptSchemesAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findConceptSchemes(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : conceptSchemes.getConceptSchemes()) {
+            for (ResourceInternal resource : results) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -155,6 +174,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
+    }
+
+    @Override
+    public List<ResourceInternal> findConcepts(String query) throws MetamacException {
+        try {
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Concepts concepts = null;
+            do {
+                concepts = findConcepts(offset, MAXIMUM_LIMIT, query);
+                results.addAll(concepts.getConcepts());
+                offset += concepts.getConcepts().size(); // next page
+            } while (concepts.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public Concepts findConcepts(int firstResult, int maxResult, String query) throws MetamacException {
+        return findConcepts(null, firstResult, maxResult, query);
     }
 
     @Override
@@ -200,11 +241,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public List<String> findConceptsUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<String> findConceptsAsUrnsList(String query) throws MetamacException {
         try {
-            Concepts concepts = findConcepts(null, firstResult, maxResult, query);
+            List<ResourceInternal> results = findConcepts(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : concepts.getConcepts()) {
+            for (ResourceInternal resource : results) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -213,7 +254,6 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    
     // -------------------------------------------------------------------------------------------------
     // CODELISTS
     // -------------------------------------------------------------------------------------------------
@@ -231,11 +271,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public List<String> findCodelistsAsUrnsList(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findCodelists(String query) throws MetamacException {
         try {
-            Codelists codelists = findCodelists(firstResult, maxResult, query);
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Codelists codelists = null;
+            do {
+                codelists = findCodelists(offset, MAXIMUM_LIMIT, query);
+                results.addAll(codelists.getCodelists());
+                offset += codelists.getCodelists().size(); // next page
+            } while (codelists.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findCodelistsAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findCodelists(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : codelists.getCodelists()) {
+            for (ResourceInternal resource : results) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -260,7 +317,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     // -------------------------------------------------------------------------------------------------
     // CODES
     // -------------------------------------------------------------------------------------------------
-    
+
     @Override
     public Codes retrieveCodesOfCodelistEfficiently(String codelistUrn) throws MetamacException {
         if (StringUtils.isBlank(codelistUrn)) {
@@ -277,7 +334,12 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-    
+
+    @Override
+    public Codes findCodes(int firstResult, int maxResult, String query) throws MetamacException {
+        return findCodes(null, firstResult, maxResult, query);
+    }
+
     @Override
     public Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException {
         try {
@@ -304,11 +366,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public List<String> findCodesUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findCodes(String query) throws MetamacException {
         try {
-            Codes codes = findCodes(null, firstResult, maxResult, query);
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Codes codes = null;
+            do {
+                codes = findCodes(offset, MAXIMUM_LIMIT, query);
+                results.addAll(codes.getCodes());
+                offset += codes.getCodes().size(); // next page
+            } while (codes.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findCodesAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findCodes(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : codes.getCodes()) {
+            for (ResourceInternal resource : results) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -348,11 +427,28 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public List<String> findOrganisationSchemesUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findOrganisationSchemes(String query) throws MetamacException {
         try {
-            OrganisationSchemes organisationSchemes = findOrganisationSchemes(firstResult, maxResult, query);
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            OrganisationSchemes organisationSchemes = null;
+            do {
+                organisationSchemes = findOrganisationSchemes(offset, MAXIMUM_LIMIT, query);
+                results.addAll(organisationSchemes.getOrganisationSchemes());
+                offset += organisationSchemes.getOrganisationSchemes().size(); // next page
+            } while (organisationSchemes.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findOrganisationSchemesAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findOrganisationSchemes(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : organisationSchemes.getOrganisationSchemes()) {
+            for (ResourceInternal resource : results) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -380,103 +476,43 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-    
-    
+
     @Override
     public Organisations findOrganisations(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
             String orderBy = null;
-            return restApiLocator.getSrmRestInternalFacadeV10().findOrganisations(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit, offset);
+            return restApiLocator.getSrmRestInternalFacadeV10().findOrganisations(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit,
+                    offset);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
     }
 
     @Override
-    public List<String> findOrganisationsUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findOrganisations(String query) throws MetamacException {
         try {
-            Organisations organisations = findOrganisations(firstResult, maxResult, query);
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Organisations organisations = null;
+            do {
+                organisations = findOrganisations(offset, MAXIMUM_LIMIT, query);
+                results.addAll(organisations.getOrganisations());
+                offset += organisations.getOrganisations().size(); // next page
+            } while (organisations.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findOrganisationsAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findOrganisations(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : organisations.getOrganisations()) {
-                urns.add(resource.getUrn());
-            }
-            return urns;
-        } catch (Exception e) {
-            throw manageSrmInternalRestException(e);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------
-    // CATEGORY SCHEMES
-    // -------------------------------------------------------------------------------------------------
-
-    @Override
-    public CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException {
-        try {
-            String limit = String.valueOf(maxResult);
-            String offset = String.valueOf(firstResult);
-            String orderBy = null;
-            return restApiLocator.getSrmRestInternalFacadeV10().findCategorySchemes(query, orderBy, limit, offset);
-        } catch (Exception e) {
-            throw manageSrmInternalRestException(e);
-        }
-    }
-
-    @Override
-    public List<String> findCategorySchemesUrns(int firstResult, int maxResult, String query) throws MetamacException {
-        try {
-            CategorySchemes categorySchemes = findCategorySchemes(firstResult, maxResult, query);
-            List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : categorySchemes.getCategorySchemes()) {
-                urns.add(resource.getUrn());
-            }
-            return urns;
-        } catch (Exception e) {
-            throw manageSrmInternalRestException(e);
-        }
-    }
-
-    
-    // -------------------------------------------------------------------------------------------------
-    // CATEGORIES
-    // -------------------------------------------------------------------------------------------------
-    @Override
-    public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException {
-        if (StringUtils.isBlank(categorySchemeUrn)) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CATEGORY_SCHEME_URN);
-        }
-
-        try {
-            String[] params = UrnUtils.splitUrnItemScheme(categorySchemeUrn);
-            String agencyId = params[0];
-            String resourceId = params[1];
-            String version = params[2];
-            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(agencyId, resourceId, version, null, null, null, null);
-        } catch (Exception e) {
-            throw manageSrmInternalRestException(e);
-        }
-    }
-    
-    @Override
-    public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException {
-        try {
-            String limit = String.valueOf(maxResult);
-            String offset = String.valueOf(firstResult);
-            String orderBy = null;
-            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit, offset);
-        } catch (Exception e) {
-            throw manageSrmInternalRestException(e);
-        }
-    }
-
-    @Override
-    public List<String> findCategoriesUrns(int firstResult, int maxResult, String query) throws MetamacException {
-        try {
-            Categories categories = findCategories(firstResult, maxResult, query);
-            List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : categories.getCategories()) {
+            for (ResourceInternal resource : results) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -498,12 +534,123 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-
     
+    // -------------------------------------------------------------------------------------------------
+    // CATEGORY SCHEMES
+    // -------------------------------------------------------------------------------------------------
+
+    @Override
+    public CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException {
+        try {
+            String limit = String.valueOf(maxResult);
+            String offset = String.valueOf(firstResult);
+            String orderBy = null;
+            return restApiLocator.getSrmRestInternalFacadeV10().findCategorySchemes(query, orderBy, limit, offset);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<ResourceInternal> findCategorySchemes(String query) throws MetamacException {
+        try {
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            CategorySchemes categorySchemes = null;
+            do {
+                categorySchemes = findCategorySchemes(offset, MAXIMUM_LIMIT, query);
+                results.addAll(categorySchemes.getCategorySchemes());
+                offset += categorySchemes.getCategorySchemes().size(); // next page
+            } while (categorySchemes.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findCategorySchemesAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findCategorySchemes(query);
+            List<String> urns = new ArrayList<String>();
+            for (ResourceInternal resource : results) {
+                urns.add(resource.getUrn());
+            }
+            return urns;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+    // CATEGORIES
+    // -------------------------------------------------------------------------------------------------
+    @Override
+    public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException {
+        if (StringUtils.isBlank(categorySchemeUrn)) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.CATEGORY_SCHEME_URN);
+        }
+
+        try {
+            String[] params = UrnUtils.splitUrnItemScheme(categorySchemeUrn);
+            String agencyId = params[0];
+            String resourceId = params[1];
+            String version = params[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(agencyId, resourceId, version, null, null, null, null);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException {
+        try {
+            String limit = String.valueOf(maxResult);
+            String offset = String.valueOf(firstResult);
+            String orderBy = null;
+            return restApiLocator.getSrmRestInternalFacadeV10().findCategories(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit,
+                    offset);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<ResourceInternal> findCategories(String query) throws MetamacException {
+        try {
+            Integer offset = RestApiConstants.DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Categories categories = null;
+            do {
+                categories = findCategories(offset, MAXIMUM_LIMIT, query);
+                results.addAll(categories.getCategories());
+                offset += categories.getCategories().size(); // next page
+            } while (categories.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findCategoriesAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> results = findCategories(query);
+            List<String> urns = new ArrayList<String>();
+            for (ResourceInternal resource : results) {
+                urns.add(resource.getUrn());
+            }
+            return urns;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+
     // -------------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // -------------------------------------------------------------------------------------------------
-    
+
     private MetamacException manageSrmInternalRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_SRM_INTERNAL, restApiLocator.getSrmRestInternalFacadeV10());
     }

@@ -18,53 +18,71 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 
 public interface SrmRestInternalService {
 
     // DSD
+    public List<ResourceInternal> findDsds(String query) throws MetamacException;
     public DataStructures findDsds(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findDsdsUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findDsdsAsUrnsList(String query) throws MetamacException;
+    
     public DataStructure retrieveDsdByUrn(String urn) throws MetamacException;
     
     // CONCEPT SCHEMES
+    public List<ResourceInternal> findConceptSchemes(String query) throws MetamacException;
     public ConceptSchemes findConceptSchemes(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findConceptSchemesUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findConceptSchemesAsUrnsList(String query) throws MetamacException;
+    
     public ConceptScheme retrieveConceptSchemeByUrn(String urn) throws MetamacException;
     
     // CONCEPTS
-    public Concept retrieveConceptByUrn(String urn) throws MetamacException;
+    public List<ResourceInternal> findConcepts(String query) throws MetamacException;
+    public Concepts findConcepts(int firstResult, int maxResult, String query) throws MetamacException;
     public Concepts findConcepts(String conceptSchemeUrn, int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findConceptsUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findConceptsAsUrnsList(String query) throws MetamacException;
+    
+    public Concept retrieveConceptByUrn(String urn) throws MetamacException;
     public Concepts retrieveConceptsOfConceptSchemeEfficiently(String conceptSchemeUrn) throws MetamacException;
 
     // CODELIST
+    public List<ResourceInternal> findCodelists(String query) throws MetamacException;
     public Codelists findCodelists(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findCodelistsAsUrnsList(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findCodelistsAsUrnsList(String query) throws MetamacException;
+    
     public Codelist retrieveCodelistByUrn(String urn) throws MetamacException;
 
     // CODES
-    public Codes retrieveCodesOfCodelistEfficiently(String codelistUrn) throws MetamacException;
+    public List<ResourceInternal> findCodes(String query) throws MetamacException;
+    public Codes findCodes(int firstResult, int maxResult, String query) throws MetamacException;
     public Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findCodesUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findCodesAsUrnsList(String query) throws MetamacException;
+    
+    public Codes retrieveCodesOfCodelistEfficiently(String codelistUrn) throws MetamacException;
     public Code retrieveCodeByUrn(String urn) throws MetamacException;
     
     // ORGANISATION SCHEMES
+    public List<ResourceInternal> findOrganisationSchemes(String query) throws MetamacException;
     public OrganisationSchemes findOrganisationSchemes(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findOrganisationSchemesUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findOrganisationSchemesAsUrnsList(String query) throws MetamacException;
     
     // ORGANISATION
-    public Organisations retrieveOrganisationsOfOrganisationSchemeEfficiently(String organisationSchemeUrn) throws MetamacException;
+    public List<ResourceInternal> findOrganisations(String query) throws MetamacException;
     public Organisations findOrganisations(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findOrganisationsUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findOrganisationsAsUrnsList(String query) throws MetamacException;
     
+    public Organisations retrieveOrganisationsOfOrganisationSchemeEfficiently(String organisationSchemeUrn) throws MetamacException;
     public Agency retrieveAgencyByUrn(String agencyUrn) throws MetamacException;
     
     // CATEGORY SCHEMES
+    public List<ResourceInternal> findCategorySchemes(String query) throws MetamacException;
     public CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findCategorySchemesUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findCategorySchemesAsUrnsList(String query) throws MetamacException;
     
     // CATEGORY
-    public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException;
+    public List<ResourceInternal> findCategories(String query) throws MetamacException;
     public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException;
-    public List<String> findCategoriesUrns(int firstResult, int maxResult, String query) throws MetamacException;
+    public List<String> findCategoriesAsUrnsList(String query) throws MetamacException;
+    
+    public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException;
 }

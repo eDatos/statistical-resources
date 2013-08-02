@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.invocation.service;
 
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.DEFAULT_OFFSET;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.MAXIMUM_LIMIT;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,11 +57,28 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     }
 
     @Override
-    public List<String> findOperationsUrns(int firstResult, int maxResult, String query) throws MetamacException {
+    public List<ResourceInternal> findOperations(String query) throws MetamacException {
         try {
-            Operations operations = findOperations(firstResult, maxResult, query);
+            Integer offset = DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Operations operations = null;
+            do {
+                operations = findOperations(offset, MAXIMUM_LIMIT, query);
+                results.addAll(operations.getOperations());
+                offset += operations.getOperations().size(); // next page
+            } while (operations.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageStatisticalOperationsInternalRestException(e);
+        }
+    }
+    
+    @Override
+    public List<String> findOperationsAsUrnsList(String query) throws MetamacException {
+        try {
+            List<ResourceInternal> operations = findOperations(query);
             List<String> urns = new ArrayList<String>();
-            for (ResourceInternal resource : operations.getOperations()) {
+            for (ResourceInternal resource : operations) {
                 urns.add(resource.getUrn());
             }
             return urns;
@@ -110,6 +130,11 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     // ---------------------------------------------------------------------------------
 
     @Override
+    public Instances findInstances(int firstResult, int maxResult, String query) {
+        return findInstances(null, firstResult, maxResult, query);
+    }
+    
+    @Override
     public Instances findInstances(String operationId, int firstResult, int maxResult, String query) {
         String limit = String.valueOf(maxResult);
         String offset = String.valueOf(firstResult);
@@ -122,10 +147,28 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     }
 
     @Override
-    public List<String> findInstancesUrns(String operationId, int firstResult, int maxResult, String query) {
-        Instances instances = findInstances(operationId, firstResult, maxResult, query);
+    public List<ResourceInternal> findInstances(String query) throws MetamacException {
+        try {
+            Integer offset = DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            Instances instances = null;
+            do {
+                instances = findInstances(offset, MAXIMUM_LIMIT, query);
+                results.addAll(instances.getInstances());
+                offset += instances.getInstances().size(); // next page
+            } while (instances.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageStatisticalOperationsInternalRestException(e);
+        }
+    }
+    
+    
+    @Override
+    public List<String> findInstancesAsUrnsList(String query) throws MetamacException {
+        List<ResourceInternal> instances = findInstances(query);
         List<String> ids = new ArrayList<String>();
-        for (ResourceInternal resource : instances.getInstances()) {
+        for (ResourceInternal resource : instances) {
             ids.add(resource.getUrn());
         }
         return ids;
