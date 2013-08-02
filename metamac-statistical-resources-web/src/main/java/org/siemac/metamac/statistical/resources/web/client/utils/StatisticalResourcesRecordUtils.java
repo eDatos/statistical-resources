@@ -37,8 +37,15 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     //
 
     public static DatasetRecord getDatasetRecord(DatasetVersionDto datasetDto) {
-        DatasetRecord record = new DatasetRecord(datasetDto.getId(), datasetDto.getCode(), getLocalisedString(datasetDto.getTitle()), getLocalisedString(datasetDto.getDescription()),
-                CommonUtils.getProcStatusName(datasetDto), datasetDto.getVersionLogic(), datasetDto.getUrn(), datasetDto);
+        DatasetRecord record = new DatasetRecord();
+        record.setId(datasetDto.getId());
+        record.setCode(datasetDto.getCode());
+        record.setTitle(getLocalisedString(datasetDto.getTitle()));
+        record.setDescription(getLocalisedString(datasetDto.getDescription()));
+        record.setProcStatus(CommonUtils.getProcStatusName(datasetDto));
+        record.setVersionLogic(datasetDto.getVersionLogic());
+        record.setUrn(datasetDto.getUrn());
+        record.setDatasetDto(datasetDto);
         return record;
     }
 
@@ -52,8 +59,15 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     //
 
     public static PublicationRecord getPublicationRecord(PublicationVersionDto publicationDto) {
-        PublicationRecord record = new PublicationRecord(publicationDto.getId(), publicationDto.getCode(), getLocalisedString(publicationDto.getTitle()),
-                getLocalisedString(publicationDto.getDescription()), CommonUtils.getProcStatusName(publicationDto), publicationDto.getVersionLogic(), publicationDto.getUrn(), publicationDto);
+        PublicationRecord record = new PublicationRecord();
+        record.setId(publicationDto.getId());
+        record.setCode(publicationDto.getCode());
+        record.setTitle(getLocalisedString(publicationDto.getTitle()));
+        record.setDescription(getLocalisedString(publicationDto.getDescription()));
+        record.setProcStatus(CommonUtils.getProcStatusName(publicationDto));
+        record.setVersionLogic(publicationDto.getVersionLogic());
+        record.setUrn(publicationDto.getUrn());
+        record.setPublicationDto(publicationDto);
         return record;
     }
 
@@ -89,8 +103,16 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     //
 
     public static QueryRecord getQueryRecord(QueryVersionDto queryDto) {
-        QueryRecord record = new QueryRecord(queryDto.getId(), queryDto.getCode(), getLocalisedString(queryDto.getTitle()), CommonUtils.getProcStatusName(queryDto),
-                CommonUtils.getQueryTypeName(queryDto), queryDto.getVersionLogic(), queryDto.getUrn(), queryDto);
+        QueryRecord record = new QueryRecord();
+        record.setId(queryDto.getId());
+        record.setCode(queryDto.getCode());
+        record.setTitle(getLocalisedString(queryDto.getTitle()));
+        record.setDescription(getLocalisedString(queryDto.getDescription()));
+        record.setProcStatus(CommonUtils.getProcStatusName(queryDto));
+        record.setVersionLogic(queryDto.getVersionLogic());
+        record.setUrn(queryDto.getUrn());
+        record.setType(CommonUtils.getQueryTypeName(queryDto));
+        record.setQueryDto(queryDto);
         return record;
     }
 

@@ -9,10 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
-
-import com.smartgwt.client.widgets.grid.HoverCustomizer;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 
 public class PublicationListGrid extends BaseCustomListGrid {
 
@@ -21,28 +18,9 @@ public class PublicationListGrid extends BaseCustomListGrid {
 
         this.setShowAllRecords(true);
 
-        ListGridField identifierField = new ListGridField(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        ListGridField titleField = new ListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
+        CustomListGridField identifierField = new CustomListGridField(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        CustomListGridField titleField = new CustomListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
 
-        // ToolTip
-        identifierField.setShowHover(true);
-        identifierField.setHoverCustomizer(new HoverCustomizer() {
-
-            @Override
-            public String hoverHTML(Object value, ListGridRecord record, int rowNum, int colNum) {
-                PublicationRecord publicationRecord = (PublicationRecord) record;
-                return publicationRecord.getIdentifier();
-            }
-        });
-        titleField.setShowHover(true);
-        titleField.setHoverCustomizer(new HoverCustomizer() {
-
-            @Override
-            public String hoverHTML(Object value, ListGridRecord record, int rowNum, int colNum) {
-                PublicationRecord publicationRecord = (PublicationRecord) record;
-                return publicationRecord.getName();
-            }
-        });
         this.setFields(identifierField, titleField);
     }
 
