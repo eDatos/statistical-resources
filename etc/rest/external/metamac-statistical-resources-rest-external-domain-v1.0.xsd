@@ -451,7 +451,7 @@
             <xs:enumeration value="ID" />
             <xs:enumeration value="NAME" />
             <xs:enumeration value="DESCRIPTION" />
-            <xs:enumeration value="RELATED_DSD_URN" />
+            <xs:enumeration value="RELATED_DATASET_URN" />
             <xs:enumeration value="STATUS" />
             <xs:enumeration value="TYPE" />
             <xs:enumeration value="VALID_FROM" />

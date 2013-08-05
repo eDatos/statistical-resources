@@ -1,26 +1,65 @@
 package org.siemac.metamac.rest.statistical_resources.v1_0.service;
 
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.NOT_EXISTS;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_3_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_4_CODE;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 
 public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
+
+    @Test
+    public void testFindQueries() throws Exception {
+        Queries queries = statisticalResourcesRestExternalFacadeClientXml.findQueries(null, null, null, null, null);
+
+        assertEquals(4, queries.getQueries().size());
+        assertEquals(RestExternalConstants.KIND_QUERIES, queries.getKind());
+    }
+
+    @Test
+    public void testFindQueriesXml() throws Exception {
+        String requestUri = getFindQueriesUri(AGENCY_1, null, null, null, null);
+        InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/findQueries.xml");
+        testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
+    }
+
+    @Test
+    public void testRetrieveQuery() throws Exception {
+        Query query = statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(AGENCY_1, QUERY_1_CODE, null, null);
+
+        assertEquals(QUERY_1_CODE, query.getId());
+        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)", query.getUrn());
+        assertEquals(RestExternalConstants.KIND_QUERY, query.getKind());
+
+        MetamacRestAsserts.assertEqualsInternationalString("es", "title-query1 en Espanol", null, null, query.getName());
+    }
+
+    @Test
+    public void testRetrieveQueryAnotherLanguage() throws Exception {
+        Query query = statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(AGENCY_1, QUERY_1_CODE, Arrays.asList("en"), null);
+
+        MetamacRestAsserts.assertEqualsInternationalString("es", "title-query1 en Espanol", "en", "title-query1 in English", query.getName());
+    }
 
     @Test
     public void testRetrieveQueryXml() throws Exception {
@@ -272,17 +311,25 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         assertEquals(12, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR).length);
     }
 
-    @Ignore
-    // TODO testRetrieveQueryErrorNotExists
     @Test
     public void testRetrieveQueryErrorNotExists() throws Exception {
+        String agencyID = AGENCY_1;
+        String resourceID = NOT_EXISTS;
+        try {
+            statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(agencyID, resourceID, null, null);
+        } catch (ServerWebApplicationException e) {
+            assertEquals(Status.NOT_FOUND.getStatusCode(), e.getStatus());
 
-    }
-
-    @Ignore
-    // TODO testRetrieveQueryErrorNotExistsXml
-    @Test
-    public void testRetrieveQueryErrorNotExistsXml() throws Exception {
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = extractErrorFromException(statisticalResourcesRestExternalFacadeClientXml, e);
+            assertEquals(RestServiceExceptionType.QUERY_NOT_FOUND.getCode(), exception.getCode());
+            assertEquals("Query " + resourceID + " not found from Agency " + agencyID, exception.getMessage());
+            assertEquals(2, exception.getParameters().getParameters().size());
+            assertEquals(resourceID, exception.getParameters().getParameters().get(0));
+            assertEquals(agencyID, exception.getParameters().getParameters().get(1));
+            assertNull(exception.getErrors());
+        } catch (Exception e) {
+            fail("Incorrect exception");
+        }
     }
 
     public String getRetrieveQueryUri(String agencyID, String resourceID, String fields, String langs) throws Exception {

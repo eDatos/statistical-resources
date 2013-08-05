@@ -10,6 +10,8 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.DATASET_1_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.DATASET_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.NOT_EXISTS;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.VERSION_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.VERSION_2;
 
@@ -61,6 +63,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
@@ -85,6 +88,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private DatasetVersionRepository          datasetVersionRepository;
     private QueryVersionRepository            queryVersionRepository;
     private DatasetService                    datasetService;
+    private QueryService                      queryService;
     private SrmRestExternalFacade             srmRestExternalFacade;
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
@@ -271,6 +275,46 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private void mockFindQueriesByCondition() throws MetamacException {
+        when(queryService.findQueryVersionsByCondition(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenAnswer(new Answer<PagedResult<QueryVersion>>() {
+
+            @Override
+            public org.fornax.cartridges.sculptor.framework.domain.PagedResult<QueryVersion> answer(InvocationOnMock invocation) throws Throwable {
+                List<ConditionalCriteria> conditions = (List<ConditionalCriteria>) invocation.getArguments()[1];
+
+                String agencyID = getAgencyIdFromConditionalCriteria(conditions);
+                String resourceID = getResourceIdFromConditionalCriteria(conditions);
+                String version = getVersionFromConditionalCriteria(conditions);
+
+                if (agencyID != null && resourceID != null && version != null) {
+                    // Retrieve one
+                    QueryVersion queryVersion = null;
+                    if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
+                        queryVersion = null;
+                    } else if (AGENCY_1.equals(agencyID) && QUERY_1_CODE.equals(resourceID) && VERSION_1.equals(version)) {
+                        queryVersion = restDoMocks.mockQueryVersion(agencyID, resourceID, version);
+                    } else {
+                        fail();
+                    }
+                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                    if (queryVersion != null) {
+                        queries.add(queryVersion);
+                    }
+                    return new PagedResult<QueryVersion>(queries, 0, queries.size(), queries.size());
+                } else {
+                    // any
+                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_1));
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_2));
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_2, QUERY_1_CODE, VERSION_1));
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_2_CODE, VERSION_1));
+                    return new PagedResult<QueryVersion>(queries, queries.size(), queries.size(), queries.size(), queries.size() * 10, 0);
+                }
+            };
+        });
+    }
+
     private void mockRetrieveDatasetVersionDimensionsIds() throws MetamacException {
         when(datasetService.retrieveDatasetVersionDimensionsIds(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<List<String>>() {
 
@@ -434,6 +478,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         reset(datasetService);
         publicationService = applicationContext.getBean(PublicationService.class);
         reset(publicationService);
+        queryService = applicationContext.getBean(QueryService.class);
+        reset(queryService);
 
         queryVersionRepository = applicationContext.getBean(QueryVersionRepository.class);
         reset(queryVersionRepository);
@@ -460,6 +506,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         mockFindCollectionsByCondition();
 
+        mockFindQueriesByCondition();
         mockRetrieveQueryLastPublishedVersion();
     }
 }

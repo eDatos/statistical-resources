@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<stat:queries xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" kind="statisticalResources#queries" total="40" limit="25" offset="4" selfLink="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1?limit=25&amp;offset=4" nextLink="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1?limit=25&amp;offset=29" lastLink="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1?limit=25&amp;offset=29">
+    <stat:query kind="statisticalResources#query">
+        <cdomain:id>query1</cdomain:id>
+        <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)</cdomain:urn>
+        <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
+        <cdomain:name>
+            <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
+        </cdomain:name>
+    </stat:query>
+    <stat:query kind="statisticalResources#query">
+        <cdomain:id>query1</cdomain:id>
+        <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(02.000)</cdomain:urn>
+        <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
+        <cdomain:name>
+            <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
+        </cdomain:name>
+    </stat:query>
+    <stat:query kind="statisticalResources#query">
+        <cdomain:id>query1</cdomain:id>
+        <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency2:query1(01.000)</cdomain:urn>
+        <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency2/query1"/>
+        <cdomain:name>
+            <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
+        </cdomain:name>
+    </stat:query>
+    <stat:query kind="statisticalResources#query">
+        <cdomain:id>query2</cdomain:id>
+        <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query2(01.000)</cdomain:urn>
+        <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query2"/>
+        <cdomain:name>
+            <cdomain:text xml:lang="es">title-query2 en Espanol</cdomain:text>
+        </cdomain:name>
+    </stat:query>
+</stat:queries>

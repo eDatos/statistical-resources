@@ -41,6 +41,18 @@ public class QueriesRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implement
                     return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
+                case RELATED_DATASET_URN:
+                    return buildSculptorPropertyCriteria(QueryVersionProperties.datasetVersion().siemacMetadataStatisticalResource().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case TYPE:
+                    return buildSculptorPropertyCriteria(QueryVersionProperties.type(), PropertyTypeEnum.QUERY_TYPE, propertyRestriction);
+                case STATUS:
+                    return buildSculptorPropertyCriteria(QueryVersionProperties.status(), PropertyTypeEnum.QUERY_STATUS, propertyRestriction);
+                case VALID_FROM:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, QueryVersionProperties.lifeCycleStatisticalResource().validTo(), QueryVersion.class, false);
+                case VALID_TO:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, QueryVersionProperties.lifeCycleStatisticalResource().validTo(), QueryVersion.class, false);
+                case STATISTIC_OPERATION_URN:
+                    return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn(), PropertyTypeEnum.STRING, propertyRestriction);
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
             }

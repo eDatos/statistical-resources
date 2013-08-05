@@ -12,6 +12,8 @@ import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.rest.search.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.rest.search.criteria.utils.CriteriaUtils.PropertyValueRestToPropertyValueEntityInterface;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,7 @@ public abstract class BaseRest2DoMapperV10Impl {
     private PropertyValueRestToPropertyValueEntityInterface propertyValueRestToPropertyValueEntity = null;
 
     protected enum PropertyTypeEnum {
-        STRING, DATE, BOOLEAN
+        STRING, DATE, BOOLEAN, QUERY_TYPE, QUERY_STATUS
     }
 
     public BaseRest2DoMapperV10Impl() {
@@ -52,6 +54,10 @@ public abstract class BaseRest2DoMapperV10Impl {
                         return CoreCommonUtil.transformISODateTimeLexicalRepresentationToDateTime(value).toDate();
                     case BOOLEAN:
                         return Boolean.valueOf(value);
+                    case QUERY_TYPE:
+                        return toQueryType(value);
+                    case QUERY_STATUS:
+                        return toQueryStatus(value);
                     default:
                         throw toRestExceptionParameterIncorrect(propertyName);
                 }
@@ -80,6 +86,19 @@ public abstract class BaseRest2DoMapperV10Impl {
     protected RestException toRestExceptionParameterIncorrect(String parameter) {
         org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.PARAMETER_INCORRECT, parameter);
         throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+    }
+
+    private QueryTypeEnum toQueryType(String source) {
+        QueryTypeEnum target = QueryTypeEnum.valueOf(source);
+        return target;
+    }
+
+    private QueryStatusEnum toQueryStatus(String source) {
+        QueryStatusEnum target = QueryStatusEnum.valueOf(source);
+        if (QueryStatusEnum.PENDING_REVIEW.equals(target)) {
+            target = QueryStatusEnum.ACTIVE;
+        }
+        return target;
     }
 
 }
