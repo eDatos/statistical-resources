@@ -195,6 +195,10 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         maintainerItem.setShowIfCondition(getFormItemIfFunctionEditionMode());
         fields.add(maintainerItem);
 
+        ExternalItemLinkItem maintainerViewItem = new ExternalItemLinkItem(SiemacMetadataDS.MAINTAINER_VIEW, getConstants().siemacMetadataStatisticalResourceMaintainer());
+        maintainerViewItem.setShowIfCondition(getFormItemIfFunctionViewMode());
+        fields.add(maintainerViewItem);
+
         RelatedResourceDto datasetVersion = getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION));
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();

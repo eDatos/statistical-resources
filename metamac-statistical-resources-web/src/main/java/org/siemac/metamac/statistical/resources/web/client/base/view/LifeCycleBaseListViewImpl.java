@@ -90,7 +90,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                retrieveResultSet(firstResult, maxResults);
+                LifeCycleBaseListViewImpl.this.retrieveResultSet(firstResult, maxResults);
             }
         });
         listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);

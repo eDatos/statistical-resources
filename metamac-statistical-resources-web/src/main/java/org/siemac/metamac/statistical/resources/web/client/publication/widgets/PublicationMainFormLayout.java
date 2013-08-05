@@ -15,42 +15,42 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
     @Override
     protected boolean canSendToProductionValidation() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canSendToDiffusionValidation() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canRejectValidation() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canPublish() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canProgramPublication() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canCancelProgrammedPublication() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canVersioning() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 }

@@ -13,7 +13,6 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
@@ -175,7 +174,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @Override
-    public void saveQuery(QueryVersionDto queryDto) {
+    public void saveQuery(final QueryVersionDto queryDto) {
         dispatcher.execute(new SaveQueryVersionAction(queryDto, operation.getCode()), new WaitingAsyncCallbackHandlingError<SaveQueryVersionResult>(this) {
 
             @Override
@@ -186,10 +185,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             }
 
             private void updateUrlIfNeeded(QueryVersionDto query) {
-                String queryParam = placeManager.getCurrentPlaceRequest().getParameter(PlaceRequestParams.queryParam, null);
-                if (queryParam == null) {
-                    String queryCodeWithVersion = query.getCode() + "(" + query.getVersionLogic() + ")";
-                    placeManager.revealRelativePlace(new PlaceRequest(NameTokens.queryPage).with(PlaceRequestParams.queryParam, queryCodeWithVersion), -1);
+                if (queryDto.getId() == null) {
+                    placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeQueryPlaceRequest(query.getUrn()), -1);
                 }
             }
         });
