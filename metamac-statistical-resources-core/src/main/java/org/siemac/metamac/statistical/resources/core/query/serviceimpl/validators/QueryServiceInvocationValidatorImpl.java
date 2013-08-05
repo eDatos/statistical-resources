@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
@@ -89,7 +90,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
             return;
         }
 
-        checkExistingLifeCycleStatisticalResource(queryVersion.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY_VERSION, exceptions);
+        checkExistingLifeCycleStatisticalResource(queryVersion.getLifeCycleStatisticalResource(), TypeRelatedResourceEnum.QUERY_VERSION, ServiceExceptionParameters.QUERY_VERSION, exceptions);
         checkQueryVersion(queryVersion, exceptions);
 
         // Metadata that must be filled for existing entities

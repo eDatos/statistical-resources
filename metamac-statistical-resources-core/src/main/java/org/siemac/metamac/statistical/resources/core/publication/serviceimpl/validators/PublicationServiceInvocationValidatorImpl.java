@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -84,7 +85,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
             return;
         }
 
-        checkExistingSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
+        checkExistingSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
         checkPublicationVersion(publicationVersion, exceptions);
 
         // Metadata that must be filled for existing entities
@@ -148,7 +149,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         }
 
         checkChapter(chapter, exceptions);
-        checkExistingNameableStatisticalResource(chapter.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER, exceptions);
+        checkExistingNameableStatisticalResource(chapter.getNameableStatisticalResource(), TypeRelatedResourceEnum.CHAPTER, ServiceExceptionParameters.CHAPTER, exceptions);
 
         // Metadata that must be filled for existing entities
         StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getElementLevel(), ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL, exceptions);
@@ -207,7 +208,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         }
 
         checkCube(cube, exceptions);
-        checkExistingNameableStatisticalResource(cube.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE, exceptions);
+        checkExistingNameableStatisticalResource(cube.getNameableStatisticalResource(), TypeRelatedResourceEnum.CUBE, ServiceExceptionParameters.CUBE, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL, exceptions);
     }
 

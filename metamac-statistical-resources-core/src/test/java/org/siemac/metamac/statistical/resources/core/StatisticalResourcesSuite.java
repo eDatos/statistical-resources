@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMappe
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.utils.VersionUtilsTest;
+import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
@@ -19,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetI
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
+import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedResourceEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtilsTest;
@@ -54,6 +56,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      InternationalStringRepositoryTest.class,
                      SiemacMetadataStatisticalResourceRepositoryTest.class,
                      IdentifiableStatisticalResourceRepositoryTest.class,
+                     BaseInvocationValidatorTest.class,
                      BaseDto2DoMapperTest.class,
                      QueryRepositoryTest.class,
                      QueryVersionRepositoryTest.class, 
@@ -74,6 +77,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      PublicationDo2DtoMapperTest.class,
                      PublicationDto2DoMapperTest.class,
                      ProcStatusEnumUtilsTest.class, 
+                     TypeRelatedResourceEnumUtilsTest.class,
                      QueryStatusEnumUtilsTest.class,
                      LifecycleCommonMetadataCheckerTest.class,
                      LifecycleCheckerTest.class,
