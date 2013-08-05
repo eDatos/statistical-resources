@@ -793,7 +793,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setSelfLink(source.getSelfLink());
 
         target.setOpen(source.isOpen());
-        target.setOrder(source.getOrder());
         return target;
     }
 

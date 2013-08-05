@@ -301,7 +301,6 @@
                 <xs:sequence>
                     <xs:element name="visualisationParent" type="xs:string" minOccurs="0" />
                     <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0" />
-                    <xs:element name="order" type="xs:int" minOccurs="0" />
                     <xs:element name="open" type="xs:boolean" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
