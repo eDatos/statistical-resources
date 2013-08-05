@@ -48,8 +48,10 @@ public class RestDoMocks {
         target.setDatasetRepositoryId("datasetRepository01");
         target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("GEO_DIM-codelist01-code01"));
         target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("GEO_DIM-codelist01-code02"));
+        target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "Y2012"));
         target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
         target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2013", "Y2013"));
+        target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2014", "Y2014"));
         target.addMeasureCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("code-d2-1"));
         target.addMeasureCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("code-d2-2"));
         target.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem("municipalities"));
@@ -85,6 +87,8 @@ public class RestDoMocks {
     public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
+        target.setDatasetVersion(mockDatasetVersion(agencyID, "dataset01", "01.000"));
+
         target.setStatus(QueryStatusEnum.ACTIVE);
         if (QUERY_1_CODE.equals(resourceID)) {
             target.setType(QueryTypeEnum.FIXED);
@@ -112,18 +116,10 @@ public class RestDoMocks {
             target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011")));
             target.setLatestTemporalCodeInCreation("2012");
             target.setLatestDataNumber(null);
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "Y2012"));
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2013", "Y2013"));
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2014", "Y2014"));
         } else if (QueryTypeEnum.LATEST_DATA.equals(target.getType())) {
             target.addSelection(mockQuerySelectionItem("TIME_PERIOD", null));
             target.setLatestTemporalCodeInCreation(null);
             target.setLatestDataNumber(2);
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "Y2012"));
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2013", "Y2013"));
-            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2014", "Y2014"));
         }
         return target;
     }

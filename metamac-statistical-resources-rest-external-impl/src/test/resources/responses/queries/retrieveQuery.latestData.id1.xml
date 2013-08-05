@@ -5,23 +5,149 @@
     <stat:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query3"/>
     <stat:parentLink kind="statisticalResources#queries" href="http://data.istac.es/apis/statistical-resources/v1.0/queries"/>
     <stat:name>
-        <cdomain:text xml:lang="es">title-resource-ryw8GREewS en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">title-resource-HxHH69e6b9 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-ryw8GREewS en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-HxHH69e6b9 en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
     </stat:selectedLanguages>
     <stat:metadata>
         <stat:relatedDataset kind="statisticalResources#dataset">
-            <cdomain:id>statisticalOperation01_000001</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency01:resource-HVC2gOXQri(001.000)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency01/statisticalOperation01_000001/001.000"/>
+            <cdomain:id>dataset01</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset01(01.000)</cdomain:urn>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset01/01.000"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-resource-HVC2gOXQri en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-resource-UtiYbJoHvc en Espanol</cdomain:text>
             </cdomain:name>
         </stat:relatedDataset>
+        <stat:relatedDsd kind="structuralResources#dataStructure">
+            <cdomain:id>DSD01</cdomain:id>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=MaintainerMock:DSD01(1.0)</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#dataStructure" href="http://data.istac.es/apis/srm/latest/DSD01"/>
+            <cdomain:name>
+                <cdomain:text xml:lang="es">title-DSD01 en Espanol</cdomain:text>
+            </cdomain:name>
+            <stat:heading total="2">
+                <stat:dimensionId>measure01</stat:dimensionId>
+                <stat:dimensionId>dim01</stat:dimensionId>
+            </stat:heading>
+            <stat:stub total="2">
+                <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
+            </stat:stub>
+            <stat:autoOpen>true</stat:autoOpen>
+            <stat:showDecimals>2</stat:showDecimals>
+        </stat:relatedDsd>
+        <stat:dimensions total="4">
+            <stat:dimension>
+                <stat:id>GEO_DIM</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">GEO_DIM-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>GEOGRAPHIC_DIMENSION</stat:type>
+                <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedDimensionValues" total="2">
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>GEO_DIM-codelist01-code01</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).GEO_DIM-codelist01-code01</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/GEO_DIM-codelist01-code01"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">GEO_DIM-codelist01-code01 en Español</cdomain:text>
+                        </cdomain:name>
+                        <stat:order>1</stat:order>
+                        <stat:open>true</stat:open>
+                    </stat:value>
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>GEO_DIM-codelist01-code03</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).GEO_DIM-codelist01-code03</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/GEO_DIM-codelist01-code03"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">GEO_DIM-codelist01-code03 en Español</cdomain:text>
+                        </cdomain:name>
+                        <stat:parent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).GEO_DIM-codelist01-code02</stat:parent>
+                        <stat:order>4</stat:order>
+                        <stat:open>false</stat:open>
+                    </stat:value>
+                </stat:dimensionValues>
+            </stat:dimension>
+            <stat:dimension>
+                <stat:id>TIME_PERIOD</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">TIME_PERIOD-conceptTimeDimension01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>TIME_DIMENSION</stat:type>
+                <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:NonEnumeratedDimensionValues" total="2">
+                    <stat:value>
+                        <stat:id>2013</stat:id>
+                        <stat:name>
+                            <cdomain:text xml:lang="es">2013 en Español</cdomain:text>
+                        </stat:name>
+                    </stat:value>
+                    <stat:value>
+                        <stat:id>2014</stat:id>
+                        <stat:name>
+                            <cdomain:text xml:lang="es">2014 en Español</cdomain:text>
+                        </stat:name>
+                    </stat:value>
+                </stat:dimensionValues>
+            </stat:dimension>
+            <stat:dimension>
+                <stat:id>measure01</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">measure01-conceptMeasureDimension01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>MEASURE_DIMENSION</stat:type>
+                <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedDimensionValues" total="3">
+                    <stat:value kind="structuralResources#concept">
+                        <cdomain:id>measure01-conceptScheme01-concept01</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept01"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">measure01-conceptScheme01-concept01 en Español</cdomain:text>
+                        </cdomain:name>
+                        <stat:showDecimalsPrecision>4</stat:showDecimalsPrecision>
+                    </stat:value>
+                    <stat:value kind="structuralResources#concept">
+                        <cdomain:id>measure01-conceptScheme01-concept02</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept02</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept02"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">measure01-conceptScheme01-concept02 en Español</cdomain:text>
+                        </cdomain:name>
+                        <stat:parent>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01</stat:parent>
+                    </stat:value>
+                    <stat:value kind="structuralResources#concept">
+                        <cdomain:id>measure01-conceptScheme01-concept05</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept05</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept05"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">measure01-conceptScheme01-concept05 en Español</cdomain:text>
+                        </cdomain:name>
+                        <stat:showDecimalsPrecision>1</stat:showDecimalsPrecision>
+                    </stat:value>
+                </stat:dimensionValues>
+            </stat:dimension>
+            <stat:dimension>
+                <stat:id>dim01</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">dim01-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>DIMENSION</stat:type>
+                <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedDimensionValues" total="1">
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>dim01-codelist01-code01</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:dim01-codelist01(01.000).dim01-codelist01-code01</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code01"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">dim01-codelist01-code01 en Español</cdomain:text>
+                        </cdomain:name>
+                        <stat:order>1</stat:order>
+                        <stat:open>true</stat:open>
+                    </stat:value>
+                </stat:dimensionValues>
+            </stat:dimension>
+        </stat:dimensions>
         <stat:status>ACTIVE</stat:status>
         <stat:type>LATEST_DATA</stat:type>
         <stat:latestDataNumber>2</stat:latestDataNumber>

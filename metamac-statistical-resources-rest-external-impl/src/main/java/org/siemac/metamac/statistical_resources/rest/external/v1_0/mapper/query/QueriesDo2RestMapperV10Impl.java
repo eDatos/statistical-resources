@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +7,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.Pair;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -15,12 +15,13 @@ import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
@@ -104,6 +105,12 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         }
         QueryMetadata target = new QueryMetadata();
 
+        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
+        Pair<DataStructureDefinition, Dimensions> dataStructureAndDimensions = commonDo2RestMapper.toDataStructureDefinitionAndDimensions(source.getDatasetVersion(),
+                effectiveDimensionValuesToDataByDimension, selectedLanguages);
+        target.setRelatedDsd(dataStructureAndDimensions.getFirst());
+        target.setDimensions(dataStructureAndDimensions.getSecond());
+
         target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));
@@ -120,11 +127,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
-        Map<String, List<String>> dimensionValuesSelected = new HashMap<String, List<String>>(source.getSelection().size());
-        for (QuerySelectionItem selection : source.getSelection()) {
-            List<String> codes = commonDo2RestMapper.calculateEffectiveCodesToQuery(source, selection);
-            dimensionValuesSelected.put(selection.getDimension(), codes);
-        }
+        Map<String, List<String>> dimensionValuesSelected = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
         return commonDo2RestMapper.toData(source.getDatasetVersion(), selectedLanguages, dimensionValuesSelected);
     }
 

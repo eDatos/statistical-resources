@@ -103,6 +103,8 @@
     <xs:complexType name="QueryMetadata">
         <xs:sequence>
             <xs:element name="relatedDataset" type="common:Resource" minOccurs="1" />
+            <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
+            <xs:element name="dimensions" type="tns:Dimensions" />            
             <xs:element name="status" type="tns:QueryStatus" />
             <xs:element name="type" type="tns:QueryType" />
             <xs:element name="latestDataNumber" type="xs:int" minOccurs="0" />

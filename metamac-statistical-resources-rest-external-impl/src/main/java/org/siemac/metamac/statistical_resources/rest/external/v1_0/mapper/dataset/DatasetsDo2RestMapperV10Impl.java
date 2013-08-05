@@ -1,21 +1,13 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset;
 
-import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
-
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Response.Status;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.Pair;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.Item;
@@ -23,58 +15,23 @@ import org.siemac.metamac.rest.common.v1_0.domain.Items;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
-import org.siemac.metamac.rest.exception.RestException;
-import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionVisualisation;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
-import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
-import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
-
-    private static final Logger    logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10Impl.class);
-
-    @Autowired
-    private SrmRestExternalFacade  srmRestExternalFacade;
-
-    @Autowired
-    private DatasetService         datasetService;
 
     @Autowired
     private CommonDo2RestMapperV10 commonDo2RestMapper;
@@ -142,10 +99,10 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         }
         DatasetMetadata target = new DatasetMetadata();
 
-        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrn());
-        List<DsdDimension> dimensionsType = DsdProcessor.getDimensions(dataStructure);
+        Pair<DataStructureDefinition, Dimensions> dataStructureAndDimensions = commonDo2RestMapper.toDataStructureDefinitionAndDimensions(source, null, selectedLanguages);
+        target.setRelatedDsd(dataStructureAndDimensions.getFirst());
+        target.setDimensions(dataStructureAndDimensions.getSecond());
 
-        // DatasetResource
         target.setGeographicCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
         target.setTemporalCoverages(toTemporalCoverages(source.getTemporalCoverage(), selectedLanguages));
         target.setMeasureCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));
@@ -154,8 +111,6 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setDateStart(commonDo2RestMapper.toDate(source.getDateStart()));
         target.setDateEnd(commonDo2RestMapper.toDate(source.getDateEnd()));
         target.setStatisticalUnit(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getStatisticalUnit(), selectedLanguages));
-        target.setRelatedDsd(toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
-        target.setDimensions(toDimensions(dataStructure, dimensionsType, source.getSiemacMetadataStatisticalResource().getUrn(), selectedLanguages));
         target.setFormatExtentObservations(source.getFormatExtentObservations());
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
         target.setDateNextUpdate(commonDo2RestMapper.toDate(source.getDateNextUpdate()));
@@ -198,254 +153,6 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setId(source.getIdentifier());
         target.setName(commonDo2RestMapper.toInternationalString(source.getDescription(), selectedLanguages));
         return target;
-    }
-
-    private DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages) {
-        if (source == null) {
-            return null;
-        }
-        DataStructureDefinition target = new DataStructureDefinition();
-        commonDo2RestMapper.toResourceExternalItemSrm(source, target, selectedLanguages);
-        target.setHeading(toDimensionsId(dataStructure.getHeading()));
-        target.setStub(toDimensionsId(dataStructure.getStub()));
-        target.setAutoOpen(dataStructure.isAutoOpen());
-        target.setShowDecimals(dataStructure.getShowDecimals());
-        return target;
-    }
-
-    private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions sources) {
-        if (sources == null) {
-            return null;
-        }
-        DimensionsId targets = new DimensionsId();
-        for (LocalDimensionReferenceType source : sources.getDimensions()) {
-            targets.getDimensionIds().add(toDimensionId(source));
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getDimensionIds().size()));
-        return targets;
-    }
-
-    private String toDimensionId(LocalDimensionReferenceType source) {
-        if (source == null) {
-            return null;
-        }
-        return source.getRef().getId();
-    }
-
-    private Dimensions toDimensions(DataStructure dataStructure, List<DsdDimension> sources, String datasetVersionUrn, List<String> selectedLanguages) throws MetamacException {
-
-        List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
-        if (CollectionUtils.isEmpty(dimensionsId)) {
-            return null;
-        }
-
-        // TODO pasar a DsdProcessor?
-        Map<String, DimensionVisualisation> dimensionVisualisationByDimensionId = null;
-        if (dataStructure.getDimensionVisualisations() != null && !CollectionUtils.isEmpty(dataStructure.getDimensionVisualisations().getDimensionVisualisations())) {
-            dimensionVisualisationByDimensionId = new HashMap<String, DimensionVisualisation>(dataStructure.getDimensionVisualisations().getDimensionVisualisations().size());
-            for (DimensionVisualisation dimensionVisualisation : dataStructure.getDimensionVisualisations().getDimensionVisualisations()) {
-                dimensionVisualisationByDimensionId.put(dimensionVisualisation.getDimension().getRef().getId(), dimensionVisualisation);
-            }
-        }
-
-        Dimensions targets = new Dimensions();
-        for (DsdDimension source : sources) {
-            DimensionVisualisation dimensionVisualisation = dimensionVisualisationByDimensionId != null ? dimensionVisualisationByDimensionId.get(source.getComponentId()) : null;
-            targets.getDimensions().add(toDimension(datasetVersionUrn, dataStructure, source, dimensionVisualisation, selectedLanguages));
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
-        return targets;
-    }
-
-    private Dimension toDimension(String datasetVersionUrn, DataStructure dataStructure, DsdDimension source, DimensionVisualisation dimensionVisualisation, List<String> selectedLanguages)
-            throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        Dimension target = new Dimension();
-        target.setId(source.getComponentId());
-        target.setType(toDimensionType(source.getType()));
-
-        Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
-        target.setName(commonDo2RestMapper.toInternationalString(conceptIdentity.getNames(), selectedLanguages));
-
-        // Dimension values
-        target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, selectedLanguages));
-        return target;
-    }
-
-    private DimensionValues toDimensionValues(String datasetVersionUrn, DataStructure dataStructure, DsdDimension dimension, DimensionVisualisation dimensionVisualisation,
-            List<String> selectedLanguages) throws MetamacException {
-        if (dimension == null) {
-            return null;
-        }
-        List<CodeDimension> coverages = datasetService.retrieveCoverageForDatasetVersionDimension(SERVICE_CONTEXT, datasetVersionUrn, dimension.getComponentId());
-        if (CollectionUtils.isEmpty(coverages)) {
-            return null;
-        }
-        Map<String, CodeDimension> coveragesById = new HashMap<String, CodeDimension>(coverages.size());
-        for (CodeDimension coverage : coverages) {
-            coveragesById.put(coverage.getIdentifier(), coverage);
-        }
-
-        DimensionValues targets = null;
-        if (dimension.getCodelistRepresentationUrn() != null) {
-            targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), dimensionVisualisation, selectedLanguages);
-        } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
-            targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), selectedLanguages);
-        } else if (dimension.getTimeTextFormatRepresentation() != null) {
-            targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatRepresentation(), selectedLanguages);
-        } else if (dimension.getTextFormatRepresentation() != null) {
-            targets = toNonEnumeratedDimensionValuesFromTextFormatType(coveragesById, dimension.getTextFormatRepresentation(), selectedLanguages);
-        } else {
-            logger.error("Dimension definition unsupported for dimension: " + dimension.getComponentId());
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-        }
-
-        return targets;
-    }
-
-    private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionVisualisation dimensionVisualisation,
-            List<String> selectedLanguages) throws MetamacException {
-        if (codelistUrn == null) {
-            return null;
-        }
-        EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
-        String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
-        String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness);
-        for (CodeResource code : codes.getCodes()) {
-            String id = code.getId();
-            if (!coveragesById.containsKey(id)) {
-                // skip to include only codes in coverage
-                continue;
-            }
-            targets.getValues().add(toEnumeratedDimensionValue(code, selectedLanguages));
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
-        return targets;
-    }
-
-    private EnumeratedDimensionValues toEnumeratedDimensionValuesFromConceptScheme(Map<String, CodeDimension> coveragesById, DataStructure dataStructure, DsdComponentType componentType,
-            String conceptSchemeUrn, List<String> selectedLanguages) throws MetamacException {
-        if (conceptSchemeUrn == null) {
-            return null;
-        }
-        EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
-
-        Map<String, Integer> showDecimalPrecisionsById = null;
-        if (DsdComponentType.MEASURE.equals(componentType)) {
-            if (dataStructure.getShowDecimalsPrecisions() != null && !CollectionUtils.isEmpty(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions())) {
-                showDecimalPrecisionsById = new HashMap<String, Integer>(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().size());
-                for (ShowDecimalPrecision showDecimalPrecision : dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions()) {
-                    showDecimalPrecisionsById.put(showDecimalPrecision.getConcept().getRef().getId(), showDecimalPrecision.getShowDecimals());
-                }
-            }
-        }
-
-        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
-        for (ItemResourceInternal concept : concepts.getConcepts()) {
-            String id = concept.getId();
-            if (!coveragesById.containsKey(id)) {
-                // skip to include only concepts in coverage
-                continue;
-            }
-            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsById, selectedLanguages));
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
-        return targets;
-    }
-
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType,
-            List<String> selectedLanguages) throws MetamacException {
-        if (timeTextFormatType == null) {
-            return null;
-        }
-        // note: timeTextFormatType definition is not necessary to define dimension values
-        NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
-        for (String coverageId : coveragesById.keySet()) {
-            CodeDimension codeDimension = coveragesById.get(coverageId);
-            targets.getValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
-        return targets;
-    }
-
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(Map<String, CodeDimension> coveragesById, SimpleComponentTextFormatType textFormatType,
-            List<String> selectedLanguages) throws MetamacException {
-        if (textFormatType == null) {
-            return null;
-        }
-        // note: textFormatType definition is not necessary to define dimension values
-        NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
-        for (String coverageId : coveragesById.keySet()) {
-            CodeDimension codeDimension = coveragesById.get(coverageId);
-            targets.getValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
-        return targets;
-    }
-
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResource source, List<String> selectedLanguages) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        EnumeratedDimensionValue target = new EnumeratedDimensionValue();
-        target.setId(source.getId());
-        target.setUrn(source.getUrn());
-        target.setName(commonDo2RestMapper.toInternationalString(source.getName(), selectedLanguages));
-        target.setParent(source.getParent());
-        target.setKind(source.getKind());
-        target.setSelfLink(source.getSelfLink());
-
-        target.setOpen(source.isOpen());
-        target.setOrder(source.getOrder());
-        return target;
-    }
-
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsById, List<String> selectedLanguages) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        EnumeratedDimensionValue target = new EnumeratedDimensionValue();
-        target.setId(source.getId());
-        target.setUrn(source.getUrn());
-        target.setName(commonDo2RestMapper.toInternationalString(source.getName(), selectedLanguages));
-        target.setParent(source.getParent());
-        if (showDecimalPrecisionsById != null && showDecimalPrecisionsById.containsKey(source.getId())) {
-            target.setShowDecimalsPrecision(showDecimalPrecisionsById.get(source.getId()));
-        }
-        target.setKind(source.getKind());
-        target.setSelfLink(source.getSelfLink());
-        return target;
-    }
-
-    private NonEnumeratedDimensionValue toNonEnumeratedDimensionValue(CodeDimension source, List<String> selectedLanguages) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        NonEnumeratedDimensionValue target = new NonEnumeratedDimensionValue();
-        target.setId(source.getIdentifier());
-        target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
-        return target;
-    }
-
-    private DimensionType toDimensionType(DsdComponentType source) {
-        switch (source) {
-            case OTHER:
-                return DimensionType.DIMENSION;
-            case SPATIAL:
-                return DimensionType.GEOGRAPHIC_DIMENSION;
-            case TEMPORAL:
-                return DimensionType.TIME_DIMENSION;
-            case MEASURE:
-                return DimensionType.MEASURE_DIMENSION;
-            default:
-                logger.error("DsdComponentType unsupported: " + source);
-                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-        }
     }
 
     private ResourceLink toDatasetParentLink(DatasetVersion source) {
