@@ -410,13 +410,13 @@
             <xs:enumeration value="RELATED_DSD_URN" />
             <xs:enumeration value="DATE_NEXT_UPDATE" />
             <xs:enumeration value="STATISTIC_OFFICIALITY" />
-            <xs:enumeration value="STATISTIC_OPERATION_URN" />
             <xs:enumeration value="SUBTITLE" />
             <xs:enumeration value="TITLE_ALTERNATIVE" />
             <xs:enumeration value="KEYWORD" />
             <xs:enumeration value="NEWNESS_UNTIL_DATE" />
             <xs:enumeration value="VALID_FROM" />
             <xs:enumeration value="VALID_TO" />
+            <xs:enumeration value="STATISTIC_OPERATION_URN" />
         </xs:restriction>
     </xs:simpleType>
 

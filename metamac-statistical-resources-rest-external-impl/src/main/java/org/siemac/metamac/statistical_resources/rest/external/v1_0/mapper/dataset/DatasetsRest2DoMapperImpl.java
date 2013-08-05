@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.datas
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestOrder;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestQueryPropertyRestriction;
+import org.siemac.metamac.rest.common.query.domain.OperationTypeEnum;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteriaBase;
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria;
@@ -41,10 +42,44 @@ public class DatasetsRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implemen
                     return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
-                case VALID_FROM:
+                case GEOGRAPHIC_COVERAGE_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.geographicCoverage().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case TEMPORAL_COVERAGE:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.temporalCoverage().identifier(), PropertyTypeEnum.STRING, propertyRestriction);
+                case GEOGRAPHIC_GRANULARITY_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.geographicGranularities().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case TEMPORAL_GRANULARITY_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.temporalGranularities().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case DATE_START:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class, false);
+                case DATE_END:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.dateStart(), DatasetVersion.class, false);
+                case STATISTICAL_UNIT_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.statisticalUnit().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case MEASURE_COVERAGE_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.measureCoverage().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case RELATED_DSD_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.relatedDsd().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                case DATE_NEXT_UPDATE:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.dateNextUpdate(), DatasetVersion.class, false);
+                case STATISTIC_OFFICIALITY:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.statisticOfficiality().identifier(), PropertyTypeEnum.STRING, propertyRestriction);
+                case SUBTITLE:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().subtitle().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
+                case TITLE_ALTERNATIVE:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().titleAlternative().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
+                case KEYWORD:
+                    propertyRestriction.setOperationType(OperationTypeEnum.LIKE); // override, because keywords are a string separated by space
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().keywords().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
+                case NEWNESS_UNTIL_DATE:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().newnessUntilDate(), DatasetVersion.class,
+                            false);
+                case VALID_FROM:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.datasources(), DatasetVersion.class, false);
                 case VALID_TO:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class, false);
+                case STATISTIC_OPERATION_URN:
+                    return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn(), PropertyTypeEnum.STRING, propertyRestriction);
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
             }
