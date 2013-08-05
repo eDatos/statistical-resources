@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.record;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
@@ -10,8 +11,8 @@ public class DatasetRecord extends SiemacMetadataRecord {
     public DatasetRecord() {
     }
 
-    public void setRelatedDSD(String value) {
-        setAttribute(DatasetDS.RELATED_DSD, value);
+    public void setRelatedDSD(ExternalItemDto value) {
+        setExternalItem(DatasetDS.RELATED_DSD, value);
     }
 
     public void setStatisticOfficiality(String value) {

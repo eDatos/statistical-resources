@@ -37,10 +37,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.rec
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
-import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
-import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class StatisticalResourcesRecordUtils extends RecordUtils {
 
@@ -100,7 +98,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
 
     public static DatasetRecord getDatasetRecord(DatasetVersionDto datasetDto) {
         DatasetRecord record = (DatasetRecord) getSiemacMetadataRecord(new DatasetRecord(), datasetDto);
-        record.setRelatedDSD(ExternalItemUtils.getExternalItemName(datasetDto.getRelatedDsd()));
+        record.setRelatedDSD(datasetDto.getRelatedDsd());
         if (datasetDto.getStatisticOfficiality() != null) {
             record.setStatisticOfficiality(getLocalisedString(datasetDto.getStatisticOfficiality().getDescription()));
         }
@@ -154,7 +152,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
 
     public static QueryRecord getQueryRecord(QueryVersionDto queryDto) {
         QueryRecord record = (QueryRecord) getLifeCycleResourceRecord(new QueryRecord(), queryDto);
-        record.setRelatedDataset(RelatedResourceBaseUtils.getRelatedResourceName(queryDto.getRelatedDatasetVersion()));
+        record.setRelatedDataset(queryDto.getRelatedDatasetVersion());
         record.setStatus(CommonUtils.getQueryStatusName(queryDto));
         record.setType(CommonUtils.getQueryTypeName(queryDto));
         return record;

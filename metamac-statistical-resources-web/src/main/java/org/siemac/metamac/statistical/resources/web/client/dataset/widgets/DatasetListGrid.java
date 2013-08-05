@@ -6,9 +6,9 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
+import org.siemac.metamac.statistical.resources.web.client.widgets.NavigableListGrid;
 
-public class DatasetListGrid extends BaseCustomListGrid {
+public class DatasetListGrid extends NavigableListGrid {
 
     public DatasetListGrid() {
         super();

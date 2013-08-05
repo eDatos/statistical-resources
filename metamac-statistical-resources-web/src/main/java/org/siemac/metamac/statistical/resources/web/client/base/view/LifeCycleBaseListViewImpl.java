@@ -10,9 +10,9 @@ import org.siemac.metamac.statistical.resources.web.client.base.presenter.LifeCy
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
+import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourcePaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
@@ -30,22 +30,22 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends ViewWithUiHandlers<C> implements LifeCycleBaseListPresenter.LifeCycleBaseListView {
 
-    protected VLayout                  panel;
-    protected SearchSectionStack       searchSectionStack;
+    protected VLayout                                 panel;
+    protected SearchSectionStack                      searchSectionStack;
 
-    protected ToolStrip                toolStrip;
-    protected CustomToolStripButton    newButton;
-    protected CustomToolStripButton    deleteButton;
-    protected CustomToolStripButton    sendToProductionValidationButton;
-    protected CustomToolStripButton    sendToDiffusionValidationButton;
-    protected CustomToolStripButton    rejectValidationButton;
-    protected CustomToolStripButton    programPublicationButton;
-    protected CustomToolStripButton    cancelProgrammedPublicationButton;
-    protected CustomToolStripButton    publishButton;
+    protected ToolStrip                               toolStrip;
+    protected CustomToolStripButton                   newButton;
+    protected CustomToolStripButton                   deleteButton;
+    protected CustomToolStripButton                   sendToProductionValidationButton;
+    protected CustomToolStripButton                   sendToDiffusionValidationButton;
+    protected CustomToolStripButton                   rejectValidationButton;
+    protected CustomToolStripButton                   programPublicationButton;
+    protected CustomToolStripButton                   cancelProgrammedPublicationButton;
+    protected CustomToolStripButton                   publishButton;
 
-    protected DeleteConfirmationWindow deleteConfirmationWindow;
+    protected DeleteConfirmationWindow                deleteConfirmationWindow;
 
-    protected PaginatedCheckListGrid   listGrid;
+    protected LifeCycleResourcePaginatedCheckListGrid listGrid;
 
     public LifeCycleBaseListViewImpl() {
         super();
@@ -85,7 +85,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
         // ListGrid
 
-        listGrid = new PaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
+        listGrid = new LifeCycleResourcePaginatedCheckListGrid(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {

@@ -6,9 +6,9 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
+import org.siemac.metamac.statistical.resources.web.client.widgets.NavigableListGrid;
 
-public class QueryListGrid extends BaseCustomListGrid {
+public class QueryListGrid extends NavigableListGrid {
 
     public QueryListGrid() {
         super();

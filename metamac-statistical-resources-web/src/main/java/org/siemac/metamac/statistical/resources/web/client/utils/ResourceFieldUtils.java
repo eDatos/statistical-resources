@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.NameableReso
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
+import org.siemac.metamac.web.common.client.widgets.CustomLinkListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 
 public class ResourceFieldUtils {
@@ -80,7 +81,7 @@ public class ResourceFieldUtils {
 
     public static CustomListGridField[] getDatasetListGridFields() {
 
-        CustomListGridField relatedDSD = new CustomListGridField(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
+        CustomLinkListGridField relatedDSD = new CustomLinkListGridField(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
         relatedDSD.setHidden(true);
 
         CustomListGridField statisticOfficiality = new CustomListGridField(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
@@ -103,7 +104,7 @@ public class ResourceFieldUtils {
 
     public static CustomListGridField[] getQueryListGridFields() {
 
-        CustomListGridField relatedDataset = new CustomListGridField(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion());
+        CustomLinkListGridField relatedDataset = new CustomLinkListGridField(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion());
 
         CustomListGridField status = new CustomListGridField(QueryDS.STATUS, getConstants().queryStatus());
 

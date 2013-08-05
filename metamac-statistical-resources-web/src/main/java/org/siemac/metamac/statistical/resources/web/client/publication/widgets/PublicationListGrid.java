@@ -6,9 +6,9 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
+import org.siemac.metamac.statistical.resources.web.client.widgets.NavigableListGrid;
 
-public class PublicationListGrid extends BaseCustomListGrid {
+public class PublicationListGrid extends NavigableListGrid {
 
     public PublicationListGrid() {
         super();
