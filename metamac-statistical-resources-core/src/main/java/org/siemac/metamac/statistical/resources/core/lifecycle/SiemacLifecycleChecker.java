@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetada
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,9 @@ public class SiemacLifecycleChecker {
 
     @Autowired
     private ExternalItemChecker            externalItemChecker;
+
+    @Autowired
+    private RelatedResourceChecker         relatedResourceChecker;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -59,8 +63,9 @@ public class SiemacLifecycleChecker {
     public void checkSendToPublished(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
-        checkRelatedResourcesPreviouslyPublished(resource, metadataName, exceptionItems);
         checkExternalItemsPreviouslyPublished(resource.getSiemacMetadataStatisticalResource(), addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE),
+                exceptionItems);
+        checkRelatedResourcesPreviouslyPublished(resource.getSiemacMetadataStatisticalResource(), addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE),
                 exceptionItems);
     }
 
@@ -71,43 +76,50 @@ public class SiemacLifecycleChecker {
         // Languages
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptionItems);
 
-        // Statistical Operation Instance 
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperationInstances(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES),
-                exceptionItems);
+        // Statistical Operation Instance
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperationInstances(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES), exceptionItems);
 
         // Creator
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptionItems);
 
-        // Contributor 
+        // Contributor
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR), exceptionItems);
 
-        // Publisher 
+        // Publisher
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER), exceptionItems);
 
-        // Publisher contributor 
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getPublisherContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR), exceptionItems);
+        // Publisher contributor
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getPublisherContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR),
+                exceptionItems);
 
-        // Mediator 
+        // Mediator
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getMediator(), addParameter(metadataName, ServiceExceptionSingleParameters.MEDIATOR), exceptionItems);
 
         // Common metadata
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getCommonMetadata(), addParameter(metadataName, ServiceExceptionSingleParameters.COMMON_METADATA), exceptionItems);
     }
 
-    private void checkRelatedResourcesPreviouslyPublished(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    private void checkRelatedResourcesPreviouslyPublished(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         // Replaces
+        relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getReplaces(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES),
+                exceptionItems);
 
         // Is replaced by
+        // API checks if it's published
 
         // Requires
+        relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getRequires(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REQUIRES),
+                exceptionItems);
 
         // Is required by
+        // API checks if it's published
 
         // Has part
+        relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getHasPart(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.HAS_PART), exceptionItems);
 
         // Is part of
-
-        // TODO Auto-generated method stub
+        // API checks if it's published
     }
 
     // ------------------------------------------------------------------------------------------------------

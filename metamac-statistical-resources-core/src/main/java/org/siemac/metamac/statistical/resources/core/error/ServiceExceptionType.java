@@ -43,6 +43,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Related resources
     public static final CommonServiceExceptionType RELATED_RESOURCE_NOT_PUBLISHED                         = create("exception.resources.related_resource.not_published");
+    public static final CommonServiceExceptionType RELATED_RESOURCE_WITHOUT_PUBLISHED_VERSION             = create("exception.resources.related_resource.without_published_version");
 
     // External items
     public static final CommonServiceExceptionType EXTERNAL_ITEM_URN_NOT_PUBLISHED                        = create("exception.resources.external_item.urn.not_published");
