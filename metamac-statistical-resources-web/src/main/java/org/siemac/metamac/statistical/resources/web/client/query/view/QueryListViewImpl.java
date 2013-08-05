@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -139,5 +140,51 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
                 getUiHandlers().goToNewQuery();
             }
         };
+    }
+
+    //
+    // LISTGRID ACTIONS
+    //
+
+    @Override
+    protected boolean canDelete(ListGridRecord record) {
+        // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canSendToProductionValidation(ListGridRecord record) {
+        // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canSendToDiffusionValidation(ListGridRecord record) {
+        // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canRejectValidation(ListGridRecord record) {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    protected boolean canPublish(ListGridRecord record) {
+        // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canProgramPublication(ListGridRecord record) {
+        // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canCancelProgrammedPublication(ListGridRecord record) {
+        // TODO Security
+        return true;
     }
 }

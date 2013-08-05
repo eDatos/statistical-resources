@@ -6,6 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.LifeCycleBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
@@ -153,9 +154,17 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showDeleteButton() {
-        // TODO Security
-        deleteButton.show();
+    private void showDeleteButton(ListGridRecord[] records) {
+        boolean canBeDeleted = true;
+        for (ListGridRecord record : records) {
+            if (!canDelete(record)) {
+                canBeDeleted = false;
+                break;
+            }
+        }
+        if (canBeDeleted) {
+            deleteButton.show();
+        }
     }
 
     // Send to production validation
@@ -166,9 +175,17 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showSendtoProductionValidationButton() {
-        // TODO Security
-        sendToProductionValidationButton.show();
+    private void showSendToProductionValidationButton(ListGridRecord[] records) {
+        boolean canSendToProductionValidation = true;
+        for (ListGridRecord record : records) {
+            if (!ProcStatusEnum.DRAFT.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canSendToProductionValidation(record)) {
+                canSendToProductionValidation = false;
+                break;
+            }
+        }
+        if (canSendToProductionValidation) {
+            sendToProductionValidationButton.show();
+        }
     }
 
     // Send to diffusion validation
@@ -179,9 +196,17 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showSendtoDiffusionValidationButton() {
-        // TODO Security
-        sendToDiffusionValidationButton.show();
+    private void showSendtoDiffusionValidationButton(ListGridRecord[] records) {
+        boolean canSendToDiffusionValidation = true;
+        for (ListGridRecord record : records) {
+            if (!ProcStatusEnum.PRODUCTION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canSendToDiffusionValidation(record)) {
+                canSendToDiffusionValidation = false;
+                break;
+            }
+        }
+        if (canSendToDiffusionValidation) {
+            sendToDiffusionValidationButton.show();
+        }
     }
 
     // Reject validation
@@ -192,9 +217,18 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showRejectValidationButton() {
-        // TODO Security
-        rejectValidationButton.show();
+    private void showRejectValidationButton(ListGridRecord[] records) {
+        boolean canRejectValidation = true;
+        for (ListGridRecord record : records) {
+            if ((!ProcStatusEnum.PRODUCTION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) && !ProcStatusEnum.DIFFUSION_VALIDATION.equals(((LifeCycleResourceRecord) record)
+                    .getProcStatusEnum())) || !canRejectValidation(record)) {
+                canRejectValidation = false;
+                break;
+            }
+        }
+        if (canRejectValidation) {
+            rejectValidationButton.show();
+        }
     }
 
     // Publish
@@ -205,9 +239,17 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showPublishButton() {
-        // TODO Security
-        publishButton.show();
+    private void showPublishButton(ListGridRecord[] records) {
+        boolean canPublish = true;
+        for (ListGridRecord record : records) {
+            if (!ProcStatusEnum.DIFFUSION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canPublish(record)) {
+                canPublish = false;
+                break;
+            }
+        }
+        if (canPublish) {
+            publishButton.show();
+        }
     }
 
     // Program publication
@@ -218,9 +260,17 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showProgramPublicationButton() {
-        // TODO Security
-        programPublicationButton.show();
+    private void showProgramPublicationButton(ListGridRecord[] records) {
+        boolean canProgramPublication = true;
+        for (ListGridRecord record : records) {
+            if (!ProcStatusEnum.DIFFUSION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canProgramPublication(record)) {
+                canProgramPublication = false;
+                break;
+            }
+        }
+        if (canProgramPublication) {
+            programPublicationButton.show();
+        }
     }
 
     // Cancel programmed publication
@@ -231,29 +281,36 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showCancelProgrammedPublicationButton() {
-        // TODO Security
-        cancelProgrammedPublicationButton.show();
-    }
-
-    // Visbility methods
-
-    protected void updateListGridButtonsVisibility() {
-        if (listGrid.getListGrid().getSelectedRecords().length > 0) {
-            showSelectionDependentButtons();
-        } else {
-            hideSelectionDependentButtons();
+    private void showCancelProgrammedPublicationButton(ListGridRecord[] records) {
+        boolean canCancelProgrammedPublication = true;
+        for (ListGridRecord record : records) {
+            if (!ProcStatusEnum.PUBLISHED.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canCancelProgrammedPublication(record)) {
+                canCancelProgrammedPublication = false;
+                break;
+            }
+        }
+        if (canCancelProgrammedPublication) {
+            cancelProgrammedPublicationButton.show();
         }
     }
 
-    protected void showSelectionDependentButtons() {
-        showDeleteButton();
-        showSendtoProductionValidationButton();
-        showSendtoDiffusionValidationButton();
-        showRejectValidationButton();
-        showPublishButton();
-        showProgramPublicationButton();
-        showCancelProgrammedPublicationButton();
+    // Visibility methods
+
+    protected void updateListGridButtonsVisibility() {
+        hideSelectionDependentButtons();
+        if (listGrid.getListGrid().getSelectedRecords().length > 0) {
+            showSelectionDependentButtons(listGrid.getListGrid().getSelectedRecords());
+        }
+    }
+
+    protected void showSelectionDependentButtons(ListGridRecord[] records) {
+        showDeleteButton(records);
+        showSendToProductionValidationButton(records);
+        showSendtoDiffusionValidationButton(records);
+        showRejectValidationButton(records);
+        showPublishButton(records);
+        showProgramPublicationButton(records);
+        showCancelProgrammedPublicationButton(records);
     }
 
     protected void hideSelectionDependentButtons() {
@@ -272,4 +329,11 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     public abstract ClickHandler getNewButtonClickHandler();
     public abstract void retrieveResultSet(int firstResult, int maxResults);
+    protected abstract boolean canDelete(ListGridRecord record);
+    protected abstract boolean canSendToProductionValidation(ListGridRecord record);
+    protected abstract boolean canSendToDiffusionValidation(ListGridRecord record);
+    protected abstract boolean canRejectValidation(ListGridRecord record);
+    protected abstract boolean canPublish(ListGridRecord record);
+    protected abstract boolean canProgramPublication(ListGridRecord record);
+    protected abstract boolean canCancelProgrammedPublication(ListGridRecord record);
 }

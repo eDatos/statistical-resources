@@ -102,7 +102,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         if (datasetDto.getStatisticOfficiality() != null) {
             record.setStatisticOfficiality(getLocalisedString(datasetDto.getStatisticOfficiality().getDescription()));
         }
-        record.setDatasetDto(datasetDto);
+        record.setDatasetVersionDto(datasetDto);
         return record;
     }
 
@@ -116,7 +116,9 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     //
 
     public static PublicationRecord getPublicationRecord(PublicationVersionDto publicationDto) {
-        return (PublicationRecord) getSiemacMetadataRecord(new PublicationRecord(), publicationDto);
+        PublicationRecord record = (PublicationRecord) getSiemacMetadataRecord(new PublicationRecord(), publicationDto);
+        record.setPublicationDto(publicationDto);
+        return record;
     }
 
     public static ElementLevelTreeNode getElementLevelNode(ElementLevelDto elementLevelDto) {
@@ -155,6 +157,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         record.setRelatedDataset(queryDto.getRelatedDatasetVersion());
         record.setStatus(CommonUtils.getQueryStatusName(queryDto));
         record.setType(CommonUtils.getQueryTypeName(queryDto));
+        record.setQueryDto(queryDto);
         return record;
     }
 

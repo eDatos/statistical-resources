@@ -19,8 +19,12 @@ public class DatasetRecord extends SiemacMetadataRecord {
         setAttribute(DatasetDS.STATISTIC_OFFICIALITY, value);
     }
 
-    public void setDatasetDto(DatasetVersionDto datasetDto) {
+    public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setAttribute(DatasetDS.DTO, datasetDto);
+    }
+
+    public DatasetVersionDto getDatasetVersionDto() {
+        return (DatasetVersionDto) getAttributeAsObject(DatasetDS.DTO);
     }
 
     public ProcStatusEnum getProcStatus() {
