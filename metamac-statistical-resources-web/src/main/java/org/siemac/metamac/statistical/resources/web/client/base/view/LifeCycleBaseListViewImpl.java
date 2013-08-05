@@ -178,7 +178,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showSendToProductionValidationButton(ListGridRecord[] records) {
         boolean canSendToProductionValidation = true;
         for (ListGridRecord record : records) {
-            if (!ProcStatusEnum.DRAFT.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canSendToProductionValidation(record)) {
+            if ((!ProcStatusEnum.DRAFT.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) && ProcStatusEnum.VALIDATION_REJECTED.equals(((LifeCycleResourceRecord) record)
+                    .getProcStatusEnum())) || !canSendToProductionValidation(record)) {
                 canSendToProductionValidation = false;
                 break;
             }
