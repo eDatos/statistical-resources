@@ -89,23 +89,6 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
         fail("not implemented");
     }
 
-    @Ignore
-    @Override
-    @Test
-    public void testCheckSendToPublishedLinkedStatisticalResource() throws Exception {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
-        fail("not implemented");
-    }
-
-    @Ignore
-    @Override
-    @Test
-    public void testApplySendToPublishedLinkedStatisticalResource() throws Exception {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
-        fail("not implemented");
-    }
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
@@ -124,24 +107,6 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Test
     public void testApplyVersioningResource() throws Exception {
         // TODO Auto-generated method stub
-        fail("not implemented");
-    }
-
-    @Ignore
-    @Override
-    @Test
-    public void testCheckVersioningLinkedStatisticalResource() throws Exception {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
-        fail("not implemented");
-    }
-
-    @Ignore
-    @Override
-    @Test
-    public void testApplyVersioningLinkedStatisticalResource() throws Exception {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
         fail("not implemented");
     }
 }

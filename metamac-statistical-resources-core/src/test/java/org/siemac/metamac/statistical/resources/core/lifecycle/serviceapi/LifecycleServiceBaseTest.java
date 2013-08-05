@@ -36,23 +36,10 @@ public interface LifecycleServiceBaseTest {
 
     public void testApplySendToPublishedResource() throws Exception;
 
-    // TODO: Pendiente eliminar
-    public void testCheckSendToPublishedLinkedStatisticalResource() throws Exception;
-
-    // TODO: Pendiente eliminar
-    public void testApplySendToPublishedLinkedStatisticalResource() throws Exception;
-
     // ------------------------------------------------------------------------------------------------------
     // VERSIONING
     // ------------------------------------------------------------------------------------------------------
     public void testCheckVersioningResource() throws Exception;
 
     public void testApplyVersioningResource() throws Exception;
-
-    // TODO: Pendiente eliminar
-    public void testCheckVersioningLinkedStatisticalResource() throws Exception;
-
-    // TODO: Pendiente eliminar
-    public void testApplyVersioningLinkedStatisticalResource() throws Exception;
-
 }

@@ -90,8 +90,6 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract void applySendToProductionValidationResource(ServiceContext ctx, E resource) throws MetamacException;
 
-    protected abstract String getResourceMetadataName() throws MetamacException;
-
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -217,18 +215,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         getInvocationValidator().checkSendToPublished(ctx, resource);
 
         resource = retrieveResourceByResource(resource);
+        E previousResource = retrievePreviousResourceByResource(resource);
 
-        checkSendToPublished(resource);
+        checkSendToPublished(resource, previousResource);
 
-        applySendToPublished(ctx, resource);
+        applySendToPublished(ctx, resource, previousResource);
 
         return saveResource(resource);
     }
 
-    protected final void checkSendToPublished(E resource) throws MetamacException {
+    protected final void checkSendToPublished(E resource, E previousResource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkSendToPublishedLinkedStatisticalResource(resource, exceptions);
+        checkSendToPublishedLinkedStatisticalResource(resource, previousResource, exceptions);
 
         checkResourceMetadataAllActions(resource, exceptions);
         checkSendToPublishedResource(resource, exceptions);
@@ -236,17 +235,33 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    protected final void applySendToPublished(ServiceContext ctx, E resource) throws MetamacException {
-        applySendToPublishedLinkedStatisticalResource(ctx, resource);
+    protected final void applySendToPublished(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        applySendToPublishedLinkedStatisticalResource(ctx, resource, previousResource);
 
         applySendToPublishedResource(ctx, resource);
     }
 
-    protected abstract void checkSendToPublishedLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    protected void checkSendToPublishedLinkedStatisticalResource(E resource, E previousResource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleChecker.checkSendToPublished((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleChecker.checkSendToPublished((HasLifecycle) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to validation rejected");
+        }
+    }
+    
+    protected void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleFiller.applySendToPublished(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleFiller.applySendToPublishedActions(ctx, (HasLifecycle) resource, (HasSiemacMetadata) previousResource);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+        }
+    }
 
     protected abstract void checkSendToPublishedResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
-
-    protected abstract void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
 
     protected abstract void applySendToPublishedResource(ServiceContext ctx, E resource) throws MetamacException;
 
@@ -259,18 +274,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         getInvocationValidator().checkVersioning(ctx, resource);
 
         resource = retrieveResourceByResource(resource);
+        E previousResource = retrievePreviousResourceByResource(resource);
 
-        checkSendToPublished(resource);
+        checkVersioning(resource, previousResource);
 
-        applySendToPublished(ctx, resource);
+        applyVersioning(ctx, resource, previousResource);
 
         return saveResource(resource);
     }
 
-    protected final void checkVersioning(E resource) throws MetamacException {
+    protected final void checkVersioning(E resource, E previousResource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkVersioningLinkedStatisticalResource(resource, exceptions);
+        checkVersioningLinkedStatisticalResource(resource, previousResource, exceptions);
 
         checkResourceMetadataAllActions(resource, exceptions);
         checkVersioningResource(resource, exceptions);
@@ -278,17 +294,33 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    protected final void applyVersioning(ServiceContext ctx, E resource) throws MetamacException {
-        applyVersioningLinkedStatisticalResource(ctx, resource);
+    protected final void applyVersioning(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        applyVersioningLinkedStatisticalResource(ctx, resource, previousResource);
 
         applyVersioningResource(ctx, resource);
     }
 
-    protected abstract void checkVersioningLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
-
+    protected void checkVersioningLinkedStatisticalResource(E resource, E previousResource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleChecker.checkSendToPublished((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleChecker.checkSendToPublished((HasLifecycle) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to validation rejected");
+        }
+    }
+    
+    protected void applyVersioningLinkedStatisticalResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleFiller.applySendToPublished(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource);
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleFiller.applySendToPublishedActions(ctx, (HasLifecycle) resource, (HasSiemacMetadata) previousResource);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+        }
+    }
+    
     protected abstract void checkVersioningResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
-
-    protected abstract void applyVersioningLinkedStatisticalResource(ServiceContext ctx, E resource) throws MetamacException;
 
     protected abstract void applyVersioningResource(ServiceContext ctx, E resource) throws MetamacException;
 
@@ -302,8 +334,13 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     // This method knows how to retrieve a resource given the resource
     protected abstract E retrieveResourceByResource(E resource) throws MetamacException;
 
+    // This method knows how to retrieve a previous resource given the actual resource
+    protected abstract E retrievePreviousResourceByResource(E resource) throws MetamacException;
+
     protected abstract void checkResourceMetadataAllActions(E resource, List<MetamacExceptionItem> exceptions) throws MetamacException;
 
     protected abstract E saveResource(E resource);
+    
+    protected abstract String getResourceMetadataName() throws MetamacException;
 
 }

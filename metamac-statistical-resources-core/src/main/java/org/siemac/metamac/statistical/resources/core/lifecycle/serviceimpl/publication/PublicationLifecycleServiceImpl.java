@@ -78,18 +78,6 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void checkSendToPublishedResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO:
-        // - Comprobar que al menos existe un cubo por capítulo
-        // - comprobar que almenos existe un cubo en la publicación
-        // - compobar que todos los datasets y consultas vinculados a cubos están publicados
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    @Override
     protected void applySendToPublishedResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // TODO:
         // - cumplimentar format_extent_resources
@@ -99,15 +87,10 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     @Override
-    protected void checkSendToPublishedLinkedStatisticalResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    protected void checkSendToPublishedResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        // FIXME
         // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
-    }
-
-    @Override
-    protected void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -124,18 +107,6 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     protected void applyVersioningResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
-    protected void checkVersioningLinkedStatisticalResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
-    }
-
-    @Override
-    protected void applyVersioningLinkedStatisticalResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        // TODO: esto debe ser eliminado
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -155,6 +126,13 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     @Override
     protected PublicationVersion retrieveResourceByResource(PublicationVersion resource) throws MetamacException {
         return publicationVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Override
+    protected PublicationVersion retrievePreviousResourceByResource(PublicationVersion resource) throws MetamacException {
+        // FIXME
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override

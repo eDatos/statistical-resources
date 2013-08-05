@@ -330,22 +330,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         // TODO: Implementar
     }
 
-    @Ignore
-    @Override
-    @Test
-    public void testCheckSendToPublishedLinkedStatisticalResource() throws Exception {
-        fail("not implemented");
-        // TODO: Esto debería desaparecer
-    }
-
-    @Ignore
-    @Override
-    @Test
-    public void testApplySendToPublishedLinkedStatisticalResource() throws Exception {
-        fail("not implemented");
-        // TODO: Esto debería desaparecer
-    }
-
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
@@ -364,22 +348,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     public void testApplyVersioningResource() throws Exception {
         fail("not implemented");
         // TODO: Implementar
-    }
-
-    @Ignore
-    @Override
-    @Test
-    public void testCheckVersioningLinkedStatisticalResource() throws Exception {
-        fail("not implemented");
-        // TODO: Esto debería desaparecer
-    }
-
-    @Ignore
-    @Override
-    @Test
-    public void testApplyVersioningLinkedStatisticalResource() throws Exception {
-        // TODO: Esto debería desaparecer
-        fail("not implemented");
     }
 
     /**

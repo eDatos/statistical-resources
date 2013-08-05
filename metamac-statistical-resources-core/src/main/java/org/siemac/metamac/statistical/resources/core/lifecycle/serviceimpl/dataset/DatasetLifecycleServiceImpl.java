@@ -374,7 +374,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getCreator();
         String version = resource.getSiemacMetadataStatisticalResource().getVersionLogic();
         InternationalString publisherName = resource.getSiemacMetadataStatisticalResource().getPublisher().get(0).getTitle();
-        String publicUrl = StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN; //This will be replaced by the API
+        String publicUrl = StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN; // This will be replaced by the API
         InternationalString bibliographicInternational = new InternationalString();
         for (LocalisedString localisedTitle : resource.getSiemacMetadataStatisticalResource().getTitle().getTexts()) {
             String locale = localisedTitle.getLocale();
@@ -411,28 +411,18 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected void checkSendToPublishedLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected void applySendToPublishedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
 
-    }
-
-    @Override
-    protected void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
+        // FIXME
         /*
          * FILL:
          * DATE_START
          * DATE_END
          */
 
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    @Override
-    protected void applySendToPublishedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         buildBibliographicCitation(resource);
+
+        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -441,20 +431,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void checkVersioningLinkedStatisticalResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    @Override
     protected void checkVersioningResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
-    protected void applyVersioningLinkedStatisticalResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -481,6 +458,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     @Override
     protected DatasetVersion retrieveResourceByResource(DatasetVersion resource) throws MetamacException {
         return datasetVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Override
+    protected DatasetVersion retrievePreviousResourceByResource(DatasetVersion resource) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
