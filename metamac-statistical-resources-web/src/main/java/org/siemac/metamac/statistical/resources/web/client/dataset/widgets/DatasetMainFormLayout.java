@@ -1,14 +1,14 @@
-package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
+package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
 
-public class PublicationMainFormLayout extends LifecycleMainFormLayout {
+public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
-    public PublicationMainFormLayout() {
+    public DatasetMainFormLayout() {
         super();
     }
 
-    public PublicationMainFormLayout(boolean canEdit) {
+    public DatasetMainFormLayout(boolean canEdit) {
         super(canEdit);
     }
 

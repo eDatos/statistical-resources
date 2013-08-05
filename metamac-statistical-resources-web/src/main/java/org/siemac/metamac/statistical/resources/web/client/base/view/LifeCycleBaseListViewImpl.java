@@ -178,8 +178,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showSendToProductionValidationButton(ListGridRecord[] records) {
         boolean canSendToProductionValidation = true;
         for (ListGridRecord record : records) {
-            if ((!ProcStatusEnum.DRAFT.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) && ProcStatusEnum.VALIDATION_REJECTED.equals(((LifeCycleResourceRecord) record)
-                    .getProcStatusEnum())) || !canSendToProductionValidation(record)) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if ((!ProcStatusEnum.DRAFT.equals(procStatus) && !ProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) || !canSendToProductionValidation(record)) {
                 canSendToProductionValidation = false;
                 break;
             }
@@ -200,7 +200,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showSendtoDiffusionValidationButton(ListGridRecord[] records) {
         boolean canSendToDiffusionValidation = true;
         for (ListGridRecord record : records) {
-            if (!ProcStatusEnum.PRODUCTION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canSendToDiffusionValidation(record)) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if (!ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || !canSendToDiffusionValidation(record)) {
                 canSendToDiffusionValidation = false;
                 break;
             }
@@ -221,8 +222,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showRejectValidationButton(ListGridRecord[] records) {
         boolean canRejectValidation = true;
         for (ListGridRecord record : records) {
-            if ((!ProcStatusEnum.PRODUCTION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) && !ProcStatusEnum.DIFFUSION_VALIDATION.equals(((LifeCycleResourceRecord) record)
-                    .getProcStatusEnum())) || !canRejectValidation(record)) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if ((!ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) && !ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) || !canRejectValidation(record)) {
                 canRejectValidation = false;
                 break;
             }
@@ -243,7 +244,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showPublishButton(ListGridRecord[] records) {
         boolean canPublish = true;
         for (ListGridRecord record : records) {
-            if (!ProcStatusEnum.DIFFUSION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canPublish(record)) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if (!ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus) || !canPublish(record)) {
                 canPublish = false;
                 break;
             }
@@ -264,7 +266,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showProgramPublicationButton(ListGridRecord[] records) {
         boolean canProgramPublication = true;
         for (ListGridRecord record : records) {
-            if (!ProcStatusEnum.DIFFUSION_VALIDATION.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canProgramPublication(record)) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if (!ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus) || !canProgramPublication(record)) {
                 canProgramPublication = false;
                 break;
             }
@@ -285,7 +288,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private void showCancelProgrammedPublicationButton(ListGridRecord[] records) {
         boolean canCancelProgrammedPublication = true;
         for (ListGridRecord record : records) {
-            if (!ProcStatusEnum.PUBLISHED.equals(((LifeCycleResourceRecord) record).getProcStatusEnum()) || !canCancelProgrammedPublication(record)) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canCancelProgrammedPublication(record)) {
                 canCancelProgrammedPublication = false;
                 break;
             }

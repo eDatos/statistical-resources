@@ -9,11 +9,11 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
-import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetClassDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetContentDescriptorsEditionForm;
@@ -56,7 +56,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseViewImpl<DatasetMetadataTabUiHandlers> implements DatasetMetadataTabView {
 
     private VLayout                                                  panel;
-    private LifecycleMainFormLayout                                  mainFormLayout;
+    private DatasetMainFormLayout                                    mainFormLayout;
 
     private NameableResourceIdentifiersForm                          identifiersForm;
     private DatasetContentDescriptorsForm                            contentDescriptorsForm;
@@ -92,14 +92,13 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
 
-        mainFormLayout = new LifecycleMainFormLayout(DatasetClientSecurityUtils.canUpdateDataset());
+        mainFormLayout = new DatasetMainFormLayout(DatasetClientSecurityUtils.canUpdateDataset());
 
         bindMainFormLayoutEvents();
         createViewForm();
         createEditionForm();
 
         panel.addMember(mainFormLayout);
-
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLa
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 
-public class LifecycleMainFormLayout extends InternationalMainFormLayout {
+public abstract class LifecycleMainFormLayout extends InternationalMainFormLayout {
 
     private MainFormLayoutButton productionValidation;
     private MainFormLayoutButton diffusionValidation;
@@ -80,8 +80,8 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
             showRejectValidationButton();
             showProgramPublicationButton();
             showPublishButton();
-            showCancelProgrammedPublication();
         } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
+            showCancelProgrammedPublication();
             showVersioningButton();
         }
     }
@@ -97,31 +97,45 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
     }
 
     private void showProductionValidationButton() {
-        productionValidation.show();
+        if (canSendToProductionValidation()) {
+            productionValidation.show();
+        }
     }
 
     private void showDiffusionValidationButton() {
-        diffusionValidation.show();
+        if (canSendToDiffusionValidation()) {
+            diffusionValidation.show();
+        }
     }
 
     private void showRejectValidationButton() {
-        rejectValidation.show();
+        if (canRejectValidation()) {
+            rejectValidation.show();
+        }
     }
 
     private void showProgramPublicationButton() {
-        programPublication.show();
+        if (canProgramPublication()) {
+            programPublication.show();
+        }
     }
 
     private void showCancelProgrammedPublication() {
-        cancelProgrammedPublication.show();
+        if (canCancelProgrammedPublication()) {
+            cancelProgrammedPublication.show();
+        }
     }
 
     private void showPublishButton() {
-        publish.show();
+        if (canPublish()) {
+            publish.show();
+        }
     }
 
     private void showVersioningButton() {
-        versioning.show();
+        if (canVersioning()) {
+            versioning.show();
+        }
     }
 
     public HasClickHandlers getProductionValidationButton() {
@@ -151,4 +165,16 @@ public class LifecycleMainFormLayout extends InternationalMainFormLayout {
     public HasClickHandlers getVersioningButton() {
         return versioning;
     }
+
+    //
+    // ABSTRACT METHODS
+    //
+
+    protected abstract boolean canSendToProductionValidation();
+    protected abstract boolean canSendToDiffusionValidation();
+    protected abstract boolean canRejectValidation();
+    protected abstract boolean canPublish();
+    protected abstract boolean canProgramPublication();
+    protected abstract boolean canCancelProgrammedPublication();
+    protected abstract boolean canVersioning();
 }
