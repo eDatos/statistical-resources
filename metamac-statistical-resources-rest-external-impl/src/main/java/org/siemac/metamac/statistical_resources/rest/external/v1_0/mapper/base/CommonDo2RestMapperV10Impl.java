@@ -635,27 +635,55 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
+
+        // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
+        Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
+
         String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
         String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
         Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness); // note: srm api returns codes in order
         for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
+            boolean skip = false;
             if (effectiveDimensionValuesToData != null) {
                 // note: all values in effectiveDimensionValuesToData are always in coverages
                 if (!effectiveDimensionValuesToData.contains(id)) {
                     // skip to include only values in query
-                    continue;
+                    skip = true;
                 }
             } else {
                 if (!coveragesById.containsKey(id)) {
                     // skip to include only values in coverage
-                    continue;
+                    skip = true;
                 }
             }
-            targets.getValues().add(toEnumeratedDimensionValue(code, selectedLanguages));
+            if (skip) {
+                updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(parentsReplacedToVisualisation, code);
+                continue;
+            }
+            targets.getValues().add(toEnumeratedDimensionValue(code, parentsReplacedToVisualisation, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
+    }
+
+    /**
+     * Update map with parent visualisation.
+     * This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
+     * The parent visualisation will be the nearest parent in result
+     */
+    private void updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(Map<String, String> parentsReplacedToVisualisation, ItemResourceInternal code) {
+        String parentVisualisationEffective = null;
+        if (code.getParent() == null) {
+            parentVisualisationEffective = null;
+        } else {
+            if (!parentsReplacedToVisualisation.containsKey(code.getParent())) {
+                parentVisualisationEffective = code.getParent();
+            } else {
+                parentVisualisationEffective = parentsReplacedToVisualisation.get(code.getParent());
+            }
+        }
+        parentsReplacedToVisualisation.put(code.getUrn(), parentVisualisationEffective);
     }
 
     private EnumeratedDimensionValues toEnumeratedDimensionValuesFromConceptScheme(Map<String, CodeDimension> coveragesById, DataStructure dataStructure, DsdComponentType componentType,
@@ -675,22 +703,30 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             }
         }
 
+        // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
+        Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
+
         Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
         for (ItemResourceInternal concept : concepts.getConcepts()) {
             String id = concept.getId();
+            boolean skip = false;
             if (effectiveDimensionValuesToData != null) {
                 // note: all values in effectiveDimensionValuesToData are always in coverages
                 if (!effectiveDimensionValuesToData.contains(id)) {
                     // skip to include only values in query
-                    continue;
+                    skip = true;
                 }
             } else {
                 if (!coveragesById.containsKey(id)) {
                     // skip to include only values in coverage
-                    continue;
+                    skip = true;
                 }
             }
-            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsById, selectedLanguages));
+            if (skip) {
+                updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(parentsReplacedToVisualisation, concept);
+                continue;
+            }
+            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsById, parentsReplacedToVisualisation, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
@@ -738,7 +774,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResource source, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResource source, Map<String, String> parentsReplacedToVisualisation, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -746,7 +782,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setId(source.getId());
         target.setUrn(source.getUrn());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
-        target.setParent(source.getParent());
+        if (source.getParent() != null) {
+            if (!parentsReplacedToVisualisation.containsKey(source.getParent())) {
+                target.setVisualisationParent(source.getParent());
+            } else {
+                target.setVisualisationParent(parentsReplacedToVisualisation.get(source.getParent()));
+            }
+        }
         target.setKind(source.getKind());
         target.setSelfLink(source.getSelfLink());
 
@@ -755,7 +797,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return target;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsById, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsById, Map<String, String> effectiveParentVisualisation,
+            List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -763,7 +806,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setId(source.getId());
         target.setUrn(source.getUrn());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
-        target.setParent(source.getParent());
+        if (source.getParent() != null) {
+            if (!effectiveParentVisualisation.containsKey(source.getParent())) {
+                target.setVisualisationParent(source.getParent());
+            } else {
+                target.setVisualisationParent(effectiveParentVisualisation.get(source.getParent()));
+            }
+        }
         if (showDecimalPrecisionsById != null && showDecimalPrecisionsById.containsKey(source.getId())) {
             target.setShowDecimalsPrecision(showDecimalPrecisionsById.get(source.getId()));
         }
@@ -947,7 +996,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 }
             }
         }
-        return StringUtils.join(dataObservations.iterator(), " | ");
+        return StringUtils.join(dataObservations.iterator(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR);
     }
 
     private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {

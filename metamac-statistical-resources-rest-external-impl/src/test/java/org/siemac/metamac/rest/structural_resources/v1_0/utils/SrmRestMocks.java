@@ -80,12 +80,93 @@ public class SrmRestMocks {
     }
 
     public static Codes mockCodesByCodelist(String agencyID, String resourceID, String version) {
+        if ("GEO_DIM-codelist01".equals(resourceID)) {
+            return mockCodesByCodelistGeographicalDimension(agencyID, resourceID, version);
+        } else {
+            return mockCodesByCodelistOtherDimension(agencyID, resourceID, version);
+        }
+    }
+
+    public static Codes mockCodesByCodelistGeographicalDimension(String agencyID, String resourceID, String version) {
+
         Codes codes = new Codes();
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", codes.getCodes().get(1).getUrn(), 4, false));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 5, true));
-        codes.getCodes().add(mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 3, false));
+        {
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
+            codes.getCodes().add(parent);
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
+                codes.getCodes().add(child);
+                {
+                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
+                    codes.getCodes().add(child2);
+                }
+                {
+                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
+                    codes.getCodes().add(child2);
+                }
+            }
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
+                codes.getCodes().add(child);
+                {
+                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
+                    codes.getCodes().add(child2);
+                }
+                {
+                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
+                    codes.getCodes().add(child2);
+                }
+            }
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
+                codes.getCodes().add(child);
+            }
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
+                codes.getCodes().add(child);
+            }
+        }
+        {
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
+            codes.getCodes().add(parent);
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
+                codes.getCodes().add(child);
+            }
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
+                codes.getCodes().add(child);
+            }
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
+                codes.getCodes().add(child);
+            }
+        }
+        return codes;
+    }
+
+    public static Codes mockCodesByCodelistOtherDimension(String agencyID, String resourceID, String version) {
+        Codes codes = new Codes();
+        {
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
+            codes.getCodes().add(parent);
+        }
+        {
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
+            codes.getCodes().add(parent);
+            {
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
+                codes.getCodes().add(child);
+            }
+        }
+        {
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
+            codes.getCodes().add(parent);
+        }
+        {
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
+            codes.getCodes().add(parent);
+        }
         return codes;
     }
 

@@ -73,20 +73,20 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends MetamacRestBaseTest {
 
-    private static String                    jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources";
-    protected String                         baseApi            = jaxrsServerAddress + "/v1.0";
-    protected static ApplicationContext      applicationContext = null;
-    private static StatisticalResourcesV1_0  statisticalResourcesRestExternalFacadeClientXml;
-    private static String                    apiEndpointv10;
+    private static String                     jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources";
+    protected String                          baseApi            = jaxrsServerAddress + "/v1.0";
+    protected static ApplicationContext       applicationContext = null;
+    protected static StatisticalResourcesV1_0 statisticalResourcesRestExternalFacadeClientXml;
+    private static String                     apiEndpointv10;
 
-    protected static RestDoMocks             restDoMocks;
+    protected static RestDoMocks              restDoMocks;
 
-    private PublicationService               publicationService;
-    private DatasetVersionRepository         datasetVersionRepository;
-    private QueryVersionRepository           queryVersionRepository;
-    private DatasetService                   datasetService;
-    private SrmRestExternalFacade            srmRestExternalFacade;
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private PublicationService                publicationService;
+    private DatasetVersionRepository          datasetVersionRepository;
+    private QueryVersionRepository            queryVersionRepository;
+    private DatasetService                    datasetService;
+    private SrmRestExternalFacade             srmRestExternalFacade;
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -293,10 +293,20 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             public List<CodeDimension> answer(InvocationOnMock invocation) throws Throwable {
                 String componentId = (String) invocation.getArguments()[2];
                 List<CodeDimension> codeDimensions = new ArrayList<CodeDimension>();
-                if ("GEO_DIM".equals(componentId) || "dim01".equals(componentId)) {
-                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code01"));
-                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code03"));
-                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code04"));
+                if ("GEO_DIM".equals(componentId)) {
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "santa-cruz-tenerife"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "tenerife"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "la-laguna"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "santa-cruz"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "la-palma"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "santa-cruz-la-palma"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "los-llanos-de-aridane"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "la-gomera"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "el-hierro"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "las-palmas-gran-canaria"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "gran-canaria"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "fuerteventura"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "lanzarote"));
                 } else if ("measure01".equals(componentId)) {
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept01"));
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-conceptScheme01-concept02"));
@@ -306,6 +316,11 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2012"));
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2013"));
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2014"));
+                } else if ("dim01".equals(componentId)) {
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code01"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code03"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, componentId + "-codelist01-code04"));
+
                 } else {
                     fail(componentId + " unexpected");
                 }
@@ -321,7 +336,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             @Override
             public Map<String, ObservationExtendedDto> answer(InvocationOnMock invocation) throws Throwable {
 
-                List<String> geoDimensionValues = Arrays.asList("GEO_DIM-codelist01-code01", "GEO_DIM-codelist01-code03", "GEO_DIM-codelist01-code04");
+                List<String> geoDimensionValues = Arrays.asList("santa-cruz-tenerife", "tenerife", "la-laguna", "santa-cruz", "la-palma", "santa-cruz-la-palma", "los-llanos-de-aridane", "la-gomera",
+                        "el-hierro", "las-palmas-gran-canaria", "gran-canaria", "fuerteventura", "lanzarote");
                 List<String> timeDimensionValues = Arrays.asList("2011", "2012", "2013", "2014");
                 List<String> measureDimensionValues = Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05");
                 List<String> dimension1DimensionValues = Arrays.asList("dim01-codelist01-code01", "dim01-codelist01-code03", "dim01-codelist01-code04");
@@ -338,7 +354,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                     }
                 }
                 // Test one observation empty
-                observationsMap.remove("GEO_DIM-codelist01-code01#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code04");
+                observationsMap.remove("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code04");
 
                 return observationsMap;
             };

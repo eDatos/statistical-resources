@@ -3,6 +3,7 @@ package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_3_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_4_CODE;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStat
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -42,16 +44,26 @@ public class RestDoMocks {
     public DatasetVersion mockDatasetVersion(String agencyID, String resourceID, String version) {
         DatasetVersion target = mockDatasetVersionBasic(agencyID, resourceID, version);
         target.setBibliographicCitation(new InternationalString("es", "bibliographicCitation. More info: #URI#"));
-
-        // TODO Robert: ¿puedo pasar algo al mock del core?
-
         target.setDatasetRepositoryId("datasetRepository01");
-        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("GEO_DIM-codelist01-code01"));
-        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("GEO_DIM-codelist01-code02"));
-        target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "Y2012"));
-        target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
-        target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2013", "Y2013"));
-        target.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2014", "Y2014"));
+
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("santa-cruz-tenerife"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("tenerife"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("la-laguna"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("santa-cruz"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("la-palma"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("santa-cruz-la-palma"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("los-llanos-de-aridane"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("la-gomera"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("el-hierro"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("las-palmas-gran-canaria"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("gran-canaria"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("fuerteventura"));
+        target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("lanzarote"));
+
+        target.addTemporalCoverage(mockTemporalCode("2011"));
+        target.addTemporalCoverage(mockTemporalCode("2012"));
+        target.addTemporalCoverage(mockTemporalCode("2013"));
+        target.addTemporalCoverage(mockTemporalCode("2014"));
         target.addMeasureCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("code-d2-1"));
         target.addMeasureCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("code-d2-2"));
         target.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem("municipalities"));
@@ -88,40 +100,62 @@ public class RestDoMocks {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
         target.setDatasetVersion(mockDatasetVersion(agencyID, "dataset01", "01.000"));
+        target.getSelection().clear();
 
         target.setStatus(QueryStatusEnum.ACTIVE);
         if (QUERY_1_CODE.equals(resourceID)) {
-            target.setType(QueryTypeEnum.FIXED);
+            mockQueryVersionFixed(target);
         } else if (QUERY_2_CODE.equals(resourceID)) {
-            target.setType(QueryTypeEnum.AUTOINCREMENTAL);
+            mockQueryVersionAutoincremental(target);
         } else if (QUERY_3_CODE.equals(resourceID)) {
-            target.setType(QueryTypeEnum.LATEST_DATA);
+            mockQueryVersionLatestData(target);
+        } else if (QUERY_4_CODE.equals(resourceID)) {
+            mockQueryVersionFixedWithoutAllParents(target);
         } else {
-            target.setType(QueryTypeEnum.FIXED);
-        }
-        if (QueryTypeEnum.LATEST_DATA.equals(target.getType())) {
-            target.setLatestDataNumber(Integer.valueOf(4));
+            // any
+            mockQueryVersionFixed(target);
         }
 
-        target.getSelection().clear();
-        target.addSelection(mockQuerySelectionItem("GEO_DIM", Arrays.asList("GEO_DIM-codelist01-code01", "GEO_DIM-codelist01-code03")));
+        return target;
+    }
+
+    private void mockQueryVersionFixed(QueryVersion target) {
+        target.setType(QueryTypeEnum.FIXED);
+        target.addSelection(mockQuerySelectionItem("GEO_DIM",
+                Arrays.asList("santa-cruz-tenerife", "tenerife", "la-laguna", "santa-cruz", "la-palma", "los-llanos-de-aridane", "las-palmas-gran-canaria", "fuerteventura")));
         target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
         target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
-
-        if (QueryTypeEnum.FIXED.equals(target.getType())) {
-            target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
-            target.setLatestTemporalCodeInCreation(null);
-            target.setLatestDataNumber(null);
-        } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(target.getType())) {
-            target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011")));
-            target.setLatestTemporalCodeInCreation("2012");
-            target.setLatestDataNumber(null);
-        } else if (QueryTypeEnum.LATEST_DATA.equals(target.getType())) {
-            target.addSelection(mockQuerySelectionItem("TIME_PERIOD", null));
-            target.setLatestTemporalCodeInCreation(null);
-            target.setLatestDataNumber(2);
-        }
-        return target;
+        target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
+        target.setLatestTemporalCodeInCreation(null);
+        target.setLatestDataNumber(null);
+    }
+    private void mockQueryVersionFixedWithoutAllParents(QueryVersion target) {
+        target.setType(QueryTypeEnum.FIXED);
+        target.addSelection(mockQuerySelectionItem("GEO_DIM",
+                Arrays.asList("santa-cruz-tenerife", "tenerife", "la-laguna", "santa-cruz", "los-llanos-de-aridane", "las-palmas-gran-canaria", "fuerteventura")));
+        target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
+        target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
+        target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
+        target.setLatestTemporalCodeInCreation(null);
+        target.setLatestDataNumber(null);
+    }
+    private void mockQueryVersionAutoincremental(QueryVersion target) {
+        target.setType(QueryTypeEnum.AUTOINCREMENTAL);
+        target.addSelection(mockQuerySelectionItem("GEO_DIM", Arrays.asList("santa-cruz-tenerife", "las-palmas-gran-canaria")));
+        target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
+        target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
+        target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011")));
+        target.setLatestTemporalCodeInCreation("2012");
+        target.setLatestDataNumber(null);
+    }
+    private void mockQueryVersionLatestData(QueryVersion target) {
+        target.setType(QueryTypeEnum.LATEST_DATA);
+        target.addSelection(mockQuerySelectionItem("GEO_DIM", Arrays.asList("santa-cruz-tenerife", "las-palmas-gran-canaria")));
+        target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
+        target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
+        target.addSelection(mockQuerySelectionItem("TIME_PERIOD", null));
+        target.setLatestTemporalCodeInCreation(null);
+        target.setLatestDataNumber(2);
     }
 
     public CodeDimension mockCodeDimension(String componentId, String id) {
@@ -220,4 +254,9 @@ public class RestDoMocks {
         codeItem.setCode(codeId);
         return codeItem;
     }
+
+    private TemporalCode mockTemporalCode(String code) {
+        return StatisticalResourcesDoMocks.mockTemporalCode(code, code);
+    }
+
 }
