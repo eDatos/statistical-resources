@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -163,37 +164,70 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         });
     }
 
+    //
+    // LIFE CYCLE
+    //
+
     @Override
     public void sendToProductionValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+        datasetVersionDtos.add(dataset);
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
+                        getView().setDataset(result.getDatasetVersionDto());
+                    }
+                });
     }
 
     @Override
     public void sendToDiffusionValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+        datasetVersionDtos.add(dataset);
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        getView().setDataset(result.getDatasetVersionDto());
+                    }
+                });
     }
 
     @Override
     public void rejectValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.VALIDATION_REJECTED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+        datasetVersionDtos.add(dataset);
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                        getView().setDataset(result.getDatasetVersionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void programPublication(DatasetVersionDto dataset) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void publish(DatasetVersionDto dataset) {
+        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+        datasetVersionDtos.add(dataset);
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -206,97 +240,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void programPublication(DatasetVersionDto dataset) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void sendToPendingPublication(DatasetVersionDto dataset) {
-        // TODO Auto-generated method stub
-
-    }
-    // FIXME ADD LIFECYCLE OPERATIONS
-    // @Override
-    // public void sendToPendingPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-    // dispatcher.execute(new UpdateDatasetProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PENDING, currentProcStatus),
-    // new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable caught) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorSendToPendingPublication()), MessageTypeEnum.ERROR);
-    // }
-    // @Override
-    // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceSentToPendingPublication()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetVersionDto());
-    // }
-    // });
-    // }
-    //
-    // @Override
-    // public void programPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-    // dispatcher.execute(new UpdateDatasetProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PROGRAMMED, currentProcStatus),
-    // new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable caught) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorProgramPublication()), MessageTypeEnum.ERROR);
-    // }
-    // @Override
-    // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceProgramPublication()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetVersionDto());
-    // }
-    // });
-    // }
-    //
-    // @Override
-    // public void cancelProgrammedPublication(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-    // dispatcher.execute(new UpdateDatasetProcStatusAction(urn, StatisticalResourceProcStatusEnum.PUBLICATION_PENDING, currentProcStatus),
-    // new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable caught) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorCancelProgrammedPublication()), MessageTypeEnum.ERROR);
-    // }
-    // @Override
-    // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceCancelProgrammedPublication()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetVersionDto());
-    // }
-    // });
-    // }
-
-    @Override
-    public void publish(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
-    }
-
-    // @Override
-    // public void archive(String urn, StatisticalResourceProcStatusEnum currentProcStatus) {
-    // dispatcher.execute(new UpdateDatasetProcStatusAction(urn, StatisticalResourceProcStatusEnum.ARCHIVED, currentProcStatus), new WaitingAsyncCallback<UpdateDatasetProcStatusResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable caught) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().lifeCycleResourceErrorArchive()), MessageTypeEnum.ERROR);
-    // }
-    // @Override
-    // public void onWaitSuccess(UpdateDatasetProcStatusResult result) {
-    // ShowMessageEvent.fire(DatasetMetadataTabPresenter.this, ErrorUtils.getMessageList(getMessages().lifeCycleResourceArchive()), MessageTypeEnum.SUCCESS);
-    // getView().setDataset(result.getDatasetVersionDto());
-    // }
-    // });
-    // }
-
-    @Override
     public void version(DatasetVersionDto dataset, VersionTypeEnum versionType) {
         dispatcher.execute(new VersionDatasetVersionAction(dataset, versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetVersionResult>(this) {
 
@@ -307,6 +250,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             }
         });
     }
+
+    //
+    // RELATED RESOURCES
+    //
 
     @Override
     public void retrieveDatasetsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {

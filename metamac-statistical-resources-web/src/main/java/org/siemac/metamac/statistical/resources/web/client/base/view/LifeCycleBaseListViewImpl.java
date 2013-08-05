@@ -172,6 +172,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createSendToProductionValidationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         button.setVisibility(Visibility.HIDDEN);
+        button.addClickHandler(getSendToProductionValidationClickHandler());
         return button;
     }
 
@@ -194,6 +195,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createSendToDiffusionValidation() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
         button.setVisibility(Visibility.HIDDEN);
+        button.addClickHandler(getSendToDiffusionValidationClickHandler());
         return button;
     }
 
@@ -216,6 +218,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createRejectValidationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
         button.setVisibility(Visibility.HIDDEN);
+        button.addClickHandler(getRejectValidationClickHandler());
         return button;
     }
 
@@ -238,6 +241,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createPublishButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         button.setVisibility(Visibility.HIDDEN);
+        button.addClickHandler(getPublishClickHandler());
         return button;
     }
 
@@ -260,6 +264,13 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createProgramPublicationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
         button.setVisibility(Visibility.HIDDEN);
+        button.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO show a window to ask for the validFrom
+            }
+        });
         return button;
     }
 
@@ -282,6 +293,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createCancelProgrammedPublicationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
         button.setVisibility(Visibility.HIDDEN);
+        button.addClickHandler(getCancelProgrammedPublicationClickHandler());
         return button;
     }
 
@@ -332,8 +344,15 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     // ABSTRACT METHODS
     //
 
-    public abstract ClickHandler getNewButtonClickHandler();
-    public abstract void retrieveResultSet(int firstResult, int maxResults);
+    protected abstract void retrieveResultSet(int firstResult, int maxResults);
+
+    protected abstract ClickHandler getNewButtonClickHandler();
+    protected abstract ClickHandler getSendToProductionValidationClickHandler();
+    protected abstract ClickHandler getSendToDiffusionValidationClickHandler();
+    protected abstract ClickHandler getRejectValidationClickHandler();
+    protected abstract ClickHandler getPublishClickHandler();
+    protected abstract ClickHandler getCancelProgrammedPublicationClickHandler();
+
     protected abstract boolean canDelete(ListGridRecord record);
     protected abstract boolean canSendToProductionValidation(ListGridRecord record);
     protected abstract boolean canSendToDiffusionValidation(ListGridRecord record);

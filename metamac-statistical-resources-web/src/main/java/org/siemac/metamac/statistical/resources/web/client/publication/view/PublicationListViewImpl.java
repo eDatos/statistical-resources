@@ -157,6 +157,76 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         };
     }
 
+    // Sent to production validation
+
+    @Override
+    protected ClickHandler getSendToProductionValidationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Send to diffusion validation
+
+    @Override
+    protected ClickHandler getSendToDiffusionValidationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Reject validation
+
+    @Override
+    protected ClickHandler getRejectValidationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Publish
+
+    @Override
+    protected ClickHandler getPublishClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Cancel programmed publication
+
+    @Override
+    protected ClickHandler getCancelProgrammedPublicationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
     //
     // LISTGRID ACTIONS
     //

@@ -3,6 +3,9 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -138,7 +141,9 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void sendToProductionValidation(PublicationVersionDto publicationVersionDto) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.PRODUCTION_VALIDATION),
+        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+        publicationVersionDtos.add(publicationVersionDto);
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -151,7 +156,9 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void sendToDiffusionValidation(PublicationVersionDto publicationVersionDto) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.DIFFUSION_VALIDATION),
+        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+        publicationVersionDtos.add(publicationVersionDto);
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -164,7 +171,9 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void rejectValidation(PublicationVersionDto publicationVersionDto) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.VALIDATION_REJECTED),
+        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+        publicationVersionDtos.add(publicationVersionDto);
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -177,7 +186,9 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void publish(PublicationVersionDto publicationVersionDto) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, ProcStatusEnum.PUBLISHED),
+        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+        publicationVersionDtos.add(publicationVersionDto);
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -190,14 +201,17 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void programPublication(PublicationVersionDto publication) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+        publicationVersionDtos.add(publication);
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                getView().setPublication(result.getPublicationVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                        getView().setPublication(result.getPublicationVersionDto());
+                    }
+                });
     }
 
     @Override
@@ -214,12 +228,6 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void cancelProgrammedPublication(PublicationVersionDto publication) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void sendToPendingPublication(PublicationVersionDto publication) {
         // TODO Auto-generated method stub
 
     }

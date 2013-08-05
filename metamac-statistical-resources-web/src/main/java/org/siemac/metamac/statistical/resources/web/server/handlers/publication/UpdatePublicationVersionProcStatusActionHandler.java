@@ -6,6 +6,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult.Builder;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -29,24 +30,29 @@ public class UpdatePublicationVersionProcStatusActionHandler extends SecurityAct
 
         try {
 
-            PublicationVersionDto publicationVersionDto = null;
+            PublicationVersionDto publicationVersionResult = null;
 
             ProcStatusEnum nextProcStatus = action.getNextProcStatus();
 
             switch (nextProcStatus) {
                 case PRODUCTION_VALIDATION: {
-                    publicationVersionDto = statisticalResourcesServiceFacade.sendPublicationVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getPublicationVersionToUpdateProcStatus());
+                    for (PublicationVersionDto publicationVersionDto : action.getPublicationVersionsToUpdateProcStatus()) {
+                        publicationVersionResult = statisticalResourcesServiceFacade.sendPublicationVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(),
+                                publicationVersionDto);
+                    }
                     break;
                 }
                 case DIFFUSION_VALIDATION: {
-                    publicationVersionDto = statisticalResourcesServiceFacade.sendPublicationVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getPublicationVersionToUpdateProcStatus());
+                    for (PublicationVersionDto publicationVersionDto : action.getPublicationVersionsToUpdateProcStatus()) {
+                        publicationVersionResult = statisticalResourcesServiceFacade
+                                .sendPublicationVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
+                    }
                     break;
                 }
                 case VALIDATION_REJECTED: {
-                    publicationVersionDto = statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getPublicationVersionToUpdateProcStatus());
+                    for (PublicationVersionDto publicationVersionDto : action.getPublicationVersionsToUpdateProcStatus()) {
+                        publicationVersionResult = statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
+                    }
                 }
                 case PUBLISHED: {
                     // TODO
@@ -55,7 +61,9 @@ public class UpdatePublicationVersionProcStatusActionHandler extends SecurityAct
                     break;
             }
 
-            return new UpdatePublicationVersionProcStatusResult(publicationVersionDto);
+            Builder builder = new UpdatePublicationVersionProcStatusResult.Builder();
+            builder.publicationVersionDto(publicationVersionResult);
+            return builder.build();
 
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

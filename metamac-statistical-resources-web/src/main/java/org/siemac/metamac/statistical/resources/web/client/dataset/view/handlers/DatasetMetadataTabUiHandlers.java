@@ -15,7 +15,6 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void sendToProductionValidation(DatasetVersionDto dataset);
     void sendToDiffusionValidation(DatasetVersionDto dataset);
     void rejectValidation(DatasetVersionDto dataset);
-    void sendToPendingPublication(DatasetVersionDto dataset);
     void programPublication(DatasetVersionDto dataset);
     void cancelProgrammedPublication(DatasetVersionDto dataset);
     void publish(DatasetVersionDto dataset);

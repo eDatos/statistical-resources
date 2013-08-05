@@ -19,7 +19,6 @@ public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiH
     void sendToProductionValidation(PublicationVersionDto publication);
     void sendToDiffusionValidation(PublicationVersionDto publication);
     void rejectValidation(PublicationVersionDto publication);
-    void sendToPendingPublication(PublicationVersionDto publication);
     void programPublication(PublicationVersionDto publication);
     void cancelProgrammedPublication(PublicationVersionDto publication);
     void publish(PublicationVersionDto publication);

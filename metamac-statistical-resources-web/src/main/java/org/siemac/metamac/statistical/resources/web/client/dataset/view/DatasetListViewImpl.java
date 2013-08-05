@@ -182,7 +182,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     //
 
     @Override
-    public void retrieveResultSet(int firstResult, int maxResults) {
+    protected void retrieveResultSet(int firstResult, int maxResults) {
         getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults, null);
     }
 
@@ -193,7 +193,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     // Create
 
     @Override
-    public ClickHandler getNewButtonClickHandler() {
+    protected ClickHandler getNewButtonClickHandler() {
         return new ClickHandler() {
 
             @Override
@@ -216,7 +216,75 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         };
     }
 
-    // Delete
+    // Sent to production validation
+
+    @Override
+    protected ClickHandler getSendToProductionValidationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Send to diffusion validation
+
+    @Override
+    protected ClickHandler getSendToDiffusionValidationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Reject validation
+
+    @Override
+    protected ClickHandler getRejectValidationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Publish
+
+    @Override
+    protected ClickHandler getPublishClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
+    // Cancel programmed publication
+
+    @Override
+    protected ClickHandler getCancelProgrammedPublicationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
 
     // Import datasources
 
