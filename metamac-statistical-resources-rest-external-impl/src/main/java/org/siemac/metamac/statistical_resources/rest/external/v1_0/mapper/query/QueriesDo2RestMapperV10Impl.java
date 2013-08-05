@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +18,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
@@ -123,32 +120,12 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
-        Data target = null;
-        QueryTypeEnum type = source.getType();
-        List<QuerySelectionItem> selections = source.getSelection();
-        DatasetVersion datasetVersion = source.getDatasetVersion();
-        if (QueryTypeEnum.FIXED.equals(type)) {
-            Map<String, List<String>> dimensionValuesSelected = new HashMap<String, List<String>>(selections.size());
-            for (QuerySelectionItem selection : selections) {
-                String dimensionId = selection.getDimension();
-                List<String> codes = codeItemToString(selection.getCodes());
-                dimensionValuesSelected.put(dimensionId, codes);
-            }
-            target = commonDo2RestMapper.toData(datasetVersion, selectedLanguages, dimensionValuesSelected);
-        } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(type)) {
-            logger.error("QueryTypeEnum unsupported: " + source);
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-        } else if (QueryTypeEnum.LATEST_DATA.equals(type)) {
-            logger.error("QueryTypeEnum unsupported: " + source);
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-        } else {
-            logger.error("QueryTypeEnum unsupported: " + source);
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        Map<String, List<String>> dimensionValuesSelected = new HashMap<String, List<String>>(source.getSelection().size());
+        for (QuerySelectionItem selection : source.getSelection()) {
+            List<String> codes = commonDo2RestMapper.calculateEffectiveCodesToQuery(source, selection);
+            dimensionValuesSelected.put(selection.getDimension(), codes);
         }
-        return target;
+        return commonDo2RestMapper.toData(source.getDatasetVersion(), selectedLanguages, dimensionValuesSelected);
     }
 
     private ResourceLink toQueryParentLink(QueryVersion source) {
@@ -215,14 +192,6 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private List<String> codeItemToString(List<CodeItem> sources) {
-        List<String> targets = new ArrayList<String>(sources.size()); // never null
-        for (CodeItem source : sources) {
-            targets.add(source.getCode());
-        }
-        return targets;
     }
 
 }

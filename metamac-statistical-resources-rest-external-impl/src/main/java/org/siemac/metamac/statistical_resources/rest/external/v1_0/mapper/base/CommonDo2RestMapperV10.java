@@ -17,6 +17,10 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguag
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 public interface CommonDo2RestMapperV10 {
 
@@ -34,6 +38,10 @@ public interface CommonDo2RestMapperV10 {
     public Date toDate(DateTime source);
 
     public SelectedLanguages toLanguages(List<String> selectedLanguages);
+
+    public List<String> codeItemToString(List<CodeItem> sources);
+    public List<String> temporalCoverageToString(List<TemporalCode> sources);
+    public List<String> calculateEffectiveCodesToQuery(QueryVersion source, QuerySelectionItem selection);
 
     public Resources toResourcesExternalItemsSrm(List<ExternalItem> sources, List<String> selectedLanguages);
     public Resource toResourceExternalItemSrm(ExternalItem source, List<String> selectedLanguages);

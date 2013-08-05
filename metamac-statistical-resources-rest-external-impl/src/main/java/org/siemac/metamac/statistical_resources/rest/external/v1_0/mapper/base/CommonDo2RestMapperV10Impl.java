@@ -42,11 +42,17 @@ import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
@@ -161,6 +167,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setValidTo(toDate(source.getValidTo()));
     }
 
+    @Override
     public Data toData(DatasetVersion source, List<String> selectedLanguages, Map<String, List<String>> dimensionValuesSelected) throws Exception {
         if (source == null) {
             return null;
@@ -197,6 +204,81 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.getDimensions().setTotal(BigInteger.valueOf(target.getDimensions().getDimensions().size()));
 
         return target;
+    }
+
+    @Override
+    public List<String> codeItemToString(List<CodeItem> sources) {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        List<String> targets = new ArrayList<String>(sources.size());
+        for (CodeItem source : sources) {
+            targets.add(source.getCode());
+        }
+        return targets;
+    }
+
+    @Override
+    public List<String> temporalCoverageToString(List<TemporalCode> sources) {
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        List<String> targets = new ArrayList<String>(sources.size());
+        for (TemporalCode source : sources) {
+            targets.add(source.getIdentifier());
+        }
+        return targets;
+    }
+
+    @Override
+    public List<String> calculateEffectiveCodesToQuery(QueryVersion source, QuerySelectionItem selection) {
+        DatasetVersion datasetVersion = source.getDatasetVersion();
+        QueryTypeEnum type = source.getType();
+        String dimensionId = selection.getDimension();
+
+        List<String> effectiveCodes = codeItemToString(selection.getCodes());
+        if (effectiveCodes == null) {
+            effectiveCodes = new ArrayList<String>();
+        }
+
+        if (QueryTypeEnum.FIXED.equals(type)) {
+            // return exactly
+            return effectiveCodes;
+        } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(type)) {
+            if (isTemporalDimension(dimensionId)) {
+                List<String> temporalCoverageCodes = temporalCoverageToString(datasetVersion.getTemporalCoverage());
+                int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
+                if (datasetVersion.getTemporalCoverage().size() > indexLatestTemporalCodeInCreation + 1) {
+                    // add codes added after query creation
+                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(indexLatestTemporalCodeInCreation + 1,
+                            datasetVersion.getTemporalCoverage().size());
+                    effectiveCodes.addAll(temporalCoverageToString(temporalCodesAddedAfterQueryCreation));
+                }
+                return effectiveCodes;
+            } else {
+                // return exactly
+                return effectiveCodes;
+            }
+        } else if (QueryTypeEnum.LATEST_DATA.equals(type)) {
+            if (isTemporalDimension(dimensionId)) {
+                // return N data
+                int codeIndexToReturn = -1;
+                if (datasetVersion.getTemporalCoverage().size() < source.getLatestDataNumber()) {
+                    codeIndexToReturn = 0; // there is not N data, so return all
+                } else {
+                    codeIndexToReturn = datasetVersion.getTemporalCoverage().size() - source.getLatestDataNumber();
+                }
+                List<TemporalCode> temporalCodesLatestDataNumber = datasetVersion.getTemporalCoverage().subList(codeIndexToReturn, datasetVersion.getTemporalCoverage().size());
+                return temporalCoverageToString(temporalCodesLatestDataNumber);
+            } else {
+                // return exactly
+                return effectiveCodes;
+            }
+        } else {
+            logger.error("QueryTypeEnum unsupported: " + source);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
@@ -552,6 +634,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {
         List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
         for (Map.Entry<String, List<String>> entry : dimensions.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
             ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
             conditionDimensionDto.setDimensionId(entry.getKey());
             for (String value : entry.getValue()) {
@@ -560,6 +645,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             conditionDimensionDtos.add(conditionDimensionDto);
         }
         return conditionDimensionDtos;
+    }
+
+    private boolean isTemporalDimension(String dimensionId) {
+        return StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID.equals(dimensionId);
     }
 
     private class OrderingStackElement {

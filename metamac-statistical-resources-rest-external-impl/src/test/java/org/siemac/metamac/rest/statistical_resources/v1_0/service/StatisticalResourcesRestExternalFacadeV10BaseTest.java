@@ -305,6 +305,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2011"));
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2012"));
                     codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2013"));
+                    codeDimensions.add(restDoMocks.mockCodeDimension(componentId, "2014"));
                 } else {
                     fail(componentId + " unexpected");
                 }
@@ -321,7 +322,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             public Map<String, ObservationExtendedDto> answer(InvocationOnMock invocation) throws Throwable {
 
                 List<String> geoDimensionValues = Arrays.asList("GEO_DIM-codelist01-code01", "GEO_DIM-codelist01-code03", "GEO_DIM-codelist01-code04");
-                List<String> timeDimensionValues = Arrays.asList("2011", "2012", "2013");
+                List<String> timeDimensionValues = Arrays.asList("2011", "2012", "2013", "2014");
                 List<String> measureDimensionValues = Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05");
                 List<String> dimension1DimensionValues = Arrays.asList("dim01-codelist01-code01", "dim01-codelist01-code03", "dim01-codelist01-code04");
                 Map<String, ObservationExtendedDto> observationsMap = new HashMap<String, ObservationExtendedDto>();

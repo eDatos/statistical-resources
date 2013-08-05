@@ -7,6 +7,7 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -100,10 +101,30 @@ public class RestDoMocks {
 
         target.getSelection().clear();
         target.addSelection(mockQuerySelectionItem("GEO_DIM", Arrays.asList("GEO_DIM-codelist01-code01", "GEO_DIM-codelist01-code03")));
-        target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
         target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
         target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
 
+        if (QueryTypeEnum.FIXED.equals(target.getType())) {
+            target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
+            target.setLatestTemporalCodeInCreation(null);
+            target.setLatestDataNumber(null);
+        } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(target.getType())) {
+            target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011")));
+            target.setLatestTemporalCodeInCreation("2012");
+            target.setLatestDataNumber(null);
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "Y2012"));
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2013", "Y2013"));
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2014", "Y2014"));
+        } else if (QueryTypeEnum.LATEST_DATA.equals(target.getType())) {
+            target.addSelection(mockQuerySelectionItem("TIME_PERIOD", null));
+            target.setLatestTemporalCodeInCreation(null);
+            target.setLatestDataNumber(2);
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "Y2012"));
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "Y2012"));
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2013", "Y2013"));
+            target.getDatasetVersion().addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2014", "Y2014"));
+        }
         return target;
     }
 
@@ -190,8 +211,10 @@ public class RestDoMocks {
     private QuerySelectionItem mockQuerySelectionItem(String dimensionId, List<String> codes) {
         QuerySelectionItem querySelectionItem = new QuerySelectionItem();
         querySelectionItem.setDimension(dimensionId);
-        for (String code : codes) {
-            querySelectionItem.addCode(mockCodeItem(code));
+        if (!CollectionUtils.isEmpty(codes)) {
+            for (String code : codes) {
+                querySelectionItem.addCode(mockCodeItem(code));
+            }
         }
         return querySelectionItem;
     }

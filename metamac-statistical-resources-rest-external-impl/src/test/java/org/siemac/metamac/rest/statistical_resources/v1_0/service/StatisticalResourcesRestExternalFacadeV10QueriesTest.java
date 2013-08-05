@@ -2,6 +2,8 @@ package org.siemac.metamac.rest.statistical_resources.v1_0.service;
 
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_3_CODE;
 
 import java.io.InputStream;
 
@@ -31,6 +33,28 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         for (int i = 0; i < requestUris.length; i++) {
             String requestUri = requestUris[i];
             InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/retrieveQuery.fixed.id1.xml");
+            testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
+        }
+    }
+
+    @Test
+    public void testRetrieveQueryDataAutoincrementalXml() throws Exception {
+        String requestBase = getRetrieveQueryUri(AGENCY_1, QUERY_2_CODE, null, null);
+        String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
+        for (int i = 0; i < requestUris.length; i++) {
+            String requestUri = requestUris[i];
+            InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/retrieveQuery.autoincremental.id1.xml");
+            testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
+        }
+    }
+
+    @Test
+    public void testRetrieveQueryDataLatestDataXml() throws Exception {
+        String requestBase = getRetrieveQueryUri(AGENCY_1, QUERY_3_CODE, null, null);
+        String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
+        for (int i = 0; i < requestUris.length; i++) {
+            String requestUri = requestUris[i];
+            InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/retrieveQuery.latestData.id1.xml");
             testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
         }
     }
