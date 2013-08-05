@@ -100,6 +100,8 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
         sections.addSection(lastModifiedQueriesSection);
 
         panel = new VLayout();
+        panel.setHeight100();
+        panel.setOverflow(Overflow.SCROLL);
         panel.addMember(sections);
     }
 
