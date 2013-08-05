@@ -5,10 +5,10 @@
     <stat:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
     <stat:parentLink kind="statisticalResources#queries" href="http://data.istac.es/apis/statistical-resources/v1.0/queries"/>
     <stat:name>
-        <cdomain:text xml:lang="es">title-resource-97Gcx6kfYv en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-97Gcx6kfYv en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-M0CkuxYyvJ en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -19,7 +19,7 @@
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset01(01.000)</cdomain:urn>
             <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset01/01.000"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-resource-E6vrtLPtir en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
             </cdomain:name>
         </stat:relatedDataset>
         <stat:relatedDsd kind="structuralResources#dataStructure">

@@ -51,7 +51,7 @@
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
-    
+
     <xs:complexType name="DatasetMetadata">
         <xs:complexContent>
             <xs:extension base="tns:StatisticalResource">
@@ -99,12 +99,12 @@
             <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="QueryMetadata">
         <xs:sequence>
             <xs:element name="relatedDataset" type="common:Resource" minOccurs="1" />
             <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
-            <xs:element name="dimensions" type="tns:Dimensions" />            
+            <xs:element name="dimensions" type="tns:Dimensions" />
             <xs:element name="status" type="tns:QueryStatus" />
             <xs:element name="type" type="tns:QueryType" />
             <xs:element name="latestDataNumber" type="xs:int" minOccurs="0" />
@@ -377,21 +377,21 @@
             <xs:enumeration value="MINOR_OTHER" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="QueryStatus">
         <xs:restriction base="xs:token">
             <xs:enumeration value="ACTIVE" />
             <xs:enumeration value="DISCONTINUED" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="QueryType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="AUTOINCREMENTAL" />
             <xs:enumeration value="LATEST_DATA" />
             <xs:enumeration value="FIXED" />
         </xs:restriction>
-    </xs:simpleType>        
+    </xs:simpleType>
 
     <!-- Criterias -->
     <xs:simpleType name="DatasetCriteriaPropertyRestriction">
@@ -431,6 +431,12 @@
             <xs:enumeration value="ID" />
             <xs:enumeration value="NAME" />
             <xs:enumeration value="DESCRIPTION" />
+            <xs:enumeration value="TITLE_ALTERNATIVE" />
+            <xs:enumeration value="KEYWORD" />
+            <xs:enumeration value="NEWNESS_UNTIL_DATE" />
+            <xs:enumeration value="VALID_FROM" />
+            <xs:enumeration value="VALID_TO" />
+            <xs:enumeration value="STATISTIC_OPERATION_URN" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -445,6 +451,12 @@
             <xs:enumeration value="ID" />
             <xs:enumeration value="NAME" />
             <xs:enumeration value="DESCRIPTION" />
+            <xs:enumeration value="RELATED_DSD_URN" />
+            <xs:enumeration value="STATUS" />
+            <xs:enumeration value="TYPE" />
+            <xs:enumeration value="VALID_FROM" />
+            <xs:enumeration value="VALID_TO" />
+            <xs:enumeration value="STATISTIC_OPERATION_URN" />
         </xs:restriction>
     </xs:simpleType>
 

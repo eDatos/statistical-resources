@@ -182,6 +182,7 @@ public class RestDoMocks {
         target.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
         target.getSiemacMetadataStatisticalResource().setCode(resourceID);
         target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+        target.getSiemacMetadataStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "title"));
         return target;
     }
 
@@ -191,6 +192,7 @@ public class RestDoMocks {
         target.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
         target.getSiemacMetadataStatisticalResource().setCode(resourceID);
         target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+        target.getSiemacMetadataStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "title"));
         return target;
     }
 
@@ -200,6 +202,7 @@ public class RestDoMocks {
         target.getLifeCycleStatisticalResource().getMaintainer().setCodeNested(agencyID);
         target.getLifeCycleStatisticalResource().setCode(resourceID);
         target.getLifeCycleStatisticalResource().setVersionLogic(version);
+        target.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "title"));
         return target;
     }
 

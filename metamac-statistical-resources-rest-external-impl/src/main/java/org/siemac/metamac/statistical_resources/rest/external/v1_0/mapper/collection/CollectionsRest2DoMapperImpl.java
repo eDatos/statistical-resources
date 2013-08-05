@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.colle
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestOrder;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestQueryPropertyRestriction;
+import org.siemac.metamac.rest.common.query.domain.OperationTypeEnum;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteriaBase;
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria;
@@ -41,6 +42,23 @@ public class CollectionsRest2DoMapperImpl extends BaseRest2DoMapperV10Impl imple
                     return buildSculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
+                case TITLE_ALTERNATIVE:
+                    return buildSculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().titleAlternative().texts().label(), PropertyTypeEnum.STRING,
+                            propertyRestriction);
+                case KEYWORD:
+                    propertyRestriction.setOperationType(OperationTypeEnum.LIKE); // override, because keywords are a string separated by space
+                    return buildSculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().keywords().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
+                case NEWNESS_UNTIL_DATE:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, PublicationVersionProperties.siemacMetadataStatisticalResource().newnessUntilDate(),
+                            PublicationVersion.class, false);
+                case VALID_FROM:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class,
+                            false);
+                case VALID_TO:
+                    return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class,
+                            false);
+                case STATISTIC_OPERATION_URN:
+                    return buildSculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn(), PropertyTypeEnum.STRING, propertyRestriction);
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
             }

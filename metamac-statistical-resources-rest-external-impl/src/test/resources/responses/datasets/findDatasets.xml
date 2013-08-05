@@ -5,7 +5,7 @@
         <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)</cdomain:urn>
         <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000"/>
         <cdomain:name>
-            <cdomain:text xml:lang="es">title-resource-NzOpsKGUkk en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
         </cdomain:name>
     </stat:dataset>
     <stat:dataset kind="statisticalResources#dataset">
@@ -13,7 +13,7 @@
         <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(02.000)</cdomain:urn>
         <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/02.000"/>
         <cdomain:name>
-            <cdomain:text xml:lang="es">title-resource-Ce10LXPDMB en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
         </cdomain:name>
     </stat:dataset>
     <stat:dataset kind="statisticalResources#dataset">
@@ -21,7 +21,7 @@
         <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency2:dataset1(01.000)</cdomain:urn>
         <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency2/dataset1/01.000"/>
         <cdomain:name>
-            <cdomain:text xml:lang="es">title-resource-DJGHl5avap en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
         </cdomain:name>
     </stat:dataset>
     <stat:dataset kind="statisticalResources#dataset">
@@ -29,7 +29,7 @@
         <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset2(01.000)</cdomain:urn>
         <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset2/01.000"/>
         <cdomain:name>
-            <cdomain:text xml:lang="es">title-resource-KMYliSMw4h en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">title-dataset2 en Espanol</cdomain:text>
         </cdomain:name>
     </stat:dataset>
 </stat:datasets>

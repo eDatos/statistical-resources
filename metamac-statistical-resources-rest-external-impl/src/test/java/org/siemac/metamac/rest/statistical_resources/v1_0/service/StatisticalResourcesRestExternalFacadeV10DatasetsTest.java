@@ -6,11 +6,13 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.VERSION_1;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
 import org.junit.Test;
+import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
@@ -40,6 +42,15 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         assertEquals(DATASET_1_CODE, dataset.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)", dataset.getUrn());
         assertEquals(RestExternalConstants.KIND_DATASET, dataset.getKind());
+
+        MetamacRestAsserts.assertEqualsInternationalString("es", "title-dataset1 en Espanol", null, null, dataset.getName());
+    }
+
+    @Test
+    public void testRetrieveDatasetAnotherLanguage() throws Exception {
+        Dataset dataset = statisticalResourcesRestExternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, Arrays.asList("en"), null, null);
+
+        MetamacRestAsserts.assertEqualsInternationalString("es", "title-dataset1 en Espanol", "en", "title-dataset1 in English", dataset.getName());
     }
 
     @Test
