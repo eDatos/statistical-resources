@@ -10,9 +10,9 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter.OperationResourcesView;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
@@ -28,6 +29,8 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
@@ -59,6 +62,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         void setDatasets(List<DatasetVersionDto> datasetDtos);
         void setPublications(List<PublicationVersionDto> publicationDtos);
+        void setQueries(List<QueryVersionDto> queryVersionDtos);
     }
 
     @ProxyCodeSplit
@@ -158,19 +162,46 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
                         getView().setPublications(result.getPublicationDtos());
                     }
                 });
+
+        // QUERIES
+
+        StatisticalResourceWebCriteria queryWebCriteria = new StatisticalResourceWebCriteria();
+        queryWebCriteria.setStatisticalOperationUrn(urn);
+        dispatcher.execute(new GetQueryVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryWebCriteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(GetQueryVersionsResult result) {
+                getView().setQueries(result.getQueriesList());
+            }
+        });
     }
+
+    //
+    // NAVIGATION
+    //
 
     @Override
     public void goToDataset(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.datasetPage).with(PlaceRequestParams.datasetParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeDatasetPlaceRequest(urn));
         }
     }
 
     @Override
     public void goToPublication(String urn) {
         if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.publicationParam, UrnUtils.removePrefix(urn)));
+            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativePublicationPlaceRequest(urn));
+        }
+    }
+
+    @Override
+    public void goToQuery(String urn) {
+        if (!StringUtils.isBlank(urn)) {
+            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeQueryPlaceRequest(urn));
         }
     }
 }

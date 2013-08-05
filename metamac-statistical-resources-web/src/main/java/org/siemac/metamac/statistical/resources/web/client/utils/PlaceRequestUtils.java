@@ -88,6 +88,10 @@ public class PlaceRequestUtils {
         return null;
     }
 
+    public static PlaceRequest buildRelativePublicationPlaceRequest(String urn) {
+        return new PlaceRequest(NameTokens.publicationPage).with(PlaceRequestParams.publicationParam, UrnUtils.removePrefix(urn));
+    }
+
     public static PlaceRequest buildRelativePublicationsPlaceRequest() {
         return new PlaceRequest(NameTokens.publicationsListPage);
     }

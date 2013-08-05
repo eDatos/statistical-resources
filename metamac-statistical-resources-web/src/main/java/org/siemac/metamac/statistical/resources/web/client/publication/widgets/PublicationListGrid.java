@@ -1,27 +1,19 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
+import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
-import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 
 public class PublicationListGrid extends BaseCustomListGrid {
 
     public PublicationListGrid() {
         super();
-
         this.setShowAllRecords(true);
-
-        CustomListGridField identifierField = new CustomListGridField(PublicationDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        CustomListGridField titleField = new CustomListGridField(PublicationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-
-        this.setFields(identifierField, titleField);
+        this.setFields(ResourceFieldUtils.getPublicationListGridFields());
     }
 
     public void setPublications(List<PublicationVersionDto> publications) {

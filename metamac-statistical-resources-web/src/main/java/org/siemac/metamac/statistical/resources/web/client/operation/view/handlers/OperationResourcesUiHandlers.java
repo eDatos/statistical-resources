@@ -6,5 +6,5 @@ public interface OperationResourcesUiHandlers extends UiHandlers {
 
     void goToDataset(String urn);
     void goToPublication(String urn);
-
+    void goToQuery(String urn);
 }
