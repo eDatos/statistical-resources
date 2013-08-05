@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.query.view.widgets.f
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;

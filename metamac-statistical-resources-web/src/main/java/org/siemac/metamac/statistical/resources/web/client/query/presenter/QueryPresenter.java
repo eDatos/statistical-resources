@@ -14,8 +14,6 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
-import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
@@ -33,8 +31,6 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesP
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
