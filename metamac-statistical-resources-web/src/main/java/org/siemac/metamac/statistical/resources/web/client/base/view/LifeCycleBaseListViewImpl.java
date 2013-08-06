@@ -351,6 +351,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract ClickHandler getSendToDiffusionValidationClickHandler();
     protected abstract ClickHandler getRejectValidationClickHandler();
     protected abstract ClickHandler getPublishClickHandler();
+    protected abstract ClickHandler getProgramPublicationClickHandler();
     protected abstract ClickHandler getCancelProgrammedPublicationClickHandler();
 
     protected abstract boolean canDelete(ListGridRecord record);

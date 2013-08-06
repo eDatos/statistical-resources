@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
@@ -31,6 +32,8 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
@@ -174,6 +177,104 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
             });
         }
     }
+
+    //
+    // LIFECYCLE
+    //
+
+    @Override
+    public void sendToProductionValidation(List<PublicationVersionDto> publicationVersionDtos) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesSentToProductionValidation());
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void sendToDiffusionValidation(List<PublicationVersionDto> publicationVersionDtos) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesSentToDiffusionValidation());
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void rejectValidation(List<PublicationVersionDto> publicationVersionDtos) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesRejectValidation());
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void publish(List<PublicationVersionDto> publicationVersionDtos) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesPublish());
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void programPublication(List<PublicationVersionDto> publicationVersionDtos) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesProgramPublication());
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    //
+    // NAVIGATION
+    //
 
     @Override
     public void goToPublication(String urn) {

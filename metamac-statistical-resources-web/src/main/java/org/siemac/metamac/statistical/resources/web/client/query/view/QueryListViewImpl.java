@@ -198,6 +198,20 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         };
     }
 
+    // Program publication
+
+    @Override
+    protected ClickHandler getProgramPublicationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+    }
+
     // Cancel programmed publication
 
     @Override

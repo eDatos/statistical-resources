@@ -11,4 +11,12 @@ public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandl
     void deletePublication(List<String> urns);
     void retrievePublications(int firstResult, int maxResults, String criteria);
     void goToPublication(String urn);
+
+    // LifeCycle
+
+    void sendToProductionValidation(List<PublicationVersionDto> publicationVersionDtos);
+    void sendToDiffusionValidation(List<PublicationVersionDto> publicationVersionDtos);
+    void rejectValidation(List<PublicationVersionDto> publicationVersionDtos);
+    void publish(List<PublicationVersionDto> publicationVersionDtos);
+    void programPublication(List<PublicationVersionDto> publicationVersionDtos);
 }

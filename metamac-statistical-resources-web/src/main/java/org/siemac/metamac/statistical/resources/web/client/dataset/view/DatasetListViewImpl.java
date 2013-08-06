@@ -272,6 +272,20 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         };
     }
 
+    // Program publication
+
+    @Override
+    protected ClickHandler getProgramPublicationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().programPublication(datasetVersionDtos);
+            }
+        };
+    }
+
     // Cancel programmed publication
 
     @Override

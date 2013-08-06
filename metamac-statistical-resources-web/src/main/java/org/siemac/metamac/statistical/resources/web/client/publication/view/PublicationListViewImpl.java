@@ -165,8 +165,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().sendToProductionValidation(publicationVersionDtos);
             }
         };
     }
@@ -179,8 +179,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().sendToDiffusionValidation(publicationVersionDtos);
             }
         };
     }
@@ -193,8 +193,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().rejectValidation(publicationVersionDtos);
             }
         };
     }
@@ -207,8 +207,22 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
+                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().publish(publicationVersionDtos);
+            }
+        };
+    }
 
+    // Program publication
+
+    @Override
+    protected ClickHandler getProgramPublicationClickHandler() {
+        return new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().programPublication(publicationVersionDtos);
             }
         };
     }
