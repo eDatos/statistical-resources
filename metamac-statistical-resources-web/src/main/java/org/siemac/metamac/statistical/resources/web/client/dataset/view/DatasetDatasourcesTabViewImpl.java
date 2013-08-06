@@ -240,7 +240,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private MainFormLayout                           mainFormLayout;
         private DatasourceResourceIdentifiersForm        identifiersForm;
         private DatasourceResourceIdentifiersEditionForm identifiersEditionForm;
-        private DatasourceContentEditionForm             contentEditionForm;
 
         private DatasourceDto                            datasource;
 
@@ -248,7 +247,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             super();
             setWidth("99%");
 
-            mainFormLayout = new MainFormLayout();
+            mainFormLayout = new MainFormLayout(false);
             mainFormLayout.setMargin(0);
 
             this.addMember(mainFormLayout);
@@ -267,16 +266,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                     getUiHandlers().saveDatasource(getDatasource());
                 }
             });
-
-            mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    if (isCreationMode()) {
-                        DatasourceFormPanel.this.hide();
-                    }
-                }
-            });
         }
 
         private void createViewForm() {
@@ -286,21 +275,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         private void createEditionForm() {
             identifiersEditionForm = new DatasourceResourceIdentifiersEditionForm();
-            contentEditionForm = new DatasourceContentEditionForm();
             mainFormLayout.addEditionCanvas(identifiersEditionForm);
-            // mainFormLayout.addEditionCanvas(contentEditionForm);
-        }
-
-        private void createDatasource() {
-            this.datasource = new DatasourceDto();
-
-            mainFormLayout.setTitleLabelContents(getConstants().datasourceNew());
-            mainFormLayout.setEditionMode();
-            fillViewForm(datasource);
-            fillEditionForm(datasource);
-
-            mainFormLayout.redraw();
-            this.show();
         }
 
         private void selectDatasource(DatasourceDto datasourceDto) {
@@ -324,10 +299,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private DatasourceDto getDatasource() {
             datasource = identifiersEditionForm.getDatasourceDto(datasource);
             return datasource;
-        }
-
-        private boolean isCreationMode() {
-            return StringUtils.isEmpty(this.datasource.getUrn());
         }
     }
 }

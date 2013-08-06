@@ -30,8 +30,10 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 
 import com.google.inject.Singleton;
 
@@ -112,7 +114,8 @@ public class DatasourceImportationServlet extends HttpServlet {
             if (StringUtils.isNotBlank(statisticalOperationUrn)) {
                 // TODO
             } else if (StringUtils.isNotBlank(datasetVersionUrn)) {
-                // TODO
+                DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
+                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls);
             }
 
             sendSuccessImportationResponse(response, fileName);
