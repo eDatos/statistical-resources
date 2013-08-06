@@ -57,8 +57,11 @@ public class UpdateDatasetVersionProcStatusActionHandler extends SecurityActionH
                     break;
             }
 
+            // TODO Remove this retrieve: this is here because the DTO that is returned by the CORE is not updated (its optimisticLocking value is not updated)
+            DatasetVersionDto updatedDatasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionResult.getUrn());
+
             Builder builder = new UpdateDatasetVersionProcStatusResult.Builder();
-            builder.datasetVersionDto(datasetVersionResult);
+            builder.datasetVersionDto(updatedDatasetVersionDto);
             return builder.build();
 
         } catch (MetamacException e) {

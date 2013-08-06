@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
@@ -27,6 +28,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -184,6 +187,98 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), operation);
+            }
+        });
+    }
+
+    //
+    // LIFECYCLE
+    //
+
+    @Override
+    public void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesSentToProductionValidation());
+                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesSentToDiffusionValidation());
+                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void rejectValidation(List<DatasetVersionDto> datasetVersionDtos) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesRejectValidation());
+                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void publish(List<DatasetVersionDto> datasetVersionDtos) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesPublish());
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
+    }
+
+    @Override
+    public void programPublication(List<DatasetVersionDto> datasetVersionDtos) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesProgramPublication());
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }

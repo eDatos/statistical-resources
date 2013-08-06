@@ -13,6 +13,14 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
     void deleteDatasets(List<String> urnsFromSelected);
     void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, String criteria);
 
+    // LifeCycle
+
+    void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos);
+    void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos);
+    void rejectValidation(List<DatasetVersionDto> datasetVersionDtos);
+    void publish(List<DatasetVersionDto> datasetVersionDtos);
+    void programPublication(List<DatasetVersionDto> datasetVersionDtos);
+
     // DSD related actions
 
     void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria);

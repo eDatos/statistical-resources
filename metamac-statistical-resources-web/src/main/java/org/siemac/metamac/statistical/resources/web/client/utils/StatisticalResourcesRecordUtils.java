@@ -40,6 +40,8 @@ import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+
 public class StatisticalResourcesRecordUtils extends RecordUtils {
 
     //
@@ -111,6 +113,17 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return record;
     }
 
+    public static List<DatasetVersionDto> getDatasetVersionDtosFromListGridRecords(ListGridRecord[] records) {
+        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+        if (records != null) {
+            for (ListGridRecord record : records) {
+                DatasetRecord datasetRecord = (DatasetRecord) record;
+                datasetVersionDtos.add(datasetRecord.getDatasetVersionDto());
+            }
+        }
+        return datasetVersionDtos;
+    }
+
     //
     // PUBLICATIONS
     //
@@ -148,6 +161,17 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return elementLevelTreeNode;
     }
 
+    public static List<PublicationVersionDto> getPublicationVersionDtosFromListGridRecords(ListGridRecord[] records) {
+        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+        if (records != null) {
+            for (ListGridRecord record : records) {
+                PublicationRecord datasetRecord = (PublicationRecord) record;
+                publicationVersionDtos.add(datasetRecord.getPublicationVersionDto());
+            }
+        }
+        return publicationVersionDtos;
+    }
+
     //
     // QUERIES
     //
@@ -159,6 +183,17 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         record.setType(CommonUtils.getQueryTypeName(queryDto));
         record.setQueryDto(queryDto);
         return record;
+    }
+
+    public static List<QueryVersionDto> getQueryVersionDtosFromListGridRecords(ListGridRecord[] records) {
+        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+        if (records != null) {
+            for (ListGridRecord record : records) {
+                QueryRecord datasetRecord = (QueryRecord) record;
+                queryVersionDtos.add(datasetRecord.getQueryVersionDto());
+            }
+        }
+        return queryVersionDtos;
     }
 
     // Codes

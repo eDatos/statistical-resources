@@ -31,7 +31,7 @@ public class QueryRecord extends LifeCycleResourceRecord {
         return ((QueryVersionDto) getAttributeAsObject(QueryDS.DTO)).getProcStatus();
     }
 
-    public QueryVersionDto getQueryDto() {
+    public QueryVersionDto getQueryVersionDto() {
         return (QueryVersionDto) getAttributeAsObject(QueryDS.DTO);
     }
 }

@@ -14,6 +14,10 @@ public class PublicationRecord extends SiemacMetadataRecord {
         setAttribute(PublicationDS.DTO, publicationDto);
     }
 
+    public PublicationVersionDto getPublicationVersionDto() {
+        return (PublicationVersionDto) getAttributeAsObject(PublicationDS.DTO);
+    }
+
     public ProcStatusEnum getProcStatus() {
         return ((PublicationVersionDto) getAttributeAsObject(PublicationDS.DTO)).getProcStatus();
     }
