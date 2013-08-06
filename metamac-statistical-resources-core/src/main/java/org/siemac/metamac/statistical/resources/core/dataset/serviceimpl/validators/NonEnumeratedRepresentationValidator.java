@@ -487,11 +487,13 @@ public class NonEnumeratedRepresentationValidator {
     }
 
     private static void validateDecimal(DataType dataType, BigInteger representationDecimals, String key, String value, List<MetamacExceptionItem> exceptions) {
-        if (DataType.DECIMAL.equals(dataType) || DataType.FLOAT.equals(dataType) || DataType.DOUBLE.equals(dataType)) {
-            String subStrAfterDecimalPoint = StringUtils.substringAfter(value, ".");
-            int numberPlacesOfDecimal = (subStrAfterDecimalPoint == null) ? 0 : subStrAfterDecimalPoint.length();
-            if (representationDecimals.compareTo(new BigInteger(String.valueOf(numberPlacesOfDecimal))) != 0) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_DECIMAL, value, representationDecimals.toString(), key));
+        if (representationDecimals != null) {
+            if (DataType.DECIMAL.equals(dataType) || DataType.FLOAT.equals(dataType) || DataType.DOUBLE.equals(dataType)) {
+                String subStrAfterDecimalPoint = StringUtils.substringAfter(value, ".");
+                int numberPlacesOfDecimal = (subStrAfterDecimalPoint == null) ? 0 : subStrAfterDecimalPoint.length();
+                if (representationDecimals.compareTo(new BigInteger(String.valueOf(numberPlacesOfDecimal))) != 0) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_DECIMAL, value, representationDecimals.toString(), key));
+                }
             }
         }
     }
