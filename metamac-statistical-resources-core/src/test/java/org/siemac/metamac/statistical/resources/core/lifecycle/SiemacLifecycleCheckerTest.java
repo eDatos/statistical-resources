@@ -56,7 +56,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     // ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void testSiemacResourceCheckSendToProductionValidationRequiredFields() throws Exception {
+    public void testCheckSendToProductionValidationRequiredFields() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
@@ -78,7 +78,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     // ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void testSiemacResourceCheckSendToDiffusionValidationRequiredFields() throws Exception {
+    public void testCheckSendToDiffusionValidationRequiredFields() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
@@ -100,7 +100,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     // ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void testSiemacResourceCheckSendToValidationRejectedRequiredFields() throws Exception {
+    public void testCheckSendToValidationRejectedRequiredFields() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
@@ -125,21 +125,21 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Ignore
     @Test
-    public void testSiemacResourceCheckSendToPublished() throws Exception {
+    public void testCheckSendToPublished() throws Exception {
         fail("not implemented");
         // TODO: Implementar
     }
     
     @Ignore
     @Test
-    public void testSiemacResourceCheckExternalItemsPreviouslyPublished() throws Exception {
+    public void testCheckExternalItemsPreviouslyPublished() throws Exception {
         fail("not implemented");
         // TODO: Implementar
     }
     
     @Ignore
     @Test
-    public void testSiemacResourceCheckRelatedResourcesPreviouslyPublished() throws Exception {
+    public void testCheckRelatedResourcesPreviouslyPublished() throws Exception {
         fail("not implemented");
         // TODO: Implementar
     }
