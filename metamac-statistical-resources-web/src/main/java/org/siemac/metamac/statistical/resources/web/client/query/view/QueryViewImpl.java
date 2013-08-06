@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
@@ -140,23 +142,25 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     private class QueryFormPanel extends VLayout {
 
-        private MainFormLayout                         mainFormLayout;
+        private MainFormLayout                                           mainFormLayout;
 
-        private NameableResourceIdentifiersForm        identifiersForm;
-        private QueryProductionDescriptorsForm         productionDescriptorsForm;
-        private LifeCycleResourceLifeCycleForm         lifeCycleForm;
-        private LifeCycleResourceVersionForm           versionForm;
+        private NameableResourceIdentifiersForm                          identifiersForm;
+        private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
+        private QueryProductionDescriptorsForm                           productionDescriptorsForm;
+        private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
+        private LifeCycleResourceVersionForm                             versionForm;
 
         // only creation
-        private QueryIdentifiersCreationForm           identifiersCreationForm;
+        private QueryIdentifiersCreationForm                             identifiersCreationForm;
         // Only edition
-        private NameableResourceIdentifiersEditionForm identifiersEditionForm;
+        private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
 
-        private QueryProductionDescriptorsEditionForm  productionDescriptorsEditionForm;
-        private LifeCycleResourceLifeCycleForm         lifeCycleEditionForm;
-        private LifeCycleResourceVersionEditionForm    versionEditionForm;
+        private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
+        private QueryProductionDescriptorsEditionForm                    productionDescriptorsEditionForm;
+        private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
+        private LifeCycleResourceVersionEditionForm                      versionEditionForm;
 
-        private QueryVersionDto                        queryVersionDto;
+        private QueryVersionDto                                          queryVersionDto;
 
         public QueryFormPanel() {
             super();
@@ -204,10 +208,12 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
         private void createViewForm() {
             identifiersForm = new NameableResourceIdentifiersForm();
+            thematicContentClassifiersForm = new StatisticalResourceThematicContentClassifiersForm();
             productionDescriptorsForm = new QueryProductionDescriptorsForm();
             lifeCycleForm = new LifeCycleResourceLifeCycleForm();
             versionForm = new LifeCycleResourceVersionForm();
             mainFormLayout.addViewCanvas(identifiersForm);
+            mainFormLayout.addViewCanvas(thematicContentClassifiersForm);
             mainFormLayout.addViewCanvas(productionDescriptorsForm);
             mainFormLayout.addViewCanvas(lifeCycleForm);
             mainFormLayout.addViewCanvas(versionForm);
@@ -216,12 +222,14 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private void createEditionForm() {
             identifiersEditionForm = new NameableResourceIdentifiersEditionForm();
             identifiersCreationForm = new QueryIdentifiersCreationForm();
+            thematicContentClassifiersEditionForm = new StatisticalResourceThematicContentClassifiersEditionForm();
             productionDescriptorsEditionForm = new QueryProductionDescriptorsEditionForm();
             lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
             versionEditionForm = new LifeCycleResourceVersionEditionForm();
 
             mainFormLayout.addEditionCanvas(identifiersEditionForm);
             mainFormLayout.addEditionCanvas(identifiersCreationForm);
+            mainFormLayout.addEditionCanvas(thematicContentClassifiersEditionForm);
             mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
             mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
             mainFormLayout.addEditionCanvas(versionEditionForm);
@@ -252,6 +260,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
         private void fillViewForm(QueryVersionDto queryDto) {
             identifiersForm.setNameableStatisticalResourceDto(queryDto);
+            thematicContentClassifiersForm.setStatisticalResourceDto(queryDto);
             productionDescriptorsForm.setQueryDto(queryDto);
             lifeCycleForm.setLifeCycleStatisticalResourceDto(queryDto);
             versionForm.setLifeCycleStatisticalResourceDto(queryDto);
@@ -260,6 +269,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private void fillEditionForm(QueryVersionDto queryDto) {
             identifiersEditionForm.setNameableStatisticalResourceDto(queryDto);
             identifiersCreationForm.setNameableStatisticalResourceDto(queryDto);
+            thematicContentClassifiersEditionForm.setStatisticalResourceDto(queryDto);
             productionDescriptorsEditionForm.setQueryDto(queryDto);
             lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(queryDto);
             if (isCreationMode()) {

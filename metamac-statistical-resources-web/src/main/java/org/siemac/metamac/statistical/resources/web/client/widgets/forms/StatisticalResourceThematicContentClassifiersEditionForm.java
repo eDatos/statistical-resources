@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
@@ -16,14 +16,14 @@ public class StatisticalResourceThematicContentClassifiersEditionForm extends Gr
     public StatisticalResourceThematicContentClassifiersEditionForm() {
         super(getConstants().formThematicContentClassifiers());
 
-        ExternalItemLinkItem statisticalOperation = new ExternalItemLinkItem(SiemacMetadataDS.STATISTICAL_OPERATION, getConstants().siemacMetadataStatisticalResourceStatisticalOperation());
+        ExternalItemLinkItem statisticalOperation = new ExternalItemLinkItem(StatisticalResourceDS.STATISTICAL_OPERATION, getConstants().siemacMetadataStatisticalResourceStatisticalOperation());
 
         setFields(statisticalOperation);
     }
 
     public void setStatisticalResourceDto(StatisticalResourceDto dto) {
         statisticalOperationCode = dto.getStatisticalOperation().getCode();
-        setExternalItemValue(getItem(SiemacMetadataDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
+        setExternalItemValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
     }
 
     public StatisticalResourceDto getStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
