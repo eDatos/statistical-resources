@@ -22,7 +22,7 @@ public class StatisticalResourceThematicContentClassifiersEditionForm extends Gr
     }
 
     public void setStatisticalResourceDto(StatisticalResourceDto dto) {
-        statisticalOperationCode = dto.getStatisticalOperation().getCode();
+        statisticalOperationCode = dto.getStatisticalOperation() != null ? dto.getStatisticalOperation().getCode() : null;
         setExternalItemValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
     }
 
