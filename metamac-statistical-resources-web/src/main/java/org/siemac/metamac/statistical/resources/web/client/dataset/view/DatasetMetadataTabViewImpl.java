@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -23,6 +24,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
@@ -83,9 +85,6 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
     private LifeCycleResourceVersionEditionForm                      versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
-
-    // private SearchExternalItemWindow searchAgencyWindow;
-    // private SearchMultipleExternalItemWindow searchMultiAgencyWindow;
 
     private DatasetVersionDto                                        datasetDto;
 
@@ -165,6 +164,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         });
 
         // Save
+
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
 
             @Override
@@ -179,6 +179,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         });
 
         // Life cycle
+
         mainFormLayout.getProductionValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
@@ -200,38 +201,32 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                 getUiHandlers().rejectValidation(datasetDto);
             }
         });
+        mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
 
-        // mainFormLayout.getPendingPublicationButton().addClickHandler(new ClickHandler() {
-        //
-        // @Override
-        // public void onClick(ClickEvent event) {
-        // uiHandlers.sendToPendingPublication(datasetDto.getUrn(), datasetDto.getProcStatus());
-        // }
-        // });
-        /*
-         * mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
-         * @Override
-         * public void onClick(ClickEvent event) {
-         * final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
-         * window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-         * @Override
-         * public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-         * if (window.validateForm()) {
-         * // TODO Send to date and hour selected to service
-         * uiHandlers.programPublication(datasetDto.getUrn(), datasetDto.getProcStatus());
-         * window.destroy();
-         * }
-         * }
-         * });
-         * }
-         * });
-         * mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
-         * @Override
-         * public void onClick(ClickEvent event) {
-         * uiHandlers.cancelProgrammedPublication(datasetDto.getUrn(), datasetDto.getProcStatus());
-         * }
-         * });
-         */
+            @Override
+            public void onClick(ClickEvent event) {
+                final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (window.validateForm()) {
+                            Date selectedDate = window.getSelectedDate();
+                            // TODO Send to date and hour selected to service
+                            getUiHandlers().programPublication(datasetDto);
+                            window.destroy();
+                        }
+                    }
+                });
+            }
+        });
+        mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO
+            }
+        });
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
 
             @Override
@@ -256,14 +251,6 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                 });
             }
         });
-        // FIXME: ADD CLICK HANDLER
-        // mainFormLayout.getArchiveButton().addClickHandler(new ClickHandler() {
-        //
-        // @Override
-        // public void onClick(ClickEvent event) {
-        // uiHandlers.archive(datasetDto.getUrn(), datasetDto.getProcStatus());
-        // }
-        // });
     }
 
     private void createViewForm() {

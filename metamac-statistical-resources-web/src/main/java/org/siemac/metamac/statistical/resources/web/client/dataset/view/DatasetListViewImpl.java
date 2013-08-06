@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -19,6 +20,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDa
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
@@ -280,8 +282,21 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().programPublication(datasetVersionDtos);
+
+                final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (window.validateForm()) {
+                            Date selectedDate = window.getSelectedDate();
+                            // TODO Send to date and hour selected to service
+                            List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                            getUiHandlers().programPublication(datasetVersionDtos);
+                            window.destroy();
+                        }
+                    }
+                });
             }
         };
     }

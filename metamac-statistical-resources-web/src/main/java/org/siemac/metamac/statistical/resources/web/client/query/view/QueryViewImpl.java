@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.QueryMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryIdentifiersCreationForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
@@ -28,7 +29,6 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesP
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
-import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -142,7 +142,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     private class QueryFormPanel extends VLayout {
 
-        private MainFormLayout                                           mainFormLayout;
+        private QueryMainFormLayout                                      mainFormLayout;
 
         private NameableResourceIdentifiersForm                          identifiersForm;
         private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
@@ -166,7 +166,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             super();
             setWidth("99%");
 
-            mainFormLayout = new MainFormLayout();
+            mainFormLayout = new QueryMainFormLayout();
             mainFormLayout.setMargin(0);
 
             this.addMember(mainFormLayout);
@@ -251,6 +251,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private void setQuery(QueryVersionDto queryDto) {
             this.queryVersionDto = queryDto;
             mainFormLayout.setTitleLabelContents(queryVersionDto.getCode());
+            mainFormLayout.updatePublishSection(queryDto.getProcStatus());
             mainFormLayout.setViewMode();
             fillViewForm(queryVersionDto);
             fillEditionForm(queryVersionDto);

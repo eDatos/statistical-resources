@@ -215,8 +215,16 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void programPublication(DatasetVersionDto dataset) {
-        // TODO Auto-generated method stub
+        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+        datasetVersionDtos.add(dataset);
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
+            @Override
+            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                getView().setDataset(result.getDatasetVersionDto());
+            }
+        });
     }
 
     @Override
