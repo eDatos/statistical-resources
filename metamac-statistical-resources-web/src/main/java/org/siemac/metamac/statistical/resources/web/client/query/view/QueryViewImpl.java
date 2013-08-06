@@ -31,6 +31,7 @@ import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -47,15 +48,19 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     @Inject
     public QueryViewImpl() {
         super();
-
         panel = new VLayout();
-        panel.setMargin(5);
         panel.setHeight100();
+
+        VLayout subPanel = new VLayout();
+        subPanel.setOverflow(Overflow.SCROLL);
+        subPanel.setMembersMargin(5);
+        subPanel.setMargin(15);
 
         queryFormPanel = new QueryFormPanel();
         queryFormPanel.setWidth("99%");
 
-        panel.addMember(queryFormPanel);
+        subPanel.addMember(queryFormPanel);
+        panel.addMember(subPanel);
     }
 
     @Override
