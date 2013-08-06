@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -28,7 +29,7 @@ public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
     public RelatedResourceDto datasetVersionDoToDatasetRelatedResourceDto(DatasetVersion source) throws MetamacException;
     
     // Dataset version
-    public DatasetVersionDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException;
+    public DatasetVersionDto datasetVersionDoToDto(ServiceContext ctx, DatasetVersion source) throws MetamacException;
     
     //Code dimension
     public CodeItemDto codeDimensionDoToCodeItemDto(CodeDimension codeDimension) throws MetamacException;

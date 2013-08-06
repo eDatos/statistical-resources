@@ -35,6 +35,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -149,7 +150,11 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
             resource.getCoverages().addAll(codes);
             switch (dimension.getType()) {
                 case SPATIAL:
-                    resource.getGeographicCoverage().addAll(items);
+                    for (ExternalItem item : items) {
+                        if (!StatisticalResourcesCollectionUtils.isExternalItemInCollection(resource.getGeographicCoverage(), item)) {
+                            resource.getGeographicCoverage().add(item);
+                        }
+                    }
                     break;
                 case MEASURE:
                     resource.getMeasureCoverage().addAll(items);

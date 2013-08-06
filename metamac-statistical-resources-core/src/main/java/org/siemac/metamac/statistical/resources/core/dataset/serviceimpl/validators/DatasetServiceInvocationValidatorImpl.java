@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.valida
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
+import java.net.URL;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -203,5 +204,17 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetImportationId, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileDescriptors, ServiceExceptionParameters.FILE_DESCRIPTORS, exceptions);
     }
+
+    public static void checkImportDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
+    }
+
+    public static void checkImportDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperationUrn, ServiceExceptionParameters.STATISTICAL_OPERATION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
+    }
+    
+    
 
 }

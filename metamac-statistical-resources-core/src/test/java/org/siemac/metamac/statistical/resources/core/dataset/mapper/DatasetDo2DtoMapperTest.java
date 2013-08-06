@@ -76,7 +76,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
     public void testDatasetVersionDoToDto() throws MetamacException {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
-        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
+        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
         assertEqualsDatasetVersion(expected, actual);
     }
 
@@ -84,7 +84,7 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME})
     public void testDatasetVersionDoToDtoWithStatisticOfficiality() throws MetamacException {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
-        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(expected);
+        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
         assertEqualsDatasetVersion(expected, actual);
     }
 

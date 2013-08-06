@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -413,7 +414,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersionCreated = getDatasetService().createDatasetVersion(ctx, datasetVersion, statisticalOperation);
 
         // Transform
-        DatasetVersionDto datasetCreated = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersionCreated);
+        DatasetVersionDto datasetCreated = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersionCreated);
 
         return datasetCreated;
     }
@@ -430,7 +431,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion);
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+        return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
     }
 
     @Override
@@ -454,7 +455,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<DatasetVersionDto> metamacCriteriaResult = datasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(result,
+        MetamacCriteriaResult<DatasetVersionDto> metamacCriteriaResult = datasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(ctx, result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -469,7 +470,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+        return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
     }
 
     @Override
@@ -483,7 +484,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         List<DatasetVersionDto> datasets = new ArrayList<DatasetVersionDto>();
         for (DatasetVersion version : datasetVersions) {
-            datasets.add(datasetDo2DtoMapper.datasetVersionDoToDto(version));
+            datasets.add(datasetDo2DtoMapper.datasetVersionDoToDto(ctx, version));
         }
         return datasets;
     }
@@ -515,7 +516,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = getDatasetService().versioningDatasetVersion(ctx, urnToCopy, versionType);
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+        return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
     }
 
     @Override
@@ -530,7 +531,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion);
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -547,7 +548,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion);
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(datasetVersion);
+        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -561,7 +562,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion dataset = getDatasetService().retrieveLatestDatasetVersionByDatasetUrn(ctx, datasetUrn);
 
         // Transform
-        DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(dataset);
+        DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
         return datasetVersionDto;
     }
 
@@ -574,7 +575,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion dataset = getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
 
         // Transform
-        DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(dataset);
+        DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
         return datasetVersionDto;
     }
     
@@ -588,6 +589,18 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         return datasetDo2DtoMapper.statisticOfficialityDoList2DtoList(statisticOfficialities);
+    }
+    
+    @Override
+    public void importDatasourcesInDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, List<URL> fileUrls) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto);
+        
+        // Transform for optimistic locking
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+
+        // Service
+        getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls);
     }
 
     // ------------------------------------------------------------------------

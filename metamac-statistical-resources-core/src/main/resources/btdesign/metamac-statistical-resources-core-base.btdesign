@@ -125,7 +125,7 @@ Application BaseStatisticalResources {
 			- @InternationalString titleAlternative cascade="all" databaseColumn="TITLE_ALTERNATIVE_FK" nullable;
 			- @InternationalString abstractLogic cascade="all" databaseColumn="ABSTRACT_FK" nullable;
 			- @InternationalString keywords cascade="all" databaseColumn="KEYWORDS_FK" nullable;
-			Boolean userMofifiedKeywords nullable;
+			Boolean userModifiedKeywords nullable;
 			
 			//COMMON METADATA
 			- @ExternalItem commonMetadata cascade="all" databaseColumn="COMMON_METADATA_FK" nullable;

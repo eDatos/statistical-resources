@@ -58,7 +58,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
         
         assertEqualsInternationalString(previous.getKeywords(), next.getKeywords());
-        assertEquals(previous.getUserMofifiedKeywords(), next.getUserMofifiedKeywords());
+        assertEquals(previous.getUserModifiedKeywords(), next.getUserModifiedKeywords());
         
         assertEquals(previous.getType(), next.getType());
         

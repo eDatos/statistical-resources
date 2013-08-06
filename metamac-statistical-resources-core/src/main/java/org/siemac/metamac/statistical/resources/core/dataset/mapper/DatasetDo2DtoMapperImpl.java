@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -15,10 +16,14 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("datasetDo2DtoMapper")
 public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
 
+    @Autowired
+    private TaskService taskService;
     // ---------------------------------------------------------------------------------------------------------
     // DATASOURCES
     // ---------------------------------------------------------------------------------------------------------
@@ -93,7 +98,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setCode(source.getDataset().getIdentifiableStatisticalResource().getCode());
         target.setCodeNested(null);
         target.setUrn(source.getDataset().getIdentifiableStatisticalResource().getUrn());
-
+        
         // Nameable Fields
         target.setTitle(internationalStringDoToDto(source.getSiemacMetadataStatisticalResource().getTitle()));
         
@@ -106,16 +111,16 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
     // ---------------------------------------------------------------------------------------------------------
 
     @Override
-    public DatasetVersionDto datasetVersionDoToDto(DatasetVersion source) throws MetamacException {
+    public DatasetVersionDto datasetVersionDoToDto(ServiceContext ctx, DatasetVersion source) throws MetamacException {
         if (source == null) {
             return null;
         }
         DatasetVersionDto target = new DatasetVersionDto();
-        datasetVersionDoToDto(source, target);
+        datasetVersionDoToDto(ctx, source, target);
         return target;
     }
 
-    private DatasetVersionDto datasetVersionDoToDto(DatasetVersion source, DatasetVersionDto target) throws MetamacException {
+    private DatasetVersionDto datasetVersionDoToDto(ServiceContext ctx, DatasetVersion source, DatasetVersionDto target) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -159,6 +164,8 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setUpdateFrequency(externalItemDoToDto(source.getUpdateFrequency()));
         target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
         target.setBibliographicCitation(internationalStringDoToDto(source.getBibliographicCitation()));
+        
+        target.setIsTaskInBackground(taskService.existImportationTaskInDataset(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
 
         return target;
     }

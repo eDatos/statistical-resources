@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper;
 import java.util.ArrayList;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.mapper.SculptorCriteria2MetamacCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -20,13 +21,13 @@ public class DatasetVersionSculptorCriteria2MetamacCriteriaMapperImpl implements
 
 
     @Override
-    public MetamacCriteriaResult<DatasetVersionDto> pageResultToMetamacCriteriaResultDatasetVersion(PagedResult<DatasetVersion> source, Integer pageSize) throws MetamacException {
+    public MetamacCriteriaResult<DatasetVersionDto> pageResultToMetamacCriteriaResultDatasetVersion(ServiceContext ctx, PagedResult<DatasetVersion> source, Integer pageSize) throws MetamacException {
         MetamacCriteriaResult<DatasetVersionDto> target = new MetamacCriteriaResult<DatasetVersionDto>();
         target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
         if (source.getValues() != null) {
             target.setResults(new ArrayList<DatasetVersionDto>());
             for (DatasetVersion item : source.getValues()) {
-                target.getResults().add(do2DtoMapper.datasetVersionDoToDto(item));
+                target.getResults().add(do2DtoMapper.datasetVersionDoToDto(ctx, item));
             }
         }
         return target;

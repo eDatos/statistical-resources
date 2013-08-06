@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce03BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce06LinkedToFileForDatasetVersion30;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce07LinkedToFileWithUnderscore;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -21,97 +23,117 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<DatasetVersion> {
 
-    public static final String    DATASET_VERSION_01_BASIC_NAME                                                = "DATASET_VERSION_01_BASIC";
+    @Autowired
+    private DatasourceMockFactory datasourceMockFactory;
+    
+    public static final String    DATASET_VERSION_01_BASIC_NAME                                                 = "DATASET_VERSION_01_BASIC";
     private static DatasetVersion DATASET_VERSION_01_BASIC;
 
-    public static final String    DATASET_VERSION_02_BASIC_NAME                                                = "DATASET_VERSION_02_BASIC";
+    public static final String    DATASET_VERSION_02_BASIC_NAME                                                 = "DATASET_VERSION_02_BASIC";
     private static DatasetVersion DATASET_VERSION_02_BASIC;
 
-    public static final String    DATASET_VERSION_03_FOR_DATASET_03_NAME                                       = "DATASET_VERSION_03_FOR_DATASET_03";
+    public static final String    DATASET_VERSION_03_FOR_DATASET_03_NAME                                        = "DATASET_VERSION_03_FOR_DATASET_03";
     private static DatasetVersion DATASET_VERSION_03_FOR_DATASET_03;
 
-    public static final String    DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME                      = "DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION";
+    public static final String    DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME                       = "DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION";
     private static DatasetVersion DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
 
-    public static final String    DATASET_VERSION_05_FOR_DATASET_04_NAME                                       = "DATASET_VERSION_05_FOR_DATASET_04";
+    public static final String    DATASET_VERSION_05_FOR_DATASET_04_NAME                                        = "DATASET_VERSION_05_FOR_DATASET_04";
     private static DatasetVersion DATASET_VERSION_05_FOR_DATASET_04;
 
-    public static final String    DATASET_VERSION_06_FOR_QUERIES_NAME                                          = "DATASET_VERSION_06_FOR_QUERIES";
+    public static final String    DATASET_VERSION_06_FOR_QUERIES_NAME                                           = "DATASET_VERSION_06_FOR_QUERIES";
     private static DatasetVersion DATASET_VERSION_06_FOR_QUERIES;
 
-    public static final String    DATASET_VERSION_07_VALID_CODE_000001_NAME                                    = "DATASET_VERSION_07_VALID_CODE_000001";
+    public static final String    DATASET_VERSION_07_VALID_CODE_000001_NAME                                     = "DATASET_VERSION_07_VALID_CODE_000001";
     private static DatasetVersion DATASET_VERSION_07_VALID_CODE_000001;
 
-    public static final String    DATASET_VERSION_08_VALID_CODE_000002_NAME                                    = "DATASET_VERSION_08_VALID_CODE_000002";
+    public static final String    DATASET_VERSION_08_VALID_CODE_000002_NAME                                     = "DATASET_VERSION_08_VALID_CODE_000002";
     private static DatasetVersion DATASET_VERSION_08_VALID_CODE_000002;
 
-    public static final String    DATASET_VERSION_09_OPER_0001_CODE_000003_NAME                                = "DATASET_VERSION_09_OPER_0001_CODE_000003";
+    public static final String    DATASET_VERSION_09_OPER_0001_CODE_000003_NAME                                 = "DATASET_VERSION_09_OPER_0001_CODE_000003";
     private static DatasetVersion DATASET_VERSION_09_OPER_0001_CODE_000003;
 
-    public static final String    DATASET_VERSION_10_OPER_0002_CODE_000001_NAME                                = "DATASET_VERSION_10_OPER_0002_CODE_000001";
+    public static final String    DATASET_VERSION_10_OPER_0002_CODE_000001_NAME                                 = "DATASET_VERSION_10_OPER_0002_CODE_000001";
     private static DatasetVersion DATASET_VERSION_10_OPER_0002_CODE_000001;
 
-    public static final String    DATASET_VERSION_11_OPER_0002_CODE_000002_NAME                                = "DATASET_VERSION_11_OPER_0002_CODE_000002";
+    public static final String    DATASET_VERSION_11_OPER_0002_CODE_000002_NAME                                 = "DATASET_VERSION_11_OPER_0002_CODE_000002";
     private static DatasetVersion DATASET_VERSION_11_OPER_0002_CODE_000002;
 
-    public static final String    DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME                                   = "DATASET_VERSION_12_OPER_0002_MAX_CODE";
+    public static final String    DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME                                    = "DATASET_VERSION_12_OPER_0002_MAX_CODE";
     private static DatasetVersion DATASET_VERSION_12_OPER_0002_MAX_CODE;
 
-    public static final String    DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME                       = "DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL";
+    public static final String    DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME                        = "DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL";
     private static DatasetVersion DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL;
 
-    public static final String    DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME                            = "DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED";
+    public static final String    DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME                             = "DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED";
     private static DatasetVersion DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
 
-    public static final String    DATASET_VERSION_15_DRAFT_NOT_READY_NAME                                      = "DATASET_VERSION_15_DRAFT_NOT_READY";
+    public static final String    DATASET_VERSION_15_DRAFT_NOT_READY_NAME                                       = "DATASET_VERSION_15_DRAFT_NOT_READY";
     private static DatasetVersion DATASET_VERSION_15_DRAFT_NOT_READY;
 
-    public static final String    DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME                = "DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION";
+    public static final String    DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME                 = "DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION";
     private static DatasetVersion DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION;
 
-    public static final String    DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA_NAME                  = "DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA";
+    public static final String    DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA_NAME                   = "DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA";
     private static DatasetVersion DATASET_VERSION_17_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
 
-    public static final String    DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME               = "DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
+    public static final String    DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME                = "DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
     private static DatasetVersion DATASET_VERSION_18_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
 
-    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME                      = "DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY";
+    public static final String    DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME                       = "DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY";
     private static DatasetVersion DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY;
 
-    public static final String    DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME = "DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
+    public static final String    DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME  = "DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
     private static DatasetVersion DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
 
-    public static final String    DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME  = "DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED";
+    public static final String    DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME   = "DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED";
     private static DatasetVersion DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
 
-    public static final String    DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME                          = "DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05";
+    public static final String    DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME                           = "DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05";
     private static DatasetVersion DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05;
 
-    public static final String    DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05_NAME                          = "DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05";
+    public static final String    DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05_NAME                           = "DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05";
     private static DatasetVersion DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05;
 
-    public static final String    DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05_NAME                          = "DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05";
+    public static final String    DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05_NAME                           = "DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05";
     private static DatasetVersion DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05;
 
-    public static final String    DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME                          = "DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06";
+    public static final String    DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME                           = "DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06";
     private static DatasetVersion DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06;
 
-    public static final String    DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME               = "DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06";
+    public static final String    DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME                = "DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06";
     private static DatasetVersion DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06;
 
-    public static final String    DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME                                 = "DATASET_VERSION_27_WITH_COVERAGE_FILLED";
+    public static final String    DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME                                  = "DATASET_VERSION_27_WITH_COVERAGE_FILLED";
     private static DatasetVersion DATASET_VERSION_27_WITH_COVERAGE_FILLED;
 
-    public static final String    DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME                   = "DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA";
+    public static final String    DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME                    = "DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA";
     private static DatasetVersion DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA;
-    private static final String   INIT_VERSION                                                                 = "001.000";
-    private static final String   SECOND_VERSION                                                               = "002.000";
-    private static final String   THIRD_VERSION                                                                = "003.000";
+
+    public static final String    DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME                                   = "DATASET_VERSION_29_WITHOUT_DATASOURCES";
+    private static DatasetVersion DATASET_VERSION_29_WITHOUT_DATASOURCES;
+
+    public static final String    DATASET_VERSION_30_WITH_DATASOURCE_NAME                                       = "DATASET_VERSION_30_WITH_DATASOURCE";
+    private static DatasetVersion DATASET_VERSION_30_WITH_DATASOURCE;
+
+    public static final String    DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME                 = "DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE";
+    private static DatasetVersion DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE;
+
+    public static final String    DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME              = "DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE";
+    private static DatasetVersion DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE;
+
+    public static final String    DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME = "DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE";
+    private static DatasetVersion DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE;
+
+    private static final String   INIT_VERSION                                                                  = "001.000";
+    private static final String   SECOND_VERSION                                                                = "002.000";
+    private static final String   THIRD_VERSION                                                                 = "003.000";
 
     protected static DatasetVersion getDatasetVersion01Basic() {
         if (DATASET_VERSION_01_BASIC == null) {
@@ -461,6 +483,73 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     }
 
+    protected static DatasetVersion getDatasetVersion29WithoutDatasources() {
+        if (DATASET_VERSION_29_WITHOUT_DATASOURCES == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            DATASET_VERSION_29_WITHOUT_DATASOURCES = datasetVersion;
+        }
+        return DATASET_VERSION_29_WITHOUT_DATASOURCES;
+    }
+
+    protected static DatasetVersion getDatasetVersion30WithDatasource() {
+        if (DATASET_VERSION_30_WITH_DATASOURCE == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            DATASET_VERSION_30_WITH_DATASOURCE = datasetVersion;
+            setDatasetVersion30Datasources();
+        }
+        return DATASET_VERSION_30_WITH_DATASOURCE;
+    }
+
+    private static void setDatasetVersion30Datasources() {
+        DatasetVersion datasetVersion30 = getDatasetVersion30WithDatasource();
+        datasetVersion30.addDatasource(getDatasorce06LinkedToFileForDatasetVersion30());
+    }
+
+    protected static DatasetVersion getDatasetVersion31WithSingleDatasourceLinkedToFile() {
+        if (DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE = datasetVersion;
+            setDatasetVersion31Datasources();
+        }
+        return DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE;
+    }
+
+    private static void setDatasetVersion31Datasources() {
+        DatasetVersion datasetVersion31 = getDatasetVersion31WithSingleDatasourceLinkedToFile();
+        datasetVersion31.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+    }
+
+    protected static DatasetVersion getDatasetVersion32WithMultipleDatasourcesLinkedToFile() {
+        if (DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE = datasetVersion;
+            setDatasetVersion32Datasources();
+        }
+        return DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE;
+    }
+
+    private static void setDatasetVersion32Datasources() {
+        DatasetVersion datasetVersion32 = getDatasetVersion32WithMultipleDatasourcesLinkedToFile();
+        datasetVersion32.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        datasetVersion32.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+    }
+
+
+    protected static DatasetVersion getDatasetVersion33WithSingleDatasourceLinkedToFileWithUnderscore() {
+        if (DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE = datasetVersion;
+            setDatasetVersion33Datasources();
+        }
+        return DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE;
+    }
+
+    private static void setDatasetVersion33Datasources() {
+        DatasetVersion datasetVersion33 = getDatasetVersion33WithSingleDatasourceLinkedToFileWithUnderscore();
+        datasetVersion33.addDatasource(getDatasorce07LinkedToFileWithUnderscore());
+    }
+    
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
     }

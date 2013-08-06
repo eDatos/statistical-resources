@@ -66,11 +66,11 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         //KEYWORDS
         boolean keywordsModifiedByUser = hasInternationalStringBeModified(target.getKeywords(), source.getKeywords());
         if (keywordsModifiedByUser) {
-            target.setUserMofifiedKeywords(true);
+            target.setUserModifiedKeywords(true);
             target.setKeywords(internationalStringDtoToDo(source.getKeywords(), target.getKeywords(), addParameter(metadataName, ServiceExceptionSingleParameters.KEYWORDS)));
         } else {
             if (shouldKeywordsBeRebuilt(oldTitle, oldDescription, target, source)) {
-                target.setUserMofifiedKeywords(false);
+                target.setUserModifiedKeywords(false);
                 target.setKeywords(buildKeywords(target));
             }
         }
@@ -137,7 +137,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
     private boolean shouldKeywordsBeRebuilt(InternationalString oldTitle, InternationalString oldDescription, SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResourceDto current) {
         boolean titleChanged = hasInternationalStringBeModified(oldTitle, current.getTitle());
         boolean descriptionChanged = hasInternationalStringBeModified(oldDescription, current.getDescription()); 
-        return BooleanUtils.isNotTrue(previous.getUserMofifiedKeywords()) && (titleChanged || descriptionChanged);
+        return BooleanUtils.isNotTrue(previous.getUserModifiedKeywords()) && (titleChanged || descriptionChanged);
     }
 
     private boolean hasInternationalStringBeModified(InternationalString previous, InternationalStringDto current) {

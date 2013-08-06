@@ -24,7 +24,6 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
@@ -49,7 +48,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
 
-        entity.setUserMofifiedKeywords(false);
+        entity.setUserModifiedKeywords(false);
         entity.setKeywords(null);
 
         dto.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "keytitulo1 keytitulo2 no"));
@@ -60,7 +59,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         assertContainsKeywordsInLocale(entity, "es", "keytitulo1", "keytitulo2", "keydesc1", "keydesc2");
 
-        assertFalse(entity.getUserMofifiedKeywords());
+        assertFalse(entity.getUserModifiedKeywords());
     }
 
     @Test
@@ -70,7 +69,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         entity.setTitle(StatisticalResourcesDoMocks.mockInternationalString("es", "label1 no"));
         entity.setDescription(StatisticalResourcesDoMocks.mockInternationalString("es", "label2 not"));
-        entity.setUserMofifiedKeywords(false);
+        entity.setUserModifiedKeywords(false);
         entity.setKeywords(StatisticalResourcesDoMocks.mockInternationalString("es", "label1 label2"));
 
         dto.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "keytitulo1 keytitulo2 no"));
@@ -82,7 +81,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
 
         BaseAsserts.assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
-        assertTrue(entity.getUserMofifiedKeywords());
+        assertTrue(entity.getUserModifiedKeywords());
     }
 
     @Test
@@ -90,7 +89,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
 
-        entity.setUserMofifiedKeywords(false);
+        entity.setUserModifiedKeywords(false);
         entity.setKeywords(null);
 
         dto.setKeywords(null);
@@ -98,7 +97,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
 
         BaseAsserts.assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
-        assertFalse(entity.getUserMofifiedKeywords());
+        assertFalse(entity.getUserModifiedKeywords());
     }
 
     @Test
@@ -106,7 +105,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
 
-        entity.setUserMofifiedKeywords(false);
+        entity.setUserModifiedKeywords(false);
         entity.setKeywords(StatisticalResourcesDoMocks.mockInternationalString("es", "label1", "en", "label2"));
 
         dto.setKeywords(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "label1", "en", "label2"));
@@ -114,7 +113,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
 
         BaseAsserts.assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
-        assertFalse(entity.getUserMofifiedKeywords());
+        assertFalse(entity.getUserModifiedKeywords());
     }
 
     @Test
@@ -124,7 +123,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         entity.setTitle(StatisticalResourcesDoMocks.mockInternationalString("es", "label1 no"));
         entity.setDescription(StatisticalResourcesDoMocks.mockInternationalString("en", "label2 not"));
-        entity.setUserMofifiedKeywords(true);
+        entity.setUserModifiedKeywords(true);
         entity.setKeywords(StatisticalResourcesDoMocks.mockInternationalString("es", "label1", "en", "label2"));
 
         dto.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "label1 no"));
@@ -134,7 +133,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
 
         BaseAsserts.assertEqualsInternationalString(entity.getKeywords(), dto.getKeywords());
-        assertTrue(entity.getUserMofifiedKeywords());
+        assertTrue(entity.getUserModifiedKeywords());
     }
 
     @Test

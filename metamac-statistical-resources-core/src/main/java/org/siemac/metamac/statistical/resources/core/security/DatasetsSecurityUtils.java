@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.security;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.utils.SecurityUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 
 public class DatasetsSecurityUtils extends SecurityUtils {
@@ -135,6 +136,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
 
     public static void canFindStatisticOfficialities(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canFindStatisticOfficialities(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canImportDatasourcesInDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

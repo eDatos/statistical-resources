@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
@@ -81,11 +83,9 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected Datasource mockDatasource() {
         Datasource datasource = new Datasource();
+        datasource.setFilename(mockString(10));
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
-
-        // TODO: ELiminar cuando el código del datasource se esté generando
-        // We can not set code in Identifiable becasuse thera are some resources that have generated code
-        datasource.getIdentifiableStatisticalResource().setCode("resource-" + mockString(10));
+        datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename()+"_"+new DateTime().toString());
 
         return datasource;
     }
@@ -276,7 +276,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setSubtitle(mockInternationalStringMetadata(resourceCode, "subtitle"));
         resource.setTitleAlternative(mockInternationalStringMetadata(resourceCode, "titleAlternative"));
         resource.setAbstractLogic(mockInternationalStringMetadata(resourceCode, "abstract"));
-        resource.setUserMofifiedKeywords(false);
+        resource.setUserModifiedKeywords(false);
         resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
 
         switch (artefactType) {

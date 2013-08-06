@@ -8,7 +8,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryA
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory.CHAPTER_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
@@ -648,12 +648,27 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
-        fail("testRetrieveCoverageForDatasetVersionDimension not implemented");
+        // no optimistic locking in this operation
     }
 
     @Override
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
-        fail("testRetrieveDatasetVersionDimensionsIds not implemented");
+        // no optimistic locking in this operation
+    }
+    
+    @Override
+    @MetamacMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME)
+    public void testImportDatasourcesInDatasetVersion() throws Exception {
+        // Retrieve dataset - session 1
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        DatasetVersionDto datasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+        assertEquals(Long.valueOf(0), datasetVersionDtoSession01.getOptimisticLockingVersion());
+        
+        // Retrieve dataset - session 2
+        DatasetVersionDto datasetVersionDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
+                datasetVersionUrn);
+        assertEquals(Long.valueOf(0), datasetVersionDtoSession02.getOptimisticLockingVersion());
+        
     }
 
     // ------------------------------------------------------------

@@ -59,6 +59,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                  = create("exception.resources.task.scheduler.error");
 
     // Dataset Importation
+    public static final CommonServiceExceptionType INVALID_FILE_FOR_DATASET_VERSION                       = create("exception.resources.dataset.importation.invalid_file_for_dataset");
     public static final CommonServiceExceptionType IMPORTATION_ATTR_CODE_ENUM_NOT_VALID                   = create("exception.resources.dataset.importation.attribute_code_enumeration_not_valid");
     public static final CommonServiceExceptionType IMPORTATION_ATTR_NOT_MATCH                             = create("exception.resources.dataset.importation.attribute_not_match");
 

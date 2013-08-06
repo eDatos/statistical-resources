@@ -32,7 +32,7 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setTitleAlternative(copyInternationalString(source.getTitleAlternative()));
         target.setAbstractLogic(copyInternationalString(source.getAbstractLogic()));
 
-        target.setUserMofifiedKeywords(BooleanUtils.isTrue(source.getUserMofifiedKeywords()));
+        target.setUserModifiedKeywords(BooleanUtils.isTrue(source.getUserModifiedKeywords()));
         target.setKeywords(copyInternationalString(source.getKeywords()));
 
         // Class descriptor
