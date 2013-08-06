@@ -264,13 +264,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createProgramPublicationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
         button.setVisibility(Visibility.HIDDEN);
-        button.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                // TODO show a window to ask for the validFrom
-            }
-        });
+        button.addClickHandler(getProgramPublicationClickHandler());
         return button;
     }
 
