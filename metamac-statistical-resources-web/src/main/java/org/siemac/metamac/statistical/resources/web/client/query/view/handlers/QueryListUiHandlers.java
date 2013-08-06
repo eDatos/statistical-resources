@@ -8,11 +8,13 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface QueryListUiHandlers extends UiHandlers {
 
-    void retrieveQueries(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
-
+    void retrieveQueriesByStatisticalOperation(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
     void deleteQueries(List<String> urns);
 
     void goToQuery(String urn);
-
     void goToNewQuery();
+
+    // LifeCycle
+
+    // TODO
 }

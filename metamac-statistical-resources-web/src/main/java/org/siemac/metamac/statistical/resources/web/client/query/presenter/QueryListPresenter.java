@@ -5,15 +5,22 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.constants.shared.UrnConstants;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.LifeCycleBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
@@ -43,6 +50,8 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
+
+    private ExternalItemDto                           operation;
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
@@ -78,7 +87,12 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode)) {
+            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+            retrieveOperation(operationUrn);
+            retrieveQueriesByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+        }
     }
 
     @Override
@@ -93,20 +107,26 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     }
 
     @Override
-    public void retrieveQueries(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+    public void retrieveQueriesByStatisticalOperation(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        retrieveQueriesByStatisticalOperation(operation != null ? operation.getUrn() : null, firstResult, maxResults, criteria);
+    }
+
+    private void retrieveQueriesByStatisticalOperation(String operationUrn, int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        if (criteria == null) {
+            criteria = new StatisticalResourceWebCriteria();
+        }
+        criteria.setStatisticalOperationUrn(operationUrn);
         dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fireErrorMessage(QueryListPresenter.this, caught);
             }
-
             @Override
             public void onWaitSuccess(GetQueryVersionsResult result) {
                 getView().setQueryPaginatedList(result);
             }
         });
-
     }
 
     @Override
@@ -117,14 +137,30 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fireErrorMessage(QueryListPresenter.this, caught);
             }
-
             @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());
-                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveQueriesByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }
+
+    private void retrieveOperation(String urn) {
+        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
+            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+
+                @Override
+                public void onWaitSuccess(GetStatisticalOperationResult result) {
+                    QueryListPresenter.this.operation = result.getOperation();
+                    SetOperationEvent.fire(QueryListPresenter.this, result.getOperation());
+                }
+            });
+        }
+    }
+
+    //
+    // NAVIGATION
+    //
 
     @Override
     public void goToQuery(String urn) {

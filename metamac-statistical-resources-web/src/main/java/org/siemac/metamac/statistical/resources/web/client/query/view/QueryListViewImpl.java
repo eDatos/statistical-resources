@@ -39,7 +39,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
                 StatisticalResourceWebCriteria criteria = new StatisticalResourceWebCriteria(searchSectionStack.getSearchCriteria());
-                getUiHandlers().retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, criteria);
+                getUiHandlers().retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, criteria);
             }
         });
 
@@ -122,7 +122,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
         // TODO why the criteria is null?
-        getUiHandlers().retrieveQueries(firstResult, maxResults, null);
+        getUiHandlers().retrieveQueriesByStatisticalOperation(firstResult, maxResults, null);
     }
 
     //

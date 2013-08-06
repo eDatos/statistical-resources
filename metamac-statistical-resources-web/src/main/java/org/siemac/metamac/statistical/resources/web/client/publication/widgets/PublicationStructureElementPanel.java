@@ -416,7 +416,7 @@ public class PublicationStructureElementPanel extends VLayout {
     public void setStatisticalOperationsForQuerySelection(GetStatisticalOperationsPaginatedListResult result) {
         if (searchQueriesWindow != null) {
             searchQueriesWindow.setStatisticalOperations(result.getOperationsList());
-            getUiHandlers().retrieveDatasetsForCubes(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchQueriesWindow.getSearchCriteria());
+            getUiHandlers().retrieveQueriesForCubes(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchQueriesWindow.getSearchCriteria());
         }
     }
 
