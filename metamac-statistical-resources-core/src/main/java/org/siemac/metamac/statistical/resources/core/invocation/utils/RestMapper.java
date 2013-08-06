@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapper;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestMapper {
-    
+
     @Autowired
     @Qualifier("commonDto2DoMapper")
     CommonDto2DoMapper dto2DoMapper;
@@ -39,16 +39,16 @@ public class RestMapper {
         externalItem.setUrn(resource.getUrn());
         externalItem.setUrnProvider(resource.getUrnProvider());
         externalItem.setType(TypeExternalArtefactsEnum.fromValue(resource.getKind()));
-        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(resource.getManagementAppLink())); 
+        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(resource.getManagementAppLink()));
         externalItem.setTitle(getInternationalStringFromInternationalStringResource(resource.getName()));
         return externalItem;
     }
 
-    public ExternalItem buildExternalItemFromCode(CodeResource code) throws MetamacException {
+    public ExternalItem buildExternalItemFromCode(CodeResourceInternal code) throws MetamacException {
         ExternalItem externalItem = new ExternalItem();
         externalItem.setCode(code.getId());
         externalItem.setCodeNested(code.getNestedId());
-        externalItem.setUri(dto2DoMapper.srmInternalApiUrlDtoToDo(code.getSelfLink().getHref())); 
+        externalItem.setUri(dto2DoMapper.srmInternalApiUrlDtoToDo(code.getSelfLink().getHref()));
         externalItem.setUrn(code.getUrn());
         externalItem.setUrnProvider(code.getUrnProvider());
         externalItem.setType(TypeExternalArtefactsEnum.fromValue(code.getKind()));
@@ -60,16 +60,16 @@ public class RestMapper {
     public ExternalItem buildExternalItemFromSrmItemResourceInternal(ItemResourceInternal itemResourceInternal) throws MetamacException {
         ExternalItem externalItem = new ExternalItem();
         externalItem.setCode(itemResourceInternal.getId());
-        externalItem.setCodeNested(itemResourceInternal.getNestedId()); 
+        externalItem.setCodeNested(itemResourceInternal.getNestedId());
         externalItem.setUri(dto2DoMapper.srmInternalApiUrlDtoToDo(itemResourceInternal.getSelfLink().getHref()));
         externalItem.setUrn(itemResourceInternal.getUrn());
-        externalItem.setUrnProvider(itemResourceInternal.getUrnProvider()); 
+        externalItem.setUrnProvider(itemResourceInternal.getUrnProvider());
         externalItem.setType(TypeExternalArtefactsEnum.fromValue(itemResourceInternal.getKind()));
-        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(itemResourceInternal.getManagementAppLink())); 
+        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(itemResourceInternal.getManagementAppLink()));
         externalItem.setTitle(getInternationalStringFromInternationalStringResource(itemResourceInternal.getName()));
         return externalItem;
     }
-    
+
     public InternationalString getInternationalStringFromInternationalStringResource(org.siemac.metamac.rest.common.v1_0.domain.InternationalString intString) {
         InternationalString result = new InternationalString();
         for (org.siemac.metamac.rest.common.v1_0.domain.LocalisedString text : intString.getTexts()) {

@@ -21,7 +21,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -90,54 +90,54 @@ public class SrmRestMocks {
 
         Codes codes = new Codes();
         {
-            CodeResource parent = mockCodeResource(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
+            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
             codes.getCodes().add(parent);
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
                 codes.getCodes().add(child);
                 {
-                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
+                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
                     codes.getCodes().add(child2);
                 }
                 {
-                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
+                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
                     codes.getCodes().add(child2);
                 }
             }
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
                 codes.getCodes().add(child);
                 {
-                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
+                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
                     codes.getCodes().add(child2);
                 }
                 {
-                    CodeResource child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
+                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
                     codes.getCodes().add(child2);
                 }
             }
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
                 codes.getCodes().add(child);
             }
         }
         {
-            CodeResource parent = mockCodeResource(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
+            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
             codes.getCodes().add(parent);
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
                 codes.getCodes().add(child);
             }
         }
@@ -147,23 +147,23 @@ public class SrmRestMocks {
     public static Codes mockCodesByCodelistOtherDimension(String agencyID, String resourceID, String version) {
         Codes codes = new Codes();
         {
-            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
+            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
             codes.getCodes().add(parent);
         }
         {
-            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
+            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
             codes.getCodes().add(parent);
             {
-                CodeResource child = mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
+                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
                 codes.getCodes().add(child);
             }
         }
         {
-            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
+            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
             codes.getCodes().add(parent);
         }
         {
-            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
+            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
             codes.getCodes().add(parent);
         }
         return codes;
@@ -179,8 +179,8 @@ public class SrmRestMocks {
         return concepts;
     }
 
-    public static CodeResource mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
-        CodeResource code = new CodeResource();
+    public static CodeResourceInternal mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
+        CodeResourceInternal code = new CodeResourceInternal();
         code.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Code=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
         code.setId(resourceID);
         code.setName(mockInternationalString(resourceID));

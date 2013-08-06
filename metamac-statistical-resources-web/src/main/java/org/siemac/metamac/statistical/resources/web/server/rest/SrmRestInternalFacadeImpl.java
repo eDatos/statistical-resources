@@ -221,7 +221,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         externalItemDto.setUrn(agency.getUrn());
         externalItemDto.setUrnProvider(agency.getUrnProvider());
         externalItemDto.setType(TypeExternalArtefactsEnum.AGENCY);
-        externalItemDto.setTitle(toInternationalStringDto(agency.getNames()));
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(agency.getName()));
         externalItemDto.setManagementAppUrl(agency.getManagementAppLink());
         return externalItemDto;
     }
@@ -233,7 +233,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         externalItemDto.setUrn(code.getUrn());
         externalItemDto.setUrnProvider(code.getUrnProvider());
         externalItemDto.setType(TypeExternalArtefactsEnum.CODE);
-        externalItemDto.setTitle(toInternationalStringDto(code.getNames()));
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(code.getName()));
         externalItemDto.setManagementAppUrl(code.getManagementAppLink());
         return externalItemDto;
     }

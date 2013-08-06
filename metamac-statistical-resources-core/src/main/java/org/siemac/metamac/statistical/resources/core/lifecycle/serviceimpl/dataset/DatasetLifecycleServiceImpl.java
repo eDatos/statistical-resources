@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
@@ -228,7 +228,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
         Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
 
-        for (CodeResource code : codes.getCodes()) {
+        for (CodeResourceInternal code : codes.getCodes()) {
             for (CodeDimension codeDim : codeDimensions) {
                 if (codeDim.getIdentifier().equals(code.getId())) {
                     externalItems.add(restMapper.buildExternalItemFromCode(code));

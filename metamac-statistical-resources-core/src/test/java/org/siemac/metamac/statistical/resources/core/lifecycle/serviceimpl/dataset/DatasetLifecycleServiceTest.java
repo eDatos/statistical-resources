@@ -35,7 +35,7 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
@@ -398,7 +398,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         }
 
         @Override
-        public ExternalItem buildExternalItemFromCode(CodeResource code) throws MetamacException {
+        public ExternalItem buildExternalItemFromCode(CodeResourceInternal code) throws MetamacException {
             ExternalItem externalItem = new ExternalItem();
             externalItem.setCode(code.getId());
             externalItem.setCodeNested(code.getNestedId());

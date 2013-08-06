@@ -51,7 +51,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguag
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -642,7 +642,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
         String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
         Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness); // note: srm api returns codes in order
-        for (CodeResource code : codes.getCodes()) {
+        for (CodeResourceInternal code : codes.getCodes()) {
             String id = code.getId();
             boolean skip = false;
             if (effectiveDimensionValuesToData != null) {
@@ -774,7 +774,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResource source, Map<String, String> parentsReplacedToVisualisation, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResourceInternal source, Map<String, String> parentsReplacedToVisualisation, List<String> selectedLanguages)
+            throws MetamacException {
         if (source == null) {
             return null;
         }

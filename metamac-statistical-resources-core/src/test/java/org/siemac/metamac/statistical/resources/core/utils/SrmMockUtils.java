@@ -40,7 +40,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
@@ -197,7 +197,7 @@ public class SrmMockUtils {
         Codelist scheme = new Codelist();
         scheme.setId(id);
         scheme.setUrn(urn);
-        scheme.getNames().add(buildTextType(name, lang));
+        scheme.setName(buildInternationalStringResource(name, lang));
         return scheme;
     }
 
@@ -240,8 +240,8 @@ public class SrmMockUtils {
         return codes;
     }
 
-    public static CodeResource buildCode(String id, String name, String lang) {
-        CodeResource code = new CodeResource();
+    public static CodeResourceInternal buildCode(String id, String name, String lang) {
+        CodeResourceInternal code = new CodeResourceInternal();
         code.setId(id);
         code.setUrn("urn:uuid:" + id);
         code.setUrnProvider("urn:uuid:provider:" + id);
