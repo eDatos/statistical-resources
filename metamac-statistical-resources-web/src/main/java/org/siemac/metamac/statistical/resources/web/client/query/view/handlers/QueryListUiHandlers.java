@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.view.handlers;
 
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -16,5 +17,9 @@ public interface QueryListUiHandlers extends UiHandlers {
 
     // LifeCycle
 
-    // TODO
+    void sendToProductionValidation(List<QueryVersionDto> queryVersionDtos);
+    void sendToDiffusionValidation(List<QueryVersionDto> queryVersionDtos);
+    void rejectValidation(List<QueryVersionDto> queryVersionDtos);
+    void publish(List<QueryVersionDto> queryVersionDtos);
+    void programPublication(List<QueryVersionDto> queryVersionDtos);
 }

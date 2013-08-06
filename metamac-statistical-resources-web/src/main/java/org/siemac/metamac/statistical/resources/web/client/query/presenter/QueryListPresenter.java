@@ -9,6 +9,8 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.LifeCycleBaseListPresenter;
@@ -25,6 +27,8 @@ import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVers
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
@@ -156,6 +160,98 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
                 }
             });
         }
+    }
+
+    //
+    // LIFECYCLE
+    //
+
+    @Override
+    public void sendToProductionValidation(List<QueryVersionDto> queryVersionDtos) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
+                this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().lifeCycleResourcesSentToProductionValidation());
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
+    }
+
+    @Override
+    public void sendToDiffusionValidation(List<QueryVersionDto> queryVersionDtos) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
+                this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().lifeCycleResourcesSentToDiffusionValidation());
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
+    }
+
+    @Override
+    public void rejectValidation(List<QueryVersionDto> queryVersionDtos) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        super.onWaitFailure(caught);
+                        retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                    @Override
+                    public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().lifeCycleResourcesRejectValidation());
+                        retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                    }
+                });
+    }
+
+    @Override
+    public void publish(List<QueryVersionDto> queryVersionDtos) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().lifeCycleResourcesPublish());
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
+    }
+
+    @Override
+    public void programPublication(List<QueryVersionDto> queryVersionDtos) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().lifeCycleResourcesProgramPublication());
+                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
     }
 
     //
