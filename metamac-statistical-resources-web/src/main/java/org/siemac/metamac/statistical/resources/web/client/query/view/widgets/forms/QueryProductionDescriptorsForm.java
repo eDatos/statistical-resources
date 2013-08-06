@@ -7,12 +7,14 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
@@ -27,7 +29,9 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
 
         RelatedResourceLinkItem datasetVersion = new RelatedResourceLinkItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion(), getCustomLinkItemNavigationClickHandler());
 
-        setFields(maintainer, datasetVersion);
+        ViewTextItem status = new ViewTextItem(QueryDS.STATUS, getConstants().queryStatus());
+
+        setFields(maintainer, datasetVersion, status);
     }
 
     public void setQueryDto(QueryVersionDto queryDto) {
@@ -38,6 +42,9 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
 
         RelatedResourceLinkItem datasetVersion = new RelatedResourceLinkItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion(), getCustomLinkItemNavigationClickHandler());
         fields.add(datasetVersion);
+
+        ViewTextItem status = new ViewTextItem(QueryDS.STATUS, getConstants().queryStatus());
+        fields.add(status);
 
         if (queryDto.getSelection() != null) {
             for (String dimensionId : queryDto.getSelection().keySet()) {
@@ -56,6 +63,9 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
 
         StatisticalResourcesFormUtils.setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
         StatisticalResourcesFormUtils.setExternalItemValue(getItem(QueryDS.MAINTAINER), queryDto.getMaintainer());
+
+        // Status
+        setValue(QueryDS.STATUS, CommonUtils.getQueryStatusName(queryDto));
     }
 
     private CodeItemListItem createCodeListItemForDimension(final String dimensionId) {

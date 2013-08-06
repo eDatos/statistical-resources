@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleRes
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
@@ -36,6 +37,7 @@ import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchAction;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -69,7 +71,9 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();
 
-        setFields(maintainerViewItem, maintainerItem, searchDatasetItem);
+        ViewTextItem status = new ViewTextItem(QueryDS.STATUS, getConstants().queryStatus());
+
+        setFields(maintainerViewItem, maintainerItem, searchDatasetItem, status);
     }
 
     public void setQueryDto(QueryVersionDto queryDto) {
@@ -81,6 +85,9 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         if (queryDto.getRelatedDatasetVersion() != null) {
             retrieveDimensionsForDataset(queryDto.getRelatedDatasetVersion().getUrn());
         }
+
+        // Status
+        setValue(QueryDS.STATUS, CommonUtils.getQueryStatusName(queryDto));
     }
 
     public QueryVersionDto getQueryDto(QueryVersionDto queryDto) {
@@ -203,6 +210,9 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
         SearchRelatedResourceLinkItem searchDatasetItem = createQueryDatasetItem();
         fields.add(searchDatasetItem);
+
+        ViewTextItem status = new ViewTextItem(QueryDS.STATUS, getConstants().queryStatus());
+        fields.add(status);
 
         selectionFields = new HashMap<String, CodeItemListItem>();
         dimensionCodeSelectionWindow = new HashMap<String, SearchMultipleCodeItemWindow>();
