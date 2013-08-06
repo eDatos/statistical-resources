@@ -9,7 +9,6 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.DimensionTypeType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionRefType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
@@ -211,8 +210,7 @@ public class SrmRestMocks {
         concept.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
         concept.setUrnProvider(concept.getUrn());
         concept.setId(resourceID);
-        concept.getNames().add(mockTextType("es", resourceID + " en Español"));
-        concept.getNames().add(mockTextType("en", resourceID + " in English"));
+        concept.setName(mockInternationalString(resourceID));
         return concept;
     }
 
@@ -287,13 +285,6 @@ public class SrmRestMocks {
         localisedString.setLang(lang);
         localisedString.setValue(value);
         return localisedString;
-    }
-
-    private static TextType mockTextType(String lang, String value) {
-        TextType textType = new TextType();
-        textType.setLang(lang);
-        textType.setValue(value);
-        return textType;
     }
 
     private static TimeTextFormatType mockTimeTextFormatType() {

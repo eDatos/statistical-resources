@@ -317,12 +317,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasetNewVersion;
     }
-    
+
     @Override
     public void proccessDatasetFileImportationResult(ServiceContext ctx, String datasetImportationId, List<FileDescriptorResult> fileDescriptors) throws MetamacException {
-        
+
         datasetServiceInvocationValidator.checkProccessDatasetFileImportationResult(ctx, datasetImportationId, fileDescriptors);
-        
+
         for (FileDescriptorResult fileDescriptor : fileDescriptors) {
             Datasource datasource = new Datasource();
             datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
@@ -373,8 +373,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         PagedResult<Dataset> datasetsPagedResult = getDatasetRepository().findByCondition(conditions, pagingParameter);
         return datasetsPagedResult;
     }
-    
-    
+
     @Override
     public List<StatisticOfficiality> findStatisticOfficialities(ServiceContext ctx) throws MetamacException {
         datasetServiceInvocationValidator.checkFindStatisticOfficialities(ctx);
@@ -497,7 +496,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 CodeDimensionDto codeDimensionDto = new CodeDimensionDto(dimensionId, code);
                 observation.addCodesDimension(codeDimensionDto);
             }
-            observation.setPrimaryMeasure(String.valueOf(Math.random()*10000));
+            observation.setPrimaryMeasure(String.valueOf(Math.random() * 10000));
             observations.add(observation);
         }
         return observations;
@@ -557,7 +556,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         return dimensionCodes;
     }
-    
+
     private List<String> computeDimensionOrder(DimensionListType dimensions) throws MetamacException {
         List<String> order = new ArrayList<String>();
         for (Object dimensionObj : dimensions.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
@@ -580,7 +579,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         if (dimension.getLocalRepresentation() != null) {
             CodelistReferenceType codeListRef = dimension.getLocalRepresentation().getEnumeration();
             if (codeListRef != null) {
-                codes = getCodesFromCodelist(codeListRef);
+                codes = getCodesFromCodelist(codeListRef.getURN());
             } else {
                 codes = mockStringCodes(15);
             }
@@ -634,16 +633,15 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptRef.getURN());
         if (concept.getCoreRepresentation() != null) {
-            CodelistReferenceType codeListRef = concept.getCoreRepresentation().getEnumeration();
-            codes = getCodesFromCodelist(codeListRef);
+            codes = getCodesFromCodelist(concept.getCoreRepresentation().getEnumerationCodelist());
         } else {
             throw new IllegalStateException("Found a concept with no core representation");
         }
         return codes;
     }
 
-    private List<String> getCodesFromCodelist(CodelistReferenceType codeListRef) throws MetamacException {
-        Codes codelistCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codeListRef.getURN());
+    private List<String> getCodesFromCodelist(String codelistUrn) throws MetamacException {
+        Codes codelistCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistUrn);
 
         List<String> codes = new ArrayList<String>();
         for (CodeResource code : codelistCodes.getCodes()) {

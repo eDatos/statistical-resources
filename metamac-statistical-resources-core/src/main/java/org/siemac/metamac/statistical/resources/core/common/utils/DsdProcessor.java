@@ -125,9 +125,8 @@ public class DsdProcessor {
             }
 
             if (concept.getCoreRepresentation() != null) {
-                if (concept.getCoreRepresentation().getEnumeration() != null) {
-                    extractCodelistUrnFromRef(concept.getCoreRepresentation().getEnumeration().getRef());
-
+                if (concept.getCoreRepresentation().getEnumerationCodelist() != null) {
+                    codelistRepresentationUrn = concept.getCoreRepresentation().getEnumerationCodelist();
                 } else {
                     textFormatConceptId = concept.getCoreRepresentation().getTextFormat();
                 }
@@ -196,7 +195,7 @@ public class DsdProcessor {
 
     public static class DsdDimension extends DsdComponent {
 
-        private String             dimensionId;
+        private final String       dimensionId;
         private TimeTextFormatType timeTextFormatType;
 
         public DsdDimension(Dimension dim) throws MetamacException {
@@ -259,11 +258,11 @@ public class DsdProcessor {
 
     public static class DsdAttribute extends DsdComponent {
 
-        private String                              attributeId;
+        private final String                        attributeId;
         private ReportingYearStartDayTextFormatType reportingYearStartDayTextFormatType;
-        private boolean                             isAttributeAtObservationLevel;
-        private AttributeRelationshipType           attributeRelationship;
-        private boolean                             isMandatory;
+        private final boolean                       isAttributeAtObservationLevel;
+        private final AttributeRelationshipType     attributeRelationship;
+        private final boolean                       isMandatory;
 
         public DsdAttribute(Attribute attr) throws MetamacException {
             attributeId = attr.getId();
@@ -329,7 +328,7 @@ public class DsdProcessor {
 
     public static class DsdPrimaryMeasure extends DsdComponent {
 
-        private String primaryMeasueId = "OBS_VALUE"; // Fixed
+        private final String primaryMeasueId = "OBS_VALUE"; // Fixed
 
         public DsdPrimaryMeasure(PrimaryMeasureType primaryMeasure) throws MetamacException {
 

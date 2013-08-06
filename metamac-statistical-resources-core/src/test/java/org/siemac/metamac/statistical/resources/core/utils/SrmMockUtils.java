@@ -22,7 +22,6 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ConceptRepresentation;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
@@ -50,6 +49,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
 
 public class SrmMockUtils {
 
@@ -71,7 +71,7 @@ public class SrmMockUtils {
         internationalString.getTexts().add(buildLocalisedStringResource(label, lang));
         return internationalString;
     }
-    
+
     public static LocalisedString buildLocalisedStringResource(String label, String lang) {
         LocalisedString text = new LocalisedString();
         text.setLang(lang);
@@ -94,7 +94,7 @@ public class SrmMockUtils {
         ConceptScheme scheme = new ConceptScheme();
         scheme.setId(id);
         scheme.setUrn(urn);
-        scheme.getNames().add(buildTextType(name, lang));
+        scheme.setName(buildInternationalStringResource(name, lang));
         return scheme;
     }
 
@@ -153,12 +153,12 @@ public class SrmMockUtils {
         return conceptRefType;
     }
 
-    public static Concept buildConcept(String id, String urn, String name, ConceptRepresentation conceptRepresentation) {
+    public static Concept buildConcept(String id, String urn, String name, Representation conceptRepresentation) {
         Concept concept = new Concept();
         concept.setId(id);
         concept.setUrn(urn);
         concept.setUri(UUID.randomUUID().toString());
-        concept.getNames().add(buildTextType(name, DEFAULT_LOCALE));
+        concept.setName(buildInternationalStringResource(name, DEFAULT_LOCALE));
         concept.setCoreRepresentation(conceptRepresentation);
         return concept;
     }
@@ -175,14 +175,14 @@ public class SrmMockUtils {
         return concept;
     }
 
-    public static ConceptRepresentation buildConceptRepresentation(String codelistUrn) {
-        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
-        conceptRepresentation.setEnumeration(buildCodelistRef(codelistUrn));
+    public static Representation buildConceptRepresentation(String codelistUrn) {
+        Representation conceptRepresentation = new Representation();
+        conceptRepresentation.setEnumerationCodelist(codelistUrn);
         return conceptRepresentation;
     }
 
-    public static ConceptRepresentation buildConceptRepresentation(BasicComponentDataType textType) {
-        ConceptRepresentation conceptRepresentation = new ConceptRepresentation();
+    public static Representation buildConceptRepresentation(BasicComponentDataType textType) {
+        Representation conceptRepresentation = new Representation();
         BasicComponentTextFormatType basicComponentTextFormatType = new BasicComponentTextFormatType();
         basicComponentTextFormatType.setTextType(textType);
         conceptRepresentation.setTextFormat(basicComponentTextFormatType);

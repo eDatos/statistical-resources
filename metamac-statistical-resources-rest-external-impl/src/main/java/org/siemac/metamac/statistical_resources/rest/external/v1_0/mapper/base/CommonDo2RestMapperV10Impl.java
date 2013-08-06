@@ -589,7 +589,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setType(toDimensionType(source.getType()));
 
         Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
-        target.setName(toInternationalString(conceptIdentity.getNames(), selectedLanguages));
+        target.setName(toInternationalString(conceptIdentity.getName(), selectedLanguages));
 
         // Dimension values
         target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages));
