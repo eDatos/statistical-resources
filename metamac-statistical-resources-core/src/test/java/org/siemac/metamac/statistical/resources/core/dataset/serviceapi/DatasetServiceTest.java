@@ -628,7 +628,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Override
-    @Test
     @MetamacMock({DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME})
     public void testImportDatasourcesInStatisticalOperation() throws Exception {
         Assert.fail("Unimplemented");
