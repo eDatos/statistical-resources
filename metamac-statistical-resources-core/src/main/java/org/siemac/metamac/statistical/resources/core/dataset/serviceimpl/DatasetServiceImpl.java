@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -29,6 +28,7 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
@@ -53,13 +53,16 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -331,6 +334,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
+        
+        ProcStatusEnumUtils.checkPossibleProcStatus(datasetVersion, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
         String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
@@ -383,13 +388,60 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private String getFilenameFromPath(String path) {
-        return FilenameUtils.getBaseName(path) + "." + FilenameUtils.getExtension(path);
+        String base = FilenameUtils.getBaseName(path);
+        String extension = FilenameUtils.getExtension(path);
+        if (StringUtils.isEmpty(extension)) {
+            return base;
+        }
+        return base + "." + extension;
     }
 
     @Override
     public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
-        throw new NotImplementedException();
+        datasetServiceInvocationValidator.checkImportDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
+        
+        Map<String, List<URL>> datasetVersionsForFiles = organizeFilesByDatasetVersionUrn(statisticalOperationUrn, fileUrls);
+        
+        List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
+        for (String datasetVersionUrn : datasetVersionsForFiles.keySet()) {
+            try {
+                List<URL> urls = datasetVersionsForFiles.get(datasetVersionUrn);
+                importDatasourcesInDatasetVersion(ctx, datasetVersionUrn, urls);
+            } catch (MetamacException e) {
+                MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DATASET_VERSION_ERROR, datasetVersionUrn);
+                item.setExceptionItems(e.getExceptionItems());
+                items.add(item);
+            }
+        }
+        if (items.size() > 0) {
+            throw new MetamacException(items);
+        }
     }
+
+    protected Map<String, List<URL>> organizeFilesByDatasetVersionUrn(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
+        Map<String, List<URL>> datasetVersionsForFiles = new HashMap<String, List<URL>>(); 
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        for (URL url : fileUrls) {
+            String filename = getFilenameFromPath(url.getPath());
+            String datasetUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceFile(filename);
+            DatasetVersion datasetVersion = null;
+            if (datasetUrn != null) {
+                datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
+            } 
+            
+            if (datasetVersion != null && StringUtils.equals(statisticalOperationUrn, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn())) {
+                StatisticalResourcesCollectionUtils.addValueToMapValueList(datasetVersionsForFiles, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), url);
+            } else {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION, filename, statisticalOperationUrn));
+            }
+        }
+        if (exceptionItems.size() > 0) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build();
+        }
+        return datasetVersionsForFiles;
+    }
+    
+    
 
     @Override
     public void proccessDatasetFileImportationResult(ServiceContext ctx, String datasetImportationId, List<FileDescriptorResult> fileDescriptors) throws MetamacException {

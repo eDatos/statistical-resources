@@ -130,7 +130,22 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME = "DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE";
     private static DatasetVersion DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE;
-
+    
+    public static final String    DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001_NAME = "DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001";
+    private static DatasetVersion DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001;
+    
+    public static final String    DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001_NAME = "DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001";
+    private static DatasetVersion DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001;
+    
+    public static final String    DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002_NAME = "DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002";
+    private static DatasetVersion DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002;
+    
+    public static final String    DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME = "DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001";
+    private static DatasetVersion DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
+    
+    public static final String    DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME = "DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001";
+    private static DatasetVersion DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
+    
     private static final String   INIT_VERSION                                                                  = "001.000";
     private static final String   SECOND_VERSION                                                                = "002.000";
     private static final String   THIRD_VERSION                                                                 = "003.000";
@@ -549,6 +564,56 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetVersion datasetVersion33 = getDatasetVersion33WithSingleDatasourceLinkedToFileWithUnderscore();
         datasetVersion33.addDatasource(getDatasorce07LinkedToFileWithUnderscore());
     }
+    
+
+    protected static DatasetVersion getDatasetVersion34ForImportInOperation0001() {
+        if (DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 1);
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001 = datasetVersion;
+        }
+        return DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001;
+    }
+    
+    protected static DatasetVersion getDatasetVersion35ForImportInOperation0001() {
+        if (DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 2);
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001 = datasetVersion;
+        }
+        return DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001;
+    }
+    
+    protected static DatasetVersion getDatasetVersion36ForImportInOperation0002() {
+        if (DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0002", 1);
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002 = datasetVersion;
+        }
+        return DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002;
+    }
+    
+    protected static DatasetVersion getDatasetVersion37WithSingleDatasourceInOperation0001() {
+        if (DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 1);
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001 = datasetVersion;
+            datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        }
+        return DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
+    }
+    
+    protected static DatasetVersion getDatasetVersion38WithSingleDatasourceInOperation0001() {
+        if (DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 1);
+            datasetVersion.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
+            DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001 = datasetVersion;
+            datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        }
+        return DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
+    }
+    
+    
     
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);

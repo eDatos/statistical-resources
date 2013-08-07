@@ -1,10 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.MapUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ExternalItemEqualsUrnPredicate;
@@ -31,4 +33,14 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
     }
     
     
+    public static <K,V> void addValueToMapValueList(Map<K,List<V>> map, K key, V value) {
+        if (map != null) {
+            List<V> values = map.get(key);
+            if (values == null) {
+                values = new ArrayList<V>();
+                map.put(key, values);
+            }
+            values.add(value);
+        }
+    }
 }
