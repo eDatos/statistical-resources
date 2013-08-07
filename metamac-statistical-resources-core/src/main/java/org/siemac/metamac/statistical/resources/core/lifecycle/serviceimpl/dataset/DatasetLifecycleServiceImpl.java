@@ -33,7 +33,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +49,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private LifecycleCommonMetadataChecker             lifecycleCommonMetadataChecker;
-
-    @Autowired
-    private DatasetLifecycleServiceInvocationValidator datasetLifecycleServiceInvocationValidator;
 
     @Autowired
     private DatasetVersionRepository                   datasetVersionRepository;
@@ -450,10 +446,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     // ------------------------------------------------------------------------------------------------------
     // GENERAL ABSTRACT METHODS
     // ------------------------------------------------------------------------------------------------------
-    @Override
-    protected LifecycleInvocationValidatorBase<DatasetVersion> getInvocationValidator() {
-        return datasetLifecycleServiceInvocationValidator;
-    }
 
     @Override
     protected DatasetVersion saveResource(DatasetVersion resource) {
@@ -461,8 +453,8 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected DatasetVersion retrieveResourceByResource(DatasetVersion resource) throws MetamacException {
-        return datasetVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+    protected DatasetVersion retrieveResourceByUrn(String urn) throws MetamacException {
+        return datasetVersionRepository.retrieveByUrn(urn);
     }
 
     @Override

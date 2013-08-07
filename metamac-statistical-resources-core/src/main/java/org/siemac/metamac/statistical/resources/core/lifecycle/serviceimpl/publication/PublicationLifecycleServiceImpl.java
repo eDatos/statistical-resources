@@ -7,7 +7,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
@@ -19,9 +18,6 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
 
     @Autowired
     private LifecycleCommonMetadataChecker                 lifecycleCommonMetadataChecker;
-
-    @Autowired
-    private PublicationLifecycleServiceInvocationValidator publicationLifecycleServiceInvocationValidator;
 
     @Autowired
     private PublicationVersionRepository                   publicationVersionRepository;
@@ -114,18 +110,13 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected LifecycleInvocationValidatorBase<PublicationVersion> getInvocationValidator() {
-        return publicationLifecycleServiceInvocationValidator;
-    }
-
-    @Override
     protected PublicationVersion saveResource(PublicationVersion resource) {
         return publicationVersionRepository.save(resource);
     }
 
     @Override
-    protected PublicationVersion retrieveResourceByResource(PublicationVersion resource) throws MetamacException {
-        return publicationVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+    protected PublicationVersion retrieveResourceByUrn(String urn) throws MetamacException {
+        return publicationVersionRepository.retrieveByUrn(urn);
     }
 
     @Override

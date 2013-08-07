@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -53,6 +52,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
 import org.siemac.metamac.statistical.resources.core.utils.DsRepositoryMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
@@ -66,35 +66,35 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
 
     @InjectMocks
-    protected DatasetLifecycleServiceImpl              datasetLifecycleService = new DatasetLifecycleServiceImpl();
+    protected DatasetLifecycleServiceImpl    datasetLifecycleService = new DatasetLifecycleServiceImpl();
 
     @Mock
-    private SiemacLifecycleChecker                     siemacLifecycleChecker;
+    private SiemacLifecycleChecker           siemacLifecycleChecker;
 
     @Mock
-    private SiemacLifecycleFiller                      siemacLifecycleFiller;
+    private SiemacLifecycleFiller            siemacLifecycleFiller;
 
     @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private RestMapperTestImpl                         restMapper;
+    private RestMapperTestImpl               restMapper;
 
     @Mock
-    private LifecycleCommonMetadataChecker             lifecycleCommonMetadataChecker;
+    private LifecycleInvocationValidatorBase lifecycleInvocationValidatorBase;
 
     @Mock
-    private DatasetLifecycleServiceInvocationValidator datasetLifecycleServiceInvocationValidator;
+    private LifecycleCommonMetadataChecker   lifecycleCommonMetadataChecker;
 
     @Mock
-    private DatasetVersionRepository                   datasetVersionRepository;
+    private DatasetVersionRepository         datasetVersionRepository;
 
-    protected DatasetVersionMockFactory                datasetVersionMockFactory;
+    protected DatasetVersionMockFactory      datasetVersionMockFactory;
 
-    protected DatasetService                           datasetService;
-
-    @Mock
-    private DatasetRepositoriesServiceFacade           datasetRepositoriesServiceFacade;
+    protected DatasetService                 datasetService;
 
     @Mock
-    private SrmRestInternalService                     srmRestInternalService;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+
+    @Mock
+    private SrmRestInternalService           srmRestInternalService;
 
     @Before
     public void setUp() {
@@ -123,9 +123,8 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
 
-        datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
-        verify(datasetLifecycleServiceInvocationValidator, times(1)).checkSendToProductionValidation(any(ServiceContext.class), Mockito.eq(datasetVersion));
         verify(datasetVersionRepository, times(1)).retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
         verify(siemacLifecycleChecker, times(1)).checkSendToProductionValidation(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
         verify(lifecycleCommonMetadataChecker, times(1)).checkDatasetVersionCommonMetadata(any(DatasetVersion.class), anyString(), anyListOf(MetamacExceptionItem.class));
@@ -145,7 +144,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersionChanged = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
         datasetVersionChanged.setStatisticOfficiality(null);
 
-        datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionChanged);
+        datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionChanged.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Test
@@ -221,7 +220,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
 
-        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Test
@@ -232,7 +231,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersionChanged = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
         datasetVersionChanged.setStatisticOfficiality(null);
 
-        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersionChanged);
+        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersionChanged.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Test
@@ -240,7 +239,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
 
-        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(DatasetVersion.class), Mockito.anyString(),
                 Mockito.anyListOf(MetamacExceptionItem.class));
@@ -271,7 +270,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
 
-        datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Test
@@ -279,7 +278,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.anyString())).thenReturn(datasetVersion);
 
-        datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(DatasetVersion.class), Mockito.anyString(),
                 Mockito.anyListOf(MetamacExceptionItem.class));
@@ -311,7 +310,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         thrown.expect(UnsupportedOperationException.class);
 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
-        datasetLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Ignore

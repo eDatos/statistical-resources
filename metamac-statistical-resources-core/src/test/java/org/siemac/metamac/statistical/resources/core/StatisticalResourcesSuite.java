@@ -30,11 +30,8 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFillerTe
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFillerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemCheckerTest;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceTest;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceTest;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapperTest;
@@ -86,11 +83,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      SiemacLifecycleCheckerTest.class,
                      LifecycleFillerTest.class,
                      SiemacLifecycleFillerTest.class, 
-                     DatasetLifecycleServiceInvocationValidatorTest.class,
                      DatasetLifecycleServiceTest.class,
-                     PublicationLifecycleServiceInvocationValidatorTest.class,
                      PublicationLifecycleServiceTest.class,
-                     QueryLifecycleServiceInvocationValidatorTest.class,
                      QueryLifecycleServiceTest.class,
                      VersionUtilsTest.class,
                      CommonDto2DoMapperTest.class,

@@ -307,7 +307,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to production validation and retrieve
-        queryVersion = queryLifecycleService.sendToProductionValidation(ctx, queryVersion);
+        queryVersion = queryLifecycleService.sendToProductionValidation(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
@@ -324,7 +324,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to production validation and retrieve
-        queryVersion = queryLifecycleService.sendToDiffusionValidation(ctx, queryVersion);
+        queryVersion = queryLifecycleService.sendToDiffusionValidation(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
@@ -341,7 +341,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to production validation and retrieve
-        queryVersion = queryLifecycleService.sendToValidationRejected(ctx, queryVersion);
+        queryVersion = queryLifecycleService.sendToValidationRejected(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
@@ -582,7 +582,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion);
+        datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -599,7 +599,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion);
+        datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -844,7 +844,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Send to production validation and retrieve
-        publicationVersion = publicationLifecycleService.sendToProductionValidation(ctx, publicationVersion);
+        publicationVersion = publicationLifecycleService.sendToProductionValidation(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
@@ -861,7 +861,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Send to production validation and retrieve
-        publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersion);
+        publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
@@ -878,7 +878,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Send to production validation and retrieve
-        publicationVersion = publicationLifecycleService.sendToValidationRejected(ctx, publicationVersion);
+        publicationVersion = publicationLifecycleService.sendToValidationRejected(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);

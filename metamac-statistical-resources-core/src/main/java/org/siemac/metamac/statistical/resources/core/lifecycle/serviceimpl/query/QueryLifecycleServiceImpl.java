@@ -7,7 +7,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
@@ -19,9 +18,6 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Autowired
     private LifecycleCommonMetadataChecker           lifecycleCommonMetadataChecker;
-
-    @Autowired
-    private QueryLifecycleServiceInvocationValidator queryLifecycleServiceInvocationValidator;
 
     @Autowired
     private QueryVersionRepository                   queryVersionRepository;
@@ -110,18 +106,13 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected LifecycleInvocationValidatorBase<QueryVersion> getInvocationValidator() {
-        return queryLifecycleServiceInvocationValidator;
-    }
-
-    @Override
     protected QueryVersion saveResource(QueryVersion resource) {
         return queryVersionRepository.save(resource);
     }
 
     @Override
-    protected QueryVersion retrieveResourceByResource(QueryVersion resource) throws MetamacException {
-        return queryVersionRepository.retrieveByUrn(resource.getLifeCycleStatisticalResource().getUrn());
+    protected QueryVersion retrieveResourceByUrn(String urn) throws MetamacException {
+        return queryVersionRepository.retrieveByUrn(urn);
     }
 
     @Override
