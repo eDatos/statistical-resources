@@ -55,13 +55,16 @@ public class UpdateQueryVersionProcStatusActionHandler extends SecurityActionHan
                     break;
             }
 
-            // TODO Remove this retrieve: this is here because the DTO that is returned by the CORE is not updated (its optimisticLocking value is not updated)
-            // TODO use queryVersionResult instead of action.getQueryVersionsToUpdateProcStatus...
-            QueryVersionDto updatedQueryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action
-                    .getQueryVersionsToUpdateProcStatus().get(0).getUrn());
-
             Builder builder = new UpdateQueryVersionProcStatusResult.Builder();
-            builder.queryVersionDto(updatedQueryVersionDto);
+
+            if (action.getQueryVersionsToUpdateProcStatus().size() == 1) {
+                // TODO Remove this retrieve: this is here because the DTO that is returned by the CORE is not updated (its optimisticLocking value is not updated)
+                // TODO use queryVersionResult instead of action.getQueryVersionsToUpdateProcStatus...
+                QueryVersionDto updatedQueryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action
+                        .getQueryVersionsToUpdateProcStatus().get(0).getUrn());
+                builder.queryVersionDto(updatedQueryVersionDto);
+            }
+
             return builder.build();
 
         } catch (MetamacException e) {

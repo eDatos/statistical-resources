@@ -61,12 +61,15 @@ public class UpdatePublicationVersionProcStatusActionHandler extends SecurityAct
                     break;
             }
 
-            // TODO Remove this retrieve: this is here because the DTO that is returned by the CORE is not updated (its optimisticLocking value is not updated)
-            PublicationVersionDto updatedPublicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(ServiceContextHolder.getCurrentServiceContext(),
-                    publicationVersionResult.getUrn());
-
             Builder builder = new UpdatePublicationVersionProcStatusResult.Builder();
-            builder.publicationVersionDto(updatedPublicationVersionDto);
+
+            if (action.getPublicationVersionsToUpdateProcStatus().size() == 1) {
+                // TODO Remove this retrieve: this is here because the DTO that is returned by the CORE is not updated (its optimisticLocking value is not updated)
+                PublicationVersionDto updatedPublicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action
+                        .getPublicationVersionsToUpdateProcStatus().get(0).getUrn());
+                builder.publicationVersionDto(updatedPublicationVersionDto);
+            }
+
             return builder.build();
 
         } catch (MetamacException e) {
