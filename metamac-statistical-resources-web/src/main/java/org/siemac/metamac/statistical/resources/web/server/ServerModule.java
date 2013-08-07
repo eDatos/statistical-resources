@@ -13,7 +13,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetStatisticOfficialitiesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgenciesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgencySchemesPaginatedListActionHandler;
@@ -39,14 +39,14 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationStructureElementActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationStructureElementLocationActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationVersionProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.DeleteQueryVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueriesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.VersionQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
@@ -60,7 +60,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasource
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
@@ -86,14 +86,14 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.VersionQueryVersionAction;
 import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetLoginPageUrlActionHandler;
@@ -150,7 +150,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteDatasetVersionsAction.class, DeleteDatasetVersionsActionHandler.class);
         bindHandler(GetDatasetVersionsAction.class, GetDatasetVersionsActionHandler.class);
         bindHandler(GetDatasetsAction.class, GetDatasetsActionHandler.class);
-        bindHandler(UpdateDatasetVersionProcStatusAction.class, UpdateDatasetVersionProcStatusActionHandler.class);
+        bindHandler(UpdateDatasetVersionsProcStatusAction.class, UpdateDatasetVersionsProcStatusActionHandler.class);
         bindHandler(VersionDatasetVersionAction.class, VersionDatasetVersionActionHandler.class);
         bindHandler(GetDatasourcesByDatasetAction.class, GetDatasourcesByDatasetActionHandler.class);
         bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
@@ -164,7 +164,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetPublicationVersionAction.class, GetPublicationVersionActionHandler.class);
         bindHandler(SavePublicationVersionAction.class, SavePublicationVersionActionHandler.class);
         bindHandler(DeletePublicationVersionsAction.class, DeletePublicationVersionsActionHandler.class);
-        bindHandler(UpdatePublicationVersionProcStatusAction.class, UpdatePublicationVersionProcStatusActionHandler.class);
+        bindHandler(UpdatePublicationVersionsProcStatusAction.class, UpdatePublicationVersionsProcStatusActionHandler.class);
         bindHandler(VersionPublicationVersionAction.class, VersionPublicationVersionActionHandler.class);
         bindHandler(GetPublicationStructureAction.class, GetPublicationStructureActionHandler.class);
         bindHandler(SavePublicationStructureElementAction.class, SavePublicationStructureElementActionHandler.class);
@@ -177,7 +177,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveQueryVersionAction.class, SaveQueryVersionActionHandler.class);
         bindHandler(GetQueryVersionAction.class, GetQueryVersionActionHandler.class);
         bindHandler(DeleteQueryVersionsAction.class, DeleteQueryVersionsActionHandler.class);
-        bindHandler(UpdateQueryVersionProcStatusAction.class, UpdateQueryVersionProcStatusActionHandler.class);
+        bindHandler(UpdateQueryVersionsProcStatusAction.class, UpdateQueryVersionsProcStatusActionHandler.class);
         bindHandler(VersionQueryVersionAction.class, VersionQueryVersionActionHandler.class);
 
         // COMMON

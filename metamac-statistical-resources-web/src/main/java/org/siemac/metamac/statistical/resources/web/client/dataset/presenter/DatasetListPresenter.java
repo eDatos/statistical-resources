@@ -29,9 +29,9 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction.Builder;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction.Builder;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -197,43 +197,43 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     @Override
     public void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
     public void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
     public void rejectValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
     public void publish(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
     public void programPublication(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
     }
 
     @Override
     public void version(List<DatasetVersionDto> datasetVersionDtos, VersionTypeEnum versionType) {
-        Builder builder = new UpdateDatasetVersionProcStatusAction.Builder(datasetVersionDtos, LifeCycleActionEnum.VERSION);
+        Builder builder = new UpdateDatasetVersionsProcStatusAction.Builder(datasetVersionDtos, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);
         updateDatasetVersionProcStatus(builder.build(), getMessages().lifeCycleResourcesVersion());
     }
 
-    private void updateDatasetVersionProcStatus(UpdateDatasetVersionProcStatusAction action, final String successMessage) {
-        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+    private void updateDatasetVersionProcStatus(UpdateDatasetVersionsProcStatusAction action, final String successMessage) {
+        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -241,7 +241,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
                 retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
             @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+            public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
                 retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }

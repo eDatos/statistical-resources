@@ -1,9 +1,9 @@
-package org.siemac.metamac.statistical.resources.web.shared.dataset;
+package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -12,19 +12,19 @@ import com.gwtplatform.dispatch.annotation.Optional;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class UpdateDatasetVersionProcStatus {
+public class UpdatePublicationVersionsProcStatus {
 
     @In(1)
-    List<DatasetVersionDto> datasetVersionsToUpdateProcStatus;
+    List<PublicationVersionDto> publicationVersionsToUpdateProcStatus;
 
     @In(2)
-    LifeCycleActionEnum     lifeCycleAction;
+    LifeCycleActionEnum         lifeCycleAction;
 
     @Optional
     @In(3)
-    VersionTypeEnum         versionType;
+    VersionTypeEnum             versionType;
 
     @Optional
     @Out(1)
-    DatasetVersionDto       datasetVersionDto;
+    PublicationVersionDto       publicationVersionDto;
 }

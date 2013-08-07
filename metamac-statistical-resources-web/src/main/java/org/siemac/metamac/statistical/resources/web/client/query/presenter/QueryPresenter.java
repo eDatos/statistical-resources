@@ -41,8 +41,8 @@ import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersion
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionResult;
-import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.VersionQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.VersionQueryVersionResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -253,11 +253,11 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public void sendToProductionValidation(QueryVersionDto query) {
         List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
         queryVersionDtos.add(query);
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setQueryDto(result.getQueryVersionDto());
                     }
@@ -268,11 +268,11 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public void sendToDiffusionValidation(QueryVersionDto query) {
         List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
         queryVersionDtos.add(query);
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setQueryDto(result.getQueryVersionDto());
                     }
@@ -283,11 +283,11 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public void rejectValidation(QueryVersionDto query) {
         List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
         queryVersionDtos.add(query);
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
+        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(
                 this) {
 
             @Override
-            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+            public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
@@ -298,10 +298,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public void programPublication(QueryVersionDto query) {
         List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
         queryVersionDtos.add(query);
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(this) {
 
             @Override
-            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+            public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourcePublish());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
@@ -312,10 +312,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public void publish(QueryVersionDto query) {
         List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
         queryVersionDtos.add(query);
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(this) {
 
             @Override
-            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+            public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourcePublish());
                 getView().setQueryDto(result.getQueryVersionDto());
             }

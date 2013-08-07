@@ -30,8 +30,8 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationVersionResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -143,11 +143,11 @@ public class PublicationMetadataTabPresenter
     public void sendToProductionValidation(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdatePublicationVersionsProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
@@ -158,11 +158,11 @@ public class PublicationMetadataTabPresenter
     public void sendToDiffusionValidation(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdatePublicationVersionsProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
@@ -173,11 +173,11 @@ public class PublicationMetadataTabPresenter
     public void rejectValidation(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdatePublicationVersionsProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
@@ -188,11 +188,11 @@ public class PublicationMetadataTabPresenter
     public void publish(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdatePublicationVersionsProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
@@ -203,11 +203,11 @@ public class PublicationMetadataTabPresenter
     public void programPublication(PublicationVersionDto publication) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publication);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdatePublicationVersionsProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }

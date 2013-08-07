@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.annotation.Optional;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class UpdateQueryVersionProcStatus {
+public class UpdateQueryVersionsProcStatus {
 
     @In(1)
     List<QueryVersionDto> queryVersionsToUpdateProcStatus;

@@ -31,8 +31,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListAction;
@@ -172,11 +172,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void sendToProductionValidation(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
@@ -187,11 +187,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void sendToDiffusionValidation(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
@@ -202,11 +202,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void rejectValidation(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
@@ -217,11 +217,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void programPublication(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
@@ -232,11 +232,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void publish(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
                     @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
