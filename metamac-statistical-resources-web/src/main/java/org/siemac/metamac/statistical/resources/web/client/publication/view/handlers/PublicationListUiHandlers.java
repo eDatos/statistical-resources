@@ -20,5 +20,5 @@ public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandl
     void rejectValidation(List<PublicationVersionDto> publicationVersionDtos);
     void publish(List<PublicationVersionDto> publicationVersionDtos);
     void programPublication(List<PublicationVersionDto> publicationVersionDtos);
-    void version(List<String> urns, VersionTypeEnum versionType);
+    void version(List<PublicationVersionDto> publicationVersionDtos, VersionTypeEnum versionType);
 }

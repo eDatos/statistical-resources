@@ -242,7 +242,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
     @Override
     protected void version(VersionTypeEnum versionType) {
-        getUiHandlers().version(getSelectedResourcesUrns(), versionType);
+        List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        getUiHandlers().version(publicationVersionDtos, versionType);
     }
 
     //

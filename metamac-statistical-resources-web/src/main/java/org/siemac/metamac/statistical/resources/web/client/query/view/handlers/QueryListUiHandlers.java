@@ -22,5 +22,5 @@ public interface QueryListUiHandlers extends BaseUiHandlers {
     void rejectValidation(List<QueryVersionDto> queryVersionDtos);
     void publish(List<QueryVersionDto> queryVersionDtos);
     void programPublication(List<QueryVersionDto> queryVersionDtos);
-    void version(List<String> urns, VersionTypeEnum versionType);
+    void version(List<QueryVersionDto> queryVersionDtos, VersionTypeEnum versionType);
 }

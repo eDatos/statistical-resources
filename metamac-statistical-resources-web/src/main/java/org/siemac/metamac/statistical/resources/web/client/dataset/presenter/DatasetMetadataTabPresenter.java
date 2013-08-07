@@ -12,13 +12,13 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
@@ -172,7 +172,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void sendToProductionValidation(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
                     @Override
@@ -187,7 +187,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void sendToDiffusionValidation(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
                     @Override
@@ -202,7 +202,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void rejectValidation(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
                     @Override
@@ -217,28 +217,30 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void programPublication(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                        getView().setDataset(result.getDatasetVersionDto());
+                    }
+                });
     }
 
     @Override
     public void publish(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                        getView().setDataset(result.getDatasetVersionDto());
+                    }
+                });
     }
 
     @Override

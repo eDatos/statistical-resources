@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
@@ -31,27 +31,31 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
     public UpdateDatasetVersionProcStatusResult executeSecurityAction(UpdateDatasetVersionProcStatusAction action) throws ActionException {
 
         List<DatasetVersionDto> datasetVersionsToUpdateProcStatus = action.getDatasetVersionsToUpdateProcStatus();
-        ProcStatusEnum nextProcStatus = action.getNextProcStatus();
+        LifeCycleActionEnum lifeCycleAction = action.getLifeCycleAction();
 
         MetamacException metamacException = new MetamacException();
 
         for (DatasetVersionDto datasetVersionDto : datasetVersionsToUpdateProcStatus) {
             try {
 
-                switch (nextProcStatus) {
-                    case PRODUCTION_VALIDATION:
+                switch (lifeCycleAction) {
+                    case SEND_TO_PRODUCTION_VALIDATION:
                         statisticalResourcesServiceFacade.sendDatasetVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto);
                         break;
 
-                    case DIFFUSION_VALIDATION:
+                    case SEND_TO_DIFFUSION_VALIDATION:
                         statisticalResourcesServiceFacade.sendDatasetVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto);
                         break;
 
-                    case VALIDATION_REJECTED:
+                    case REJECT_VALIDATION:
                         // TODO
                         break;
 
-                    case PUBLISHED:
+                    case PUBLISH:
+                        // TODO
+                        break;
+
+                    case VERSION:
                         // TODO
                         break;
 
@@ -65,7 +69,7 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     throw WebExceptionUtils.createMetamacWebException(e);
                 } else {
                     // If there were more than one resource, the messages should be shown in a tree structure
-                    addExceptionsItemToMetamacException(nextProcStatus, datasetVersionDto, metamacException, e);
+                    addExceptionsItemToMetamacException(lifeCycleAction, datasetVersionDto, metamacException, e);
                 }
             }
         }

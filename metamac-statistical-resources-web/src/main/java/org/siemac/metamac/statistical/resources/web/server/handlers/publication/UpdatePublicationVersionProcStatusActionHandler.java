@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
@@ -31,27 +31,31 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
     public UpdatePublicationVersionProcStatusResult executeSecurityAction(UpdatePublicationVersionProcStatusAction action) throws ActionException {
 
         List<PublicationVersionDto> publicationVersionsToUpdateProcStatus = action.getPublicationVersionsToUpdateProcStatus();
-        ProcStatusEnum nextProcStatus = action.getNextProcStatus();
+        LifeCycleActionEnum lifeCycleAction = action.getLifeCycleAction();
 
         MetamacException metamacException = new MetamacException();
 
         for (PublicationVersionDto publicationVersionDto : publicationVersionsToUpdateProcStatus) {
             try {
 
-                switch (nextProcStatus) {
-                    case PRODUCTION_VALIDATION:
+                switch (lifeCycleAction) {
+                    case SEND_TO_PRODUCTION_VALIDATION:
                         statisticalResourcesServiceFacade.sendPublicationVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
                         break;
 
-                    case DIFFUSION_VALIDATION:
+                    case SEND_TO_DIFFUSION_VALIDATION:
                         statisticalResourcesServiceFacade.sendPublicationVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
                         break;
 
-                    case VALIDATION_REJECTED:
+                    case REJECT_VALIDATION:
                         statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
                         break;
 
-                    case PUBLISHED:
+                    case PUBLISH:
+                        // TODO
+                        break;
+
+                    case VERSION:
                         // TODO
                         break;
 
@@ -65,7 +69,7 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                     throw WebExceptionUtils.createMetamacWebException(e);
                 } else {
                     // If there were more than one resource, the messages should be shown in a tree structure
-                    addExceptionsItemToMetamacException(nextProcStatus, publicationVersionDto, metamacException, e);
+                    addExceptionsItemToMetamacException(lifeCycleAction, publicationVersionDto, metamacException, e);
                 }
             }
         }

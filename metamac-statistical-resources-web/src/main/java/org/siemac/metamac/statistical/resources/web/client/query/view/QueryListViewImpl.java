@@ -230,7 +230,8 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected void version(VersionTypeEnum versionType) {
-        getUiHandlers().version(getSelectedResourcesUrns(), versionType);
+        List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        getUiHandlers().version(queryVersionDtos, versionType);
     }
 
     //

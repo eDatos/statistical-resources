@@ -12,11 +12,11 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -143,7 +143,7 @@ public class PublicationMetadataTabPresenter
     public void sendToProductionValidation(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -158,7 +158,7 @@ public class PublicationMetadataTabPresenter
     public void sendToDiffusionValidation(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -173,7 +173,7 @@ public class PublicationMetadataTabPresenter
     public void rejectValidation(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -188,7 +188,7 @@ public class PublicationMetadataTabPresenter
     public void publish(PublicationVersionDto publicationVersionDto) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publicationVersionDto);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -203,7 +203,7 @@ public class PublicationMetadataTabPresenter
     public void programPublication(PublicationVersionDto publication) {
         List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
         publicationVersionDtos.add(publication);
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override

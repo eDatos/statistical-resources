@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.query;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -17,7 +17,7 @@ public class UpdateQueryVersionProcStatus {
     List<QueryVersionDto> queryVersionsToUpdateProcStatus;
 
     @In(2)
-    ProcStatusEnum        nextProcStatus;
+    LifeCycleActionEnum   lifeCycleAction;
 
     @Optional
     @Out(1)

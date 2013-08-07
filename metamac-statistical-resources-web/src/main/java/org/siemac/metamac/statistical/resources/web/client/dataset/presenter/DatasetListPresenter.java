@@ -11,12 +11,12 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -196,78 +196,36 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     @Override
     public void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesSentToProductionValidation());
-                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
     public void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesSentToDiffusionValidation());
-                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
     public void rejectValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesRejectValidation());
-                        retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
     public void publish(List<DatasetVersionDto> datasetVersionDtos) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-            }
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesPublish());
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-            }
-        });
+        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
     public void programPublication(List<DatasetVersionDto> datasetVersionDtos) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesProgramPublication());
+    }
+
+    @Override
+    public void version(List<DatasetVersionDto> datasetVersionDtos, VersionTypeEnum versionType) {
+        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.VERSION, getMessages().lifeCycleResourcesVersion());
+    }
+
+    private void updateDatasetVersionProcStatus(List<DatasetVersionDto> datasetVersionDtos, LifeCycleActionEnum lifeCycleAction, final String successMessage) {
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, lifeCycleAction), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -276,16 +234,10 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             }
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().lifeCycleResourcesProgramPublication());
+                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
                 retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
-    }
-
-    @Override
-    public void version(List<String> urns, VersionTypeEnum versionType) {
-        // TODO Auto-generated method stub
-
     }
 
     //

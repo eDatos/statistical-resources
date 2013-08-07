@@ -296,7 +296,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected void version(VersionTypeEnum versionType) {
-        getUiHandlers().version(getSelectedResourcesUrns(), versionType);
+        List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        getUiHandlers().version(datasetVersionDtos, versionType);
     }
 
     // Import datasources

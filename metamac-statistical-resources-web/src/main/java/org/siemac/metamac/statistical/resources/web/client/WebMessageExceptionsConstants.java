@@ -6,4 +6,5 @@ public class WebMessageExceptionsConstants {
     public static final String ERROR_SEND_RESOURCE_DIFFUSION_VALIDATION  = "exception.resources.life_cycle.send_to_diffusion_validation";
     public static final String ERROR_REJECT_VALIDATION                   = "exception.resources.life_cycle.reject_validation";
     public static final String ERROR_PUBLISH_RESOURCE                    = "exception.resources.life_cycle.publish";
+    public static final String ERROR_VERSION_RESOURCE                    = "exception.resources.life_cycle.version";
 }

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
@@ -31,27 +31,31 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
     public UpdateQueryVersionProcStatusResult executeSecurityAction(UpdateQueryVersionProcStatusAction action) throws ActionException {
 
         List<QueryVersionDto> queryVersionsToUpdateProcStatus = action.getQueryVersionsToUpdateProcStatus();
-        ProcStatusEnum nextProcStatus = action.getNextProcStatus();
+        LifeCycleActionEnum lifeCycleAction = action.getLifeCycleAction();
 
         MetamacException metamacException = new MetamacException();
 
         for (QueryVersionDto queryVersionDto : queryVersionsToUpdateProcStatus) {
             try {
 
-                switch (nextProcStatus) {
-                    case PRODUCTION_VALIDATION:
+                switch (lifeCycleAction) {
+                    case SEND_TO_PRODUCTION_VALIDATION:
                         statisticalResourcesServiceFacade.sendQueryVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionDto);
                         break;
 
-                    case DIFFUSION_VALIDATION:
+                    case SEND_TO_DIFFUSION_VALIDATION:
                         statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionDto);
                         break;
 
-                    case VALIDATION_REJECTED:
+                    case REJECT_VALIDATION:
                         statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), queryVersionDto);
                         break;
 
-                    case PUBLISHED:
+                    case PUBLISH:
+                        // TODO
+                        break;
+
+                    case VERSION:
                         // TODO
                         break;
 
@@ -65,7 +69,7 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                     throw WebExceptionUtils.createMetamacWebException(e);
                 } else {
                     // If there were more than one resource, the messages should be shown in a tree structure
-                    addExceptionsItemToMetamacException(nextProcStatus, queryVersionDto, metamacException, e);
+                    addExceptionsItemToMetamacException(lifeCycleAction, queryVersionDto, metamacException, e);
                 }
             }
         }

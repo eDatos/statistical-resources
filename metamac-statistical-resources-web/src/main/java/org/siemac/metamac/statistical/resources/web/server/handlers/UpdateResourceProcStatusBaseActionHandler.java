@@ -9,8 +9,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.lang.shared.LocaleConstants;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.WebMessageExceptionsConstants;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebTranslateExceptions;
@@ -28,10 +28,10 @@ public abstract class UpdateResourceProcStatusBaseActionHandler<A extends Action
         super(actionType);
     }
 
-    protected void addExceptionsItemToMetamacException(ProcStatusEnum nextProcStatus, LifeCycleStatisticalResourceDto lifeCycleResource, MetamacException mainMetamacException,
+    protected void addExceptionsItemToMetamacException(LifeCycleActionEnum lifeCycleAction, LifeCycleStatisticalResourceDto lifeCycleResource, MetamacException mainMetamacException,
             MetamacException thrownMetamacException) {
 
-        MetamacExceptionItem item = createMetamacExceptionItem(nextProcStatus, lifeCycleResource);
+        MetamacExceptionItem item = createMetamacExceptionItem(lifeCycleAction, lifeCycleResource);
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
@@ -50,8 +50,8 @@ public abstract class UpdateResourceProcStatusBaseActionHandler<A extends Action
         mainMetamacException.getExceptionItems().add(item);
     }
 
-    protected MetamacExceptionItem createMetamacExceptionItem(ProcStatusEnum nextProcStatus, LifeCycleStatisticalResourceDto lifeCycleResource) {
-        String exceptionCode = getExceptionCode(nextProcStatus);
+    protected MetamacExceptionItem createMetamacExceptionItem(LifeCycleActionEnum lifeCycleAction, LifeCycleStatisticalResourceDto lifeCycleResource) {
+        String exceptionCode = getExceptionCode(lifeCycleAction);
         String exceptionMessage = getTranslatedErrorMessage(exceptionCode, lifeCycleResource.getUrn());
 
         MetamacExceptionItem item = new MetamacExceptionItem();
@@ -61,16 +61,18 @@ public abstract class UpdateResourceProcStatusBaseActionHandler<A extends Action
         return item;
     }
 
-    protected String getExceptionCode(ProcStatusEnum procStatus) {
-        switch (procStatus) {
-            case PRODUCTION_VALIDATION:
+    protected String getExceptionCode(LifeCycleActionEnum lifeCycleAction) {
+        switch (lifeCycleAction) {
+            case SEND_TO_PRODUCTION_VALIDATION:
                 return WebMessageExceptionsConstants.ERROR_SEND_RESOURCE_PRODUCTION_VALIDATION;
-            case DIFFUSION_VALIDATION:
+            case SEND_TO_DIFFUSION_VALIDATION:
                 return WebMessageExceptionsConstants.ERROR_SEND_RESOURCE_DIFFUSION_VALIDATION;
-            case VALIDATION_REJECTED:
+            case REJECT_VALIDATION:
                 return WebMessageExceptionsConstants.ERROR_REJECT_VALIDATION;
-            case PUBLISHED:
+            case PUBLISH:
                 return WebMessageExceptionsConstants.ERROR_PUBLISH_RESOURCE;
+            case VERSION:
+                return WebMessageExceptionsConstants.ERROR_VERSION_RESOURCE;
             default:
                 return null;
         }

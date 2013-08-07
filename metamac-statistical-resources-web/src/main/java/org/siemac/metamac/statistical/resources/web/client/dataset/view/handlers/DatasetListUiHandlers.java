@@ -21,7 +21,7 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
     void rejectValidation(List<DatasetVersionDto> datasetVersionDtos);
     void publish(List<DatasetVersionDto> datasetVersionDtos);
     void programPublication(List<DatasetVersionDto> datasetVersionDtos);
-    void version(List<String> urns, VersionTypeEnum versionType);
+    void version(List<DatasetVersionDto> datasetVersionDtos, VersionTypeEnum versionType);
 
     // DSD related actions
 

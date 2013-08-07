@@ -11,13 +11,13 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent.SetOperationHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -184,79 +184,36 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void sendToProductionValidation(List<PublicationVersionDto> publicationVersionDtos) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesSentToProductionValidation());
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
     public void sendToDiffusionValidation(List<PublicationVersionDto> publicationVersionDtos) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesSentToDiffusionValidation());
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
     public void rejectValidation(List<PublicationVersionDto> publicationVersionDtos) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesRejectValidation());
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
     public void publish(List<PublicationVersionDto> publicationVersionDtos) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesPublish());
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
     public void programPublication(List<PublicationVersionDto> publicationVersionDtos) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, ProcStatusEnum.PUBLISHED),
+        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesProgramPublication());
+    }
+
+    @Override
+    public void version(List<PublicationVersionDto> publicationVersionDtos, VersionTypeEnum versionType) {
+        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.VERSION, getMessages().lifeCycleResourcesVersion());
+    }
+
+    private void updatePublicationProcStatus(List<PublicationVersionDto> publicationVersionDtos, LifeCycleActionEnum lifeCycleAction, final String successMessage) {
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, lifeCycleAction),
                 new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
                     @Override
@@ -266,16 +223,10 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
                     }
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().lifeCycleResourcesProgramPublication());
+                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, successMessage);
                         retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
                     }
                 });
-    }
-
-    @Override
-    public void version(List<String> urns, VersionTypeEnum versionType) {
-        // TODO Auto-generated method stub
-
     }
 
     //

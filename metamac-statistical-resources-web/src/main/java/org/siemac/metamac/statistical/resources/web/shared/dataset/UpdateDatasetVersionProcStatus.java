@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -17,7 +17,7 @@ public class UpdateDatasetVersionProcStatus {
     List<DatasetVersionDto> datasetVersionsToUpdateProcStatus;
 
     @In(2)
-    ProcStatusEnum          nextProcStatus;
+    LifeCycleActionEnum     lifeCycleAction;
 
     @Optional
     @Out(1)
