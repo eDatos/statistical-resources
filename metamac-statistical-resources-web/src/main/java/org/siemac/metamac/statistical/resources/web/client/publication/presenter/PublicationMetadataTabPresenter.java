@@ -216,12 +216,12 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void version(PublicationVersionDto publication, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersionPublicationVersionAction(publication, versionType), new WaitingAsyncCallbackHandlingError<VersionPublicationVersionResult>(this) {
+        dispatcher.execute(new VersionPublicationVersionAction(publication.getUrn(), versionType), new WaitingAsyncCallbackHandlingError<VersionPublicationVersionResult>(this) {
 
             @Override
             public void onWaitSuccess(VersionPublicationVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setPublication(result.getResultPublicationVersionDto());
+                getView().setPublication(result.getPublicationVersionDto());
             }
         });
     }

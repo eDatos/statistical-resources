@@ -4,14 +4,18 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.LifeCycleBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourcePaginatedCheckListGrid;
+import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
@@ -268,7 +272,24 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createProgramPublicationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
         button.setVisibility(Visibility.HIDDEN);
-        button.addClickHandler(getProgramPublicationClickHandler());
+        button.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (window.validateForm()) {
+                            Date selectedDate = window.getSelectedDate();
+                            programPublication(selectedDate);
+                            window.destroy();
+                        }
+                    }
+                });
+            }
+        });
         return button;
     }
 
@@ -314,7 +335,23 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createVersionButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
         button.setVisibility(Visibility.HIDDEN);
-        // TODO
+        button.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                final VersionWindow versionWindow = new VersionWindow(getConstants().lifeCycleVersioning());
+                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (versionWindow.validateForm()) {
+                            version(versionWindow.getSelectedVersion());
+                            versionWindow.destroy();
+                        }
+                    }
+                });
+            }
+        });
         return button;
     }
 
@@ -374,7 +411,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract ClickHandler getSendToDiffusionValidationClickHandler();
     protected abstract ClickHandler getRejectValidationClickHandler();
     protected abstract ClickHandler getPublishClickHandler();
-    protected abstract ClickHandler getProgramPublicationClickHandler();
     protected abstract ClickHandler getCancelProgrammedPublicationClickHandler();
 
     protected abstract boolean canDelete(ListGridRecord record);
@@ -385,4 +421,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract boolean canProgramPublication(ListGridRecord record);
     protected abstract boolean canCancelProgrammedPublication(ListGridRecord record);
     protected abstract boolean canVersion(ListGridRecord record);
+
+    protected abstract void programPublication(Date validFrom);
+    protected abstract void version(VersionTypeEnum versionType);
 }

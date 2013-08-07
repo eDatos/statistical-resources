@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
@@ -269,6 +270,12 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
                         retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
                     }
                 });
+    }
+
+    @Override
+    public void version(List<String> urns, VersionTypeEnum versionType) {
+        // TODO Auto-generated method stub
+
     }
 
     //

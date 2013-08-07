@@ -26,8 +26,7 @@ public class VersionDatasetVersionActionHandler extends SecurityActionHandler<Ve
     @Override
     public VersionDatasetVersionResult executeSecurityAction(VersionDatasetVersionAction action) throws ActionException {
         try {
-            // FIXME: using dataset not urn
-            DatasetVersionDto datasetDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionDto().getUrn(),
+            DatasetVersionDto datasetDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn(),
                     action.getVersionType());
             return new VersionDatasetVersionResult(datasetDto);
         } catch (MetamacException e) {

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -17,6 +18,8 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.Qu
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryIdentifiersCreationForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
@@ -178,6 +181,31 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         }
 
         private void bindEvents() {
+            mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
+                    identifiersForm.setTranslationsShowed(translationsShowed);
+                    identifiersCreationForm.setTranslationsShowed(translationsShowed);
+                    identifiersEditionForm.setTranslationsShowed(translationsShowed);
+
+                    thematicContentClassifiersForm.setTranslationsShowed(translationsShowed);
+                    thematicContentClassifiersEditionForm.setTranslationsShowed(translationsShowed);
+
+                    productionDescriptorsForm.setTranslationsShowed(translationsShowed);
+                    productionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
+                    lifeCycleForm.setTranslationsShowed(translationsShowed);
+                    lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
+
+                    versionForm.setTranslationsShowed(translationsShowed);
+                    versionEditionForm.setTranslationsShowed(translationsShowed);
+                }
+            });
+
+            // Save
+
             mainFormLayout.getSave().addClickHandler(new ClickHandler() {
 
                 @Override
@@ -194,6 +222,8 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                 }
             });
 
+            // Cancel
+
             mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
 
                 @Override
@@ -202,6 +232,81 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                         QueryFormPanel.this.hide();
                         QueryViewImpl.this.getUiHandlers().goToQueries();
                     }
+                }
+            });
+
+            // Life cycle
+
+            mainFormLayout.getProductionValidationButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().sendToProductionValidation(queryVersionDto);
+                }
+            });
+            mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().sendToDiffusionValidation(queryVersionDto);
+                }
+            });
+            mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().rejectValidation(queryVersionDto);
+                }
+            });
+            mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().publish(queryVersionDto);
+                }
+            });
+            mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
+                    window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                        @Override
+                        public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                            if (window.validateForm()) {
+                                Date selectedDate = window.getSelectedDate();
+                                // TODO Send to date and hour selected to service
+                                getUiHandlers().programPublication(queryVersionDto);
+                                window.destroy();
+                            }
+                        }
+                    });
+                }
+            });
+            mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+            mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    final VersionWindow versionWindow = new VersionWindow(getConstants().lifeCycleVersioning());
+                    versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                        @Override
+                        public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                            if (versionWindow.validateForm()) {
+                                getUiHandlers().version(queryVersionDto, versionWindow.getSelectedVersion());
+                                versionWindow.destroy();
+                            }
+                        }
+                    });
                 }
             });
         }

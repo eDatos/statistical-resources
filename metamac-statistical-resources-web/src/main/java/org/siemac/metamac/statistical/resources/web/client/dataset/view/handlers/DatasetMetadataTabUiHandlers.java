@@ -11,7 +11,7 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, StatisticalResourceUiHandlers {
 
-    // Lifecycle
+    // Life cycle
     void sendToProductionValidation(DatasetVersionDto dataset);
     void sendToDiffusionValidation(DatasetVersionDto dataset);
     void rejectValidation(DatasetVersionDto dataset);

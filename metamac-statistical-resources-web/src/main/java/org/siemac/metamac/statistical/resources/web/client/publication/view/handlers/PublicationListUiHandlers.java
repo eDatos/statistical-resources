@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view.han
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 
@@ -19,4 +20,5 @@ public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandl
     void rejectValidation(List<PublicationVersionDto> publicationVersionDtos);
     void publish(List<PublicationVersionDto> publicationVersionDtos);
     void programPublication(List<PublicationVersionDto> publicationVersionDtos);
+    void version(List<String> urns, VersionTypeEnum versionType);
 }

@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view;
 
+import java.util.Date;
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.LifeCycleBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -204,15 +206,10 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     // Program publication
 
     @Override
-    protected ClickHandler getProgramPublicationClickHandler() {
-        return new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().programPublication(queryVersionDtos);
-            }
-        };
+    protected void programPublication(Date validFrom) {
+        // TODO Send to date and hour selected to service
+        List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        getUiHandlers().programPublication(queryVersionDtos);
     }
 
     // Cancel programmed publication
@@ -227,6 +224,13 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             }
         };
+    }
+
+    // Version
+
+    @Override
+    protected void version(VersionTypeEnum versionType) {
+        getUiHandlers().version(getSelectedResourcesUrns(), versionType);
     }
 
     //

@@ -3,14 +3,17 @@ package org.siemac.metamac.statistical.resources.web.client.query.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
@@ -38,6 +41,10 @@ import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersion
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.VersionQueryVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.VersionQueryVersionResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -237,6 +244,105 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
         });
     }
+
+    //
+    // LIFE CYCLE
+    //
+
+    @Override
+    public void sendToProductionValidation(QueryVersionDto query) {
+        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+        queryVersionDtos.add(query);
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
+                this) {
+
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
+                getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
+    }
+
+    @Override
+    public void sendToDiffusionValidation(QueryVersionDto query) {
+        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+        queryVersionDtos.add(query);
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
+                this) {
+
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
+    }
+
+    @Override
+    public void rejectValidation(QueryVersionDto query) {
+        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+        queryVersionDtos.add(query);
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.VALIDATION_REJECTED),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                        getView().setQueryDto(result.getQueryVersionDto());
+                    }
+                });
+    }
+
+    @Override
+    public void programPublication(QueryVersionDto query) {
+        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+        queryVersionDtos.add(query);
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourcePublish());
+                getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
+    }
+
+    @Override
+    public void publish(QueryVersionDto query) {
+        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+        queryVersionDtos.add(query);
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(queryVersionDtos, ProcStatusEnum.PUBLISHED), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourcePublish());
+                getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
+    }
+
+    @Override
+    public void cancelProgrammedPublication(QueryVersionDto query) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void version(QueryVersionDto query, VersionTypeEnum versionType) {
+        dispatcher.execute(new VersionQueryVersionAction(query.getUrn(), versionType), new WaitingAsyncCallbackHandlingError<VersionQueryVersionResult>(this) {
+
+            @Override
+            public void onWaitSuccess(VersionQueryVersionResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceVersion());
+                getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
+    }
+
+    //
+    // NAVIGATION
+    //
 
     @Override
     public void goTo(List<PlaceRequest> location) {

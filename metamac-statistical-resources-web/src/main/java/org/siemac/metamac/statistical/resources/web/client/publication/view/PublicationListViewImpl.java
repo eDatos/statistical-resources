@@ -2,8 +2,10 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.Date;
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
@@ -216,15 +218,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     // Program publication
 
     @Override
-    protected ClickHandler getProgramPublicationClickHandler() {
-        return new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().programPublication(publicationVersionDtos);
-            }
-        };
+    protected void programPublication(Date validFrom) {
+        // TODO Send to date and hour selected to service
+        List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        getUiHandlers().programPublication(publicationVersionDtos);
     }
 
     // Cancel programmed publication
@@ -239,6 +236,13 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             }
         };
+    }
+
+    // Version
+
+    @Override
+    protected void version(VersionTypeEnum versionType) {
+        getUiHandlers().version(getSelectedResourcesUrns(), versionType);
     }
 
     //

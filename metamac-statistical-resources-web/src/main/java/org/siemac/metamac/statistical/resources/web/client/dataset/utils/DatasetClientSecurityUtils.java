@@ -20,8 +20,8 @@ public class DatasetClientSecurityUtils {
     }
 
     public static boolean canImportDatasources(DatasetVersionDto datasetVersionDto) {
-        if (!ProcStatusEnum.DRAFT.equals(datasetVersionDto.getProcStatus())) {
-            // Datasources can only be imported in datasets in DRAFT
+        if (!ProcStatusEnum.DRAFT.equals(datasetVersionDto.getProcStatus()) && !ProcStatusEnum.VALIDATION_REJECTED.equals(datasetVersionDto.getProcStatus())) {
+            // Datasources can only be imported in datasets in DRAFT or in VALIDATION_REJECTED
             return false;
         }
         return true;

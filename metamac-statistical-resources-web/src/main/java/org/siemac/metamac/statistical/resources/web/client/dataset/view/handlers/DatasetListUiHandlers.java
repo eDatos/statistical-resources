@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view.handler
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
@@ -20,6 +21,7 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
     void rejectValidation(List<DatasetVersionDto> datasetVersionDtos);
     void publish(List<DatasetVersionDto> datasetVersionDtos);
     void programPublication(List<DatasetVersionDto> datasetVersionDtos);
+    void version(List<String> urns, VersionTypeEnum versionType);
 
     // DSD related actions
 

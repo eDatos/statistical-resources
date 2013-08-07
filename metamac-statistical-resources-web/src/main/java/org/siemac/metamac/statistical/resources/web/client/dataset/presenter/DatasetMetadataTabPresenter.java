@@ -249,12 +249,12 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void version(DatasetVersionDto dataset, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersionDatasetVersionAction(dataset, versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetVersionResult>(this) {
+        dispatcher.execute(new VersionDatasetVersionAction(dataset.getUrn(), versionType), new WaitingAsyncCallbackHandlingError<VersionDatasetVersionResult>(this) {
 
             @Override
             public void onWaitSuccess(VersionDatasetVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setDataset(result.getResultDatasetVersionDto());
+                getView().setDataset(result.getDatasetVersionDto());
             }
         });
     }

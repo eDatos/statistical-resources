@@ -11,11 +11,11 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class VersionDatasetVersion {
 
     @In(1)
-    DatasetVersionDto datasetVersionDto;
+    String            datasetVersionUrn;
 
     @In(2)
     VersionTypeEnum   versionType;
 
     @Out(1)
-    DatasetVersionDto resultDatasetVersionDto;
+    DatasetVersionDto datasetVersionDto;
 }
