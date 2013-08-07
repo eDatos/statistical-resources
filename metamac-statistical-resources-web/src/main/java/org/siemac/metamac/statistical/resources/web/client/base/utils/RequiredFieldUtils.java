@@ -34,6 +34,8 @@ public class RequiredFieldUtils {
         switch (currentProcStatus) {
             case DRAFT:
                 return publicationFieldsToProductionValidation;
+            case VALIDATION_REJECTED:
+                return publicationFieldsToProductionValidation;
             case PRODUCTION_VALIDATION:
                 return publicationFieldsToDiffusionValidation;
             case DIFFUSION_VALIDATION:
@@ -54,6 +56,8 @@ public class RequiredFieldUtils {
         switch (currentProcStatus) {
             case DRAFT:
                 return datasetFieldsToProductionValidation;
+            case VALIDATION_REJECTED:
+                return datasetFieldsToProductionValidation;
             case PRODUCTION_VALIDATION:
                 return datasetFieldsToDiffusionValidation;
             case DIFFUSION_VALIDATION:
@@ -73,6 +77,8 @@ public class RequiredFieldUtils {
     public static String[] getQueryRequiredFieldsToNextProcStatus(ProcStatusEnum currentProcStatus) {
         switch (currentProcStatus) {
             case DRAFT:
+                return queryFieldsToProductionValidation;
+            case VALIDATION_REJECTED:
                 return queryFieldsToProductionValidation;
             case PRODUCTION_VALIDATION:
                 return queryFieldsToDiffusionValidation;
