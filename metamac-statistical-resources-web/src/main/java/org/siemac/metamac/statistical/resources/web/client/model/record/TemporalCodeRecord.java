@@ -31,7 +31,6 @@ public class TemporalCodeRecord extends ListGridRecord {
         setAttribute(TemporalCodeDS.DTO, codeItemDto);
     }
 
-    @SuppressWarnings("unchecked")
     public TemporalCodeDto getCodeItemDto() {
         return (TemporalCodeDto) getAttributeAsObject(TemporalCodeDS.DTO);
     }

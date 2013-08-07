@@ -31,7 +31,6 @@ public class CodeItemRecord extends ListGridRecord {
         setAttribute(CodeItemDS.DTO, codeItemDto);
     }
 
-    @SuppressWarnings("unchecked")
     public CodeItemDto getCodeItemDto() {
         return (CodeItemDto) getAttributeAsObject(CodeItemDS.DTO);
     }

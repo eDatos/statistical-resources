@@ -6,9 +6,11 @@ import org.siemac.metamac.web.common.shared.criteria.base.HasOnlyLastVersionCrit
 
 public class ItemSchemeWebCriteria extends MetamacWebCriteria implements HasOnlyLastVersionCriteria, HasSchemeCriteria {
 
-    protected String  schemeUrn;
+    private static final long serialVersionUID = 1L;
 
-    protected boolean onlyLastVersion;
+    protected String          schemeUrn;
+
+    protected boolean         onlyLastVersion;
 
     public ItemSchemeWebCriteria() {
         super();
