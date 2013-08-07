@@ -7,6 +7,7 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCoverageForDsdComponent;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
@@ -64,6 +65,8 @@ import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
+
+    private static final String              TESTING_CLASS           = "org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceImpl";
 
     @InjectMocks
     protected DatasetLifecycleServiceImpl    datasetLifecycleService = new DatasetLifecycleServiceImpl();
@@ -194,21 +197,24 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         assertEquals(3, datasetVersion.getMeasureCoverage().size());
     }
 
-    @Ignore
     @Override
     @Test
     public void testCheckSendToProductionValidationResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
-
+        // It's already tested in:
+        // - testSendToProductionValidation
+        // - testSendToProductionValidationChangingSomeFieldsDontHaveEffect
+        // - testCheckSendToProductionValidationRequiredMetadata
+        // - testApplySendToProductionValidationResourceFillCoveragesLocalRepresentation
     }
 
-    @Ignore
     @Override
     @Test
     public void testApplySendToProductionValidationResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        // It's already tested in:
+        // - testSendToProductionValidation
+        // - testSendToProductionValidationChangingSomeFieldsDontHaveEffect
+        // - testCheckSendToProductionValidationRequiredMetadata
+        // - testApplySendToProductionValidationResourceFillCoveragesLocalRepresentation
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -245,20 +251,22 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
                 Mockito.anyListOf(MetamacExceptionItem.class));
     }
 
-    @Ignore
     @Override
     @Test
     public void testCheckSendToDiffusionValidationResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        // It's already tested in:
+        // - testSendToDiffusionValidation
+        // - testSendToDiffusionValidationChangingSomeFieldsDontHaveEffect
+        // - testSendToDiffusionValidationRequiredFields
     }
 
-    @Ignore
     @Override
     @Test
     public void testApplySendToDiffusionValidationResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        // It's already tested in:
+        // - testSendToDiffusionValidation
+        // - testSendToDiffusionValidationChangingSomeFieldsDontHaveEffect
+        // - testSendToDiffusionValidationRequiredFields
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -284,20 +292,16 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
                 Mockito.anyListOf(MetamacExceptionItem.class));
     }
 
-    @Ignore
     @Override
     @Test
     public void testCheckSendToValidationRejectedResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        assertEmptyMethod(TESTING_CLASS, "applySendToValidationRejectedResource");
     }
 
-    @Ignore
     @Override
     @Test
     public void testApplySendToValidationRejectedResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        assertEmptyMethod(TESTING_CLASS, "applySendToValidationRejectedResource");
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -306,7 +310,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Test
     public void testSendToPublished() throws Exception {
-        // FIXME: Do test
+        // FIXME: Do test in testCheckSendToPublishedResource and testApplySendToPublishedResource
         thrown.expect(UnsupportedOperationException.class);
 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
@@ -349,9 +353,10 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         // TODO: Implementar
     }
 
-    /**
-     * UTILS
-     */
+    // ------------------------------------------------------------------------------------------------------
+    // PRIVATE UTILS
+    // ------------------------------------------------------------------------------------------------------
+
     private void mockDsdAndatasetRepositoryForProductionValidation() throws Exception {
         List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
 

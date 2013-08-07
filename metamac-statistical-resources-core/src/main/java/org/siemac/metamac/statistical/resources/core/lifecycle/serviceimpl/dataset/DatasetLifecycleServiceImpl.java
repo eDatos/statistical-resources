@@ -48,19 +48,19 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
 
     @Autowired
-    private LifecycleCommonMetadataChecker             lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker   lifecycleCommonMetadataChecker;
 
     @Autowired
-    private DatasetVersionRepository                   datasetVersionRepository;
+    private DatasetVersionRepository         datasetVersionRepository;
 
     @Autowired
-    private SrmRestInternalService                     srmRestInternalService;
+    private SrmRestInternalService           srmRestInternalService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade           statisticsDatasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade statisticsDatasetRepositoriesServiceFacade;
 
     @Autowired
-    private RestMapper                                 restMapper;
+    private RestMapper                       restMapper;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -367,8 +367,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToValidationRejectedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        // TODO: CLEAR ALL METADATA FILLED IN PREVIOUS VALIDATIONS
-        // resource.getGeographicCoverage().clear();
+        // NOTHING
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {

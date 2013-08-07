@@ -94,14 +94,16 @@ Application FacadeStatisticalResources {
             List<@DatasetVersionDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(String urnDatasetVersionToCopy, @VersionTypeEnum versionType) throws MetamacException;
-    		"Send to production validation"
-    		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		"Send to diffusion validation"
-    		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		"Retrieve latest datasetVersion providing datasetUrn"
     		@DatasetVersionDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
     		"Retrieve latest published datasetVersion providing datasetUrn"
     		@DatasetVersionDto retrieveLatestPublishedDatasetVersion(String datasetUrn) throws MetamacException;
+    		"Send to production validation"
+    		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
+    		"Send to diffusion validation"
+    		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
+    		"Send to validation rejected"
+    		@DatasetVersionDto sendDatasetVersionToValidationRejected(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
