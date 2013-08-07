@@ -602,6 +602,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Service
         getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls);
     }
+    
+    @Override
+    public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn);
+        
+        getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
+    }
 
     // ------------------------------------------------------------------------
     // PUBLICATIONS

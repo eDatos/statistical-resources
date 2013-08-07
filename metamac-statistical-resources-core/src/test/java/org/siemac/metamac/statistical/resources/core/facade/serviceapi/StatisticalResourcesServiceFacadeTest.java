@@ -1296,6 +1296,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         
         statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url));
     }
+    
+    @Override
+    public void testImportDatasourcesInStatisticalOperation() throws Exception {
+        //See testImportDatasourcesInStatisticalOperation in DatasetServiceTest
+    }
 
     // ------------------------------------------------------------------------
     // PUBLICATIONS
