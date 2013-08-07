@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
@@ -196,36 +197,43 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     @Override
     public void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION, getMessages().lifeCycleResourcesSentToProductionValidation());
+        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
+        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
     public void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION, getMessages().lifeCycleResourcesSentToDiffusionValidation());
+        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
+        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
     public void rejectValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION, getMessages().lifeCycleResourcesRejectValidation());
+        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
+        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
     public void publish(List<DatasetVersionDto> datasetVersionDtos) {
-        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesPublish());
+        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
     public void programPublication(List<DatasetVersionDto> datasetVersionDtos) {
-        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesProgramPublication());
+        UpdateDatasetVersionProcStatusAction action = new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
     }
 
     @Override
     public void version(List<DatasetVersionDto> datasetVersionDtos, VersionTypeEnum versionType) {
-        updateDatasetVersionProcStatus(datasetVersionDtos, LifeCycleActionEnum.VERSION, getMessages().lifeCycleResourcesVersion());
+        Builder builder = new UpdateDatasetVersionProcStatusAction.Builder(datasetVersionDtos, LifeCycleActionEnum.VERSION);
+        builder.versionType(versionType);
+        updateDatasetVersionProcStatus(builder.build(), getMessages().lifeCycleResourcesVersion());
     }
 
-    private void updateDatasetVersionProcStatus(List<DatasetVersionDto> datasetVersionDtos, LifeCycleActionEnum lifeCycleAction, final String successMessage) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(datasetVersionDtos, lifeCycleAction), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+    private void updateDatasetVersionProcStatus(UpdateDatasetVersionProcStatusAction action, final String successMessage) {
+        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {

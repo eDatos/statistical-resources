@@ -34,6 +34,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -184,49 +185,55 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void sendToProductionValidation(List<PublicationVersionDto> publicationVersionDtos) {
-        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION, getMessages().lifeCycleResourcesSentToProductionValidation());
+        UpdatePublicationVersionProcStatusAction action = new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
+        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
     public void sendToDiffusionValidation(List<PublicationVersionDto> publicationVersionDtos) {
-        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION, getMessages().lifeCycleResourcesSentToDiffusionValidation());
+        UpdatePublicationVersionProcStatusAction action = new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
+        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
     public void rejectValidation(List<PublicationVersionDto> publicationVersionDtos) {
-        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION, getMessages().lifeCycleResourcesRejectValidation());
+        UpdatePublicationVersionProcStatusAction action = new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
+        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
     public void publish(List<PublicationVersionDto> publicationVersionDtos) {
-        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesPublish());
+        UpdatePublicationVersionProcStatusAction action = new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH);
+        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
     public void programPublication(List<PublicationVersionDto> publicationVersionDtos) {
-        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.PUBLISH, getMessages().lifeCycleResourcesProgramPublication());
+        UpdatePublicationVersionProcStatusAction action = new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, LifeCycleActionEnum.PUBLISH);
+        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
     }
 
     @Override
     public void version(List<PublicationVersionDto> publicationVersionDtos, VersionTypeEnum versionType) {
-        updatePublicationProcStatus(publicationVersionDtos, LifeCycleActionEnum.VERSION, getMessages().lifeCycleResourcesVersion());
+        Builder builder = new UpdatePublicationVersionProcStatusAction.Builder(publicationVersionDtos, LifeCycleActionEnum.VERSION);
+        builder.versionType(versionType);
+        updatePublicationVersionProcStatus(builder.build(), getMessages().lifeCycleResourcesVersion());
     }
 
-    private void updatePublicationProcStatus(List<PublicationVersionDto> publicationVersionDtos, LifeCycleActionEnum lifeCycleAction, final String successMessage) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDtos, lifeCycleAction),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+    private void updatePublicationVersionProcStatus(UpdatePublicationVersionProcStatusAction action, final String successMessage) {
+        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        super.onWaitFailure(caught);
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, successMessage);
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                    }
-                });
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+            @Override
+            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, successMessage);
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
     }
 
     //
