@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
@@ -76,6 +77,19 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         } else {
             checkUrnExternalItemRequired(parameter, parameterName, exceptions);
+        }
+    }
+    
+    /**
+     * Check for a required metadata and add an exception for a failed validation.
+     * 
+     * @param parameter
+     * @param parameterName
+     * @param exceptions
+     */
+    public static void checkMetadataRequired(RelatedResource parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (isEmpty(parameter)) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName));
         }
     }
 
@@ -234,6 +248,55 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         return isEmpty(parameter.getUrn()) || isEmpty(parameter.getType());
     }
 
+    /**
+     * Check if a RelatedResource is empty.
+     * 
+     * @param parameter
+     * @return
+     */
+    private static Boolean isEmpty(RelatedResource parameter) {
+        if (parameter == null || parameter.getType() == null) {
+            return Boolean.TRUE;
+        }
+        
+        switch (parameter.getType()) {
+            case DATASET:
+                if (parameter.getDataset() == null) {
+                    return true;
+                }
+                break;
+            case DATASET_VERSION:
+                if (parameter.getDatasetVersion() == null) {
+                    return true;
+                }
+                break;
+            case PUBLICATION:
+                if (parameter.getPublication() == null) {
+                    return true;
+                }
+                break;
+            case PUBLICATION_VERSION:
+                if (parameter.getPublicationVersion() == null) {
+                    return true;
+                }
+                break;
+            case QUERY:
+                if (parameter.getQuery() == null) {
+                    return true;
+                }
+                break;
+            case QUERY_VERSION:
+                if (parameter.getQueryVersion() == null) {
+                    return true;
+                }
+                break;
+            default:
+                return true;
+        }
+        
+        return false;
+    }
+    
     /**
      * Check if a Set<QuerySelectionItem> is empty
      * 

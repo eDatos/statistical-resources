@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication;
+package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query;
 
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
@@ -8,9 +8,9 @@ import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
 
-public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
+public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
 
-    private static final String TESTING_CLASS = "org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceImpl";
+    private static final String TESTING_CLASS = "org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceImpl";
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -69,10 +69,6 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Test
     public void testCheckSendToPublishedResource() throws Exception {
         // TODO:
-        // - Comprobar que al menos existe un cubo por capítulo
-        // - comprobar que almenos existe un cubo en la publicación
-        // - compobar que todos los datasets y consultas vinculados a cubos están publicados
-
         fail("not implemented");
     }
 

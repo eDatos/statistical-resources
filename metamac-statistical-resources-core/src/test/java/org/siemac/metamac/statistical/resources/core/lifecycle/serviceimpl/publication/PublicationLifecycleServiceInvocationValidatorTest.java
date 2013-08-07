@@ -34,6 +34,24 @@ public class PublicationLifecycleServiceInvocationValidatorTest extends Statisti
         MetamacAsserts.assertEqualsMetamacException(expected, new MetamacException(exceptionItems));
     }
 
+    @Test
+    public void testSendToValidationRejectedQueryVersionRequired() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        publicationLifecycleServiceInvocationValidator.checkSendToValidationRejectedInternal(getServiceContextAdministrador(), null, exceptionItems);
+        
+        MetamacException expected = new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION);
+        MetamacAsserts.assertEqualsMetamacException(expected, new MetamacException(exceptionItems));
+    }
     
-    // TODO: EN el test del published hay que comprobar que exista al menos una tabla por nivel.
+    @Test
+    public void testSendToPublishedQueryVersionRequired() throws Exception {
+        // TODO: EN el test del published hay que comprobar que exista al menos una tabla por nivel. Aquí o en el checker?
+        
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        publicationLifecycleServiceInvocationValidator.checkSendToPublishedInternal(getServiceContextAdministrador(), null, exceptionItems);
+        
+        MetamacException expected = new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION);
+        MetamacAsserts.assertEqualsMetamacException(expected, new MetamacException(exceptionItems));
+    }
+    
 }

@@ -128,6 +128,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Autowired
     private LifecycleService<PublicationVersion>                     publicationLifecycleService;
 
+    @Autowired
+    private LifecycleService<QueryVersion>                           queryLifecycleService;
+
     public StatisticalResourcesServiceFacadeImpl() {
     }
 
@@ -293,6 +296,57 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Delete
         getQueryService().deleteQueryVersion(ctx, urn);
+    }
+
+    @Override
+    public QueryVersionDto sendQueryVersionToProductionValidation(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx);
+
+        // Transform
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+
+        // Send to production validation and retrieve
+        queryVersion = queryLifecycleService.sendToProductionValidation(ctx, queryVersion);
+
+        // Transform
+        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+
+        return queryVersionDto;
+    }
+
+    @Override
+    public QueryVersionDto sendQueryVersionToDiffusionValidation(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx);
+
+        // Transform
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+
+        // Send to production validation and retrieve
+        queryVersion = queryLifecycleService.sendToDiffusionValidation(ctx, queryVersion);
+
+        // Transform
+        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+
+        return queryVersionDto;
+    }
+
+    @Override
+    public QueryVersionDto sendQueryVersionToValidationRejected(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx);
+
+        // Transform
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+
+        // Send to production validation and retrieve
+        queryVersion = queryLifecycleService.sendToValidationRejected(ctx, queryVersion);
+
+        // Transform
+        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+
+        return queryVersionDto;
     }
 
     // ------------------------------------------------------------------------
@@ -578,24 +632,24 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
         return datasetVersionDto;
     }
-    
+
     @Override
     public List<StatisticOfficialityDto> findStatisticOfficialities(ServiceContext ctx) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canFindStatisticOfficialities(ctx);
-        
+
         // Retrieve
         List<StatisticOfficiality> statisticOfficialities = getDatasetService().findStatisticOfficialities(ctx);
 
         // Transform
         return datasetDo2DtoMapper.statisticOfficialityDoList2DtoList(statisticOfficialities);
     }
-    
+
     @Override
     public void importDatasourcesInDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, List<URL> fileUrls) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto);
-        
+
         // Transform for optimistic locking
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
@@ -777,7 +831,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Build structure
         PublicationStructureDto publicationStructureDto = publicationDo2DtoMapper.publicationVersionStructureDoToDto(publicationVersion);
-        
+
         return publicationStructureDto;
     }
 

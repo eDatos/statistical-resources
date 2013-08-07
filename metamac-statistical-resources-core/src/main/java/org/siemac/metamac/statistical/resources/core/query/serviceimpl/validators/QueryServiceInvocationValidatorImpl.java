@@ -25,11 +25,11 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     public static void checkRetrieveQueryVersionByUrn(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
-    
+
     public static void checkRetrieveLatestQueryVersionByQueryUrn(String queryUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(queryUrn, ServiceExceptionParameters.QUERY_URN, exceptions);
     }
-    
+
     public static void checkRetrieveLatestPublishedQueryVersionByQueryUrn(String queryUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(queryUrn, ServiceExceptionParameters.QUERY_URN, exceptions);
     }
@@ -44,37 +44,35 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
 
     public static void checkCreateQueryVersion(QueryVersion queryVersion, ExternalItem statisticalOperation, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.STATISTICAL_OPERATION, exceptions);
-        checkNewQuery(queryVersion, exceptions);
+        checkNewQueryVersion(queryVersion, exceptions);
     }
 
     public static void checkUpdateQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkExistingQuery(queryVersion, exceptions);
+        checkExistingQueryVersion(queryVersion, exceptions);
     }
-    
+
     public static void checkMarkQueryVersionAsDiscontinued(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
-        checkExistingQuery(queryVersion, exceptions);
+        checkExistingQueryVersion(queryVersion, exceptions);
     }
-    
+
     public static void checkDeleteQueryVersion(String urn, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
-    // ------------------------------------------------------------------------
-    // PRIVATE METHODS
-    // ------------------------------------------------------------------------
-
-    private static void checkNewQuery(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
+    public static void checkNewQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(queryVersion, ServiceExceptionParameters.QUERY_VERSION, exceptions);
         if (queryVersion == null) {
             return;
         }
 
         checkNewLifeCycleStatisticalResource(queryVersion.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE, exceptions);
-        
+
         if (queryVersion.getLifeCycleStatisticalResource() != null) {
             // Check code
-            StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
-            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(queryVersion.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getLifeCycleStatisticalResource().getCode(),
+                    ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
+            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(queryVersion.getLifeCycleStatisticalResource().getCode(),
+                    ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
         }
         checkQueryVersion(queryVersion, exceptions);
 
@@ -84,7 +82,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         StatisticalResourcesValidationUtils.checkMetadataEmpty(queryVersion.getStatus(), ServiceExceptionParameters.QUERY_VERSION__STATUS, exceptions);
     }
 
-    private static void checkExistingQuery(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
+    public static void checkExistingQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(queryVersion, ServiceExceptionParameters.QUERY_VERSION, exceptions);
         if (queryVersion == null) {
             return;
@@ -103,7 +101,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getUuid(), ServiceExceptionParameters.QUERY_VERSION__UUID, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getDatasetVersion(), ServiceExceptionParameters.QUERY_VERSION__DATASET_VERSION, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getSelection(), ServiceExceptionParameters.QUERY_VERSION__SELECTION, exceptions);
-        
+
         if (QueryTypeEnum.LATEST_DATA.equals(queryVersion.getType())) {
             StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getLatestDataNumber(), ServiceExceptionParameters.QUERY_VERSION__LATEST_DATA_NUMBER, exceptions);
             if (queryVersion.getLatestDataNumber() != null && queryVersion.getLatestDataNumber() <= Integer.valueOf(0)) {

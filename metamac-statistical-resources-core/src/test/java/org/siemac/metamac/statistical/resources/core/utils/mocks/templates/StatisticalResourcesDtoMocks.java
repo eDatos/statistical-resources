@@ -80,7 +80,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // TODO: Esto debe eliminarse cuando el código pase a ser generado automáticamente
         // code is not setting in nameable becasuse some resources have generated code
         datasourceDto.setCode(mockString(8));
-        
         datasourceDto.setDatasetVersionUrn(URN_RELATED_RESOURCE_MOCK);
 
         return datasourceDto;

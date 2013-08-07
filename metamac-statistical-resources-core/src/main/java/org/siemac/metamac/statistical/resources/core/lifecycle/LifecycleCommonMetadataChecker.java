@@ -16,8 +16,11 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.stereotype.Component;
 
@@ -91,5 +94,16 @@ public class LifecycleCommonMetadataChecker {
     public void checkPublicationVersionCommonMetadata(PublicationVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
      // Metadata specific of publicationVersion are only required for published: formatExtentResources and at least one cube per level.
         checkMetadataEmpty(resource.getFormatExtentResources(), addParameter(metadataName, ServiceExceptionSingleParameters.FORMAT_EXTENT_RESOURCES), exceptionItems);
+    }
+    
+    public void checkQueryVersionCommonMetadata(QueryVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+        checkMetadataRequired(resource.getDatasetVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.DATASET_VERSION), exceptionItems);
+        checkMetadataRequired(resource.getStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.STATUS), exceptionItems);
+        checkMetadataRequired(resource.getType(), addParameter(metadataName, ServiceExceptionSingleParameters.TYPE), exceptionItems);
+        checkMetadataRequired(resource.getSelection(), addParameter(metadataName, ServiceExceptionSingleParameters.SELECTION), exceptionItems);
+        
+        if (QueryTypeEnum.LATEST_DATA.equals(resource.getType())) {
+            checkMetadataRequired(resource.getLatestDataNumber(), addParameter(metadataName, ServiceExceptionSingleParameters.LATEST_DATA_NUMBER), exceptionItems);
+        }
     }
 }

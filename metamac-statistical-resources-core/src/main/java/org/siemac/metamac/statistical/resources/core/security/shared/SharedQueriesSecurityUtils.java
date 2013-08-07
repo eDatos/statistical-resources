@@ -61,4 +61,19 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
+
+    public static boolean canSendQueryVersionToProductionValidation(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendQueryVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canSendQueryVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
 }

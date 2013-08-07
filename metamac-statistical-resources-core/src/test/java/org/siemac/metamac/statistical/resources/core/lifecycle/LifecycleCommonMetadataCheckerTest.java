@@ -23,10 +23,12 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBaseTest {
@@ -259,6 +261,41 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        throw new MetamacException(exceptionItems);
+    }
+    
+    @Test
+    public void testQueryVersionCommonMetadata() throws Exception {
+        QueryVersion resource = new QueryVersion();
+        
+        String baseMetadata = ServiceExceptionSingleParameters.QUERY_VERSION;
+        expectedMetamacException(new MetamacException(
+                Arrays.asList(
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__DATASET_VERSION), 
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__STATUS), 
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__TYPE),
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__SELECTION))));
+        
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        lifecycleCommonMetadataChecker.checkQueryVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        throw new MetamacException(exceptionItems);
+    }
+    
+    @Test
+    public void testQueryVersionCommonMetadataTypeLatestData() throws Exception {
+        QueryVersion resource = new QueryVersion();
+        resource.setType(QueryTypeEnum.LATEST_DATA);
+        
+        String baseMetadata = ServiceExceptionSingleParameters.QUERY_VERSION;
+        expectedMetamacException(new MetamacException(
+                Arrays.asList(
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__DATASET_VERSION), 
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__STATUS), 
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__SELECTION),
+                        new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__LATEST_DATA_NUMBER))));
+        
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        lifecycleCommonMetadataChecker.checkQueryVersionCommonMetadata(resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 }

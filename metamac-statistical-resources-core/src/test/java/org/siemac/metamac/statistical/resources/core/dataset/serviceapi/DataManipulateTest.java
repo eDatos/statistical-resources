@@ -54,9 +54,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
-/**
- * Spring based transactional test with DbUnit support.
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)

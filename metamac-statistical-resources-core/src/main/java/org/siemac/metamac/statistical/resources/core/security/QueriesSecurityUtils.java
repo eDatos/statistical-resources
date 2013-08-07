@@ -74,4 +74,23 @@ public class QueriesSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+
+    public static void canSendQueryVersionToProductionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canSendQueryVersionToProductionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+        
+    }
+
+    public static void canSendQueryVersionToDiffusionValidation(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canSendQueryVersionToValidationRejected(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canSendQueryVersionToValidationRejected(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 }

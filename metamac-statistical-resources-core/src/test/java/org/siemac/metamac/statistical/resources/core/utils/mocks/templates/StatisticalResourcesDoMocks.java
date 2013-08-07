@@ -3,8 +3,6 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;

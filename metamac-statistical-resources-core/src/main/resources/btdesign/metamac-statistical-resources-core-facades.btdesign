@@ -31,6 +31,7 @@ Application FacadeStatisticalResources {
 			> @PublicationService
 			> @DatasetLifecycleService
 			> @PublicationLifecycleService
+			> @QueryLifecyleService
 			
 			// QUERY VERSION
 			"Retrieves a query scheme by URN"
@@ -51,6 +52,12 @@ Application FacadeStatisticalResources {
     		@QueryVersionDto retrieveLatestQueryVersion(String queryUrn) throws MetamacException;
     		"Retrieve latest published queryVersion providing queryUrn"
     		@QueryVersionDto retrieveLatestPublishedQueryVersion(String queryUrn) throws MetamacException
+    		"Send to production validation"
+    		@QueryVersionDto sendQueryVersionToProductionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		"Send to diffusion validation"
+    		@QueryVersionDto sendQueryVersionToDiffusionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		"Send to validation rejected"
+    		@QueryVersionDto sendQueryVersionToValidationRejected(@QueryVersionDto queryVersionDto) throws MetamacException;
     		
     		// QUERIES
 	   		"Find all queries"

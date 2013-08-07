@@ -66,7 +66,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_03_BASIC_ORDERED_02_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_04_BASIC_ORDERED_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_06_BASIC_ACTIVE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_07_BASIC_ACTIVE_NAME;
@@ -162,10 +162,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
-/**
- * Spring based transactional test with DbUnit support.
- */
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -2069,5 +2065,52 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM", conceptSchemeReference, codelistReference);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
+    }
+    
+    @Override
+    @Test
+    @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
+    public void testSendQueryVersionToProductionValidation() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME).getLifeCycleStatisticalResource().getUrn();
+        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
+
+        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.sendQueryVersionToProductionValidation(getServiceContextAdministrador(), queryVersionDto);
+        assertNotNull(updatedQueryVersion);
+        assertEquals(ProcStatusEnum.PRODUCTION_VALIDATION, updatedQueryVersion.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedQueryVersion.getProductionValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getProductionValidationDate()));
+    }
+
+    @Override
+    @Test
+    @MetamacMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME)
+    public void testSendQueryVersionToDiffusionValidation() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME)
+                .getLifeCycleStatisticalResource().getUrn();
+        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
+
+        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(getServiceContextAdministrador(), queryVersionDto);
+        assertNotNull(updatedQueryVersion);
+        assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, updatedQueryVersion.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedQueryVersion.getDiffusionValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getDiffusionValidationDate()));
+    }
+
+    @Override
+    @Test
+    @MetamacMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME)
+    public void testSendQueryVersionToValidationRejected() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME)
+                .getLifeCycleStatisticalResource().getUrn();
+        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
+
+        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(getServiceContextAdministrador(), queryVersionDto);
+        assertNotNull(updatedQueryVersion);
+        assertEquals(ProcStatusEnum.VALIDATION_REJECTED, updatedQueryVersion.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedQueryVersion.getRejectValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getRejectValidationDate()));
+
+        assertNotNull(updatedQueryVersion.getProductionValidationUser());
+        assertNotNull(updatedQueryVersion.getProductionValidationDate());
     }
 }

@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.springframework.stereotype.Component;
 
@@ -185,7 +186,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion11Draft() {
         if (QUERY_VERSION_11_DRAFT == null) {
             QUERY_VERSION_11_DRAFT = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_11_DRAFT.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+            prepareToProductionValidation(QUERY_VERSION_11_DRAFT);
         }
         return QUERY_VERSION_11_DRAFT;
     }
@@ -193,7 +194,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion12ProductionValidation() {
         if (QUERY_VERSION_12_PRODUCTION_VALIDATION == null) {
             QUERY_VERSION_12_PRODUCTION_VALIDATION = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_12_PRODUCTION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+            prepareToDiffusionValidation(QUERY_VERSION_12_PRODUCTION_VALIDATION);
         }
         return QUERY_VERSION_12_PRODUCTION_VALIDATION;
     }
@@ -201,7 +202,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion13DifussionValidation() {
         if (QUERY_VERSION_13_DIFUSSION_VALIDATION == null) {
             QUERY_VERSION_13_DIFUSSION_VALIDATION = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_13_DIFUSSION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+            prepareToValidationRejected(QUERY_VERSION_13_DIFUSSION_VALIDATION);
         }
         return QUERY_VERSION_13_DIFUSSION_VALIDATION;
     }
@@ -209,7 +210,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     protected static QueryVersion getQueryVersion14ValidationRejected() {
         if (QUERY_VERSION_14_VALIDATION_REJECTED == null) {
             QUERY_VERSION_14_VALIDATION_REJECTED = createQueryWithGeneratedDatasetVersion();
-            QUERY_VERSION_14_VALIDATION_REJECTED.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
+            prepareToDiffusionValidation(QUERY_VERSION_14_VALIDATION_REJECTED);
         }
         return QUERY_VERSION_14_VALIDATION_REJECTED;
     }
@@ -411,6 +412,26 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     private static QueryVersion createQueryWithGeneratedDatasetVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryVersionWithGeneratedDatasetVersion();
+    }
+    
+    // -----------------------------------------------------------------
+    // LIFE CYCLE PREPARATIONS
+    // -----------------------------------------------------------------
+
+    private static void prepareToProductionValidation(QueryVersion queryVersion) {
+        LifecycleTestUtils.prepareToProductionValidation(queryVersion);
+        queryVersion.setType(QueryTypeEnum.FIXED);
+        queryVersion.setStatus(QueryStatusEnum.ACTIVE);
+    }
+
+    private static void prepareToDiffusionValidation(QueryVersion queryVersion) {
+        prepareToProductionValidation(queryVersion);
+        LifecycleTestUtils.prepareToDiffusionValidation(queryVersion);
+    }
+
+    private static void prepareToValidationRejected(QueryVersion queryVersion) {
+        prepareToProductionValidation(queryVersion);
+        LifecycleTestUtils.prepareToValidationRejected(queryVersion);
     }
 
 }
