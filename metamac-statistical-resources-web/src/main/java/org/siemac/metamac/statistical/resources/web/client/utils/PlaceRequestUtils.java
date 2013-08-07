@@ -96,6 +96,18 @@ public class PlaceRequestUtils {
     public static PlaceRequest buildRelativePublicationsPlaceRequest() {
         return new PlaceRequest(NameTokens.publicationsListPage);
     }
+    
+    public static List<PlaceRequest> buildAbsolutePublicationsPlaceRequest(String operationUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativePublicationsPlaceRequest());
+        return placeRequests;
+    }
+
+    public static List<PlaceRequest> buildAbsolutePublicationPlaceRequest(String operationUrn, String publicationUrn) {
+        List<PlaceRequest> placeRequests = buildAbsolutePublicationsPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativePublicationPlaceRequest(publicationUrn));
+        return placeRequests;
+    }
 
     // ---------------------------------------------------------------------------
     // QUERIES
@@ -125,7 +137,7 @@ public class PlaceRequestUtils {
     }
 
     public static List<PlaceRequest> buildAbsoluteQueryPlaceRequest(String operationUrn, String queryUrn) {
-        List<PlaceRequest> placeRequests = buildAbsoluteDatasetsPlaceRequest(operationUrn);
+        List<PlaceRequest> placeRequests = buildAbsoluteQueriesPlaceRequest(operationUrn);
         placeRequests.add(buildRelativeQueryPlaceRequest(queryUrn));
         return placeRequests;
     }
@@ -164,22 +176,21 @@ public class PlaceRequestUtils {
             switch (relatedResourceDto.getType()) {
                 case DATASET_VERSION:
                     if (StatisticalResourcesUrnParserUtils.isDatasetUrn(urn)) {
-
+                        return buildAbsoluteDatasetPlaceRequest(relatedResourceDto.getStatisticalOperationUrn(), urn);
                     }
                     break;
                 case PUBLICATION_VERSION:
                     if (StatisticalResourcesUrnParserUtils.isPublicationUrn(urn)) {
-
+                        return buildAbsolutePublicationPlaceRequest(relatedResourceDto.getStatisticalOperationUrn(), urn);
                     }
                     break;
                 case QUERY_VERSION:
                     if (StatisticalResourcesUrnParserUtils.isQueryUrn(urn)) {
-
+                        return buildAbsoluteQueryPlaceRequest(relatedResourceDto.getStatisticalOperationUrn(), urn);
                     }
                     break;
             }
         }
-        // FIXME
         return new ArrayList<PlaceRequest>();
     }
 }
