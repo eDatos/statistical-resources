@@ -1262,6 +1262,24 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(getServiceContextAdministrador().getUserId(), updatedDatasetVersion.getDiffusionValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getDiffusionValidationDate()));
     }
+    
+    @Override
+    @Test
+    @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+    public void testSendDatasetVersionToValidationRejected() throws Exception {
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        DatasetVersionDto updatedDatasetVersion = statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(getServiceContextAdministrador(), datasetVersionDto);
+        assertNotNull(updatedDatasetVersion);
+        assertEquals(ProcStatusEnum.VALIDATION_REJECTED, updatedDatasetVersion.getProcStatus());
+        assertEquals(getServiceContextAdministrador().getUserId(), updatedDatasetVersion.getRejectValidationUser());
+        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getRejectValidationDate()));
+
+        assertNotNull(updatedDatasetVersion.getProductionValidationUser());
+        assertNotNull(updatedDatasetVersion.getProductionValidationDate());
+    }
 
     @Override
     public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {

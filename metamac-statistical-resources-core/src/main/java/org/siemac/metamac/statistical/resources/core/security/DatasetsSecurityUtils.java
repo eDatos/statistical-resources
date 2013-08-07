@@ -109,6 +109,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+    
+    public static void canSendDatasetVersionToValidationRejected(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 
     public static void canRetrieveLatestDatasetVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canRetrieveLatestDatasetVersion(getMetamacPrincipal(ctx))) {

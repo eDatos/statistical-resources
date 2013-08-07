@@ -90,6 +90,11 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
+    
+    public static boolean canSendDatasetVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
 
     public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos

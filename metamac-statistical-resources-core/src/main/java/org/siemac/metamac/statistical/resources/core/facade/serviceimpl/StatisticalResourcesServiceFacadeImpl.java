@@ -606,6 +606,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return datasetVersionDto;
     }
+    
+    @Override
+    public DatasetVersionDto sendDatasetVersionToValidationRejected(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx);
+
+        // Transform
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+
+        // Send to production validation and retrieve
+        datasetVersion = datasetLifecycleService.sendToValidationRejected(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Transform
+        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+
+        return datasetVersionDto;
+    }
 
     @Override
     public DatasetVersionDto retrieveLatestDatasetVersion(ServiceContext ctx, String datasetUrn) throws MetamacException {
