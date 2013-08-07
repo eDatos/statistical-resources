@@ -159,8 +159,10 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getStatisticOfficialityHashMap() {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put(new String(), new String());
-        for (Entry<String, StatisticOfficialityDto> entry : statisticOfficialitiesMap.entrySet()) {
-            map.put(entry.getKey(), getStatisticOfficialityName(entry.getValue()));
+        if (statisticOfficialitiesMap != null) {
+            for (Entry<String, StatisticOfficialityDto> entry : statisticOfficialitiesMap.entrySet()) {
+                map.put(entry.getKey(), getStatisticOfficialityName(entry.getValue()));
+            }
         }
         return map;
     }
