@@ -2,20 +2,26 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
+import com.gwtplatform.dispatch.annotation.Optional;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class VersionDatasetVersion {
+public class UpdateDatasetVersionProcStatus {
 
     @In(1)
-    String            datasetVersionUrn;
+    DatasetVersionDto   datasetVersionToUpdateProcStatus;
 
     @In(2)
-    VersionTypeEnum   versionType;
+    LifeCycleActionEnum lifeCycleAction;
+
+    @Optional
+    @In(3)
+    VersionTypeEnum     versionType;
 
     @Out(1)
-    DatasetVersionDto datasetVersionDto;
+    DatasetVersionDto   datasetVersionDto;
 }

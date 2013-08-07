@@ -13,8 +13,8 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetStatisticOfficialitiesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionsProcStatusActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.VersionDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgenciesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgencySchemesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetCommonMetadataConfigurationsListActionHandler;
@@ -60,8 +60,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasource
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.VersionDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
@@ -151,7 +151,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDatasetVersionsAction.class, GetDatasetVersionsActionHandler.class);
         bindHandler(GetDatasetsAction.class, GetDatasetsActionHandler.class);
         bindHandler(UpdateDatasetVersionsProcStatusAction.class, UpdateDatasetVersionsProcStatusActionHandler.class);
-        bindHandler(VersionDatasetVersionAction.class, VersionDatasetVersionActionHandler.class);
+        bindHandler(UpdateDatasetVersionProcStatusAction.class, UpdateDatasetVersionProcStatusActionHandler.class);
         bindHandler(GetDatasourcesByDatasetAction.class, GetDatasourcesByDatasetActionHandler.class);
         bindHandler(SaveDatasourceAction.class, SaveDatasourceActionHandler.class);
         bindHandler(DeleteDatasourcesAction.class, DeleteDatasourcesActionHandler.class);
