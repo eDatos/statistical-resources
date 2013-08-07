@@ -17,7 +17,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -104,6 +103,7 @@ public class LifecycleCommonMetadataChecker {
         
         if (QueryTypeEnum.LATEST_DATA.equals(resource.getType())) {
             checkMetadataRequired(resource.getLatestDataNumber(), addParameter(metadataName, ServiceExceptionSingleParameters.LATEST_DATA_NUMBER), exceptionItems);
+            checkMetadataRequired(resource.getLatestTemporalCodeInCreation(), addParameter(metadataName, ServiceExceptionSingleParameters.LATEST_TEMPORAL_CODE_IN_CREATION), exceptionItems);
         }
     }
 }
