@@ -286,4 +286,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         // TODO Security
         return true;
     }
+
+    @Override
+    protected boolean canVersion(ListGridRecord record) {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

@@ -76,6 +76,12 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         return panel;
     }
 
+    @Override
+    public void setUiHandlers(QueryListUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        listGrid.setUiHandlers(uiHandlers);
+    }
+
     public void setQueriesPaginatedList(GetQueryVersionsResult result) {
         QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
         int index = 0;
@@ -84,11 +90,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         }
         listGrid.getListGrid().setData(records);
         listGrid.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
-    }
-
-    @Override
-    public void goToQueryListLastPageAfterCreate() {
-        listGrid.goToLastPageAfterCreate();
     }
 
     @Override
@@ -271,6 +272,12 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
         // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canVersion(ListGridRecord record) {
+        // TODO Auto-generated method stub
         return true;
     }
 }

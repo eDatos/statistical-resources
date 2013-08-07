@@ -119,11 +119,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     }
 
     @Override
-    public void goToDatasetListLastPageAfterCreate() {
-        listGrid.goToLastPageAfterCreate();
-    }
-
-    @Override
     public void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result) {
         List<ExternalItemDto> externalItemsDtos = result.getDsdsList();
         newDatasetWindow.setExternalItemsForRelatedDsd(externalItemsDtos, result.getFirstResultOut(), externalItemsDtos.size(), result.getTotalResults());
@@ -374,6 +369,12 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
         // TODO Security
+        return true;
+    }
+
+    @Override
+    protected boolean canVersion(ListGridRecord record) {
+        // TODO Auto-generated method stub
         return true;
     }
 }

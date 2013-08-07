@@ -83,7 +83,6 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     public interface PublicationListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<PublicationListUiHandlers> {
 
         void setPublicationPaginatedList(List<PublicationVersionDto> PublicationDtos, int firstResult, int totalResults);
-        // void clearSearchSection();
     }
 
     @Inject

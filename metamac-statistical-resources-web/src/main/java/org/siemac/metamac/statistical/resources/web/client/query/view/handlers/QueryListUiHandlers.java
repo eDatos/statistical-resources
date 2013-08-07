@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
-import com.gwtplatform.mvp.client.UiHandlers;
-
-public interface QueryListUiHandlers extends UiHandlers {
+public interface QueryListUiHandlers extends BaseUiHandlers {
 
     void retrieveQueriesByStatisticalOperation(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
     void deleteQueries(List<String> urns);

@@ -43,6 +43,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected CustomToolStripButton                   programPublicationButton;
     protected CustomToolStripButton                   cancelProgrammedPublicationButton;
     protected CustomToolStripButton                   publishButton;
+    protected CustomToolStripButton                   versionButton;
 
     protected DeleteConfirmationWindow                deleteConfirmationWindow;
 
@@ -83,6 +84,9 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
         cancelProgrammedPublicationButton = createCancelProgrammedPublicationButton();
         toolStrip.addButton(cancelProgrammedPublicationButton);
+
+        versionButton = createVersionButton();
+        toolStrip.addButton(versionButton);
 
         // ListGrid
 
@@ -295,13 +299,36 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         boolean canCancelProgrammedPublication = true;
         for (ListGridRecord record : records) {
             ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
-            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canCancelProgrammedPublication(record)) {
+            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canCancelProgrammedPublication(record)) { // TODO can be canceled if it is a publication programmed
                 canCancelProgrammedPublication = false;
                 break;
             }
         }
         if (canCancelProgrammedPublication) {
             cancelProgrammedPublicationButton.show();
+        }
+    }
+
+    // Version
+
+    private CustomToolStripButton createVersionButton() {
+        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
+        button.setVisibility(Visibility.HIDDEN);
+        // TODO
+        return button;
+    }
+
+    private void showVersionButton(ListGridRecord[] records) {
+        boolean canVersion = true;
+        for (ListGridRecord record : records) {
+            ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
+            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canVersion(record)) { // TODO can be version if it is published! (no programmed publication)
+                canVersion = false;
+                break;
+            }
+        }
+        if (canVersion) {
+            versionButton.show();
         }
     }
 
@@ -322,6 +349,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         showPublishButton(records);
         showProgramPublicationButton(records);
         showCancelProgrammedPublicationButton(records);
+        showVersionButton(records);
     }
 
     protected void hideSelectionDependentButtons() {
@@ -332,6 +360,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         publishButton.hide();
         programPublicationButton.hide();
         cancelProgrammedPublicationButton.hide();
+        versionButton.hide();
     }
 
     //
@@ -355,4 +384,5 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract boolean canPublish(ListGridRecord record);
     protected abstract boolean canProgramPublication(ListGridRecord record);
     protected abstract boolean canCancelProgrammedPublication(ListGridRecord record);
+    protected abstract boolean canVersion(ListGridRecord record);
 }

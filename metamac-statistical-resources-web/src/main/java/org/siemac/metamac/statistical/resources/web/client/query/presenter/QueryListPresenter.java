@@ -76,7 +76,6 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     public interface QueryListView extends LifeCycleBaseListPresenter.LifeCycleBaseListView, HasUiHandlers<QueryListUiHandlers> {
 
         void setQueryPaginatedList(GetQueryVersionsResult queriesPaginatedList);
-        void goToQueryListLastPageAfterCreate();
     }
 
     @Inject
@@ -268,5 +267,12 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     @Override
     public void goToNewQuery() {
         placeManager.revealRelativePlace(new PlaceRequest(NameTokens.queryPage));
+    }
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
     }
 }

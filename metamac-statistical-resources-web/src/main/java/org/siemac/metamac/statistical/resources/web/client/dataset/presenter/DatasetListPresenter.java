@@ -81,7 +81,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     public interface DatasetListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<DatasetListUiHandlers> {
 
         void setDatasetPaginatedList(String operationUrn, GetDatasetVersionsResult datasetsPaginatedList);
-        void goToDatasetListLastPageAfterCreate();
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
     }
@@ -152,7 +151,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             public void onWaitSuccess(SaveDatasetVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
                 retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-                getView().goToDatasetListLastPageAfterCreate();
             }
         });
     }
