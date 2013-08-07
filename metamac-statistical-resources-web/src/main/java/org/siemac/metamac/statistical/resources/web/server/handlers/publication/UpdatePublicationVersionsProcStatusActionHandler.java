@@ -9,7 +9,6 @@ import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleAction
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusResult.Builder;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
                         break;
 
                     case VERSION:
-                        // TODO
+                        statisticalResourcesServiceFacade.versioningPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto.getUrn(), action.getVersionType());
                         break;
 
                     default:
@@ -64,37 +63,13 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
                 }
 
             } catch (MetamacException e) {
-                if (publicationVersionsToUpdateProcStatus.size() == 1) {
-                    // If there was only one resource, throw the exception
-                    throw WebExceptionUtils.createMetamacWebException(e);
-                } else {
-                    // If there were more than one resource, the messages should be shown in a tree structure
-                    addExceptionsItemToMetamacException(lifeCycleAction, publicationVersionDto, metamacException, e);
-                }
+                addExceptionsItemToMetamacException(lifeCycleAction, publicationVersionDto, metamacException, e);
             }
         }
 
         if (metamacException.getExceptionItems() == null || metamacException.getExceptionItems().isEmpty()) {
-
-            // If there were no exceptions...
-
-            Builder builder = new UpdatePublicationVersionsProcStatusResult.Builder();
-
-            if (publicationVersionsToUpdateProcStatus.size() == 1) {
-                try {
-                    PublicationVersionDto publicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(ServiceContextHolder.getCurrentServiceContext(),
-                            publicationVersionsToUpdateProcStatus.get(0).getUrn());
-                    builder.publicationVersionDto(publicationVersionDto);
-                } catch (MetamacException e) {
-                    throw WebExceptionUtils.createMetamacWebException(e);
-                }
-            }
-
-            return builder.build();
-
+            return new UpdatePublicationVersionsProcStatusResult();
         } else {
-
-            // Throw the captured exceptions
             throw WebExceptionUtils.createMetamacWebException(metamacException);
         }
     }

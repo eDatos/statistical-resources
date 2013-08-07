@@ -39,15 +39,14 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationStructureElementActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationStructureElementLocationActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationVersionsProcStatusActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.publication.VersionPublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.DeleteQueryVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueriesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionsProcStatusActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.query.VersionQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
@@ -86,15 +85,14 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.VersionPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction;
-import org.siemac.metamac.statistical.resources.web.shared.query.VersionQueryVersionAction;
 import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetLoginPageUrlActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetNavigationBarUrlActionHandler;
@@ -165,7 +163,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SavePublicationVersionAction.class, SavePublicationVersionActionHandler.class);
         bindHandler(DeletePublicationVersionsAction.class, DeletePublicationVersionsActionHandler.class);
         bindHandler(UpdatePublicationVersionsProcStatusAction.class, UpdatePublicationVersionsProcStatusActionHandler.class);
-        bindHandler(VersionPublicationVersionAction.class, VersionPublicationVersionActionHandler.class);
+        bindHandler(UpdatePublicationVersionProcStatusAction.class, UpdatePublicationVersionProcStatusActionHandler.class);
         bindHandler(GetPublicationStructureAction.class, GetPublicationStructureActionHandler.class);
         bindHandler(SavePublicationStructureElementAction.class, SavePublicationStructureElementActionHandler.class);
         bindHandler(UpdatePublicationStructureElementLocationAction.class, UpdatePublicationStructureElementLocationActionHandler.class);
@@ -178,7 +176,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetQueryVersionAction.class, GetQueryVersionActionHandler.class);
         bindHandler(DeleteQueryVersionsAction.class, DeleteQueryVersionsActionHandler.class);
         bindHandler(UpdateQueryVersionsProcStatusAction.class, UpdateQueryVersionsProcStatusActionHandler.class);
-        bindHandler(VersionQueryVersionAction.class, VersionQueryVersionActionHandler.class);
 
         // COMMON
         bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);
