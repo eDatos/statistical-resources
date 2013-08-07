@@ -96,7 +96,7 @@ public class PlaceRequestUtils {
     public static PlaceRequest buildRelativePublicationsPlaceRequest() {
         return new PlaceRequest(NameTokens.publicationsListPage);
     }
-    
+
     public static List<PlaceRequest> buildAbsolutePublicationsPlaceRequest(String operationUrn) {
         List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(operationUrn);
         placeRequests.add(buildRelativePublicationsPlaceRequest());

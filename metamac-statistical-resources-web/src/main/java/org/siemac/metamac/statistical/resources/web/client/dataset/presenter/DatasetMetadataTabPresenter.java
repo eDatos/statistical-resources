@@ -217,30 +217,30 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     public void programPublication(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(
+                this) {
 
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                        getView().setDataset(result.getDatasetVersionDto());
-                    }
-                });
+            @Override
+            public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                getView().setDataset(result.getDatasetVersionDto());
+            }
+        });
     }
 
     @Override
     public void publish(DatasetVersionDto dataset) {
         List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
         datasetVersionDtos.add(dataset);
-        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
+        dispatcher.execute(new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(
+                this) {
 
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
-                        getView().setDataset(result.getDatasetVersionDto());
-                    }
-                });
+            @Override
+            public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                getView().setDataset(result.getDatasetVersionDto());
+            }
+        });
     }
 
     @Override

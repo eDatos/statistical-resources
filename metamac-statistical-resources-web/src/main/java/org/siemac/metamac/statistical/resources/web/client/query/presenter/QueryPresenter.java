@@ -283,15 +283,15 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public void rejectValidation(QueryVersionDto query) {
         List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
         queryVersionDtos.add(query);
-        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(
-                this) {
+        dispatcher.execute(new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                getView().setQueryDto(result.getQueryVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                        getView().setQueryDto(result.getQueryVersionDto());
+                    }
+                });
     }
 
     @Override
