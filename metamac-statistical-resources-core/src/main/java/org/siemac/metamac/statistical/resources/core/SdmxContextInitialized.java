@@ -8,14 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Arte
  *         This listener run a check action about database state to find in_progress job. If there are jobs with this state then marks it with failed status.
  *         This listener runs when spring context is initialized (ContextRefreshedEvent)
  */
-@Component
 public class SdmxContextInitialized implements ApplicationListener<ContextRefreshedEvent> {
 
     private static Logger     logger = LoggerFactory.getLogger(SdmxContextInitialized.class);
