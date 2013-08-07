@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnParserUtils;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
 
@@ -159,15 +160,26 @@ public class PlaceRequestUtils {
 
     public static List<PlaceRequest> buildAbsoluteResourcePlaceRequest(RelatedResourceDto relatedResourceDto) {
         if (relatedResourceDto != null) {
+            String urn = relatedResourceDto.getUrn();
             switch (relatedResourceDto.getType()) {
                 case DATASET_VERSION:
+                    if (StatisticalResourcesUrnParserUtils.isDatasetUrn(urn)) {
+
+                    }
                     break;
                 case PUBLICATION_VERSION:
+                    if (StatisticalResourcesUrnParserUtils.isPublicationUrn(urn)) {
+
+                    }
+                    break;
+                case QUERY_VERSION:
+                    if (StatisticalResourcesUrnParserUtils.isQueryUrn(urn)) {
+
+                    }
                     break;
             }
-
         }
-        // FIXME: se debe generar la ruta absoluta
+        // FIXME
         return new ArrayList<PlaceRequest>();
     }
 }
