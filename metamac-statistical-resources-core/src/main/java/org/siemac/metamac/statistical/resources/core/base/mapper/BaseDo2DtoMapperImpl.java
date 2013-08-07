@@ -183,6 +183,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setUrn(source.getUrn());
         target.setTitle(internationalStringDoToDto(source.getTitle()));
         target.setType(type);
+        target.setStatisticalOperationUrn(source.getStatisticalOperation() != null? source.getStatisticalOperation().getUrn() : null);
         return target;
     }
     

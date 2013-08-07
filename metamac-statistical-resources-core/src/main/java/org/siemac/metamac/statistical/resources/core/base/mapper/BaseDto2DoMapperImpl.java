@@ -248,7 +248,9 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
 
-        versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
+        if (MetadataEditionChecks.canVersionRationaleTypesBeEdited(source.getVersionLogic())) {
+            versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
+        }
         return target;
     }
 

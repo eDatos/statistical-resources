@@ -10,6 +10,8 @@ Application StatisticalResourcesDto {
 		
 		DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
 			- @TypeRelatedResourceEnum type required;
+			
+			String statisticalOperationUrn; 
 		}
 	}
 }
