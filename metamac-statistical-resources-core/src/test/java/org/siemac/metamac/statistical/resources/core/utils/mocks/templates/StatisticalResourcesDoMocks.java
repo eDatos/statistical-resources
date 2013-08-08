@@ -3,6 +3,9 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
@@ -18,11 +21,13 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -62,13 +67,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return querySelectionItem;
     }
 
-    private CodeItem mockCodeItem() {
+    private static CodeItem mockCodeItem() {
         CodeItem code = new CodeItem();
         code.setCode(mockString(6));
         code.setTitle(mockString(6));
         return code;
     }
-
+    
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -257,6 +262,24 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return elementLevel;
     }
 
+    // Code dimension
+    public static CodeDimension mockCodeDimension(DatasetVersion datasetVersion, String dsdComponentId, String identifier, String title) {
+        CodeDimension codeDimension = new CodeDimension();
+        codeDimension.setDatasetVersion(datasetVersion);
+        codeDimension.setDsdComponentId(dsdComponentId);
+        codeDimension.setIdentifier(identifier);
+        codeDimension.setTitle(title);
+        return codeDimension;
+    }
+    
+    public static List<CodeDimension> mockCodeDimensionsWithIdentifiers(DatasetVersion datasetVersion, String dsdComponentId, String... identifiers) {
+        List<CodeDimension> codes = new ArrayList<CodeDimension>();
+        for (String identifier : identifiers) {
+            codes.add(mockCodeDimension(datasetVersion, dsdComponentId, identifier, identifier));
+        }
+        return codes;
+    }
+    
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------

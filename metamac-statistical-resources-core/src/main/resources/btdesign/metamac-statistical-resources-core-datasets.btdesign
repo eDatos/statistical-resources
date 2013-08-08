@@ -63,6 +63,8 @@ Application DatasetsStatisticalResources {
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
+    		"Retrieve the coverage for a given dimension"
+    		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
     		
     		// Statistic officialities
     		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;
@@ -229,7 +231,7 @@ Application DatasetsStatisticalResources {
     		
     		Repository CodeDimensionRepository {
     			findByQuery;
-    			List<@CodeDimension> findCodesForDatasetVersionByDimensionId(long datasetVersionId, String dimensionId) throws MetamacException;	
+    			List<@CodeDimension> findCodesForDatasetVersionByDimensionId(long datasetVersionId, String dimensionId, String filter) throws MetamacException;	
     		}
     	}
     	

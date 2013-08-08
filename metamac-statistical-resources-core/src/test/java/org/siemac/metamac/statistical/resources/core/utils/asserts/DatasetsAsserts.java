@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
 public class DatasetsAsserts extends BaseAsserts {
@@ -68,7 +69,7 @@ public class DatasetsAsserts extends BaseAsserts {
             }
         }
     }
-
+    
     public static void assertEqualsCodeDimension(CodeDimension expected, CodeDimension actual) {
         assertEqualsNullability(expected, actual);
         assertEquals(expected.getDsdComponentId(), actual.getDsdComponentId());
@@ -79,6 +80,28 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEquals(expected.getDatasetVersion().getId(), actual.getDatasetVersion().getId());
         }
     }
+    
+    public static void assertEqualsCodeItemDtosCollection(List<CodeItemDto> expected, List<CodeItemDto> actual) {
+        assertEqualsNullability(expected, actual);
+        
+        if (expected != null) {
+            assertEquals(expected.size(), actual.size());
+            
+            for (int i = 0; i < expected.size(); i++) {
+                CodeItemDto expectedCode = expected.get(i);
+                CodeItemDto actualCode = actual.get(i);
+                assertEqualsCodeItemDto(expectedCode, actualCode);
+            }
+        }
+    }
+    
+    public static void assertEqualsCodeItemDto(CodeItemDto expected, CodeItemDto actual) {
+        assertEqualsNullability(expected, actual);
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getTitle(), actual.getTitle());
+    }
+    
+
 
     // -----------------------------------------------------------------
     // DATASET VERSION: DO & DO

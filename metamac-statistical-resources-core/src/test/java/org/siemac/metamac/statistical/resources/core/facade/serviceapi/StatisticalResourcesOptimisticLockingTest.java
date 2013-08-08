@@ -1121,6 +1121,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    public void testFilterCoverageForDatasetVersionDimension() throws Exception {
+        // no optimistic locking in this operation
+    }
+    
+    @Override
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         // no optimistic locking in this operation
     }

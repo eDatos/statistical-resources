@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoM
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
+import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.CodeDimensionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
@@ -64,6 +65,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      QueryDto2DoMapperTest.class,
                      DatasourceRepositoryTest.class,
                      DatasetRepositoryTest.class,
+                     CodeDimensionRepositoryTest.class,
                      DatasetVersionRepositoryTest.class, 
                      DatasetDo2DtoMapperTest.class,
                      DatasetDto2DoMapperTest.class,
@@ -89,11 +91,11 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      VersionUtilsTest.class,
                      CommonDto2DoMapperTest.class,
                      CommonDo2DtoMapperTest.class,
-                     DataManipulateTest.class,
                      ExternalItemCheckerTest.class,
                      DatasetIntegrationServiceTest.class,
                      PublicationIntegrationServiceTest.class,
                      QueryIntegrationServiceTest.class,
-                     RestCriteriaUtilsTest.class})
+                     RestCriteriaUtilsTest.class,
+                     DataManipulateTest.class})
 public class StatisticalResourcesSuite {
 }

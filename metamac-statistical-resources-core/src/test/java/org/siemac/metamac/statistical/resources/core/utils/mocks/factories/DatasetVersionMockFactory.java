@@ -31,7 +31,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     @Autowired
     private DatasourceMockFactory datasourceMockFactory;
-    
+
     public static final String    DATASET_VERSION_01_BASIC_NAME                                                 = "DATASET_VERSION_01_BASIC";
     private static DatasetVersion DATASET_VERSION_01_BASIC;
 
@@ -130,22 +130,25 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME = "DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE";
     private static DatasetVersion DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE;
-    
-    public static final String    DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001_NAME = "DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001";
+
+    public static final String    DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001_NAME                          = "DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001";
     private static DatasetVersion DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001;
-    
-    public static final String    DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001_NAME = "DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001";
+
+    public static final String    DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001_NAME                          = "DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001";
     private static DatasetVersion DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001;
-    
-    public static final String    DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002_NAME = "DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002";
+
+    public static final String    DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002_NAME                          = "DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002";
     private static DatasetVersion DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002;
-    
-    public static final String    DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME = "DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001";
+
+    public static final String    DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME              = "DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001";
     private static DatasetVersion DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
-    
-    public static final String    DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME = "DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001";
+
+    public static final String    DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME              = "DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001";
     private static DatasetVersion DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
-    
+
+    public static final String    DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES_NAME                      = "DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES";
+    private static DatasetVersion DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES;
+
     private static final String   INIT_VERSION                                                                  = "001.000";
     private static final String   SECOND_VERSION                                                                = "002.000";
     private static final String   THIRD_VERSION                                                                 = "003.000";
@@ -489,7 +492,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             }
         }
         return DATASET_VERSION_27_WITH_COVERAGE_FILLED;
-
     }
 
     protected static DatasetVersion getDatasetVersion28WithoutDatasourcesImportingData() {
@@ -552,7 +554,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion32.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
     }
 
-
     protected static DatasetVersion getDatasetVersion33WithSingleDatasourceLinkedToFileWithUnderscore() {
         if (DATASET_VERSION_33_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE == null) {
             DatasetVersion datasetVersion = createDatasetVersion(1);
@@ -566,7 +567,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetVersion datasetVersion33 = getDatasetVersion33WithSingleDatasourceLinkedToFileWithUnderscore();
         datasetVersion33.addDatasource(getDatasorce07LinkedToFileWithUnderscore());
     }
-    
 
     protected static DatasetVersion getDatasetVersion34ForImportInOperation0001() {
         if (DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001 == null) {
@@ -576,7 +576,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_34_FOR_IMPORT_IN_OPERATION_0001;
     }
-    
+
     protected static DatasetVersion getDatasetVersion35ForImportInOperation0001() {
         if (DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001 == null) {
             DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 2);
@@ -585,7 +585,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_35_FOR_IMPORT_IN_OPERATION_0001;
     }
-    
+
     protected static DatasetVersion getDatasetVersion36ForImportInOperation0002() {
         if (DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002 == null) {
             DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0002", 1);
@@ -594,7 +594,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002;
     }
-    
+
     protected static DatasetVersion getDatasetVersion37WithSingleDatasourceInOperation0001() {
         if (DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001 == null) {
             DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 1);
@@ -604,7 +604,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
     }
-    
+
     protected static DatasetVersion getDatasetVersion38WithSingleDatasourceInOperation0001() {
         if (DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001 == null) {
             DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation("OPER_0001", 1);
@@ -614,9 +614,27 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001;
     }
-    
-    
-    
+
+    protected static DatasetVersion getDatasetVersion39WithCoverageFilledWithTitles() {
+        if (DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(2);
+
+            prepareToProductionValidation(datasetVersion);
+
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+
+            DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES = datasetVersion;
+        }
+        return DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES;
+    }
+
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
     }

@@ -115,6 +115,11 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
+    
+    public static boolean canFilterCoverageForDatasetVersionDimension(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
 
     public static boolean canFindStatisticOfficialities(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos

@@ -139,6 +139,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+    
+    public static void canFilterCoverageForDatasetVersionDimension(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canFilterCoverageForDatasetVersionDimension(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 
     public static void canFindStatisticOfficialities(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canFindStatisticOfficialities(getMetamacPrincipal(ctx))) {

@@ -560,6 +560,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
     }
+    
+    @Override
+    public List<CodeItemDto> filterCoverageForDatasetVersionDimension(ServiceContext ctx, String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canFilterCoverageForDatasetVersionDimension(ctx);
+
+        List<CodeDimension> codeDimensions = getDatasetService().filterCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dsdDimensionId, filter);
+
+        return datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
+    }
 
     @Override
     public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, String urnToCopy, VersionTypeEnum versionType) throws MetamacException {

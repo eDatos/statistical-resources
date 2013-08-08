@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -61,11 +63,26 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         queryVersionDto.setType(QueryTypeEnum.FIXED);
 
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();
-        selection.put("SEX", Arrays.asList(new CodeItemDto("FEMALE", "Female")));
-        selection.put("REGION", Arrays.asList(new CodeItemDto("TENERIFE", "Tenerife"), new CodeItemDto("LA_GOMERA", "La gomera")));
+        selection.put("SEX", Arrays.asList(mockCodeItemDto("FEMALE", "Female")));
+        selection.put("REGION", Arrays.asList(mockCodeItemDto("TENERIFE", "Tenerife"), mockCodeItemDto("LA_GOMERA", "La gomera")));
         queryVersionDto.setSelection(selection);
 
         return queryVersionDto;
+    }
+    
+    public static CodeItemDto mockCodeItemDto(String code, String title) {
+        CodeItemDto codeItem = new CodeItemDto();
+        codeItem.setCode(code);
+        codeItem.setTitle(title);
+        return codeItem;
+    }
+    
+    public static List<CodeItemDto> mockCodeItemDtosWithIdentifiers(String... identifiers) {
+        List<CodeItemDto> codes = new ArrayList<CodeItemDto>();
+        for (String identifier : identifiers) {
+            codes.add(mockCodeItemDto(identifier, identifier));
+        }
+        return codes;
     }
 
     // -----------------------------------------------------------------

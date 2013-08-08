@@ -106,6 +106,12 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
     }
+    
+
+    public static void checkFilterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
+    }
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
@@ -214,6 +220,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperationUrn, ServiceExceptionParameters.STATISTICAL_OPERATION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
     }
+
     
     
 

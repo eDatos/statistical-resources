@@ -110,6 +110,7 @@ Application FacadeStatisticalResources {
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeItemDto> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
+    		List<@CodeItemDto> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
     		"Import a set of files provided by urn as datasources in a datasetVersion"
     		importDatasourcesInDatasetVersion(@DatasetVersionDto datasetVersionDto, List<URL> fileUrls) throws MetamacException;
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException;
