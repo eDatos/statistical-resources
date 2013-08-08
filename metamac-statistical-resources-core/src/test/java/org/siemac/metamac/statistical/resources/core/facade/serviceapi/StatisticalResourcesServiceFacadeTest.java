@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDay;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
@@ -86,8 +85,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.*;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockCodeItemDtosWithIdentifiers;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -117,7 +115,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -668,7 +665,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @Ignore
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
-    //Datasources can not longer be created from facade
+    // Datasources can not longer be created from facade
     public void testCreateDatasource() throws Exception {
         DatasourceDto persistedDatasource = statisticalResourcesServiceFacade.createDatasource(getServiceContextAdministrador(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn(), StatisticalResourcesDtoMocks.mockDatasourceDto());
@@ -704,7 +701,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
+
         String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
 
@@ -1267,13 +1264,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(getServiceContextAdministrador().getUserId(), updatedDatasetVersion.getDiffusionValidationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getDiffusionValidationDate()));
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendDatasetVersionToValidationRejected() throws Exception {
-        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn();
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
 
         DatasetVersionDto updatedDatasetVersion = statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(getServiceContextAdministrador(), datasetVersionDto);
@@ -1309,18 +1305,18 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             DatasetsAsserts.assertEqualsCodeItemDtosCollection(mockCodeItemDtosWithIdentifiers("code-d3-1"), codeDimensions);
         }
     }
-    
 
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME);
-        
-        List<String> dimensionIds = statisticalResourcesServiceFacade.retrieveDatasetVersionDimensionsIds(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        assertEquals(dimensionIds, Arrays.asList("dim1","dim2","dim3"));
+
+        List<String> dimensionIds = statisticalResourcesServiceFacade.retrieveDatasetVersionDimensionsIds(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource()
+                .getUrn());
+        assertEquals(dimensionIds, Arrays.asList("dim1", "dim2", "dim3"));
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
@@ -1340,22 +1336,22 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         List<StatisticOfficialityDto> officiality = statisticalResourcesServiceFacade.findStatisticOfficialities(getServiceContextAdministrador());
         assertEquals(2, officiality.size());
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME)
     public void testImportDatasourcesInDatasetVersion() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
-        
+
         URL url = new URL("file", null, "myfile.px");
-        
+
         statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url));
     }
-    
+
     @Override
     public void testImportDatasourcesInStatisticalOperation() throws Exception {
-        //See testImportDatasourcesInStatisticalOperation in DatasetServiceTest
+        // See testImportDatasourcesInStatisticalOperation in DatasetServiceTest
     }
 
     // ------------------------------------------------------------------------
@@ -2099,7 +2095,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         propertyRestriction.setStringValue(stringValue);
         metamacCriteria.setRestriction(propertyRestriction);
     }
-    
+
     @Override
     @Test
     @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
@@ -2118,8 +2114,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME)
     public void testSendQueryVersionToDiffusionValidation() throws Exception {
-        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME)
-                .getLifeCycleStatisticalResource().getUrn();
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
         QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
 
         QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(getServiceContextAdministrador(), queryVersionDto);
@@ -2133,8 +2128,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME)
     public void testSendQueryVersionToValidationRejected() throws Exception {
-        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME)
-                .getLifeCycleStatisticalResource().getUrn();
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
         QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
 
         QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(getServiceContextAdministrador(), queryVersionDto);

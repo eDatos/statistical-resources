@@ -63,7 +63,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, URN_NOT_EXISTS));
-        
+
         datasetVersionRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
 
@@ -76,7 +76,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         DatasetVersion actual = datasetVersionRepository.retrieveLastVersion(datasetUrn);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME})
     public void testRetrieveLastVersionWithAllVersionsPublished() throws Exception {
@@ -85,9 +85,10 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         DatasetVersion actual = datasetVersionRepository.retrieveLastVersion(datasetUrn);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME,
+            DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
     public void testRetrieveLastVersionWithLatestVersionNoVisible() throws Exception {
         String datasetUrn = datasetMockFactory.retrieveMock(DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME);
@@ -104,7 +105,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         DatasetVersion actual = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLastPublishedVersionWithAllVersionsPublished() throws Exception {
@@ -113,7 +114,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         DatasetVersion actual = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_VERSION_15_DRAFT_NOT_READY_NAME})
     public void testRetrieveLastPublishedVersionWithoutVersionsPublished() throws Exception {
@@ -122,23 +123,24 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         DatasetVersion actual = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_VERSION_15_DRAFT_NOT_READY_NAME, DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    @MetamacMock({DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_VERSION_15_DRAFT_NOT_READY_NAME,
+            DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
     public void testRetrieveLastPublishedVersionWithLatestVersionNoVisible() throws Exception {
         String datasetUrn = datasetMockFactory.retrieveMock(DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME);
         DatasetVersion actual = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
         assertEqualsDatasetVersion(expected, actual);
     }
-    
+
     @Override
     @Test
     @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testIsLastVersion() throws Exception {
         DatasetVersion notLastDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME);
         DatasetVersion lastDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
-        
+
         assertTrue(datasetVersionRepository.isLastVersion(lastDatasetVersion.getSiemacMetadataStatisticalResource().getUrn()));
         assertFalse(datasetVersionRepository.isLastVersion(notLastDatasetVersion.getSiemacMetadataStatisticalResource().getUrn()));
     }
@@ -147,18 +149,18 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     @Test
     @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveByVersion() throws Exception {
-        DatasetVersion actual = datasetVersionRepository.retrieveByVersion(datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME).getId(),
-                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getVersionLogic());
+        DatasetVersion actual = datasetVersionRepository.retrieveByVersion(datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME).getId(), datasetVersionMockFactory
+                .retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEqualsDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), actual);
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
     public void testRetrieveDimensionsIds() throws Exception {
         DatasetVersion notLastDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME);
-        
+
         List<String> dimensionIds = datasetVersionRepository.retrieveDimensionsIds(notLastDatasetVersion);
-        assertEquals(dimensionIds, Arrays.asList("dim1","dim2","dim3"));
+        assertEquals(dimensionIds, Arrays.asList("dim1", "dim2", "dim3"));
     }
 }
