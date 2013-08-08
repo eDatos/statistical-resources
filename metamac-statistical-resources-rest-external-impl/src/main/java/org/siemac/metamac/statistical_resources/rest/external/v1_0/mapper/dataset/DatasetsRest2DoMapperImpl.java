@@ -43,23 +43,23 @@ public class DatasetsRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implemen
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case GEOGRAPHIC_COVERAGE_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.geographicCoverage().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.geographicCoverage());
                 case TEMPORAL_COVERAGE:
                     return buildSculptorPropertyCriteria(DatasetVersionProperties.temporalCoverage().identifier(), PropertyTypeEnum.STRING, propertyRestriction);
                 case GEOGRAPHIC_GRANULARITY_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.geographicGranularities().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.geographicGranularities());
                 case TEMPORAL_GRANULARITY_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.temporalGranularities().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.temporalGranularities());
                 case DATE_START:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class, false);
                 case DATE_END:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.dateStart(), DatasetVersion.class, false);
                 case STATISTICAL_UNIT_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.statisticalUnit().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.statisticalUnit());
                 case MEASURE_COVERAGE_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.measureCoverage().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.measureCoverage());
                 case RELATED_DSD_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.relatedDsd().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.relatedDsd());
                 case DATE_NEXT_UPDATE:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.dateNextUpdate(), DatasetVersion.class, false);
                 case STATISTIC_OFFICIALITY:
@@ -79,7 +79,7 @@ public class DatasetsRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implemen
                 case VALID_TO:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class, false);
                 case STATISTIC_OPERATION_URN:
-                    return buildSculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation());
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
             }

@@ -5,11 +5,13 @@ import javax.ws.rs.core.Response.Status;
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
+import org.siemac.metamac.core.common.ent.domain.ExternalItemProperties.ExternalItemProperty;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestQueryPropertyRestriction;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteria;
+import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteriaDisjunction;
 import org.siemac.metamac.rest.search.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.rest.search.criteria.utils.CriteriaUtils.PropertyValueRestToPropertyValueEntityInterface;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
@@ -35,6 +37,14 @@ public abstract class BaseRest2DoMapperV10Impl {
     @SuppressWarnings("rawtypes")
     protected SculptorPropertyCriteria buildSculptorPropertyCriteria(Property propertyEntity, PropertyTypeEnum propertyEntityType, MetamacRestQueryPropertyRestriction restPropertyRestriction) {
         return CriteriaUtils.buildSculptorPropertyCriteria(propertyEntity, propertyEntityType.name(), restPropertyRestriction, propertyValueRestToPropertyValueEntity);
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    protected SculptorPropertyCriteriaDisjunction buildSculptorPropertyCriteriaDisjunctionForUrnProperty(MetamacRestQueryPropertyRestriction propertyRestriction,
+            ExternalItemProperty externalItemProperty) {
+        SculptorPropertyCriteria propertyCriteria1Urn = buildSculptorPropertyCriteria(externalItemProperty.urn(), PropertyTypeEnum.STRING, propertyRestriction);
+        SculptorPropertyCriteria propertyCriteria2UrnProvider = buildSculptorPropertyCriteria(externalItemProperty.urnProvider(), PropertyTypeEnum.STRING, propertyRestriction);
+        return new SculptorPropertyCriteriaDisjunction(propertyCriteria1Urn, propertyCriteria2UrnProvider);
     }
 
     private class PropertyValueRestToPropertyValueEntity implements PropertyValueRestToPropertyValueEntityInterface {
