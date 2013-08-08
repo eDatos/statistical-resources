@@ -20,7 +20,7 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
         informationLabel.setMargin(10);
         body.addMember(informationLabel);
 
-        UploadShapeForm form = new UploadShapeForm();
+        UploadDatasourceForm form = new UploadDatasourceForm();
         setForm(form);
     }
 
@@ -32,9 +32,9 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
         ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN)).setDefaultValue(urn);
     }
 
-    private class UploadShapeForm extends UploadForm {
+    private class UploadDatasourceForm extends UploadForm {
 
-        public UploadShapeForm() {
+        public UploadDatasourceForm() {
             super(getConstants().datasources());
 
             HiddenItem datasetVersionUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
