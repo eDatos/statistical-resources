@@ -2,10 +2,13 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.Job;
@@ -91,7 +94,7 @@ public class ImportDatasetJob implements Job {
         }
     }
 
-    private List<FileDescriptor> inflateFileDescriptors(String filePaths, String fileNames, String fileFormats) throws FileNotFoundException {
+    private List<FileDescriptor> inflateFileDescriptors(String filePaths, String fileNames, String fileFormats) throws FileNotFoundException, UnsupportedEncodingException {
         List<FileDescriptor> fileDescriptorDtos = new LinkedList<FileDescriptor>();
         String[] files = filePaths.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
         String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
@@ -100,8 +103,9 @@ public class ImportDatasetJob implements Job {
         for (int i = 0; i < files.length; i++) {
             FileDescriptor fileDescriptorDto = new FileDescriptor();
             fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.valueOf(formats[i]));
-            fileDescriptorDto.setFileName(names[i]);
-            fileDescriptorDto.setFile(new File(files[i]));
+            String encoding = StringUtils.isEmpty(System.getProperty("file.encoding")) ? "UTF-8" : System.getProperty("file.encoding");
+            fileDescriptorDto.setFileName(URLDecoder.decode(names[i], encoding));
+            fileDescriptorDto.setFile(new File(URLDecoder.decode(files[i], encoding)));
             fileDescriptorDtos.add(fileDescriptorDto);
         }
 
