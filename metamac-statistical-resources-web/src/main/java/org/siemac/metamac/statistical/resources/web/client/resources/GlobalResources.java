@@ -93,4 +93,8 @@ public interface GlobalResources extends ClientBundleWithLookup {
     @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/tree_file.png")
     ImageResource treeFile();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/preview.png")
+    ImageResource preview();
 }

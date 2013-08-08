@@ -20,6 +20,8 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void publish(DatasetVersionDto dataset);
     void version(DatasetVersionDto dataset, VersionTypeEnum versionType);
 
+    void previewData(DatasetVersionDto datasetVersionDto);
+
     void retrieveDataset(String datasetIdentifier);
     void saveDataset(DatasetVersionDto datasetDto);
 

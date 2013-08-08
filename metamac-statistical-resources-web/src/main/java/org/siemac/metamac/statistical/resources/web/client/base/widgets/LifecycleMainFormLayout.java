@@ -65,7 +65,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         this.status = status;
     }
 
-    private void updateVisibility() {
+    protected void updateVisibility() {
         // Hide all buttons
         hideAllLifeCycleButtons();
         // Show buttons depending on the status
@@ -86,7 +86,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         }
     }
 
-    private void hideAllLifeCycleButtons() {
+    protected void hideAllLifeCycleButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();

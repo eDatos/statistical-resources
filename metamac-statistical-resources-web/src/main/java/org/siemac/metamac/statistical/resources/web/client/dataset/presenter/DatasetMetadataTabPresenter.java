@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.utils.Dataset
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
+import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
@@ -50,6 +51,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalG
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -246,6 +248,12 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
+    }
+
+    @Override
+    public void previewData(DatasetVersionDto datasetVersionDto) {
+        String url = MetamacPortalWebUtils.buildDatasetUrl(datasetVersionDto);
+        Window.open(url, "_blank", "");
     }
 
     //
