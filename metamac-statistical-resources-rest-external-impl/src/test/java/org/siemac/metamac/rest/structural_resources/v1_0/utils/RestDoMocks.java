@@ -76,7 +76,7 @@ public class RestDoMocks {
         target.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem("statisticalUnit2"));
         target.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem("statisticalUnit3"));
         target.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem("DSD01"));
-        target.setFormatExtentObservations(Integer.valueOf(3));
+        target.setFormatExtentObservations(Long.valueOf(3));
         target.setFormatExtentDimensions(Integer.valueOf(5));
         target.setDateNextUpdate(new DateTime(2013, 12, 2, 3, 4, 5, 0));
         target.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem("updateFrequency01"));

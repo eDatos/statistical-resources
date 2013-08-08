@@ -66,7 +66,7 @@
                     <xs:element name="statisticalUnit" type="common:Resources" minOccurs="0" />
                     <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
                     <xs:element name="dimensions" type="tns:Dimensions" />
-                    <xs:element name="formatExtentObservations" type="xs:int" minOccurs="0" />
+                    <xs:element name="formatExtentObservations" type="xs:long" minOccurs="0" />
                     <xs:element name="formatExtentDimensions" type="xs:int" minOccurs="0" />
                     <xs:element name="dateNextUpdate" type="xs:dateTime" />
                     <xs:element name="updateFrequency" type="common:Resource" />
