@@ -617,9 +617,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), effectiveDimensionValuesToData,
                     selectedLanguages);
         } else if (dimension.getTimeTextFormatRepresentation() != null) {
-            targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coveragesById, dimension.getTimeTextFormatRepresentation(), effectiveDimensionValuesToData, selectedLanguages);
+            targets = toNonEnumeratedDimensionValuesFromTimeTextFormatType(coverages, dimension.getTimeTextFormatRepresentation(), effectiveDimensionValuesToData, selectedLanguages);
         } else if (dimension.getTextFormatRepresentation() != null) {
-            targets = toNonEnumeratedDimensionValuesFromTextFormatType(coveragesById, dimension.getTextFormatRepresentation(), effectiveDimensionValuesToData, selectedLanguages);
+            targets = toNonEnumeratedDimensionValuesFromTextFormatType(coverages, dimension.getTextFormatRepresentation(), effectiveDimensionValuesToData, selectedLanguages);
         } else {
             logger.error("Dimension definition unsupported for dimension: " + dimension.getComponentId());
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -732,43 +732,37 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTimeTextFormatType(Map<String, CodeDimension> coveragesById, TimeTextFormatType timeTextFormatType,
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTimeTextFormatType(List<CodeDimension> coverages, TimeTextFormatType timeTextFormatType,
             List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
         if (timeTextFormatType == null) {
             return null;
         }
         // note: timeTextFormatType definition is not necessary to define dimension values
         NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
-        for (String coverageId : coveragesById.keySet()) {
-            if (effectiveDimensionValuesToData != null) {
-                if (!effectiveDimensionValuesToData.contains(coverageId)) {
-                    // skip to include only values in query
-                    continue;
-                }
+        for (CodeDimension coverage : coverages) {
+            if (effectiveDimensionValuesToData != null && !effectiveDimensionValuesToData.contains(coverage.getIdentifier())) {
+                // skip to include only values in query
+                continue;
             }
-            CodeDimension codeDimension = coveragesById.get(coverageId);
-            targets.getValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
+            targets.getValues().add(toNonEnumeratedDimensionValue(coverage, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
     }
 
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(Map<String, CodeDimension> coveragesById, SimpleComponentTextFormatType textFormatType,
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(List<CodeDimension> coverages, SimpleComponentTextFormatType textFormatType,
             List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
         if (textFormatType == null) {
             return null;
         }
         // note: textFormatType definition is not necessary to define dimension values
         NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
-        for (String coverageId : coveragesById.keySet()) {
-            if (effectiveDimensionValuesToData != null) {
-                if (!effectiveDimensionValuesToData.contains(coverageId)) {
-                    // skip to include only values in query
-                    continue;
-                }
+        for (CodeDimension coverage : coverages) {
+            if (effectiveDimensionValuesToData != null && !effectiveDimensionValuesToData.contains(coverage.getIdentifier())) {
+                // skip to include only values in query
+                continue;
             }
-            CodeDimension codeDimension = coveragesById.get(coverageId);
-            targets.getValues().add(toNonEnumeratedDimensionValue(codeDimension, selectedLanguages));
+            targets.getValues().add(toNonEnumeratedDimensionValue(coverage, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
