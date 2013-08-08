@@ -64,6 +64,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
                 case LAST_VERSION:    
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue());
+                case DATA:    
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.datasetRepositoryId(), propertyRestriction.getStringValue());
                 default:
                     // QUERY_STATUS
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
