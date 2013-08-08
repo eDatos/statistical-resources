@@ -9,7 +9,6 @@ import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleAction
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Optional;
-import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
 public class UpdateQueryVersionsProcStatus {
@@ -23,8 +22,4 @@ public class UpdateQueryVersionsProcStatus {
     @Optional
     @In(3)
     VersionTypeEnum       versionType;
-
-    @Optional
-    @Out(1)
-    QueryVersionDto       queryVersionDto;
 }

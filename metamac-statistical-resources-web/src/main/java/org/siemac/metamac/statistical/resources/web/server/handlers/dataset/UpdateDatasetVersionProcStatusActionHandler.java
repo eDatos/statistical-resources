@@ -45,7 +45,8 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     break;
 
                 case REJECT_VALIDATION:
-                    // TODO
+                    datasetVersionDto = statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
+                            action.getDatasetVersionToUpdateProcStatus());
                     break;
 
                 case PUBLISH:
