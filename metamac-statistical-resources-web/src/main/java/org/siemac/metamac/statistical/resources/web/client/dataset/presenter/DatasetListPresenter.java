@@ -21,8 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
@@ -133,7 +133,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     @Override
     public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, String criteria) {
         final String statisticalOperationUrn = operationUrn;
-        VersionableStatisticalResourceWebCriteria webCriteria = new VersionableStatisticalResourceWebCriteria();
+        DatasetVersionWebCriteria webCriteria = new DatasetVersionWebCriteria();
         webCriteria.setStatisticalOperationUrn(statisticalOperationUrn);
         webCriteria.setCriteria(criteria);
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {

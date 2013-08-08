@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -13,20 +13,20 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasetVersions {
 
     @In(1)
-    int                                       firstResult;
+    int                       firstResult;
 
     @In(2)
-    int                                       maxResults;
+    int                       maxResults;
 
     @In(3)
-    VersionableStatisticalResourceWebCriteria criteria;
+    DatasetVersionWebCriteria criteria;
 
     @Out(1)
-    List<DatasetVersionDto>                   datasetVersionDtos;
+    List<DatasetVersionDto>   datasetVersionDtos;
 
     @Out(2)
-    Integer                                   firstResultOut;
+    Integer                   firstResultOut;
 
     @Out(3)
-    Integer                                   totalResults;
+    Integer                   totalResults;
 }

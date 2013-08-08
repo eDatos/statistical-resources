@@ -6,6 +6,7 @@ import static org.siemac.metamac.statistical.resources.core.invocation.utils.Res
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
@@ -29,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.common.criteria.enums.Stati
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasDataCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasLastVersionCriteria;
@@ -50,6 +52,9 @@ public class MetamacWebCriteriaUtils {
         if (webCriteria instanceof HasLastVersionCriteria) {
             addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasLastVersionCriteria) webCriteria));
         }
+        if (webCriteria instanceof HasDataCriteria) {
+            addRestrictionIfExists(criteria, buildMetamacCriteriaDatasetWithData((HasDataCriteria) webCriteria));
+        }
 
         return criteria;
     }
@@ -59,6 +64,16 @@ public class MetamacWebCriteriaUtils {
         order.setType(OrderTypeEnum.DESC);
         order.setPropertyName(StatisticalResourcesCriteriaOrderEnum.LAST_UPDATED.name());
         return order;
+    }
+
+    public static MetamacCriteriaRestriction buildMetamacCriteriaDatasetWithData(HasDataCriteria criteria) {
+        String param = null;
+        if (BooleanUtils.isTrue(criteria.getHasData())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATA.name(), param, OperationType.IS_NOT_NULL);
+        } else if (BooleanUtils.isFalse(criteria.getHasData())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATA.name(), param, OperationType.IS_NULL);
+        }
+        return null;
     }
 
     // Private methods

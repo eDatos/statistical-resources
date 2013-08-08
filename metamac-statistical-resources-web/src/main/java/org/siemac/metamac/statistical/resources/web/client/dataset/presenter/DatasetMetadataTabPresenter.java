@@ -22,9 +22,9 @@ import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEve
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
@@ -263,7 +263,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     @Override
     public void retrieveDatasetsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
 
-        VersionableStatisticalResourceWebCriteria versionableCriteria = new VersionableStatisticalResourceWebCriteria(criteria.getCriteria());
+        DatasetVersionWebCriteria versionableCriteria = new DatasetVersionWebCriteria(criteria.getCriteria());
         versionableCriteria.setOnlyLastVersion(false);
 
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {

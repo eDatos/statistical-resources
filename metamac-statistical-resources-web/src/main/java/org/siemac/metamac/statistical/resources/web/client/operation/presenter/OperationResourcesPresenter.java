@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter.OperationResourcesView;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
@@ -130,7 +131,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         // DATASETS
 
-        VersionableStatisticalResourceWebCriteria datasetWebCriteria = new VersionableStatisticalResourceWebCriteria();
+        DatasetVersionWebCriteria datasetWebCriteria = new DatasetVersionWebCriteria();
         datasetWebCriteria.setStatisticalOperationUrn(urn);
 
         dispatcher.execute(new GetDatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetVersionsResult>() {

@@ -30,9 +30,9 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleCodeItemWindow;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchAction;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
@@ -49,16 +49,16 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
-    private QueryUiHandlers                                                  uiHandlers;
+    private QueryUiHandlers                                          uiHandlers;
 
-    private SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow searchDatasetWindow;
+    private SearchSingleDatasetVersionRelatedResourcePaginatedWindow searchDatasetWindow;
 
-    private Map<String, SearchMultipleCodeItemWindow>                        dimensionCodeSelectionWindow;
-    private Map<String, CodeItemListItem>                                    selectionFields;
+    private Map<String, SearchMultipleCodeItemWindow>                dimensionCodeSelectionWindow;
+    private Map<String, CodeItemListItem>                            selectionFields;
 
-    protected SearchSrmLinkItemWithSchemeFilterItem                          maintainerItem;
+    protected SearchSrmLinkItemWithSchemeFilterItem                  maintainerItem;
 
-    private Map<String, List<CodeItemDto>>                                   dtoSelection;
+    private Map<String, List<CodeItemDto>>                           dtoSelection;
 
     public QueryProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
@@ -151,11 +151,11 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchDatasetWindow = new SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-                        new SearchPaginatedAction<VersionableStatisticalResourceWebCriteria>() {
+                searchDatasetWindow = new SearchSingleDatasetVersionRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<DatasetVersionWebCriteria>() {
 
                             @Override
-                            public void retrieveResultSet(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
+                            public void retrieveResultSet(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
                                 retrieveDatasetsAsResources(firstResult, maxResults, criteria);
                             }
                         });
@@ -182,7 +182,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         return datasetItem;
     }
 
-    private void retrieveDatasetsAsResources(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
+    private void retrieveDatasetsAsResources(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
         uiHandlers.retrieveDatasetsForQuery(firstResult, maxResults, criteria);
     }
 

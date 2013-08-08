@@ -20,8 +20,8 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
@@ -198,7 +198,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @Override
-    public void retrieveDatasetsForQuery(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
+    public void retrieveDatasetsForQuery(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
+        criteria.setHasData(true);
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
             @Override
