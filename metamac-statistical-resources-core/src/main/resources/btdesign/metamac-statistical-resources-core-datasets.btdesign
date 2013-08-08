@@ -162,7 +162,7 @@ Application DatasetsStatisticalResources {
 			//Class descriptors
 			
 			//Number of observations contained in the dataset
-			Integer formatExtentObservations nullable;
+			Long formatExtentObservations nullable;
 			//Number of diemnsions defined in the DSD
 			Integer formatExtentDimensions nullable;
 			

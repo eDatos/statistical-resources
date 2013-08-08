@@ -133,7 +133,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getCode();
 
         datasetVersion.setBibliographicCitation(mockInternationalStringMetadata(datasetCode, "bibliographicCitation"));
-
+        datasetVersion.setRelatedDsd(mockDsdExternalItem());
         // Mock code
         String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         datasetVersion.getSiemacMetadataStatisticalResource().setCode(statisticalOperationCode + "_000001");

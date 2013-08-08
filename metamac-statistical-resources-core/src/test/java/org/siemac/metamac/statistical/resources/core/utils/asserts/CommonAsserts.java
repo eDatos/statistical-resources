@@ -210,6 +210,7 @@ public class CommonAsserts extends MetamacAsserts {
             for (TemporalCode actualItem : actual) {
                 if (actualItem.getIdentifier().equals(expec.getIdentifier())) {
                     assertEquals(expec.getTitle(), actualItem.getTitle());
+                    found = true;
                 }
             }
             if (!found) {

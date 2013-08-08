@@ -34,7 +34,7 @@ Application DatasetsStatisticalResourcesDto {
 			//Class descriptors
 			
 			//Number of observations contained in the dataset
-			Integer formatExtentObservations;
+			Long formatExtentObservations;
 			//Number of diemnsions defined in the DSD
 			Integer formatExtentDimensions;
 			

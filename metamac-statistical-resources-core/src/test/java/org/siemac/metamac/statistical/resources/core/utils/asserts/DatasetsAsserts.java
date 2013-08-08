@@ -144,6 +144,8 @@ public class DatasetsAsserts extends BaseAsserts {
 
         assertEquals(expected.getFormatExtentDimensions(), actual.getFormatExtentDimensions());
         assertEquals(expected.getFormatExtentObservations(), actual.getFormatExtentObservations());
+        
+        assertEqualsCodeDimensionsCollection(expected.getCoverages(), actual.getCoverages());
 
         assertEqualsStatisticOfficiality(expected.getStatisticOfficiality(), actual.getStatisticOfficiality());
 

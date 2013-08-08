@@ -45,12 +45,18 @@ import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForC
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -59,6 +65,7 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFi
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -66,7 +73,9 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesC
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -91,6 +100,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private DatasetRepositoriesServiceFacade          statisticsDatasetRepositoriesServiceFacade;
+    
+    @Autowired
+    private RestMapper                                 restMapper;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -118,8 +130,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Update dataset version (add datasource)
         addDatasourceForDatasetVersion(datasource, datasetVersion);
 
-        // FIXME: REMOVE
-        // mockData(datasetVersion);
+        computeDataRelatedMetadata(datasetVersion);
 
         return datasource;
     }
@@ -159,8 +170,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
 
         // TODO: Comprobar que el dataset está en un estado en el que se le pueden eliminar datasources
+        
+        DatasetVersion datasetVersion = datasource.getDatasetVersion();
 
         deleteDatasourceToDataset(datasource);
+        
+        computeDataRelatedMetadata(datasetVersion);
+        
+        //FIXME: delete queries
     }
 
     @Override
@@ -510,9 +527,263 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return getStatisticOfficialityRepository().findAll();
     }
 
+    
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
+    
+    protected void computeDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
+        ExternalItem externalDsd = resource.getRelatedDsd();
+        DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(externalDsd.getUrn());
+        
+        processCoverages(resource, dataStructure);
+        
+        processDataRelatedMetadata(resource);
+        
+        // processStartEndDates();
+        // TODO: DATE_START, DATE_END
+
+        // TODO: DATE_NEXT_UPDATE
+        // calculateDateNextUpdate(resource);
+    }
+
+    private void processDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
+        try {
+            DatasetRepositoryDto datasetRepository = statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(resource.getDatasetRepositoryId());
+            resource.setFormatExtentDimensions(datasetRepository.getDimensions().size());
+            long num = statisticsDatasetRepositoriesServiceFacade.countObservations(resource.getDatasetRepositoryId());
+            resource.setFormatExtentObservations(num);
+        } catch (ApplicationException e) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId());
+        }
+    }
+    
+    // COVERAGE UTILS
+    private void processCoverages(DatasetVersion resource, DataStructure dataStructure) throws MetamacException {
+        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
+
+        resource.getCoverages().clear();
+        resource.getGeographicCoverage().clear();
+        resource.getTemporalCoverage().clear();
+        resource.getMeasureCoverage().clear();
+
+        for (DsdDimension dimension : dimensions) {
+            List<CodeDimension> codes = getCodesFromDsdComponent(resource, dimension);
+            List<ExternalItem> items = buildExternalItemsBasedOnCodeDimensions(codes, dimension);
+            if (items != null) {
+                addTranslationsToCodesFromExternalItems(codes, items);
+            }
+            resource.getCoverages().addAll(codes);
+            switch (dimension.getType()) {
+                case SPATIAL:
+                    for (ExternalItem item : items) {
+                        if (!StatisticalResourcesCollectionUtils.isExternalItemInCollection(resource.getGeographicCoverage(), item)) {
+                            resource.getGeographicCoverage().add(item);
+                        }
+                    }
+                    break;
+                case MEASURE:
+                    resource.getMeasureCoverage().addAll(items);
+                    break;
+                case TEMPORAL:
+                    List<TemporalCode> temporalCodes = buildTemporalCodeFromCodeDimensions(codes);
+                    resource.getTemporalCoverage().addAll(temporalCodes);
+                    break;
+            }
+        }
+
+        // Try to fill specific coverages from attributes
+        if (resource.getGeographicCoverage().isEmpty()) {
+            List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.SPATIAL);
+            resource.getGeographicCoverage().addAll(codeItems);
+        }
+        if (resource.getTemporalCoverage().isEmpty()) {
+            List<CodeDimension> codeItems = processCodeFromAttributeByType(resource, dataStructure, DsdComponentType.TEMPORAL);
+            resource.getTemporalCoverage().addAll(buildTemporalCodeFromCodeDimensions(codeItems));
+        }
+        if (resource.getMeasureCoverage().isEmpty()) {
+            List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.MEASURE);
+            resource.getMeasureCoverage().addAll(codeItems);
+        }
+    }
+    
+    private void addTranslationsToCodesFromExternalItems(List<CodeDimension> codeDimensions, List<ExternalItem> externalItems) {
+        for (ExternalItem externalItem : externalItems) {
+            for (CodeDimension codeDimension : codeDimensions) {
+                if (codeDimension.getIdentifier().equals(externalItem.getCode())) {
+                    String title = externalItem.getTitle().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+                    if (title != null) {
+                        codeDimension.setTitle(title);
+                    } else {
+                        codeDimension.setTitle(codeDimension.getIdentifier());
+                    }
+                }
+            }
+        }
+    }
+    
+    private List<ExternalItem> processExternalItemsCodeFromAttributeByType(DatasetVersion resource, DataStructure dataStructure, DsdComponentType type) throws MetamacException {
+        DsdAttribute attribute = getDsdAttributeByType(dataStructure, type);
+        List<ExternalItem> items = new ArrayList<ExternalItem>();
+        if (attribute != null) {
+            List<CodeDimension> codes = filterCodesFromAttribute(resource, resource.getDatasetRepositoryId(), attribute.getComponentId());
+            items = buildExternalItemsBasedOnCodeDimensions(codes, attribute);
+        }
+        return items;
+    }
+
+    private List<CodeDimension> processCodeFromAttributeByType(DatasetVersion resource, DataStructure dataStructure, DsdComponentType type) throws MetamacException {
+        DsdAttribute attribute = getDsdAttributeByType(dataStructure, type);
+        List<CodeDimension> codes = new ArrayList<CodeDimension>();
+        if (attribute != null) {
+            codes = filterCodesFromAttribute(resource, resource.getDatasetRepositoryId(), attribute.getComponentId());
+            List<ExternalItem> items = buildExternalItemsBasedOnCodeDimensions(codes, attribute);
+            addTranslationsToCodesFromExternalItems(codes, items);
+        }
+        return codes;
+    }
+
+
+    private DsdAttribute getDsdAttributeByType(DataStructure dataStructure, DsdComponentType type) throws MetamacException {
+        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
+        DsdAttribute foundAttribute = filterDsdAttributeWithType(attributes, type);
+        return foundAttribute;
+    }
+    
+    private DsdAttribute filterDsdAttributeWithType(List<DsdAttribute> attributes, DsdComponentType type) {
+        for (DsdAttribute attr : attributes) {
+            if (type.equals(attr.getType())) {
+                return attr;
+            }
+        }
+        return null;
+    }
+    
+    private List<TemporalCode> buildTemporalCodeFromCodeDimensions(List<CodeDimension> codes) {
+        List<TemporalCode> temporalCodes = new ArrayList<TemporalCode>();
+        for (CodeDimension codeDim : codes) {
+            TemporalCode tempCode = new TemporalCode();
+            tempCode.setIdentifier(codeDim.getIdentifier());
+            tempCode.setTitle(codeDim.getTitle());
+            temporalCodes.add(tempCode);
+        }
+        return temporalCodes;
+    }
+
+    private List<ExternalItem> buildExternalItemsBasedOnCodeDimensions(List<CodeDimension> codes, DsdComponent component) throws MetamacException {
+        if (component.getCodelistRepresentationUrn() != null) {
+            return buildExternalItemsBasedOnCodeDimensionsInCodelist(codes, component.getCodelistRepresentationUrn());
+        } else if (component.getConceptSchemeRepresentationUrn() != null) {
+            return buildExternalItemsBasedOnCodeDimensionsInConceptScheme(codes, component.getConceptSchemeRepresentationUrn());
+        } else {
+            return null;
+        }
+    }
+
+    private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInCodelist(List<CodeDimension> codeDimensions, String codelistRepresentationUrn) throws MetamacException {
+        List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
+
+        Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
+
+        for (CodeResourceInternal code : codes.getCodes()) {
+            for (CodeDimension codeDim : codeDimensions) {
+                if (codeDim.getIdentifier().equals(code.getId())) {
+                    externalItems.add(restMapper.buildExternalItemFromCode(code));
+                }
+            }
+        }
+
+        if (externalItems.size() < codeDimensions.size()) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Some codes in dimension were not found in codelist " + codelistRepresentationUrn);
+        }
+
+        return externalItems;
+    }
+    
+    
+
+    private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInConceptScheme(List<CodeDimension> codeDimensions, String conceptSchemeRepresentationUrn) throws MetamacException {
+        List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
+
+        Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeRepresentationUrn);
+
+        for (ItemResourceInternal concept : concepts.getConcepts()) {
+            for (CodeDimension codeDim : codeDimensions) {
+                if (codeDim.getIdentifier().equals(concept.getId())) {
+                    externalItems.add(restMapper.buildExternalItemFromSrmItemResourceInternal(concept));
+                }
+            }
+        }
+
+        if (externalItems.size() < codeDimensions.size()) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Some codes in dimension were not found in conceptScheme " + conceptSchemeRepresentationUrn);
+        }
+
+        return externalItems;
+    }
+
+    private List<CodeDimension> getCodesFromDsdComponent(DatasetVersion resource, DsdComponent dsdComponent) throws MetamacException {
+        List<CodeDimension> codes = new ArrayList<CodeDimension>();
+        if (dsdComponent != null) {
+            if (dsdComponent instanceof DsdDimension) {
+                codes = filterCodesFromDimension(resource, resource.getDatasetRepositoryId(), dsdComponent.getComponentId());
+            } else if (dsdComponent instanceof DsdAttribute) {
+                codes = filterCodesFromAttribute(resource, resource.getDatasetRepositoryId(), dsdComponent.getComponentId());
+            }
+        }
+        return codes;
+    }
+    
+    private List<CodeDimension> filterCodesFromDimension(DatasetVersion resource, String datasetRepositoryId, String dimensionId) throws MetamacException {
+        try {
+            List<ConditionObservationDto> conditions = statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(datasetRepositoryId);
+
+            List<CodeDimensionDto> dimCodes = filterCodeDimensionsForDimension(dimensionId, conditions);
+
+            List<CodeDimension> codes = new ArrayList<CodeDimension>();
+            for (CodeDimensionDto code : dimCodes) {
+                CodeDimension codeDimension = new CodeDimension();
+                codeDimension.setIdentifier(code.getCodeDimensionId());
+                codeDimension.setTitle(code.getCodeDimensionId());
+                codeDimension.setDsdComponentId(dimensionId);
+                codeDimension.setDatasetVersion(resource);
+                codes.add(codeDimension);
+            }
+            return codes;
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "An error has ocurred retrieving codes from dataset repository " + datasetRepositoryId + " for dimension " + dimensionId);
+        }
+    }
+
+    private List<CodeDimension> filterCodesFromAttribute(DatasetVersion resource, String datasetRepositoryId, String attributeId) throws MetamacException {
+        try {
+            List<AttributeDto> attributes = statisticsDatasetRepositoriesServiceFacade.findAttributes(datasetRepositoryId, attributeId);
+
+            List<CodeDimension> codes = new ArrayList<CodeDimension>();
+            if (attributes.size() > 0) {
+                String value = attributes.get(0).getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+                CodeDimension codeDimension = new CodeDimension();
+                codeDimension.setIdentifier(value);
+                codeDimension.setTitle(value);
+                codeDimension.setDsdComponentId(attributeId);
+                codeDimension.setDatasetVersion(resource);
+                codes.add(codeDimension);
+            }
+            return codes;
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "An error has ocurred retrieving values from dataset repository " + datasetRepositoryId + " for attribute " + attributeId);
+        }
+    }
+
+    private List<CodeDimensionDto> filterCodeDimensionsForDimension(String dimensionId, List<ConditionObservationDto> conditions) {
+        for (ConditionObservationDto condition : conditions) {
+            if (condition.getCodesDimension().size() > 0 && condition.getCodesDimension().get(0).getDimensionId().equals(dimensionId)) {
+                return condition.getCodesDimension();
+            }
+        }
+        return null;
+    }
+
 
     private static void fillMetadataForCreateDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateIdentifiableResource(datasource.getIdentifiableStatisticalResource(), datasetVersion.getSiemacMetadataStatisticalResource()

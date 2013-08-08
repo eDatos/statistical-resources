@@ -22,6 +22,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
+import org.siemac.metamac.core.common.util.MetamacPredicate;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -34,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.siemac.metamac.statistical.resources.core.utils.TaskInfoPredicateByDatasetId;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,11 +161,14 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         ArgumentCaptor<TaskInfoDataset> argument = ArgumentCaptor.forClass(TaskInfoDataset.class);
         verify(taskService, Mockito.times(2)).planifyImportationDataset(any(ServiceContext.class), argument.capture());
         
-        assertTaskInfoFile(datasetVersion02, 1, argument.getAllValues().get(0));
-        assertTaskFile(filename02, DatasetFileFormatEnum.PX, argument.getAllValues().get(0).getFiles().get(0));
         
-        assertTaskInfoFile(datasetVersion01, 1, argument.getAllValues().get(1));
-        assertTaskFile(filename01, DatasetFileFormatEnum.PX, argument.getAllValues().get(1).getFiles().get(0));
+        TaskInfoDataset taskDataset01 = MetamacCollectionUtils.find(argument.getAllValues(), new TaskInfoPredicateByDatasetId(datasetVersion01.getSiemacMetadataStatisticalResource().getUrn()));
+        assertTaskInfoFile(datasetVersion01, 1, taskDataset01);
+        assertTaskFile(filename01, DatasetFileFormatEnum.PX, taskDataset01.getFiles().get(0));
+        
+        TaskInfoDataset taskDataset02 = MetamacCollectionUtils.find(argument.getAllValues(), new TaskInfoPredicateByDatasetId(datasetVersion02.getSiemacMetadataStatisticalResource().getUrn()));
+        assertTaskInfoFile(datasetVersion02, 1, taskDataset02);
+        assertTaskFile(filename02, DatasetFileFormatEnum.PX, taskDataset02.getFiles().get(0));
     }
     
     @Test
@@ -244,4 +250,5 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
     private URL buildFileUrl(String filename) throws Exception {
         return new URL("file", null, filename);
     }
+    
 }

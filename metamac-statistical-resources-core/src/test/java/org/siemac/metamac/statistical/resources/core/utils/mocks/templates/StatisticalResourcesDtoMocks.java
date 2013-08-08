@@ -107,7 +107,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         datasetVersionDto.setRelatedDsd(mockDsdExternalItemDto());
 
         datasetVersionDto.setFormatExtentDimensions(5);
-        datasetVersionDto.setFormatExtentObservations(8);
+        datasetVersionDto.setFormatExtentObservations(8L);
 
         datasetVersionDto.setDateNextUpdate(mockDate());
         datasetVersionDto.setUpdateFrequency(mockCodeExternalItemDto());

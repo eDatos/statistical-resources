@@ -153,6 +153,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     protected static DatasetVersion getDatasetVersion01Basic() {
         if (DATASET_VERSION_01_BASIC == null) {
             DATASET_VERSION_01_BASIC = createDatasetVersion(1);
+            DATASET_VERSION_01_BASIC.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
         }
         return DATASET_VERSION_01_BASIC;
     }
@@ -160,6 +161,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     protected static DatasetVersion getDatasetVersion02Basic() {
         if (DATASET_VERSION_02_BASIC == null) {
             DATASET_VERSION_02_BASIC = createDatasetVersion(1);
+            DATASET_VERSION_02_BASIC.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
         }
         return DATASET_VERSION_02_BASIC;
     }
@@ -237,7 +239,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
             datasetVersion.setFormatExtentDimensions(3);
-            datasetVersion.setFormatExtentObservations(1354);
+            datasetVersion.setFormatExtentObservations(1354L);
             datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
             datasetVersion.setBibliographicCitation(StatisticalResourcesDoMocks.mockInternationalString("es", "biblio"));
 
