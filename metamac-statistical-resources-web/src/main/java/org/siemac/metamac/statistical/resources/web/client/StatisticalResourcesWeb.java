@@ -1,8 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.client;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
@@ -92,7 +94,18 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
                 StatisticalResourcesDefaults.defaultLanguage = result.getDefaultLanguage();
             }
         });
+    }
 
+    @Override
+    protected String[] getPropertiesToLoad() {
+        return new String[]{ConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB};
+    }
+
+    @Override
+    protected void setConfigurationProperties(Map<String, String> propertyValues) {
+        super.setConfigurationProperties(propertyValues);
+        String metamacPortalBaseUrl = propertyValues.get(ConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        CommonUtils.setMetamacPortalBaseUrl(metamacPortalBaseUrl);
     }
 
     public static MetamacPrincipal getCurrentUser() {

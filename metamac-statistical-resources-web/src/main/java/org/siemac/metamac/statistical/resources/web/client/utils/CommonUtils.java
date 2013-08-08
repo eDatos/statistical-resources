@@ -24,6 +24,7 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
 
+    private static String                               metamacPortalBaseUrl;
     private static Map<String, StatisticOfficialityDto> statisticOfficialitiesMap;
 
     // -----------------------------------------------------------------------------------------
@@ -171,6 +172,13 @@ public class CommonUtils {
         return statisticOfficialitiesMap.get(identifier);
     }
 
+    public static void setStatisticOfficialities(List<StatisticOfficialityDto> statisticOfficialities) {
+        CommonUtils.statisticOfficialitiesMap = new HashMap<String, StatisticOfficialityDto>();
+        for (StatisticOfficialityDto officiality : statisticOfficialities) {
+            CommonUtils.statisticOfficialitiesMap.put(officiality.getIdentifier(), officiality);
+        }
+    }
+
     // -----------------------------------------------------------------------------------------
     // TEMPORAL CODES
     // -----------------------------------------------------------------------------------------
@@ -193,11 +201,16 @@ public class CommonUtils {
         return StringUtils.EMPTY;
     }
 
-    public static void setStatisticOfficialities(List<StatisticOfficialityDto> statisticOfficialities) {
-        CommonUtils.statisticOfficialitiesMap = new HashMap<String, StatisticOfficialityDto>();
-        for (StatisticOfficialityDto officiality : statisticOfficialities) {
-            CommonUtils.statisticOfficialitiesMap.put(officiality.getIdentifier(), officiality);
-        }
+    // -----------------------------------------------------------------------------------------
+    // METAMAC PORTAL BASE URL
+    // -----------------------------------------------------------------------------------------
+
+    public static void setMetamacPortalBaseUrl(String baseUrl) {
+        metamacPortalBaseUrl = baseUrl;
+    }
+
+    public static String getMetamacPortalBaseUrl() {
+        return metamacPortalBaseUrl;
     }
 
     // TODO: FORMAT WILL NOT BE USED in STAT REOSURCES
