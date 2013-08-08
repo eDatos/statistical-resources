@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -12,12 +13,15 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasetDimensionCoverage {
 
     @In(1)
-    String            datasetVersionUrn;
+    String             datasetVersionUrn;
 
     @In(2)
-    String            dimensionId;
+    String             dimensionId;
+
+    @In(3)
+    MetamacWebCriteria criteria;
 
     @Out(1)
-    List<CodeItemDto> codesDimension;
+    List<CodeItemDto>  codesDimension;
 
 }
