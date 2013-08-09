@@ -1264,16 +1264,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({DATASET_VERSION_43_NEXT_VERSION_NO_UPDATES_NAME, DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE_NAME, DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME,
             DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME})
-    public void testFindDatasetsVersionsByConditionByNextVersionDateKK() throws Exception {
-        MetamacCriteria metamacCriteria = new MetamacCriteria();
-        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION_DATE, OperationType.IS_NULL, null);
-
-        statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
-    }
-
-    @Test
-    @MetamacMock({DATASET_VERSION_43_NEXT_VERSION_NO_UPDATES_NAME, DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE_NAME, DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME,
-            DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME})
     public void testFindDatasetsVersionsByConditionByNextVersionDate() throws Exception {
         DatasetVersion datasetVersionNoUpdates = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_43_NEXT_VERSION_NO_UPDATES_NAME);
         DatasetVersion datasetVersionNonScheduledUpdate = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE_NAME);
