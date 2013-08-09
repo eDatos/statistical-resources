@@ -11,7 +11,6 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
-import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetMainFormLayout;
@@ -86,12 +85,12 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private LifeCycleResourceVersionEditionForm                      versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
-    private DatasetVersionDto                                        datasetDto;
+    private DatasetVersionDto                                        datasetVersionDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
 
-        mainFormLayout = new DatasetMainFormLayout(DatasetClientSecurityUtils.canUpdateDataset());
+        mainFormLayout = new DatasetMainFormLayout();
 
         bindMainFormLayoutEvents();
         createViewForm();
@@ -184,21 +183,21 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().sendToProductionValidation(datasetDto);
+                getUiHandlers().sendToProductionValidation(datasetVersionDto);
             }
         });
         mainFormLayout.getDiffusionValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().sendToDiffusionValidation(datasetDto);
+                getUiHandlers().sendToDiffusionValidation(datasetVersionDto);
             }
         });
         mainFormLayout.getRejectValidationButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().rejectValidation(datasetDto);
+                getUiHandlers().rejectValidation(datasetVersionDto);
             }
         });
         mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
@@ -213,7 +212,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                         if (window.validateForm()) {
                             Date selectedDate = window.getSelectedDate();
                             // TODO Send to date and hour selected to service
-                            getUiHandlers().programPublication(datasetDto);
+                            getUiHandlers().programPublication(datasetVersionDto);
                             window.destroy();
                         }
                     }
@@ -231,7 +230,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().publish(datasetDto);
+                getUiHandlers().publish(datasetVersionDto);
             }
         });
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
@@ -244,7 +243,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (versionWindow.validateForm()) {
-                            getUiHandlers().version(datasetDto, versionWindow.getSelectedVersion());
+                            getUiHandlers().version(datasetVersionDto, versionWindow.getSelectedVersion());
                             versionWindow.destroy();
                         }
                     }
@@ -258,7 +257,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().previewData(datasetDto);
+                getUiHandlers().previewData(datasetVersionDto);
             }
         });
     }
@@ -364,15 +363,14 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     }
 
     @Override
-    public void setDataset(DatasetVersionDto datasetDto) {
-        this.datasetDto = datasetDto;
+    public void setDataset(DatasetVersionDto datasetVersionDto) {
+        this.datasetVersionDto = datasetVersionDto;
 
-        mainFormLayout.updatePublishSection(datasetDto.getProcStatus());
-
+        mainFormLayout.setDatasetVersion(datasetVersionDto);
         mainFormLayout.setViewMode();
 
-        setDatasetViewMode(datasetDto);
-        setDatasetEditionMode(datasetDto);
+        setDatasetViewMode(datasetVersionDto);
+        setDatasetEditionMode(datasetVersionDto);
     }
 
     private void setDatasetViewMode(DatasetVersionDto datasetDto) {
@@ -469,39 +467,39 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     public DatasetVersionDto getDatasetVersionDto() {
         // Identifiers form
-        datasetDto = (DatasetVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetVersionDto);
 
         // Content descriptors form
-        datasetDto = contentDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
+        datasetVersionDto = contentDescriptorsEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Common metadata
-        datasetDto = (DatasetVersionDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(datasetVersionDto);
 
         // Thematic content classifiers
-        datasetDto = (DatasetVersionDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) thematicContentClassifiersEditionForm.getSiemacMetadataStatisticalResourceDto(datasetVersionDto);
 
         // Language
-        datasetDto = (DatasetVersionDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) languageEditionForm.getSiemacMetadataStatisticalResourceDto(datasetVersionDto);
 
         // Production descriptors
-        datasetDto = productionDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
+        datasetVersionDto = productionDescriptorsEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Class descriptors
-        datasetDto = classDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
+        datasetVersionDto = classDescriptorsEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Resource relation descriptors
-        datasetDto = (DatasetVersionDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) resourceRelationDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetVersionDto);
 
         // Publication descriptors
-        datasetDto = publicationDescriptorsEditionForm.getDatasetVersionDto(datasetDto);
+        datasetVersionDto = publicationDescriptorsEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Version
-        datasetDto = (DatasetVersionDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetVersionDto);
 
         // Intellectual property descriptors
-        datasetDto = (DatasetVersionDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetDto);
+        datasetVersionDto = (DatasetVersionDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetVersionDto);
 
-        return datasetDto;
+        return datasetVersionDto;
     }
 
     @Override

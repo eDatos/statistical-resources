@@ -2,7 +2,9 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
 
@@ -11,6 +13,8 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
     private MainFormLayoutButton preview;
+
+    private DatasetVersionDto    datasetVersionDto;
 
     public DatasetMainFormLayout() {
         super();
@@ -25,6 +29,13 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
     private void common() {
         preview = new MainFormLayoutButton(getConstants().actionPreviewData(), GlobalResources.RESOURCE.preview().getURL());
         toolStrip.addButton(preview);
+    }
+
+    public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        this.datasetVersionDto = datasetVersionDto;
+        setCanEdit(DatasetClientSecurityUtils.canUpdateDatasetVersion(datasetVersionDto));
+        setCanDelete(DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetVersionDto));
+        updatePublishSection(datasetVersionDto.getProcStatus());
     }
 
     @Override
@@ -55,32 +66,27 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canSendToProductionValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canSendDatasetVersionToProductionValidation(datasetVersionDto);
     }
 
     @Override
     protected boolean canSendToDiffusionValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canSendDatasetVersionToDiffusionValidation(datasetVersionDto);
     }
 
     @Override
     protected boolean canRejectValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canSendDatasetVersionToValidationRejected(datasetVersionDto);
     }
 
     @Override
     protected boolean canPublish() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetVersionDto);
     }
 
     @Override
     protected boolean canProgramPublication() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetVersionDto);
     }
 
     @Override

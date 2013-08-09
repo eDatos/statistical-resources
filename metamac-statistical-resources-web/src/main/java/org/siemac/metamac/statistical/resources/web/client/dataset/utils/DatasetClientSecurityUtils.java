@@ -1,38 +1,129 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 
+import org.siemac.metamac.core.common.util.shared.BooleanUtils;
+import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 
-// TODO: Add real rules not only "true"
 // TODO take into account the metadata isTaskInBackground to avoid to execute some actions!
 public class DatasetClientSecurityUtils {
 
+    // ------------------------------------------------------------------------
+    // DATASETS VERSIONS
+    // ------------------------------------------------------------------------
+
     public static boolean canCreateDataset() {
-        return true;
+        return SharedDatasetsSecurityUtils.canCreateDataset(getMetamacPrincipal());
     }
 
-    public static boolean canUpdateDataset() {
-        return true;
-    }
-
-    public static boolean canDeleteDataset() {
-        return true;
-    }
-
-    public static boolean canImportDatasources(DatasetVersionDto datasetVersionDto) {
-        if (!ProcStatusEnum.DRAFT.equals(datasetVersionDto.getProcStatus()) && !ProcStatusEnum.VALIDATION_REJECTED.equals(datasetVersionDto.getProcStatus())) {
-            // Datasources can only be imported in datasets in DRAFT or in VALIDATION_REJECTED
+    public static boolean canUpdateDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        if (BooleanUtils.isTrue(datasetVersionDto.getIsTaskInBackground())) {
             return false;
         }
-        return true;
+        return SharedDatasetsSecurityUtils.canUpdateDatasetVersion(getMetamacPrincipal());
     }
 
-    // this method will be called by the button that import datasources in many datasets
-    public static boolean canImportDatasources() {
-        return true;
+    public static boolean canDeleteDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        return canDeleteDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canDeleteDatasetVersion(boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canVersionDataset(boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal());
+    }
+
+    public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionDto datasetVersionDto) {
+        return canSendDatasetVersionToProductionValidation(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToProductionValidation(boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(getMetamacPrincipal());
+    }
+
+    public static boolean canSendDatasetVersionToDiffusionValidation(DatasetVersionDto datasetVersionDto) {
+        return canSendDatasetVersionToDiffusionValidation(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToDiffusionValidation(boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(getMetamacPrincipal());
+    }
+
+    public static boolean canSendDatasetVersionToValidationRejected(DatasetVersionDto datasetVersionDto) {
+        return canSendDatasetVersionToValidationRejected(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToValidationRejected(boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(getMetamacPrincipal());
+    }
+
+    public static boolean canPublishDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        return canPublishDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canPublishDatasetVersion(boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        return true; // TODO
+    }
+
+    public static boolean canImportDatasourcesInDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        if (BooleanUtils.isTrue(datasetVersionDto.getIsTaskInBackground())) {
+            return false;
+        }
+
+        // Datasources can only be imported in datasets in DRAFT or in VALIDATION_REJECTED
+        if (!ProcStatusEnum.DRAFT.equals(datasetVersionDto.getProcStatus()) && !ProcStatusEnum.VALIDATION_REJECTED.equals(datasetVersionDto.getProcStatus())) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canImportDatasourcesInStatisticalOperation() {
+        return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal());
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASOURCES
+    // ------------------------------------------------------------------------
+
+    public static boolean canCreateDatasource() {
+        return SharedDatasetsSecurityUtils.canCreateDatasource(getMetamacPrincipal());
+    }
+
+    public static boolean canUpdateDatasource() {
+        return SharedDatasetsSecurityUtils.canUpdateDatasource(getMetamacPrincipal());
     }
 
     public static boolean canDeleteDatasource() {
-        return true;
+        return SharedDatasetsSecurityUtils.canDeleteDatasource(getMetamacPrincipal());
+    }
+
+    //
+    // PRIVATE METHODS
+    //
+
+    private static MetamacPrincipal getMetamacPrincipal() {
+        return StatisticalResourcesWeb.getCurrentUser();
     }
 }
