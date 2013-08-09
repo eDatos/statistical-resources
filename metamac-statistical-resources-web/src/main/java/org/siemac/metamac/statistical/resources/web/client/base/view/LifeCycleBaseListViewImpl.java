@@ -122,7 +122,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         // Delete confirmation window
 
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().lifeCycleDeleteConfirmationTitle(), getConstants().lifeCycleDeleteConfirmation());
-        deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+        deleteConfirmationWindow.setVisible(false);
     }
 
     protected List<String> getSelectedResourcesUrns() {
@@ -151,7 +151,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createDeleteButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(new ClickHandler() {
 
             @Override
@@ -179,7 +179,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createSendToProductionValidationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(getSendToProductionValidationClickHandler());
         return button;
     }
@@ -202,7 +202,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createSendToDiffusionValidation() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(getSendToDiffusionValidationClickHandler());
         return button;
     }
@@ -225,7 +225,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createRejectValidationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(getRejectValidationClickHandler());
         return button;
     }
@@ -248,7 +248,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createPublishButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);        
         button.addClickHandler(getPublishClickHandler());
         return button;
     }
@@ -271,7 +271,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createProgramPublicationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(new ClickHandler() {
 
             @Override
@@ -311,7 +311,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createCancelProgrammedPublicationButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(getCancelProgrammedPublicationClickHandler());
         return button;
     }
@@ -334,7 +334,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createVersionButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
-        button.setVisibility(Visibility.HIDDEN);
+        button.setVisible(false);
         button.addClickHandler(new ClickHandler() {
 
             @Override

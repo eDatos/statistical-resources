@@ -139,7 +139,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             // Delete confirmation window
 
             deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
-            deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+            deleteConfirmationWindow.setVisible(false);
 
             // Import datasources window
 
@@ -150,6 +150,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 public void uploadFailed(String errorMessage) {
                     getUiHandlers().datasourcesImportationFailed(errorMessage);
                 }
+
                 @Override
                 public void uploadComplete(String fileName) {
                     getUiHandlers().datasourcesImportationSucceed(fileName);
@@ -163,7 +164,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         private CustomToolStripButton createDeleteDatasourcesButton() {
             CustomToolStripButton deleteDatasourceButton = new CustomToolStripButton(getConstants().actionDelete(), RESOURCE.deleteListGrid().getURL());
-            deleteDatasourceButton.setVisibility(Visibility.HIDDEN);
+            deleteDatasourceButton.setVisible(false);
             deleteDatasourceButton.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -241,7 +242,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private void updateButtonsVisibility() {
-            importDatasourcesButton.setVisibility(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto) ? Visibility.VISIBLE : Visibility.HIDDEN);
+            importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
         }
     }
 

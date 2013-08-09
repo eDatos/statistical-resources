@@ -37,7 +37,7 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
         panel = new VLayout();
 
         titleLabel = new TitleLabel(new String());
-        titleLabel.setVisibility(Visibility.HIDDEN);
+        titleLabel.setVisible(false);
 
         tabSet = new CustomTabSet();
         publicationMetadataTab = new Tab(getConstants().publicationMetadata());
