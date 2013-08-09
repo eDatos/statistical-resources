@@ -87,6 +87,17 @@ public class DatasetClientSecurityUtils {
         return true; // TODO
     }
 
+    // ------------------------------------------------------------------------
+    // DATASOURCES
+    // ------------------------------------------------------------------------
+
+    public static boolean canDeleteDatasource(DatasetVersionDto datasetVersionDto) {
+        if (BooleanUtils.isTrue(datasetVersionDto.getIsTaskInBackground())) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canDeleteDatasource(getMetamacPrincipal());
+    }
+
     public static boolean canImportDatasourcesInDatasetVersion(DatasetVersionDto datasetVersionDto) {
         if (BooleanUtils.isTrue(datasetVersionDto.getIsTaskInBackground())) {
             return false;
@@ -101,22 +112,6 @@ public class DatasetClientSecurityUtils {
 
     public static boolean canImportDatasourcesInStatisticalOperation() {
         return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal());
-    }
-
-    // ------------------------------------------------------------------------
-    // DATASOURCES
-    // ------------------------------------------------------------------------
-
-    public static boolean canCreateDatasource() {
-        return SharedDatasetsSecurityUtils.canCreateDatasource(getMetamacPrincipal());
-    }
-
-    public static boolean canUpdateDatasource() {
-        return SharedDatasetsSecurityUtils.canUpdateDatasource(getMetamacPrincipal());
-    }
-
-    public static boolean canDeleteDatasource() {
-        return SharedDatasetsSecurityUtils.canDeleteDatasource(getMetamacPrincipal());
     }
 
     //

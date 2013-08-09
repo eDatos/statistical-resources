@@ -55,10 +55,11 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     private PlaceManager      placeManager;
 
     private ExternalItemDto   operation;
-    private DatasetVersionDto dataset;
+    private DatasetVersionDto datasetVersion;
 
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
 
+        void setDatasetVersion(DatasetVersionDto datasetVersionDto);
         void setDatasources(String datasetUrn, List<DatasourceDto> datasources);
         void setDatasource(DatasourceDto datasourceDto);
     }
@@ -82,8 +83,9 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         return getConstants().breadcrumbDatasources();
     }
 
-    private void setDataset(DatasetVersionDto datasetDto) {
-        this.dataset = datasetDto;
+    private void setDataset(DatasetVersionDto datasetVersionDto) {
+        this.datasetVersion = datasetVersionDto;
+        getView().setDatasetVersion(datasetVersionDto);
     }
 
     @Override
@@ -144,12 +146,12 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     public void saveDatasource(DatasourceDto datasourceDto) {
-        dispatcher.execute(new SaveDatasourceAction(dataset.getUrn(), datasourceDto), new WaitingAsyncCallbackHandlingError<SaveDatasourceResult>(this) {
+        dispatcher.execute(new SaveDatasourceAction(datasetVersion.getUrn(), datasourceDto), new WaitingAsyncCallbackHandlingError<SaveDatasourceResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveDatasourceResult result) {
                 getView().setDatasource(result.getDatasourceSaved());
-                retrieveDatasourcesByDataset(dataset.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveDatasourcesByDataset(datasetVersion.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }
@@ -161,7 +163,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             @Override
             public void onWaitSuccess(DeleteDatasourcesResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesDeleted());
-                retrieveDatasourcesByDataset(dataset.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveDatasourcesByDataset(datasetVersion.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }

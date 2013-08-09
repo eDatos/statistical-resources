@@ -6,6 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
@@ -46,6 +47,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     private DatasourcesListPanel datasourcesListPanel;
     private DatasourceFormPanel  datasourceFormPanel;
 
+    private DatasetVersionDto    datasetVersionDto;
+
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
         panel.setMargin(5);
@@ -58,6 +61,12 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         panel.addMember(datasourcesListPanel);
         panel.addMember(datasourceFormPanel);
+    }
+
+    @Override
+    public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        this.datasetVersionDto = datasetVersionDto;
+        datasourcesListPanel.updateButtonsVisibility();
     }
 
     @Override
@@ -168,7 +177,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private CustomToolStripButton createImportDatasourcesButton() {
             CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
                     .importResource().getURL());
-            // TODO Security importDatasourcesButton.setVisible(...);
             importDatasourcesButton.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -214,7 +222,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private void showListGridDeleteButton() {
-            if (DatasetClientSecurityUtils.canDeleteDatasource()) {
+            if (DatasetClientSecurityUtils.canDeleteDatasource(datasetVersionDto)) {
                 deleteDatasourceButton.show();
             }
         }
@@ -230,6 +238,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 records[index++] = StatisticalResourcesRecordUtils.getDatasourceRecord(datasourceDto);
             }
             datasourcesList.setData(records);
+        }
+
+        private void updateButtonsVisibility() {
+            importDatasourcesButton.setVisibility(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto) ? Visibility.VISIBLE : Visibility.HIDDEN);
         }
     }
 
