@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVersion> {
 
     @Autowired
-    private LifecycleCommonMetadataChecker           lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Autowired
-    private QueryVersionRepository                   queryVersionRepository;
+    private QueryVersionRepository         queryVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -123,7 +123,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     }
 
     @Override
-    protected void checkResourceMetadataAllActions(QueryVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    protected void checkResourceMetadataAllActions(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         lifecycleCommonMetadataChecker.checkQueryVersionCommonMetadata(resource, ServiceExceptionParameters.QUERY_VERSION, exceptions);
     }
 }

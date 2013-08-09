@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.ent.repositoryimpl.InternationalStringRepo
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.base.utils.StatisticalResourcesUrnParserUtilsTest;
 import org.siemac.metamac.statistical.resources.core.base.utils.VersionUtilsTest;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapperTest;
@@ -18,6 +19,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.Data
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DataManipulateTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetIntegrationServiceTest;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceImportationTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
@@ -70,6 +72,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetDo2DtoMapperTest.class,
                      DatasetDto2DoMapperTest.class,
                      DatasetServiceTest.class, 
+                     DatasetServiceImportationTest.class, 
                      PublicationRepositoryTest.class,
                      PublicationVersionRepositoryTest.class,
                      CubeRepositoryTest.class,
@@ -96,6 +99,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      PublicationIntegrationServiceTest.class,
                      QueryIntegrationServiceTest.class,
                      RestCriteriaUtilsTest.class,
+                     StatisticalResourcesUrnParserUtilsTest.class,
                      DataManipulateTest.class})
 public class StatisticalResourcesSuite {
 }

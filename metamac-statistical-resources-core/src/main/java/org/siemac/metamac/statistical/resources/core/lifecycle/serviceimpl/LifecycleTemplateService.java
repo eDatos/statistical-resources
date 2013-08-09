@@ -45,19 +45,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToProductionValidation(resource);
+        checkSendToProductionValidation(ctx, resource);
 
         applySendToProductionValidation(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected final void checkSendToProductionValidation(E resource) throws MetamacException {
+    protected final void checkSendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToProductionValidationLinkedStatisticalResource(resource, exceptions);
 
-        checkResourceMetadataAllActions(resource, exceptions);
+        checkResourceMetadataAllActions(ctx, resource, exceptions);
         checkSendToProductionValidationResource(resource, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -103,19 +103,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToDiffusionValidation(resource);
+        checkSendToDiffusionValidation(ctx, resource);
 
         applySendToDiffusionValidation(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected final void checkSendToDiffusionValidation(E resource) throws MetamacException {
+    protected final void checkSendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToDiffusionValidationLinkedStatisticalResource(resource, exceptions);
 
-        checkResourceMetadataAllActions(resource, exceptions);
+        checkResourceMetadataAllActions(ctx, resource, exceptions);
         checkSendToDiffusionValidationResource(resource, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -161,19 +161,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToValidationRejected(resource);
+        checkSendToValidationRejected(ctx, resource);
 
         applySendToValidationRejected(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected final void checkSendToValidationRejected(E resource) throws MetamacException {
+    protected final void checkSendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
 
-        checkResourceMetadataAllActions(resource, exceptions);
+        checkResourceMetadataAllActions(ctx, resource, exceptions);
         checkSendToValidationRejectedResource(resource, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -220,19 +220,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         E resource = retrieveResourceByUrn(urn);
         E previousResource = retrievePreviousResourceByResource(resource);
 
-        checkSendToPublished(resource, previousResource);
+        checkSendToPublished(ctx, resource, previousResource);
 
         applySendToPublished(ctx, resource, previousResource);
 
         return saveResource(resource);
     }
 
-    protected final void checkSendToPublished(E resource, E previousResource) throws MetamacException {
+    protected final void checkSendToPublished(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkSendToPublishedLinkedStatisticalResource(resource, previousResource, exceptions);
 
-        checkResourceMetadataAllActions(resource, exceptions);
+        checkResourceMetadataAllActions(ctx, resource, exceptions);
         checkSendToPublishedResource(resource, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -279,19 +279,19 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         E resource = retrieveResourceByUrn(urn);
         E previousResource = retrievePreviousResourceByResource(resource);
 
-        checkVersioning(resource, previousResource);
+        checkVersioning(ctx, resource, previousResource);
 
         applyVersioning(ctx, resource, previousResource);
 
         return saveResource(resource);
     }
 
-    protected final void checkVersioning(E resource, E previousResource) throws MetamacException {
+    protected final void checkVersioning(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkVersioningLinkedStatisticalResource(resource, previousResource, exceptions);
 
-        checkResourceMetadataAllActions(resource, exceptions);
+        checkResourceMetadataAllActions(ctx, resource, exceptions);
         checkVersioningResource(resource, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -342,7 +342,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     // This method knows how to retrieve a previous resource given the actual resource
     protected abstract E retrievePreviousResourceByResource(E resource) throws MetamacException;
 
-    protected abstract void checkResourceMetadataAllActions(E resource, List<MetamacExceptionItem> exceptions) throws MetamacException;
+    protected abstract void checkResourceMetadataAllActions(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptions) throws MetamacException;
 
     protected abstract E saveResource(E resource);
 

@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<PublicationVersion> {
 
     @Autowired
-    private LifecycleCommonMetadataChecker                 lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Autowired
-    private PublicationVersionRepository                   publicationVersionRepository;
+    private PublicationVersionRepository   publicationVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -127,7 +127,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     @Override
-    protected void checkResourceMetadataAllActions(PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    protected void checkResourceMetadataAllActions(ServiceContext ctx, PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
     }
 }

@@ -23,8 +23,11 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 public class DataMockUtils {
 
-    private static final String GEOCODELIST_TEST_URN = "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)";
-    private static final String CODE_TEST_URN_PREFIX = "urn:uuid:";
+    private static final String                     GEOCODELIST_TEST_URN = "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=TEST:codelist-01(1.0)";
+    private static final String                     CODE_TEST_URN_PREFIX = "urn:uuid:";
+
+    private static DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private static SrmRestInternalService           srmRestInternalService;
 
     public static void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
         List<ConditionObservationDto> dimensionsCodes = new ArrayList<ConditionObservationDto>();
@@ -99,10 +102,24 @@ public class DataMockUtils {
     }
 
     protected static SrmRestInternalService getSrmRestInternalService() {
+        if (srmRestInternalService != null) {
+            return srmRestInternalService;
+        }
         return ApplicationContextProvider.getApplicationContext().getBean(SrmRestInternalService.class);
     }
 
     private static DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
+        if (datasetRepositoriesServiceFacade != null) {
+            return datasetRepositoriesServiceFacade;
+        }
         return ApplicationContextProvider.getApplicationContext().getBean(DatasetRepositoriesServiceFacade.class);
+    }
+
+    public static void setSrmRestInternalService(SrmRestInternalService srmRestInternalService) {
+        DataMockUtils.srmRestInternalService = srmRestInternalService;
+    }
+
+    public static void setDatasetRepositoriesServiceFacade(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade) {
+        DataMockUtils.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
     }
 }

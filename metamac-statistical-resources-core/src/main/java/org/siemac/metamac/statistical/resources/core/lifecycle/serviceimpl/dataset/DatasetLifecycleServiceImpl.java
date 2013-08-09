@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
+import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,13 @@ import org.springframework.stereotype.Service;
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
 
     @Autowired
-    private LifecycleCommonMetadataChecker   lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Autowired
-    private DatasetVersionRepository         datasetVersionRepository;
+    private DatasetVersionRepository       datasetVersionRepository;
+
+    @Autowired
+    private TaskService                    taskService;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -47,7 +51,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         checkMetadataRequired(resource.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES, exceptions);
         checkMetadataRequired(resource.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES, exceptions);
 
-        checkMetadataRequired(resource.getDateNextUpdate(), ServiceExceptionParameters.DATASET_VERSION__DATE_NEXT_UPDATE, exceptions);
         checkMetadataRequired(resource.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY, exceptions);
         checkMetadataRequired(resource.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY, exceptions);
 
@@ -71,7 +74,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToProductionValidationResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        //NOTHING
+        // NOTHING
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -195,14 +198,18 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected void checkResourceMetadataAllActions(DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    protected void checkResourceMetadataAllActions(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkNotImportationTaskInProgress(ctx, resource.getSiemacMetadataStatisticalResource().getUrn());
         lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
+    private void checkNotImportationTaskInProgress(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        if (taskService.existImportationTaskInDataset(ctx, datasetVersionUrn)) {
+            throw new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn);
+        }
+    }
     // ------------------------------------------------------------------------------------------------------
     // SRM related Utils
     // ------------------------------------------------------------------------------------------------------
-
-
 
 }

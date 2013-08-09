@@ -100,9 +100,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private DatasetRepositoriesServiceFacade          statisticsDatasetRepositoriesServiceFacade;
-    
+
     @Autowired
-    private RestMapper                                 restMapper;
+    private RestMapper                                restMapper;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -141,6 +141,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Validation of parameters
         datasetServiceInvocationValidator.checkUpdateDatasource(ctx, datasource);
 
+        checkNotImportationTaskInProgress(ctx, datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+
         // TODO: Comprobar que el estado del dataset asociado es el correcto y otras condiciones necesarias
 
         // Update
@@ -170,14 +172,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
 
         // TODO: Comprobar que el dataset está en un estado en el que se le pueden eliminar datasources
-        
+
         DatasetVersion datasetVersion = datasource.getDatasetVersion();
 
+        checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
         deleteDatasourceToDataset(datasource);
-        
+
         computeDataRelatedMetadata(datasetVersion);
-        
-        //FIXME: delete queries
+
+        // FIXME: delete queries linked directly with current dataset version
     }
 
     @Override
@@ -222,6 +226,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public DatasetVersion updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
         // Validations
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
+
+        checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Check status
         BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion);
@@ -298,6 +304,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Retrieve version to delete
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
+        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+
         // Check can be deleted
         BaseValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
 
@@ -328,6 +336,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // TODO: check only published datasets can be versioned
 
         DatasetVersion datasetVersionToCopy = retrieveDatasetVersionByUrn(ctx, datasetVersionUrnToCopy);
+
+        checkNotImportationTaskInProgress(ctx, datasetVersionUrnToCopy);
+
         DatasetVersion datasetNewVersion = DatasetVersioningCopyUtils.copyDatasetVersion(datasetVersionToCopy);
 
         FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, datasetVersionToCopy.getSiemacMetadataStatisticalResource(),
@@ -351,7 +362,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
-        
+
+        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+
         ProcStatusEnumUtils.checkPossibleProcStatus(datasetVersion, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
         String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
@@ -416,9 +429,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     @Override
     public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
         datasetServiceInvocationValidator.checkImportDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
-        
+
         Map<String, List<URL>> datasetVersionsForFiles = organizeFilesByDatasetVersionUrn(statisticalOperationUrn, fileUrls);
-        
+
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
         for (String datasetVersionUrn : datasetVersionsForFiles.keySet()) {
             try {
@@ -436,7 +449,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     protected Map<String, List<URL>> organizeFilesByDatasetVersionUrn(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
-        Map<String, List<URL>> datasetVersionsForFiles = new HashMap<String, List<URL>>(); 
+        Map<String, List<URL>> datasetVersionsForFiles = new HashMap<String, List<URL>>();
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (URL url : fileUrls) {
             String filename = getFilenameFromPath(url.getPath());
@@ -444,8 +457,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             DatasetVersion datasetVersion = null;
             if (datasetUrn != null) {
                 datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
-            } 
-            
+            }
+
             if (datasetVersion != null && StringUtils.equals(statisticalOperationUrn, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn())) {
                 StatisticalResourcesCollectionUtils.addValueToMapValueList(datasetVersionsForFiles, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), url);
             } else {
@@ -457,8 +470,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         return datasetVersionsForFiles;
     }
-    
-    
 
     @Override
     public void proccessDatasetFileImportationResult(ServiceContext ctx, String datasetImportationId, List<FileDescriptorResult> fileDescriptors) throws MetamacException {
@@ -487,6 +498,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
+        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+
         List<String> dimensionsIds = getDatasetVersionRepository().retrieveDimensionsIds(datasetVersion);
         if (dimensionsIds.size() > 0) {
             return dimensionsIds;
@@ -501,14 +514,18 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
+        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, null);
     }
-    
+
     @Override
     public List<CodeDimension> filterCoverageForDatasetVersionDimension(ServiceContext ctx, String datasetVersionUrn, String dimensionId, String filter) throws MetamacException {
         datasetServiceInvocationValidator.checkFilterCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dimensionId, filter);
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
 
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, filter);
     }
@@ -536,19 +553,24 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return getStatisticOfficialityRepository().findAll();
     }
 
-    
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
-    
+
+    private void checkNotImportationTaskInProgress(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        if (getTaskService().existImportationTaskInDataset(ctx, datasetVersionUrn)) {
+            throw new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn);
+        }
+    }
+
     protected void computeDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
         ExternalItem externalDsd = resource.getRelatedDsd();
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(externalDsd.getUrn());
-        
+
         processCoverages(resource, dataStructure);
-        
+
         processDataRelatedMetadata(resource);
-        
+
         // processStartEndDates();
         // TODO: DATE_START, DATE_END
 
@@ -566,7 +588,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId());
         }
     }
-    
+
     // COVERAGE UTILS
     private void processCoverages(DatasetVersion resource, DataStructure dataStructure) throws MetamacException {
         List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
@@ -615,7 +637,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             resource.getMeasureCoverage().addAll(codeItems);
         }
     }
-    
+
     private void addTranslationsToCodesFromExternalItems(List<CodeDimension> codeDimensions, List<ExternalItem> externalItems) {
         for (ExternalItem externalItem : externalItems) {
             for (CodeDimension codeDimension : codeDimensions) {
@@ -630,7 +652,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             }
         }
     }
-    
+
     private List<ExternalItem> processExternalItemsCodeFromAttributeByType(DatasetVersion resource, DataStructure dataStructure, DsdComponentType type) throws MetamacException {
         DsdAttribute attribute = getDsdAttributeByType(dataStructure, type);
         List<ExternalItem> items = new ArrayList<ExternalItem>();
@@ -652,13 +674,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-
     private DsdAttribute getDsdAttributeByType(DataStructure dataStructure, DsdComponentType type) throws MetamacException {
         List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
         DsdAttribute foundAttribute = filterDsdAttributeWithType(attributes, type);
         return foundAttribute;
     }
-    
+
     private DsdAttribute filterDsdAttributeWithType(List<DsdAttribute> attributes, DsdComponentType type) {
         for (DsdAttribute attr : attributes) {
             if (type.equals(attr.getType())) {
@@ -667,7 +688,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         return null;
     }
-    
+
     private List<TemporalCode> buildTemporalCodeFromCodeDimensions(List<CodeDimension> codes) {
         List<TemporalCode> temporalCodes = new ArrayList<TemporalCode>();
         for (CodeDimension codeDim : codes) {
@@ -708,8 +729,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return externalItems;
     }
-    
-    
 
     private List<ExternalItem> buildExternalItemsBasedOnCodeDimensionsInConceptScheme(List<CodeDimension> codeDimensions, String conceptSchemeRepresentationUrn) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
@@ -742,7 +761,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         return codes;
     }
-    
+
     private List<CodeDimension> filterCodesFromDimension(DatasetVersion resource, String datasetRepositoryId, String dimensionId) throws MetamacException {
         try {
             List<ConditionObservationDto> conditions = statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(datasetRepositoryId);
@@ -792,7 +811,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         return null;
     }
-
 
     private static void fillMetadataForCreateDatasource(Datasource datasource, DatasetVersion datasetVersion) {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateIdentifiableResource(datasource.getIdentifiableStatisticalResource(), datasetVersion.getSiemacMetadataStatisticalResource()

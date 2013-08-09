@@ -1,4 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -47,7 +48,9 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -69,6 +72,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
@@ -85,12 +89,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml",
+        "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
-
-
 
     @Autowired
     private DatasetService                          datasetService;
@@ -110,10 +113,16 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
 
+    @Before
+    public void setUp() throws MetamacException {
+        TaskMockUtils.mockAllTaskInProgressForDatasetVersion(false);
+    }
+
+    @After
     public void after() {
         Mockito.validateMockitoUsage();
     }
-    
+
     // ------------------------------------------------------------------------
     // DATASOURCES
     // ------------------------------------------------------------------------
@@ -122,41 +131,44 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+
         Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
-        Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn(), expected);
+        Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
         expected.setDatasetVersion(expectedDatasetVersion);
-        
-        //SET EXPECTED METADATA
-        
+
+        // SET EXPECTED METADATA
+
         DataMockUtils.fillDatasetVersionWithCalculatedMetadataFromData(expectedDatasetVersion);
-        
+
         assertEqualsDatasource(expected, actual);
     }
-
-    
 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testCreateDatasourceErrorIdentifiableResourceRequired() throws Exception {
+        DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE));
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceWithIdentifiableAndDatasetVersionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME));
-        datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn(),
-                expected);
+        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceWithIdentifiableAndDatasetVersionNull(expectedDatasetVersion);
+        datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
     }
 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
-    public void testCreateDatasourceErrorDatasetVersionMustBeEmpty() throws Exception {
+    public void testCreateDatasoureErrorDatasetVersionMustBeEmpty() throws Exception {
+        DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.DATASOURCE__DATASET_VERSION));
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasource(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME));
-        datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn(),
-                expected);
+        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasource(expectedDatasetVersion);
+        datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
     }
 
     @Override
@@ -164,10 +176,27 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
         Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
+
         expected.getIdentifiableStatisticalResource().setLastUpdatedBy("user");
 
         Datasource actual = datasetService.updateDatasource(getServiceContextWithoutPrincipal(), expected);
         assertEqualsDatasource(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
+    public void testUpdateDatasourceImportationTaskInProgress() throws Exception {
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+
+        expected.getIdentifiableStatisticalResource().setLastUpdatedBy("user");
+        datasetService.updateDatasource(getServiceContextWithoutPrincipal(), expected);
     }
 
     @Override
@@ -198,30 +227,53 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
-        String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
+
+        String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
-        
+
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
         datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), datasourceUrn);
     }
-    
+
+    @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
+    public void testDeleteDatasourceImportationInProgress() throws Exception {
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+
+        String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+    }
+
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testDeleteDatasourceUpdateDatasetVersionDataMetadata() throws Exception {
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
-        String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
-        
+
+        String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
+
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
-        
-        DatasetVersion expectedDatasetVersion = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getDatasetVersion();
-        DatasetVersion actualDatasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        
+
+        DatasetVersion actualDatasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
+
         DataMockUtils.fillDatasetVersionWithCalculatedMetadataFromData(expectedDatasetVersion);
-        
+
         assertEqualsDatasetVersion(expectedDatasetVersion, actualDatasetVersion);
     }
 
@@ -261,15 +313,16 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateLastUpdateDateOnDatasourceCreation() throws Exception {
+        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
         DateTime oldLastUpdate = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate();
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
-        datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn(), expected);
+        datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
 
         // retrieve dataset version, lastupdate must have been changed
-        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
         assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate());
         assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate().equals(oldLastUpdate));
     }
@@ -278,14 +331,19 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testUpdateLastUpdateDateOnDatasourceDeletion() throws Exception {
         Datasource datasource = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+        DatasetVersion expectedDatasetVersion = datasource.getDatasetVersion();
+        String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+
         String datasourceUrn = datasource.getIdentifiableStatisticalResource().getUrn();
 
-        DateTime oldLastUpdate = datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getLastUpdate();
+        DateTime oldLastUpdate = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate();
 
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
 
         // retrieve dataset version, lastupdate must have been changed
-        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
         assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate());
         assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate().equals(oldLastUpdate));
     }
@@ -429,6 +487,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateDatasetVersion() throws Exception {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+
         expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
         expected.getSiemacMetadataStatisticalResource().setDescription(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
 
@@ -436,12 +495,30 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEqualsDatasetVersion(expected, actual);
     }
 
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testUpdateDatasetVersionImportationTaskInProgress() throws Exception {
+        DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String datasetVersionUrn = expected.getSiemacMetadataStatisticalResource().getUrn();
+
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+
+        expected.getSiemacMetadataStatisticalResource().setTitle(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+        expected.getSiemacMetadataStatisticalResource().setDescription(statisticalResourcesNotPersistedDoMocks.mockInternationalString());
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+
+        datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), expected);
+    }
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testUpdateDatasetVersionErrorFinal() throws Exception {
         DatasetVersion finalDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME);
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, finalDataset.getSiemacMetadataStatisticalResource().getUrn(),
-                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+        String datasetVersionUrn = finalDataset.getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
 
         datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), finalDataset);
     }
@@ -449,9 +526,10 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testUpdateDatasetVersionErrorIncorrectCode() throws Exception {
+        DatasetVersion dataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
+
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__CODE));
 
-        DatasetVersion dataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
         dataset.getSiemacMetadataStatisticalResource().setCode("@12345");
         datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), dataset);
     }
@@ -551,11 +629,24 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testDeleteDatasetVersion() throws Exception {
         String urn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, urn));
 
         // Delete dataset version
         datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urn);
         datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
+    public void testDeleteDatasetVersionImportationTaskInProgress() throws Exception {
+        String urn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(urn, true);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, urn));
+
+        // Delete dataset version
+        datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urn);
     }
 
     @Test
@@ -608,34 +699,61 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersion() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        DatasetVersion datasetNewVersion = datasetService.versioningDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(),
-                VersionTypeEnum.MINOR);
+        DatasetVersion datasetNewVersion = datasetService.versioningDatasetVersion(getServiceContextWithoutPrincipal(), urn, VersionTypeEnum.MINOR);
+
         assertNotNull(datasetNewVersion);
         assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(datasetNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewDatasetVersionCreated(datasetVersion, datasetNewVersion);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
+    public void testVersioningDatasetVersionImportationTaskInProgress() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(urn, true);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, urn));
+
+        datasetService.versioningDatasetVersion(getServiceContextWithoutPrincipal(), urn, VersionTypeEnum.MINOR);
     }
 
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME)
     public void testImportDatasourcesInDatasetVersion() throws Exception {
-
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME);
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), urls);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME)
+    public void testImportDatasourcesInDatasetVersionImportationTaskInProgress() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME);
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(urn, true);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, urn));
+
+        List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls);
     }
 
     @Test
     @MetamacMock({DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME, DATASET_VERSION_30_WITH_DATASOURCE_NAME})
     public void testImportDatasourcesInDatasetVersionFileAlreadyAssignedInOtherDataset() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME);
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, "datasource_06.px", datasetVersion
-                .getSiemacMetadataStatisticalResource().getUrn()))));
+        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, "datasource_06.px", urn))));
 
         List<URL> urls = Arrays.asList(new File("datasource_06.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), urls);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls);
     }
 
     @Override
@@ -646,6 +764,31 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String fileForDatasetVersion37 = datasetVersion37.getDatasources().get(0).getFilename();
         DatasetVersion datasetVersion38 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
         String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getFilename();
+
+        String statisticalOperationUrn = datasetVersion37.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn();
+
+        List<URL> urls = Arrays.asList(buildURLForFile(fileForDatasetVersion37), buildURLForFile(fileForDatasetVersion38));
+        datasetService.importDatasourcesInStatisticalOperation(getServiceContextWithoutPrincipal(), statisticalOperationUrn, urls);
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME, DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME})
+    public void testImportDatasourcesInStatisticalOperationImportationTaskInProgress() throws Exception {
+        DatasetVersion datasetVersion37 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
+        String fileForDatasetVersion37 = datasetVersion37.getDatasources().get(0).getFilename();
+        DatasetVersion datasetVersion38 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
+        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getFilename();
+
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersion37.getSiemacMetadataStatisticalResource().getUrn(), true);
+
+        MetamacException expectedException = new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_ERROR, datasetVersion37.getSiemacMetadataStatisticalResource().getUrn());
+        expectedException
+                .getExceptionItems()
+                .get(0)
+                .setExceptionItems(
+                        Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersion37.getSiemacMetadataStatisticalResource().getUrn())));
+
+        expectedMetamacException(expectedException);
 
         String statisticalOperationUrn = datasetVersion37.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn();
 
@@ -739,7 +882,20 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetsAsserts.assertEqualsCodeDimensionsCollection(mockCodeDimensionsWithIdentifiers(datasetVersion, "dim3", "code-d3-1"), codeDimensions);
         }
     }
-    
+
+    @Test
+    @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
+    public void testRetrieveCoverageForDatasetVersionDimensionImportationTaskInProgress() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME);
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        {
+            List<CodeDimension> codeDimensions = datasetService.retrieveCoverageForDatasetVersionDimension(getServiceContextAdministrador(), datasetVersionUrn, "dim-none");
+            Assert.assertEquals(0, codeDimensions.size());
+        }
+    }
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
@@ -752,14 +908,41 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
     }
 
+    @Test
+    @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
+    public void testFilterCoverageForDatasetVersionDimensionImportationTaskInProgress() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME);
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        {
+            List<CodeDimension> codeDimensions = datasetService.filterCoverageForDatasetVersionDimension(getServiceContextAdministrador(), datasetVersionUrn, "TIME_PERIOD", "Enero");
+            Assert.assertEquals(1, codeDimensions.size());
+        }
+    }
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME);
-        
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        List<String> dimensionIds = datasetService.retrieveDatasetVersionDimensionsIds(getServiceContextAdministrador(), datasetVersionUrn);
+        assertEquals(dimensionIds, Arrays.asList("dim1", "dim2", "dim3"));
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
+    public void testRetrieveDatasetVersionDimensionsIdsImportationTaskInProgress() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME);
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+
         List<String> dimensionIds = datasetService.retrieveDatasetVersionDimensionsIds(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        assertEquals(dimensionIds, Arrays.asList("dim1","dim2","dim3"));
+        assertEquals(dimensionIds, Arrays.asList("dim1", "dim2", "dim3"));
     }
 
     @Override
@@ -769,7 +952,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<StatisticOfficiality> officialities = datasetService.findStatisticOfficialities(getServiceContextAdministrador());
         assertEquals(2, officialities.size());
     }
-
 
     private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());

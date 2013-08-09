@@ -710,7 +710,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(updatedQueryVersion.getProductionValidationUser());
         assertNotNull(updatedQueryVersion.getProductionValidationDate());
     }
-    
+
     // ------------------------------------------------------------------------
     // DATASOURCES
     // ------------------------------------------------------------------------
@@ -1259,6 +1259,16 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionScheduledUpdateJanuary, datasetVersionScheduledUpdateJuly), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_43_NEXT_VERSION_NO_UPDATES_NAME, DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE_NAME, DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME,
+            DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME})
+    public void testFindDatasetsVersionsByConditionByNextVersionDateKK() throws Exception {
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION_DATE, OperationType.IS_NULL, null);
+
+        statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
     }
 
     @Test

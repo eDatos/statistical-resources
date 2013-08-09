@@ -90,18 +90,16 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         // Check unique URN
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
-        
+
         // Checks
         // TODO: Comprobar si hay que hacer alguno más
         // TODO: Comprobar si pueden ser comunes al resto de artefactos
 
+        // TODO: Check compatibility with dataset version
+
         // Save query
-        // queryVersion.setQuery(query);
-//        query.addVersion(queryVersion);
         query = getQueryRepository().save(query);
-        
-//         queryVersion = getQueryVersionRepository().retrieveByUrn(queryVersion.getLifeCycleStatisticalResource().getUrn());
-        
+
         queryVersion.setQuery(query);
         queryVersion = getQueryVersionRepository().save(queryVersion);
         return queryVersion;
@@ -110,11 +108,11 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     @Override
     public QueryVersion updateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
-        queryServiceInvocationValidator.checkUpdateQueryVersion(ctx, queryVersion); 
-        
+        queryServiceInvocationValidator.checkUpdateQueryVersion(ctx, queryVersion);
+
         // Fill metadata
         fillMetadataForUpdateQueryVersion(queryVersion);
-                
+
         // Check that could be update
         // TODO: Comprobar si hay que hacer alguno más
         // Check URN duplicated. We have to do it right now because later the fillMetadata method change the hibernate cache
@@ -187,7 +185,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     private void fillMetadataForUpdateQueryVersion(QueryVersion queryVersion) throws MetamacException {
         queryVersion.setStatus(determineQueryStatus(queryVersion));
-        
+
         // Update URN
         String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
