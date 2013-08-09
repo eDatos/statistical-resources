@@ -477,6 +477,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkProccessDatasetFileImportationResult(ctx, datasetImportationId, fileDescriptors);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
+        datasetVersion.setDatasetRepositoryId(datasetImportationId);
+        getDatasetVersionRepository().save(datasetVersion);
 
         for (FileDescriptorResult fileDescriptor : fileDescriptors) {
             Datasource datasource = new Datasource();
@@ -488,8 +490,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             }
             createDatasource(ctx, datasetImportationId, datasource);
         }
-        datasetVersion.setDatasetRepositoryId(datasetImportationId);
-        getDatasetVersionRepository().save(datasetVersion);
     }
 
     @Override
