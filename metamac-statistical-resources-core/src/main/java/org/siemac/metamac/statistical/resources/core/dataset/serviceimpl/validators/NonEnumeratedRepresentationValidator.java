@@ -510,10 +510,10 @@ public class NonEnumeratedRepresentationValidator {
 
     private static void validateStartTimesAndEndTimes(List<String> representationStartTimes, List<String> representationEndTimes, String key, String value, List<MetamacExceptionItem> exceptions) {
         // startTime: BasicTimePeriod (for time range)
-        DateTime[] valueDateTimes = SdmxTimeUtils.calculatePeriodStart(value);
+        DateTime[] valueDateTimes = SdmxTimeUtils.calculateDateTimes(value);
         if (!representationStartTimes.isEmpty()) {
             String flattenRepresentation = CoreCommonUtil.flattenListString(representationStartTimes);
-            DateTime[] representationDateTimes = SdmxTimeUtils.calculatePeriodStart(flattenRepresentation);
+            DateTime[] representationDateTimes = SdmxTimeUtils.calculateDateTimes(flattenRepresentation);
             if (representationDateTimes == null || representationDateTimes[0] == null || representationDateTimes[0].isAfter(valueDateTimes[0])) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_STARTTIMES, value, flattenRepresentation, key));
             }
@@ -522,7 +522,7 @@ public class NonEnumeratedRepresentationValidator {
         // endTime: BasicTimePeriod (for time range)
         if (!representationEndTimes.isEmpty()) {
             String flattenRepresentation = CoreCommonUtil.flattenListString(representationEndTimes);
-            DateTime[] representationDateTimes = SdmxTimeUtils.calculatePeriodStart(flattenRepresentation);
+            DateTime[] representationDateTimes = SdmxTimeUtils.calculateDateTimes(flattenRepresentation);
             if (representationDateTimes == null || representationDateTimes[0] == null || representationDateTimes[0].isBefore(valueDateTimes[0])) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_NONENUMERATED_ENDTIMES, value, flattenRepresentation, key));
             }
