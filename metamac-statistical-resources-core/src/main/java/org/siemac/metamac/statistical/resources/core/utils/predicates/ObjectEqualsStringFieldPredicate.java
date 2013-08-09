@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.predicates;
 
 import org.apache.commons.lang3.StringUtils;
 import org.siemac.metamac.core.common.util.MetamacPredicate;
-import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.MetamacReflectionUtils;
 
 
 public class ObjectEqualsStringFieldPredicate extends MetamacPredicate<Object> {

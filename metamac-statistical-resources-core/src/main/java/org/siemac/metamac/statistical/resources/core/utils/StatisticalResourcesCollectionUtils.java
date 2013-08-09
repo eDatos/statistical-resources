@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
-import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ExternalItemEqualsUrnPredicate;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ObjectEqualsStringFieldPredicate;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.MetamacTransformer;

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.MetamacReflectionUtils;
 
 /*
  * All Mock factories should extend from this class.

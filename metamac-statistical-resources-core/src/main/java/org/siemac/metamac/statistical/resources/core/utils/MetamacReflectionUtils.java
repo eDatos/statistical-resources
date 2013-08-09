@@ -1,6 +1,4 @@
-package org.siemac.metamac.statistical.resources.core;
-
-import static org.junit.Assert.fail;
+package org.siemac.metamac.statistical.resources.core.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -105,7 +103,6 @@ public class MetamacReflectionUtils {
             Long objectId = (Long) method.invoke(object);
             return objectId;
         } catch (Exception e) {
-            fail("The object doesn't have getId method");
             return null;
         }
     }
