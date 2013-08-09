@@ -2,7 +2,47 @@ package org.siemac.metamac.statistical.resources.core.common.criteria.enums;
 
 public enum StatisticalResourcesCriteriaPropertyEnum {
 
-    CODE, TITLE, DESCRIPTION, URN, PROC_STATUS, LAST_VERSION, STATISTICAL_OPERATION_URN, QUERY_STATUS, DATA;
+    // StatisticalReSource
+    STATISTICAL_OPERATION_URN,
+
+    // IdentifiableResource
+    CODE,
+    URN,
+
+    // NameableResource
+    TITLE,
+    DESCRIPTION,
+
+    // VersionableResource
+    VERSION_RATIONALE_TYPE,
+    NEXT_VERSION,
+    NEXT_VERSION_DATE,
+
+    // LifecyleResource
+    PROC_STATUS,
+
+    // SiemacResource
+    TITLE_ALTERNATIVE,
+    KEYWORDS,
+    NEWNESS_UNTIL_DATE,
+
+    // DatasetResource
+    DATASET_GEOGRAPHIC_GRANULARITY_URN,
+    DATASET_TEMPORAL_GRANULARITY_URN,
+    DATASET_DATE_START,
+    DATASET_DATE_END,
+    DATASET_RELATED_DSD_URN,
+    DATASET_DATE_NEXT_UPDATE,
+    DATASET_STATISTIC_OFFICIALITY_IDENTIFIER,
+    DATA,
+
+    // QueryResource
+    QUERY_RELATED_DATASET_URN,
+    QUERY_STATUS,
+    QUERY_TYPE,
+
+    // Others
+    LAST_VERSION;
 
     public String value() {
         return name();

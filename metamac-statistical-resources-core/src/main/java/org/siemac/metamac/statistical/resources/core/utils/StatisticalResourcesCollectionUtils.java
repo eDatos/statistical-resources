@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
+import org.siemac.metamac.statistical.resources.core.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ExternalItemEqualsUrnPredicate;
+import org.siemac.metamac.statistical.resources.core.utils.predicates.ObjectEqualsStringFieldPredicate;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.MetamacTransformer;
 
 
@@ -27,7 +28,28 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
         return find(collection, new ExternalItemEqualsUrnPredicate(externalItem.getUrn())) != null;
     }
 
+    public static <T, R> boolean equalsCollectionByField(Collection<T> expected, Collection<R> actual, String expectedFieldName, String actualFieldName) throws Exception {
+        if (expected.size() != actual.size()) {
+            return false;
+        } else {
+            for (Object expectedItem : expected) {
+                String nameFieldValue = (String) MetamacReflectionUtils.getComplexFieldValue(expectedItem, expectedFieldName);
+                
+                if (!find(actual, new ObjectEqualsStringFieldPredicate(actualFieldName, nameFieldValue))) {
+                    return false;
+                }
+            } 
+        }
+        return true;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static<T> boolean find(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
+        return (T)CollectionUtils.find(collection, predicate) != null;
+    }
+    
     //TODO: Move to common
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T,R> Collection<T> mapCollection(Collection<T> collection, final Collection outputCollection, MetamacTransformer<T,R> transformer) {
         return CollectionUtils.collect(collection, transformer, outputCollection);
     }

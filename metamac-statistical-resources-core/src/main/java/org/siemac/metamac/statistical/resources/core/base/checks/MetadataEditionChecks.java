@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.base.checks;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class MetadataEditionChecks {

@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.FieldCallback;
 
-
 public class MetamacReflectionUtils {
-    
+
     @SuppressWarnings("rawtypes")
     public static Set<Field> getDeclaredFieldsWithType(Class clazz, Class typeClass) {
         Set<Field> fields = new HashSet<Field>();
@@ -25,8 +25,7 @@ public class MetamacReflectionUtils {
         }
         return fields;
     }
-    
-    
+
     @SuppressWarnings("rawtypes")
     public static Object getDeclaredStaticFieldValue(Class clazz, String name) throws Exception {
         Field field = clazz.getDeclaredField(name);
@@ -39,9 +38,34 @@ public class MetamacReflectionUtils {
             return value;
         }
     }
-    
+
     public static Object getDeclaredFieldValue(Object obj, String name) throws Exception {
         Field field = obj.getClass().getDeclaredField(name);
+        return makeFieldAccesible(obj, field);
+    }
+    
+    public static Object getFieldValue(Object obj, String name) throws Exception {
+        Field field = findField(obj.getClass(), name);
+        return makeFieldAccesible(obj, field);
+    }
+
+    public static Object getComplexFieldValue(Object obj, String name) throws Exception {
+        String[] complexName = StringUtils.split(name, ".");
+        Field field = null;
+        Class<? extends Object> clazz = obj.getClass();
+        Object finalObj = obj;
+
+        for (int i = 0; i < complexName.length; i++) {
+            field = findField(clazz, complexName[i]);
+            clazz = field.getType();
+            if (i < complexName.length -1) {
+                finalObj = getFieldValue(finalObj, complexName[i]);
+            }
+        }
+        return makeFieldAccesible(finalObj, field);
+    }
+
+    private static Object makeFieldAccesible(Object obj, Field field) throws IllegalAccessException {
         if (field.isAccessible()) {
             return field.get(obj);
         } else {
@@ -51,11 +75,12 @@ public class MetamacReflectionUtils {
             return value;
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     public static List<Field> getAllFields(Class clazz) {
         final List<Field> fields = new ArrayList<Field>();
         ReflectionUtils.doWithFields(clazz, new FieldCallback() {
+
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 fields.add(field);
@@ -63,8 +88,16 @@ public class MetamacReflectionUtils {
         });
         return fields;
     }
-    
-    
+
+    @SuppressWarnings("rawtypes")
+    private static Field findField(Class clazz, final String name) throws NoSuchFieldException {
+        try {
+            return ReflectionUtils.findField(clazz, name);
+        } catch (Exception e) {
+            throw new NoSuchFieldException(name);
+        }
+    }
+
     public static Long retrieveObjectId(Object object) {
         try {
             Method method = object.getClass().getMethod("getId");

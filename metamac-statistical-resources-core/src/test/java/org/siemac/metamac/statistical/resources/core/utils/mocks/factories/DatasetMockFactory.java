@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion03ForDataset03;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion04ForDataset03AndLastVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion05ForDataset04;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion22V1PublishedForDataset05;
@@ -8,6 +8,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion24V3PublishedForDataset05;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion25V1PublishedForDataset06;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion26V2PublishedNoVisibleForDataset06;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion31WithSingleDatasourceLinkedToFile;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion32WithMultipleDatasourcesLinkedToFile;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.getDatasetVersion33WithSingleDatasourceLinkedToFileWithUnderscore;
 
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;

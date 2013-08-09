@@ -2,47 +2,24 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @Service("datasetLifecycleService")
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
@@ -52,15 +29,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private DatasetVersionRepository         datasetVersionRepository;
-
-    @Autowired
-    private SrmRestInternalService           srmRestInternalService;
-
-    @Autowired
-    private DatasetRepositoriesServiceFacade statisticsDatasetRepositoriesServiceFacade;
-
-    @Autowired
-    private RestMapper                       restMapper;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {

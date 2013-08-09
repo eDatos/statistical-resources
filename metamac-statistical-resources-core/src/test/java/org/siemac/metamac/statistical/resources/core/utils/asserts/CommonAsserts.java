@@ -1,8 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.core.common.constants.CoreCommonConstants.API_LATEST;
@@ -35,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourc
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 
 public class CommonAsserts extends MetamacAsserts {
 
@@ -412,16 +411,11 @@ public class CommonAsserts extends MetamacAsserts {
     // -----------------------------------------------------------------
     // OTHER
     // -----------------------------------------------------------------
-    @SuppressWarnings("rawtypes")
-    public static void assertCollectionStructure(Collection expected, Collection actual) {
-        if (expected != null) {
-            assertNotNull(actual);
-            assertEquals(expected.size(), actual.size());
-        } else {
-            assertNull(actual);
-        }
+    
+    public static <T, R> void assertEqualsCollectionByField(Collection<T> expected, Collection<R> actual, String expectedFieldName, String actualFieldName) throws Exception {
+        StatisticalResourcesCollectionUtils.equalsCollectionByField(expected, actual, expectedFieldName, actualFieldName);
     }
-
+    
     protected static void assertRelaxedEqualsObject(Object expected, Object actual) {
         if ((expected != null && actual == null) || (expected == null && actual != null)) {
             fail("The expected object and the actual are not equals");

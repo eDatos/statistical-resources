@@ -17,7 +17,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 @Table(name = "TB_DATASETS_VERSIONS")
 public class DatasetVersion extends DatasetVersionBase implements HasSiemacMetadata {
     private static final long serialVersionUID = 1L;
-
+    
     public DatasetVersion() {
     }
 

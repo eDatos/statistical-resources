@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.springframework.stereotype.Component;

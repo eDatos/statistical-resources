@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockCodeDimension;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockCodeDimensionsWithIdentifiers;
 
@@ -70,9 +70,9 @@ public class CodeDimensionRepositoryTest extends StatisticalResourcesBaseTest im
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
+    @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
     public void testFindCodesForDatasetVersionByDimensionIdWithFilters() throws Exception {
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_39_WITH_COVERAGE_FILLED_WITH_TITLES_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME);
         {
             List<CodeDimension> codeDimensions = codeDimensionRepository.findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), "TIME_PERIOD", null);
             DatasetsAsserts.assertEqualsCodeDimensionsCollection(CodeDimensionsMockBuilder.prepare(datasetVersion, "TIME_PERIOD").addCode("2011").addCode("2010").addCode("2010-M01", "Enero 2010")

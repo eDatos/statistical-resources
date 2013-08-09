@@ -46,9 +46,11 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Mock
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
+    @SuppressWarnings("unused")
     @Mock
     private ExternalItemChecker            externalItemChecker;
 
+    @SuppressWarnings("unused")
     @Mock
     private RelatedResourceChecker         relatedResourceChecker;
 

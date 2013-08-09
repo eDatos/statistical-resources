@@ -29,9 +29,11 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     private static final String          METADATA_NAME_TEST = "METADATA_TEST";
 
+    @SuppressWarnings("unused")
     @Mock
     private ExternalItemRepository       externalItemRepository;
 
+    @SuppressWarnings("unused")
     @Mock(answer = Answers.CALLS_REAL_METHODS)
     private ConfigurationServiceMockImpl configurationService;
 

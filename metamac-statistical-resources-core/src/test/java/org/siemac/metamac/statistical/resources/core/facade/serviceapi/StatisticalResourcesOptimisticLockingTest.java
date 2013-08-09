@@ -61,8 +61,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
@@ -92,9 +90,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
-
-    @Autowired
-    private DatasetRepositoriesServiceFacade  statisticsDatasetRepositoriesServiceFacade;
 
     @Before
     public void onBeforeTest() throws Exception {

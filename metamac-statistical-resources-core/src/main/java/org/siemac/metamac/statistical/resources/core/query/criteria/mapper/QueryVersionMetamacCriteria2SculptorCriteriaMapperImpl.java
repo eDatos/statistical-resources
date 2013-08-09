@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
@@ -48,6 +49,8 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
             StatisticalResourcesCriteriaPropertyEnum propertyEnum = StatisticalResourcesCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
+                case STATISTICAL_OPERATION_URN:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
                 case CODE:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue());
                 case URN:
@@ -56,12 +59,21 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
                 case DESCRIPTION:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
-                case QUERY_STATUS:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue());
+                case VERSION_RATIONALE_TYPE:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().versionRationaleTypes().value(), propertyRestriction.getEnumValue());
+                case NEXT_VERSION:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().nextVersion(), propertyRestriction.getEnumValue());
+                case NEXT_VERSION_DATE:
+                    return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().nextVersionDate(),
+                            QueryVersion.class), propertyRestriction.getDateValue());
                 case PROC_STATUS:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
-                case STATISTICAL_OPERATION_URN:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
+                case QUERY_STATUS:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue());
+                case QUERY_TYPE:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.type(), propertyRestriction.getEnumValue());
+                case QUERY_RELATED_DATASET_URN:
+                    return new SculptorPropertyCriteria(QueryVersionProperties.datasetVersion().siemacMetadataStatisticalResource().urn(), propertyRestriction.getStringValue());
                 case LAST_VERSION:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue());
                 default:
