@@ -24,6 +24,8 @@
         <module>metamac-statistical-resources-rest-external-api</module>
         <module>metamac-statistical-resources-rest-external-impl</module>
         <module>metamac-statistical-resources-external-web</module>
+        <module>metamac-sdmx-data-rest-external-api</module>
+        <module>metamac-sdmx-data-rest-external-impl</module>
         <module>metamac-statistical-resources-web</module>
     </modules>
 
