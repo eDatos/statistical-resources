@@ -1,12 +1,12 @@
 package org.siemac.metamac.statistical.resources.web.server.servlet;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -34,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.utils.ZipUtils;
 
 import com.google.inject.Singleton;
 
@@ -107,7 +106,11 @@ public class DatasourceImportationServlet extends HttpServlet {
             }
 
             String tempZipFilePathName = inputStreamToTempFile(fileName, inputStream);
-            List<URL> fileUrls = unZipCompressedFiles(tempZipFilePathName);
+            File outputFolder = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+
+            List<File> files = ZipUtils.unzipArchive(new File(tempZipFilePathName), outputFolder);
+            List<URL> fileUrls = getURLsFromFiles(files);
+
             String statisticalOperationUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN);
             String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
 
@@ -182,55 +185,6 @@ public class DatasourceImportationServlet extends HttpServlet {
         return outputFile.getPath();
     }
 
-    /**
-     * UnZip a compressed file.
-     * 
-     * @param zipFile
-     * @return the URLs of the files
-     * @throws IOException
-     */
-    public List<URL> unZipCompressedFiles(String zipFile) throws IOException {
-
-        List<URL> urls = new ArrayList<URL>();
-
-        byte[] buffer = new byte[1024];
-
-        File outputFolder = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
-
-        // get the zip file content
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
-
-        // get the zipped file list entry
-        ZipEntry ze = zis.getNextEntry();
-
-        while (ze != null) {
-
-            String fileName = ze.getName();
-            File file = new File(outputFolder + File.separator + fileName);
-
-            urls.add(file.toURI().toURL());
-
-            // create all non exists folders
-            // else you will hit FileNotFoundException for compressed folder
-            new File(file.getParent()).mkdirs();
-
-            FileOutputStream fos = new FileOutputStream(file);
-
-            int len;
-            while ((len = zis.read(buffer)) > 0) {
-                fos.write(buffer, 0, len);
-            }
-
-            fos.close();
-            ze = zis.getNextEntry();
-        }
-
-        zis.closeEntry();
-        zis.close();
-
-        return urls;
-    }
-
     private void sendSuccessImportationResponse(HttpServletResponse response, String fileName) throws IOException {
         String action = "if (parent.uploadComplete) parent.uploadComplete('" + fileName + "');";
         sendResponse(response, action);
@@ -276,5 +230,13 @@ public class DatasourceImportationServlet extends HttpServlet {
             return message.replace("'", "");
         }
         return message;
+    }
+
+    private List<URL> getURLsFromFiles(List<File> files) throws MalformedURLException {
+        List<URL> urls = new ArrayList<URL>();
+        for (File file : files) {
+            urls.add(file.toURI().toURL());
+        }
+        return urls;
     }
 }
