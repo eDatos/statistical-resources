@@ -18,6 +18,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     private MainFormLayoutButton cancelProgrammedPublication;
     private MainFormLayoutButton publish;
     private MainFormLayoutButton versioning;
+    private MainFormLayoutButton preview;
 
     private ProcStatusEnum       status;
 
@@ -39,6 +40,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         cancelProgrammedPublication = new MainFormLayoutButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
+        preview = new MainFormLayoutButton(getConstants().actionPreviewData(), GlobalResources.RESOURCE.preview().getURL());
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
@@ -47,6 +49,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         toolStrip.addButton(cancelProgrammedPublication);
         toolStrip.addButton(publish);
         toolStrip.addButton(versioning);
+        toolStrip.addButton(preview);
     }
 
     @Override
@@ -84,6 +87,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
             showCancelProgrammedPublication();
             showVersioningButton();
         }
+        showPreviewButton();
     }
 
     protected void hideAllLifeCycleButtons() {
@@ -94,6 +98,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         cancelProgrammedPublication.hide();
         publish.hide();
         versioning.hide();
+        preview.hide();
     }
 
     private void showProductionValidationButton() {
@@ -138,6 +143,12 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         }
     }
 
+    private void showPreviewButton() {
+        if (canPreviewData()) {
+            preview.show();
+        }
+    }
+
     public HasClickHandlers getProductionValidationButton() {
         return productionValidation;
     }
@@ -166,6 +177,10 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         return versioning;
     }
 
+    public HasClickHandlers getPreviewButton() {
+        return preview;
+    }
+
     //
     // ABSTRACT METHODS
     //
@@ -177,4 +192,5 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     protected abstract boolean canProgramPublication();
     protected abstract boolean canCancelProgrammedPublication();
     protected abstract boolean canVersioning();
+    protected abstract boolean canPreviewData();
 }

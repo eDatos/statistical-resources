@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.presenter.Statis
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
@@ -33,6 +34,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -135,6 +137,10 @@ public class PublicationMetadataTabPresenter
         });
     }
 
+    //
+    // LIFE CYCLE
+    //
+
     @Override
     public void sendToProductionValidation(PublicationVersionDto publicationVersionDto) {
         dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
@@ -219,6 +225,16 @@ public class PublicationMetadataTabPresenter
             }
         });
     }
+
+    @Override
+    public void previewData(PublicationVersionDto publicationVersionDto) {
+        String url = MetamacPortalWebUtils.buildPublicationVersionUrl(publicationVersionDto);
+        Window.open(url, "_blank", "");
+    }
+
+    //
+    // RELATED RESOURCES
+    //
 
     @Override
     public void retrievePublicationsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {

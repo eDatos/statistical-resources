@@ -53,4 +53,10 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
         // TODO Auto-generated method stub
         return true;
     }
+
+    @Override
+    protected boolean canPreviewData() {
+        // Do not show the query preview button
+        return false;
+    }
 }

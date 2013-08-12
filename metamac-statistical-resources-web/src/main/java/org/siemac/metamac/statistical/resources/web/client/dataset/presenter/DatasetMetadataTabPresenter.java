@@ -252,7 +252,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void previewData(DatasetVersionDto datasetVersionDto) {
-        String url = MetamacPortalWebUtils.buildDatasetUrl(datasetVersionDto);
+        String url = MetamacPortalWebUtils.buildDatasetVersionUrl(datasetVersionDto);
         Window.open(url, "_blank", "");
     }
 

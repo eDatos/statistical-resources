@@ -10,6 +10,8 @@ public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiH
 
     void savePublication(PublicationVersionDto publicationDto);
 
+    void previewData(PublicationVersionDto publicationDto);
+
     // RELATED PUBLICATIONS
 
     void retrievePublicationsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria);

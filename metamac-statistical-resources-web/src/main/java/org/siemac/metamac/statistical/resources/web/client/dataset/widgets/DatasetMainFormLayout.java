@@ -1,20 +1,12 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
-import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
-
-import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
-    private MainFormLayoutButton preview;
-
-    private DatasetVersionDto    datasetVersionDto;
+    private DatasetVersionDto datasetVersionDto;
 
     public DatasetMainFormLayout() {
         super();
@@ -27,8 +19,7 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
     }
 
     private void common() {
-        preview = new MainFormLayoutButton(getConstants().actionPreviewData(), GlobalResources.RESOURCE.preview().getURL());
-        toolStrip.addButton(preview);
+
     }
 
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
@@ -36,28 +27,6 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
         setCanEdit(DatasetClientSecurityUtils.canUpdateDatasetVersion(datasetVersionDto));
         setCanDelete(DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetVersionDto));
         updatePublishSection(datasetVersionDto.getProcStatus());
-    }
-
-    @Override
-    protected void updateVisibility() {
-        super.updateVisibility();
-        showPreviewButton();
-    }
-
-    @Override
-    protected void hideAllLifeCycleButtons() {
-        super.hideAllLifeCycleButtons();
-        preview.hide();
-    }
-
-    private void showPreviewButton() {
-        if (canPreviewData()) {
-            preview.show();
-        }
-    }
-
-    public HasClickHandlers getPreviewButton() {
-        return preview;
     }
 
     //
@@ -101,6 +70,7 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
         return true;
     }
 
+    @Override
     protected boolean canPreviewData() {
         // TODO Security
         return true;

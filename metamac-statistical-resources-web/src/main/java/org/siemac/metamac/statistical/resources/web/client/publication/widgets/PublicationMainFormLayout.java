@@ -53,4 +53,10 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
         // TODO Auto-generated method stub
         return true;
     }
+
+    @Override
+    protected boolean canPreviewData() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }
