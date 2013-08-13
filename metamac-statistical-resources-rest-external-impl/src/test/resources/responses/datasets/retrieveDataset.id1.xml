@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-EsHpjmZxSl en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-7AkVx8l8uC en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -67,16 +67,16 @@
             </cdomain:resource>
         </stat:statisticalOperationInstances>
         <stat:subtitle>
-            <cdomain:text xml:lang="es">subtitle-resource-EsHpjmZxSl en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">subtitle-resource-7AkVx8l8uC en Espanol</cdomain:text>
         </stat:subtitle>
         <stat:titleAlternative>
-            <cdomain:text xml:lang="es">titleAlternative-resource-EsHpjmZxSl en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">titleAlternative-resource-7AkVx8l8uC en Espanol</cdomain:text>
         </stat:titleAlternative>
         <stat:abstract>
-            <cdomain:text xml:lang="es">abstract-resource-EsHpjmZxSl en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">abstract-resource-7AkVx8l8uC en Espanol</cdomain:text>
         </stat:abstract>
         <stat:keywords>
-            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-resource-EsHpjmZxSl en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-resource-7AkVx8l8uC en Espanol</cdomain:text>
         </stat:keywords>
         <stat:type>DATASET</stat:type>
         <stat:creator kind="structuralResources#organisationUnit">
@@ -108,7 +108,7 @@
         <stat:createdDate>2012-01-02T03:04:05Z</stat:createdDate>
         <stat:lastUpdate>2013-01-02T03:04:05Z</stat:lastUpdate>
         <stat:conformsTo>
-            <cdomain:text xml:lang="es">conformsTo-resource-EsHpjmZxSl en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">conformsTo-resource-7AkVx8l8uC en Espanol</cdomain:text>
         </stat:conformsTo>
         <stat:publishers total="2">
             <cdomain:resource kind="structuralResources#organisationUnit">
@@ -253,9 +253,18 @@
                 </cdomain:name>
             </cdomain:resource>
         </stat:isPartOf>
+        <stat:rightsHolder kind="structuralResources#organisation">
+            <cdomain:id>contact</cdomain:id>
+            <cdomain:name>
+                <cdomain:text xml:lang="es">contact en Español</cdomain:text>
+            </cdomain:name>
+        </stat:rightsHolder>
         <stat:copyrightDate>2014-02-15T03:04:12Z</stat:copyrightDate>
+        <stat:license>
+            <cdomain:text xml:lang="es">license en Español</cdomain:text>
+        </stat:license>
         <stat:accessRights>
-            <cdomain:text xml:lang="es">accessRights-resource-EsHpjmZxSl en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">accessRights-resource-7AkVx8l8uC en Espanol</cdomain:text>
         </stat:accessRights>
         <stat:publicationDate>2013-01-01T03:04:13Z</stat:publicationDate>
         <stat:replacesVersion kind="statisticalResources#dataset">
@@ -671,15 +680,15 @@
                 <stat:type>TIME_DIMENSION</stat:type>
                 <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:NonEnumeratedDimensionValues" total="4">
                     <stat:value>
-                        <stat:id>2012</stat:id>
-                        <stat:name>
-                            <cdomain:text xml:lang="es">2012 en Español</cdomain:text>
-                        </stat:name>
-                    </stat:value>
-                    <stat:value>
                         <stat:id>2011</stat:id>
                         <stat:name>
                             <cdomain:text xml:lang="es">2011 en Español</cdomain:text>
+                        </stat:name>
+                    </stat:value>
+                    <stat:value>
+                        <stat:id>2012</stat:id>
+                        <stat:name>
+                            <cdomain:text xml:lang="es">2012 en Español</cdomain:text>
                         </stat:name>
                     </stat:value>
                     <stat:value>

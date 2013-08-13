@@ -32,4 +32,8 @@
         <constructor-arg value="org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade" />
     </bean>
     
+    <bean id="commonMetadataRestExternalFacade" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade" />
+    </bean>
+    
 </beans>

@@ -46,7 +46,9 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
+import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.constants.RestConstants;
+import org.siemac.metamac.rest.structural_resources.v1_0.utils.CommonMetadataRestMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -67,6 +69,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
@@ -90,6 +93,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private DatasetService                    datasetService;
     private QueryService                      queryService;
     private SrmRestExternalFacade             srmRestExternalFacade;
+    private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -404,6 +408,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             };
         });
     }
+
     private void mockRetrieveDataStructureByUrn() throws MetamacException {
         when(srmRestExternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
 
@@ -452,6 +457,16 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    private void mockRetrieveConfigurationById() throws MetamacException {
+        when(commonMetadataRestExternalFacade.retrieveConfiguration(any(String.class))).thenAnswer(new Answer<Configuration>() {
+
+            @Override
+            public Configuration answer(InvocationOnMock invocation) throws Throwable {
+                return CommonMetadataRestMocks.mockConfiguration("configuration01");
+            };
+        });
+    }
+
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
         ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties
@@ -493,6 +508,9 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
         reset(datasetRepositoriesServiceFacade);
 
+        commonMetadataRestExternalFacade = applicationContext.getBean(CommonMetadataRestExternalFacade.class);
+        reset(commonMetadataRestExternalFacade);
+
         mockFindDatasetsByCondition();
         mockRetrieveDatasetLastPublishedVersion();
         mockRetrieveDatasetVersionDimensionsIds();
@@ -508,5 +526,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         mockFindQueriesByCondition();
         mockRetrieveQueryLastPublishedVersion();
+
+        mockRetrieveConfigurationById();
     }
 }

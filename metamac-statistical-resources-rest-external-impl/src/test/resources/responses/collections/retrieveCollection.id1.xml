@@ -146,7 +146,16 @@
                 </cdomain:name>
             </cdomain:resource>
         </stat:mediators>
-        <stat:copyrightDate>2013-08-05T13:28:24.278+01:00</stat:copyrightDate>
+        <stat:rightsHolder kind="structuralResources#organisation">
+            <cdomain:id>contact</cdomain:id>
+            <cdomain:name>
+                <cdomain:text xml:lang="es">contact en Español</cdomain:text>
+            </cdomain:name>
+        </stat:rightsHolder>
+        <stat:copyrightDate>2013-08-13T12:10:07.602+01:00</stat:copyrightDate>
+        <stat:license>
+            <cdomain:text xml:lang="es">license en Español</cdomain:text>
+        </stat:license>
         <stat:accessRights>
             <cdomain:text xml:lang="es">accessRights-resource-n0kQ9qoE3Q en Espanol</cdomain:text>
         </stat:accessRights>

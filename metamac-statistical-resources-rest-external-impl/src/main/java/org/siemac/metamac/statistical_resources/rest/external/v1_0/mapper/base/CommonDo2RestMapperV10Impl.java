@@ -26,6 +26,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.common.v1_0.domain.Resources;
+import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
@@ -76,6 +77,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelection
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
+import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
@@ -105,6 +107,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private SrmRestExternalFacade            srmRestExternalFacade;
+
+    @Autowired
+    private CommonMetadataRestExternalFacade commonMetadataRestExternalFacade;
 
     @Autowired
     private DatasetsDo2RestMapperV10         datasetsDo2RestMapper;
@@ -172,9 +177,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
         target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
 
-        // TODO common-metadata
-        // target.setRightsHolder(toResourceExternalItemSrm(source.getRightsHolder(), selectedLanguages));
-        // target.setLicense(toInternationalString(source.getLicense(), selectedLanguages));
+        toCommonMetadata(source, target, selectedLanguages);
+
         target.setCopyrightDate(toDate(source.getCopyrightedDate()));
         target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
 
@@ -441,6 +445,21 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         SelectedLanguages target = new SelectedLanguages();
         target.getLanguages().addAll(selectedLanguages);
         target.setTotal(BigInteger.valueOf(target.getLanguages().size()));
+        return target;
+    }
+
+    @Override
+    public Resource toResource(Resource source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Resource target = source;
+        target.setId(source.getId());
+        target.setUrn(source.getUrn());
+        target.setKind(source.getKind());
+        target.setName(toInternationalString(source.getName(), selectedLanguages));
+        target.setNestedId(source.getNestedId());
+        target.setSelfLink(source.getSelfLink());
         return target;
     }
 
@@ -1000,6 +1019,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensionIds().size()));
         return targets;
+    }
+
+    private void toCommonMetadata(SiemacMetadataStatisticalResource source, StatisticalResource target, List<String> selectedLanguages) {
+        String configurationId = source.getCommonMetadata().getCode();
+        Configuration configuration = commonMetadataRestExternalFacade.retrieveConfiguration(configurationId);
+        target.setRightsHolder(toResource(configuration.getContact(), selectedLanguages));
+        target.setLicense(toInternationalString(configuration.getLicense(), selectedLanguages));
     }
 
     private class OrderingStackElement {

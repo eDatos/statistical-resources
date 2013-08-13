@@ -31,6 +31,8 @@ public interface CommonDo2RestMapperV10 {
     public Pair<DataStructureDefinition, Dimensions> toDataStructureDefinitionAndDimensions(DatasetVersion datasetVersion, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
             List<String> selectedLanguages) throws MetamacException;
 
+    public Resource toResource(Resource source, List<String> selectedLanguages);
+
     public ResourceLink toResourceLink(String kind, String href);
     public String toResourceLink(String resourceSubpath, String agencyID, String resourceID, String version);
 

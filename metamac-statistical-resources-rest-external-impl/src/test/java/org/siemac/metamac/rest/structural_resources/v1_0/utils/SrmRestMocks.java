@@ -1,7 +1,7 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
-import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.mockInternationalString;
+
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -248,21 +248,6 @@ public class SrmRestMocks {
         conceptScheme.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/" + agencyID + "/" + resourceID + "/" + version));
         return conceptScheme;
     }
-
-    private static InternationalString mockInternationalString(String resourceID) {
-        InternationalString internationalString = new InternationalString();
-        internationalString.getTexts().add(mockLocalisedString("es", resourceID + " en Español"));
-        internationalString.getTexts().add(mockLocalisedString("en", resourceID + " in English"));
-        return internationalString;
-    }
-
-    private static LocalisedString mockLocalisedString(String lang, String value) {
-        LocalisedString localisedString = new LocalisedString();
-        localisedString.setLang(lang);
-        localisedString.setValue(value);
-        return localisedString;
-    }
-
     private static TextFormat mockTimeTextFormatType() {
         TextFormat timeTextFormatType = new TextFormat();
         timeTextFormatType.setTextType(DataType.BASIC_TIME_PERIOD);

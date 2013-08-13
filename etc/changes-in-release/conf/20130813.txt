@@ -1,0 +1,2 @@
+1) Aplicación web externa: Añadida propiedad en el fichero 'metamac-statistical-resources-external-web-configuration.xml':
+   <entry key="metamac.common_metadata.rest.external">http://FILL_ME_WITH_HOST_AND_PORT/FILL_ME_WITH_COMMON_METADATA_EXTERNAL_APP/apis/cmetadata</entry>

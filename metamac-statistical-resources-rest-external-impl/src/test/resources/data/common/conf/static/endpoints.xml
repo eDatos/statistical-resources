@@ -5,6 +5,7 @@
     
     <entry key="metamac.statistical_resources.rest.external">http://data.istac.es/apis/statistical-resources</entry>
     <entry key="metamac.srm.rest.external">http://data.istac.es/apis/srm</entry>
+    <entry key="metamac.common_metadata.rest.external">http://data.istac.es/apis/cmetadata</entry>
     <entry key="metamac.statistical_operations.rest.external">http://data.istac.es/apis/operations</entry>
     <entry key="metamac.edition.languages">es,en</entry>
     
