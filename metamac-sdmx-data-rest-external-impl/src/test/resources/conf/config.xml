@@ -3,6 +3,6 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <override>
         <system />
-        <properties fileName="conf/statistic-sdmx-srm-external-web-configuration.xml" basePath="" config-optional="false" />
+        <properties fileName="conf/statistic-sdmx-data-external-web-configuration.xml" basePath="" config-optional="false" />
     </override>
 </configuration>

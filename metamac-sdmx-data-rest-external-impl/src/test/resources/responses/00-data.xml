@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<message:Structure xmlns:registry="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/registry" xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" xmlns:datastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/structurespecific" xmlns:message="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message" xmlns:metadatageneric="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/metadata/generic" xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xmlns:query="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/query" xmlns:datageneric="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic" xmlns:metadatastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/metadata/structurespecific" xmlns:messagefooter="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message/footer">
+  <message:Header>
+    <message:ID>Structure_Message</message:ID>
+    <message:Test>false</message:Test>
+    <message:Prepared>2013-08-07T07:48:02.454+01:00</message:Prepared>
+    <message:Sender id="SDMX01"/>
+  </message:Header>
+  <message:Structures>
+    <structure:CategorySchemes>
+      <structure:CategoryScheme id="itemScheme1" isPartial="false" agencyID="agency1" isFinal="true" isExternalReference="false" version="01.000" validFrom="2012-11-05T10:12:13.014Z" validTo="2013-10-04T10:12:13.014+01:00" urn="urn:sdmx:org.sdmx.infomodel.categoryscheme.CategoryScheme=agency1:itemScheme1(01.000)" uri="http://localhost:9001/apis/sdmx/structural-resources/conceptscheme/agency1/itemScheme1/01.000" serviceURL="serviceUrl-itemScheme1" structureURL="structureUrl-itemScheme1">
+        <common:Annotations>
+          <common:Annotation id="code2">
+            <common:AnnotationTitle>title-code2</common:AnnotationTitle>
+            <common:AnnotationType>type-code2</common:AnnotationType>
+            <common:AnnotationURL>url-code2</common:AnnotationURL>
+            <common:AnnotationText xml:lang="en">text-code2 in English</common:AnnotationText>
+            <common:AnnotationText xml:lang="es">text-code2 en Español</common:AnnotationText>
+          </common:Annotation>
+          <common:Annotation id="code1">
+            <common:AnnotationTitle>title-code1</common:AnnotationTitle>
+            <common:AnnotationType>type-code1</common:AnnotationType>
+            <common:AnnotationURL>url-code1</common:AnnotationURL>
+            <common:AnnotationText xml:lang="en">text-code1 in English</common:AnnotationText>
+            <common:AnnotationText xml:lang="es">text-code1 en Español</common:AnnotationText>
+          </common:Annotation>
+        </common:Annotations>
+        <common:Name xml:lang="es">name-itemScheme1v01.000 en Español</common:Name>
+        <common:Name xml:lang="en">name-itemScheme1v01.000 in English</common:Name>
+        <common:Description xml:lang="es">description-itemScheme1v01.000 en Español</common:Description>
+        <common:Description xml:lang="en">description-itemScheme1v01.000 in English</common:Description>
+        <structure:Category id="categoryA" urn="urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=agency1:itemScheme1(01.000).categoryA" uri="uriProvider:categoryA">
+          <common:Annotations>
+            <common:Annotation id="code2">
+              <common:AnnotationTitle>title-code2</common:AnnotationTitle>
+              <common:AnnotationType>type-code2</common:AnnotationType>
+              <common:AnnotationURL>url-code2</common:AnnotationURL>
+              <common:AnnotationText xml:lang="es">text-code2 en Español</common:AnnotationText>
+              <common:AnnotationText xml:lang="en">text-code2 in English</common:AnnotationText>
+            </common:Annotation>
+            <common:Annotation id="code1">
+              <common:AnnotationTitle>title-code1</common:AnnotationTitle>
+              <common:AnnotationType>type-code1</common:AnnotationType>
+              <common:AnnotationURL>url-code1</common:AnnotationURL>
+              <common:AnnotationText xml:lang="es">text-code1 en Español</common:AnnotationText>
+              <common:AnnotationText xml:lang="en">text-code1 in English</common:AnnotationText>
+            </common:Annotation>
+          </common:Annotations>
+          <common:Name xml:lang="en">name-categoryA in English</common:Name>
+          <common:Name xml:lang="es">name-categoryA en Español</common:Name>
+          <common:Description xml:lang="en">description-categoryA in English</common:Description>
+          <common:Description xml:lang="es">description-categoryA en Español</common:Description>
+          <structure:Category id="categoryB" urn="urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=agency1:itemScheme1(01.000).categoryB" uri="uriProvider:categoryB">
+            <common:Annotations>
+              <common:Annotation id="code1">
+                <common:AnnotationTitle>title-code1</common:AnnotationTitle>
+                <common:AnnotationType>type-code1</common:AnnotationType>
+                <common:AnnotationURL>url-code1</common:AnnotationURL>
+                <common:AnnotationText xml:lang="en">text-code1 in English</common:AnnotationText>
+                <common:AnnotationText xml:lang="es">text-code1 en Español</common:AnnotationText>
+              </common:Annotation>
+              <common:Annotation id="code2">
+                <common:AnnotationTitle>title-code2</common:AnnotationTitle>
+                <common:AnnotationType>type-code2</common:AnnotationType>
+                <common:AnnotationURL>url-code2</common:AnnotationURL>
+                <common:AnnotationText xml:lang="es">text-code2 en Español</common:AnnotationText>
+                <common:AnnotationText xml:lang="en">text-code2 in English</common:AnnotationText>
+              </common:Annotation>
+            </common:Annotations>
+            <common:Name xml:lang="en">name-categoryB in English</common:Name>
+            <common:Name xml:lang="es">name-categoryB en Español</common:Name>
+            <common:Description xml:lang="es">description-categoryB en Español</common:Description>
+            <common:Description xml:lang="en">description-categoryB in English</common:Description>
+          </structure:Category>
+        </structure:Category>
+        <structure:Category id="categoryC" urn="urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=agency1:itemScheme1(01.000).categoryC" uri="uriProvider:categoryC">
+          <common:Annotations>
+            <common:Annotation id="code2">
+              <common:AnnotationTitle>title-code2</common:AnnotationTitle>
+              <common:AnnotationType>type-code2</common:AnnotationType>
+              <common:AnnotationURL>url-code2</common:AnnotationURL>
+              <common:AnnotationText xml:lang="es">text-code2 en Español</common:AnnotationText>
+              <common:AnnotationText xml:lang="en">text-code2 in English</common:AnnotationText>
+            </common:Annotation>
+            <common:Annotation id="code1">
+              <common:AnnotationTitle>title-code1</common:AnnotationTitle>
+              <common:AnnotationType>type-code1</common:AnnotationType>
+              <common:AnnotationURL>url-code1</common:AnnotationURL>
+              <common:AnnotationText xml:lang="es">text-code1 en Español</common:AnnotationText>
+              <common:AnnotationText xml:lang="en">text-code1 in English</common:AnnotationText>
+            </common:Annotation>
+          </common:Annotations>
+          <common:Name xml:lang="en">name-categoryC in English</common:Name>
+          <common:Name xml:lang="es">name-categoryC en Español</common:Name>
+          <common:Description xml:lang="en">description-categoryC in English</common:Description>
+          <common:Description xml:lang="es">description-categoryC en Español</common:Description>
+        </structure:Category>
+      </structure:CategoryScheme>
+    </structure:CategorySchemes>
+  </message:Structures>
+</message:Structure>
