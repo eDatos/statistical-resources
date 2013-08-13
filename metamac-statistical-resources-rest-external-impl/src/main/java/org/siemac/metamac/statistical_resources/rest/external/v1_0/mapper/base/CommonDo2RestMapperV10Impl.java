@@ -17,10 +17,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -59,6 +55,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionVisualisation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
 import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -409,23 +406,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     @Override
-    public InternationalString toInternationalString(List<TextType> sources, List<String> selectedLanguages) {
-        if (CollectionUtils.isEmpty(sources)) {
-            return null;
-        }
-        InternationalString targets = new InternationalString();
-        for (TextType source : sources) {
-            if (selectedLanguages.contains(source.getLang())) {
-                LocalisedString target = new LocalisedString();
-                target.setLang(source.getLang());
-                target.setValue(source.getValue());
-                targets.getTexts().add(target);
-            }
-        }
-        return targets;
-    }
-
-    @Override
     public InternationalString toInternationalString(InternationalString sources, List<String> selectedLanguages) {
         if (sources == null) {
             return null;
@@ -560,7 +540,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (dataStructure.getDimensionVisualisations() != null && !CollectionUtils.isEmpty(dataStructure.getDimensionVisualisations().getDimensionVisualisations())) {
             dimensionVisualisationByDimensionId = new HashMap<String, DimensionVisualisation>(dataStructure.getDimensionVisualisations().getDimensionVisualisations().size());
             for (DimensionVisualisation dimensionVisualisation : dataStructure.getDimensionVisualisations().getDimensionVisualisations()) {
-                dimensionVisualisationByDimensionId.put(dimensionVisualisation.getDimension().getRef().getId(), dimensionVisualisation);
+                dimensionVisualisationByDimensionId.put(dimensionVisualisation.getDimension(), dimensionVisualisation);
             }
         }
 
@@ -588,6 +568,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setId(source.getComponentId());
         target.setType(toDimensionType(source.getType()));
 
+        // TODO se podría dejar el conceptIdentity completo en el DsdProcessor, o poner el nombre ya en la dimensión
         Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
         target.setName(toInternationalString(conceptIdentity.getName(), selectedLanguages));
 
@@ -693,12 +674,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
 
-        Map<String, Integer> showDecimalPrecisionsById = null;
+        Map<String, Integer> showDecimalPrecisionsByUrn = null;
         if (DsdComponentType.MEASURE.equals(componentType)) {
             if (dataStructure.getShowDecimalsPrecisions() != null && !CollectionUtils.isEmpty(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions())) {
-                showDecimalPrecisionsById = new HashMap<String, Integer>(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().size());
+                showDecimalPrecisionsByUrn = new HashMap<String, Integer>(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().size());
                 for (ShowDecimalPrecision showDecimalPrecision : dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions()) {
-                    showDecimalPrecisionsById.put(showDecimalPrecision.getConcept().getRef().getId(), showDecimalPrecision.getShowDecimals());
+                    showDecimalPrecisionsByUrn.put(showDecimalPrecision.getConcept().getUrn(), showDecimalPrecision.getShowDecimals());
                 }
             }
         }
@@ -726,13 +707,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(parentsReplacedToVisualisation, concept);
                 continue;
             }
-            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsById, parentsReplacedToVisualisation, selectedLanguages));
+            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsByUrn, parentsReplacedToVisualisation, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
     }
 
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTimeTextFormatType(List<CodeDimension> coverages, TimeTextFormatType timeTextFormatType,
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTimeTextFormatType(List<CodeDimension> coverages, TextFormat timeTextFormatType,
             List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
         if (timeTextFormatType == null) {
             return null;
@@ -750,8 +731,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(List<CodeDimension> coverages, SimpleComponentTextFormatType textFormatType,
-            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(List<CodeDimension> coverages, TextFormat textFormatType, List<String> effectiveDimensionValuesToData,
+            List<String> selectedLanguages) throws MetamacException {
         if (textFormatType == null) {
             return null;
         }
@@ -791,7 +772,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return target;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsById, Map<String, String> effectiveParentVisualisation,
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsByUrn, Map<String, String> effectiveParentVisualisation,
             List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
@@ -807,8 +788,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 target.setVisualisationParent(effectiveParentVisualisation.get(source.getParent()));
             }
         }
-        if (showDecimalPrecisionsById != null && showDecimalPrecisionsById.containsKey(source.getId())) {
-            target.setShowDecimalsPrecision(showDecimalPrecisionsById.get(source.getId()));
+        if (showDecimalPrecisionsByUrn != null) {
+            target.setShowDecimalsPrecision(showDecimalPrecisionsByUrn.get(source.getUrn()));
         }
         target.setKind(source.getKind());
         target.setSelfLink(source.getSelfLink());
@@ -1013,23 +994,16 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID.equals(dimensionId);
     }
 
-    private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions sources) {
+    private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences sources) {
         if (sources == null) {
             return null;
         }
         DimensionsId targets = new DimensionsId();
-        for (LocalDimensionReferenceType source : sources.getDimensions()) {
-            targets.getDimensionIds().add(toDimensionId(source));
+        for (String source : sources.getDimensions()) {
+            targets.getDimensionIds().add(source);
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensionIds().size()));
         return targets;
-    }
-
-    private String toDimensionId(LocalDimensionReferenceType source) {
-        if (source == null) {
-            return null;
-        }
-        return source.getRef().getId();
     }
 
     private class OrderingStackElement {

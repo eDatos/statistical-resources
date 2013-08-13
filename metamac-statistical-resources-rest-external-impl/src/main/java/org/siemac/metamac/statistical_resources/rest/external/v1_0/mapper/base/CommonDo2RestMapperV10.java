@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.Pair;
@@ -36,7 +35,6 @@ public interface CommonDo2RestMapperV10 {
     public String toResourceLink(String resourceSubpath, String agencyID, String resourceID, String version);
 
     public InternationalString toInternationalString(org.siemac.metamac.core.common.ent.domain.InternationalString sources, List<String> selectedLanguages);
-    public InternationalString toInternationalString(List<TextType> sources, List<String> selectedLanguages);
     public InternationalString toInternationalString(InternationalString sources, List<String> selectedLanguages);
     public InternationalString toInternationalString(String source, List<String> selectedLanguages);
 

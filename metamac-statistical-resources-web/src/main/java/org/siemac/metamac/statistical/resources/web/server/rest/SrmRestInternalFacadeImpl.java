@@ -10,15 +10,7 @@ import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacW
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
@@ -28,9 +20,14 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
@@ -70,18 +67,18 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     public List<String> retrieveDsdDimensionsIds(String dsdUrn) throws MetamacWebException {
         try {
             DataStructure structure = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
-            DimensionListType dimensionsList = structure.getDataStructureComponents().getDimensionList();
+            Dimensions dimensionsList = structure.getDataStructureComponents().getDimensions();
 
             List<String> dimensions = new ArrayList<String>();
-            for (Object dimObj : dimensionsList.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
-                if (dimObj instanceof DimensionType) {
-                    DimensionType dim = (DimensionType) dimObj;
+            for (DimensionBase dimObj : dimensionsList.getDimensions()) {
+                if (dimObj instanceof Dimension) {
+                    Dimension dim = (Dimension) dimObj;
                     dimensions.add(dim.getId());
-                } else if (dimObj instanceof MeasureDimensionType) {
-                    MeasureDimensionType dim = (MeasureDimensionType) dimObj;
+                } else if (dimObj instanceof MeasureDimension) {
+                    MeasureDimension dim = (MeasureDimension) dimObj;
                     dimensions.add(dim.getId());
-                } else if (dimObj instanceof TimeDimensionType) {
-                    TimeDimensionType dim = (TimeDimensionType) dimObj;
+                } else if (dimObj instanceof TimeDimension) {
+                    TimeDimension dim = (TimeDimension) dimObj;
                     dimensions.add(dim.getId());
                 }
             }
@@ -238,17 +235,4 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         return externalItemDto;
     }
 
-    protected InternationalStringDto toInternationalStringDto(List<TextType> sources) {
-        if (CollectionUtils.isEmpty(sources)) {
-            return null;
-        }
-        InternationalStringDto targets = new InternationalStringDto();
-        for (TextType source : sources) {
-            LocalisedStringDto target = new LocalisedStringDto();
-            target.setLocale(source.getLang());
-            target.setLabel(source.getValue());
-            targets.getTexts().add(target);
-        }
-        return targets;
-    }
 }

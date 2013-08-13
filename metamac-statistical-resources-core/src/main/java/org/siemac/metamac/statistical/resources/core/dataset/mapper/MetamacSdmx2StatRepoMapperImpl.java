@@ -7,9 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
@@ -170,7 +169,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
     }
 
     @Override
-    public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationshipType attributeRelationship, Map<String, List<ComponentInfo>> groupDimensionMapInfo)
+    public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationship attributeRelationship, Map<String, List<ComponentInfo>> groupDimensionMapInfo)
             throws MetamacException {
 
         StringBuilder customKeyAttribute = new StringBuilder();
@@ -197,7 +196,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
             // List<CodeDimensionDto> codeDimensionDtos = new ArrayList<CodeDimensionDto>(); // Dimensions and values to insert
 
             // For all dimensions key in the attachment of current attribute
-            List<ComponentInfo> groupDimensionsInfo = groupDimensionMapInfo.get(attributeRelationship.getGroup().getRef().getId());
+            List<ComponentInfo> groupDimensionsInfo = groupDimensionMapInfo.get(attributeRelationship.getGroup());
 
             for (ComponentInfo componentInfo : groupDimensionsInfo) {
                 // Search key Value of this attribute
@@ -219,7 +218,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
         if (!attributeRelationship.getDimensions().isEmpty() || !attributeRelationship.getAttachmentGroups().isEmpty()) {
             // Map<String, CodeDimensionDto> codeDimensionDtosMap = new HashMap<String, CodeDimensionDto>(); // Dimensions and values to insert
 
-            List<String> dimensionsList = extractDimensionsList(attributeRelationship.getDimensions());
+            List<String> dimensionsList = attributeRelationship.getDimensions();
 
             // For all dimensions key in the attachment of current attribute
             for (String dimensionId : dimensionsList) {
@@ -251,13 +250,6 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
      * PRIVATE
      *************************************************************************/
 
-    private List<String> extractDimensionsList(List<LocalDimensionReferenceType> localDimensionReferences) {
-        List<String> dimensionsList = new LinkedList<String>();
-        for (LocalDimensionReferenceType localDimensionReferenceType : localDimensionReferences) {
-            dimensionsList.add(localDimensionReferenceType.getRef().getId());
-        }
-        return dimensionsList;
-    }
     /**
      * Generate a attributeDto form idValuePairDto and keys
      * 

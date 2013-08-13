@@ -1,37 +1,31 @@
 package org.siemac.metamac.statistical.resources.core.common.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.PrimaryMeasureType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeQualifierType;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeUsageStatusType;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.PrimaryMeasure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 
 public class DsdProcessor {
@@ -47,16 +41,16 @@ public class DsdProcessor {
 
     public static List<DsdDimension> getDimensions(DataStructure dsd) throws MetamacException {
         List<DsdDimension> dimensions = new ArrayList<DsdProcessor.DsdDimension>();
-        DataStructureComponentsType components = dsd.getDataStructureComponents();
-        if (components != null && components.getDimensionList() != null) {
-            DimensionListType dimensionList = components.getDimensionList();
-            for (Object dimObj : dimensionList.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
+        DataStructureComponents components = dsd.getDataStructureComponents();
+        if (components != null && components.getDimensions() != null) {
+            Dimensions dimensionList = components.getDimensions();
+            for (DimensionBase dimObj : dimensionList.getDimensions()) {
                 if (dimObj instanceof Dimension) {
                     dimensions.add(new DsdDimension((Dimension) dimObj));
-                } else if (dimObj instanceof MeasureDimensionType) {
-                    dimensions.add(new DsdDimension((MeasureDimensionType) dimObj));
-                } else if (dimObj instanceof TimeDimensionType) {
-                    dimensions.add(new DsdDimension((TimeDimensionType) dimObj));
+                } else if (dimObj instanceof MeasureDimension) {
+                    dimensions.add(new DsdDimension((MeasureDimension) dimObj));
+                } else if (dimObj instanceof TimeDimension) {
+                    dimensions.add(new DsdDimension((TimeDimension) dimObj));
                 } else {
                     throw new IllegalArgumentException("Found a dimension of unknown type " + dimObj);
                 }
@@ -67,15 +61,13 @@ public class DsdProcessor {
 
     public static List<DsdAttribute> getAttributes(DataStructure dsd) throws MetamacException {
         List<DsdAttribute> attributes = new ArrayList<DsdAttribute>();
-        DataStructureComponentsType components = dsd.getDataStructureComponents();
+        DataStructureComponents components = dsd.getDataStructureComponents();
 
-        if (components != null && components.getAttributeList() != null) {
-            AttributeListType attributeList = components.getAttributeList();
-            for (Object attrObj : attributeList.getAttributesAndReportingYearStartDaies()) {
+        if (components != null && components.getAttributes() != null) {
+            Attributes attributeList = components.getAttributes();
+            for (AttributeBase attrObj : attributeList.getAttributes()) {
                 if (attrObj instanceof Attribute) {
                     attributes.add(new DsdAttribute((Attribute) attrObj));
-                } else if (attrObj instanceof ReportingYearStartDayType) {
-                    attributes.add(new DsdAttribute((ReportingYearStartDayType) attrObj));
                 } else {
                     throw new IllegalArgumentException("Found an attribute of unknown type " + attrObj);
                 }
@@ -86,47 +78,40 @@ public class DsdProcessor {
 
     public abstract static class DsdComponent {
 
-        protected DsdComponentType              type                           = null;
-        protected String                        codelistRepresentationUrn      = null;
-        protected String                        conceptSchemeRepresentationUrn = null;
-        protected String                        conceptIdentityUrn             = null;
-        protected SimpleComponentTextFormatType textFormat                     = null;
-        protected BasicComponentTextFormatType  textFormatConceptId            = null;
+        protected DsdComponentType type                           = null;
+        protected String           codelistRepresentationUrn      = null;
+        protected String           conceptSchemeRepresentationUrn = null;
+        protected String           conceptIdentityUrn             = null;
+        protected TextFormat       textFormat                     = null;
+        protected TextFormat       textFormatConceptId            = null;
 
-        protected void setConceptIdentityUrn(ConceptReferenceType conceptIdentityRef) {
-            if (conceptIdentityRef.getRef() != null) {
-                ConceptRefType ref = conceptIdentityRef.getRef();
-                conceptIdentityUrn = GeneratorUrnUtils.generateSdmxConceptUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getMaintainableParentID(), ref.getMaintainableParentVersion(),
-                        ref.getId());
+        protected void setConceptIdentityUrn(ItemResourceInternal conceptIdentity) {
+            if (conceptIdentity != null) {
+                conceptIdentityUrn = conceptIdentity.getUrn();
             } else {
-                throw new IllegalArgumentException("Concept identity is required.");
+                throw new IllegalArgumentException("Concept identity is required");
             }
         }
 
-        protected void setRepresentationFromLocalRepresentation(SimpleDataStructureRepresentationType localRepresentation) {
-            if (localRepresentation.getEnumeration() != null) {
-                extractCodelistUrnFromRef(localRepresentation.getEnumeration().getRef());
+        protected void setRepresentationFromLocalRepresentation(Representation localRepresentation) {
+            if (localRepresentation.getEnumerationCodelist() != null) {
+                extractCodelistUrn(localRepresentation.getEnumerationCodelist());
             } else {
                 textFormat = localRepresentation.getTextFormat();
             }
         }
 
-        protected void setRepresentationFromConceptIdentity(ConceptReferenceType conceptIdentityRef) throws MetamacException {
+        protected void setRepresentationFromConceptIdentity(ItemResourceInternal conceptIdentity) throws MetamacException {
             Concept concept = null;
-            if (conceptIdentityRef.getRef() != null) {
-                ConceptRefType ref = conceptIdentityRef.getRef();
-                concept = getSrmRestInternalService()
-                        .retrieveConceptByUrn(
-                                GeneratorUrnUtils.generateSdmxConceptUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getMaintainableParentID(), ref.getMaintainableParentVersion(),
-                                        ref.getId()));
+            if (conceptIdentity != null) {
+                concept = getSrmRestInternalService().retrieveConceptByUrn(conceptIdentity.getUrn());
             } else {
-                // In metamac, Ref is always present
-                throw new RuntimeException("The reference is not present. In Metamac is always present.");
+                throw new RuntimeException("Concept identity can not be null");
             }
 
             if (concept.getCoreRepresentation() != null) {
                 if (concept.getCoreRepresentation().getEnumerationCodelist() != null) {
-                    codelistRepresentationUrn = concept.getCoreRepresentation().getEnumerationCodelist();
+                    extractCodelistUrn(concept.getCoreRepresentation().getEnumerationCodelist());
                 } else {
                     textFormatConceptId = concept.getCoreRepresentation().getTextFormat();
                 }
@@ -135,21 +120,19 @@ public class DsdProcessor {
             }
         }
 
-        protected void extractCodelistUrnFromRef(CodelistRefType ref) {
-            if (ref != null) {
-                codelistRepresentationUrn = GeneratorUrnUtils.generateSdmxCodelistUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getId(), ref.getVersion());
+        protected void extractCodelistUrn(ResourceInternal codelist) {
+            if (codelist != null) {
+                codelistRepresentationUrn = codelist.getUrn();
             } else {
-                // In metamac, Ref is always present
-                throw new RuntimeException("The reference is not present. In Metamac is always present.");
+                throw new RuntimeException("Codelist can not be null");
             }
         }
 
-        protected void extractConceptSchemeUrnFromRef(ConceptSchemeRefType ref) {
-            if (ref != null) {
-                conceptSchemeRepresentationUrn = GeneratorUrnUtils.generateSdmxConceptSchemeUrn((String[]) Arrays.asList(ref.getAgencyID()).toArray(), ref.getId(), ref.getVersion());
+        protected void extractConceptSchemeUrn(ResourceInternal conceptScheme) {
+            if (conceptScheme != null) {
+                conceptSchemeRepresentationUrn = conceptScheme.getUrn();
             } else {
-                // In metamac, Ref is always present
-                throw new RuntimeException("The reference is not present. In Metamac is always present.");
+                throw new RuntimeException("ConceptScheme can not be null");
             }
         }
 
@@ -167,11 +150,11 @@ public class DsdProcessor {
             return conceptSchemeRepresentationUrn;
         }
 
-        public SimpleComponentTextFormatType getTextFormatRepresentation() {
+        public TextFormat getTextFormatRepresentation() {
             return textFormat;
         }
 
-        public BasicComponentTextFormatType getTextFormatConceptId() {
+        public TextFormat getTextFormatConceptId() {
             return textFormatConceptId;
         }
 
@@ -195,8 +178,8 @@ public class DsdProcessor {
 
     public static class DsdDimension extends DsdComponent {
 
-        private final String       dimensionId;
-        private TimeTextFormatType timeTextFormatType;
+        private final String dimensionId;
+        private TextFormat   timeTextFormatType;
 
         public DsdDimension(Dimension dim) throws MetamacException {
             dimensionId = dim.getId();
@@ -218,12 +201,12 @@ public class DsdProcessor {
 
         }
 
-        public DsdDimension(MeasureDimensionType dim) {
+        public DsdDimension(MeasureDimension dim) {
             dimensionId = dim.getId();
             type = DsdComponentType.MEASURE;
             if (dim.getLocalRepresentation() != null) {
-                if (dim.getLocalRepresentation().getEnumeration() != null) {
-                    extractConceptSchemeUrnFromRef(dim.getLocalRepresentation().getEnumeration().getRef());
+                if (dim.getLocalRepresentation().getEnumerationConceptScheme() != null) {
+                    extractConceptSchemeUrn(dim.getLocalRepresentation().getEnumerationConceptScheme());
                 } else {
                     throw new IllegalArgumentException("Found a dimension with local representation but no Concept Scheme");
                 }
@@ -234,7 +217,7 @@ public class DsdProcessor {
             setConceptIdentityUrn(dim.getConceptIdentity());
         }
 
-        public DsdDimension(TimeDimensionType dim) {
+        public DsdDimension(TimeDimension dim) {
             dimensionId = dim.getId();
             type = DsdComponentType.TEMPORAL;
             if (dim.getLocalRepresentation() != null) {
@@ -246,7 +229,7 @@ public class DsdProcessor {
             setConceptIdentityUrn(dim.getConceptIdentity());
         }
 
-        public TimeTextFormatType getTimeTextFormatRepresentation() {
+        public TextFormat getTimeTextFormatRepresentation() {
             return timeTextFormatType;
         }
 
@@ -258,11 +241,10 @@ public class DsdProcessor {
 
     public static class DsdAttribute extends DsdComponent {
 
-        private final String                        attributeId;
-        private ReportingYearStartDayTextFormatType reportingYearStartDayTextFormatType;
-        private final boolean                       isAttributeAtObservationLevel;
-        private final AttributeRelationshipType     attributeRelationship;
-        private final boolean                       isMandatory;
+        private final String                attributeId;
+        private final boolean               isAttributeAtObservationLevel;
+        private final AttributeRelationship attributeRelationship;
+        private final boolean               isMandatory;
 
         public DsdAttribute(Attribute attr) throws MetamacException {
             attributeId = attr.getId();
@@ -284,24 +266,7 @@ public class DsdProcessor {
 
             isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
             attributeRelationship = attr.getAttributeRelationship();
-            isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
-        }
-
-        public DsdAttribute(ReportingYearStartDayType attr) throws MetamacException {
-            attributeId = attr.getId();
-            type = DsdComponentType.TEMPORAL;
-
-            if (attr.getLocalRepresentation() != null) {
-                reportingYearStartDayTextFormatType = attr.getLocalRepresentation().getTextFormat();
-            } else {
-                setRepresentationFromConceptIdentity(attr.getConceptIdentity());
-            }
-
-            setConceptIdentityUrn(attr.getConceptIdentity());
-
-            isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
-            attributeRelationship = attr.getAttributeRelationship();
-            isMandatory = UsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
+            isMandatory = AttributeUsageStatusType.MANDATORY.equals(attr.getAssignmentStatus());
         }
 
         @Override
@@ -313,12 +278,8 @@ public class DsdProcessor {
             return isAttributeAtObservationLevel;
         }
 
-        public AttributeRelationshipType getAttributeRelationship() {
+        public AttributeRelationship getAttributeRelationship() {
             return attributeRelationship;
-        }
-
-        public ReportingYearStartDayTextFormatType getReportingYearStartDayTextFormatRepresentation() {
-            return reportingYearStartDayTextFormatType;
         }
 
         public boolean isMandatory() {
@@ -330,7 +291,7 @@ public class DsdProcessor {
 
         private final String primaryMeasueId = "OBS_VALUE"; // Fixed
 
-        public DsdPrimaryMeasure(PrimaryMeasureType primaryMeasure) throws MetamacException {
+        public DsdPrimaryMeasure(PrimaryMeasure primaryMeasure) throws MetamacException {
 
             if (primaryMeasure.getLocalRepresentation() != null) {
                 setRepresentationFromLocalRepresentation(primaryMeasure.getLocalRepresentation());

@@ -2,24 +2,21 @@ package org.siemac.metamac.statistical.resources.core.mock;
 
 import java.util.Arrays;
 
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.BasicComponentDataType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.SimpleDataType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeUsageStatusType;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataType;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Groups;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Measure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
 import org.siemac.metamac.statistical.resources.core.utils.SrmMockUtils;
 
 public class Mocks {
@@ -217,12 +214,12 @@ public class Mocks {
 
     public static Concept mock_SDMX_CROSS_DOMAIN_1_0_OBS_VALUE() {
         return SrmMockUtils.buildConcept("OBS_VALUE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE", "Observation value",
-                SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
+                SrmMockUtils.buildConceptRepresentation(DataType.STRING));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_1_0_TITLE() {
         return SrmMockUtils.buildConcept("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", "Title",
-                SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
+                SrmMockUtils.buildConceptRepresentation(DataType.STRING));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS() {
@@ -242,7 +239,7 @@ public class Mocks {
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD() {
         return SrmMockUtils.buildConcept("COLL_METHOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD", "Data Collection Method",
-                SrmMockUtils.buildConceptRepresentation(BasicComponentDataType.STRING));
+                SrmMockUtils.buildConceptRepresentation(DataType.STRING));
     }
 
     public static Concept mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ() {
@@ -282,76 +279,71 @@ public class Mocks {
         dataStructure.setVersion("1.0");
         dataStructure.setId("ECB_EXR_RG");
         dataStructure.setUrn("rn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)");
-        dataStructure.getNames().add(SrmMockUtils.buildTextType("Sample Data Structure Definition for exchange rates, with sibling and rate groups defined.", "en"));
+        dataStructure.setName(SrmMockUtils.buildInternationalStringResource("Sample Data Structure Definition for exchange rates, with sibling and rate groups defined.", "en"));
 
-        dataStructure.setDataStructureComponents(new DataStructureComponentsType());
+        dataStructure.setDataStructureComponents(new DataStructureComponents());
         // Components: Dimensions
-        DimensionListType dimensionListType = new DimensionListType();
-        dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
-                SrmMockUtils.buildDimension("FREQ", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ", null));
+        Dimensions dimensions = new Dimensions();
+        dimensions.getDimensions().add(SrmMockUtils.buildDimension("FREQ", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ", null));
 
-        dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
+        dimensions.getDimensions().add(
                 SrmMockUtils.buildDimension("CURRENCY", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ",
                         "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)"));
 
-        dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
-                SrmMockUtils.buildDimension("CURRENCY_DENOM", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM", null));
+        dimensions.getDimensions().add(SrmMockUtils.buildDimension("CURRENCY_DENOM", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM", null));
 
-        dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
-                SrmMockUtils.buildDimension("EXR_TYPE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE", null));
+        dimensions.getDimensions().add(SrmMockUtils.buildDimension("EXR_TYPE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE", null));
 
-        dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
-                SrmMockUtils.buildDimension("EXR_VAR", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_VAR", null));
+        dimensions.getDimensions().add(SrmMockUtils.buildDimension("EXR_VAR", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_VAR", null));
 
-        dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions()
-                .add(SrmMockUtils.buildTimeDimension("TIME_PERIOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TIME_PERIOD",
-                        TimeDataType.OBSERVATIONAL_TIME_PERIOD));
+        dimensions.getDimensions().add(
+                SrmMockUtils.buildTimeDimension("TIME_PERIOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TIME_PERIOD", DataType.OBSERVATIONAL_TIME_PERIOD));
 
-        dataStructure.getDataStructureComponents().setDimensionList(dimensionListType);
+        dataStructure.getDataStructureComponents().setDimensions(dimensions);
 
         // Components: Groups
-        dataStructure.getDataStructureComponents().getGroups().add(SrmMockUtils.buildGroupType("SiblingGroup", "CURRENCY", "CURRENCY_DENOM", "EXR_TYPE", "EXR_VAR"));
-        dataStructure.getDataStructureComponents().getGroups().add(SrmMockUtils.buildGroupType("RateGroup", "EXR_TYPE", "EXR_VAR"));
+        dataStructure.getDataStructureComponents().setGroups(new Groups());
+        dataStructure.getDataStructureComponents().getGroups().getGroups().add(SrmMockUtils.buildGroupType("SiblingGroup", "CURRENCY", "CURRENCY_DENOM", "EXR_TYPE", "EXR_VAR"));
+        dataStructure.getDataStructureComponents().getGroups().getGroups().add(SrmMockUtils.buildGroupType("RateGroup", "EXR_TYPE", "EXR_VAR"));
 
         // Components: Attributes
-        AttributeListType attributeListType = new AttributeListType();
+        Attributes attributes = new Attributes();
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithGroupRelationship("COLL_METHOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD", null,
-                        UsageStatusType.CONDITIONAL, "RateGroup"));
+                        AttributeUsageStatusType.CONDITIONAL, "RateGroup"));
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithDimensionRelationship("DECIMALS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS", null,
-                        UsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), Arrays.asList("SiblingGroup")));
+                        AttributeUsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), Arrays.asList("SiblingGroup")));
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithDimensionRelationship("UNIT_MEASURE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MEASURE",
-                        "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)", UsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"),
+                        "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)", AttributeUsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"),
                         Arrays.asList("SiblingGroup")));
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithDimensionRelationship("UNIT_MULT", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT", null,
-                        UsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), Arrays.asList("SiblingGroup")));
+                        AttributeUsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), Arrays.asList("SiblingGroup")));
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("CONF_STATUS_OBS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null,
-                        UsageStatusType.CONDITIONAL));
+                        AttributeUsageStatusType.CONDITIONAL));
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_STATUS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS", null,
-                        UsageStatusType.MANDATORY));
+                        AttributeUsageStatusType.MANDATORY));
 
-        attributeListType.getAttributesAndReportingYearStartDaies().add(
+        attributes.getAttributes().add(
                 SrmMockUtils.buildAttributeTypeWithGroupRelationship("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", null,
-                        UsageStatusType.MANDATORY, "SiblingGroup"));
+                        AttributeUsageStatusType.MANDATORY, "SiblingGroup"));
 
-        dataStructure.getDataStructureComponents().setAttributeList(attributeListType);
+        dataStructure.getDataStructureComponents().setAttributes(attributes);
 
         // Components: Primary Measure
-        MeasureListType measureListType = new MeasureListType();
-        measureListType.setPrimaryMeasure(SrmMockUtils.buildPrimaryMeasure("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE", null));
-
-        dataStructure.getDataStructureComponents().setMeasureList(measureListType);
+        Measure measure = new Measure();
+        measure.setPrimaryMeasure(SrmMockUtils.buildPrimaryMeasure("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE", null));
+        dataStructure.getDataStructureComponents().setMeasure(measure);
 
         return dataStructure;
     }
@@ -364,12 +356,10 @@ public class Mocks {
     public static DataStructure mock_DSD_ECB_EXR_RG_for_PX() {
         DataStructure dataStructure = mock_DSD_ECB_EXR_RG();
 
-        for (Object attribute : dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies()) {
+        for (Object attribute : dataStructure.getDataStructureComponents().getAttributes().getAttributes()) {
 
-            if (attribute instanceof AttributeType) {
-                ((AttributeType) attribute).setAssignmentStatus(UsageStatusType.CONDITIONAL);
-            } else if (attribute instanceof ReportingYearStartDayType) {
-                ((ReportingYearStartDayType) attribute).setAssignmentStatus(UsageStatusType.CONDITIONAL);
+            if (attribute instanceof Attribute) {
+                ((Attribute) attribute).setAssignmentStatus(AttributeUsageStatusType.CONDITIONAL);
             }
 
         }
@@ -377,31 +367,31 @@ public class Mocks {
         {
             // Add OBS_NOTE attribute
             Attribute obsNote = SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_NOTE",
-                    "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, UsageStatusType.CONDITIONAL);
+                    "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, AttributeUsageStatusType.CONDITIONAL);
 
             // Not enumerated representation
-            SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
-            SimpleComponentTextFormatType simpleComponentTextFormatType = new SimpleComponentTextFormatType();
-            simpleComponentTextFormatType.setTextType(SimpleDataType.STRING);
+            Representation simpleDataStructureRepresentationType = new Representation();
+            TextFormat simpleComponentTextFormatType = new TextFormat();
+            simpleComponentTextFormatType.setTextType(DataType.STRING);
             simpleDataStructureRepresentationType.setTextFormat(simpleComponentTextFormatType);
             obsNote.setLocalRepresentation(simpleDataStructureRepresentationType);
 
-            dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies().add(obsNote);
+            dataStructure.getDataStructureComponents().getAttributes().getAttributes().add(obsNote);
         }
 
         {
             // Add OBS_CONF attribute
             Attribute obsConf = SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_CONF",
-                    "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, UsageStatusType.CONDITIONAL);
+                    "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, AttributeUsageStatusType.CONDITIONAL);
 
             // Not enumerated representation
-            SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
-            SimpleComponentTextFormatType simpleComponentTextFormatType = new SimpleComponentTextFormatType();
-            simpleComponentTextFormatType.setTextType(SimpleDataType.STRING);
+            Representation simpleDataStructureRepresentationType = new Representation();
+            TextFormat simpleComponentTextFormatType = new TextFormat();
+            simpleComponentTextFormatType.setTextType(DataType.STRING);
             simpleDataStructureRepresentationType.setTextFormat(simpleComponentTextFormatType);
             obsConf.setLocalRepresentation(simpleDataStructureRepresentationType);
 
-            dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies().add(obsConf);
+            dataStructure.getDataStructureComponents().getAttributes().getAttributes().add(obsConf);
 
         }
 

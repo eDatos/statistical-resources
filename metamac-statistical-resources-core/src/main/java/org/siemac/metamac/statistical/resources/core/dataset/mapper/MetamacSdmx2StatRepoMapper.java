@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
@@ -57,6 +57,6 @@ public interface MetamacSdmx2StatRepoMapper {
      * @return key of attribute
      * @throws MetamacException
      */
-    public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationshipType attributeRelationship, Map<String, List<ComponentInfo>> groupDimensionMapInfo)
+    public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationship attributeRelationship, Map<String, List<ComponentInfo>> groupDimensionMapInfo)
             throws MetamacException;
 }

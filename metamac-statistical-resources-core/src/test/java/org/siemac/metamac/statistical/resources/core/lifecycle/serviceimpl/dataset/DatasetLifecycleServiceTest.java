@@ -25,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
@@ -33,6 +32,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
@@ -124,7 +124,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         DataStructure emptyDsd = new DataStructure();
-        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        emptyDsd.setDataStructureComponents(new DataStructureComponents());
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
 
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionUrn);
@@ -144,7 +144,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
 
         DataStructure emptyDsd = new DataStructure();
-        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        emptyDsd.setDataStructureComponents(new DataStructureComponents());
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
 
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionUrn);
@@ -157,7 +157,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
 
         DataStructure emptyDsd = new DataStructure();
-        emptyDsd.setDataStructureComponents(new DataStructureComponentsType());
+        emptyDsd.setDataStructureComponents(new DataStructureComponents());
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(emptyDsd);
 
         DatasetVersion datasetVersionChanged = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);

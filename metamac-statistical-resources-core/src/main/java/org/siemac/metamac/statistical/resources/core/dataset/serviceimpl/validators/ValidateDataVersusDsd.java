@@ -10,23 +10,23 @@ import java.util.Set;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.StringUtils;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.PrimaryMeasureType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.ReportingYearStartDayType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.PrimaryMeasure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponent;
@@ -252,12 +252,7 @@ public class ValidateDataVersusDsd {
 
     private void checkAttributeNonEnumeratedRepresentation(String attributeId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
         DsdProcessor.DsdAttribute dsdAttribute = attributesProcessorMap.get(attributeId);
-
-        if (dsdAttribute.getTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
-        } else if (dsdAttribute.getReportingYearStartDayTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkReportingYearStartDayTextFormatType(dsdAttribute.getReportingYearStartDayTextFormatRepresentation(), key, value, exceptions);
-        }
+        NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
     }
 
     @SuppressWarnings("unchecked")
@@ -300,12 +295,12 @@ public class ValidateDataVersusDsd {
         // Groups
         Map<String, List<ComponentInfo>> groupDimensionMapInfo = new HashMap<String, List<ComponentInfo>>();
 
-        if (dataStructure.getDataStructureComponents() != null) {
-            for (GroupType sourceGroupType : dataStructure.getDataStructureComponents().getGroups()) {
+        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getGroups() != null) {
+            for (Group sourceGroupType : dataStructure.getDataStructureComponents().getGroups().getGroups()) {
                 // Group Dimensions
                 List<ComponentInfo> groupDimensions = new LinkedList<ComponentInfo>();
-                for (GroupDimensionType groupDimensionType : sourceGroupType.getGroupDimensions()) {
-                    groupDimensions.add(this.dimensionsInfoMap.get(groupDimensionType.getDimensionReference().getRef().getId()));
+                for (String dimensionId : sourceGroupType.getDimensions().getDimensions()) {
+                    groupDimensions.add(this.dimensionsInfoMap.get(dimensionId));
                 }
                 groupDimensionMapInfo.put(sourceGroupType.getId(), groupDimensions);
             }
@@ -322,34 +317,22 @@ public class ValidateDataVersusDsd {
         Set<String> attributeIdsAtObservationLevelSet = new HashSet<String>();
         Set<String> mandatoryAttributeIdsAtObservationLevel = new HashSet<String>();
 
-        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getAttributeList() != null) {
-            for (Object sourceAttribute : dataStructure.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies()) {
-                DsdAttribute dsdAttribute = null;
-                if (sourceAttribute instanceof ReportingYearStartDayType) {
-                    dsdAttribute = new DsdAttribute((ReportingYearStartDayType) sourceAttribute);
-                    // Processor
-                    attributesProcessorMap.put(((ReportingYearStartDayType) sourceAttribute).getId(), dsdAttribute);
-                    // ComponentInfo
-                    ComponentInfo componentInfo = new ComponentInfo(((ReportingYearStartDayType) sourceAttribute).getId(), ComponentInfoTypeEnum.REPORTING_YEAR_START_DAY);
-                    attributesInfoMap.put(((ReportingYearStartDayType) sourceAttribute).getId(), componentInfo);
-                    attributesInfoList.add(componentInfo);
-                } else if (sourceAttribute instanceof Attribute) {
-                    dsdAttribute = new DsdAttribute((Attribute) sourceAttribute);
-                    // Processor
-                    attributesProcessorMap.put(((Attribute) sourceAttribute).getId(), new DsdAttribute((Attribute) sourceAttribute));
-                    // Representation
-                    cacheEnumerateRepresentation(dsdAttribute, enumerationRepresentationsMultimap);
-                    // ComponentInfo
-                    ComponentInfo componentInfo = new ComponentInfo(((Attribute) sourceAttribute).getId(), ComponentInfoTypeEnum.DATA_ATTRIBUTE);
-                    attributesInfoMap.put(((Attribute) sourceAttribute).getId(), new ComponentInfo(((Attribute) sourceAttribute).getId(), ComponentInfoTypeEnum.DATA_ATTRIBUTE));
-                    attributesInfoList.add(componentInfo);
-                }
-                if (dsdAttribute != null) {
-                    if (dsdAttribute.isAttributeAtObservationLevel()) {
-                        attributeIdsAtObservationLevelSet.add(dsdAttribute.getComponentId());
-                        if (dsdAttribute.isMandatory()) {
-                            mandatoryAttributeIdsAtObservationLevel.add(dsdAttribute.getComponentId());
-                        }
+        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getAttributes() != null) {
+            for (AttributeBase sourceAttribute : dataStructure.getDataStructureComponents().getAttributes().getAttributes()) {
+                DsdAttribute dsdAttribute = new DsdAttribute((Attribute) sourceAttribute);
+                // Processor
+                attributesProcessorMap.put(((Attribute) sourceAttribute).getId(), new DsdAttribute((Attribute) sourceAttribute));
+                // Representation
+                cacheEnumerateRepresentation(dsdAttribute, enumerationRepresentationsMultimap);
+                // ComponentInfo
+                ComponentInfo componentInfo = new ComponentInfo(((Attribute) sourceAttribute).getId(), ComponentInfoTypeEnum.DATA_ATTRIBUTE);
+                attributesInfoMap.put(((Attribute) sourceAttribute).getId(), new ComponentInfo(((Attribute) sourceAttribute).getId(), ComponentInfoTypeEnum.DATA_ATTRIBUTE));
+                attributesInfoList.add(componentInfo);
+
+                if (dsdAttribute.isAttributeAtObservationLevel()) {
+                    attributeIdsAtObservationLevelSet.add(dsdAttribute.getComponentId());
+                    if (dsdAttribute.isMandatory()) {
+                        mandatoryAttributeIdsAtObservationLevel.add(dsdAttribute.getComponentId());
                     }
                 }
             }
@@ -369,8 +352,8 @@ public class ValidateDataVersusDsd {
         Map<String, ComponentInfo> dimensionsInfoMap = new HashMap<String, ComponentInfo>();
         List<ComponentInfo> dimensionsInfoList = new LinkedList<ComponentInfo>();
 
-        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getDimensionList() != null) {
-            for (Object sourceDim : dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
+        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getDimensions() != null) {
+            for (DimensionBase sourceDim : dataStructure.getDataStructureComponents().getDimensions().getDimensions()) {
                 if (sourceDim instanceof Dimension) {
                     DsdDimension dsdDimension = new DsdDimension((Dimension) sourceDim);
                     // Processor
@@ -381,22 +364,22 @@ public class ValidateDataVersusDsd {
                     ComponentInfo componentInfo = new ComponentInfo(((Dimension) sourceDim).getId(), ComponentInfoTypeEnum.DIMENSION);
                     dimensionsInfoMap.put(((Dimension) sourceDim).getId(), componentInfo);
                     dimensionsInfoList.add(componentInfo);
-                } else if (sourceDim instanceof TimeDimensionType) {
+                } else if (sourceDim instanceof TimeDimension) {
                     // Processor
-                    dimensionsProcessorMap.put(((TimeDimensionType) sourceDim).getId(), new DsdDimension((TimeDimensionType) sourceDim));
+                    dimensionsProcessorMap.put(((TimeDimension) sourceDim).getId(), new DsdDimension((TimeDimension) sourceDim));
                     // ComponentInfo
-                    ComponentInfo componentInfo = new ComponentInfo(((TimeDimensionType) sourceDim).getId(), ComponentInfoTypeEnum.TIME_DIMENSION);
-                    dimensionsInfoMap.put(((TimeDimensionType) sourceDim).getId(), componentInfo);
+                    ComponentInfo componentInfo = new ComponentInfo(((TimeDimension) sourceDim).getId(), ComponentInfoTypeEnum.TIME_DIMENSION);
+                    dimensionsInfoMap.put(((TimeDimension) sourceDim).getId(), componentInfo);
                     dimensionsInfoList.add(componentInfo);
-                } else if (sourceDim instanceof MeasureDimensionType) {
-                    DsdDimension dsdDimension = new DsdDimension((MeasureDimensionType) sourceDim);
+                } else if (sourceDim instanceof MeasureDimension) {
+                    DsdDimension dsdDimension = new DsdDimension((MeasureDimension) sourceDim);
                     // Processor
-                    dimensionsProcessorMap.put(((MeasureDimensionType) sourceDim).getId(), dsdDimension);
+                    dimensionsProcessorMap.put(((MeasureDimension) sourceDim).getId(), dsdDimension);
                     // Representation
                     cacheEnumerateRepresentation(dsdDimension, enumerationRepresentationsMultimap);
                     // ComponentInfo
-                    ComponentInfo componentInfo = new ComponentInfo(((MeasureDimensionType) sourceDim).getId(), ComponentInfoTypeEnum.MEASURE_DIMENSION);
-                    dimensionsInfoMap.put(((MeasureDimensionType) sourceDim).getId(), componentInfo);
+                    ComponentInfo componentInfo = new ComponentInfo(((MeasureDimension) sourceDim).getId(), ComponentInfoTypeEnum.MEASURE_DIMENSION);
+                    dimensionsInfoMap.put(((MeasureDimension) sourceDim).getId(), componentInfo);
                     dimensionsInfoList.add(componentInfo);
                 }
             }
@@ -412,8 +395,8 @@ public class ValidateDataVersusDsd {
 
     protected MultiMap calculateCachePrimaryMeasureInfo(MultiMap enumerationRepresentationsMultimap) throws MetamacException {
 
-        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getMeasureList() != null) {
-            PrimaryMeasureType primaryMeasure = dataStructure.getDataStructureComponents().getMeasureList().getPrimaryMeasure();
+        if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getMeasure() != null) {
+            PrimaryMeasure primaryMeasure = dataStructure.getDataStructureComponents().getMeasure().getPrimaryMeasure();
 
             DsdPrimaryMeasure dsdPrimaryMeasure = new DsdPrimaryMeasure(primaryMeasure);
 

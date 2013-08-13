@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mockito.Mockito;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -44,13 +43,13 @@ public class DataMockUtils {
 
         // Mock codelist and concept Scheme
 
-        CodelistReferenceType codelistReference = SrmMockUtils.buildCodelistRef(GEOCODELIST_TEST_URN);
+        ResourceInternal codelistReference = SrmMockUtils.buildCodelistRef(GEOCODELIST_TEST_URN);
         Codes codes = SrmMockUtils.buildCodes(3);
-        Mockito.when(getSrmRestInternalService().retrieveCodesOfCodelistEfficiently(codelistReference.getURN())).thenReturn(codes);
+        Mockito.when(getSrmRestInternalService().retrieveCodesOfCodelistEfficiently(codelistReference.getUrn())).thenReturn(codes);
 
-        ConceptSchemeReferenceType conceptSchemeReference = SrmMockUtils.buildConceptSchemeRef("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)");
+        ResourceInternal conceptSchemeReference = SrmMockUtils.buildConceptSchemeRef("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)");
         Concepts concepts = SrmMockUtils.buildConcepts(3);
-        Mockito.when(getSrmRestInternalService().retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeReference.getURN())).thenReturn(concepts);
+        Mockito.when(getSrmRestInternalService().retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeReference.getUrn())).thenReturn(concepts);
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 

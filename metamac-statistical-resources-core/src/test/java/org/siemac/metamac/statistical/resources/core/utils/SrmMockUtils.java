@@ -4,42 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.BasicComponentDataType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.DimensionTypeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalGroupKeyDescriptorRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalGroupKeyDescriptorReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalPrimaryMeasureRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalPrimaryMeasureReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.AttributeRelationshipType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.BasicComponentTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.GroupType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.PrimaryMeasureType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.UsageStatusType;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeUsageStatusType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -47,9 +18,20 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionType;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.PrimaryMeasure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 
 public class SrmMockUtils {
 
@@ -79,13 +61,6 @@ public class SrmMockUtils {
         return text;
     }
 
-    public static TextType buildTextType(String label, String lang) {
-        TextType text = new TextType();
-        text.setLang(lang);
-        text.setValue(label);
-        return text;
-    }
-
     // -------------------------------------------------------------------------------------
     // CONCEPT SCHEME
     // -------------------------------------------------------------------------------------
@@ -98,30 +73,10 @@ public class SrmMockUtils {
         return scheme;
     }
 
-    public static ConceptSchemeReferenceType buildConceptSchemeRef(String conceptSchemeUrn) {
-        ConceptSchemeReferenceType ref = new ConceptSchemeReferenceType();
-        ref.setRef(buildConceptSchemeRefType(conceptSchemeUrn));
-        ref.setURN(conceptSchemeUrn);
-        return ref;
-    }
-
-    public static ConceptSchemeReferenceType buildConceptSchemeRef(ConceptScheme scheme) {
-        if (scheme != null) {
-            ConceptSchemeReferenceType ref = new ConceptSchemeReferenceType();
-            ref.setRef(buildConceptSchemeRefType(scheme.getUrn()));
-            ref.setURN(scheme.getUrn());
-            return ref;
-        }
-        return null;
-    }
-
-    protected static ConceptSchemeRefType buildConceptSchemeRefType(String codelistUrn) {
-        ConceptSchemeRefType conceptSchemeRefType = new ConceptSchemeRefType();
-        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
-        conceptSchemeRefType.setAgencyID(params[0]);
-        conceptSchemeRefType.setId(params[1]);
-        conceptSchemeRefType.setVersion(params[2]);
-        return conceptSchemeRefType;
+    public static ResourceInternal buildConceptSchemeRef(String conceptSchemeUrn) {
+        ResourceInternal conceptScheme = new ResourceInternal();
+        conceptScheme.setUrn(conceptSchemeUrn);
+        return conceptScheme;
     }
 
     // -------------------------------------------------------------------------------------
@@ -136,21 +91,10 @@ public class SrmMockUtils {
         return concepts;
     }
 
-    public static ConceptReferenceType buildConceptReferenceTypeWithURN(String conceptIdentityURN) {
-        ConceptReferenceType conceptReferenceType = new ConceptReferenceType();
-        conceptReferenceType.setURN(conceptIdentityURN);
-        conceptReferenceType.setRef(buildConceptRefType(conceptIdentityURN));
+    public static ItemResourceInternal buildConceptReferenceTypeWithURN(String conceptIdentityURN) {
+        ItemResourceInternal conceptReferenceType = new ItemResourceInternal();
+        conceptReferenceType.setUrn(conceptIdentityURN);
         return conceptReferenceType;
-    }
-
-    protected static ConceptRefType buildConceptRefType(String codelistUrn) {
-        ConceptRefType conceptRefType = new ConceptRefType();
-        String[] params = UrnUtils.splitUrnItem(codelistUrn);
-        conceptRefType.setAgencyID(params[0]);
-        conceptRefType.setMaintainableParentID(params[1]);
-        conceptRefType.setMaintainableParentVersion(params[2]);
-        conceptRefType.setId(params[3]);
-        return conceptRefType;
     }
 
     public static Concept buildConcept(String id, String urn, String name, Representation conceptRepresentation) {
@@ -177,15 +121,16 @@ public class SrmMockUtils {
 
     public static Representation buildConceptRepresentation(String codelistUrn) {
         Representation conceptRepresentation = new Representation();
-        conceptRepresentation.setEnumerationCodelist(codelistUrn);
+        conceptRepresentation.setEnumerationCodelist(new ResourceInternal());
+        conceptRepresentation.getEnumerationCodelist().setUrn(codelistUrn);
         return conceptRepresentation;
     }
 
-    public static Representation buildConceptRepresentation(BasicComponentDataType textType) {
+    public static Representation buildConceptRepresentation(DataType textType) {
         Representation conceptRepresentation = new Representation();
-        BasicComponentTextFormatType basicComponentTextFormatType = new BasicComponentTextFormatType();
-        basicComponentTextFormatType.setTextType(textType);
-        conceptRepresentation.setTextFormat(basicComponentTextFormatType);
+        TextFormat textFormat = new TextFormat();
+        textFormat.setTextType(textType);
+        conceptRepresentation.setTextFormat(textFormat);
         return conceptRepresentation;
     }
 
@@ -201,31 +146,10 @@ public class SrmMockUtils {
         return scheme;
     }
 
-    public static CodelistReferenceType buildCodelistRef(Codelist scheme) {
-        if (scheme != null) {
-            CodelistReferenceType ref = new CodelistReferenceType();
-            ref.setRef(buildCodelistRefType(scheme.getUrn()));
-            ref.setURN(scheme.getUrn());
-
-            return ref;
-        }
-        return null;
-    }
-
-    public static CodelistReferenceType buildCodelistRef(String codelistUrn) {
-        CodelistReferenceType ref = new CodelistReferenceType();
-        ref.setRef(buildCodelistRefType(codelistUrn));
-        ref.setURN(codelistUrn);
+    public static ResourceInternal buildCodelistRef(String codelistUrn) {
+        ResourceInternal ref = new ResourceInternal();
+        ref.setUrn(codelistUrn);
         return ref;
-    }
-
-    protected static CodelistRefType buildCodelistRefType(String codelistUrn) {
-        CodelistRefType codelistRefType = new CodelistRefType();
-        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
-        codelistRefType.setAgencyID(params[0]);
-        codelistRefType.setId(params[1]);
-        codelistRefType.setVersion(params[2]);
-        return codelistRefType;
     }
 
     // -------------------------------------------------------------------------------------
@@ -255,77 +179,77 @@ public class SrmMockUtils {
     // DSD
     // -------------------------------------------------------------------------------------
 
-    public static DataStructure mockDsdWithGeoTimeAndMeasureDimensions(String urn, String geoId, String timeId, String measureId, ConceptSchemeReferenceType measureConceptSchemeReference,
-            CodelistReferenceType geoCodelistReference) {
-        MeasureDimensionType measureDim = SrmMockUtils.buildMeasureDimension(measureId, measureConceptSchemeReference);
-        TimeDimensionType timeDim = SrmMockUtils.buildTimeDimension(timeId, TimeDataType.REPORTING_YEAR);
+    public static DataStructure mockDsdWithGeoTimeAndMeasureDimensions(String urn, String geoId, String timeId, String measureId, ResourceInternal measureConceptSchemeReference,
+            ResourceInternal geoCodelistReference) {
+        MeasureDimension measureDim = SrmMockUtils.buildMeasureDimension(measureId, measureConceptSchemeReference);
+        TimeDimension timeDim = SrmMockUtils.buildTimeDimension(timeId, DataType.REPORTING_YEAR);
         Dimension geoDim = SrmMockUtils.buildGeoDimension(geoId, geoCodelistReference);
 
         DataStructure dsd = new DataStructure();
         dsd.setUrn(urn);
-        DataStructureComponentsType components = new DataStructureComponentsType();
-        components.setDimensionList(new DimensionListType());
-        components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(measureDim);
-        components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(timeDim);
-        components.getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(geoDim);
+        DataStructureComponents components = new DataStructureComponents();
+        components.setDimensions(new Dimensions());
+        components.getDimensions().getDimensions().add(measureDim);
+        components.getDimensions().getDimensions().add(timeDim);
+        components.getDimensions().getDimensions().add(geoDim);
         dsd.setDataStructureComponents(components);
 
         return dsd;
     }
 
-    public static MeasureDimensionType buildMeasureDimension(String id, ConceptSchemeReferenceType conceptSchemeRepresentationReference) {
-        MeasureDimensionType measureDim = new MeasureDimensionType();
+    public static MeasureDimension buildMeasureDimension(String id, ResourceInternal conceptSchemeRepresentationReference) {
+        MeasureDimension measureDim = new MeasureDimension();
         measureDim.setId(id);
-        measureDim.setType(DimensionTypeType.MEASURE_DIMENSION);
+        measureDim.setType(DimensionType.MEASURE_DIMENSION);
 
-        MeasureDimensionRepresentationType representationType = new MeasureDimensionRepresentationType();
-        representationType.setEnumeration(conceptSchemeRepresentationReference);
+        Representation representation = new Representation();
+        representation.setEnumerationConceptScheme(conceptSchemeRepresentationReference);
 
-        measureDim.setLocalRepresentation(representationType);
+        measureDim.setLocalRepresentation(representation);
 
         measureDim.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
         return measureDim;
     }
 
-    public static TimeDimensionType buildTimeDimension(String id, TimeDataType type) {
-        TimeDimensionType dim = new TimeDimensionType();
+    public static TimeDimension buildTimeDimension(String id, DataType type) {
+        TimeDimension dim = new TimeDimension();
         dim.setId(id);
-        dim.setType(DimensionTypeType.TIME_DIMENSION);
+        dim.setType(DimensionType.TIME_DIMENSION);
 
-        TimeDimensionRepresentationType representationType = new TimeDimensionRepresentationType();
-        TimeTextFormatType formatType = new TimeTextFormatType();
-        formatType.setTextType(type);
-        representationType.setTextFormat(formatType);
+        Representation representation = new Representation();
+        TextFormat textFormat = new TextFormat();
+        textFormat.setTextType(type);
+        representation.setTextFormat(textFormat);
 
-        dim.setLocalRepresentation(representationType);
+        dim.setLocalRepresentation(representation);
         dim.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
         return dim;
     }
 
-    public static TimeDimensionType buildTimeDimension(String id, String conceptIdentityURN, TimeDataType type) {
-        TimeDimensionType dim = new TimeDimensionType();
+    public static TimeDimension buildTimeDimension(String id, String conceptIdentityURN, DataType type) {
+        TimeDimension dim = new TimeDimension();
         dim.setId(id);
-        dim.setType(DimensionTypeType.TIME_DIMENSION);
+        dim.setType(DimensionType.TIME_DIMENSION);
 
-        TimeDimensionRepresentationType representationType = new TimeDimensionRepresentationType();
-        TimeTextFormatType formatType = new TimeTextFormatType();
-        formatType.setTextType(type);
-        representationType.setTextFormat(formatType);
+        Representation representation = new Representation();
+        TextFormat textFormat = new TextFormat();
+        textFormat.setTextType(type);
+        representation.setTextFormat(textFormat);
 
-        dim.setLocalRepresentation(representationType);
+        dim.setLocalRepresentation(representation);
 
         dim.setConceptIdentity(buildConceptReferenceTypeWithURN(conceptIdentityURN));
         return dim;
     }
 
-    public static Dimension buildGeoDimension(String id, CodelistReferenceType codelistReference) {
+    public static Dimension buildGeoDimension(String id, ResourceInternal codelistReference) {
         Dimension dim = new Dimension();
         dim.setId(id);
         dim.setIsSpatial(true);
-        dim.setType(DimensionTypeType.DIMENSION);
+        dim.setType(DimensionType.DIMENSION);
 
-        SimpleDataStructureRepresentationType representation = new SimpleDataStructureRepresentationType();
-        representation.setEnumeration(codelistReference);
+        Representation representation = new Representation();
+        representation.setEnumerationCodelist(codelistReference);
 
         dim.setLocalRepresentation(representation);
 
@@ -337,7 +261,7 @@ public class SrmMockUtils {
         Dimension dimension = new Dimension();
         dimension.setId(id);
         dimension.setIsSpatial(false);
-        dimension.setType(DimensionTypeType.DIMENSION);
+        dimension.setType(DimensionType.DIMENSION);
 
         dimension.setConceptIdentity(buildConceptReferenceTypeWithURN(conceptIdentityURN));
 
@@ -347,30 +271,19 @@ public class SrmMockUtils {
         return dimension;
     }
 
-    public static GroupType buildGroupType(String groupId, String... dimensions) {
-        GroupType groupType = new GroupType();
-        groupType.setId(groupId);
+    public static Group buildGroupType(String groupId, String... dimensions) {
+        Group group = new Group();
+        group.setId(groupId);
 
         for (int i = 0; i < dimensions.length; i++) {
-            GroupDimensionType groupDimensionType = new GroupDimensionType();
-            LocalDimensionReferenceType localDimensionReferenceType = buildLocalDimensionReferenceType(dimensions[i]);
-            groupDimensionType.setDimensionReference(localDimensionReferenceType);
-
-            groupType.getGroupDimensions().add(groupDimensionType);
+            group.setDimensions(new DimensionReferences());
+            group.getDimensions().getDimensions().add(dimensions[i]);
         }
 
-        return groupType;
+        return group;
     }
 
-    protected static LocalDimensionReferenceType buildLocalDimensionReferenceType(String dimensionId) {
-        LocalDimensionReferenceType localDimensionReferenceType = new LocalDimensionReferenceType();
-        LocalDimensionRefType localDimensionRefType = new LocalDimensionRefType();
-        localDimensionRefType.setId(dimensionId);
-        localDimensionReferenceType.setRef(localDimensionRefType);
-        return localDimensionReferenceType;
-    }
-
-    private static Attribute buildAttributeType(String attributeId, String conceptIdentityURN, UsageStatusType usageStatusType, String representationURN) {
+    private static Attribute buildAttributeType(String attributeId, String conceptIdentityURN, AttributeUsageStatusType usageStatusType, String representationURN) {
         Attribute attribute = new Attribute();
         attribute.setId(attributeId);
         attribute.setAssignmentStatus(usageStatusType);
@@ -384,77 +297,62 @@ public class SrmMockUtils {
         return attribute;
     }
 
-    public static Attribute buildAttributeTypeWithGroupRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType, String groupId) {
+    public static Attribute buildAttributeTypeWithGroupRelationship(String attributeId, String conceptIdentityURN, String representationURN, AttributeUsageStatusType usageStatusType, String groupId) {
         Attribute attribute = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
 
-        AttributeRelationshipType attributeRelationshipType = new AttributeRelationshipType();
-        LocalGroupKeyDescriptorReferenceType localGroupKeyDescriptorReferenceType = buildLocalGroupKeyDescriptorReferenceType(groupId);
-        attributeRelationshipType.setGroup(localGroupKeyDescriptorReferenceType);
-
-        attribute.setAttributeRelationship(attributeRelationshipType);
+        AttributeRelationship attributeRelationship = new AttributeRelationship();
+        attributeRelationship.setGroup(groupId);
+        attribute.setAttributeRelationship(attributeRelationship);
 
         return attribute;
     }
 
-    protected static LocalGroupKeyDescriptorReferenceType buildLocalGroupKeyDescriptorReferenceType(String groupId) {
-        LocalGroupKeyDescriptorReferenceType localGroupKeyDescriptorReferenceType = new LocalGroupKeyDescriptorReferenceType();
-        LocalGroupKeyDescriptorRefType localGroupKeyDescriptorRefType = new LocalGroupKeyDescriptorRefType();
-        localGroupKeyDescriptorRefType.setId(groupId);
-        localGroupKeyDescriptorReferenceType.setRef(localGroupKeyDescriptorRefType);
-        return localGroupKeyDescriptorReferenceType;
-    }
-
-    public static Attribute buildAttributeTypeWithDimensionRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType,
+    public static Attribute buildAttributeTypeWithDimensionRelationship(String attributeId, String conceptIdentityURN, String representationURN, AttributeUsageStatusType usageStatusType,
             List<String> dimensions, List<String> groups) {
         Attribute attribute = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
 
-        AttributeRelationshipType attributeRelationshipType = new AttributeRelationshipType();
+        AttributeRelationship attributeRelationship = new AttributeRelationship();
 
         for (String dimension : dimensions) {
-            attributeRelationshipType.getDimensions().add(buildLocalDimensionReferenceType(dimension));
+            attributeRelationship.getDimensions().add(dimension);
         }
 
         for (String group : groups) {
-            attributeRelationshipType.getAttachmentGroups().add(buildLocalGroupKeyDescriptorReferenceType(group));
+            attributeRelationship.getAttachmentGroups().add(group);
         }
 
-        attribute.setAttributeRelationship(attributeRelationshipType);
+        attribute.setAttributeRelationship(attributeRelationship);
 
         return attribute;
     }
 
-    public static Attribute buildAttributeTypeWithPrimaryMeasureRelationship(String attributeId, String conceptIdentityURN, String representationURN, UsageStatusType usageStatusType) {
+    public static Attribute buildAttributeTypeWithPrimaryMeasureRelationship(String attributeId, String conceptIdentityURN, String representationURN, AttributeUsageStatusType usageStatusType) {
         Attribute attribute = buildAttributeType(attributeId, conceptIdentityURN, usageStatusType, representationURN);
 
-        AttributeRelationshipType attributeRelationshipType = new AttributeRelationshipType();
+        AttributeRelationship attributeRelationship = new AttributeRelationship();
+        attributeRelationship.setPrimaryMeasure("OBS_VALUE");
 
-        LocalPrimaryMeasureReferenceType localPrimaryMeasureReferenceType = new LocalPrimaryMeasureReferenceType();
-        LocalPrimaryMeasureRefType localPrimaryMeasureRefType = new LocalPrimaryMeasureRefType();
-        localPrimaryMeasureRefType.setId("OBS_VALUE");
-        localPrimaryMeasureReferenceType.setRef(localPrimaryMeasureRefType);
-        attributeRelationshipType.setPrimaryMeasure(localPrimaryMeasureReferenceType);
-
-        attribute.setAttributeRelationship(attributeRelationshipType);
+        attribute.setAttributeRelationship(attributeRelationship);
 
         return attribute;
     }
 
-    private static SimpleDataStructureRepresentationType buildSimpleDataStructureRepresentationTypeWithURN(String representationURN) {
-        SimpleDataStructureRepresentationType simpleDataStructureRepresentationType = new SimpleDataStructureRepresentationType();
-        simpleDataStructureRepresentationType.setEnumeration(buildCodelistRef(representationURN));
+    private static Representation buildSimpleDataStructureRepresentationTypeWithURN(String representationURN) {
+        Representation simpleDataStructureRepresentationType = new Representation();
+        simpleDataStructureRepresentationType.setEnumerationCodelist(buildCodelistRef(representationURN));
         return simpleDataStructureRepresentationType;
     }
 
-    public static PrimaryMeasureType buildPrimaryMeasure(String conceptIdentityURN, String representationURN) {
-        PrimaryMeasureType primaryMeasureType = new PrimaryMeasureType();
-        primaryMeasureType.setId("OBS_VALUE");
-        primaryMeasureType.setConceptIdentity(buildConceptReferenceTypeWithURN(conceptIdentityURN));
+    public static PrimaryMeasure buildPrimaryMeasure(String conceptIdentityURN, String representationURN) {
+        PrimaryMeasure primaryMeasure = new PrimaryMeasure();
+        primaryMeasure.setId("OBS_VALUE");
+        primaryMeasure.setConceptIdentity(buildConceptReferenceTypeWithURN(conceptIdentityURN));
 
         if (StringUtils.isNotEmpty(representationURN)) {
-            primaryMeasureType.setLocalRepresentation(buildSimpleDataStructureRepresentationTypeWithURN(representationURN));
+            primaryMeasure.setLocalRepresentation(buildSimpleDataStructureRepresentationTypeWithURN(representationURN));
         }
 
-        return primaryMeasureType;
+        return primaryMeasure;
     }
 
 }

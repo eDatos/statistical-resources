@@ -17,13 +17,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -37,7 +30,13 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -873,7 +872,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         if (resource.getRelatedDsd() != null) {
             DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
 
-            DimensionListType dimensions = dataStructure.getDataStructureComponents().getDimensionList();
+            Dimensions dimensions = dataStructure.getDataStructureComponents().getDimensions();
 
             if (dimensions != null) {
                 List<String> dimOrder = computeDimensionOrder(dimensions);
@@ -968,46 +967,46 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     }
 
-    private Map<String, List<String>> computeDimensionsCodes(DimensionListType dimensions) throws MetamacException {
+    private Map<String, List<String>> computeDimensionsCodes(Dimensions dimensions) throws MetamacException {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        for (Object dimensionObj : dimensions.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
-            if (dimensionObj instanceof DimensionType) {
-                DimensionType dim = (DimensionType) dimensionObj;
+        for (DimensionBase dimensionObj : dimensions.getDimensions()) {
+            if (dimensionObj instanceof Dimension) {
+                Dimension dim = (Dimension) dimensionObj;
                 dimensionCodes.put(dim.getId(), getCodesForDimension(dim));
-            } else if (dimensionObj instanceof TimeDimensionType) {
-                TimeDimensionType dim = (TimeDimensionType) dimensionObj;
+            } else if (dimensionObj instanceof TimeDimension) {
+                TimeDimension dim = (TimeDimension) dimensionObj;
                 dimensionCodes.put(dim.getId(), getCodesForTimeDimension(dim));
-            } else if (dimensionObj instanceof MeasureDimensionType) {
-                MeasureDimensionType dim = (MeasureDimensionType) dimensionObj;
+            } else if (dimensionObj instanceof MeasureDimension) {
+                MeasureDimension dim = (MeasureDimension) dimensionObj;
                 dimensionCodes.put(dim.getId(), getCodesForMeasureDimension(dim));
             }
         }
         return dimensionCodes;
     }
 
-    private List<String> computeDimensionOrder(DimensionListType dimensions) throws MetamacException {
+    private List<String> computeDimensionOrder(Dimensions dimensions) throws MetamacException {
         List<String> order = new ArrayList<String>();
-        for (Object dimensionObj : dimensions.getDimensionsAndMeasureDimensionsAndTimeDimensions()) {
-            if (dimensionObj instanceof DimensionType) {
-                DimensionType dim = (DimensionType) dimensionObj;
+        for (DimensionBase dimensionObj : dimensions.getDimensions()) {
+            if (dimensionObj instanceof Dimension) {
+                Dimension dim = (Dimension) dimensionObj;
                 order.add(dim.getId());
-            } else if (dimensionObj instanceof TimeDimensionType) {
-                TimeDimensionType dim = (TimeDimensionType) dimensionObj;
+            } else if (dimensionObj instanceof TimeDimension) {
+                TimeDimension dim = (TimeDimension) dimensionObj;
                 order.add(dim.getId());
-            } else if (dimensionObj instanceof MeasureDimensionType) {
-                MeasureDimensionType dim = (MeasureDimensionType) dimensionObj;
+            } else if (dimensionObj instanceof MeasureDimension) {
+                MeasureDimension dim = (MeasureDimension) dimensionObj;
                 order.add(dim.getId());
             }
         }
         return order;
     }
 
-    private List<String> getCodesForDimension(DimensionType dimension) throws MetamacException {
+    private List<String> getCodesForDimension(Dimension dimension) throws MetamacException {
         List<String> codes = null;
         if (dimension.getLocalRepresentation() != null) {
-            CodelistReferenceType codeListRef = dimension.getLocalRepresentation().getEnumeration();
-            if (codeListRef != null) {
-                codes = getCodesFromCodelist(codeListRef.getURN());
+            ResourceInternal codelist = dimension.getLocalRepresentation().getEnumerationCodelist();
+            if (codelist != null) {
+                codes = getCodesFromCodelist(codelist.getUrn());
             } else {
                 codes = mockStringCodes(15);
             }
@@ -1017,7 +1016,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesForTimeDimension(TimeDimensionType dimension) throws MetamacException {
+    private List<String> getCodesForTimeDimension(TimeDimension dimension) throws MetamacException {
         List<String> codes = null;
         if (dimension.getLocalRepresentation() != null) {
             codes = mockStringCodes(15);
@@ -1027,19 +1026,19 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesForMeasureDimension(MeasureDimensionType dimension) throws MetamacException {
+    private List<String> getCodesForMeasureDimension(MeasureDimension dimension) throws MetamacException {
         List<String> codes = null;
         if (dimension.getLocalRepresentation() != null) {
-            ConceptSchemeReferenceType conceptSchemeRef = dimension.getLocalRepresentation().getEnumeration();
-            codes = getCodesFromConceptScheme(conceptSchemeRef);
+            ResourceInternal conceptScheme = dimension.getLocalRepresentation().getEnumerationConceptScheme();
+            codes = getCodesFromConceptScheme(conceptScheme);
         } else {
             codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
         }
         return codes;
     }
 
-    private List<String> getCodesFromConceptScheme(ConceptSchemeReferenceType conceptSchemeRef) throws MetamacException {
-        Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeRef.getURN());
+    private List<String> getCodesFromConceptScheme(ResourceInternal conceptScheme) throws MetamacException {
+        Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptScheme.getUrn());
 
         List<String> codes = new ArrayList<String>();
         for (ItemResourceInternal concept : concepts.getConcepts()) {
@@ -1056,12 +1055,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return codes;
     }
 
-    private List<String> getCodesFromConceptRepresentation(ConceptReferenceType conceptRef) throws MetamacException {
+    private List<String> getCodesFromConceptRepresentation(ItemResourceInternal conceptResource) throws MetamacException {
         List<String> codes = new ArrayList<String>();
 
-        Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptRef.getURN());
+        Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptResource.getUrn());
         if (concept.getCoreRepresentation() != null) {
-            codes = getCodesFromCodelist(concept.getCoreRepresentation().getEnumerationCodelist());
+            codes = getCodesFromCodelist(concept.getCoreRepresentation().getEnumerationCodelist().getUrn());
         } else {
             throw new IllegalStateException("Found a concept with no core representation");
         }

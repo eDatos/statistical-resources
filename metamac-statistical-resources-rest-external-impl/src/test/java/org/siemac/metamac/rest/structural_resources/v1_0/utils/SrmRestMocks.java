@@ -1,23 +1,5 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptSchemeReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.DimensionTypeType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionRefType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.LocalDimensionReferenceType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.common.TimeDataType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureComponentsType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DimensionListType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.MeasureDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.SimpleDataStructureRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionRepresentationType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeDimensionType;
-import org.sdmx.resources.sdmxml.schemas.v2_1.structure.TimeTextFormatType;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -26,11 +8,20 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecisions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 
 public class SrmRestMocks {
 
@@ -43,37 +34,30 @@ public class SrmRestMocks {
         dataStructure.setVersion(version);
         dataStructure.setAutoOpen(Boolean.TRUE);
 
-        dataStructure.setStub(new Dimensions());
-        dataStructure.getStub().getDimensions().add(mockDimensionReference("GEO_DIM"));
-        dataStructure.getStub().getDimensions().add(mockDimensionReference("TIME_PERIOD"));
-        dataStructure.setHeading(new Dimensions());
-        dataStructure.getHeading().getDimensions().add(mockDimensionReference("measure01"));
-        dataStructure.getHeading().getDimensions().add(mockDimensionReference("dim01"));
+        dataStructure.setStub(new DimensionReferences());
+        dataStructure.getStub().getDimensions().add("GEO_DIM");
+        dataStructure.getStub().getDimensions().add("TIME_PERIOD");
+        dataStructure.setHeading(new DimensionReferences());
+        dataStructure.getHeading().getDimensions().add("measure01");
+        dataStructure.getHeading().getDimensions().add("dim01");
 
-        dataStructure.setDataStructureComponents(new DataStructureComponentsType());
-        dataStructure.getDataStructureComponents().setDimensionList(new DimensionListType());
-        dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimension("GEO_DIM", Boolean.TRUE));
-        dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockTimeDimension("TIME_PERIOD"));
-        dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockMeasureDimension("measure01"));
-        dataStructure.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimension("dim01", Boolean.FALSE));
+        dataStructure.setDataStructureComponents(new DataStructureComponents());
+        dataStructure.getDataStructureComponents().setDimensions(new Dimensions());
+        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockDimension("GEO_DIM", Boolean.TRUE));
+        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockTimeDimension("TIME_PERIOD"));
+        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockMeasureDimension("measure01"));
+        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockDimension("dim01", Boolean.FALSE));
 
         dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
-        dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "conceptScheme01", "01.000", "measure01-conceptScheme01-concept01", 4));
-        dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "conceptScheme01", "01.000", "measure01-conceptScheme01-concept05", 1));
+        dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "measure01-conceptScheme01", "01.000", "measure01-conceptScheme01-concept01", 4));
+        dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions().add(mockShowDecimalPrecision("agency01", "measure01-conceptScheme01", "01.000", "measure01-conceptScheme01-concept05", 1));
         return dataStructure;
-    }
-
-    private static LocalDimensionReferenceType mockDimensionReference(String dimensionID) {
-        LocalDimensionReferenceType dimension = new LocalDimensionReferenceType();
-        dimension.setRef(new LocalDimensionRefType());
-        dimension.getRef().setId(dimensionID);
-        return dimension;
     }
 
     private static ShowDecimalPrecision mockShowDecimalPrecision(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, int value) {
         ShowDecimalPrecision showDecimalPrecision = new ShowDecimalPrecision();
-        showDecimalPrecision.setConcept(mockConceptReferenceType(agencyID, maintainableParentID, maintainableVersionID, resourceID));
+        showDecimalPrecision.setConcept(mockConceptResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, null));
         showDecimalPrecision.setShowDecimals(value);
         return showDecimalPrecision;
     }
@@ -216,61 +200,53 @@ public class SrmRestMocks {
 
     private static Dimension mockDimension(String id, Boolean isSpatial) {
         Dimension dimension = new Dimension();
-        dimension.setType(DimensionTypeType.DIMENSION);
+        dimension.setType(DimensionType.DIMENSION);
         dimension.setId(id);
         dimension.setIsSpatial(isSpatial);
-        dimension.setLocalRepresentation(new SimpleDataStructureRepresentationType());
-        dimension.getLocalRepresentation().setEnumeration(mockCodelistReferenceType("agency01", id + "-codelist01", "01.000"));
-        dimension.setConceptIdentity(mockConceptReferenceType("agency01", "conceptScheme01", "01.000", id + "-concept01"));
+        dimension.setLocalRepresentation(new Representation());
+        dimension.getLocalRepresentation().setEnumerationCodelist(mockCodelistResource("agency01", id + "-codelist01", "01.000"));
+        dimension.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
         return dimension;
     }
 
-    private static MeasureDimensionType mockMeasureDimension(String id) {
-        MeasureDimensionType dimension = new MeasureDimensionType();
-        dimension.setType(DimensionTypeType.MEASURE_DIMENSION);
+    private static MeasureDimension mockMeasureDimension(String id) {
+        MeasureDimension dimension = new MeasureDimension();
+        dimension.setType(DimensionType.MEASURE_DIMENSION);
         dimension.setId(id);
-        dimension.setLocalRepresentation(new MeasureDimensionRepresentationType());
-        dimension.getLocalRepresentation().setEnumeration(mockConceptSchemeReferenceType("agency01", id + "-conceptScheme01", "01.000"));
-        dimension.setConceptIdentity(mockConceptReferenceType("agency01", "conceptScheme01", "01.000", id + "-conceptMeasureDimension01"));
+        dimension.setLocalRepresentation(new Representation());
+        dimension.getLocalRepresentation().setEnumerationConceptScheme(mockConceptSchemeResource("agency01", id + "-conceptScheme01", "01.000"));
+        dimension.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-conceptMeasureDimension01", null));
         return dimension;
     }
 
-    private static TimeDimensionType mockTimeDimension(String id) {
-        TimeDimensionType dimension = new TimeDimensionType();
-        dimension.setType(DimensionTypeType.TIME_DIMENSION);
+    private static TimeDimension mockTimeDimension(String id) {
+        TimeDimension dimension = new TimeDimension();
+        dimension.setType(DimensionType.TIME_DIMENSION);
         dimension.setId(id);
-        dimension.setLocalRepresentation(new TimeDimensionRepresentationType());
+        dimension.setLocalRepresentation(new Representation());
         dimension.getLocalRepresentation().setTextFormat(mockTimeTextFormatType());
-        dimension.setConceptIdentity(mockConceptReferenceType("agency01", "conceptScheme01", "01.000", id + "-conceptTimeDimension01"));
+        dimension.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-conceptTimeDimension01", null));
         return dimension;
     }
 
-    private static CodelistReferenceType mockCodelistReferenceType(String agencyID, String id, String version) {
-        CodelistReferenceType reference = new CodelistReferenceType();
-        reference.setRef(new CodelistRefType());
-        reference.getRef().setAgencyID(agencyID);
-        reference.getRef().setId(id);
-        reference.getRef().setVersion(version);
-        return reference;
+    private static ResourceInternal mockCodelistResource(String agencyID, String resourceID, String version) {
+        ResourceInternal codelist = new ResourceInternal();
+        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=" + agencyID + ":" + resourceID + "(" + version + ")");
+        codelist.setId(resourceID);
+        codelist.setName(mockInternationalString(resourceID));
+        codelist.setKind("structuralResources#codelist");
+        codelist.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/" + agencyID + "/" + resourceID + "/" + version));
+        return codelist;
     }
 
-    private static ConceptSchemeReferenceType mockConceptSchemeReferenceType(String agencyID, String id, String version) {
-        ConceptSchemeReferenceType reference = new ConceptSchemeReferenceType();
-        reference.setRef(new ConceptSchemeRefType());
-        reference.getRef().setAgencyID(agencyID);
-        reference.getRef().setId(id);
-        reference.getRef().setVersion(version);
-        return reference;
-    }
-
-    private static ConceptReferenceType mockConceptReferenceType(String agencyID, String maintainableParentID, String maintainableVersionID, String id) {
-        ConceptReferenceType reference = new ConceptReferenceType();
-        reference.setRef(new ConceptRefType());
-        reference.getRef().setAgencyID(agencyID);
-        reference.getRef().setId(id);
-        reference.getRef().setMaintainableParentID(maintainableParentID);
-        reference.getRef().setMaintainableParentVersion(maintainableVersionID);
-        return reference;
+    private static ResourceInternal mockConceptSchemeResource(String agencyID, String resourceID, String version) {
+        ResourceInternal conceptScheme = new ResourceInternal();
+        conceptScheme.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=" + agencyID + ":" + resourceID + "(" + version + ")");
+        conceptScheme.setId(resourceID);
+        conceptScheme.setName(mockInternationalString(resourceID));
+        conceptScheme.setKind("structuralResources#conceptScheme");
+        conceptScheme.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/" + agencyID + "/" + resourceID + "/" + version));
+        return conceptScheme;
     }
 
     private static InternationalString mockInternationalString(String resourceID) {
@@ -287,10 +263,10 @@ public class SrmRestMocks {
         return localisedString;
     }
 
-    private static TimeTextFormatType mockTimeTextFormatType() {
-        TimeTextFormatType timeTextFormatType = new TimeTextFormatType();
-        timeTextFormatType.setTextType(TimeDataType.BASIC_TIME_PERIOD);
-        timeTextFormatType.getEndTimes().add("2013");
+    private static TextFormat mockTimeTextFormatType() {
+        TextFormat timeTextFormatType = new TextFormat();
+        timeTextFormatType.setTextType(DataType.BASIC_TIME_PERIOD);
+        timeTextFormatType.setEndTime("2013");
         return timeTextFormatType;
     }
 
