@@ -46,27 +46,27 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public QueryVersion retrieveLastVersion(String queryUrn) throws MetamacException {
-     // Prepare criteria
+        // Prepare criteria
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.query().identifiableStatisticalResource().urn())
-                .eq(queryUrn).orderBy(CriteriaUtils.getDatetimedLeafProperty(QueryVersionProperties.lifeCycleStatisticalResource().creationDate(), QueryVersion.class)).descending()
-                .distinctRoot().build();
+                .eq(queryUrn).orderBy(CriteriaUtils.getDatetimedLeafProperty(QueryVersionProperties.lifeCycleStatisticalResource().creationDate(), QueryVersion.class)).descending().distinctRoot()
+                .build();
 
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
         // Find
         PagedResult<QueryVersion> result = findByCondition(conditions, paging);
 
-        // Check for unique result and return. We have at least one queryVersion 
+        // Check for unique result and return. We have at least one queryVersion
         if (result.getRowCount() == 0) {
-            throw new MetamacException(ServiceExceptionType.DATASET_LAST_VERSION_NOT_FOUND, queryUrn);
+            throw new MetamacException(ServiceExceptionType.QUERY_LAST_VERSION_NOT_FOUND, queryUrn);
         }
 
         return result.getValues().get(0);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public QueryVersion retrieveLastPublishedVersion(String queryUrn) throws MetamacException {
-     // Prepare criteria
+        // Prepare criteria
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.query().identifiableStatisticalResource().urn())
                 .eq(queryUrn).and().withProperty(QueryVersionProperties.lifeCycleStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
                 .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validFrom()).lessThanOrEqual(new DateTime())

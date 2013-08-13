@@ -33,6 +33,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Query
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                         = create("exception.resources.query.not_found");
+    public static final CommonServiceExceptionType QUERY_LAST_VERSION_NOT_FOUND                            = create("exception.resources.query.last_version_not_found");
 
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND             = create("exception.resources.identifiable_statistical_resource.not_found");
