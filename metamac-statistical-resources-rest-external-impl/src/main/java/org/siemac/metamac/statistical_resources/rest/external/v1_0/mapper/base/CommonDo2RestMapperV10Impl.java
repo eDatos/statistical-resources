@@ -1022,6 +1022,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private void toCommonMetadata(SiemacMetadataStatisticalResource source, StatisticalResource target, List<String> selectedLanguages) {
+        if (source == null) {
+            return;
+        }
+        if (source.getCommonMetadata() == null) {
+            return;
+        }
         String configurationId = source.getCommonMetadata().getCode();
         Configuration configuration = commonMetadataRestExternalFacade.retrieveConfiguration(configurationId);
         target.setRightsHolder(toResource(configuration.getContact(), selectedLanguages));
