@@ -66,8 +66,7 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canVersioning() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canVersionDataset(datasetVersionDto);
     }
 
     @Override
