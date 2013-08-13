@@ -36,6 +36,10 @@ public class DatasetClientSecurityUtils {
         return SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal());
     }
 
+    public static boolean canVersionDataset(DatasetVersionDto datasetVersionDto) {
+        return canVersionDataset(datasetVersionDto.getIsTaskInBackground());
+    }
+
     public static boolean canVersionDataset(boolean isTaskInBackground) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;

@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
@@ -322,38 +323,38 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected boolean canDelete(ListGridRecord record) {
-        // TODO Security
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetRecord.getDatasetVersionDto());
     }
 
     @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canSendDatasetVersionToProductionValidation(datasetRecord.getDatasetVersionDto());
     }
 
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canSendDatasetVersionToDiffusionValidation(datasetRecord.getDatasetVersionDto());
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        // TODO Auto-generated method stub
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canSendDatasetVersionToValidationRejected(datasetRecord.getDatasetVersionDto());
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
-        // TODO Security
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionDto());
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
-        // TODO Security
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionDto());
     }
 
     @Override
@@ -364,7 +365,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        // TODO Auto-generated method stub
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canVersionDataset(datasetRecord.getDatasetVersionDto());
     }
 }
