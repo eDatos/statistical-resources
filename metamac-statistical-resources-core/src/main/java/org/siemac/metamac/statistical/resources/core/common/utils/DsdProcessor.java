@@ -78,16 +78,16 @@ public class DsdProcessor {
 
     public abstract static class DsdComponent {
 
-        protected DsdComponentType type                           = null;
-        protected String           codelistRepresentationUrn      = null;
-        protected String           conceptSchemeRepresentationUrn = null;
-        protected String           conceptIdentityUrn             = null;
-        protected TextFormat       textFormat                     = null;
-        protected TextFormat       textFormatConceptId            = null;
+        protected DsdComponentType     type                           = null;
+        protected String               codelistRepresentationUrn      = null;
+        protected String               conceptSchemeRepresentationUrn = null;
+        protected ItemResourceInternal conceptIdentity                = null;
+        protected TextFormat           textFormat                     = null;
+        protected TextFormat           textFormatConceptId            = null;
 
-        protected void setConceptIdentityUrn(ItemResourceInternal conceptIdentity) {
+        protected void setConceptIdentity(ItemResourceInternal conceptIdentity) {
             if (conceptIdentity != null) {
-                conceptIdentityUrn = conceptIdentity.getUrn();
+                this.conceptIdentity = conceptIdentity;
             } else {
                 throw new IllegalArgumentException("Concept identity is required");
             }
@@ -171,8 +171,8 @@ public class DsdProcessor {
             return null;
         }
 
-        public String getConceptIdentityUrn() {
-            return conceptIdentityUrn;
+        public ItemResourceInternal getConceptIdentity() {
+            return conceptIdentity;
         }
     }
 
@@ -197,7 +197,7 @@ public class DsdProcessor {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
 
-            setConceptIdentityUrn(dim.getConceptIdentity());
+            setConceptIdentity(dim.getConceptIdentity());
 
         }
 
@@ -214,7 +214,7 @@ public class DsdProcessor {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
 
-            setConceptIdentityUrn(dim.getConceptIdentity());
+            setConceptIdentity(dim.getConceptIdentity());
         }
 
         public DsdDimension(TimeDimension dim) {
@@ -226,7 +226,7 @@ public class DsdProcessor {
                 throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
             }
 
-            setConceptIdentityUrn(dim.getConceptIdentity());
+            setConceptIdentity(dim.getConceptIdentity());
         }
 
         public TextFormat getTimeTextFormatRepresentation() {
@@ -262,7 +262,7 @@ public class DsdProcessor {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
             }
 
-            setConceptIdentityUrn(attr.getConceptIdentity());
+            setConceptIdentity(attr.getConceptIdentity());
 
             isAttributeAtObservationLevel = (attr.getAttributeRelationship().getPrimaryMeasure() != null);
             attributeRelationship = attr.getAttributeRelationship();
@@ -300,7 +300,7 @@ public class DsdProcessor {
             } else {
                 throw new IllegalArgumentException("Found a primary measure with no representation info ");
             }
-            setConceptIdentityUrn(primaryMeasure.getConceptIdentity());
+            setConceptIdentity(primaryMeasure.getConceptIdentity());
         }
 
         @Override

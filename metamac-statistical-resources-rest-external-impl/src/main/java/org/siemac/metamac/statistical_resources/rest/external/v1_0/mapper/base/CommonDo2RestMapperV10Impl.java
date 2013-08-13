@@ -49,7 +49,6 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalReso
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionVisualisation;
@@ -567,10 +566,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         Dimension target = new Dimension();
         target.setId(source.getComponentId());
         target.setType(toDimensionType(source.getType()));
-
-        // TODO se podría dejar el conceptIdentity completo en el DsdProcessor, o poner el nombre ya en la dimensión
-        Concept conceptIdentity = srmRestExternalFacade.retrieveConceptByUrn(source.getConceptIdentityUrn());
-        target.setName(toInternationalString(conceptIdentity.getName(), selectedLanguages));
+        target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
 
         // Dimension values
         target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages));
