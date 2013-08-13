@@ -168,6 +168,16 @@ public class CommonUtils {
         return statisticalResourceNextVersionEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceNextVersionEnum() + statisticalResourceNextVersionEnum.name()) : null;
     }
 
+    public static NextVersionTypeEnum getNextVersionTypeEnum(String nextVersionTypeName) {
+        if (!StringUtils.isBlank(nextVersionTypeName)) {
+            try {
+                return NextVersionTypeEnum.valueOf(nextVersionTypeName);
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
     // -----------------------------------------------------------------------------------------
     // STATISTIC OFFICIALITY
     // -----------------------------------------------------------------------------------------

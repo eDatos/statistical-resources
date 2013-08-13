@@ -11,6 +11,7 @@ import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionSta
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -41,11 +42,18 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
         TextItem name = new TextItem(LifeCycleResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         TextItem urn = new TextItem(LifeCycleResourceDS.URN, getConstants().identifiableStatisticalResourceURN());
         TextItem description = new TextItem(LifeCycleResourceDS.DESCRIPTION, getConstants().nameableStatisticalResourceDescription());
+
+        SelectItem nextVersionType = new SelectItem(LifeCycleResourceDS.NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersion());
+        nextVersionType.setValueMap(CommonUtils.getStatisticalResourceNextVersionHashMap());
+
+        CustomDateItem nextVersionDate = new CustomDateItem(LifeCycleResourceDS.DATE_NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersionDate());
+
         SelectItem procStatus = new SelectItem(LifeCycleResourceDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
         procStatus.setValueMap(CommonUtils.getProcStatusHashMap());
-        // TODO add the rest of the fields
+
         CustomCheckboxItem isLastVersion = new CustomCheckboxItem(LifeCycleResourceDS.LAST_VERSION, MetamacWebCommon.getConstants().isLastVersion());
         isLastVersion.setValue(true);
+
         CustomButtonItem searchItem = new CustomButtonItem(ADVANCED_SEARCH_ITEM_NAME, MetamacWebCommon.getConstants().search());
         searchItem.setColSpan(4);
         searchItem.addClickHandler(new ClickHandler() {
@@ -55,7 +63,7 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
                 retrieveResources();
             }
         });
-        FormItem[] advancedSearchFormItems = new FormItem[]{code, name, urn, description, procStatus, isLastVersion, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{code, name, urn, description, nextVersionType, nextVersionDate, procStatus, isLastVersion, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
@@ -66,8 +74,9 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
         lifecycleStatisticalResourceWebCriteria.setTitle(advancedSearchForm.getValueAsString(LifeCycleResourceDS.TITLE));
         lifecycleStatisticalResourceWebCriteria.setUrn(advancedSearchForm.getValueAsString(LifeCycleResourceDS.URN));
         lifecycleStatisticalResourceWebCriteria.setDescription(advancedSearchForm.getValueAsString(LifeCycleResourceDS.DESCRIPTION));
+        lifecycleStatisticalResourceWebCriteria.setNextVersionType(CommonUtils.getNextVersionTypeEnum(advancedSearchForm.getValueAsString(LifeCycleResourceDS.NEXT_VERSION)));
+        lifecycleStatisticalResourceWebCriteria.setNextVersionDate(((CustomDateItem) advancedSearchForm.getItem(LifeCycleResourceDS.DATE_NEXT_VERSION)).getValueAsDate());
         lifecycleStatisticalResourceWebCriteria.setProcStatus(CommonUtils.getProcStatusEnum(advancedSearchForm.getValueAsString(LifeCycleResourceDS.PROC_STATUS)));
-        // TODO add the rest of the fields
         lifecycleStatisticalResourceWebCriteria.setOnlyLastVersion(((CustomCheckboxItem) advancedSearchForm.getItem(LifeCycleResourceDS.LAST_VERSION)).getValueAsBoolean());
         return lifecycleStatisticalResourceWebCriteria;
     }

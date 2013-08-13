@@ -11,7 +11,9 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.LifeCycleStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.SiemacMetadataStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasDataCriteria;
@@ -47,6 +49,8 @@ public class MetamacWebCriteriaUtils {
             addRestrictionIfExists(criteria, buildTitleCriteria(versionableStatisticalResourceWebCriteria));
             addRestrictionIfExists(criteria, buildDescriptionCriteria(versionableStatisticalResourceWebCriteria));
             addRestrictionIfExists(criteria, buildUrnCriteria(versionableStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildNextVersionTypeCriteria(versionableStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildNextVersionDateCriteria(versionableStatisticalResourceWebCriteria));
         }
 
         if (webCriteria instanceof LifeCycleStatisticalResourceWebCriteria) {
@@ -57,6 +61,26 @@ public class MetamacWebCriteriaUtils {
         if (webCriteria instanceof SiemacMetadataStatisticalResourceWebCriteria) {
             SiemacMetadataStatisticalResourceWebCriteria siemacMetadataStatisticalResourceWebCriteria = (SiemacMetadataStatisticalResourceWebCriteria) webCriteria;
             addRestrictionIfExists(criteria, buildTitleAlternativeCriteria(siemacMetadataStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildKeywordsCriteria(siemacMetadataStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildNewnessUntilDateCriteria(siemacMetadataStatisticalResourceWebCriteria));
+        }
+
+        if (webCriteria instanceof DatasetVersionWebCriteria) {
+            DatasetVersionWebCriteria datasetVersionWebCriteria = (DatasetVersionWebCriteria) webCriteria;
+            addRestrictionIfExists(criteria, buildGeographicGranularityCriteria(datasetVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildTemporalGranularityCriteria(datasetVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildDateStartCriteria(datasetVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildDateEndCriteria(datasetVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildDsdCriteria(datasetVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildDateNextUpdateCriteria(datasetVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildStatisticOfficialityCriteria(datasetVersionWebCriteria));
+        }
+
+        if (webCriteria instanceof QueryVersionWebCriteria) {
+            QueryVersionWebCriteria queryVersionWebCriteria = (QueryVersionWebCriteria) webCriteria;
+            addRestrictionIfExists(criteria, buildDatasetVersionCriteria(queryVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildQueryStatusCriteria(queryVersionWebCriteria));
+            addRestrictionIfExists(criteria, buildQueryTypeCriteria(queryVersionWebCriteria));
         }
 
         return criteria;
@@ -150,6 +174,106 @@ public class MetamacWebCriteriaUtils {
     private static MetamacCriteriaRestriction buildTitleAlternativeCriteria(SiemacMetadataStatisticalResourceWebCriteria criteria) {
         if (StringUtils.isNotBlank(criteria.getTitleAlternative())) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.TITLE_ALTERNATIVE.name(), criteria.getTitleAlternative(), OperationType.ILIKE);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildNextVersionTypeCriteria(VersionableStatisticalResourceWebCriteria criteria) {
+        if (criteria.getNextVersionType() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION.name(), criteria.getNextVersionType(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildNextVersionDateCriteria(VersionableStatisticalResourceWebCriteria criteria) {
+        if (criteria.getNextVersionDate() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION_DATE.name(), criteria.getNextVersionDate(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildKeywordsCriteria(SiemacMetadataStatisticalResourceWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getKeywords())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.KEYWORDS.name(), criteria.getKeywords(), OperationType.ILIKE);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildNewnessUntilDateCriteria(SiemacMetadataStatisticalResourceWebCriteria criteria) {
+        if (criteria.getNewnessUtilDate() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.NEWNESS_UNTIL_DATE.name(), criteria.getNewnessUtilDate(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildGeographicGranularityCriteria(DatasetVersionWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getGeographicalGranularityUrn())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_GEOGRAPHIC_GRANULARITY_URN.name(), criteria.getGeographicalGranularityUrn(),
+                    OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildTemporalGranularityCriteria(DatasetVersionWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getTemporalGranularityUrn())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_TEMPORAL_GRANULARITY_URN.name(), criteria.getTemporalGranularityUrn(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildDateStartCriteria(DatasetVersionWebCriteria criteria) {
+        if (criteria.getDateStart() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_DATE_START.name(), criteria.getDateStart(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildDateEndCriteria(DatasetVersionWebCriteria criteria) {
+        if (criteria.getDateEnd() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_DATE_END.name(), criteria.getDateEnd(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildDsdCriteria(DatasetVersionWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getDsdUrn())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_RELATED_DSD_URN.name(), criteria.getDsdUrn(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildDateNextUpdateCriteria(DatasetVersionWebCriteria criteria) {
+        if (criteria.getDateNextUpdate() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_DATE_NEXT_UPDATE.name(), criteria.getDateNextUpdate(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildStatisticOfficialityCriteria(DatasetVersionWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getStatisticOfficialityIdentifier())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATASET_STATISTIC_OFFICIALITY_IDENTIFIER.name(), criteria.getStatisticOfficialityIdentifier(),
+                    OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildDatasetVersionCriteria(QueryVersionWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getDatasetVersionUrn())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.QUERY_RELATED_DATASET_URN.name(), criteria.getDatasetVersionUrn(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildQueryStatusCriteria(QueryVersionWebCriteria criteria) {
+        if (criteria.getQueryStatus() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.QUERY_STATUS.name(), criteria.getQueryStatus(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildQueryTypeCriteria(QueryVersionWebCriteria criteria) {
+        if (criteria.getQueryType() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.QUERY_TYPE.name(), criteria.getQueryType(), OperationType.EQ);
         }
         return null;
     }
