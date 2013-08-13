@@ -1,11 +1,11 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryCode;
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryConcept;
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryConceptScheme;
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryDsd;
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryOrganisation;
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryOrganisationScheme;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryCode;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryConcept;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryConceptScheme;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryDsd;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryOrganisation;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryOrganisationScheme;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryStatisticalOperation;
-import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils.buildQueryStatisticalOperationInstance;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryStatisticalOperation;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryStatisticalOperationInstance;
 
 import java.util.ArrayList;
 import java.util.List;
