@@ -11,7 +11,6 @@ import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
@@ -111,33 +110,45 @@ public class ValidateDataVersusDsd {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
         List<ComponentInfo> dimensionsInfos = retrieveDimensionsInfo();
 
+        int previousExceptionSize = 0;
         for (ObservationExtendedDto overExtendedDto : dataDtos) {
 
             // Number of dimensions
             if (dimensionsInfos.size() != overExtendedDto.getCodesDimension().size()) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_KEY_CARDINALITY_NOT_MATCH));
+                continue;
             }
 
             // The used dimension if correct
+            previousExceptionSize = exceptions.size();
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 if (!this.dimensionsCodeSet.contains(codeDimensionDto.getDimensionId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_NOT_MATCH, codeDimensionDto.getDimensionId()));
                 }
             }
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
 
             // Number of attributes at observation level, can not exceed the maximum cardinality.
             if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size() + 1) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED));
+                continue;
             }
 
             // The used attribute if correct
+            previousExceptionSize = exceptions.size();
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH, attributeBasicDto.getAttributeId()));
                 }
             }
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
 
             // Mandatory attributes at observation level
+            previousExceptionSize = exceptions.size();
             Set<String> attributesInCurrentObservation = new HashSet<String>();
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 attributesInCurrentObservation.add(attributeBasicDto.getAttributeId());
@@ -147,8 +158,12 @@ public class ValidateDataVersusDsd {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_ATTR_NOT_FOUND, attributeId));
                 }
             }
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
 
             // Representation of codes of dimensions
+            previousExceptionSize = exceptions.size();
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 // Enumerated representation
                 checkDimensionEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(), exceptions);
@@ -156,8 +171,12 @@ public class ValidateDataVersusDsd {
                 // Non Enumerated representation
                 checkDimensionNonEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(), overExtendedDto.getUniqueKey(), exceptions);
             }
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
 
             // The codes of attributes must be defined in the enumerated representation
+            previousExceptionSize = exceptions.size();
             for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
 
@@ -170,9 +189,13 @@ public class ValidateDataVersusDsd {
                     checkAttributeNonEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, overExtendedDto.getUniqueKey(), exceptions);
                 }
             }
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
 
             // Representation of PRIMARY_MEASURE
             // If the observation is null, not validation is required
+            previousExceptionSize = exceptions.size();
             if (StringUtils.isNotBlank(overExtendedDto.getPrimaryMeasure())) {
                 // Enumerated representation
                 checkPrimaryMeasureEnumeratedRepresentation(this.dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(), exceptions);
@@ -185,6 +208,9 @@ public class ValidateDataVersusDsd {
                     NonEnumeratedRepresentationValidator.checkExtraValidationForPrimaryMeasure(overExtendedDto.getUniqueKey(), overExtendedDto.getPrimaryMeasure(), exceptions);
                 }
             }
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
 
         }
 
@@ -194,11 +220,14 @@ public class ValidateDataVersusDsd {
     public void checkAttributes(List<AttributeDto> attributeDtos) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
 
+        int previousExceptionSize = 0;
         for (AttributeDto attributeDto : attributeDtos) {
+            previousExceptionSize = exceptions.size();
 
             // The used attribute if correct
             if (!this.attributesCodeSet.contains(attributeDto.getAttributeId()) || this.attributeIdsAtObservationLevelSet.contains(attributeDto.getAttributeId())) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH).withMessageParameters(attributeDto.getAttributeId()).build();
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH, attributeDto.getAttributeId()));
+                continue;
             }
 
             String value = attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
@@ -208,11 +237,14 @@ public class ValidateDataVersusDsd {
 
             // Non Enumerated representation
             checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), value, attributeDto.getUniqueKey(), exceptions);
+
+            if (exceptions.size() != previousExceptionSize) {
+                continue;
+            }
         }
 
         ExceptionUtils.throwIfException(exceptions);
     }
-
     @SuppressWarnings("unchecked")
     private void checkDimensionEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // Enumerated representation

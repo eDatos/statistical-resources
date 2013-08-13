@@ -88,6 +88,7 @@ public class ImportDatasetJob implements Job {
             // Mark as failed
             try {
                 getTaskServiceFacade().markTaskAsFailed(serviceContext, jobKey.getName(), throwableMetamacException);
+                logger.info("ImportationJob: " + jobKey + " marked as error at " + new Date());
             } catch (MetamacException e1) {
                 logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed and it can't marked as error", e1);
             }
