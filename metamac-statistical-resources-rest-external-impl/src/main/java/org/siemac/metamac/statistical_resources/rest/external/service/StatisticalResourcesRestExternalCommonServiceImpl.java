@@ -26,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
@@ -125,7 +126,16 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             // Retrieve last version published
             String[] maintainerCodes = StringUtils.splitPreserveAllTokens(agencyID, UrnConstants.DOT);
             String queryUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, resourceID);
-            QueryVersion queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn); // TODO retrieveLastPublishedVersion
+            QueryVersion queryVersion = null;
+            try {
+                queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn); // TODO retrieveLastPublishedVersion
+            } catch (MetamacException e) {
+                if (e.getExceptionItems().size() == 1 && ServiceExceptionType.QUERY_LAST_VERSION_NOT_FOUND.getCode().equals(e.getExceptionItems().get(0).getCode())) {
+                    queryVersion = null;
+                } else {
+                    throw e;
+                }
+            }
             if (queryVersion == null) {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.QUERY_NOT_FOUND, resourceID, agencyID);
                 throw new RestException(exception, Status.NOT_FOUND);
