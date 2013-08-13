@@ -6,24 +6,22 @@ import java.util.List;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.LifeCycleBaseListViewImpl;
-import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.QueryVersionSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
+import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
@@ -32,20 +30,11 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHandlers> implements QueryListPresenter.QueryListView {
 
+    private QueryVersionSearchSectionStack searchSectionStack;
+
     @Inject
     public QueryListViewImpl() {
         super();
-
-        // Search
-
-        searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
-
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                StatisticalResourceWebCriteria criteria = new StatisticalResourceWebCriteria(searchSectionStack.getSearchCriteria());
-                getUiHandlers().retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, criteria);
-            }
-        });
 
         // List
 
@@ -81,6 +70,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     public void setUiHandlers(QueryListUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
+        searchSectionStack.setUiHandlers(uiHandlers);
         listGrid.setUiHandlers(uiHandlers);
     }
 
@@ -127,7 +117,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
         // TODO why the criteria is null?
-        getUiHandlers().retrieveQueriesByStatisticalOperation(firstResult, maxResults, null);
+        getUiHandlers().retrieveQueries(firstResult, maxResults, null);
     }
 
     //
@@ -284,5 +274,15 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     protected boolean canVersion(ListGridRecord record) {
         // TODO Auto-generated method stub
         return true;
+    }
+
+    //
+    // SEARCH
+    //
+
+    @Override
+    protected BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack() {
+        searchSectionStack = new QueryVersionSearchSectionStack();
+        return searchSectionStack;
     }
 }

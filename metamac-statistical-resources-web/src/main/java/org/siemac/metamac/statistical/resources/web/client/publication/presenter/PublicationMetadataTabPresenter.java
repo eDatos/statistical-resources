@@ -19,7 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
@@ -239,10 +239,10 @@ public class PublicationMetadataTabPresenter
     @Override
     public void retrievePublicationsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
 
-        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria.getCriteria());
-        publicationWebCriteria.setOnlyLastVersion(false);
+        PublicationVersionWebCriteria publicationVersionWebCriteria = new PublicationVersionWebCriteria(criteria.getCriteria());
+        publicationVersionWebCriteria.setOnlyLastVersion(false);
 
-        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
+        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationVersionWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetPublicationVersionsResult result) {

@@ -10,23 +10,22 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
-import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationVersionSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
@@ -35,21 +34,12 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl<PublicationListUiHandlers> implements PublicationListPresenter.PublicationListView {
 
-    private NewPublicationWindow newPublicationWindow;
+    private PublicationVersionSearchSectionStack searchSectionStack;
+    private NewPublicationWindow                 newPublicationWindow;
 
     @Inject
     public PublicationListViewImpl() {
         super();
-
-        // Search
-
-        searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
-
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                getUiHandlers().retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
-            }
-        });
 
         // Publication list
 
@@ -76,6 +66,12 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
                 deleteConfirmationWindow.hide();
             }
         });
+    }
+
+    @Override
+    public void setUiHandlers(PublicationListUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        searchSectionStack.setUiHandlers(uiHandlers);
     }
 
     @Override
@@ -296,5 +292,15 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     protected boolean canVersion(ListGridRecord record) {
         // TODO Auto-generated method stub
         return true;
+    }
+
+    //
+    // SEARCH
+    //
+
+    @Override
+    protected BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack() {
+        searchSectionStack = new PublicationVersionSearchSectionStack();
+        return searchSectionStack;
     }
 }

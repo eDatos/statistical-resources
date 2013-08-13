@@ -102,7 +102,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
         }
     }
 
@@ -131,12 +131,10 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, String criteria) {
+    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
         final String statisticalOperationUrn = operationUrn;
-        DatasetVersionWebCriteria webCriteria = new DatasetVersionWebCriteria();
-        webCriteria.setStatisticalOperationUrn(statisticalOperationUrn);
-        webCriteria.setCriteria(criteria);
-        dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
+        criteria.setStatisticalOperationUrn(statisticalOperationUrn);
+        dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetVersionsResult result) {

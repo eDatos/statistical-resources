@@ -2,12 +2,10 @@ package org.siemac.metamac.statistical.resources.web.shared.criteria;
 
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasDataCriteria;
 
-public class DatasetVersionWebCriteria extends VersionableStatisticalResourceWebCriteria implements HasDataCriteria {
+public class DatasetVersionWebCriteria extends SiemacMetadataStatisticalResourceWebCriteria implements HasDataCriteria {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 7050528031069849463L;
+
     private Boolean           hasData;
 
     public DatasetVersionWebCriteria() {

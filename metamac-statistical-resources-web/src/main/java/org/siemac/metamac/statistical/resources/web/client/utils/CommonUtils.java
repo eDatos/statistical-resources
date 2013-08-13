@@ -32,8 +32,30 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static String getProcStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        return lifeCycleStatisticalResourceDto != null && lifeCycleStatisticalResourceDto.getProcStatus() != null ? getCoreMessages().getString(
-                getCoreMessages().statisticalResourceProcStatusEnum() + lifeCycleStatisticalResourceDto.getProcStatus().getName()) : null;
+        return lifeCycleStatisticalResourceDto != null ? getProcStatusName(lifeCycleStatisticalResourceDto.getProcStatus()) : null;
+    }
+
+    public static String getProcStatusName(ProcStatusEnum procStatusEnum) {
+        return procStatusEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceProcStatusEnum() + procStatusEnum.getName()) : null;
+    }
+
+    public static LinkedHashMap<String, String> getProcStatusHashMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        for (ProcStatusEnum procStatusEnum : ProcStatusEnum.values()) {
+            valueMap.put(procStatusEnum.name(), getProcStatusName(procStatusEnum));
+        }
+        return valueMap;
+    }
+
+    public static ProcStatusEnum getProcStatusEnum(String procStatusName) {
+        if (!StringUtils.isBlank(procStatusName)) {
+            try {
+                return ProcStatusEnum.valueOf(procStatusName);
+            } catch (Exception e) {
+            }
+        }
+        return null;
     }
 
     // -----------------------------------------------------------------------------------------

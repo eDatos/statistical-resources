@@ -22,8 +22,8 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -148,7 +148,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         // PUBLICATIONS
 
-        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria();
+        PublicationVersionWebCriteria publicationWebCriteria = new PublicationVersionWebCriteria();
         publicationWebCriteria.setStatisticalOperationUrn(urn);
 
         dispatcher.execute(new GetPublicationVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationWebCriteria),
@@ -166,9 +166,9 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         // QUERIES
 
-        StatisticalResourceWebCriteria queryWebCriteria = new StatisticalResourceWebCriteria();
-        queryWebCriteria.setStatisticalOperationUrn(urn);
-        dispatcher.execute(new GetQueryVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryWebCriteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
+        QueryVersionWebCriteria queryVersionWebCriteria = new QueryVersionWebCriteria();
+        queryVersionWebCriteria.setStatisticalOperationUrn(urn);
+        dispatcher.execute(new GetQueryVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryVersionWebCriteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

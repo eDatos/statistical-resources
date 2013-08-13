@@ -1,11 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.server.utils;
 
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.appendConditionToQuery;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.fieldComparison;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
@@ -15,23 +9,12 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnu
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
-import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
-import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.InstanceCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemeCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.LifeCycleStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.SiemacMetadataStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasDataCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasSchemeCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasLastVersionCriteria;
@@ -53,8 +36,27 @@ public class MetamacWebCriteriaUtils {
         if (webCriteria instanceof HasLastVersionCriteria) {
             addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasLastVersionCriteria) webCriteria));
         }
+
         if (webCriteria instanceof HasDataCriteria) {
             addRestrictionIfExists(criteria, buildMetamacCriteriaDatasetWithData((HasDataCriteria) webCriteria));
+        }
+
+        if (webCriteria instanceof VersionableStatisticalResourceWebCriteria) {
+            VersionableStatisticalResourceWebCriteria versionableStatisticalResourceWebCriteria = (VersionableStatisticalResourceWebCriteria) webCriteria;
+            addRestrictionIfExists(criteria, buildCodeCriteria(versionableStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildTitleCriteria(versionableStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildDescriptionCriteria(versionableStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildUrnCriteria(versionableStatisticalResourceWebCriteria));
+        }
+
+        if (webCriteria instanceof LifeCycleStatisticalResourceWebCriteria) {
+            LifeCycleStatisticalResourceWebCriteria lifeCycleStatisticalResourceWebCriteria = (LifeCycleStatisticalResourceWebCriteria) webCriteria;
+            addRestrictionIfExists(criteria, buildProcStatusCriteria(lifeCycleStatisticalResourceWebCriteria));
+        }
+
+        if (webCriteria instanceof SiemacMetadataStatisticalResourceWebCriteria) {
+            SiemacMetadataStatisticalResourceWebCriteria siemacMetadataStatisticalResourceWebCriteria = (SiemacMetadataStatisticalResourceWebCriteria) webCriteria;
+            addRestrictionIfExists(criteria, buildTitleAlternativeCriteria(siemacMetadataStatisticalResourceWebCriteria));
         }
 
         return criteria;
@@ -106,6 +108,48 @@ public class MetamacWebCriteriaUtils {
     private static MetamacCriteriaRestriction buildOnlyLastVersionCriteria(HasLastVersionCriteria criteria) {
         if (criteria.isOnlyLastVersion()) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildCodeCriteria(VersionableStatisticalResourceWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getCode())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.CODE.name(), criteria.getCode(), OperationType.ILIKE);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildTitleCriteria(VersionableStatisticalResourceWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getTitle())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.TITLE.name(), criteria.getTitle(), OperationType.ILIKE);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildUrnCriteria(VersionableStatisticalResourceWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getUrn())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.URN.name(), criteria.getUrn(), OperationType.ILIKE);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildDescriptionCriteria(VersionableStatisticalResourceWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getDescription())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DESCRIPTION.name(), criteria.getDescription(), OperationType.ILIKE);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildProcStatusCriteria(LifeCycleStatisticalResourceWebCriteria criteria) {
+        if (criteria.getProcStatus() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS.name(), criteria.getProcStatus(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildTitleAlternativeCriteria(SiemacMetadataStatisticalResourceWebCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getTitleAlternative())) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.TITLE_ALTERNATIVE.name(), criteria.getTitleAlternative(), OperationType.ILIKE);
         }
         return null;
     }

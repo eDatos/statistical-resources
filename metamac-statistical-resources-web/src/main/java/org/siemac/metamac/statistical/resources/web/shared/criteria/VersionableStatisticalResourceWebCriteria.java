@@ -8,6 +8,10 @@ public class VersionableStatisticalResourceWebCriteria extends MetamacVersionabl
     private static final long serialVersionUID = 1L;
 
     private String            statisticalOperationUrn;
+    private String            code;
+    private String            title;
+    private String            urn;
+    private String            description;
 
     public VersionableStatisticalResourceWebCriteria() {
         super();
@@ -27,4 +31,35 @@ public class VersionableStatisticalResourceWebCriteria extends MetamacVersionabl
         this.statisticalOperationUrn = statisticalOperationUrn;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUrn() {
+        return urn;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setUrn(String urn) {
+        this.urn = urn;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

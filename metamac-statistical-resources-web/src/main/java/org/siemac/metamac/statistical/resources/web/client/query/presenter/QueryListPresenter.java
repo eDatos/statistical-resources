@@ -21,7 +21,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
@@ -96,7 +96,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrieveQueriesByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            retrieveQueriesByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new QueryVersionWebCriteria());
         }
     }
 
@@ -112,14 +112,11 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     }
 
     @Override
-    public void retrieveQueriesByStatisticalOperation(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+    public void retrieveQueries(int firstResult, int maxResults, QueryVersionWebCriteria criteria) {
         retrieveQueriesByStatisticalOperation(operation != null ? operation.getUrn() : null, firstResult, maxResults, criteria);
     }
 
-    private void retrieveQueriesByStatisticalOperation(String operationUrn, int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
-        if (criteria == null) {
-            criteria = new StatisticalResourceWebCriteria();
-        }
+    private void retrieveQueriesByStatisticalOperation(String operationUrn, int firstResult, int maxResults, QueryVersionWebCriteria criteria) {
         criteria.setStatisticalOperationUrn(operationUrn);
         dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
 
@@ -210,12 +207,12 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
             @Override
             public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, successMessage);
-                retrieveQueriesByStatisticalOperation(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }

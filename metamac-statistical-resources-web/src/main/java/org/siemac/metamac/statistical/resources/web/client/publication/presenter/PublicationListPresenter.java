@@ -24,7 +24,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
@@ -106,7 +106,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
-            retrievePublications(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            retrievePublications(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -125,16 +125,13 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void retrievePublications(int firstResult, int maxResults, String criteria) {
-        retrievePublications(operation != null ? operation.getUrn() : null, firstResult, maxResults, criteria);
+    public void retrievePublications(int firstResult, int maxResults, PublicationVersionWebCriteria publicationVersionWebCriteria) {
+        retrievePublications(operation != null ? operation.getUrn() : null, firstResult, maxResults, publicationVersionWebCriteria);
     }
 
-    private void retrievePublications(String operationUrn, int firstResult, int maxResults, String criteria) {
-
-        VersionableStatisticalResourceWebCriteria publicationWebCriteria = new VersionableStatisticalResourceWebCriteria(criteria);
-        publicationWebCriteria.setStatisticalOperationUrn(operationUrn);
-
-        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
+    private void retrievePublications(String operationUrn, int firstResult, int maxResults, PublicationVersionWebCriteria publicationVersionWebCriteria) {
+        publicationVersionWebCriteria.setStatisticalOperationUrn(operationUrn);
+        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationVersionWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetPublicationVersionsResult result) {

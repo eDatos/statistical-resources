@@ -11,12 +11,12 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
-import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetVersionSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
+import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -32,8 +33,6 @@ import com.google.inject.Inject;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
@@ -42,13 +41,14 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<DatasetListUiHandlers> implements DatasetListPresenter.DatasetListView {
 
-    private CustomToolStripButton   importDatasourcesButton;
+    private DatasetVersionSearchSectionStack searchSectionStack;
 
-    private NewDatasetWindow        newDatasetWindow;
+    private CustomToolStripButton            importDatasourcesButton;
 
-    private ImportDatasourcesWindow importDatasourcesWindow;
+    private ImportDatasourcesWindow          importDatasourcesWindow;
+    private NewDatasetWindow                 newDatasetWindow;
 
-    private String                  operationUrn;
+    private String                           operationUrn;
 
     @Inject
     public DatasetListViewImpl() {
@@ -60,16 +60,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
         importDatasourcesButton = createImportDatasourcesButton();
         toolStrip.addButton(importDatasourcesButton);
-
-        // Search
-
-        searchSectionStack.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
-
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, searchSectionStack.getSearchCriteria());
-            }
-        });
 
         // ListGrid
 
@@ -110,6 +100,12 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
                 getUiHandlers().datasourcesImportationSucceed(fileName);
             }
         });
+    }
+
+    @Override
+    public void setUiHandlers(DatasetListUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        searchSectionStack.setUiHandlers(uiHandlers);
     }
 
     @Override
@@ -367,5 +363,15 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     protected boolean canVersion(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
         return DatasetClientSecurityUtils.canVersionDataset(datasetRecord.getDatasetVersionDto());
+    }
+
+    //
+    // SEARCH
+    //
+
+    @Override
+    protected BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack() {
+        searchSectionStack = new DatasetVersionSearchSectionStack();
+        return searchSectionStack;
     }
 }

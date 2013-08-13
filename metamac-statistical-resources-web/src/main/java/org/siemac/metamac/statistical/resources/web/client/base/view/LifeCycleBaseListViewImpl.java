@@ -16,15 +16,14 @@ import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResou
 import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourcePaginatedCheckListGrid;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
+import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.SearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Autofit;
-import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -36,7 +35,6 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends ViewWithUiHandlers<C> implements LifeCycleBaseListPresenter.LifeCycleBaseListView {
 
     protected VLayout                                 panel;
-    protected SearchSectionStack                      searchSectionStack;
 
     protected ToolStrip                               toolStrip;
     protected CustomToolStripButton                   newButton;
@@ -55,10 +53,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     public LifeCycleBaseListViewImpl() {
         super();
-
-        // Search
-
-        searchSectionStack = new SearchSectionStack();
 
         // ToolStrip
 
@@ -116,7 +110,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
         panel = new VLayout();
         panel.addMember(toolStrip);
-        panel.addMember(searchSectionStack);
+        panel.addMember(createAdvacedSearchSectionStack());
         panel.addMember(listGrid);
 
         // Delete confirmation window
@@ -248,7 +242,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
     private CustomToolStripButton createPublishButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
-        button.setVisible(false);        
+        button.setVisible(false);
         button.addClickHandler(getPublishClickHandler());
         return button;
     }
@@ -403,6 +397,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     //
     // ABSTRACT METHODS
     //
+
+    protected abstract BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack();
 
     protected abstract void retrieveResultSet(int firstResult, int maxResults);
 
