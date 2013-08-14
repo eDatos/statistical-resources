@@ -34,6 +34,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
@@ -90,6 +92,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
 
         // Related resources
+        void setGeographicGranularitiesForSearchSection(GetGeographicalGranularitiesListResult result);
         void setTemporalGranularitiesForSearchSection(GetTemporalGranularitiesListResult result);
     }
 
@@ -269,6 +272,17 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     //
     // RELATED RESOURCE
     //
+
+    @Override
+    public void retrieveGeographicGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetGeographicalGranularitiesListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetGeographicalGranularitiesListResult result) {
+                getView().setGeographicGranularitiesForSearchSection(result);
+            }
+        });
+    }
 
     @Override
     public void retrieveTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria) {

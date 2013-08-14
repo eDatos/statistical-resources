@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.widgets.SiemacMetadataResourceSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleItemWihtoutFilterWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
@@ -22,6 +23,7 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSearchSectionStack {
 
+    private SearchSingleItemWihtoutFilterWindow searchGeographicGranularitiesWindow;
     private SearchSingleItemWihtoutFilterWindow searchTemporalGranularitiesWindow;
 
     private DatasetListUiHandlers               uiHandlers;
@@ -33,16 +35,14 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
     protected void createAdvancedSearchForm() {
         super.createAdvancedSearchForm();
 
-        // TODO geographical granularity
-
+        SearchExternalItemLinkItem geographicalGranularity = createGeographicGranularityItem(DatasetDS.GEOGRAPHIC_GRANULARITY, getConstants().datasetGeographicGranularity());
         SearchExternalItemLinkItem temporalGranularity = createTemporalGranularityItem(DatasetDS.TEMPORAL_GRANULARITY, getConstants().datasetTemporalGranularity());
-
         CustomDateItem dateStart = new CustomDateItem(DatasetDS.DATE_START, getConstants().datasetDateStart());
         CustomDateItem dateEnd = new CustomDateItem(DatasetDS.DATE_END, getConstants().datasetDateEnd());
         // TODO related DSD
         CustomDateItem dateNextUpdate = new CustomDateItem(DatasetDS.DATE_NEXT_UPDATE, getConstants().datasetDateNextUpdate());
 
-        advancedSearchForm.addFieldsInThePenultimePosition(temporalGranularity, dateStart, dateEnd, dateNextUpdate);
+        advancedSearchForm.addFieldsInThePenultimePosition(geographicalGranularity, temporalGranularity, dateStart, dateEnd, dateNextUpdate);
     }
 
     public DatasetVersionWebCriteria getDatasetVersionWebCriteria() {
@@ -50,6 +50,9 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
         ExternalItemDto selectedTemporalGranularity = ((SearchExternalItemLinkItem) advancedSearchForm.getItem(DatasetDS.TEMPORAL_GRANULARITY)).getExternalItemDto();
         criteria.setTemporalGranularityUrn(selectedTemporalGranularity != null ? selectedTemporalGranularity.getUrn() : null);
+
+        ExternalItemDto selectedGeographicalGranularity = ((SearchExternalItemLinkItem) advancedSearchForm.getItem(DatasetDS.GEOGRAPHIC_GRANULARITY)).getExternalItemDto();
+        criteria.setGeographicalGranularityUrn(selectedGeographicalGranularity != null ? selectedGeographicalGranularity.getUrn() : null);
 
         criteria.setDateStart(((CustomDateItem) advancedSearchForm.getItem(DatasetDS.DATE_START)).getValueAsDate());
         criteria.setDateEnd(((CustomDateItem) advancedSearchForm.getItem(DatasetDS.DATE_END)).getValueAsDate());
@@ -110,6 +113,51 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
                     public void onClick(ClickEvent event) {
                         ExternalItemDto selectedResource = searchTemporalGranularitiesWindow.getSelectedResource();
                         searchTemporalGranularitiesWindow.markForDestroy();
+                        item.setExternalItem(selectedResource);
+                        item.validate();
+                    }
+                });
+            }
+        });
+        return item;
+    }
+
+    // Geographical granularities
+
+    public void setGeographicalGranularities(GetGeographicalGranularitiesListResult result) {
+        if (searchGeographicGranularitiesWindow != null) {
+            searchGeographicGranularitiesWindow.setResources(result.getGeographicalGranularities());
+            searchGeographicGranularitiesWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), result.getGeographicalGranularities().size(), result.getTotalResults());
+        }
+    }
+
+    private SearchExternalItemLinkItem createGeographicGranularityItem(String name, String title) {
+
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title);
+        item.setExternalItem(null);
+        item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+
+                searchGeographicGranularitiesWindow = new SearchSingleItemWihtoutFilterWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<MetamacWebCriteria>() {
+
+                            @Override
+                            public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+                                uiHandlers.retrieveGeographicGranularities(firstResult, maxResults, criteria);
+                            }
+
+                        });
+
+                uiHandlers.retrieveGeographicGranularities(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
+
+                searchGeographicGranularitiesWindow.setSaveAction(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        ExternalItemDto selectedResource = searchGeographicGranularitiesWindow.getSelectedResource();
+                        searchGeographicGranularitiesWindow.markForDestroy();
                         item.setExternalItem(selectedResource);
                         item.validate();
                     }
