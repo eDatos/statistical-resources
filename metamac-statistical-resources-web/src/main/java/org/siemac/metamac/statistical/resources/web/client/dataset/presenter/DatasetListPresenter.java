@@ -38,8 +38,11 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -85,6 +88,9 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         void setDatasetPaginatedList(String operationUrn, GetDatasetVersionsResult datasetsPaginatedList);
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
+
+        // Related resources
+        void setTemporalGranularitiesForSearchSection(GetTemporalGranularitiesListResult result);
     }
 
     @Inject
@@ -258,6 +264,21 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     @Override
     public void datasourcesImportationFailed(String errorMessage) {
         ShowMessageEvent.fireErrorMessage(DatasetListPresenter.this, errorMessage);
+    }
+
+    //
+    // RELATED RESOURCE
+    //
+
+    @Override
+    public void retrieveTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetTemporalGranularitiesListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetTemporalGranularitiesListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetTemporalGranularitiesListResult result) {
+                getView().setTemporalGranularitiesForSearchSection(result);
+            }
+        });
     }
 
     //

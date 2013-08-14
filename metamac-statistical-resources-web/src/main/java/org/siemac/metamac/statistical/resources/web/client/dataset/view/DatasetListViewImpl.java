@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUt
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
@@ -373,5 +374,10 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     protected BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack() {
         searchSectionStack = new DatasetVersionSearchSectionStack();
         return searchSectionStack;
+    }
+
+    @Override
+    public void setTemporalGranularitiesForSearchSection(GetTemporalGranularitiesListResult result) {
+        searchSectionStack.setTemporalGranularities(result);
     }
 }

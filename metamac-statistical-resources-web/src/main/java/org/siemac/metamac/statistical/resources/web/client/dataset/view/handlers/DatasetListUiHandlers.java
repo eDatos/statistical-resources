@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers {
 
@@ -33,4 +34,8 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
 
     void datasourcesImportationFailed(String errorMessage);
     void datasourcesImportationSucceed(String fileName);
+
+    // Related resources
+
+    void retrieveTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria);
 }
