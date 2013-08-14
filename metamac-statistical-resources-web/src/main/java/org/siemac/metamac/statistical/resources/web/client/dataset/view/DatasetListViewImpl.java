@@ -386,4 +386,14 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     public void setGeographicGranularitiesForSearchSection(GetGeographicalGranularitiesListResult result) {
         searchSectionStack.setGeographicalGranularities(result);
     }
+
+    @Override
+    public void setStatisticalOperationsForDsdSelectionInSearchSection(List<ExternalItemDto> results) {
+        searchSectionStack.setStatisticalOperationsForDsdSelection(results);
+    }
+
+    @Override
+    public void setDsdsForSearchSection(GetDsdsPaginatedListResult result) {
+        searchSectionStack.setDsds(result);
+    }
 }

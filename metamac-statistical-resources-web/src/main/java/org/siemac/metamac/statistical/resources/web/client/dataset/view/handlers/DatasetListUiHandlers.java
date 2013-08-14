@@ -37,6 +37,8 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
 
     // Related resources
 
-    void retrieveGeographicGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria);
-    void retrieveTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria);
+    void retrieveGeographicGranularitiesForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria);
+    void retrieveTemporalGranularitiesForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria);
+    void retrieveStatisticalOperationsForDsdSelectionInSearchSection();
+    void retrieveDsdsForSearchSection(int firstResult, int maxResults, DsdWebCriteria criteria);
 }

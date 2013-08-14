@@ -7,8 +7,11 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.SiemacMetadataResourceSearchSectionStack;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDsdPaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleItemWihtoutFilterWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
@@ -25,6 +28,7 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
     private SearchSingleItemWihtoutFilterWindow searchGeographicGranularitiesWindow;
     private SearchSingleItemWihtoutFilterWindow searchTemporalGranularitiesWindow;
+    private SearchSingleDsdPaginatedWindow      searchDsdWindow;
 
     private DatasetListUiHandlers               uiHandlers;
 
@@ -39,10 +43,10 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
         SearchExternalItemLinkItem temporalGranularity = createTemporalGranularityItem(DatasetDS.TEMPORAL_GRANULARITY, getConstants().datasetTemporalGranularity());
         CustomDateItem dateStart = new CustomDateItem(DatasetDS.DATE_START, getConstants().datasetDateStart());
         CustomDateItem dateEnd = new CustomDateItem(DatasetDS.DATE_END, getConstants().datasetDateEnd());
-        // TODO related DSD
+        SearchExternalItemLinkItem dsd = createDsdItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
         CustomDateItem dateNextUpdate = new CustomDateItem(DatasetDS.DATE_NEXT_UPDATE, getConstants().datasetDateNextUpdate());
 
-        advancedSearchForm.addFieldsInThePenultimePosition(geographicalGranularity, temporalGranularity, dateStart, dateEnd, dateNextUpdate);
+        advancedSearchForm.addFieldsInThePenultimePosition(geographicalGranularity, temporalGranularity, dateStart, dateEnd, dsd, dateNextUpdate);
     }
 
     public DatasetVersionWebCriteria getDatasetVersionWebCriteria() {
@@ -56,6 +60,10 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
         criteria.setDateStart(((CustomDateItem) advancedSearchForm.getItem(DatasetDS.DATE_START)).getValueAsDate());
         criteria.setDateEnd(((CustomDateItem) advancedSearchForm.getItem(DatasetDS.DATE_END)).getValueAsDate());
+
+        ExternalItemDto selectedDsd = ((SearchExternalItemLinkItem) advancedSearchForm.getItem(DatasetDS.RELATED_DSD)).getExternalItemDto();
+        criteria.setDsdUrn(selectedDsd != null ? selectedDsd.getUrn() : null);
+
         criteria.setDateNextUpdate(((CustomDateItem) advancedSearchForm.getItem(DatasetDS.DATE_NEXT_UPDATE)).getValueAsDate());
         return criteria;
     }
@@ -100,12 +108,12 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                             @Override
                             public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-                                uiHandlers.retrieveTemporalGranularities(firstResult, maxResults, criteria);
+                                uiHandlers.retrieveTemporalGranularitiesForSearchSection(firstResult, maxResults, criteria);
                             }
 
                         });
 
-                uiHandlers.retrieveTemporalGranularities(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
+                uiHandlers.retrieveTemporalGranularitiesForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
 
                 searchTemporalGranularitiesWindow.setSaveAction(new ClickHandler() {
 
@@ -145,12 +153,12 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                             @Override
                             public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-                                uiHandlers.retrieveGeographicGranularities(firstResult, maxResults, criteria);
+                                getUiHandlers().retrieveGeographicGranularitiesForSearchSection(firstResult, maxResults, criteria);
                             }
 
                         });
 
-                uiHandlers.retrieveGeographicGranularities(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
+                getUiHandlers().retrieveGeographicGranularitiesForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
 
                 searchGeographicGranularitiesWindow.setSaveAction(new ClickHandler() {
 
@@ -158,6 +166,57 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
                     public void onClick(ClickEvent event) {
                         ExternalItemDto selectedResource = searchGeographicGranularitiesWindow.getSelectedResource();
                         searchGeographicGranularitiesWindow.markForDestroy();
+                        item.setExternalItem(selectedResource);
+                        item.validate();
+                    }
+                });
+            }
+        });
+        return item;
+    }
+
+    // DSD
+
+    public void setStatisticalOperationsForDsdSelection(java.util.List<ExternalItemDto> externalItemDtos) {
+        if (searchDsdWindow != null) {
+            searchDsdWindow.setStatisticalOperations(externalItemDtos);
+        }
+    }
+
+    public void setDsds(GetDsdsPaginatedListResult result) {
+        if (searchDsdWindow != null) {
+            searchDsdWindow.setResources(result.getDsdsList());
+            searchDsdWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), result.getDsdsList().size(), result.getTotalResults());
+        }
+    }
+
+    private SearchExternalItemLinkItem createDsdItem(String name, String title) {
+
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title);
+        item.setExternalItem(null);
+        item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+
+                searchDsdWindow = new SearchSingleDsdPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<DsdWebCriteria>() {
+
+                            @Override
+                            public void retrieveResultSet(int firstResult, int maxResults, DsdWebCriteria criteria) {
+                                getUiHandlers().retrieveDsdsForSearchSection(firstResult, maxResults, criteria);
+                            }
+                        });
+
+                // Load resources (to populate the selection window)
+                getUiHandlers().retrieveStatisticalOperationsForDsdSelectionInSearchSection();
+
+                searchDsdWindow.setSaveAction(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        ExternalItemDto selectedResource = searchDsdWindow.getSelectedResource();
+                        searchDsdWindow.markForDestroy();
                         item.setExternalItem(selectedResource);
                         item.validate();
                     }

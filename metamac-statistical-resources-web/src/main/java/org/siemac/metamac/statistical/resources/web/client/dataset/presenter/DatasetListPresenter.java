@@ -94,6 +94,8 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         // Related resources
         void setGeographicGranularitiesForSearchSection(GetGeographicalGranularitiesListResult result);
         void setTemporalGranularitiesForSearchSection(GetTemporalGranularitiesListResult result);
+        void setStatisticalOperationsForDsdSelectionInSearchSection(List<ExternalItemDto> results);
+        void setDsdsForSearchSection(GetDsdsPaginatedListResult result);
     }
 
     @Inject
@@ -159,7 +161,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(SaveDatasetVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
             }
         });
     }
@@ -245,12 +247,12 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
             }
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
             }
         });
     }
@@ -270,11 +272,11 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     //
-    // RELATED RESOURCE
+    // RELATED RESOURCES
     //
 
     @Override
-    public void retrieveGeographicGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+    public void retrieveGeographicGranularitiesForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria) {
         dispatcher.execute(new GetGeographicalGranularitiesListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesListResult>(this) {
 
             @Override
@@ -285,12 +287,34 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void retrieveTemporalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+    public void retrieveTemporalGranularitiesForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria) {
         dispatcher.execute(new GetTemporalGranularitiesListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetTemporalGranularitiesListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetTemporalGranularitiesListResult result) {
                 getView().setTemporalGranularitiesForSearchSection(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForDsdSelectionInSearchSection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForDsdSelectionInSearchSection(result.getOperationsList());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDsdsForSearchSection(int firstResult, int maxResults, DsdWebCriteria criteria) {
+        dispatcher.execute(new GetDsdsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDsdsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDsdsPaginatedListResult result) {
+                getView().setDsdsForSearchSection(result);
             }
         });
     }
