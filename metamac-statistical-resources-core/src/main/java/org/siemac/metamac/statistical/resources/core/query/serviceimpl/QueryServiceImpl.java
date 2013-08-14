@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -10,16 +11,21 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.query.serviceimpl.validators.QueryConstraintValidator;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -151,8 +157,13 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         // Check that query is pending_review
         BaseValidator.checkStatisticalResourceCanBeDeleted(queryVersion);
 
-        // Delete
-        getQueryVersionRepository().delete(queryVersion);
+        if (VersionUtil.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic())) {
+            Query query = queryVersion.getQuery();
+            getQueryRepository().delete(query);
+        } else {
+            // Delete
+            getQueryVersionRepository().delete(queryVersion);
+        }
     }
 
     private void fillMetadataForCreateQuery(Query query, QueryVersion queryVersion, ExternalItem statisticalOperation) throws MetamacException {
@@ -169,6 +180,18 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private void fillMetadataForCreateQueryVersion(ServiceContext ctx, QueryVersion queryVersion, ExternalItem statisticalOperation) throws MetamacException {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), statisticalOperation, ctx);
         queryVersion.setStatus(determineQueryStatus(queryVersion));
+        queryVersion.setLatestTemporalCodeInCreation(determineLatestTemporalCodeInCreation(queryVersion));
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
+                .getLifeCycleStatisticalResource().getVersionLogic());
+        queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
+    }
+
+    private void fillMetadataForUpdateQueryVersion(QueryVersion queryVersion) throws MetamacException {
+        queryVersion.setStatus(determineQueryStatus(queryVersion));
+        queryVersion.setLatestTemporalCodeInCreation(determineLatestTemporalCodeInCreation(queryVersion));
+
+        // Update URN
         String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
                 .getLifeCycleStatisticalResource().getVersionLogic());
@@ -183,14 +206,15 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         }
     }
 
-    private void fillMetadataForUpdateQueryVersion(QueryVersion queryVersion) throws MetamacException {
-        queryVersion.setStatus(determineQueryStatus(queryVersion));
-
-        // Update URN
-        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
-        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
-                .getLifeCycleStatisticalResource().getVersionLogic());
-        queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
+    private String determineLatestTemporalCodeInCreation(QueryVersion queryVersion) {
+        if (QueryTypeEnum.AUTOINCREMENTAL.equals(queryVersion.getType())) {
+            List<TemporalCode> temporalCodes = queryVersion.getDatasetVersion().getTemporalCoverage();
+            List<String> timeCodes = new ArrayList<String>();
+            StatisticalResourcesCollectionUtils.temporalCodesToTimeCodes(temporalCodes, timeCodes);
+            List<String> sortedCodes = SdmxTimeUtils.sortTimeList(timeCodes);
+            return sortedCodes.get(0);
+        }
+        return null;
     }
 
     @Override

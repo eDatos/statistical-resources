@@ -163,10 +163,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME                        = "DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY";
     private static DatasetVersion DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY;
-    
-    public static final String    DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME                      = "DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES";
+
+    public static final String    DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME                          = "DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES";
     private static DatasetVersion DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES;
-    
+
+    public static final String    DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME                             = "DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED";
+    private static DatasetVersion DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED;
+
     private static final String   INIT_VERSION                                                                      = "001.000";
     private static final String   SECOND_VERSION                                                                    = "002.000";
     private static final String   THIRD_VERSION                                                                     = "003.000";
@@ -673,8 +676,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_42_VERSION_RATIONALE_TYPE_MINOR_ERRATAS_AND_MAJOR_ESTIMATORS;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion43NextVersionNoUpdates() {
         if (DATASET_VERSION_43_NEXT_VERSION_NO_UPDATES == null) {
             DatasetVersion datasetVersion = createDatasetVersionEmpty();
@@ -685,8 +687,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_43_NEXT_VERSION_NO_UPDATES;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion44NextVersionNonScheduledUpdate() {
         if (DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE == null) {
             DatasetVersion datasetVersion = createDatasetVersionEmpty();
@@ -697,8 +698,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion45NextVersionScheduledUpdateJanuary() {
         if (DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY == null) {
             DatasetVersion datasetVersion = createDatasetVersionEmpty();
@@ -709,8 +709,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion46NextVersionScheduledUpdateJuly() {
         if (DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY == null) {
             DatasetVersion datasetVersion = createDatasetVersionEmpty();
@@ -721,7 +720,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY;
     }
-    
+
     protected static DatasetVersion getDatasetVersion47WithCoverageFilledWithTitles() {
         if (DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES == null) {
             DatasetVersion datasetVersion = createDatasetVersion(2);
@@ -730,8 +729,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
             datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
             datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
             datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
@@ -740,6 +739,30 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES = datasetVersion;
         }
         return DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES;
+    }
+
+    protected static DatasetVersion getDatasetVersion48WithTemporalCoverageFilled() {
+        if (DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+
+            prepareToProductionValidation(datasetVersion);
+
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010-M12", "Dic 2010"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2009-M12", "Dic 2009"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2008-M12", "Dic 2008"));
+
+            DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED = datasetVersion;
+        }
+        return DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED;
     }
 
     // -----------------------------------------------------------------

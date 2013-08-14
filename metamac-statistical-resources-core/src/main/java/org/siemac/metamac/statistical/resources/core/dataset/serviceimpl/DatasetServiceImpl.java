@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,9 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.time.TimeSdmx;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.TimeSdmxComparator;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -603,6 +607,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             if (items != null) {
                 addTranslationsToCodesFromExternalItems(codes, items);
             }
+
+            if (DsdComponentType.TEMPORAL.equals(dimension.getType())) {
+                sortTemporalCodeDimensions(codes);
+            }
+
             resource.getCoverages().addAll(codes);
             switch (dimension.getType()) {
                 case SPATIAL:
@@ -635,6 +644,18 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.MEASURE);
             resource.getMeasureCoverage().addAll(codeItems);
         }
+    }
+
+    private void sortTemporalCodeDimensions(List<CodeDimension> codes) {
+        Collections.sort(codes, new Comparator<CodeDimension>() {
+
+            private TimeSdmxComparator sdmxComparator = new TimeSdmxComparator();
+
+            @Override
+            public int compare(CodeDimension o1, CodeDimension o2) {
+                return sdmxComparator.compare(new TimeSdmx(o2.getIdentifier()), new TimeSdmx(o1.getIdentifier()));
+            }
+        });
     }
 
     private void addTranslationsToCodesFromExternalItems(List<CodeDimension> codeDimensions, List<ExternalItem> externalItems) {

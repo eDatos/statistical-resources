@@ -75,13 +75,13 @@ public class CodeDimensionRepositoryTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME);
         {
             List<CodeDimension> codeDimensions = codeDimensionRepository.findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), "TIME_PERIOD", null);
-            DatasetsAsserts.assertEqualsCodeDimensionsCollection(CodeDimensionsMockBuilder.prepare(datasetVersion, "TIME_PERIOD").addCode("2011").addCode("2010").addCode("2010-M01", "Enero 2010")
-                    .addCode("2010-M02", "Febrero 2010").build(), codeDimensions);
+            DatasetsAsserts.assertEqualsCodeDimensionsCollection(CodeDimensionsMockBuilder.prepare(datasetVersion, "TIME_PERIOD").addCode("2011").addCode("2010").addCode("2010-M02", "Febrero 2010")
+                    .addCode("2010-M01", "Enero 2010").build(), codeDimensions);
         }
         {
             List<CodeDimension> codeDimensions = codeDimensionRepository.findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), "TIME_PERIOD", "2010");
             DatasetsAsserts.assertEqualsCodeDimensionsCollection(
-                    CodeDimensionsMockBuilder.prepare(datasetVersion, "TIME_PERIOD").addCode("2010").addCode("2010-M01", "Enero 2010").addCode("2010-M02", "Febrero 2010").build(), codeDimensions);
+                    CodeDimensionsMockBuilder.prepare(datasetVersion, "TIME_PERIOD").addCode("2010").addCode("2010-M02", "Febrero 2010").addCode("2010-M01", "Enero 2010").build(), codeDimensions);
         }
         {
             List<CodeDimension> codeDimensions = codeDimensionRepository.findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), "TIME_PERIOD", "Enero");

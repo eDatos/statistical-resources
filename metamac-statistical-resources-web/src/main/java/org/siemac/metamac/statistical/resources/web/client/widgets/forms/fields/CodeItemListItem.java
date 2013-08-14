@@ -12,6 +12,7 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.form.fields.BaseListItem;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class CodeItemListItem extends BaseListItem {
@@ -33,9 +34,11 @@ public class CodeItemListItem extends BaseListItem {
 
     public void setCodeItems(List<CodeItemDto> dtos) {
         listGrid.removeAllData();
-        for (CodeItemDto dto : dtos) {
-            CodeItemRecord record = StatisticalResourcesRecordUtils.getCodeItemRecord(dto);
-            listGrid.addData(record);
+        if (dtos != null) {
+            for (CodeItemDto dto : dtos) {
+                CodeItemRecord record = StatisticalResourcesRecordUtils.getCodeItemRecord(dto);
+                listGrid.addData(record);
+            }
         }
     }
 
@@ -53,6 +56,20 @@ public class CodeItemListItem extends BaseListItem {
 
     public void clearRelatedResourceList() {
         listGrid.removeAllData();
+    }
+    
+    public void setRequired(boolean required) {
+        if (required) {
+            setTitleStyle("requiredFormLabel");
+            CustomValidator customValidator = new CustomValidator() {
+
+                @Override
+                protected boolean condition(Object value) {
+                    return isVisible() ? (getCodeItemsDtos() != null && !getCodeItemsDtos().isEmpty()) : true;
+                }
+            };
+            setValidators(customValidator);
+        }
     }
 
 }

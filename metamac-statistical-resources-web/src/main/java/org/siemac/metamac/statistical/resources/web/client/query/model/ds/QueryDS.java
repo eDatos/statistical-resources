@@ -10,6 +10,7 @@ public class QueryDS extends LifeCycleResourceDS {
 
     public static String       RELATED_DATASET_VERSION = "query-dataset-version";
     public static String       SELECTION               = "query-dataset-version";
+    public static String       LATEST_N_DATA           = "query-latest-n-data";
 
     public QueryDS() {
         super();

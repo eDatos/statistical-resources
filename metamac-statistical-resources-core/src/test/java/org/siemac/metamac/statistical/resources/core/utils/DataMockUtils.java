@@ -74,9 +74,9 @@ public class DataMockUtils {
         datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "concept-01", "Concept 01"));
         datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "concept-02", "Concept 02"));
         datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "concept-03", "Concept 03"));
-        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010"));
-        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011"));
         datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012"));
+        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011"));
+        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010"));
         datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "code-01", "Code 01"));
         datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "code-02", "Code 02"));
         datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "code-03", "Code 03"));

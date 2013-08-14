@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -63,7 +64,19 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static String getQueryTypeName(QueryVersionDto queryDto) {
-        return queryDto != null && queryDto.getType() != null ? getCoreMessages().getString(getCoreMessages().queryTypeEnum() + queryDto.getType().getName()) : null;
+        return queryDto != null && queryDto.getType() != null ? getQueryTypeName(queryDto.getType()) : null;
+    }
+
+    public static LinkedHashMap<String, String> getQueryTypeHashMap() {
+        LinkedHashMap<String, String> queryTypeHashMap = new LinkedHashMap<String, String>();
+        queryTypeHashMap.put(QueryTypeEnum.FIXED.name(), getQueryTypeName(QueryTypeEnum.FIXED));
+        queryTypeHashMap.put(QueryTypeEnum.LATEST_DATA.name(), getQueryTypeName(QueryTypeEnum.LATEST_DATA));
+        queryTypeHashMap.put(QueryTypeEnum.AUTOINCREMENTAL.name(), getQueryTypeName(QueryTypeEnum.AUTOINCREMENTAL));
+        return queryTypeHashMap;
+    }
+
+    private static String getQueryTypeName(QueryTypeEnum queryType) {
+        return queryType != null ? getCoreMessages().getString(getCoreMessages().queryTypeEnum() + queryType.getName()) : null;
     }
 
     // -----------------------------------------------------------------------------------------
