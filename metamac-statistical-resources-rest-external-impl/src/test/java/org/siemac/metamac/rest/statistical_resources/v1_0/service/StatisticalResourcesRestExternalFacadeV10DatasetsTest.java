@@ -30,14 +30,14 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testFindDatasetsXml() throws Exception {
-        String requestUri = getFindDatasetsUri(AGENCY_1, DATASET_1_CODE, null, null, null, null);
+        String requestUri = getFindDatasetsUri(AGENCY_1, DATASET_1_CODE, null, null, null, "es");
         InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10DatasetsTest.class.getResourceAsStream("/responses/datasets/findDatasets.xml");
         testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
     }
 
     @Test
     public void testRetrieveDataset() throws Exception {
-        Dataset dataset = statisticalResourcesRestExternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, null, null, null);
+        Dataset dataset = statisticalResourcesRestExternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, defaultLanguages, null, null);
 
         assertEquals(DATASET_1_CODE, dataset.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)", dataset.getUrn());
@@ -56,7 +56,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
     @Test
     public void testRetrieveDatasetXml() throws Exception {
         String requestBase = getRetrieveDatasetUri(AGENCY_1, DATASET_1_CODE, VERSION_1, null, null);
-        String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
+        String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".xml?lang=es", requestBase + "?_type=xml&lang=es"};
         for (int i = 0; i < requestUris.length; i++) {
             String requestUri = requestUris[i];
             InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10DatasetsTest.class.getResourceAsStream("/responses/datasets/retrieveDataset.id1.xml");

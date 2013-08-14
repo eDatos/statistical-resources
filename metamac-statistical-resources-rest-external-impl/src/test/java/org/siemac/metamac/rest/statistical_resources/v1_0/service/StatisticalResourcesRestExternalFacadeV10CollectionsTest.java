@@ -30,14 +30,14 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
 
     @Test
     public void testFindCollectionsXml() throws Exception {
-        String requestUri = getFindCollectionsUri(AGENCY_1, COLLECTION_1_CODE, null, null, null, null);
+        String requestUri = getFindCollectionsUri(AGENCY_1, COLLECTION_1_CODE, null, null, null, "es");
         InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10CollectionsTest.class.getResourceAsStream("/responses/collections/findCollections.xml");
         testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
     }
 
     @Test
     public void testRetrieveCollection() throws Exception {
-        Collection collection = statisticalResourcesRestExternalFacadeClientXml.retrieveCollection(AGENCY_1, COLLECTION_1_CODE, VERSION_1, null, null);
+        Collection collection = statisticalResourcesRestExternalFacadeClientXml.retrieveCollection(AGENCY_1, COLLECTION_1_CODE, VERSION_1, defaultLanguages, null);
 
         assertEquals(COLLECTION_1_CODE, collection.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency1:collection1(01.000)", collection.getUrn());
@@ -56,7 +56,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
     @Test
     public void testRetrieveCollectionXml() throws Exception {
         String requestBase = getRetrieveCollectionUri(AGENCY_1, COLLECTION_1_CODE, VERSION_1, null, null);
-        String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
+        String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".xml?lang=es", requestBase + "?_type=xml&lang=es"};
         for (int i = 0; i < requestUris.length; i++) {
             String requestUri = requestUris[i];
             InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10CollectionsTest.class.getResourceAsStream("/responses/collections/retrieveCollection.id1.xml");

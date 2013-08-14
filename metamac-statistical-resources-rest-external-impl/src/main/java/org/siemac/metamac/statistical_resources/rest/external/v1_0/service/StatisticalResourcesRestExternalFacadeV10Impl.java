@@ -201,13 +201,20 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     }
 
     private List<String> languagesRequestedToEffectiveLanguages(List<String> sources) throws MetamacException {
-        List<String> targets = new ArrayList<String>();
-        if (!CollectionUtils.isEmpty(sources)) {
-            targets.addAll(sources);
-        }
-        String languageDefault = configurationService.retrieveLanguageDefault();
-        if (!targets.contains(languageDefault)) {
-            targets.add(languageDefault);
+
+        List<String> targets = null;
+        if (CollectionUtils.isEmpty(sources)) {
+            // all languages in DATA
+            targets = configurationService.retrieveLanguages();
+        } else {
+            targets = new ArrayList<String>();
+            if (!CollectionUtils.isEmpty(sources)) {
+                targets.addAll(sources);
+            }
+            String languageDefault = configurationService.retrieveLanguageDefault();
+            if (!targets.contains(languageDefault)) {
+                targets.add(languageDefault);
+            }
         }
         return targets;
     }

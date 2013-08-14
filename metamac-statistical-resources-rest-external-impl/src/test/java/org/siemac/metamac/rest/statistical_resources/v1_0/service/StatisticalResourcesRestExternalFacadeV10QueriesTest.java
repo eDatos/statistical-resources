@@ -38,14 +38,14 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
 
     @Test
     public void testFindQueriesXml() throws Exception {
-        String requestUri = getFindQueriesUri(AGENCY_1, null, null, null, null);
+        String requestUri = getFindQueriesUri(AGENCY_1, null, null, null, "es");
         InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/findQueries.xml");
         testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
     }
 
     @Test
     public void testRetrieveQuery() throws Exception {
-        Query query = statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(AGENCY_1, QUERY_1_CODE, null, null);
+        Query query = statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(AGENCY_1, QUERY_1_CODE, defaultLanguages, null);
 
         assertEquals(QUERY_1_CODE, query.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)", query.getUrn());
@@ -64,7 +64,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
     @Test
     public void testRetrieveQueryXml() throws Exception {
         String requestBase = getRetrieveQueryUri(AGENCY_1, QUERY_1_CODE, null, null);
-        String[] requestUris = new String[]{requestBase, requestBase + ".xml", requestBase + "?_type=xml"};
+        String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".xml?lang=es", requestBase + "?_type=xml&lang=es"};
         for (int i = 0; i < requestUris.length; i++) {
             String requestUri = requestUris[i];
             InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/retrieveQuery.id1.xml");

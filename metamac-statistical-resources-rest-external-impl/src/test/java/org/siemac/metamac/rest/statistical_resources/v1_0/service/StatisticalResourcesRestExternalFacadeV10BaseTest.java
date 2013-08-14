@@ -96,6 +96,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
+    protected static List<String>             defaultLanguages   = Arrays.asList("es");
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
