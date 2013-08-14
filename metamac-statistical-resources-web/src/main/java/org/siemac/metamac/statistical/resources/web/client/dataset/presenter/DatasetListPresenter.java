@@ -99,6 +99,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
         // Search
         void clearSearchSection();
+        DatasetVersionWebCriteria getDatasetVersionWebCriteria();
     }
 
     @Inject

@@ -88,6 +88,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
         // Search
         void clearSearchSection();
+        PublicationVersionWebCriteria getPublicationVersionWebCriteria();
     }
 
     @Inject

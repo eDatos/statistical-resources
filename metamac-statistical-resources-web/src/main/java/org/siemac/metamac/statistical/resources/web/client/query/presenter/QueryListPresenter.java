@@ -86,6 +86,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
         // Search
         void clearSearchSection();
+        QueryVersionWebCriteria getQueryVersionWebCriteria();
         void setStatisticalOperationsForDatasetVersionSelectionInSearchSection(List<ExternalItemDto> results);
         void setDatasetVersionsForSearchSection(GetDatasetVersionsResult result);
     }

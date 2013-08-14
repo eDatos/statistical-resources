@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.NewDa
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
@@ -380,6 +381,11 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     protected BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack() {
         searchSectionStack = new DatasetVersionSearchSectionStack();
         return searchSectionStack;
+    }
+
+    @Override
+    public DatasetVersionWebCriteria getDatasetVersionWebCriteria() {
+        return searchSectionStack.getDatasetVersionWebCriteria();
     }
 
     @Override

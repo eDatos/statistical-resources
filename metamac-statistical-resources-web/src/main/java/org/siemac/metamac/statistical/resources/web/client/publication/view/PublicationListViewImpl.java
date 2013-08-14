@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.N
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationVersionSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -307,5 +308,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     protected BaseAdvancedSearchSectionStack createAdvacedSearchSectionStack() {
         searchSectionStack = new PublicationVersionSearchSectionStack();
         return searchSectionStack;
+    }
+
+    @Override
+    public PublicationVersionWebCriteria getPublicationVersionWebCriteria() {
+        return searchSectionStack.getPublicationVersionWebCriteria();
     }
 }
