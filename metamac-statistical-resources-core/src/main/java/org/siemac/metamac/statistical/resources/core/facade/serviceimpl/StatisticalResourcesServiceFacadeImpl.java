@@ -15,6 +15,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -28,6 +29,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2Dt
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
@@ -67,6 +69,9 @@ import org.springframework.stereotype.Service;
  */
 @Service("statisticalResourcesServiceFacade")
 public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesServiceFacadeImplBase {
+
+    @Autowired
+    private CommonDo2DtoMapper                                       commonDo2DtoMapper;
 
     @Autowired
     private QueryDo2DtoMapper                                        queryDo2DtoMapper;
@@ -560,7 +565,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
     }
-    
+
     @Override
     public List<CodeItemDto> filterCoverageForDatasetVersionDimension(ServiceContext ctx, String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException {
         // Security
@@ -616,7 +621,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return datasetVersionDto;
     }
-    
+
     @Override
     public DatasetVersionDto sendDatasetVersionToValidationRejected(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
@@ -661,6 +666,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
+    public DatasetVersionMainCoveragesDto retrieveDatasetVersionMainCoverages(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canRetrieveDatasetVersionMainCoverages(ctx);
+
+        // Retrieve
+        DatasetVersion dataset = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        // Transform
+        DatasetVersionMainCoveragesDto mainCoveragesDto = new DatasetVersionMainCoveragesDto();
+        mainCoveragesDto.getGeographicCoverage().addAll(commonDo2DtoMapper.externalItemDoCollectionToDtoList(dataset.getGeographicCoverage()));
+        mainCoveragesDto.getTemporalCoverage().addAll(commonDo2DtoMapper.temporalCodeDoCollectionToDtoList(dataset.getTemporalCoverage()));
+        mainCoveragesDto.getMeasureCoverage().addAll(commonDo2DtoMapper.externalItemDoCollectionToDtoList(dataset.getMeasureCoverage()));
+
+        return mainCoveragesDto;
+    }
+
+    @Override
     public List<StatisticOfficialityDto> findStatisticOfficialities(ServiceContext ctx) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canFindStatisticOfficialities(ctx);
@@ -683,12 +705,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Service
         getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls);
     }
-    
+
     @Override
     public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn);
-        
+
         getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
     }
 

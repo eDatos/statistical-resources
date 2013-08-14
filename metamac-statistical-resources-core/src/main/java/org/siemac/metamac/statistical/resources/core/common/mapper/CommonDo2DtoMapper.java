@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.common.mapper;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -19,6 +20,7 @@ public interface CommonDo2DtoMapper extends BaseDo2DtoMapper {
 
     // External Item
     public Collection<ExternalItemDto> externalItemDoCollectionToDtoCollection(Collection<ExternalItem> source) throws MetamacException;
+    public List<ExternalItemDto> externalItemDoCollectionToDtoList(Collection<ExternalItem> source) throws MetamacException;
     public ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException;
 
     // Related resource
@@ -30,6 +32,7 @@ public interface CommonDo2DtoMapper extends BaseDo2DtoMapper {
 
     // Temporal code
     public Collection<TemporalCodeDto> temporalCodeDoCollectionToDtoCollection(Collection<TemporalCode> source) throws MetamacException;
+    public List<TemporalCodeDto> temporalCodeDoCollectionToDtoList(Collection<TemporalCode> source) throws MetamacException;
     public TemporalCodeDto temporalCodeDoToDto(TemporalCode source) throws MetamacException;
     
     // Other types

@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.mockito.Mockito;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
@@ -83,6 +84,9 @@ public class DataMockUtils {
 
         datasetVersion.setFormatExtentDimensions(3);
         datasetVersion.setFormatExtentObservations(27L);
+        
+        datasetVersion.setDateStart(new DateTime(2010, 1, 1, 0, 0, 0, 0));
+        datasetVersion.setDateEnd(new DateTime(2012, 12, 31, 23, 59, 59, 999));
     }
 
     private static TemporalCode buildTemporalCode(String identifier) {

@@ -26,6 +26,8 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersi
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
@@ -79,6 +81,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         // metadata fill methods
         void setDatasetsForReplaces(GetDatasetVersionsResult result);
         void setDatasetsForIsReplacedBy(GetDatasetVersionsResult result);
+        void setDatasetsMainCoverages(GetDatasetVersionMainCoveragesResult result);
 
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
@@ -259,6 +262,17 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     //
     // RELATED RESOURCES
     //
+    
+    @Override
+    public void retrieveMainCoveragesForDatasetVersion(String datasetVersionUrn) {
+        dispatcher.execute(new GetDatasetVersionMainCoveragesAction(datasetVersionUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionMainCoveragesResult>(this) {
+            
+            @Override
+            public void onWaitSuccess(GetDatasetVersionMainCoveragesResult result) {
+                getView().setDatasetsMainCoverages(result);
+            }
+        });
+    }
 
     @Override
     public void retrieveDatasetsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {

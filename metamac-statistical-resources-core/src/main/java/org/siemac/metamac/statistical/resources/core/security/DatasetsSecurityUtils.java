@@ -109,7 +109,7 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     public static void canSendDatasetVersionToValidationRejected(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -139,7 +139,7 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     public static void canFilterCoverageForDatasetVersionDimension(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canFilterCoverageForDatasetVersionDimension(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -157,9 +157,15 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     public static void canImportDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveDatasetVersionMainCoverages(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveDatasetVersionMainCoverages(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

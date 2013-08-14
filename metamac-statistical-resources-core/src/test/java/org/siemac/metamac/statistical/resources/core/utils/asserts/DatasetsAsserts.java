@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -161,9 +164,10 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEqualsExternalItemList(expected.getStatisticalUnit(), actual.getStatisticalUnit());
         assertEqualsExternalItem(expected.getUpdateFrequency(), actual.getUpdateFrequency());
 
-        assertEquals(expected.getDateStart(), actual.getDateStart());
-        assertEquals(expected.getDateEnd(), actual.getDateEnd());
-        assertEquals(expected.getDateNextUpdate(), actual.getDateNextUpdate());
+        assertEqualsDate(expected.getDateNextUpdate(), actual.getDateNextUpdate());
+        
+        assertEqualsDate(expected.getDateStart(), actual.getDateStart());
+        assertEqualsDate(expected.getDateEnd(), actual.getDateEnd());
 
         assertEquals(expected.getFormatExtentDimensions(), actual.getFormatExtentDimensions());
         assertEquals(expected.getFormatExtentObservations(), actual.getFormatExtentObservations());
@@ -221,9 +225,6 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEquals(entity.getUuid(), dto.getUuid());
                 assertEquals(entity.getVersion(), dto.getVersion());
 
-                assertEqualsExternalItemCollectionMapper(entity.getGeographicCoverage(), dto.getGeographicCoverage());
-                assertEqualsTemporalCodeCollectionMapper(entity.getTemporalCoverage(), dto.getTemporalCoverage());
-                assertEqualsExternalItemCollectionMapper(entity.getMeasureCoverage(), dto.getMeasureCoverage());
                 assertEqualsExternalItemCollectionMapper(entity.getTemporalGranularities(), dto.getTemporalGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getGeographicGranularities(), dto.getGeographicGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalUnit(), dto.getStatisticalUnit());
@@ -248,6 +249,16 @@ public class DatasetsAsserts extends BaseAsserts {
                 break;
         }
     }
+    
+    // -----------------------------------------------------------------
+    // DatasetVersionMainCoverages
+    // -----------------------------------------------------------------
+    public static void assertEqualsDatasetVersionMainCoverages(DatasetVersionMainCoveragesDto mainCoverages, List<ExternalItem> geographicCoverage, List<TemporalCode> temporalCoverage, List<ExternalItem> measureCoverage) {
+        assertEqualsExternalItemCollectionMapper(geographicCoverage, mainCoverages.getGeographicCoverage());
+        assertEqualsTemporalCodeCollectionMapper(temporalCoverage, mainCoverages.getTemporalCoverage());
+        assertEqualsExternalItemCollectionMapper(measureCoverage, mainCoverages.getMeasureCoverage());
+    }
+
 
 
     // -----------------------------------------------------------------

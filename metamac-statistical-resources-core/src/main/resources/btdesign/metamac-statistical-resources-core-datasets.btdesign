@@ -172,6 +172,8 @@ Application DatasetsStatisticalResources {
 			
 			//public date of next update
 			DateTimeTZ dateNextUpdate nullable;
+			//flag indicating if date next update was modified by user
+			Boolean userModifiedDateNextUpdate nullable;
 			//Frecuency which the data is updated
 			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK" cascade="all";
 			//Official/no official statistic

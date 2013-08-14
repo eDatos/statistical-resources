@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -27,6 +28,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.time.TimeSdmx;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.core.common.util.TimeSdmxComparator;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
@@ -574,11 +576,45 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         processDataRelatedMetadata(resource);
 
-        // processStartEndDates();
-        // TODO: DATE_START, DATE_END
+        processStartEndDates(resource);
 
-        // TODO: DATE_NEXT_UPDATE
-        // calculateDateNextUpdate(resource);
+        processDateNextUpdate(resource);
+    }
+    
+    private void processStartEndDates(DatasetVersion resource) {
+        List<TemporalCode> temporalCoverage = resource.getTemporalCoverage();
+        TemporalCode start = temporalCoverage.get(temporalCoverage.size()-1);
+        TemporalCode end = temporalCoverage.get(0);
+        
+        resource.setDateStart(temporalCodeToDateTimeStart(start));
+        resource.setDateEnd(temporalCodeToDateTimeEnd(end));
+    }
+    
+    private DateTime temporalCodeToDateTimeStart(TemporalCode temporalCode) {
+        String timeCode = temporalCode.getIdentifier();
+        DateTime[] times = SdmxTimeUtils.calculateDateTimes(timeCode);
+        return times[0]; //start
+    }
+    
+    private DateTime temporalCodeToDateTimeEnd(TemporalCode temporalCode) {
+        String timeCode = temporalCode.getIdentifier();
+        DateTime[] times = SdmxTimeUtils.calculateDateTimes(timeCode);
+        return times[1]; //start
+    }
+
+    private void processDateNextUpdate(DatasetVersion resource) {
+        if (resource.getDateNextUpdate() == null || BooleanUtils.isNotTrue(resource.getUserModifiedDateNextUpdate())) {
+            DateTime mostRecentDate = null;
+            for (Datasource datasource : resource.getDatasources()) {
+                if (datasource.getDateNextUpdate() != null) {
+                    if (mostRecentDate == null || datasource.getDateNextUpdate().isBefore(mostRecentDate.getMillis())) {
+                        mostRecentDate = datasource.getDateNextUpdate();
+                    }
+                }
+            }
+            resource.setDateNextUpdate(mostRecentDate);
+            resource.setUserModifiedDateNextUpdate(false);
+        }
     }
 
     private void processDataRelatedMetadata(DatasetVersion resource) throws MetamacException {

@@ -97,7 +97,9 @@ Application FacadeStatisticalResources {
     		"Retrieve latest datasetVersion providing datasetUrn"
     		@DatasetVersionDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
     		"Retrieve latest published datasetVersion providing datasetUrn"
-    		@DatasetVersionDto retrieveLatestPublishedDatasetVersion(String datasetUrn) throws MetamacException;
+    		@DatasetVersionDto retrieveLatestPublishedDatasetVersion(String datasetUrn) throws MetamacException
+    		"Retrieve main coverages for dataset Version";
+    		@DatasetVersionMainCoveragesDto retrieveDatasetVersionMainCoverages(String datasetVersionUrn) throws MetamacException;
     		"Send to production validation"
     		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		"Send to diffusion validation"

@@ -28,6 +28,9 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
     public static final String DATASOURCE_07_LINKED_TO_FILE_WITH_UNDERSCORE_NAME        = "DATASOURCE_07_LINKED_TO_FILE_WITH_UNDERSCORE";
     private static Datasource  DATASOURCE_07_LINKED_TO_FILE_WITH_UNDERSCORE;
 
+    public static final String DATASOURCE_08_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME = "DATASOURCE_08_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH";
+    private static Datasource  DATASOURCE_08_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH;
+
     protected static Datasource getDatasource01Basic() {
         if (DATASOURCE_01_BASIC == null) {
             DATASOURCE_01_BASIC = createDatasource();
@@ -84,6 +87,17 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
             // Dataset link set in datasetversion
         }
         return DATASOURCE_07_LINKED_TO_FILE_WITH_UNDERSCORE;
+    }
+
+    protected static Datasource getDatasorce08FromPxWithNextUpdateInOneMonth() {
+        if (DATASOURCE_08_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH == null) {
+            Datasource datasource = createDatasource();
+            datasource.getIdentifiableStatisticalResource().setCode("pxFile.px_" + new DateTime().toString());
+            datasource.setDateNextUpdate(new DateTime().plusMonths(1));
+            DATASOURCE_08_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH = datasource;
+            // Dataset link set in datasetversion
+        }
+        return DATASOURCE_08_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH;
     }
 
     public static Datasource generateSimpleDatasource() {

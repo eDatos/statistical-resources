@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
@@ -119,23 +122,41 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         if (source.getRelatedDsd() != null && DatasetMetadataEditionChecks.canDsdBeEdited(target.getId(), target.getSiemacMetadataStatisticalResource().getProcStatus())) {
             datasetVersionDtoRelatedDsdToDo(source, target);
         }
-            
-        target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
+
+        boolean dateNextUpdateModified = hasDateBeModified(target.getDateNextUpdate(), source.getDateNextUpdate());
+        if (dateNextUpdateModified) {
+            target.setUserModifiedDateNextUpdate(true);
+            target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
+        }
 
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
-        target.setStatisticOfficiality(statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
+        target.setStatisticOfficiality(statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(),
+                ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
         return target;
     }
 
-    //source.relatedDsd is supposed not to be null
+    private boolean hasDateBeModified(DateTime previous, Date current) {
+        if ((previous == null && current != null) || (previous != null && current == null)) {
+            return true;
+        } else if (previous == null && current == null) {
+            return false;
+        } else if (!previous.toDate().equals(current)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // source.relatedDsd is supposed not to be null
     private void datasetVersionDtoRelatedDsdToDo(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
         if (target.getRelatedDsd() == null) {
             target.setRelatedDsd(externalItemDtoToDo(source.getRelatedDsd(), target.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD));
         } else {
             boolean changedDsd = false;
             if (areDifferentDsd(target.getRelatedDsd(), source.getRelatedDsd())) {
-                if (DatasetMetadataEditionChecks.canDsdBeReplacedByAnyOtherDsd(target.getId(), target.getSiemacMetadataStatisticalResource().getVersionLogic(), target.getSiemacMetadataStatisticalResource().getProcStatus())) {
+                if (DatasetMetadataEditionChecks.canDsdBeReplacedByAnyOtherDsd(target.getId(), target.getSiemacMetadataStatisticalResource().getVersionLogic(), target
+                        .getSiemacMetadataStatisticalResource().getProcStatus())) {
                     changedDsd = true;
                 }
             } else if (areSameDsdDifferentVersion(target.getRelatedDsd(), source.getRelatedDsd())) {
@@ -147,29 +168,29 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             }
         }
     }
-    
+
     // Check if its the same dsd
     private boolean areDifferentDsd(ExternalItem dsd, ExternalItemDto dsdDto) {
         return !dsd.getCode().equals(dsdDto.getCode());
     }
-    
+
     private boolean areSameDsdDifferentVersion(ExternalItem oldDsd, ExternalItemDto newDsdDto) {
-        String[] oldDsdIdentifiers = UrnUtils.splitUrnStructure(oldDsd.getUrn()); 
+        String[] oldDsdIdentifiers = UrnUtils.splitUrnStructure(oldDsd.getUrn());
         String[] newDsdIdentifiers = UrnUtils.splitUrnStructure(newDsdDto.getUrn());
-        
+
         String newDsdAgency = oldDsdIdentifiers[0];
         String oldDsdAgency = newDsdIdentifiers[0];
-        
+
         String newDsdCode = oldDsdIdentifiers[1];
         String oldDsdCode = newDsdIdentifiers[1];
-        
+
         String newDsdVersion = oldDsdIdentifiers[2];
         String oldDsdVersion = newDsdIdentifiers[2];
-        
-        boolean sameDsd = StringUtils.equals(oldDsdAgency,newDsdAgency) && StringUtils.equals(oldDsdCode, newDsdCode); 
-        boolean differentDsdVersion = !StringUtils.equals(oldDsdVersion, newDsdVersion); 
-        
-        return  sameDsd && differentDsdVersion;
+
+        boolean sameDsd = StringUtils.equals(oldDsdAgency, newDsdAgency) && StringUtils.equals(oldDsdCode, newDsdCode);
+        boolean differentDsdVersion = !StringUtils.equals(oldDsdVersion, newDsdVersion);
+
+        return sameDsd && differentDsdVersion;
     }
 
     public StatisticOfficiality statisticOfficialityDtoToDo(StatisticOfficialityDto source, StatisticOfficiality target, String metadataName) throws MetamacException {

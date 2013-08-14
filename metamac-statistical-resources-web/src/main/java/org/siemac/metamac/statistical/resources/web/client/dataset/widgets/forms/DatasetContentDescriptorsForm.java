@@ -6,9 +6,11 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.web.client.base.checks.DatasetMetadataShowChecks;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.TemporalCodeListItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
 
@@ -23,8 +25,10 @@ public class DatasetContentDescriptorsForm extends SiemacMetadataContentDescript
 
         ExternalItemListItem geographicCoverage = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_COVERAGE, getConstants().datasetGeographicCoverage(), false);
         geographicCoverage.setShowIfCondition(getCanShowCoveragesFunction());
-        ExternalItemListItem temporalCoverage = new ExternalItemListItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().datasetTemporalCoverage(), false);
+        
+        TemporalCodeListItem temporalCoverage = new TemporalCodeListItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().datasetTemporalCoverage(), false);
         temporalCoverage.setShowIfCondition(getCanShowCoveragesFunction());
+        
         ExternalItemListItem measures = new ExternalItemListItem(DatasetDS.MEASURES, getConstants().datasetMeasures(), false);
         measures.setShowIfCondition(getCanShowCoveragesFunction());
 
@@ -51,9 +55,9 @@ public class DatasetContentDescriptorsForm extends SiemacMetadataContentDescript
         ((ExternalItemListItem) getItem(DatasetDS.STATISTICAL_UNIT)).setExternalItems(datasetDto.getStatisticalUnit());
     }
 
-    public void setCoverages(List<ExternalItemDto> geoItems, List<ExternalItemDto> temporalItems, List<ExternalItemDto> measureItems) {
+    public void setCoverages(List<ExternalItemDto> geoItems, List<TemporalCodeDto> temporalItems, List<ExternalItemDto> measureItems) {
         ((ExternalItemListItem) getItem(DatasetDS.GEOGRAPHIC_COVERAGE)).setExternalItems(geoItems);
-        ((ExternalItemListItem) getItem(DatasetDS.TEMPORAL_COVERAGE)).setExternalItems(temporalItems);
+        ((TemporalCodeListItem) getItem(DatasetDS.TEMPORAL_COVERAGE)).setTemporalCodes(temporalItems);
         ((ExternalItemListItem) getItem(DatasetDS.MEASURES)).setExternalItems(measureItems);
     }
 

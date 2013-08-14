@@ -1,8 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.common.mapper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -41,6 +43,18 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         }
         return result;
     }
+    
+    @Override
+    public List<TemporalCodeDto> temporalCodeDoCollectionToDtoList(Collection<TemporalCode> source) throws MetamacException {
+        List<TemporalCodeDto> result = new ArrayList<TemporalCodeDto>();
+        
+        if (source != null) {
+            for (TemporalCode temporalCode : source) {
+                result.add(temporalCodeDoToDto(temporalCode));
+            }
+        }
+        return result;
+    }
 
     @Override
     public TemporalCodeDto temporalCodeDoToDto(TemporalCode source) throws MetamacException {
@@ -59,6 +73,18 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
     public Collection<ExternalItemDto> externalItemDoCollectionToDtoCollection(Collection<ExternalItem> source) throws MetamacException {
         HashSet<ExternalItemDto> result = new HashSet<ExternalItemDto>();
 
+        if (source != null) {
+            for (ExternalItem externalItem : source) {
+                result.add(externalItemDoToDto(externalItem));
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    public List<ExternalItemDto> externalItemDoCollectionToDtoList(Collection<ExternalItem> source) throws MetamacException {
+        List<ExternalItemDto> result = new ArrayList<ExternalItemDto>();
+        
         if (source != null) {
             for (ExternalItem externalItem : source) {
                 result.add(externalItemDoToDto(externalItem));

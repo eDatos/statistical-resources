@@ -133,16 +133,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
-        // Other
-        target.getGeographicCoverage().clear();
-        target.getGeographicCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicCoverage()));
-
-        target.getTemporalCoverage().clear();
-        target.getTemporalCoverage().addAll(temporalCodeDoCollectionToDtoCollection(source.getTemporalCoverage()));
-
-        target.getMeasureCoverage().clear();
-        target.getMeasureCoverage().addAll(externalItemDoCollectionToDtoCollection(source.getMeasureCoverage()));
-
         target.getGeographicGranularities().clear();
         target.getGeographicGranularities().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicGranularities()));
 

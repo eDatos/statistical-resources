@@ -24,6 +24,7 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
 
     void retrieveDataset(String datasetIdentifier);
     void saveDataset(DatasetVersionDto datasetDto);
+    void retrieveMainCoveragesForDatasetVersion(String datasetVersionUrn);
 
     // DSD
     void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria);

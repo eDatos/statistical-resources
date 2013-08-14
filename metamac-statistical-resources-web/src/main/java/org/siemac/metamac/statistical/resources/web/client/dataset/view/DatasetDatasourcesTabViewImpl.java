@@ -133,8 +133,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             ListGridField fieldCode = new ListGridField(DatasourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
             fieldCode.setAlign(Alignment.LEFT);
-            ListGridField fieldName = new ListGridField(DatasourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-            datasourcesList.setFields(fieldCode, fieldName);
+            datasourcesList.setFields(fieldCode);
 
             // Delete confirmation window
 

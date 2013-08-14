@@ -8,6 +8,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
@@ -41,6 +42,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacM
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersForm;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListResult;
@@ -371,6 +373,10 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
         setDatasetViewMode(datasetVersionDto);
         setDatasetEditionMode(datasetVersionDto);
+
+        if (ProcStatusEnum.PUBLISHED.equals(datasetVersionDto.getProcStatus())) {
+            getUiHandlers().retrieveMainCoveragesForDatasetVersion(datasetVersionDto.getUrn());
+        }
     }
 
     private void setDatasetViewMode(DatasetVersionDto datasetDto) {
@@ -512,6 +518,12 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     public void setDatasetsForIsReplacedBy(GetDatasetVersionsResult result) {
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionDtosAsRelatedResourceDtos(result.getDatasetVersionDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
+    }
+    
+    @Override
+    public void setDatasetsMainCoverages(GetDatasetVersionMainCoveragesResult result) {
+        contentDescriptorsForm.setCoverages(result.getGeographicCoverage(), result.getTemporalCoverage(), result.getMeasureCoverage());
+        contentDescriptorsEditionForm.setCoverages(result.getGeographicCoverage(), result.getTemporalCoverage(), result.getMeasureCoverage());
     }
 
     @Override

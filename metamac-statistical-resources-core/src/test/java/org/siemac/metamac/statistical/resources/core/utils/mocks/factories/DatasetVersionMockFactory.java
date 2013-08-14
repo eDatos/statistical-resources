@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce06LinkedToFileForDatasetVersion30;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce07LinkedToFileWithUnderscore;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce08FromPxWithNextUpdateInOneMonth;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -169,6 +170,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME                             = "DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED";
     private static DatasetVersion DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED;
+
+    public static final String    DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME     = "DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH";
+    private static DatasetVersion DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH;
+    
+    public static final String    DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME     = "DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH";
+    private static DatasetVersion DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH;
 
     private static final String   INIT_VERSION                                                                      = "001.000";
     private static final String   SECOND_VERSION                                                                    = "002.000";
@@ -764,6 +771,65 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED;
     }
+    
+    protected static DatasetVersion getDatasetVersion49WithDatasourceFromPxWithNextUpdateInOneMonth() {
+        if (DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            
+            datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
+            datasetVersion.setUserModifiedDateNextUpdate(false);
+            
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010", "2010"));
+            
+            DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH = datasetVersion;
+            setDatasetVersion49Datasources(datasetVersion);
+        }
+        return DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH;
+    }
+    
+    private static void setDatasetVersion49Datasources(DatasetVersion datasetVersion) {
+        datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+    }
+    
+    protected static DatasetVersion getDatasetVersion50WithDatasourceFromPxWithUserNextUpdateInOneMonth() {
+        if (DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH == null) {
+            DatasetVersion datasetVersion = createDatasetVersion(1);
+            
+            datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
+            datasetVersion.setUserModifiedDateNextUpdate(true);
+            
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
+            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010", "2010"));
+            
+            DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH = datasetVersion;
+            setDatasetVersion49Datasources(datasetVersion);
+        }
+        return DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH;
+    }
+    
+    private static void setDatasetVersion50Datasources(DatasetVersion datasetVersion) {
+        datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+    }
+
 
     // -----------------------------------------------------------------
     // PRIVATE UTILS

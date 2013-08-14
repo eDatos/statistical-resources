@@ -957,6 +957,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testRetrieveDatasetVersions() throws Exception {
         // no optimistic locking in this operation
     }
+    
+    @Override
+    public void testRetrieveDatasetVersionMainCoverages() throws Exception {
+        // no optimistic locking in this operation
+    }
 
     @Override
     public void testVersioningDatasetVersion() throws Exception {

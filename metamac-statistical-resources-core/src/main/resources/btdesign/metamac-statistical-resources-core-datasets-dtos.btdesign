@@ -9,13 +9,6 @@ Application DatasetsStatisticalResourcesDto {
 		
 		// DATASET VERSION
 		DataTransferObject DatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
-			//geographic dimension
-			- List<@ExternalItemDto> geographicCoverage;
-			//temporal dimension
-			- List<@TemporalCodeDto> temporalCoverage;
-			//measure dimension
-			- List<@ExternalItemDto> measureCoverage;
-
 			//geographic granularities
 			- Bag<@ExternalItemDto> geographicGranularities;
 			//temporal granularities
@@ -68,6 +61,12 @@ Application DatasetsStatisticalResourcesDto {
         DataTransferObject TemporalCodeDto {
             String identifier;
             String title;
+        }
+        
+        DataTransferObject DatasetVersionMainCoveragesDto {
+            - Bag<@ExternalItemDto> geographicCoverage;
+            - Bag<@TemporalCodeDto> temporalCoverage;
+            - Bag<@ExternalItemDto> measureCoverage;
         }
         
         

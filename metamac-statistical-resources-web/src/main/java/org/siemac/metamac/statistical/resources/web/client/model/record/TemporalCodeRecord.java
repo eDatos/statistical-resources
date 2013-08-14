@@ -31,7 +31,7 @@ public class TemporalCodeRecord extends ListGridRecord {
         setAttribute(TemporalCodeDS.DTO, codeItemDto);
     }
 
-    public TemporalCodeDto getCodeItemDto() {
+    public TemporalCodeDto getTemporalCodeDto() {
         return (TemporalCodeDto) getAttributeAsObject(TemporalCodeDS.DTO);
     }
 
