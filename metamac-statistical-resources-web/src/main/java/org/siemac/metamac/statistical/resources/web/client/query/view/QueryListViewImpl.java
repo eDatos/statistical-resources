@@ -90,6 +90,11 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     }
 
     @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
     public void setInSlot(Object slot, Widget content) {
         if (slot == QueryListPresenter.TYPE_SetContextAreaContentOperationResourcesToolBar) {
             if (content != null) {

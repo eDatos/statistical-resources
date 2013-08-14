@@ -85,6 +85,11 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
     protected NewStatisticalResourceWindow getNewStatisticalResourceWindow() {
         return newPublicationWindow;
     }

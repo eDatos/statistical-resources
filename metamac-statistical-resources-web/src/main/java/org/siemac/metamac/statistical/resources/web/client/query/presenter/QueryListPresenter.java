@@ -78,6 +78,9 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     public interface QueryListView extends LifeCycleBaseListPresenter.LifeCycleBaseListView, HasUiHandlers<QueryListUiHandlers> {
 
         void setQueryPaginatedList(GetQueryVersionsResult queriesPaginatedList);
+
+        // Search
+        void clearSearchSection();
     }
 
     @Inject
@@ -98,6 +101,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             retrieveOperation(operationUrn);
             retrieveQueriesByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new QueryVersionWebCriteria());
         }
+        getView().clearSearchSection();
     }
 
     @Override

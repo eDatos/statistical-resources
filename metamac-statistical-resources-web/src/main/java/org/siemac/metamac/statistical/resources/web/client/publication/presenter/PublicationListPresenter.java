@@ -85,6 +85,9 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     public interface PublicationListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<PublicationListUiHandlers> {
 
         void setPublicationPaginatedList(List<PublicationVersionDto> PublicationDtos, int firstResult, int totalResults);
+
+        // Search
+        void clearSearchSection();
     }
 
     @Inject
@@ -107,6 +110,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
             retrieveOperation(operationUrn);
             retrievePublications(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
+            getView().clearSearchSection();
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }

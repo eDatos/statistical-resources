@@ -96,6 +96,9 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         void setTemporalGranularitiesForSearchSection(GetTemporalGranularitiesListResult result);
         void setStatisticalOperationsForDsdSelectionInSearchSection(List<ExternalItemDto> results);
         void setDsdsForSearchSection(GetDsdsPaginatedListResult result);
+
+        // Search
+        void clearSearchSection();
     }
 
     @Inject
@@ -115,6 +118,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             retrieveOperation(operationUrn);
             retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
         }
+        getView().clearSearchSection();
     }
 
     @Override

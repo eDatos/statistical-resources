@@ -118,6 +118,11 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     }
 
     @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
     public void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result) {
         List<ExternalItemDto> externalItemsDtos = result.getDsdsList();
         newDatasetWindow.setExternalItemsForRelatedDsd(externalItemsDtos, result.getFirstResultOut(), externalItemsDtos.size(), result.getTotalResults());
