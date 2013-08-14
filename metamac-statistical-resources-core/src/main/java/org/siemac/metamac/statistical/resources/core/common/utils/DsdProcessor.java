@@ -289,10 +289,10 @@ public class DsdProcessor {
 
     public static class DsdPrimaryMeasure extends DsdComponent {
 
-        private final String primaryMeasueId = "OBS_VALUE"; // Fixed
+        private final String primaryMeasueId;
 
         public DsdPrimaryMeasure(PrimaryMeasure primaryMeasure) throws MetamacException {
-
+            primaryMeasueId = primaryMeasure.getId();
             if (primaryMeasure.getLocalRepresentation() != null) {
                 setRepresentationFromLocalRepresentation(primaryMeasure.getLocalRepresentation());
             } else if (primaryMeasure.getConceptIdentity() != null) {
