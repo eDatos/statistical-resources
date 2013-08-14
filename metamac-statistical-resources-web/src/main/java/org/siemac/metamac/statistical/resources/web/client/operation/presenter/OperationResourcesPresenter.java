@@ -186,23 +186,23 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     //
 
     @Override
-    public void goToDataset(String urn) {
-        if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeDatasetPlaceRequest(urn));
+    public void goToDataset(DatasetVersionDto datasetVersionDto) {
+        if (datasetVersionDto != null) {
+            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(datasetVersionDto.getStatisticalOperation().getUrn(), datasetVersionDto.getUrn()));
         }
     }
 
     @Override
-    public void goToPublication(String urn) {
-        if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativePublicationPlaceRequest(urn));
+    public void goToPublication(PublicationVersionDto publicationVersionDto) {
+        if (publicationVersionDto != null) {
+            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsolutePublicationPlaceRequest(publicationVersionDto.getStatisticalOperation().getUrn(), publicationVersionDto.getUrn()));
         }
     }
 
     @Override
-    public void goToQuery(String urn) {
-        if (!StringUtils.isBlank(urn)) {
-            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeQueryPlaceRequest(urn));
+    public void goToQuery(QueryVersionDto queryVersionDto) {
+        if (queryVersionDto != null) {
+            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(queryVersionDto.getStatisticalOperation().getUrn(), queryVersionDto.getUrn()));
         }
     }
 }

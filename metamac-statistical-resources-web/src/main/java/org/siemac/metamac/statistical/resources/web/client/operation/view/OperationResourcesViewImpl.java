@@ -54,7 +54,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 DatasetRecord record = (DatasetRecord) event.getRecord();
-                getUiHandlers().goToDataset(record.getUrn());
+                getUiHandlers().goToDataset(record.getDatasetVersionDto());
             }
         });
 
@@ -71,7 +71,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 PublicationRecord record = (PublicationRecord) event.getRecord();
-                getUiHandlers().goToPublication(record.getUrn());
+                getUiHandlers().goToPublication(record.getPublicationVersionDto());
             }
         });
 
@@ -88,7 +88,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 QueryRecord record = (QueryRecord) event.getRecord();
-                getUiHandlers().goToQuery(record.getUrn());
+                getUiHandlers().goToQuery(record.getQueryVersionDto());
             }
         });
 
