@@ -21,9 +21,14 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
@@ -81,6 +86,8 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
         // Search
         void clearSearchSection();
+        void setStatisticalOperationsForDatasetVersionSelectionInSearchSection(List<ExternalItemDto> results);
+        void setDatasetVersionsForSearchSection(GetDatasetVersionsResult result);
     }
 
     @Inject
@@ -217,6 +224,32 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, successMessage);
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+            }
+        });
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    @Override
+    public void retrieveStatisticalOperationsForDatasetVersionSelectionInSearchSection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForDatasetVersionSelectionInSearchSection(result.getOperationsList());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDatasetVersionsForSearchSection(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
+        dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetVersionsResult result) {
+                getView().setDatasetVersionsForSearchSection(result);
             }
         });
     }

@@ -46,6 +46,8 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
         SearchExternalItemLinkItem dsd = createDsdItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
         CustomDateItem dateNextUpdate = new CustomDateItem(DatasetDS.DATE_NEXT_UPDATE, getConstants().datasetDateNextUpdate());
 
+        // TODO statistic officiality
+
         advancedSearchForm.addFieldsInThePenultimePosition(geographicalGranularity, temporalGranularity, dateStart, dateEnd, dsd, dateNextUpdate);
     }
 
@@ -108,12 +110,12 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                             @Override
                             public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria criteria) {
-                                uiHandlers.retrieveTemporalGranularitiesForSearchSection(firstResult, maxResults, criteria);
+                                getUiHandlers().retrieveTemporalGranularitiesForSearchSection(firstResult, maxResults, criteria);
                             }
 
                         });
 
-                uiHandlers.retrieveTemporalGranularitiesForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
+                getUiHandlers().retrieveTemporalGranularitiesForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
 
                 searchTemporalGranularitiesWindow.setSaveAction(new ClickHandler() {
 
@@ -210,6 +212,7 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                 // Load resources (to populate the selection window)
                 getUiHandlers().retrieveStatisticalOperationsForDsdSelectionInSearchSection();
+                getUiHandlers().retrieveDsdsForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new DsdWebCriteria());
 
                 searchDsdWindow.setSaveAction(new ClickHandler() {
 

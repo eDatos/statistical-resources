@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.view;
 import java.util.Date;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.LifeCycleBaseListViewImpl;
@@ -290,4 +291,14 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         searchSectionStack = new QueryVersionSearchSectionStack();
         return searchSectionStack;
     }
+
+    @Override
+    public void setStatisticalOperationsForDatasetVersionSelectionInSearchSection(List<ExternalItemDto> results) {
+        searchSectionStack.setStatisticalOperationsForDatasetVersionSelection(results);
+    }
+
+    @Override
+    public void setDatasetVersionsForSearchSection(org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult result) {
+        searchSectionStack.setDatasetVersions(result);
+    };
 }
