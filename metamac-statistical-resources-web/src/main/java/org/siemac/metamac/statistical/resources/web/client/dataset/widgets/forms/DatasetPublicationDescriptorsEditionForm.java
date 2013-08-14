@@ -88,6 +88,8 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
 
         if (datasetDto.getStatisticOfficiality() != null) {
             setValue(DatasetDS.STATISTIC_OFFICIALITY, datasetDto.getStatisticOfficiality().getIdentifier());
+        } else {
+            setValue(DatasetDS.STATISTIC_OFFICIALITY, (String)null);
         }
     }
 
