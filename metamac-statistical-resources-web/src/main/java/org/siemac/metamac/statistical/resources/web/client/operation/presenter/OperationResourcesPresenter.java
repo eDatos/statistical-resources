@@ -45,6 +45,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
+import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -64,6 +65,11 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         void setDatasets(List<DatasetVersionDto> datasetDtos);
         void setPublications(List<PublicationVersionDto> publicationDtos);
         void setQueries(List<QueryVersionDto> queryVersionDtos);
+    }
+
+    @TitleFunction
+    public static String getTranslatedTitle() {
+        return getConstants().breadcrumbOperationResources();
     }
 
     @ProxyCodeSplit

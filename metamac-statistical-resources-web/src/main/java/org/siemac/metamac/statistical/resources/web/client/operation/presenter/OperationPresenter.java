@@ -80,7 +80,7 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
 
     @TitleFunction
     public static String getTranslatedTitle() {
-        return getConstants().breadcrumbOperationResources();
+        return getConstants().breadcrumbOperation();
     }
 
     @Override
