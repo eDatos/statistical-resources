@@ -289,44 +289,44 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         DatasetVersion datasetVersion = source.getDatasetVersion();
         QueryTypeEnum type = source.getType();
         String dimensionId = selection.getDimension();
-
-        List<String> effectiveDimensionValues = codeItemToString(selection.getCodes());
-        if (effectiveDimensionValues == null) {
-            effectiveDimensionValues = new ArrayList<String>();
-        }
+        List<String> selectionCodes = codeItemToString(selection.getCodes());
 
         if (QueryTypeEnum.FIXED.equals(type)) {
             // return exactly
-            return effectiveDimensionValues;
+            return selectionCodes;
         } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(type)) {
             if (isTemporalDimension(dimensionId)) {
+                List<String> effectiveDimensionValues = new ArrayList<String>();
                 List<String> temporalCoverageCodes = temporalCoverageToString(datasetVersion.getTemporalCoverage());
                 int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
-                if (datasetVersion.getTemporalCoverage().size() > indexLatestTemporalCodeInCreation + 1) {
+                if (indexLatestTemporalCodeInCreation != 0) {
                     // add codes added after query creation
-                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(indexLatestTemporalCodeInCreation + 1,
-                            datasetVersion.getTemporalCoverage().size());
-                    effectiveDimensionValues.addAll(temporalCoverageToString(temporalCodesAddedAfterQueryCreation));
+                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
+                    List<String> temporalCodesAddedAfterQueryCreationString = temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
+                    for (String code : temporalCodesAddedAfterQueryCreationString) {
+                        effectiveDimensionValues.add(code);
+                    }
                 }
+                effectiveDimensionValues.addAll(selectionCodes);
                 return effectiveDimensionValues;
             } else {
                 // return exactly
-                return effectiveDimensionValues;
+                return selectionCodes;
             }
         } else if (QueryTypeEnum.LATEST_DATA.equals(type)) {
             if (isTemporalDimension(dimensionId)) {
                 // return N data
-                int codeIndexToReturn = -1;
+                int codeLastIndexToReturn = -1;
                 if (datasetVersion.getTemporalCoverage().size() < source.getLatestDataNumber()) {
-                    codeIndexToReturn = 0; // there is not N data, so return all
+                    codeLastIndexToReturn = datasetVersion.getTemporalCoverage().size(); // there is not N data, so return all
                 } else {
-                    codeIndexToReturn = datasetVersion.getTemporalCoverage().size() - source.getLatestDataNumber();
+                    codeLastIndexToReturn = source.getLatestDataNumber();
                 }
-                List<TemporalCode> temporalCodesLatestDataNumber = datasetVersion.getTemporalCoverage().subList(codeIndexToReturn, datasetVersion.getTemporalCoverage().size());
+                List<TemporalCode> temporalCodesLatestDataNumber = datasetVersion.getTemporalCoverage().subList(0, codeLastIndexToReturn);
                 return temporalCoverageToString(temporalCodesLatestDataNumber);
             } else {
                 // return exactly
-                return effectiveDimensionValues;
+                return selectionCodes;
             }
         } else {
             logger.error("QueryTypeEnum unsupported: " + source);

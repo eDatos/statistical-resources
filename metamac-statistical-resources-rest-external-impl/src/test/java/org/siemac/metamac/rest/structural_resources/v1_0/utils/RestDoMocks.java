@@ -60,10 +60,10 @@ public class RestDoMocks {
         target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("fuerteventura"));
         target.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("lanzarote"));
 
-        target.addTemporalCoverage(mockTemporalCode("2011"));
-        target.addTemporalCoverage(mockTemporalCode("2012"));
-        target.addTemporalCoverage(mockTemporalCode("2013"));
         target.addTemporalCoverage(mockTemporalCode("2014"));
+        target.addTemporalCoverage(mockTemporalCode("2013"));
+        target.addTemporalCoverage(mockTemporalCode("2012"));
+        target.addTemporalCoverage(mockTemporalCode("2011"));
         target.addMeasureCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("code-d2-1"));
         target.addMeasureCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("code-d2-2"));
         target.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem("municipalities"));
