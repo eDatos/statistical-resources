@@ -6,17 +6,11 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetada
 import org.siemac.metamac.statistical.resources.web.shared.criteria.SiemacMetadataStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 
 public abstract class SiemacMetadataResourceSearchSectionStack extends LifeCycleResourceSearchSectionStack {
 
     public SiemacMetadataResourceSearchSectionStack() {
-    }
-
-    @Override
-    protected void setFormItemsInAdvancedSearchForm(FormItem[] advancedSearchFormItems) {
-        super.setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
     @Override

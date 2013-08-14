@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
@@ -67,11 +68,22 @@ public class CommonUtils {
         return queryDto != null && queryDto.getType() != null ? getQueryTypeName(queryDto.getType()) : null;
     }
 
+    public static QueryTypeEnum getQueryTypeEnum(String value) {
+        if (!StringUtils.isBlank(value)) {
+            try {
+                return QueryTypeEnum.valueOf(value);
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
     public static LinkedHashMap<String, String> getQueryTypeHashMap() {
         LinkedHashMap<String, String> queryTypeHashMap = new LinkedHashMap<String, String>();
-        queryTypeHashMap.put(QueryTypeEnum.FIXED.name(), getQueryTypeName(QueryTypeEnum.FIXED));
-        queryTypeHashMap.put(QueryTypeEnum.LATEST_DATA.name(), getQueryTypeName(QueryTypeEnum.LATEST_DATA));
-        queryTypeHashMap.put(QueryTypeEnum.AUTOINCREMENTAL.name(), getQueryTypeName(QueryTypeEnum.AUTOINCREMENTAL));
+        queryTypeHashMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        for (QueryTypeEnum queryTypeEnum : QueryTypeEnum.values()) {
+            queryTypeHashMap.put(queryTypeEnum.name(), getQueryTypeName(queryTypeEnum));
+        }
         return queryTypeHashMap;
     }
 
@@ -83,8 +95,31 @@ public class CommonUtils {
     // QUERY STATUS
     // -----------------------------------------------------------------------------------------
 
+    public static LinkedHashMap<String, String> getQueryStatusHashMap() {
+        LinkedHashMap<String, String> hashMap = new LinkedHashMap<String, String>();
+        hashMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        for (QueryStatusEnum queryStatusEnum : QueryStatusEnum.values()) {
+            hashMap.put(queryStatusEnum.name(), getQueryStatusName(queryStatusEnum));
+        }
+        return hashMap;
+    }
+
+    public static QueryStatusEnum getQueryStatusEnum(String value) {
+        if (!StringUtils.isBlank(value)) {
+            try {
+                return QueryStatusEnum.valueOf(value);
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
     public static String getQueryStatusName(QueryVersionDto queryDto) {
-        return queryDto != null && queryDto.getStatus() != null ? getCoreMessages().getString(getCoreMessages().queryStatusEnum() + queryDto.getStatus().name()) : null;
+        return queryDto != null ? getQueryStatusName(queryDto.getStatus()) : null;
+    }
+
+    public static String getQueryStatusName(QueryStatusEnum queryStatusEnum) {
+        return queryStatusEnum != null ? getCoreMessages().getString(getCoreMessages().queryStatusEnum() + queryStatusEnum.name()) : null;
     }
 
     // -----------------------------------------------------------------------------------------
