@@ -165,4 +165,9 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
     protected MetamacWebGinjector getWebGinjector() {
         return getResourcesWebGinjector();
     }
+
+    @Override
+    protected String getBundleName() {
+        return "messages-statistical_resources-web";
+    }
 }
