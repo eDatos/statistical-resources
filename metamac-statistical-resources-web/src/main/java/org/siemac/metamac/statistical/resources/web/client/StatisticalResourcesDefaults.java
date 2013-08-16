@@ -6,4 +6,6 @@ public class StatisticalResourcesDefaults {
 
     public static ExternalItemDto defaultAgency;
     public static ExternalItemDto defaultLanguage;
+
+    public static ExternalItemDto selectedStatisticalOperation;
 }

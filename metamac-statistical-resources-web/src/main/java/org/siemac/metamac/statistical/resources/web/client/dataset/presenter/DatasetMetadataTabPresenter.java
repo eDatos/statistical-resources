@@ -5,20 +5,19 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
@@ -117,8 +116,10 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            }
             retrieveDataset(datasetCode);
         } else {
             StatisticalResourcesWeb.showErrorPage();
@@ -131,21 +132,18 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    DatasetMetadataTabPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(DatasetMetadataTabPresenter.this, result.getOperation());
-                }
-            });
-        }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+            }
+        });
     }
 
     @Override
     public void retrieveDataset(String datasetIdentifier) {
-        String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
+        String urn = CommonUtils.generateDatasetUrn(datasetIdentifier);
         dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
@@ -262,11 +260,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     //
     // RELATED RESOURCES
     //
-    
+
     @Override
     public void retrieveMainCoveragesForDatasetVersion(String datasetVersionUrn) {
         dispatcher.execute(new GetDatasetVersionMainCoveragesAction(datasetVersionUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionMainCoveragesResult>(this) {
-            
+
             @Override
             public void onWaitSuccess(GetDatasetVersionMainCoveragesResult result) {
                 getView().setDatasetsMainCoverages(result);

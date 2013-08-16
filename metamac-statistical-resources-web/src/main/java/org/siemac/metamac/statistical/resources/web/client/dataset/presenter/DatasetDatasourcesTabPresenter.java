@@ -5,18 +5,16 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
@@ -54,7 +52,6 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     private DispatchAsync     dispatcher;
     private PlaceManager      placeManager;
 
-    private ExternalItemDto   operation;
     private DatasetVersionDto datasetVersion;
 
     public interface DatasetDatasourcesTabView extends View, HasUiHandlers<DatasetDatasourcesTabUiHandlers> {
@@ -95,9 +92,11 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            String datasetUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetCode);
-            retrieveOperation(operationUrn);
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+            String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            }
             retrieveDataset(datasetUrn);
             retrieveDatasourcesByDataset(datasetUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
         } else {
@@ -111,16 +110,13 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    DatasetDatasourcesTabPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(DatasetDatasourcesTabPresenter.this, result.getOperation());
-                }
-            });
-        }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+            }
+        });
     }
 
     public void retrieveDataset(String datasetUrn) {

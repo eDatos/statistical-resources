@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
@@ -22,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -315,5 +318,22 @@ public class CommonUtils {
 
     public static boolean isResourceInProductionValidationOrGreaterProcStatus(ProcStatusEnum procStatus) {
         return ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus) || ProcStatusEnum.PUBLISHED.equals(procStatus);
+    }
+
+    public static boolean isUrnFromSelectedStatisticalOperation(String urn) {
+        if (StatisticalResourcesDefaults.selectedStatisticalOperation != null) {
+            if (!StringUtils.isBlank(urn)) {
+                return StringUtils.equals(urn, StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+            }
+        }
+        return false;
+    }
+
+    public static String generateStatisticalOperationUrn(String operationCode) {
+        return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+    }
+
+    public static String generateDatasetUrn(String datasetIdentifier) {
+        return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
     }
 }

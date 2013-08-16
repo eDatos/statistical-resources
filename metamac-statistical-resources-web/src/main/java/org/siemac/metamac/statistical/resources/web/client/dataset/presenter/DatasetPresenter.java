@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -13,8 +11,8 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
@@ -75,8 +73,8 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     }
 
     @TitleFunction
-    public String getTitle() {
-        return getConstants().dataset();
+    public String getTitle(PlaceRequest placeRequest) {
+        return PlaceRequestUtils.getDatasetBreadCrumbTitle(placeRequest);
     }
 
     @Override
@@ -97,7 +95,9 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            }
             retrieveDataset(datasetCode);
             getView().showMetadata();
         } else {
@@ -112,14 +112,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
                 @Override
                 public void onWaitSuccess(GetStatisticalOperationResult result) {
                     DatasetPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(DatasetPresenter.this, result.getOperation());
                 }
             });
         }
     }
 
     public void retrieveDataset(String datasetIdentifier) {
-        String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
+        String urn = CommonUtils.generateDatasetUrn(datasetIdentifier);
         dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
@@ -142,5 +141,4 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         hierarchy.add(new PlaceRequest(NameTokens.datasetDatasourcesPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
-
 }

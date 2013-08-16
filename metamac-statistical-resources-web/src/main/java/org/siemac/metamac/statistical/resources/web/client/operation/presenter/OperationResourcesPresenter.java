@@ -4,22 +4,19 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent.SetOperationHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter.OperationResourcesProxy;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter.OperationResourcesView;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
@@ -44,7 +41,6 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
@@ -53,12 +49,10 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-public class OperationResourcesPresenter extends Presenter<OperationResourcesView, OperationResourcesProxy> implements OperationResourcesUiHandlers, SetOperationHandler {
+public class OperationResourcesPresenter extends Presenter<OperationResourcesView, OperationResourcesProxy> implements OperationResourcesUiHandlers {
 
     private final PlaceManager  placeManager;
     private final DispatchAsync dispatcher;
-
-    private ExternalItemDto     operation;
 
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
 
@@ -96,9 +90,13 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         super.prepareFromRequest(request);
         String operationParam = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationParam)) {
-            String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationParam);
-            retrieveOperation(urn);
+            String urn = CommonUtils.generateStatisticalOperationUrn(operationParam);
+
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(urn)) {
+                retrieveOperation(urn);
+            }
             retrieveResourcesByStatisticalOperation(urn);
+
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
@@ -110,27 +108,18 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         SetTitleEvent.fire(this, getConstants().statisticalResources());
     }
 
-    @ProxyEvent
-    @Override
-    public void onSetOperation(SetOperationEvent event) {
-        this.operation = event.getOperation();
-    }
-
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
-                }
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    OperationResourcesPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(OperationResourcesPresenter.this, operation);
-                }
-            });
-        }
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
+            }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+            }
+        });
     }
 
     private void retrieveResourcesByStatisticalOperation(String urn) {

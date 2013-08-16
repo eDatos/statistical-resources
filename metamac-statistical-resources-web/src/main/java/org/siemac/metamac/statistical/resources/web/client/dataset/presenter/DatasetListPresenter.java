@@ -13,12 +13,13 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
@@ -67,8 +68,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     private final PlaceManager                        placeManager;
 
-    private ExternalItemDto                           operation;
-
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
 
@@ -116,7 +115,9 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            }
             retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
         }
         getView().clearSearchSection();
@@ -134,16 +135,13 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    DatasetListPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(DatasetListPresenter.this, result.getOperation());
-                }
-            });
-        }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+            }
+        });
     }
 
     @Override
@@ -161,14 +159,16 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     @Override
     public void createDataset(DatasetVersionDto datasetDto) {
-        dispatcher.execute(new SaveDatasetVersionAction(datasetDto, operation.getCode()), new WaitingAsyncCallbackHandlingError<SaveDatasetVersionResult>(this) {
+        dispatcher.execute(new SaveDatasetVersionAction(datasetDto, StatisticalResourcesDefaults.selectedStatisticalOperation.getCode()),
+                new WaitingAsyncCallbackHandlingError<SaveDatasetVersionResult>(this) {
 
-            @Override
-            public void onWaitSuccess(SaveDatasetVersionResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(SaveDatasetVersionResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
+                        retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS,
+                                new DatasetVersionWebCriteria());
+                    }
+                });
     }
 
     @Override
@@ -178,7 +178,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(DeleteDatasetVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
-                retrieveDatasetsByStatisticalOperation(DatasetListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }
@@ -200,7 +200,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
-                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), operation);
+                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.selectedStatisticalOperation);
             }
         });
     }
@@ -252,12 +252,14 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+                retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS,
+                        new DatasetVersionWebCriteria());
             }
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
-                retrieveDatasetsByStatisticalOperation(operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+                retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS,
+                        new DatasetVersionWebCriteria());
             }
         });
     }
