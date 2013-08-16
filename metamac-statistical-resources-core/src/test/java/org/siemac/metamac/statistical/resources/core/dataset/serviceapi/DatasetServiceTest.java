@@ -14,7 +14,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_09_OPER_0001_CODE_000003_NAME;
@@ -27,9 +27,13 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_08_BASIC_DISCONTINUED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockCodeDimensionsWithIdentifiers;
@@ -47,6 +51,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
@@ -88,6 +93,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml",
         "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -111,10 +119,14 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     private QueryVersionMockFactory                 queryMockFactory;
 
     @Autowired
+    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
+
+    @Autowired
     private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
 
     @Before
     public void setUp() throws MetamacException {
+        Mockito.reset(datasetRepositoriesServiceFacade);
         TaskMockUtils.mockAllTaskInProgressForDatasetVersion(false);
     }
 
@@ -146,63 +158,63 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         assertEqualsDatasource(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME})
     public void testUpdateDateNextUpdateOnCreateDatasourceFromPxWithDateNextUpdateBuiltAutomatically() throws Exception {
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        
+
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
+
         DateTime newNextUpdate = new DateTime().plusWeeks(1);
         Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(newNextUpdate);
-        
+
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
-        
+
         DatasetVersion actual = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
-        
+
         BaseAsserts.assertEqualsDate(newNextUpdate, actual.getDateNextUpdate());
     }
-    
+
     @Test
     @MetamacMock({DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME})
     public void testUpdateDateNextUpdateOnCreateDatasourceFromPxWithDateNextUpdateBuiltAutomaticallyNewDateIsAfter() throws Exception {
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        
+
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
+
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime newNextUpdate = new DateTime().plusYears(1);
         Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(newNextUpdate);
-        
+
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
-        
+
         DatasetVersion actual = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
-        
+
         BaseAsserts.assertEqualsDate(oldNextUpdate, actual.getDateNextUpdate());
     }
-    
+
     @Test
     @MetamacMock({DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME})
     public void testUpdateDateNextUpdateOnCreateDatasourceFromPxWithUserDateNextUpdate() throws Exception {
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        
+
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
-        
+
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime nextUpdate = new DateTime().plusWeeks(1);
         Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(nextUpdate);
-        
+
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
-        
+
         DatasetVersion actual = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
-        
+
         // SET EXPECTED METADATA
         BaseAsserts.assertEqualsDate(oldNextUpdate, actual.getDateNextUpdate());
     }
@@ -282,6 +294,22 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), URN_NOT_EXISTS);
     }
 
+    @Test
+    @MetamacMock({DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
+    public void testDeleteDatasourceInDatasetVersionWithQueries() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME);
+
+        Datasource expected = datasetVersion.getDatasources().get(0);
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+
+        String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasourceUrn));
+
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+    }
+
     @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
@@ -296,6 +324,23 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
         datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), datasourceUrn);
+    }
+
+    @Test
+    @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
+    public void testDeleteDatasourceErrorDeletingData() throws Exception {
+        Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+
+        String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
+
+        Mockito.doThrow(ApplicationException.class).when(datasetRepositoriesServiceFacade)
+                .deleteObservationsByAttributeValue(Mockito.anyString(), Mockito.anyInt(), Mockito.any(AttributeBasicDto.class));
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, expected.getIdentifiableStatisticalResource().getCode()));
+
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
     }
 
     @Test
@@ -377,6 +422,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         DateTime oldLastUpdate = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate();
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
 
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
 
@@ -876,6 +923,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testProccessDatasetFileImportationResult() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+
         FileDescriptorResult fileDescriptor = new FileDescriptorResult();
         fileDescriptor.setDatasourceId("file.csv_" + new Date().toString());
         fileDescriptor.setFileName("file.csv");
@@ -900,6 +949,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock(DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME)
     public void testProccessDatasetFileImportationResultPxDatasource() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
 
         FileDescriptorResult fileDescriptor = new FileDescriptorResult();
         fileDescriptor.setDatasourceId("file.px_" + new Date().toString());

@@ -83,5 +83,11 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             return null;
         }
     }
+    
+    @Override
+    public List<QueryVersion> findLinkedToDatasetVersion(Long datasetVersionId) {
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.datasetVersion().id()).eq(datasetVersionId).build();
+        return findByCondition(conditions);
+    }
 
 }

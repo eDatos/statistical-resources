@@ -64,6 +64,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
@@ -71,6 +72,8 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumU
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -78,10 +81,13 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesC
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
+import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -102,6 +108,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private SrmRestInternalService                    srmRestInternalService;
+
+    @Autowired
+    private QueryVersionRepository                    queryVersionRepository;
 
     @Autowired
     private DatasetRepositoriesServiceFacade          statisticsDatasetRepositoriesServiceFacade;
@@ -178,15 +187,42 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // TODO: Comprobar que el dataset está en un estado en el que se le pueden eliminar datasources
 
+        // FIXME: check if datasetversion is in correct status
+
         DatasetVersion datasetVersion = datasource.getDatasetVersion();
 
         checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
+        checkDatasetVersionForDatasourceHasNoQueries(datasource);
+
         deleteDatasourceToDataset(datasource);
+
+        deleteDatasourceData(datasource);
 
         computeDataRelatedMetadata(datasetVersion);
 
-        // FIXME: delete queries linked directly with current dataset version
+    }
+
+    private void checkDatasetVersionForDatasourceHasNoQueries(Datasource datasource) throws MetamacException {
+        List<QueryVersion> queries = queryVersionRepository.findLinkedToDatasetVersion(datasource.getDatasetVersion().getId());
+        if (!queries.isEmpty()) {
+            throw new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getUrn());
+        }
+    }
+    private void deleteDatasourceData(Datasource datasource) throws MetamacException {
+        try {
+            InternationalStringDto internationalStringDto = new InternationalStringDto();
+            LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+            localisedStringDto.setLabel(datasource.getIdentifiableStatisticalResource().getCode());
+            localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+            internationalStringDto.addText(localisedStringDto);
+
+            AttributeBasicDto attributeBasicDto = new AttributeBasicDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+
+            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(ManipulateDataUtils.DATA_SOURCE_ID, 0, attributeBasicDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getCode());
+        }
     }
 
     @Override
@@ -580,26 +616,26 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         processDateNextUpdate(resource);
     }
-    
+
     private void processStartEndDates(DatasetVersion resource) {
         List<TemporalCode> temporalCoverage = resource.getTemporalCoverage();
-        TemporalCode start = temporalCoverage.get(temporalCoverage.size()-1);
+        TemporalCode start = temporalCoverage.get(temporalCoverage.size() - 1);
         TemporalCode end = temporalCoverage.get(0);
-        
+
         resource.setDateStart(temporalCodeToDateTimeStart(start));
         resource.setDateEnd(temporalCodeToDateTimeEnd(end));
     }
-    
+
     private DateTime temporalCodeToDateTimeStart(TemporalCode temporalCode) {
         String timeCode = temporalCode.getIdentifier();
         DateTime[] times = SdmxTimeUtils.calculateDateTimes(timeCode);
-        return times[0]; //start
+        return times[0]; // start
     }
-    
+
     private DateTime temporalCodeToDateTimeEnd(TemporalCode temporalCode) {
         String timeCode = temporalCode.getIdentifier();
         DateTime[] times = SdmxTimeUtils.calculateDateTimes(timeCode);
-        return times[1]; //start
+        return times[1]; // start
     }
 
     private void processDateNextUpdate(DatasetVersion resource) {
