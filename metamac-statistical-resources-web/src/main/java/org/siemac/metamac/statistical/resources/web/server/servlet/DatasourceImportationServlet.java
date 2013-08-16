@@ -114,11 +114,11 @@ public class DatasourceImportationServlet extends HttpServlet {
             String statisticalOperationUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN);
             String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
 
-            if (StringUtils.isNotBlank(statisticalOperationUrn)) {
-                statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationUrn, fileUrls);
-            } else if (StringUtils.isNotBlank(datasetVersionUrn)) {
+            if (StringUtils.isNotBlank(datasetVersionUrn)) {
                 DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
                 statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls);
+            } else if (StringUtils.isNotBlank(statisticalOperationUrn)) {
+                statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationUrn, fileUrls);
             }
 
             sendSuccessImportationResponse(response, fileName);
