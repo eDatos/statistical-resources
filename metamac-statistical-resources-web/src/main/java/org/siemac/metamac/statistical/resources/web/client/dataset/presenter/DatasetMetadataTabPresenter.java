@@ -137,7 +137,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
@@ -355,7 +355,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
-                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.selectedStatisticalOperation);
+                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());
             }
         });
     }

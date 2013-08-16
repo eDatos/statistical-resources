@@ -130,7 +130,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
@@ -140,7 +140,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
         getView().clearSearchSection();
 
         PublicationVersionWebCriteria publicationVersionWebCriteria = new PublicationVersionWebCriteria();
-        publicationVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+        publicationVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
 
         retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationVersionWebCriteria);
     }
@@ -158,7 +158,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void createPublication(PublicationVersionDto publicationDto) {
-        dispatcher.execute(new SavePublicationVersionAction(publicationDto, StatisticalResourcesDefaults.selectedStatisticalOperation),
+        dispatcher.execute(new SavePublicationVersionAction(publicationDto, StatisticalResourcesDefaults.getSelectedStatisticalOperation()),
                 new WaitingAsyncCallbackHandlingError<SavePublicationVersionResult>(this) {
 
                     @Override

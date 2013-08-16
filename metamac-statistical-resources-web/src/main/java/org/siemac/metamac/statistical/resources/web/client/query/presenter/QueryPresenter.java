@@ -133,7 +133,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
@@ -183,22 +183,22 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void saveQuery(final QueryVersionDto queryDto) {
-        dispatcher.execute(new SaveQueryVersionAction(queryDto, StatisticalResourcesDefaults.selectedStatisticalOperation.getCode()), new WaitingAsyncCallbackHandlingError<SaveQueryVersionResult>(
-                this) {
+        dispatcher.execute(new SaveQueryVersionAction(queryDto, StatisticalResourcesDefaults.getSelectedStatisticalOperation().getCode()),
+                new WaitingAsyncCallbackHandlingError<SaveQueryVersionResult>(this) {
 
-            @Override
-            public void onWaitSuccess(SaveQueryVersionResult result) {
-                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().querySaved());
-                getView().setQueryDto(result.getSavedQueryVersionDto());
-                updateUrlIfNeeded(result.getSavedQueryVersionDto());
-            }
+                    @Override
+                    public void onWaitSuccess(SaveQueryVersionResult result) {
+                        ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().querySaved());
+                        getView().setQueryDto(result.getSavedQueryVersionDto());
+                        updateUrlIfNeeded(result.getSavedQueryVersionDto());
+                    }
 
-            private void updateUrlIfNeeded(QueryVersionDto query) {
-                if (queryDto.getId() == null) {
-                    placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeQueryPlaceRequest(query.getUrn()), -1);
-                }
-            }
-        });
+                    private void updateUrlIfNeeded(QueryVersionDto query) {
+                        if (queryDto.getId() == null) {
+                            placeManager.revealRelativePlace(PlaceRequestUtils.buildRelativeQueryPlaceRequest(query.getUrn()), -1);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -347,6 +347,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void goToQueries() {
-        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()));
+        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn()));
     }
 }

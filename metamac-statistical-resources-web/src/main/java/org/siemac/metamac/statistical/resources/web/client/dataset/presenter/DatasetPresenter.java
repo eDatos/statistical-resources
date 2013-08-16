@@ -108,7 +108,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });

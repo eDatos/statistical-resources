@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -321,9 +322,10 @@ public class CommonUtils {
     }
 
     public static boolean isUrnFromSelectedStatisticalOperation(String urn) {
-        if (StatisticalResourcesDefaults.selectedStatisticalOperation != null) {
+        ExternalItemDto selectedStatisticalOperation = StatisticalResourcesDefaults.getSelectedStatisticalOperation();
+        if (selectedStatisticalOperation != null) {
             if (!StringUtils.isBlank(urn)) {
-                return StringUtils.equals(urn, StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+                return StringUtils.equals(urn, selectedStatisticalOperation.getUrn());
             }
         }
         return false;

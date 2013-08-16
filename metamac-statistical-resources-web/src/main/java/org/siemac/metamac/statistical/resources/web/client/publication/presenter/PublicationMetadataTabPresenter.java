@@ -106,7 +106,7 @@ public class PublicationMetadataTabPresenter
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
@@ -130,7 +130,7 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void savePublication(PublicationVersionDto publicationDto) {
-        dispatcher.execute(new SavePublicationVersionAction(publicationDto, StatisticalResourcesDefaults.selectedStatisticalOperation),
+        dispatcher.execute(new SavePublicationVersionAction(publicationDto, StatisticalResourcesDefaults.getSelectedStatisticalOperation()),
                 new WaitingAsyncCallbackHandlingError<SavePublicationVersionResult>(this) {
 
                     @Override

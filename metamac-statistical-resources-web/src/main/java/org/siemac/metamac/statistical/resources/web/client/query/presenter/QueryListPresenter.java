@@ -130,7 +130,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
@@ -140,7 +140,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
         getView().clearSearchSection();
 
         QueryVersionWebCriteria queryVersionWebCriteria = new QueryVersionWebCriteria();
-        queryVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+        queryVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
 
         retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryVersionWebCriteria);
     }

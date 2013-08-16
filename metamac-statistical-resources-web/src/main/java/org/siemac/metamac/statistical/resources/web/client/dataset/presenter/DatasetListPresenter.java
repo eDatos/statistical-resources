@@ -140,7 +140,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
@@ -150,7 +150,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         getView().clearSearchSection();
 
         DatasetVersionWebCriteria datasetVersionWebCriteria = new DatasetVersionWebCriteria();
-        datasetVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+        datasetVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
 
         retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetVersionWebCriteria);
     }
@@ -168,7 +168,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     @Override
     public void createDataset(DatasetVersionDto datasetDto) {
-        dispatcher.execute(new SaveDatasetVersionAction(datasetDto, StatisticalResourcesDefaults.selectedStatisticalOperation.getCode()),
+        dispatcher.execute(new SaveDatasetVersionAction(datasetDto, StatisticalResourcesDefaults.getSelectedStatisticalOperation().getCode()),
                 new WaitingAsyncCallbackHandlingError<SaveDatasetVersionResult>(this) {
 
                     @Override
@@ -208,7 +208,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
-                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.selectedStatisticalOperation);
+                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());
             }
         });
     }

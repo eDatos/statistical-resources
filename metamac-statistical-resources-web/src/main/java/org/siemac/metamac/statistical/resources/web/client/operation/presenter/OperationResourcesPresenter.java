@@ -115,14 +115,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
-                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
                 loadInitialData();
             }
         });
     }
 
     private void loadInitialData() {
-        retrieveResourcesByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+        retrieveResourcesByStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
     }
 
     private void retrieveResourcesByStatisticalOperation(String urn) {
