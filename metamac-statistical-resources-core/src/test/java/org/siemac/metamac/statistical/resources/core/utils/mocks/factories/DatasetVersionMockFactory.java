@@ -177,6 +177,24 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME = "DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH";
     private static DatasetVersion DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH;
 
+    public static final String    DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME                                   = "DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE";
+    private static DatasetVersion DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE;
+
+    public static final String    DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME                   = "DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE";
+    private static DatasetVersion DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE;
+
+    public static final String    DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME                    = "DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE";
+    private static DatasetVersion DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE;
+
+    public static final String    DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME                     = "DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE";
+    private static DatasetVersion DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE;
+
+    public static final String    DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME                                  = "DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE";
+    private static DatasetVersion DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE;
+    
+    public static final String    DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME                                  = "DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES";
+    private static DatasetVersion DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES;
+
     private static final String   INIT_VERSION                                                                       = "001.000";
     private static final String   SECOND_VERSION                                                                     = "002.000";
     private static final String   THIRD_VERSION                                                                      = "003.000";
@@ -822,13 +840,62 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010", "2010"));
 
             DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH = datasetVersion;
-            setDatasetVersion49Datasources(datasetVersion);
+            setDatasetVersion50Datasources(datasetVersion);
         }
         return DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH;
     }
 
     private static void setDatasetVersion50Datasources(DatasetVersion datasetVersion) {
         datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+    }
+
+    protected static DatasetVersion getDatasetVersion51InDraftWithDatasource() {
+        if (DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE == null) {
+            DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DRAFT);
+        }
+        return DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE;
+    }
+
+    protected static DatasetVersion getDatasetVersion52InProductionValidationWithDatasource() {
+        if (DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE == null) {
+            DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PRODUCTION_VALIDATION);
+        }
+        return DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE;
+    }
+    
+    protected static DatasetVersion getDatasetVersion53InDiffusionValidationWithDatasource() {
+        if (DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE == null) {
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DIFFUSION_VALIDATION);
+        }
+        return DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE;
+    }
+    
+    protected static DatasetVersion getDatasetVersion54InValidationRejectedWithDatasource() {
+        if (DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE == null) {
+            DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.VALIDATION_REJECTED);
+        }
+        return DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE;
+    }
+    
+    protected static DatasetVersion getDatasetVersion55PublishedWithDatasource() {
+        if (DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE == null) {
+            DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PUBLISHED);
+        }
+        return DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE;
+    }
+
+    protected static DatasetVersion getDatasetVersion56DraftWithDatasourceAndQueries() {
+        if (DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES == null) {
+            DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DRAFT);
+        }
+        return DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES;
+    }
+    
+    private static DatasetVersion generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum procStatus) {
+        DatasetVersion datasetVersion = createDatasetVersion(1);
+        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(procStatus);
+        datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        return datasetVersion;
     }
 
     // -----------------------------------------------------------------

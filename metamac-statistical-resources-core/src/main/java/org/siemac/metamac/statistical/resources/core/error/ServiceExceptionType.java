@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.error;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
 public class ServiceExceptionType extends CommonServiceExceptionType {
 
@@ -14,6 +17,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASET_MAX_REACHED_IN_OPERATION                        = create("exception.resources.dataset.max_reached_in_operation");
     public static final CommonServiceExceptionType DATASET_EMPTY_DATASOURCES                               = create("exception.resources.dataset.empty_datasources");
     public static final CommonServiceExceptionType DATASET_NO_DATA                                         = create("exception.resources.dataset.empty_data");
+    public static final CommonServiceExceptionType DATASET_VERSION_CANT_ALTER_DATASOURCES                  = create("exception.resources.dataset_version.cant_alter_datasources");
 
     // Datasource
     public static final CommonServiceExceptionType DATASOURCE_NOT_FOUND                                    = create("exception.resources.datasource.not_found");

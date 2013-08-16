@@ -56,6 +56,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -130,9 +131,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        // Validate dataset PROC_STATUS
-        // TODO: Comprobar que se puede asociar el datasource al dataset
-
+        checkCanAlterDatasourcesInDatasetVersion(datasetVersion);
+        
         // Fill metadata
         fillMetadataForCreateDatasource(datasource, datasetVersion);
 
@@ -148,23 +148,32 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasource;
     }
+    
+    private void checkCanAlterDatasourcesInDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
+        if (!DatasetMetadataEditionChecks.canAddDatasource(datasetVersion.getSiemacMetadataStatisticalResource().getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATASOURCES, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        }
+    }
 
     @Override
     public Datasource updateDatasource(ServiceContext ctx, Datasource datasource) throws MetamacException {
 
         // Validation of parameters
         datasetServiceInvocationValidator.checkUpdateDatasource(ctx, datasource);
-
+        
+        checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
+        
         checkNotImportationTaskInProgress(ctx, datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
-
-        // TODO: Comprobar que el estado del dataset asociado es el correcto y otras condiciones necesarias
 
         // Update
         Datasource updatedDataSource = getDatasourceRepository().save(datasource);
+        
+        //TODO: IF CODE can be changed, attribute in dataset repository must be changed to ensure consistency
 
         return updatedDataSource;
     }
-
+    
+    
     @Override
     public Datasource retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
 
@@ -185,12 +194,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Retrieve
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
 
-        // TODO: Comprobar que el dataset está en un estado en el que se le pueden eliminar datasources
-
-        // FIXME: check if datasetversion is in correct status
-
         DatasetVersion datasetVersion = datasource.getDatasetVersion();
 
+        checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
+        
         checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         checkDatasetVersionForDatasourceHasNoQueries(datasource);
@@ -660,7 +667,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             long num = statisticsDatasetRepositoriesServiceFacade.countObservations(resource.getDatasetRepositoryId());
             resource.setFormatExtentObservations(num);
         } catch (ApplicationException e) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId());
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId());
         }
     }
 
