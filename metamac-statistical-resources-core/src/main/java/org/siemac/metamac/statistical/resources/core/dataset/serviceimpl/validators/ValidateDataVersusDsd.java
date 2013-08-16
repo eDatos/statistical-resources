@@ -284,7 +284,9 @@ public class ValidateDataVersusDsd {
 
     private void checkAttributeNonEnumeratedRepresentation(String attributeId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
         DsdProcessor.DsdAttribute dsdAttribute = attributesProcessorMap.get(attributeId);
-        NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
+        if (dsdAttribute.getTextFormatRepresentation() != null) {
+            NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
+        }
     }
 
     @SuppressWarnings("unchecked")
