@@ -138,12 +138,15 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     private void loadInitialData() {
         getView().clearSearchSection();
-        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
+
+        PublicationVersionWebCriteria publicationVersionWebCriteria = new PublicationVersionWebCriteria();
+        publicationVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+
+        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationVersionWebCriteria);
     }
 
     @Override
     public void retrievePublications(int firstResult, int maxResults, PublicationVersionWebCriteria criteria) {
-        criteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()); // TODO Remove this
         dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
             @Override
@@ -160,7 +163,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
                     @Override
                     public void onWaitSuccess(SavePublicationVersionResult result) {
-                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
                     }
                 });
     }
@@ -172,7 +175,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
             @Override
             public void onWaitSuccess(DeletePublicationVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().publicationDeleted());
-                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             };
         });
     }
@@ -224,12 +227,12 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             }
             @Override
             public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, successMessage);
-                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             }
         });
     }

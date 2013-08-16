@@ -148,12 +148,15 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     private void loadInitialData() {
         getView().clearSearchSection();
-        retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+
+        DatasetVersionWebCriteria datasetVersionWebCriteria = new DatasetVersionWebCriteria();
+        datasetVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+
+        retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetVersionWebCriteria);
     }
 
     @Override
     public void retrieveDatasets(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
-        criteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()); // TODO Remove this
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
             @Override
@@ -171,7 +174,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
                     @Override
                     public void onWaitSuccess(SaveDatasetVersionResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
-                        retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+                        retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
                     }
                 });
     }
@@ -183,7 +186,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(DeleteDatasetVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
-                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
         });
     }
@@ -257,12 +260,12 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
-                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
         });
     }

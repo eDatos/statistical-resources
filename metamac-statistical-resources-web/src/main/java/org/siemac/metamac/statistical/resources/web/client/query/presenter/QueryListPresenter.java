@@ -138,12 +138,15 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
     private void loadInitialData() {
         getView().clearSearchSection();
-        retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new QueryVersionWebCriteria());
+
+        QueryVersionWebCriteria queryVersionWebCriteria = new QueryVersionWebCriteria();
+        queryVersionWebCriteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
+
+        retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryVersionWebCriteria);
     }
 
     @Override
     public void retrieveQueries(int firstResult, int maxResults, QueryVersionWebCriteria criteria) {
-        criteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()); // TODO Remove this
         dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
 
             @Override
@@ -168,7 +171,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());
-                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
         });
     }
@@ -220,12 +223,12 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
             @Override
             public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, successMessage);
-                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
         });
     }

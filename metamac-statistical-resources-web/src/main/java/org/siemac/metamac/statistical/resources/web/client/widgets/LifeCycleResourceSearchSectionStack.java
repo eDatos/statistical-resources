@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -42,6 +43,8 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
         super.clearAdvancedSearchSection();
         // Search last versions by default
         ((CustomCheckboxItem) advancedSearchForm.getItem(LifeCycleResourceDS.LAST_VERSION)).setValue(true);
+        // Search by selected operation by default
+        ((SearchExternalItemLinkItem) advancedSearchForm.getItem(LifeCycleResourceDS.STATISTICAL_OPERATION)).setExternalItem(StatisticalResourcesDefaults.selectedStatisticalOperation);
     }
 
     @Override
