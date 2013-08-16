@@ -54,6 +54,7 @@ import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.exception.TaskNotFoundException;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
@@ -149,6 +150,19 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             }
             // Validation: There shouldn't be a recovery job in process, please wait
             if (sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId()))) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
+            }
+
+            // Checking garbage
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey.getName()).distinctRoot().build();
+            PagedResult<Task> tasks = findTasksByCondition(ctx, conditions, PagingParameter.pageAccess(1, 1));
+            if (!tasks.getValues().isEmpty()) {
+                task = tasks.getValues().get(0);
+            }
+            if (task != null) {
+                TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
+                recoveryTaskInfo.setDatasetVersionId(taskInfoDataset.getDatasetVersionId());
+                planifyRecoveryImportDataset(ctx, recoveryTaskInfo); // Perform a clean recovery
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
