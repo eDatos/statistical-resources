@@ -1,12 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.client.query.presenter;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -14,10 +12,11 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
@@ -75,8 +74,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
 
-    private ExternalItemDto                           operation;
-
     @ProxyCodeSplit
     @NameToken(NameTokens.queryPage)
     @UseGatekeeper(LoggedInGatekeeper.class)
@@ -84,8 +81,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @TitleFunction
-    public static String getTranslatedTitle() {
-        return getConstants().breadcrumbQueries();
+    public static String getTranslatedTitle(PlaceRequest placeRequest) {
+        return PlaceRequestUtils.getQueryBreadCrumbTitle(placeRequest);
     }
 
     public interface QueryView extends View, HasUiHandlers<QueryUiHandlers> {
@@ -110,26 +107,45 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @Override
+    protected void revealInParent() {
+        RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
+    }
+
+    @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+
+        if (!StringUtils.isBlank(operationCode)) {
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
+            }
+        }
+    }
+
+    private void retrieveOperation(String urn) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
+            }
+        });
+    }
+
+    private void loadInitialData() {
         String queryCode = PlaceRequestUtils.getQueryParamFromUrl(placeManager);
         if (StringUtils.isBlank(queryCode)) {
             getView().newQueryDto();
         } else {
             retrieveQuery(queryCode);
         }
-
-        if (!StringUtils.isBlank(operationCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
-        }
-    }
-
-    @Override
-    protected void revealInParent() {
-        RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
     }
 
     public void retrieveQuery(String queryCode) {
@@ -141,19 +157,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
-    }
-
-    private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
-
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    QueryPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(QueryPresenter.this, result.getOperation());
-                }
-            });
-        }
     }
 
     @Override
@@ -180,7 +183,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void saveQuery(final QueryVersionDto queryDto) {
-        dispatcher.execute(new SaveQueryVersionAction(queryDto, operation.getCode()), new WaitingAsyncCallbackHandlingError<SaveQueryVersionResult>(this) {
+        dispatcher.execute(new SaveQueryVersionAction(queryDto, StatisticalResourcesDefaults.selectedStatisticalOperation.getCode()), new WaitingAsyncCallbackHandlingError<SaveQueryVersionResult>(
+                this) {
 
             @Override
             public void onWaitSuccess(SaveQueryVersionResult result) {
@@ -343,6 +347,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void goToQueries() {
-        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(operation.getUrn()));
+        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueriesPlaceRequest(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()));
     }
 }

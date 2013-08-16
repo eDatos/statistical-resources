@@ -2,13 +2,11 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -43,8 +41,6 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
-
-    private ExternalItemDto                           operation;
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata    = new Type<RevealContentHandler<?>>();
@@ -94,27 +90,34 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+
             if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
                 retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
             }
-            retrieveDataset(datasetCode);
-            getView().showMetadata();
+
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
     }
 
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    DatasetPresenter.this.operation = result.getOperation();
-                }
-            });
-        }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
+            }
+        });
+    }
+
+    private void loadInitialData() {
+        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        retrieveDataset(datasetCode);
+        getView().showMetadata();
     }
 
     public void retrieveDataset(String datasetIdentifier) {

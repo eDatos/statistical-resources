@@ -3,17 +3,18 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
@@ -45,8 +46,6 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
 
-    private ExternalItemDto                           operation;
-
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata  = new Type<RevealContentHandler<?>>();
 
@@ -60,8 +59,8 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     }
 
     @TitleFunction
-    public static String getTranslatedTitle() {
-        return StatisticalResourcesWeb.getConstants().breadcrumbPublication();
+    public static String getTranslatedTitle(PlaceRequest placeRequest) {
+        return PlaceRequestUtils.getPublicationBreadCrumbTitle(placeRequest);
     }
 
     public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {
@@ -84,11 +83,6 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     }
 
     @Override
-    public void prepareFromRequest(PlaceRequest request) {
-        super.prepareFromRequest(request);
-    }
-
-    @Override
     protected void onReveal() {
         super.onReveal();
 
@@ -96,30 +90,34 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
             String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
-            String publicationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
-            retrievePublication(publicationUrn);
-            getView().showMetadata();
+
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
+            }
+
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
     }
 
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(PublicationPresenter.this, caught);
-                }
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    PublicationPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(PublicationPresenter.this, result.getOperation());
-                }
-            });
-        }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
+            }
+        });
+    }
+
+    private void loadInitialData() {
+        String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
+        String publicationUrn = CommonUtils.generatePublicationUrn(publicationCode);
+        retrievePublication(publicationUrn);
+        getView().showMetadata();
     }
 
     private void retrievePublication(String urn) {

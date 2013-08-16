@@ -86,7 +86,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
     public interface DatasetListView extends StatisticalResourceBaseListPresenter.StatisticalResourceBaseListView, HasUiHandlers<DatasetListUiHandlers> {
 
-        void setDatasetPaginatedList(String operationUrn, GetDatasetVersionsResult datasetsPaginatedList);
+        void setDatasetPaginatedList(GetDatasetVersionsResult datasetsPaginatedList);
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
 
@@ -109,21 +109,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void prepareFromRequest(PlaceRequest request) {
-        super.prepareFromRequest(request);
-
-        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
-                retrieveOperation(operationUrn);
-            }
-            retrieveDatasetsByStatisticalOperation(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
-        }
-        getView().clearSearchSection();
-    }
-
-    @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
     }
@@ -134,25 +119,45 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         SetTitleEvent.fire(this, getConstants().datasets());
     }
 
+    @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+
+        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode)) {
+            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
+            }
+        }
+    }
+
     private void retrieveOperation(String urn) {
         dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
                 StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
             }
         });
     }
 
+    private void loadInitialData() {
+        getView().clearSearchSection();
+        retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
+    }
+
     @Override
-    public void retrieveDatasetsByStatisticalOperation(String operationUrn, int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
-        final String statisticalOperationUrn = operationUrn;
-        criteria.setStatisticalOperationUrn(statisticalOperationUrn);
+    public void retrieveDatasets(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
+        criteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()); // TODO Remove this
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetVersionsResult result) {
-                getView().setDatasetPaginatedList(statisticalOperationUrn, result);
+                getView().setDatasetPaginatedList(result);
             }
         });
     }
@@ -165,8 +170,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
                     @Override
                     public void onWaitSuccess(SaveDatasetVersionResult result) {
                         ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
-                        retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS,
-                                new DatasetVersionWebCriteria());
+                        retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
                     }
                 });
     }
@@ -178,7 +182,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitSuccess(DeleteDatasetVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
-                retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
     }
@@ -252,14 +256,12 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS,
-                        new DatasetVersionWebCriteria());
+                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
             }
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
-                retrieveDatasetsByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS,
-                        new DatasetVersionWebCriteria());
+                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new DatasetVersionWebCriteria());
             }
         });
     }

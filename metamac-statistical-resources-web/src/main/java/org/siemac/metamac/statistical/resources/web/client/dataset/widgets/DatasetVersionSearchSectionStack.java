@@ -72,7 +72,7 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
     @Override
     public void retrieveResources() {
-        getUiHandlers().retrieveDatasetsByStatisticalOperation(null, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getDatasetVersionWebCriteria());
+        getUiHandlers().retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getDatasetVersionWebCriteria());
     }
 
     public void setUiHandlers(DatasetListUiHandlers uiHandlers) {

@@ -86,6 +86,11 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     @Override
+    protected void revealInParent() {
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);
+    }
+
+    @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
@@ -93,20 +98,16 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
             String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
-            String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
+
             if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
                 retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
             }
-            retrieveDataset(datasetUrn);
-            retrieveDatasourcesByDataset(datasetUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
-    }
-
-    @Override
-    protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);
     }
 
     private void retrieveOperation(String urn) {
@@ -115,8 +116,16 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
                 StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
             }
         });
+    }
+
+    private void loadInitialData() {
+        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
+        retrieveDataset(datasetUrn);
+        retrieveDatasourcesByDataset(datasetUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
     }
 
     public void retrieveDataset(String datasetUrn) {

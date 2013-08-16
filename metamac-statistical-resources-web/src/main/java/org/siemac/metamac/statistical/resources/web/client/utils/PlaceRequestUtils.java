@@ -1,8 +1,11 @@
 package org.siemac.metamac.statistical.resources.web.client.utils;
 
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnParserUtils;
@@ -43,6 +46,14 @@ public class PlaceRequestUtils {
         return placeRequests;
     }
 
+    public static String getOperationBreadCrumbTitle(PlaceRequest placeRequest) {
+        String operationCode = placeRequest.getParameter(PlaceRequestParams.operationParam, null);
+        if (!StringUtils.isBlank(operationCode)) {
+            return operationCode;
+        }
+        return getConstants().breadcrumbOperation();
+    }
+
     // ---------------------------------------------------------------------------
     // DATASETS
     // ---------------------------------------------------------------------------
@@ -74,6 +85,17 @@ public class PlaceRequestUtils {
         List<PlaceRequest> placeRequests = buildAbsoluteDatasetsPlaceRequest(operationUrn);
         placeRequests.add(buildRelativeDatasetPlaceRequest(datasetUrn));
         return placeRequests;
+    }
+
+    public static String getDatasetBreadCrumbTitle(PlaceRequest placeRequest) {
+        String urnWithoutPrefix = placeRequest.getParameter(PlaceRequestParams.datasetParam, null);
+        if (!StringUtils.isBlank(urnWithoutPrefix)) {
+            String datasetCode = StatisticalResourcesUrnParserUtils.getDatasetVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
+            if (!StringUtils.isBlank(datasetCode)) {
+                return datasetCode;
+            }
+        }
+        return getConstants().breadcrumbDataset();
     }
 
     // ---------------------------------------------------------------------------
@@ -109,6 +131,17 @@ public class PlaceRequestUtils {
         return placeRequests;
     }
 
+    public static String getPublicationBreadCrumbTitle(PlaceRequest placeRequest) {
+        String urnWithoutPrefix = placeRequest.getParameter(PlaceRequestParams.publicationParam, null);
+        if (!StringUtils.isBlank(urnWithoutPrefix)) {
+            String publicationCode = StatisticalResourcesUrnParserUtils.getPublicationVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
+            if (!StringUtils.isBlank(publicationCode)) {
+                return publicationCode;
+            }
+        }
+        return getConstants().breadcrumbPublication();
+    }
+
     // ---------------------------------------------------------------------------
     // QUERIES
     // ---------------------------------------------------------------------------
@@ -140,6 +173,17 @@ public class PlaceRequestUtils {
         List<PlaceRequest> placeRequests = buildAbsoluteQueriesPlaceRequest(operationUrn);
         placeRequests.add(buildRelativeQueryPlaceRequest(queryUrn));
         return placeRequests;
+    }
+
+    public static String getQueryBreadCrumbTitle(PlaceRequest placeRequest) {
+        String urnWithoutPrefix = placeRequest.getParameter(PlaceRequestParams.queryParam, null);
+        if (!StringUtils.isBlank(urnWithoutPrefix)) {
+            String queryCode = StatisticalResourcesUrnParserUtils.getQueryVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
+            if (!StringUtils.isBlank(queryCode)) {
+                return queryCode;
+            }
+        }
+        return getConstants().breadcrumbQuery();
     }
 
     // ---------------------------------------------------------------------------

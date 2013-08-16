@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.client.widgets.ImportResourceWindow;
@@ -26,10 +27,7 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
 
     public void setDatasetVersion(String datasetVersionUrn) {
         ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN)).setDefaultValue(datasetVersionUrn);
-    }
-
-    public void setStatisticalOperationUrn(String urn) {
-        ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN)).setDefaultValue(urn);
+        ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN)).setDefaultValue(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
     }
 
     private class UploadDatasourceForm extends UploadForm {

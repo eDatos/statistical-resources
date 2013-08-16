@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
@@ -86,40 +87,42 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     }
 
     @Override
+    protected void onReset() {
+        super.onReset();
+        SetTitleEvent.fire(this, getConstants().statisticalResources());
+    }
+
+    @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         String operationParam = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationParam)) {
-            String urn = CommonUtils.generateStatisticalOperationUrn(operationParam);
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationParam);
 
-            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(urn)) {
-                retrieveOperation(urn);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
             }
-            retrieveResourcesByStatisticalOperation(urn);
 
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
     }
 
-    @Override
-    protected void onReset() {
-        super.onReset();
-        SetTitleEvent.fire(this, getConstants().statisticalResources());
-    }
-
     private void retrieveOperation(String urn) {
-        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
                 StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
             }
         });
+    }
+
+    private void loadInitialData() {
+        retrieveResourcesByStatisticalOperation(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn());
     }
 
     private void retrieveResourcesByStatisticalOperation(String urn) {

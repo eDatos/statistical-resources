@@ -51,8 +51,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     private ImportDatasourcesWindow          importDatasourcesWindow;
     private NewDatasetWindow                 newDatasetWindow;
 
-    private String                           operationUrn;
-
     @Inject
     public DatasetListViewImpl() {
         super();
@@ -112,8 +110,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     }
 
     @Override
-    public void setDatasetPaginatedList(String operationUrn, GetDatasetVersionsResult result) {
-        setOperation(operationUrn);
+    public void setDatasetPaginatedList(GetDatasetVersionsResult result) {
         setDatasetList(result.getDatasetVersionDtos());
         listGrid.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetVersionDtos().size(), result.getTotalResults());
     }
@@ -141,11 +138,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
             records[index++] = StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto);
         }
         listGrid.getListGrid().setData(records);
-    }
-
-    public void setOperation(String operationUrn) {
-        this.operationUrn = operationUrn;
-        this.importDatasourcesWindow.setStatisticalOperationUrn(operationUrn);
     }
 
     @Override
@@ -185,7 +177,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected void retrieveResultSet(int firstResult, int maxResults) {
-        getUiHandlers().retrieveDatasetsByStatisticalOperation(operationUrn, firstResult, maxResults, null);
+        getUiHandlers().retrieveDatasets(firstResult, maxResults, null);
     }
 
     //
@@ -207,7 +199,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (newDatasetWindow.validateForm()) {
-                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto(operationUrn));
+                            getUiHandlers().createDataset(newDatasetWindow.getNewDatasetVersionDto());
                             newDatasetWindow.destroy();
                         }
                     }

@@ -27,6 +27,7 @@ import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
@@ -68,6 +69,12 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     protected void onReset() {
         super.onReset();
         SetTitleEvent.fire(this, getConstants().operations());
+
+    }
+
+    @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
         retrieveOperations(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
     }
 

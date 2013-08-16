@@ -4,10 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
@@ -15,9 +12,10 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
@@ -62,10 +60,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         implements
             PublicationStructureTabUiHandlers {
 
-    private DispatchAsync   dispatcher;
-    private PlaceManager    placeManager;
-
-    private ExternalItemDto operation;
+    private DispatchAsync dispatcher;
+    private PlaceManager  placeManager;
 
     public interface PublicationStructureTabView extends View, HasUiHandlers<PublicationStructureTabUiHandlers> {
 
@@ -109,30 +105,34 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
         String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
-            String publicationVersionUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationCode);
-            retrievePublicationStructure(publicationVersionUrn);
+
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
+            }
+
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
     }
 
     private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallback<GetStatisticalOperationResult>() {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-                }
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    PublicationStructureTabPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(PublicationStructureTabPresenter.this, result.getOperation());
-                }
-            });
-        }
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
+            }
+        });
+    }
+
+    private void loadInitialData() {
+        String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
+        String publicationVersionUrn = CommonUtils.generatePublicationUrn(publicationCode);
+        retrievePublicationStructure(publicationVersionUrn);
     }
 
     private void retrievePublicationStructure(String publicationVersionUrn) {

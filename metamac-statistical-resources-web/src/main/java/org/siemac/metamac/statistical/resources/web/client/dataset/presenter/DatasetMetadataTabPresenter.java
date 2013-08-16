@@ -71,8 +71,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         implements
             DatasetMetadataTabUiHandlers {
 
-    private ExternalItemDto operation;
-
     public interface DatasetMetadataTabView extends StatisticalResourceMetadataBasePresenter.StatisticalResourceMetadataBaseView, HasUiHandlers<DatasetMetadataTabUiHandlers> {
 
         void setDataset(DatasetVersionDto datasetDto);
@@ -110,6 +108,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
+    protected void revealInParent() {
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaMetadata, this);
+    }
+
+    @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
@@ -117,18 +120,16 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
             String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+
             if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
                 retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
             }
-            retrieveDataset(datasetCode);
+
         } else {
             StatisticalResourcesWeb.showErrorPage();
         }
-    }
-
-    @Override
-    protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaMetadata, this);
     }
 
     private void retrieveOperation(String urn) {
@@ -137,8 +138,14 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(GetStatisticalOperationResult result) {
                 StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
             }
         });
+    }
+
+    private void loadInitialData() {
+        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        retrieveDataset(datasetCode);
     }
 
     @Override
@@ -348,7 +355,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
-                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), operation);
+                getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.selectedStatisticalOperation);
             }
         });
     }

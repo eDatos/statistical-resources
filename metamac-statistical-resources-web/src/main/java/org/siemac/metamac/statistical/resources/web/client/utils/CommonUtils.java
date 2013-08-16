@@ -336,4 +336,12 @@ public class CommonUtils {
     public static String generateDatasetUrn(String datasetIdentifier) {
         return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX, datasetIdentifier);
     }
+
+    public static String generatePublicationUrn(String publicationIdentifier) {
+        return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX, publicationIdentifier);
+    }
+
+    public static String generateQueryUrn(String queryIdentifier) {
+        return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryIdentifier);
+    }
 }

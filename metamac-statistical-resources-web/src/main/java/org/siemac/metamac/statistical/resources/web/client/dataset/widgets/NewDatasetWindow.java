@@ -63,7 +63,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         return form.getItem(FIELD_SAVE);
     }
 
-    public DatasetVersionDto getNewDatasetVersionDto(String operationUrn) {
+    public DatasetVersionDto getNewDatasetVersionDto() {
         DatasetVersionDto datasetDto = new DatasetVersionDto();
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         datasetDto.setRelatedDsd(getExternalItemValue(form.getItem(DatasetDS.RELATED_DSD)));

@@ -5,8 +5,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -14,14 +12,14 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceBaseListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent;
-import org.siemac.metamac.statistical.resources.web.client.event.SetOperationEvent.SetOperationHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
@@ -47,7 +45,6 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
@@ -59,12 +56,9 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class PublicationListPresenter extends StatisticalResourceBaseListPresenter<PublicationListPresenter.PublicationListView, PublicationListPresenter.PublicationListProxy>
         implements
-            PublicationListUiHandlers,
-            SetOperationHandler {
+            PublicationListUiHandlers {
 
     private final PlaceManager                        placeManager;
-
-    private ExternalItemDto                           operation;
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
@@ -104,39 +98,49 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void prepareFromRequest(PlaceRequest request) {
-        super.prepareFromRequest(request);
-        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
-            retrieveOperation(operationUrn);
-            retrievePublications(operationUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
-            getView().clearSearchSection();
-        } else {
-            StatisticalResourcesWeb.showErrorPage();
-        }
-    }
-
-    @Override
     protected void onReset() {
         super.onReset();
         SetTitleEvent.fire(this, getConstants().publications());
     }
 
-    @ProxyEvent
     @Override
-    public void onSetOperation(SetOperationEvent event) {
-        this.operation = event.getOperation();
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode)) {
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
+            }
+
+        } else {
+            StatisticalResourcesWeb.showErrorPage();
+        }
+    }
+
+    private void retrieveOperation(String urn) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.selectedStatisticalOperation = result.getOperation();
+                loadInitialData();
+            }
+        });
+    }
+
+    private void loadInitialData() {
+        getView().clearSearchSection();
+        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
     }
 
     @Override
-    public void retrievePublications(int firstResult, int maxResults, PublicationVersionWebCriteria publicationVersionWebCriteria) {
-        retrievePublications(operation != null ? operation.getUrn() : null, firstResult, maxResults, publicationVersionWebCriteria);
-    }
-
-    private void retrievePublications(String operationUrn, int firstResult, int maxResults, PublicationVersionWebCriteria publicationVersionWebCriteria) {
-        publicationVersionWebCriteria.setStatisticalOperationUrn(operationUrn);
-        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationVersionWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
+    public void retrievePublications(int firstResult, int maxResults, PublicationVersionWebCriteria criteria) {
+        criteria.setStatisticalOperationUrn(StatisticalResourcesDefaults.selectedStatisticalOperation.getUrn()); // TODO Remove this
+        dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetPublicationVersionsResult result) {
@@ -147,13 +151,14 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void createPublication(PublicationVersionDto publicationDto) {
-        dispatcher.execute(new SavePublicationVersionAction(publicationDto, operation), new WaitingAsyncCallbackHandlingError<SavePublicationVersionResult>(this) {
+        dispatcher.execute(new SavePublicationVersionAction(publicationDto, StatisticalResourcesDefaults.selectedStatisticalOperation),
+                new WaitingAsyncCallbackHandlingError<SavePublicationVersionResult>(this) {
 
-            @Override
-            public void onWaitSuccess(SavePublicationVersionResult result) {
-                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(SavePublicationVersionResult result) {
+                        retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
+                    }
+                });
     }
 
     @Override
@@ -163,22 +168,9 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
             @Override
             public void onWaitSuccess(DeletePublicationVersionsResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().publicationDeleted());
-                retrievePublications(PublicationListPresenter.this.operation.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
+                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, new PublicationVersionWebCriteria());
             };
         });
-    }
-
-    private void retrieveOperation(String urn) {
-        if (operation == null || !StringUtils.equals(operation.getUrn(), urn)) {
-            dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
-
-                @Override
-                public void onWaitSuccess(GetStatisticalOperationResult result) {
-                    PublicationListPresenter.this.operation = result.getOperation();
-                    SetOperationEvent.fire(PublicationListPresenter.this, result.getOperation());
-                }
-            });
-        }
     }
 
     //
