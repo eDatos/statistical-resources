@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.SiemacMetadataResourceSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDsdPaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleItemWihtoutFilterWindow;
@@ -19,6 +20,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
@@ -46,9 +48,10 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
         SearchExternalItemLinkItem dsd = createDsdItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
         CustomDateItem dateNextUpdate = new CustomDateItem(DatasetDS.DATE_NEXT_UPDATE, getConstants().datasetDateNextUpdate());
 
-        // TODO statistic officiality
+        SelectItem statisticOfficiality = new SelectItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
+        statisticOfficiality.setValueMap(CommonUtils.getStatisticOfficialityHashMap());
 
-        advancedSearchForm.addFieldsInThePenultimePosition(geographicalGranularity, temporalGranularity, dateStart, dateEnd, dsd, dateNextUpdate);
+        advancedSearchForm.addFieldsInThePenultimePosition(geographicalGranularity, temporalGranularity, dateStart, dateEnd, dsd, dateNextUpdate, statisticOfficiality);
     }
 
     public DatasetVersionWebCriteria getDatasetVersionWebCriteria() {
@@ -65,6 +68,8 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
         ExternalItemDto selectedDsd = ((SearchExternalItemLinkItem) advancedSearchForm.getItem(DatasetDS.RELATED_DSD)).getExternalItemDto();
         criteria.setDsdUrn(selectedDsd != null ? selectedDsd.getUrn() : null);
+
+        criteria.setStatisticOfficialityIdentifier(advancedSearchForm.getValueAsString(DatasetDS.STATISTIC_OFFICIALITY));
 
         criteria.setDateNextUpdate(((CustomDateItem) advancedSearchForm.getItem(DatasetDS.DATE_NEXT_UPDATE)).getValueAsDate());
         return criteria;
