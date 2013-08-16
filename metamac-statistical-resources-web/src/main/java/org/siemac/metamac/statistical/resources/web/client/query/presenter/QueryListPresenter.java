@@ -38,6 +38,7 @@ import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVers
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -86,6 +87,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
         QueryVersionWebCriteria getQueryVersionWebCriteria();
         void setStatisticalOperationsForDatasetVersionSelectionInSearchSection(List<ExternalItemDto> results);
         void setDatasetVersionsForSearchSection(GetDatasetVersionsResult result);
+        void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result);
     }
 
     @Inject
@@ -252,6 +254,18 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
                 getView().setDatasetVersionsForSearchSection(result);
             }
         });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, criteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForSearchSection(result);
+                    }
+                });
     }
 
     //

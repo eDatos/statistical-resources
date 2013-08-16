@@ -4,6 +4,7 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.SiemacMetadataResourceSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class PublicationVersionSearchSectionStack extends SiemacMetadataResourceSearchSectionStack {
 
@@ -27,5 +28,16 @@ public class PublicationVersionSearchSectionStack extends SiemacMetadataResource
 
     public PublicationListUiHandlers getUiHandlers() {
         return uiHandlers;
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    // Statistical operations
+
+    @Override
+    public void retrieveStatisticalOperations(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        getUiHandlers().retrieveStatisticalOperationsForSearchSection(firstResult, maxResults, criteria);
     }
 }

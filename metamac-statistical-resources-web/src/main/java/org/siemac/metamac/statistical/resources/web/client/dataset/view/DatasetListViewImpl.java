@@ -26,6 +26,7 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersi
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
@@ -398,5 +399,10 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     public void setDsdsForSearchSection(GetDsdsPaginatedListResult result) {
         searchSectionStack.setDsds(result);
+    }
+
+    @Override
+    public void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result) {
+        searchSectionStack.setStatisticalOperations(result);
     }
 }

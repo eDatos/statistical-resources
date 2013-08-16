@@ -2,24 +2,37 @@ package org.siemac.metamac.statistical.resources.web.client.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.LifeCycleStatisticalResourceWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
+import org.siemac.metamac.web.common.client.widgets.SearchExternalItemWindow;
+import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
+import org.siemac.metamac.web.common.client.widgets.actions.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSearchSectionStack {
+
+    private SearchExternalItemWindow searchOperationWindow;
 
     public LifeCycleResourceSearchSectionStack() {
     }
@@ -37,7 +50,10 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
         advancedSearchForm.setPadding(5);
         advancedSearchForm.setMargin(5);
         advancedSearchForm.setVisible(false);
-        // TODO add statistical operation
+
+        SearchExternalItemLinkItem searchOperationItem = createSearchStatisticalOperationItem(LifeCycleResourceDS.STATISTICAL_OPERATION, getConstants()
+                .siemacMetadataStatisticalResourceStatisticalOperation());
+
         TextItem code = new TextItem(LifeCycleResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
         TextItem name = new TextItem(LifeCycleResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         TextItem urn = new TextItem(LifeCycleResourceDS.URN, getConstants().identifiableStatisticalResourceURN());
@@ -63,13 +79,19 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
                 retrieveResources();
             }
         });
-        FormItem[] advancedSearchFormItems = new FormItem[]{code, name, urn, description, nextVersionType, nextVersionDate, procStatus, isLastVersion, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{searchOperationItem, code, name, urn, description, nextVersionType, nextVersionDate, procStatus, isLastVersion, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
     public LifeCycleStatisticalResourceWebCriteria getLifeCycleResourceWebCriteria(LifeCycleStatisticalResourceWebCriteria lifecycleStatisticalResourceWebCriteria) {
-        // TODO add statistical operation
+
         lifecycleStatisticalResourceWebCriteria.setCriteria(searchForm.getValueAsString(SEARCH_ITEM_NAME));
+
+        ExternalItemDto operation = ((SearchExternalItemLinkItem) advancedSearchForm.getItem(LifeCycleResourceDS.STATISTICAL_OPERATION)).getExternalItemDto();
+        if (operation != null) {
+            lifecycleStatisticalResourceWebCriteria.setStatisticalOperationUrn(operation.getUrn());
+        }
+
         lifecycleStatisticalResourceWebCriteria.setCode(advancedSearchForm.getValueAsString(LifeCycleResourceDS.CODE));
         lifecycleStatisticalResourceWebCriteria.setTitle(advancedSearchForm.getValueAsString(LifeCycleResourceDS.TITLE));
         lifecycleStatisticalResourceWebCriteria.setUrn(advancedSearchForm.getValueAsString(LifeCycleResourceDS.URN));
@@ -80,4 +102,58 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
         lifecycleStatisticalResourceWebCriteria.setOnlyLastVersion(((CustomCheckboxItem) advancedSearchForm.getItem(LifeCycleResourceDS.LAST_VERSION)).getValueAsBoolean());
         return lifecycleStatisticalResourceWebCriteria;
     }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    private SearchExternalItemLinkItem createSearchStatisticalOperationItem(String name, String title) {
+        SearchExternalItemLinkItem operationItem = new SearchExternalItemLinkItem(name, title);
+        operationItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                searchOperationWindow = new SearchExternalItemWindow(getConstants().statisticalOperation(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new PaginatedAction() {
+
+                    @Override
+                    public void retrieveResultSet(int firstResult, int maxResults) {
+                        retrieveStatisticalOperations(firstResult, maxResults, new MetamacWebCriteria(searchOperationWindow.getSearchCriteria()));
+                    }
+                });
+                retrieveStatisticalOperations(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new MetamacWebCriteria());
+                searchOperationWindow.getListGrid().setSelectionType(SelectionStyle.SINGLE); // Only one statistical operation can be selected
+                searchOperationWindow.getExternalListGridItem().setSearchAction(new SearchPaginatedAction() {
+
+                    @Override
+                    public void retrieveResultSet(int firstResult, int maxResults, String criteria) {
+                        retrieveStatisticalOperations(firstResult, maxResults, new MetamacWebCriteria(criteria));
+                    }
+                });
+                searchOperationWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        ExternalItemDto selectedOperation = searchOperationWindow.getSelectedExternalItem();
+                        searchOperationWindow.destroy();
+                        ((SearchExternalItemLinkItem) advancedSearchForm.getItem(LifeCycleResourceDS.STATISTICAL_OPERATION)).setExternalItem(selectedOperation);
+                        advancedSearchForm.validate(false);
+                    }
+                });
+            }
+        });
+        return operationItem;
+    }
+
+    public void setStatisticalOperations(GetStatisticalOperationsPaginatedListResult result) {
+        if (searchOperationWindow != null) {
+            searchOperationWindow.setExternalItems(result.getOperationsList());
+            searchOperationWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), result.getOperationsList().size(), result.getTotalResults());
+        }
+    }
+
+    //
+    // ABSTRACT METHODS
+    //
+
+    public abstract void retrieveStatisticalOperations(int firstResult, int maxResults, MetamacWebCriteria criteria);
 }

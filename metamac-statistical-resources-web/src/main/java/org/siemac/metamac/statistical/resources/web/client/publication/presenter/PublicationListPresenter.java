@@ -25,6 +25,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCal
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
@@ -36,6 +38,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -83,6 +86,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
         // Search
         void clearSearchSection();
         PublicationVersionWebCriteria getPublicationVersionWebCriteria();
+        void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result);
     }
 
     @Inject
@@ -228,6 +232,22 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, null);
             }
         });
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    @Override
+    public void retrieveStatisticalOperationsForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, criteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForSearchSection(result);
+                    }
+                });
     }
 
     //

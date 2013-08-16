@@ -228,4 +228,11 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
         });
         return item;
     }
+
+    // Statistical operations
+
+    @Override
+    public void retrieveStatisticalOperations(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        getUiHandlers().retrieveStatisticalOperationsForSearchSection(firstResult, maxResults, criteria);
+    }
 }

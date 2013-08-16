@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.Qu
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 
@@ -307,4 +308,9 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     public void setDatasetVersionsForSearchSection(org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult result) {
         searchSectionStack.setDatasetVersions(result);
     };
+
+    @Override
+    public void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result) {
+        searchSectionStack.setStatisticalOperations(result);
+    }
 }

@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.P
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -313,5 +314,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Override
     public PublicationVersionWebCriteria getPublicationVersionWebCriteria() {
         return searchSectionStack.getPublicationVersionWebCriteria();
+    }
+
+    @Override
+    public void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result) {
+        searchSectionStack.setStatisticalOperations(result);
     }
 }

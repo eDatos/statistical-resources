@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public interface QueryListUiHandlers extends BaseUiHandlers {
 
@@ -29,4 +30,5 @@ public interface QueryListUiHandlers extends BaseUiHandlers {
 
     void retrieveStatisticalOperationsForDatasetVersionSelectionInSearchSection();
     void retrieveDatasetVersionsForSearchSection(int firstResult, int maxResults, DatasetVersionWebCriteria criteria);
+    void retrieveStatisticalOperationsForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria);
 }

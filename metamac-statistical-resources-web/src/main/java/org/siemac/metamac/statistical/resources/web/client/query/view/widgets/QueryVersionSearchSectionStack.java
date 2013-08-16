@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResource
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavigationClickHandler;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -134,5 +135,12 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
             }
         });
         return item;
+    }
+
+    // Statistical operations
+
+    @Override
+    public void retrieveStatisticalOperations(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        getUiHandlers().retrieveStatisticalOperationsForSearchSection(firstResult, maxResults, criteria);
     }
 }

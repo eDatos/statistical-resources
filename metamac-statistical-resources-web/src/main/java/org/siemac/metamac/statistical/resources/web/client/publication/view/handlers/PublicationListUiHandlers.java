@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandlers {
 
@@ -22,4 +23,7 @@ public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandl
     void publish(List<PublicationVersionDto> publicationVersionDtos);
     void programPublication(List<PublicationVersionDto> publicationVersionDtos);
     void version(List<PublicationVersionDto> publicationVersionDtos, VersionTypeEnum versionType);
+
+    // Related resources
+    void retrieveStatisticalOperationsForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria);
 }

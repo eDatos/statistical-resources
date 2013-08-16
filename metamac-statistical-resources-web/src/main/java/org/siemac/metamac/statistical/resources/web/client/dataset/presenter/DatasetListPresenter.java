@@ -95,6 +95,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         void setTemporalGranularitiesForSearchSection(GetTemporalGranularitiesListResult result);
         void setStatisticalOperationsForDsdSelectionInSearchSection(List<ExternalItemDto> results);
         void setDsdsForSearchSection(GetDsdsPaginatedListResult result);
+        void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result);
 
         // Search
         void clearSearchSection();
@@ -326,6 +327,18 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
                 getView().setDsdsForSearchSection(result);
             }
         });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, criteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForSearchSection(result);
+                    }
+                });
     }
 
     //
