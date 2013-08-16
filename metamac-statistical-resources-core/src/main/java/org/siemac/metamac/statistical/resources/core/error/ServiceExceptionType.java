@@ -58,6 +58,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_ERROR_SERVER_DOWN                                 = create("exception.resources.task.error.server_down");
     public static final CommonServiceExceptionType TASKS_ERROR                                             = create("exception.resources.task.error");
     public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                   = create("exception.resources.task.scheduler.error");
+    public static final CommonServiceExceptionType TASKS_JOB_RECOVERY_IN_PROCESS                           = create("exception.resources.task.error.recovery_in_process");
 
     // Dataset Importation
     public static final CommonServiceExceptionType FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION = create("exception.resources.dataset.importation.file_not_linked_to_any_dataset_in_statistical_operation");

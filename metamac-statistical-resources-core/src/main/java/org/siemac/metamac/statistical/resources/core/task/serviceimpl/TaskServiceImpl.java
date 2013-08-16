@@ -54,7 +54,6 @@ import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
-import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.exception.TaskNotFoundException;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
@@ -148,6 +147,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             if (sched.checkExists(jobKey)) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
+            // Validation: There shouldn't be a recovery job in process, please wait
+            if (sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId()))) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
+            }
 
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
@@ -155,36 +158,13 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                     .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
                     .usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
-            // Mark importation in progress
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey.getName()).distinctRoot().build();
-            PagedResult<Task> tasks = findTasksByCondition(ctx, conditions, PagingParameter.pageAccess(1, 1));
-            if (!tasks.getValues().isEmpty()) {
-                task = tasks.getValues().get(0);
-            }
-
-            if (task == null) {
-                // No existing Job
-                task = new Task(jobKey.getName());
-                task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-                task.setExtensionPoint(taskInfoDataset.getDatasetVersionId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
-                createTask(ctx, task);
-                SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
-                sched.scheduleJob(job, trigger);
-
-            } else if (TaskStatusTypeEnum.FAILED.equals(task.getStatus())) {
-                if (!sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId()))) {
-                    TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
-                    recoveryTaskInfo.setDatasetVersionId(taskInfoDataset.getDatasetVersionId());
-                    planifyRecoveryImportDataset(ctx, recoveryTaskInfo); // Perform a clean recovery
-                }
-
-                task.setCreatedDate(new DateTime());
-                task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-                task.setExtensionPoint(taskInfoDataset.getDatasetVersionId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
-                updateTask(ctx, task);
-
-                sched.addJob(job, false);
-            }
+            // No existing Job
+            task = new Task(jobKey.getName());
+            task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
+            task.setExtensionPoint(taskInfoDataset.getDatasetVersionId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
+            createTask(ctx, task);
+            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+            sched.scheduleJob(job, trigger);
 
         } catch (Exception e) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
@@ -339,9 +319,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             // Delete failed entry
             getTaskRepository().delete(task);
-
-            // Any
-            executeDormantJobsInThisDataset(taskInfoDataset.getDatasetVersionId());
         } catch (Exception e) {
             logger.error("Error while perform a recovery in dataset", e);
         }
