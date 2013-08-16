@@ -25,16 +25,40 @@ public class StatisticalResourcesUrnParserUtils {
         return matches(URN_SIEMAC_CLASS_CUBE_PREFIX, UrnUtils.extractPrefix(urn));
     }
 
+    public static String getPublicationVersionCodeFromUrnWithoutPrefix(String tripletIdentifier) {
+        if (StringUtils.isBlank(tripletIdentifier)) {
+            throw new IllegalArgumentException("Triplet identifier can not be blank");
+        }
+
+        return StatisticalResourcesUrnUtils.splitPublicationUrnWithoutPrefix(tripletIdentifier)[1];
+    }
+
     // DATASETS
 
     public static boolean isDatasetUrn(String urn) {
         return matches(URN_SIEMAC_CLASS_DATASET_PREFIX, UrnUtils.extractPrefix(urn));
     }
 
+    public static String getDatasetVersionCodeFromUrnWithoutPrefix(String tripletIdentifier) {
+        if (StringUtils.isBlank(tripletIdentifier)) {
+            throw new IllegalArgumentException("Triplet identifier can not be blank");
+        }
+
+        return StatisticalResourcesUrnUtils.splitDatasetUrnWithoutPrefix(tripletIdentifier)[1];
+    }
+
     // QUERIES
 
     public static boolean isQueryUrn(String urn) {
         return matches(URN_SIEMAC_CLASS_QUERY_PREFIX, UrnUtils.extractPrefix(urn));
+    }
+
+    public static String getQueryVersionCodeFromUrnWithoutPrefix(String tripletIdentifier) {
+        if (StringUtils.isBlank(tripletIdentifier)) {
+            throw new IllegalArgumentException("Triplet identifier can not be blank");
+        }
+
+        return StatisticalResourcesUrnUtils.splitQueryUrnWithoutPrefix(tripletIdentifier)[1];
     }
 
     // Generic methods
