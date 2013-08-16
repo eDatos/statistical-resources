@@ -40,7 +40,7 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
         QueryVersionWebCriteria criteria = (QueryVersionWebCriteria) getLifeCycleResourceWebCriteria(new QueryVersionWebCriteria());
 
         RelatedResourceDto selectedDatasetVersion = ((SearchRelatedResourceLinkItem) advancedSearchForm.getItem(QueryDS.RELATED_DATASET_VERSION)).getRelatedResourceDto();
-        criteria.setDatasetVersionUrn(selectedDatasetVersion.getUrn() != null ? selectedDatasetVersion.getUrn() : null);
+        criteria.setDatasetVersionUrn(selectedDatasetVersion != null ? selectedDatasetVersion.getUrn() : null);
 
         criteria.setQueryStatus(CommonUtils.getQueryStatusEnum(advancedSearchForm.getValueAsString(QueryDS.STATUS)));
         criteria.setQueryType(CommonUtils.getQueryTypeEnum(advancedSearchForm.getValueAsString(QueryDS.TYPE)));
