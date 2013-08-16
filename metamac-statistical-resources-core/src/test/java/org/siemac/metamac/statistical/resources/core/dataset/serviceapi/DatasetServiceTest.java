@@ -61,6 +61,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -87,6 +88,8 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Datas
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -780,6 +783,17 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion actual = datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), expected);
         assertEqualsDatasetVersion(expected, actual);
     }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME, QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME, QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME})
+    public void testUpdateDatasetVersionChangeDsdWithQueriesError() throws Exception {
+        DatasetVersion updatedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME);
+        updatedDataset.setRelatedDsdChanged(true);
+        updatedDataset.setRelatedDsd(generateOtherDsdVersion(updatedDataset.getRelatedDsd()));
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_CHANGE_DSD_SOME_QUERIES_EXIST, updatedDataset.getSiemacMetadataStatisticalResource().getUrn()));
+        datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), updatedDataset);
+    }
 
     @SuppressWarnings("static-access")
     @Test
@@ -1272,5 +1286,13 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     private URL buildURLForFile(String filename) throws Exception {
         return new URL("file", null, filename);
+    }
+    
+    private ExternalItem generateOtherDsdVersion(ExternalItem relatedDsd) {
+        ExternalItem dsd = StatisticalResourcesDoMocks.mockDsdExternalItem();
+        dsd.setCode(relatedDsd.getCode());
+        dsd.setUrn(StatisticalResourcesDoMocks.mockDsdUrn(relatedDsd.getCode(), "02.035"));
+        assertFalse(dsd.getUrn().equals(relatedDsd.getUrn()));
+        return dsd;
     }
 }

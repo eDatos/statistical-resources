@@ -21,13 +21,10 @@ public class DatasetMetadataEditionChecks extends MetadataEditionChecks {
         return false;
     }
 
-    public static boolean canAddDatasource(ProcStatusEnum procStatus) {
+    public static boolean canAlterDatasources(ProcStatusEnum procStatus) {
         return isDraftOrValidationRejected(procStatus);
     }
 
-    public static boolean canDeleteDatasource(ProcStatusEnum procStatus) {
-        return isDraftOrValidationRejected(procStatus);
-    }
 
     private static boolean isDraftOrValidationRejected(ProcStatusEnum procStatus) {
         if (isAnyStatus(procStatus, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED)) {

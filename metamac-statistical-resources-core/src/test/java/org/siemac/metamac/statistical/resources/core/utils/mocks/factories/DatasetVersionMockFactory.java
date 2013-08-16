@@ -20,12 +20,15 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<DatasetVersion> {
+
+    private static final String   NOT_INITIAL_VERSION                                                                = "002.002";
 
     public static final String    DATASET_VERSION_01_BASIC_NAME                                                      = "DATASET_VERSION_01_BASIC";
     private static DatasetVersion DATASET_VERSION_01_BASIC;
@@ -191,9 +194,39 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME                                  = "DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE";
     private static DatasetVersion DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE;
-    
-    public static final String    DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME                                  = "DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES";
+
+    public static final String    DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME                          = "DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES";
     private static DatasetVersion DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES;
+
+    public static final String    DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME                                      = "DATASET_VERSION_57_DRAFT_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_57_DRAFT_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME                      = "DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME                       = "DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME                        = "DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME                                  = "DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME                                  = "DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION_NAME                  = "DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME                   = "DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION_NAME                    = "DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION;
+
+    public static final String    DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION_NAME                              = "DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION";
+    private static DatasetVersion DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION;
 
     private static final String   INIT_VERSION                                                                       = "001.000";
     private static final String   SECOND_VERSION                                                                     = "002.000";
@@ -862,21 +895,21 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE;
     }
-    
+
     protected static DatasetVersion getDatasetVersion53InDiffusionValidationWithDatasource() {
         if (DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE == null) {
             DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DIFFUSION_VALIDATION);
         }
         return DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE;
     }
-    
+
     protected static DatasetVersion getDatasetVersion54InValidationRejectedWithDatasource() {
         if (DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE == null) {
             DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.VALIDATION_REJECTED);
         }
         return DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE;
     }
-    
+
     protected static DatasetVersion getDatasetVersion55PublishedWithDatasource() {
         if (DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE == null) {
             DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PUBLISHED);
@@ -890,7 +923,87 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES;
     }
-    
+
+    protected static DatasetVersion getDatasetVersion57DraftInitialVersion() {
+        if (DATASET_VERSION_57_DRAFT_INITIAL_VERSION == null) {
+            DATASET_VERSION_57_DRAFT_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DRAFT);
+            DATASET_VERSION_57_DRAFT_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        }
+        return DATASET_VERSION_57_DRAFT_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion58ProductionValidationInitialVersion() {
+        if (DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION == null) {
+            DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PRODUCTION_VALIDATION);
+            DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        }
+        return DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion59DiffusionValidationInitialVersion() {
+        if (DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION == null) {
+            DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DIFFUSION_VALIDATION);
+            DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        }
+        return DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion60ValidationRejectedInitialVersion() {
+        if (DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION == null) {
+            DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.VALIDATION_REJECTED);
+            DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        }
+        return DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion61PublishedInitialVersion() {
+        if (DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION == null) {
+            DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PUBLISHED);
+            DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        }
+        return DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion62DraftNotInitialVersion() {
+        if (DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION == null) {
+            DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DRAFT);
+            DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        }
+        return DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion63ProductionValidationNotInitialVersion() {
+        if (DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION == null) {
+            DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PRODUCTION_VALIDATION);
+            DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        }
+        return DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion64DiffusionValidationNotInitialVersion() {
+        if (DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION == null) {
+            DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DIFFUSION_VALIDATION);
+            DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        }
+        return DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion65ValidationRejectedNotInitialVersion() {
+        if (DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION == null) {
+            DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.VALIDATION_REJECTED);
+            DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        }
+        return DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION;
+    }
+
+    protected static DatasetVersion getDatasetVersion66PublishedNotInitialVersion() {
+        if (DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION == null) {
+            DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PUBLISHED);
+            DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        }
+        return DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION;
+    }
+
     private static DatasetVersion generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum procStatus) {
         DatasetVersion datasetVersion = createDatasetVersion(1);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(procStatus);

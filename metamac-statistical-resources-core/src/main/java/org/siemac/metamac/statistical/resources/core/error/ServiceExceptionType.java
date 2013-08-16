@@ -18,6 +18,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASET_EMPTY_DATASOURCES                               = create("exception.resources.dataset.empty_datasources");
     public static final CommonServiceExceptionType DATASET_NO_DATA                                         = create("exception.resources.dataset.empty_data");
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_ALTER_DATASOURCES                  = create("exception.resources.dataset_version.cant_alter_datasources");
+    public static final CommonServiceExceptionType DATASET_VERSION_CANT_CHANGE_DSD_SOME_QUERIES_EXIST      = create("exception.resources.dataset_version.cant_change_dsd_some_queries_exist");
 
     // Datasource
     public static final CommonServiceExceptionType DATASOURCE_NOT_FOUND                                    = create("exception.resources.datasource.not_found");
