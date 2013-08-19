@@ -308,6 +308,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
+                importDatasourcesWindow.setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
                 importDatasourcesWindow.show();
             }
         });
