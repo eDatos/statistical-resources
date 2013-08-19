@@ -12,6 +12,8 @@ import java.util.Set;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
@@ -180,8 +182,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         InternationalString keywords = new InternationalString();
         for (String locale : locales) {
             Set<String> words = new HashSet<String>();
-            words.addAll(splitLocalisedText(resource.getTitle(), locale));
-            words.addAll(splitLocalisedText(resource.getDescription(), locale));
+            words.addAll(processLocalisedText(resource.getTitle(), locale));
+            words.addAll(processLocalisedText(resource.getDescription(), locale));
             words = filterKeywords(words);
             if (words.size() > 0) {
                 LocalisedString localisedText = new LocalisedString(locale, StringUtils.join(words, " "));
@@ -194,11 +196,14 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         return null;
     }
 
-    private Collection<String> splitLocalisedText(InternationalString intString, String locale) {
+    private Collection<String> processLocalisedText(InternationalString intString, String locale) {
         Set<String> words = new HashSet<String>();
         String text = intString != null ? intString.getLocalisedLabel(locale) : null;
         if (text != null) {
-            words.addAll(Arrays.asList(text.trim().split("\\s+")));
+            String label = Jsoup.clean(text.trim(), Whitelist.none());
+            for (String word : Arrays.asList(label.split("\\s+"))) {
+                words.add(word.toLowerCase());
+            }
         }
         return words;
     }
