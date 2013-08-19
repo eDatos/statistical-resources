@@ -84,6 +84,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
             records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
         }
         listGrid.getListGrid().setData(records);
+        listGrid.refreshPaginationInfo(firstResult, publicationDtos.size(), totalResults);
     }
 
     @Override
