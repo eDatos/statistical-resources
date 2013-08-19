@@ -17,6 +17,7 @@ import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
+import com.arte.statistic.parser.sdmx.v2_1.constants.MappingConstants;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Header;
@@ -209,7 +210,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             }
         }
 
-        result.setObservationValue(new IdValuePair("OBS_VALUE", observation.getPrimaryMeasure()));
+        result.setObservationValue(new IdValuePair(MappingConstants.OBS_VALUE, observation.getPrimaryMeasure()));
 
         // TODO attr a nivel de observation List<AttributeBasicDto> attributes = observation.getAttributes();
         return result;
