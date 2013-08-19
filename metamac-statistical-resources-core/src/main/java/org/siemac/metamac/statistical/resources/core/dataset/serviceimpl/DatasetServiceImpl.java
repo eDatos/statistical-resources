@@ -132,7 +132,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         checkCanAlterDatasourcesInDatasetVersion(datasetVersion);
-        
+
         // Fill metadata
         fillMetadataForCreateDatasource(datasource, datasetVersion);
 
@@ -148,7 +148,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return datasource;
     }
-    
+
     private void checkCanAlterDatasourcesInDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
         if (!DatasetMetadataEditionChecks.canAlterDatasources(datasetVersion.getSiemacMetadataStatisticalResource().getProcStatus())) {
             throw new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATASOURCES, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
@@ -160,20 +160,19 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Validation of parameters
         datasetServiceInvocationValidator.checkUpdateDatasource(ctx, datasource);
-        
+
         checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
-        
+
         checkNotImportationTaskInProgress(ctx, datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
 
         // Update
         Datasource updatedDataSource = getDatasourceRepository().save(datasource);
-        
-        //TODO: IF CODE can be changed, attribute in dataset repository must be changed to ensure consistency
+
+        // TODO: IF CODE can be changed, attribute in dataset repository must be changed to ensure consistency
 
         return updatedDataSource;
     }
-    
-    
+
     @Override
     public Datasource retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
 
@@ -197,7 +196,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DatasetVersion datasetVersion = datasource.getDatasetVersion();
 
         checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
-        
+
         checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         checkDatasetVersionForDatasourceHasNoQueries(datasource);
@@ -216,7 +215,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getUrn());
         }
     }
-    
+
     private void deleteDatasourceData(Datasource datasource) throws MetamacException {
         try {
             InternationalStringDto internationalStringDto = new InternationalStringDto();
@@ -277,7 +276,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
 
         checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        
+
         checkDsdChanges(datasetVersion);
 
         // Check status
@@ -286,11 +285,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
 
         clearDataRelatedMetadata(datasetVersion);
-        
+
         datasetVersion = getDatasetVersionRepository().save(datasetVersion);
         return datasetVersion;
     }
-
 
     private void checkDsdChanges(DatasetVersion datasetVersion) throws MetamacException {
         if (datasetVersion.isRelatedDsdChanged()) {
@@ -300,17 +298,42 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             }
         }
     }
-    
-    protected void clearDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
-       /* for (Datasource datasource : resource.getDatasources()) {
-            getDatasourceRepository().delete(datasource);
-        }*/
-        //FIXME clear data
-        //1 Clear datasources
-        //2 Clear fields
-        //3 rmeove datasetRepository
-    }
 
+    private void clearDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
+        // Clear datasources
+        for (Datasource datasource : resource.getDatasources()) {
+            getDatasourceRepository().delete(datasource);
+        }
+        resource.getDatasources().clear();
+        resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
+
+        // Clear coverages
+        resource.getCoverages().clear();
+        resource.getGeographicCoverage().clear();
+        resource.getTemporalCoverage().clear();
+        resource.getMeasureCoverage().clear();
+
+        // Date start and end
+        resource.setDateStart(null);
+        resource.setDateEnd(null);
+
+        // Format extent
+        resource.setFormatExtentDimensions(null);
+        resource.setFormatExtentObservations(null);
+
+        // Date next update
+        if (BooleanUtils.isNotTrue(resource.getUserModifiedDateNextUpdate())) {
+            resource.setDateNextUpdate(null);
+        }
+
+        // Dataset repository
+        try {
+            statisticsDatasetRepositoriesServiceFacade.deleteDatasetRepository(resource.getDatasetRepositoryId());
+            resource.setDatasetRepositoryId(null);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error removing datasetRepository " + resource.getDatasetRepositoryId());
+        }
+    }
 
     @Override
     public DatasetVersion retrieveDatasetVersionByUrn(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
@@ -645,7 +668,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         processDateNextUpdate(resource);
     }
-    
 
     private void processStartEndDates(DatasetVersion resource) {
         List<TemporalCode> temporalCoverage = resource.getTemporalCoverage();

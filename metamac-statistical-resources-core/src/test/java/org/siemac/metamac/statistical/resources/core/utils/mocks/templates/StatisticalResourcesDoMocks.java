@@ -72,7 +72,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         code.setTitle(mockString(6));
         return code;
     }
-    
+
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
@@ -87,7 +87,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         Datasource datasource = new Datasource();
         datasource.setFilename(mockString(10));
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
-        datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename()+"_"+new DateTime().toString());
+        datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
 
         return datasource;
     }
@@ -270,7 +270,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         codeDimension.setTitle(title);
         return codeDimension;
     }
-    
+
     public static List<CodeDimension> mockCodeDimensionsWithIdentifiers(DatasetVersion datasetVersion, String dsdComponentId, String... identifiers) {
         List<CodeDimension> codes = new ArrayList<CodeDimension>();
         for (String identifier : identifiers) {
@@ -278,7 +278,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         }
         return codes;
     }
-    
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -286,7 +286,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum artefactType) {
         SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
         mockLifeCycleStatisticalResource(resource, artefactType);
-        
+
         String resourceCode = resource.getCode();
 
         resource.setLanguage(mockCodeExternalItem("language01"));
@@ -320,8 +320,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
                 break;
             default:
                 break;
-        } 
-        
+        }
+
         resource.setCommonMetadata(mockCommonConfigurationExternalItem());
 
         resource.setCreator(mockOrganizationUnitExternalItem("creator"));
@@ -413,7 +413,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
 
     protected abstract void setSpecialCasesIdentifiableStatisticalResourceMock(IdentifiableStatisticalResource resource, TypeRelatedResourceEnum artefactType);
-    
+
     protected abstract void setSpecialCasesStatisticalResourceMock(StatisticalResource resource);
 
     protected abstract void setSpecialCasesQueryVersionMock(QueryVersion query);
@@ -495,7 +495,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         String code = mockCode();
         return mockExternalItem(code, mockCommonConfigurationUrn(code), TypeExternalArtefactsEnum.CONFIGURATION);
     }
-    
+
     public static ExternalItem mockStatisticalOperationExternalItem() {
         String code = mockCode();
         return mockStatisticalOperationExternalItem(code);
@@ -557,6 +557,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static ExternalItem mockCodeExternalItem(String code) {
+        return mockExternalItem(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
+    }
+
+    public static ExternalItem mockCodeExternalItem(String code, String title) {
         return mockExternalItem(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
     }
 
