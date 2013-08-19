@@ -27,7 +27,11 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
 
     public void setDatasetVersion(String datasetVersionUrn) {
         ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN)).setDefaultValue(datasetVersionUrn);
-        ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN)).setDefaultValue(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
+        setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
+    }
+
+    public void setStatisticalOperation(String statisticalOperationUrn) {
+        ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN)).setDefaultValue(statisticalOperationUrn);
     }
 
     private class UploadDatasourceForm extends UploadForm {
