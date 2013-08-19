@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
+package org.siemac.metamac.statistical.resources.core.io.serviceapi;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

@@ -17,7 +17,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.Code
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DataManipulateTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceDatasourceManagementTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceImportationTest;
@@ -28,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedReso
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtilsTest;
+import org.siemac.metamac.statistical.resources.core.io.serviceapi.DataManipulateTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFillerTest;
@@ -52,56 +52,16 @@ import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryV
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 
-
 @RunWith(Suite.class)
-@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,
-                     StatisticalResourcesOptimisticLockingTest.class,
-                     InternationalStringRepositoryTest.class,
-                     SiemacMetadataStatisticalResourceRepositoryTest.class,
-                     IdentifiableStatisticalResourceRepositoryTest.class,
-                     BaseInvocationValidatorTest.class,
-                     BaseDto2DoMapperTest.class,
-                     QueryRepositoryTest.class,
-                     QueryVersionRepositoryTest.class, 
-                     QueryServiceTest.class,  
-                     QueryDo2DtoMapperTest.class,
-                     QueryDto2DoMapperTest.class,
-                     DatasourceRepositoryTest.class,
-                     DatasetRepositoryTest.class,
-                     CodeDimensionRepositoryTest.class,
-                     DatasetVersionRepositoryTest.class, 
-                     DatasetDo2DtoMapperTest.class,
-                     DatasetDto2DoMapperTest.class,
-                     DatasetServiceTest.class, 
-                     DatasetServiceImportationTest.class, 
-                     DatasetServiceDatasourceManagementTest.class, 
-                     PublicationRepositoryTest.class,
-                     PublicationVersionRepositoryTest.class,
-                     CubeRepositoryTest.class,
-                     ChapterRepositoryTest.class,
-                     PublicationServiceTest.class,
-                     PublicationDo2DtoMapperTest.class,
-                     PublicationDto2DoMapperTest.class,
-                     ProcStatusEnumUtilsTest.class, 
-                     TypeRelatedResourceEnumUtilsTest.class,
-                     QueryStatusEnumUtilsTest.class,
-                     LifecycleCommonMetadataCheckerTest.class,
-                     LifecycleCheckerTest.class,
-                     SiemacLifecycleCheckerTest.class,
-                     LifecycleFillerTest.class,
-                     SiemacLifecycleFillerTest.class, 
-                     DatasetLifecycleServiceTest.class,
-                     PublicationLifecycleServiceTest.class,
-                     QueryLifecycleServiceTest.class,
-                     VersionUtilsTest.class,
-                     CommonDto2DoMapperTest.class,
-                     CommonDo2DtoMapperTest.class,
-                     ExternalItemCheckerTest.class,
-                     DatasetIntegrationServiceTest.class,
-                     PublicationIntegrationServiceTest.class,
-                     QueryIntegrationServiceTest.class,
-                     RestCriteriaUtilsTest.class,
-                     StatisticalResourcesUrnParserUtilsTest.class,
-                     DataManipulateTest.class})
+@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class, StatisticalResourcesOptimisticLockingTest.class, InternationalStringRepositoryTest.class,
+        SiemacMetadataStatisticalResourceRepositoryTest.class, IdentifiableStatisticalResourceRepositoryTest.class, BaseInvocationValidatorTest.class, BaseDto2DoMapperTest.class,
+        QueryRepositoryTest.class, QueryVersionRepositoryTest.class, QueryServiceTest.class, QueryDo2DtoMapperTest.class, QueryDto2DoMapperTest.class, DatasourceRepositoryTest.class,
+        DatasetRepositoryTest.class, CodeDimensionRepositoryTest.class, DatasetVersionRepositoryTest.class, DatasetDo2DtoMapperTest.class, DatasetDto2DoMapperTest.class, DatasetServiceTest.class,
+        DatasetServiceImportationTest.class, DatasetServiceDatasourceManagementTest.class, PublicationRepositoryTest.class, PublicationVersionRepositoryTest.class, CubeRepositoryTest.class,
+        ChapterRepositoryTest.class, PublicationServiceTest.class, PublicationDo2DtoMapperTest.class, PublicationDto2DoMapperTest.class, ProcStatusEnumUtilsTest.class,
+        TypeRelatedResourceEnumUtilsTest.class, QueryStatusEnumUtilsTest.class, LifecycleCommonMetadataCheckerTest.class, LifecycleCheckerTest.class, SiemacLifecycleCheckerTest.class,
+        LifecycleFillerTest.class, SiemacLifecycleFillerTest.class, DatasetLifecycleServiceTest.class, PublicationLifecycleServiceTest.class, QueryLifecycleServiceTest.class, VersionUtilsTest.class,
+        CommonDto2DoMapperTest.class, CommonDo2DtoMapperTest.class, ExternalItemCheckerTest.class, DatasetIntegrationServiceTest.class, PublicationIntegrationServiceTest.class,
+        QueryIntegrationServiceTest.class, RestCriteriaUtilsTest.class, StatisticalResourcesUrnParserUtilsTest.class, DataManipulateTest.class})
 public class StatisticalResourcesSuite {
 }
