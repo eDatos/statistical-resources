@@ -9,9 +9,11 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribu
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
+import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Group;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
@@ -59,4 +61,13 @@ public interface MetamacSdmx2StatRepoMapper {
      */
     public String generateAttributeKeyInAttachmentLevel(AttributeDto attributeDto, AttributeRelationship attributeRelationship, Map<String, List<ComponentInfo>> groupDimensionMapInfo)
             throws MetamacException;
+
+    /**
+     * Convert parser conditions into repository conditions
+     * 
+     * @param serieConditions
+     * @return
+     * @throws MetamacException
+     */
+    public List<ConditionObservationDto> conditionsToRepository(List<DimensionCodeInfo> serieConditions) throws MetamacException;
 }

@@ -16,11 +16,13 @@ import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
+import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Group;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Observation;
@@ -244,6 +246,27 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
         }
 
         return customKeyAttribute.toString();
+    }
+
+    @Override
+    public List<ConditionObservationDto> conditionsToRepository(List<DimensionCodeInfo> serieConditions) throws MetamacException {
+        if (serieConditions == null) {
+            return null;
+        }
+
+        List<ConditionObservationDto> conditions = new ArrayList<ConditionObservationDto>(serieConditions.size());
+        for (DimensionCodeInfo dimensionCodeInfo : serieConditions) {
+            ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
+            for (String code : dimensionCodeInfo.getCodes()) {
+                CodeDimensionDto codeDimensionDto = new CodeDimensionDto();
+                codeDimensionDto.setDimensionId(dimensionCodeInfo.getCode());
+                codeDimensionDto.setCodeDimensionId(code);
+                conditionObservationDto.addCodesDimension(codeDimensionDto);
+            }
+            conditions.add(conditionObservationDto);
+        }
+
+        return conditions;
     }
 
     /**************************************************************************
