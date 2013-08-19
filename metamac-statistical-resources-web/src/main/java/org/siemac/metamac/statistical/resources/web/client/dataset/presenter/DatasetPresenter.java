@@ -15,6 +15,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 
@@ -51,6 +53,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
 
         void setDataset(DatasetVersionDto datasetDto);
+        void setDatasetVersions(List<DatasetVersionDto> datasetVersionDtos);
         void showMetadata();
     }
 
@@ -120,16 +123,33 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         getView().showMetadata();
     }
 
-    public void retrieveDataset(String datasetIdentifier) {
+    private void retrieveDataset(String datasetIdentifier) {
         String urn = CommonUtils.generateDatasetUrn(datasetIdentifier);
         dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetVersionResult result) {
                 getView().setDataset(result.getDatasetVersionDto());
+
+                // Load the dataset versions
+                retrieveDatasetVersions(result.getDatasetVersionDto().getUrn());
             }
         });
     }
+
+    private void retrieveDatasetVersions(String urn) {
+        dispatcher.execute(new GetVersionsOfDatasetAction(urn), new WaitingAsyncCallbackHandlingError<GetVersionsOfDatasetResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetVersionsOfDatasetResult result) {
+                getView().setDatasetVersions(result.getDatasetVersionDtos());
+            }
+        });
+    }
+
+    //
+    // NAVIGATION
+    //
 
     @Override
     public void goToDatasetMetadata() {
@@ -142,6 +162,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public void goToDatasetDatasources() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
         hierarchy.add(new PlaceRequest(NameTokens.datasetDatasourcesPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goToDatasetVersion(String urn) {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetsListPage);
+        hierarchy.add(PlaceRequestUtils.buildRelativeDatasetPlaceRequest(urn));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 }

@@ -226,6 +226,8 @@ public class PublicationMetadataTabPresenter
             public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
                 getView().setPublication(result.getPublicationVersionDto());
+
+                // TODO Reload the list of versions
             }
         });
     }

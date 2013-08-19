@@ -6,4 +6,5 @@ public interface PublicationUiHandlers extends UiHandlers {
 
     void goToPublicationMetadata();
     void goToPublicationStructure();
+    public void goToPublicationVersion(String urn);
 }

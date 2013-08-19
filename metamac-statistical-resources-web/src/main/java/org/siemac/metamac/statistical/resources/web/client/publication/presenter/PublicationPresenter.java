@@ -19,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
@@ -66,6 +68,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {
 
         void setPublication(PublicationVersionDto publicationDto);
+        void setPublicationVersions(List<PublicationVersionDto> publicationVersionDtos);
         void showMetadata();
     }
 
@@ -130,9 +133,26 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
             @Override
             public void onWaitSuccess(GetPublicationVersionResult result) {
                 getView().setPublication(result.getPublicationVersionDto());
+
+                // Load the publication versions
+                retrievePublicationVersions(result.getPublicationVersionDto().getUrn());
             }
         });
     }
+
+    private void retrievePublicationVersions(String urn) {
+        dispatcher.execute(new GetVersionsOfPublicationAction(urn), new WaitingAsyncCallbackHandlingError<GetVersionsOfPublicationResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetVersionsOfPublicationResult result) {
+                getView().setPublicationVersions(result.getPublicationVersionDtos());
+            }
+        });
+    }
+
+    //
+    // NAVIGATION
+    //
 
     @Override
     public void goToPublicationMetadata() {
@@ -145,6 +165,13 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     public void goToPublicationStructure() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.publicationPage);
         hierarchy.add(new PlaceRequest(NameTokens.publicationStructurePage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goToPublicationVersion(String urn) {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.publicationsListPage);
+        hierarchy.add(PlaceRequestUtils.buildRelativePublicationPlaceRequest(urn));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 }

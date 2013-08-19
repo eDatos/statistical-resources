@@ -2,12 +2,16 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.List;
+
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
+import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationVersionsSectionStack;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
@@ -16,6 +20,8 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
+import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -23,12 +29,16 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandlers> implements PublicationPresenter.PublicationView {
 
-    private VLayout      panel;
-    private TitleLabel   titleLabel;
+    private VLayout                         panel;
+    private TitleLabel                      titleLabel;
 
-    private CustomTabSet tabSet;
-    private Tab          publicationMetadataTab;
-    private Tab          publicationStructureTab;
+    private PublicationVersionsSectionStack versionsSectionStack;
+
+    private CustomTabSet                    tabSet;
+    private Tab                             publicationMetadataTab;
+    private Tab                             publicationStructureTab;
+
+    private PublicationVersionDto           publicationVersionDto;
 
     @Inject
     public PublicationViewImpl(PublicationMetadataTabView metadataView, PublicationStructureTabView structureView) {
@@ -38,16 +48,41 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
         titleLabel = new TitleLabel(new String());
         titleLabel.setVisible(false);
 
+        //
+        // PUBLICATION VERSIONS
+        //
+
+        versionsSectionStack = new PublicationVersionsSectionStack(getConstants().publicationVersions());
+        versionsSectionStack.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                String urn = ((PublicationRecord) event.getRecord()).getUrn();
+                getUiHandlers().goToPublicationVersion(urn);
+            }
+        });
+
+        // TABS
+
         tabSet = new CustomTabSet();
         publicationMetadataTab = new Tab(getConstants().publicationMetadata());
         publicationStructureTab = new Tab(getConstants().publicationStructure());
         tabSet.setTabs(publicationMetadataTab, publicationStructureTab);
 
+        //
+        // PANEL LAYOUT
+        //
+
         VLayout subPanel = new VLayout();
         subPanel.setOverflow(Overflow.SCROLL);
-        subPanel.setMargin(15);
-        subPanel.addMember(titleLabel);
-        subPanel.addMember(tabSet);
+        subPanel.setMembersMargin(5);
+        subPanel.addMember(versionsSectionStack);
+
+        VLayout tabSubPanel = new VLayout();
+        tabSubPanel.addMember(titleLabel);
+        tabSubPanel.addMember(tabSet);
+        tabSubPanel.setMargin(15);
+        subPanel.addMember(tabSubPanel);
 
         panel.addMember(subPanel);
 
@@ -74,8 +109,15 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     @Override
     public void setPublication(PublicationVersionDto publicationVersionDto) {
         // TODO Update the title label when the title is changed!!
+        this.publicationVersionDto = publicationVersionDto;
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
         titleLabel.show();
+    }
+
+    @Override
+    public void setPublicationVersions(List<PublicationVersionDto> publicationVersionDtos) {
+        versionsSectionStack.setPublicationVersions(publicationVersionDtos);
+        versionsSectionStack.selectPublicationVersion(publicationVersionDto);
     }
 
     @Override

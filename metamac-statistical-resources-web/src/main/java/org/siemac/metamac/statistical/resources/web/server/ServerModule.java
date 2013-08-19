@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetStatisticOfficialitiesActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetVersionsOfDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
@@ -37,6 +38,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.publication.
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationStructureActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetVersionsOfPublicationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationStructureElementActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.SavePublicationVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.UpdatePublicationStructureElementLocationActionHandler;
@@ -60,6 +62,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
@@ -85,6 +88,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
@@ -161,7 +165,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDatasetDimensionCoverageAction.class, GetDatasetDimensionCoverageActionHandler.class);
         bindHandler(GetStatisticOfficialitiesAction.class, GetStatisticOfficialitiesActionHandler.class);
         bindHandler(GetDatasetVersionMainCoveragesAction.class, GetDatasetVersionMainCoveragesActionHandler.class);
-        
+        bindHandler(GetVersionsOfDatasetAction.class, GetVersionsOfDatasetActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);
@@ -174,6 +178,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SavePublicationStructureElementAction.class, SavePublicationStructureElementActionHandler.class);
         bindHandler(UpdatePublicationStructureElementLocationAction.class, UpdatePublicationStructureElementLocationActionHandler.class);
         bindHandler(DeletePublicationStructureElementAction.class, DeletePublicationStructureElementActionHandler.class);
+        bindHandler(GetVersionsOfPublicationAction.class, GetVersionsOfPublicationActionHandler.class);
 
         // QUERIES
         bindHandler(GetQueriesAction.class, GetQueriesActionHandler.class);

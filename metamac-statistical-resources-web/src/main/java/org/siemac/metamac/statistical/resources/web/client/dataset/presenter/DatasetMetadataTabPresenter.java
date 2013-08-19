@@ -254,6 +254,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
                 getView().setDataset(result.getDatasetVersionDto());
+                // TODO reload the list of versions
             }
         });
     }
