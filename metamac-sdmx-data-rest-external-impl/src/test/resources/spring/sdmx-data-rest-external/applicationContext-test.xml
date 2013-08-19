@@ -13,17 +13,11 @@
     <context:annotation-config />
 
     <!-- scans for @Components, @Repositories, @Services, ... -->
-    <context:component-scan  base-package="org.siemac.metamac.sdmx.data.rest.external" >
+    <context:component-scan  base-package="org.siemac.metamac.sdmx.data.rest.external, org.siemac.metamac.statistical.resources.core.io" >
     </context:component-scan>
-<!--     <context:component-scan  base-package="org.siemac.metamac.sdmx.data.rest.external, com.arte.statistic.sdmx.srm.core.*.mapper" > -->
-<!--         <context:exclude-filter type="regex" expression="com.arte.statistic.sdmx.srm.core.*.mapper.*Do2DtoMapperImpl*" /> -->
-<!--         <context:exclude-filter type="regex" expression="com.arte.statistic.sdmx.srm.core.*.mapper.*Dto2DoMapperImpl*" /> -->
-<!--         <context:exclude-filter type="regex" expression="com.arte.statistic.sdmx.srm.core.*.mapper.*Jaxb2DoMapperImpl*" /> -->
-<!--     </context:component-scan> -->
-
 
     <!-- Metamac environment configuration -->
-    <bean id="configurationService" class="org.siemac.metamac.core.common.conf.ConfigurationServiceImpl">
+    <bean id="configurationService" class="org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfigurationImpl">
         <property name="systemConfigurationFile">
             <value>classpath:metamac/environment-test.xml</value>
         </property>
