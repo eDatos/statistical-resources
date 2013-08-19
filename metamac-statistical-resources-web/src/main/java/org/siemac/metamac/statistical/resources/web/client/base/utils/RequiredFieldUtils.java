@@ -15,7 +15,9 @@ import static org.siemac.metamac.statistical.resources.web.client.model.ds.Siema
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.PUBLISHER;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.NEXT_VERSION;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.VERSION_RATIONALE_TYPES;
-import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.RELATED_DATASET_VERSION;
+import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.LATEST_N_DATA;
+import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.SELECTION;
+import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.TYPE;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 
@@ -69,12 +71,14 @@ public class RequiredFieldUtils {
 
     // QUERY VERSION
 
-    private static final String[] queryFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA,
-            RELATED_DATASET_VERSION                                 };
+    private static final String[] queryFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, TYPE, SELECTION, LATEST_N_DATA};
     private static final String[] queryFieldsToDiffusionValidation  = queryFieldsToProductionValidation;
     private static final String[] queryFieldsToPublication          = queryFieldsToDiffusionValidation;
 
     public static String[] getQueryRequiredFieldsToNextProcStatus(ProcStatusEnum currentProcStatus) {
+        if (currentProcStatus == null) {
+            return queryFieldsToProductionValidation;
+        }
         switch (currentProcStatus) {
             case DRAFT:
                 return queryFieldsToProductionValidation;
