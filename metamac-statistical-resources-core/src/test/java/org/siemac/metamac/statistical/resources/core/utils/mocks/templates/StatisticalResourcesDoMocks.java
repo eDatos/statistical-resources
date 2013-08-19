@@ -646,16 +646,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    public static String mockDatasetVersionRelatedUrn() {
-        // TODO: change when dataset version urn can be generated with generatorUrnUtils
-        return "TODO:mock";
-    }
-
-    public static String mockPublicationVersionRelatedUrn() {
-        // TODO: change when publication version urn can be generated with generatorUrnUtils
-        return "TODO:mock";
-    }
-
     // -----------------------------------------------------------------
     // Temporal code
     // -----------------------------------------------------------------
