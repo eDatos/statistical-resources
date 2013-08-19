@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
+import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
@@ -397,22 +398,34 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             versionForm.setLifeCycleStatisticalResourceDto(queryDto);
         }
 
-        private void fillEditionForm(QueryVersionDto queryDto) {
-            identifiersEditionForm.setNameableStatisticalResourceDto(queryDto);
-            identifiersCreationForm.setNameableStatisticalResourceDto(queryDto);
-            contentDescriptorsEditionForm.setLifeCycleStatisticalResourceDto(queryDto);
-            thematicContentClassifiersEditionForm.setStatisticalResourceDto(queryDto);
+        private void fillEditionForm(QueryVersionDto queryVersionDto) {
+
+            String[] requiredFieldsToNextProcStatus = RequiredFieldUtils.getQueryRequiredFieldsToNextProcStatus(queryVersionDto.getProcStatus());
+
+            identifiersEditionForm.setNameableStatisticalResourceDto(queryVersionDto);
+            identifiersEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
+
+            identifiersCreationForm.setNameableStatisticalResourceDto(queryVersionDto);
+            identifiersCreationForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
+
+            contentDescriptorsEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
+            contentDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
+
+            thematicContentClassifiersEditionForm.setStatisticalResourceDto(queryVersionDto);
+            thematicContentClassifiersEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
             // WORKAROUND, this form is continuously rebuilt
             mainFormLayout.removeEditionCanvas(productionDescriptorsEditionForm);
             productionDescriptorsEditionForm = new QueryProductionDescriptorsEditionForm();
             productionDescriptorsEditionForm.setUiHandlers(getUiHandlers());
-            productionDescriptorsEditionForm.setQueryDto(queryDto);
+            productionDescriptorsEditionForm.setQueryDto(queryVersionDto);
+            productionDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
             mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm, 4);
 
             // WORKAROUND
 
-            lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(queryDto);
+            lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
+            lifeCycleEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
             if (isCreationMode()) {
                 identifiersEditionForm.hide();
                 lifeCycleEditionForm.hide();
@@ -422,7 +435,9 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                 lifeCycleEditionForm.show();
                 identifiersCreationForm.hide();
             }
-            versionEditionForm.setLifeCycleStatisticalResourceDto(queryDto);
+
+            versionEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
+            versionEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
         }
 
         private QueryVersionDto getQuery() {
