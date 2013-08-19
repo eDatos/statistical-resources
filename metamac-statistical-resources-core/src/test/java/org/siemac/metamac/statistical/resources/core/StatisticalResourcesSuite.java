@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.Data
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DataManipulateTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetIntegrationServiceTest;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceDatasourceManagementTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceImportationTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
@@ -73,6 +74,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      DatasetDto2DoMapperTest.class,
                      DatasetServiceTest.class, 
                      DatasetServiceImportationTest.class, 
+                     DatasetServiceDatasourceManagementTest.class, 
                      PublicationRepositoryTest.class,
                      PublicationVersionRepositoryTest.class,
                      CubeRepositoryTest.class,
