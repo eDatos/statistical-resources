@@ -152,7 +152,6 @@ import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemReposi
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
@@ -759,9 +758,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
 
         String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
 
         statisticalResourcesServiceFacade.deleteDatasource(getServiceContextAdministrador(), datasourceUrn);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
+
         statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceUrn);
     }
 
@@ -1405,15 +1406,15 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
         assertEquals(datasetOper2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
     public void testRetrieveDatasetVersionMainCoverages() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME);
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        
-        DatasetVersionMainCoveragesDto mainCoveragesDto = statisticalResourcesServiceFacade.retrieveDatasetVersionMainCoverages(getServiceContextAdministrador(), urn); 
+
+        DatasetVersionMainCoveragesDto mainCoveragesDto = statisticalResourcesServiceFacade.retrieveDatasetVersionMainCoverages(getServiceContextAdministrador(), urn);
 
         DatasetsAsserts.assertEqualsDatasetVersionMainCoverages(mainCoveragesDto, datasetVersion.getGeographicCoverage(), datasetVersion.getTemporalCoverage(), datasetVersion.getMeasureCoverage());
     }
