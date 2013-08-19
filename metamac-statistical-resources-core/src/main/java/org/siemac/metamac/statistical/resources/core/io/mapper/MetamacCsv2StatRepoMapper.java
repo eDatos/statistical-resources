@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.mapper;
+package org.siemac.metamac.statistical.resources.core.io.mapper;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 

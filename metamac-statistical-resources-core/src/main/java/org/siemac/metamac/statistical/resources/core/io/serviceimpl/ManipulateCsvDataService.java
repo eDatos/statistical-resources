@@ -1,10 +1,10 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
+package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
 import java.io.File;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 
 // TODO mover la definición de este servicio al btdesign de sculptor
 public interface ManipulateCsvDataService {

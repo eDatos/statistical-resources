@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.mapper;
+package org.siemac.metamac.statistical.resources.core.io.mapper;
 
 import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.END;
 import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.START;

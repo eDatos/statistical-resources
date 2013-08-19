@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
+package org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators;
 
 import java.util.HashMap;
 import java.util.HashSet;

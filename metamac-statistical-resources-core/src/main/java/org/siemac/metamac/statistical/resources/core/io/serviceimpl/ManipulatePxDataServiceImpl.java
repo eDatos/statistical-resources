@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
+package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,9 +13,9 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.io.FileUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacPx2StatRepoMapper;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacPx2StatRepoMapperImpl;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacPx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacPx2StatRepoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

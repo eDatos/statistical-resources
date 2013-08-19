@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
-import org.siemac.metamac.statistical.resources.core.dataset.mapper.MetamacSdmx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;

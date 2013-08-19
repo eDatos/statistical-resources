@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
+package org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators;
 
 import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.END;
 import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.START;

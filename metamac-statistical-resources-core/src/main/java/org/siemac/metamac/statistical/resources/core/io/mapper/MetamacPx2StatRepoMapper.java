@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.mapper;
+package org.siemac.metamac.statistical.resources.core.io.mapper;
 
 import java.util.List;
 import java.util.Map;

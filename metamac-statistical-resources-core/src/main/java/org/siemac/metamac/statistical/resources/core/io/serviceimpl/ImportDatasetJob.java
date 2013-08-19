@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
+package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
