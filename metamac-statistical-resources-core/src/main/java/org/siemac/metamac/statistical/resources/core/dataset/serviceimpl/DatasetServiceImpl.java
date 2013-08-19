@@ -695,7 +695,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             DateTime mostRecentDate = null;
             for (Datasource datasource : resource.getDatasources()) {
                 if (datasource.getDateNextUpdate() != null) {
-                    if (mostRecentDate == null || datasource.getDateNextUpdate().isBefore(mostRecentDate.getMillis())) {
+                    if (isNewDateBestOptionForDateNextUpdate(mostRecentDate, datasource.getDateNextUpdate())) {
                         mostRecentDate = datasource.getDateNextUpdate();
                     }
                 }
@@ -703,6 +703,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             resource.setDateNextUpdate(mostRecentDate);
             resource.setUserModifiedDateNextUpdate(false);
         }
+    }
+
+    private boolean isNewDateBestOptionForDateNextUpdate(DateTime current, DateTime newCandidate) {
+        if (current == null) {
+            return true;
+        }
+        if (newCandidate.isAfterNow() && newCandidate.isBefore(current)) {
+            return true;
+        }
+        return false;
     }
 
     private void processDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
