@@ -6,10 +6,13 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent.UpdateResourceHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -34,6 +37,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
@@ -43,7 +47,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy> implements PublicationUiHandlers {
+public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy> implements PublicationUiHandlers, UpdateResourceHandler {
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
@@ -117,13 +121,13 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     }
 
     private void loadInitialData() {
-        String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
-        String publicationUrn = CommonUtils.generatePublicationUrn(publicationCode);
-        retrievePublication(publicationUrn);
+        String publicationIdentifier = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
+        String publicationUrn = CommonUtils.generatePublicationUrn(publicationIdentifier);
+        retrievePublicationByUrn(publicationUrn);
         getView().showMetadata();
     }
 
-    private void retrievePublication(String urn) {
+    private void retrievePublicationByUrn(String urn) {
         dispatcher.execute(new GetPublicationVersionAction(urn), new WaitingAsyncCallback<GetPublicationVersionResult>() {
 
             @Override
@@ -148,6 +152,14 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
                 getView().setPublicationVersions(result.getPublicationVersionDtos());
             }
         });
+    }
+
+    @ProxyEvent
+    @Override
+    public void onUpdateResource(UpdateResourceEvent event) {
+        if (TypeRelatedResourceEnum.PUBLICATION.equals(event.getResourceType())) {
+            retrievePublicationByUrn(event.getUrn());
+        }
     }
 
     //

@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent.UpdateResourceHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -30,6 +33,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
@@ -39,7 +43,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers {
+public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers, UpdateResourceHandler {
 
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
@@ -118,13 +122,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     }
 
     private void loadInitialData() {
-        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
-        retrieveDataset(datasetCode);
+        String datasetIdentifier = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        String datasetUrn = CommonUtils.generateDatasetUrn(datasetIdentifier);
+        retrieveDatasetByUrn(datasetUrn);
         getView().showMetadata();
     }
 
-    private void retrieveDataset(String datasetIdentifier) {
-        String urn = CommonUtils.generateDatasetUrn(datasetIdentifier);
+    private void retrieveDatasetByUrn(String urn) {
         dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
@@ -145,6 +149,14 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
                 getView().setDatasetVersions(result.getDatasetVersionDtos());
             }
         });
+    }
+
+    @ProxyEvent
+    @Override
+    public void onUpdateResource(UpdateResourceEvent event) {
+        if (TypeRelatedResourceEnum.DATASET.equals(event.getResourceType())) {
+            retrieveDatasetByUrn(event.getUrn());
+        }
     }
 
     //

@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -17,6 +18,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.presenter.Statis
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -168,6 +170,8 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             public void onWaitSuccess(SaveDatasetVersionResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().datasetSaved());
                 getView().setDataset(result.getSavedDatasetVersion());
+
+                UpdateResourceEvent.fire(DatasetMetadataTabPresenter.this, result.getSavedDatasetVersion().getUrn(), TypeRelatedResourceEnum.DATASET);
             }
         });
     }
