@@ -179,6 +179,16 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
             }
         });
 
+        // Delete
+
+        mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().deleteDatasetVersion(datasetVersionDto.getUrn());
+            }
+        });
+
         // Life cycle
 
         mainFormLayout.getProductionValidationButton().addClickHandler(new ClickHandler() {
@@ -519,7 +529,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionDtosAsRelatedResourceDtos(result.getDatasetVersionDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
-    
+
     @Override
     public void setDatasetsMainCoverages(GetDatasetVersionMainCoveragesResult result) {
         contentDescriptorsForm.setCoverages(result.getGeographicCoverage(), result.getTemporalCoverage(), result.getMeasureCoverage());

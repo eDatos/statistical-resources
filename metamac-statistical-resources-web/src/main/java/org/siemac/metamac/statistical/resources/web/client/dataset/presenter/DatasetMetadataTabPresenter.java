@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -26,6 +27,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCal
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesResult;
@@ -172,6 +175,19 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
                 getView().setDataset(result.getSavedDatasetVersion());
 
                 UpdateResourceEvent.fire(DatasetMetadataTabPresenter.this, result.getSavedDatasetVersion().getUrn(), TypeRelatedResourceEnum.DATASET);
+            }
+        });
+    }
+
+    @Override
+    public void deleteDatasetVersion(String urn) {
+        List<String> urns = new ArrayList<String>();
+        urns.add(urn);
+        dispatcher.execute(new DeleteDatasetVersionsAction(urns), new WaitingAsyncCallbackHandlingError<DeleteDatasetVersionsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(DeleteDatasetVersionsResult result) {
+                goToDatasetList();
             }
         });
     }
@@ -363,5 +379,13 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
                 getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());
             }
         });
+    }
+
+    //
+    // NAVIGATION
+    //
+
+    private void goToDatasetList() {
+        placeManager.revealRelativePlace(-2);
     }
 }

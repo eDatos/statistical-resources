@@ -25,14 +25,15 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void retrieveDataset(String datasetIdentifier);
     void saveDataset(DatasetVersionDto datasetDto);
     void retrieveMainCoveragesForDatasetVersion(String datasetVersionUrn);
+    void deleteDatasetVersion(String urn);
 
     // DSD
     void retrieveDsdsForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria);
     void retrieveStatisticalOperationsForDsdSelection();
 
-    // Geo granularities
+    // Geographic granularities
     void retrieveCodesForGeographicalGranularities(int firstResult, int maxResults, MetamacWebCriteria criteria);
-    // time codes
+    // Time codes
     void retrieveTemporalCodesForField(int firstResult, int maxResults, MetamacWebCriteria webCriteria, DatasetMetadataExternalField updateFrequency);
 
     // RELATED DATASETS

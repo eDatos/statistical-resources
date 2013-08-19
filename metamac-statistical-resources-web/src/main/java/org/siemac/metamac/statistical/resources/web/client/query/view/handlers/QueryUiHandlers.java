@@ -12,6 +12,7 @@ public interface QueryUiHandlers extends BaseUiHandlers {
     void goToQueries();
 
     void saveQuery(QueryVersionDto query);
+    void deleteQuery(String urn);
 
     void retrieveDatasetsForQuery(int firstResult, int maxResults, DatasetVersionWebCriteria criteria);
     void retrieveStatisticalOperationsForDatasetSelection();

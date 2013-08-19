@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -35,6 +36,8 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
@@ -200,6 +203,23 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
                     }
                 });
     }
+
+    @Override
+    public void deleteQuery(String urn) {
+        List<String> urns = new ArrayList<String>();
+        urns.add(urn);
+        dispatcher.execute(new DeleteQueryVersionsAction(urns), new WaitingAsyncCallbackHandlingError<DeleteQueryVersionsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(DeleteQueryVersionsResult result) {
+                goToQueries();
+            }
+        });
+    }
+
+    //
+    // RELATED RESOURCES
+    //
 
     @Override
     public void retrieveDatasetsForQuery(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {

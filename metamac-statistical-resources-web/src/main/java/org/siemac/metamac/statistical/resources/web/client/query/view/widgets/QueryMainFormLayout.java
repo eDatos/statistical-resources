@@ -1,8 +1,13 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.widgets;
 
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
 public class QueryMainFormLayout extends LifecycleMainFormLayout {
+
+    private QueryVersionDto queryVersionDto;
 
     public QueryMainFormLayout() {
         super();
@@ -10,6 +15,16 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     public QueryMainFormLayout(boolean canEdit) {
         super(canEdit);
+    }
+
+    public void setQueryVersion(QueryVersionDto queryVersionDto) {
+        this.queryVersionDto = queryVersionDto;
+
+        setTitleLabelContents(InternationalStringUtils.getLocalisedString(queryVersionDto.getTitle()));
+
+        setCanEdit(QueryClientSecurityUtils.canUpdatePublicationVersion(queryVersionDto));
+        setCanDelete(QueryClientSecurityUtils.canDeletePublicationVersion(queryVersionDto));
+        updatePublishSection(queryVersionDto.getProcStatus());
     }
 
     @Override

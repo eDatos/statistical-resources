@@ -9,6 +9,7 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiHandlers, BaseUiHandlers {
 
     void savePublication(PublicationVersionDto publicationDto);
+    void deletePublication(String urn);
 
     void previewData(PublicationVersionDto publicationDto);
 

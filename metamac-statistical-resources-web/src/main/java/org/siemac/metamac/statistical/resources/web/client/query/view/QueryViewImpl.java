@@ -180,11 +180,11 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             createViewForm();
             createEditionForm();
 
-            bindEvents();
+            bindMainFormLayoutEvents();
             this.hide();
         }
 
-        private void bindEvents() {
+        private void bindMainFormLayoutEvents() {
             mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
 
                 @Override
@@ -228,6 +228,16 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                             getUiHandlers().saveQuery(getQuery());
                         }
                     }
+                }
+            });
+
+            // Delete
+
+            mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().deleteQuery(queryVersionDto.getUrn());
                 }
             });
 
@@ -366,11 +376,12 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             this.show();
         }
 
-        private void setQuery(QueryVersionDto queryDto) {
-            this.queryVersionDto = queryDto;
-            mainFormLayout.setTitleLabelContents(queryVersionDto.getCode());
-            mainFormLayout.updatePublishSection(queryDto.getProcStatus());
+        private void setQuery(QueryVersionDto queryVersionDto) {
+            this.queryVersionDto = queryVersionDto;
+
+            mainFormLayout.setQueryVersion(queryVersionDto);
             mainFormLayout.setViewMode();
+
             fillViewForm(queryVersionDto);
             fillEditionForm(queryVersionDto);
             mainFormLayout.redraw();

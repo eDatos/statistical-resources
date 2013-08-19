@@ -1,8 +1,12 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 
 public class PublicationMainFormLayout extends LifecycleMainFormLayout {
+
+    private PublicationVersionDto publicationVersionDto;
 
     public PublicationMainFormLayout() {
         super();
@@ -10,6 +14,13 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
 
     public PublicationMainFormLayout(boolean canEdit) {
         super(canEdit);
+    }
+
+    public void setPublicationVersion(PublicationVersionDto publicationVersionDto) {
+        this.publicationVersionDto = publicationVersionDto;
+        setCanEdit(PublicationClientSecurityUtils.canUpdatePublicationVersion(publicationVersionDto));
+        setCanDelete(PublicationClientSecurityUtils.canDeletePublicationVersion(publicationVersionDto));
+        updatePublishSection(publicationVersionDto.getProcStatus());
     }
 
     @Override

@@ -10,7 +10,6 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceMetadataBaseViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
-import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsEditionForm;
@@ -85,7 +84,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     public PublicationMetadataTabViewImpl() {
         panel = new VLayout();
 
-        mainFormLayout = new PublicationMainFormLayout(PublicationClientSecurityUtils.canUpdatePublication());
+        mainFormLayout = new PublicationMainFormLayout();
         bindMainFormLayoutEvents();
         createViewForm();
         createEditionForm();
@@ -170,6 +169,16 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
                         && languageEditionForm.validate(false) && intellectualPropertyDescriptorsEditionForm.validate(false)) {
                     getUiHandlers().savePublication(getPublicationDto());
                 }
+            }
+        });
+
+        // Delete
+
+        mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().deletePublication(publicationVersionDto.getUrn());
             }
         });
 
@@ -453,7 +462,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     public void setPublication(PublicationVersionDto publicationDto) {
         this.publicationVersionDto = publicationDto;
 
-        mainFormLayout.updatePublishSection(publicationDto.getProcStatus());
+        mainFormLayout.setPublicationVersion(publicationDto);
         mainFormLayout.setViewMode();
 
         setPublicationViewMode(publicationDto);

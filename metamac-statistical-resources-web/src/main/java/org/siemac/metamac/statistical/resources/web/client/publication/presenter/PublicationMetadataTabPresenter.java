@@ -3,6 +3,9 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
@@ -22,6 +25,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCal
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
@@ -145,6 +150,19 @@ public class PublicationMetadataTabPresenter
                 });
     }
 
+    @Override
+    public void deletePublication(String urn) {
+        List<String> urns = new ArrayList<String>();
+        urns.add(urn);
+        dispatcher.execute(new DeletePublicationVersionsAction(urns), new WaitingAsyncCallbackHandlingError<DeletePublicationVersionsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(DeletePublicationVersionsResult result) {
+                goToPublicationList();
+            }
+        });
+    }
+
     //
     // LIFE CYCLE
     //
@@ -259,5 +277,13 @@ public class PublicationMetadataTabPresenter
                 getView().setPublicationsForReplaces(result);
             }
         });
+    }
+
+    //
+    // NAVIGATION
+    //
+
+    private void goToPublicationList() {
+        placeManager.revealRelativePlace(-2);
     }
 }

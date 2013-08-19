@@ -1,14 +1,13 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
-import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.base.utils.BaseClientSecurityUtils;
 
 // TODO take into account the metadata isTaskInBackground to avoid to execute some actions!
-public class DatasetClientSecurityUtils {
+public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
 
     // ------------------------------------------------------------------------
     // DATASETS VERSIONS
@@ -116,13 +115,5 @@ public class DatasetClientSecurityUtils {
 
     public static boolean canImportDatasourcesInStatisticalOperation() {
         return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal());
-    }
-
-    //
-    // PRIVATE METHODS
-    //
-
-    private static MetamacPrincipal getMetamacPrincipal() {
-        return StatisticalResourcesWeb.getCurrentUser();
     }
 }

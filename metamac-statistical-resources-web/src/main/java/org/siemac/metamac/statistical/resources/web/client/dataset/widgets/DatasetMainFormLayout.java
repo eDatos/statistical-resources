@@ -10,16 +10,10 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
     public DatasetMainFormLayout() {
         super();
-        common();
     }
 
     public DatasetMainFormLayout(boolean canEdit) {
         super(canEdit);
-        common();
-    }
-
-    private void common() {
-
     }
 
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
