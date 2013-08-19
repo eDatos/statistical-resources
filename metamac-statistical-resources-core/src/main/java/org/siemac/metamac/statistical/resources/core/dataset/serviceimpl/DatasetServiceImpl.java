@@ -3,13 +3,11 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -22,7 +20,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -33,21 +30,13 @@ import org.siemac.metamac.core.common.util.TimeSdmxComparator;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
-import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -64,7 +53,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
-import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -89,7 +77,6 @@ import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 /**
@@ -163,12 +150,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
 
-        checkNotImportationTaskInProgress(ctx, datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
 
         // Update
         Datasource updatedDataSource = getDatasourceRepository().save(datasource);
 
-        // TODO: IF CODE can be changed, attribute in dataset repository must be changed to ensure consistency
+        //TODO: IF CODE can be changed, attribute in dataset repository must be changed to ensure consistency
 
         return updatedDataSource;
     }
@@ -197,7 +184,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
 
-        checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         checkDatasetVersionForDatasourceHasNoQueries(datasource);
 
@@ -215,7 +202,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getUrn());
         }
     }
-
     private void deleteDatasourceData(Datasource datasource) throws MetamacException {
         try {
             InternationalStringDto internationalStringDto = new InternationalStringDto();
@@ -275,7 +261,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Validations
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
 
-        checkNotImportationTaskInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         checkDsdChanges(datasetVersion);
 
@@ -285,10 +271,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
 
         clearDataRelatedMetadata(datasetVersion);
-
+        
         datasetVersion = getDatasetVersionRepository().save(datasetVersion);
         return datasetVersion;
     }
+
 
     private void checkDsdChanges(DatasetVersion datasetVersion) throws MetamacException {
         if (datasetVersion.isRelatedDsdChanged()) {
@@ -297,13 +284,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 throw new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_CHANGE_DSD_SOME_QUERIES_EXIST, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
             }
         }
-    }
+        }
 
     private void clearDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
         // Clear datasources
         for (Datasource datasource : resource.getDatasources()) {
             getDatasourceRepository().delete(datasource);
-        }
+    }
         resource.getDatasources().clear();
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
 
@@ -334,7 +321,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error removing datasetRepository " + resource.getDatasetRepositoryId());
         }
     }
-
+    
     @Override
     public DatasetVersion retrieveDatasetVersionByUrn(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
         // Validations
@@ -397,7 +384,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Retrieve version to delete
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         // Check can be deleted
         BaseValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
@@ -424,39 +411,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public DatasetVersion versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        datasetServiceInvocationValidator.checkVersioningDatasetVersion(ctx, datasetVersionUrnToCopy, versionType);
-        // TODO: check only published datasets can be versioned
-
-        DatasetVersion datasetVersionToCopy = retrieveDatasetVersionByUrn(ctx, datasetVersionUrnToCopy);
-
-        checkNotImportationTaskInProgress(ctx, datasetVersionUrnToCopy);
-
-        DatasetVersion datasetNewVersion = DatasetVersioningCopyUtils.copyDatasetVersion(datasetVersionToCopy);
-
-        FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, datasetVersionToCopy.getSiemacMetadataStatisticalResource(),
-                datasetNewVersion.getSiemacMetadataStatisticalResource(), versionType);
-
-        // DATASET URN
-        String[] creator = new String[]{datasetNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
-        datasetNewVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, datasetNewVersion.getSiemacMetadataStatisticalResource().getCode(), datasetNewVersion
-                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
-
-        // TODO: DATE_NEXT_UPDATE
-
-        datasetNewVersion = getDatasetVersionRepository().save(datasetNewVersion);
-
-        return datasetNewVersion;
-    }
-
-    @Override
     public void importDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls) throws MetamacException {
         datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
 
-        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         ProcStatusEnumUtils.checkPossibleProcStatus(datasetVersion, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
 
@@ -591,7 +551,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         List<String> dimensionsIds = getDatasetVersionRepository().retrieveDimensionsIds(datasetVersion);
         if (dimensionsIds.size() > 0) {
@@ -607,7 +567,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, null);
     }
@@ -618,7 +578,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotImportationTaskInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, filter);
     }
@@ -650,9 +610,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-    private void checkNotImportationTaskInProgress(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        if (getTaskService().existImportationTaskInDataset(ctx, datasetVersionUrn)) {
-            throw new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn);
+    private void checkNotTasksInProgress(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        if (getTaskService().existsTaskForResource(ctx, datasetVersionUrn)) {
+            throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn);
         }
     }
 
@@ -1014,221 +974,5 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Add version to dataset
         dataset.addVersion(datasetVersion);
         return getDatasetRepository().save(datasetVersion.getDataset());
-    }
-
-    /**
-     * DATA MOCKING
-     * 
-     * @throws MetamacException
-     */
-
-    // FIXME: DELETE MOCK
-    private void mockData(DatasetVersion resource) throws MetamacException {
-        if (resource.getRelatedDsd() != null) {
-            DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
-
-            Dimensions dimensions = dataStructure.getDataStructureComponents().getDimensions();
-
-            if (dimensions != null) {
-                List<String> dimOrder = computeDimensionOrder(dimensions);
-                Map<String, List<String>> dimensionCodes = computeDimensionsCodes(dimensions);
-
-                List<ObservationExtendedDto> observations = buildObservations(dimensionCodes, dimOrder);
-
-                DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
-                datasetRepositoryDto.setDatasetId("dataset_" + UUID.randomUUID().toString());
-                datasetRepositoryDto.setMaxAttributesObservation(1);
-                datasetRepositoryDto.getLanguages().add("es");
-                datasetRepositoryDto.getLanguages().add("en");
-                for (String dimensionId : dimOrder) {
-                    datasetRepositoryDto.getDimensions().add(dimensionId);
-                }
-
-                try {
-
-                    datasetRepositoryDto = statisticsDatasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
-                    statisticsDatasetRepositoriesServiceFacade.createObservationsExtended(datasetRepositoryDto.getDatasetId(), observations);
-                    String oldDatasetRepositoryId = resource.getDatasetRepositoryId();
-                    resource.setDatasetRepositoryId(datasetRepositoryDto.getDatasetId());
-                    getDatasetVersionRepository().save(resource);
-                    if (!StringUtils.isEmpty(oldDatasetRepositoryId)) {
-                        try {
-                            statisticsDatasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetRepositoryId);
-                        } catch (Exception e) {
-                            // TODO:
-                        }
-                    }
-                } catch (ApplicationException e) {
-                    throw new RuntimeException("Error mocking data, creating dataset repository", e);
-                }
-            }
-        }
-    }
-
-    private List<ObservationExtendedDto> buildObservations(Map<String, List<String>> dimensionCodes, List<String> dimOrder) {
-        CodeSelectionGenerator codeGen = new CodeSelectionGenerator(dimOrder, dimensionCodes);
-
-        List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
-        while (codeGen.hasNext()) {
-            int[] indexes = codeGen.getNext();
-            ObservationExtendedDto observation = new ObservationExtendedDto();
-            for (int i = 0; i < indexes.length; i++) {
-                String dimensionId = dimOrder.get(i);
-                String code = dimensionCodes.get(dimensionId).get(indexes[i]);
-                CodeDimensionDto codeDimensionDto = new CodeDimensionDto(dimensionId, code);
-                observation.addCodesDimension(codeDimensionDto);
-            }
-            observation.setPrimaryMeasure(String.valueOf(Math.random() * 10000));
-            observations.add(observation);
-        }
-        return observations;
-    }
-
-    private class CodeSelectionGenerator {
-
-        private int[] indexes = null;
-        private int[] max     = null;
-
-        public CodeSelectionGenerator(List<String> dimensionOrder, Map<String, List<String>> dimensionCodes) {
-            indexes = new int[dimensionCodes.size()];
-            max = new int[dimensionCodes.size()];
-            int i = 0;
-            for (String dimensionId : dimensionOrder) {
-                indexes[i] = 0;
-                max[i] = dimensionCodes.get(dimensionId).size();
-                i++;
-            }
-            indexes[indexes.length - 1] = -1;
-        }
-
-        public boolean hasNext() {
-            for (int i = 0; i < indexes.length; i++) {
-                if (indexes[i] < max[i] - 1) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public int[] getNext() {
-            int acum = 1;
-            for (int i = indexes.length - 1; i >= 0; i--) {
-                int newAcum = (indexes[i] + acum) / max[i];
-                indexes[i] = (indexes[i] + acum) % max[i];
-                acum = newAcum;
-            }
-            return Arrays.copyOf(indexes, indexes.length);
-        }
-
-    }
-
-    private Map<String, List<String>> computeDimensionsCodes(Dimensions dimensions) throws MetamacException {
-        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        for (DimensionBase dimensionObj : dimensions.getDimensions()) {
-            if (dimensionObj instanceof Dimension) {
-                Dimension dim = (Dimension) dimensionObj;
-                dimensionCodes.put(dim.getId(), getCodesForDimension(dim));
-            } else if (dimensionObj instanceof TimeDimension) {
-                TimeDimension dim = (TimeDimension) dimensionObj;
-                dimensionCodes.put(dim.getId(), getCodesForTimeDimension(dim));
-            } else if (dimensionObj instanceof MeasureDimension) {
-                MeasureDimension dim = (MeasureDimension) dimensionObj;
-                dimensionCodes.put(dim.getId(), getCodesForMeasureDimension(dim));
-            }
-        }
-        return dimensionCodes;
-    }
-
-    private List<String> computeDimensionOrder(Dimensions dimensions) throws MetamacException {
-        List<String> order = new ArrayList<String>();
-        for (DimensionBase dimensionObj : dimensions.getDimensions()) {
-            if (dimensionObj instanceof Dimension) {
-                Dimension dim = (Dimension) dimensionObj;
-                order.add(dim.getId());
-            } else if (dimensionObj instanceof TimeDimension) {
-                TimeDimension dim = (TimeDimension) dimensionObj;
-                order.add(dim.getId());
-            } else if (dimensionObj instanceof MeasureDimension) {
-                MeasureDimension dim = (MeasureDimension) dimensionObj;
-                order.add(dim.getId());
-            }
-        }
-        return order;
-    }
-
-    private List<String> getCodesForDimension(Dimension dimension) throws MetamacException {
-        List<String> codes = null;
-        if (dimension.getLocalRepresentation() != null) {
-            ResourceInternal codelist = dimension.getLocalRepresentation().getEnumerationCodelist();
-            if (codelist != null) {
-                codes = getCodesFromCodelist(codelist.getUrn());
-            } else {
-                codes = mockStringCodes(15);
-            }
-        } else {
-            codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
-        }
-        return codes;
-    }
-
-    private List<String> getCodesForTimeDimension(TimeDimension dimension) throws MetamacException {
-        List<String> codes = null;
-        if (dimension.getLocalRepresentation() != null) {
-            codes = mockStringCodes(15);
-        } else {
-            codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
-        }
-        return codes;
-    }
-
-    private List<String> getCodesForMeasureDimension(MeasureDimension dimension) throws MetamacException {
-        List<String> codes = null;
-        if (dimension.getLocalRepresentation() != null) {
-            ResourceInternal conceptScheme = dimension.getLocalRepresentation().getEnumerationConceptScheme();
-            codes = getCodesFromConceptScheme(conceptScheme);
-        } else {
-            codes = getCodesFromConceptRepresentation(dimension.getConceptIdentity());
-        }
-        return codes;
-    }
-
-    private List<String> getCodesFromConceptScheme(ResourceInternal conceptScheme) throws MetamacException {
-        Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptScheme.getUrn());
-
-        List<String> codes = new ArrayList<String>();
-        for (ItemResourceInternal concept : concepts.getConcepts()) {
-            codes.add(concept.getId());
-        }
-        return codes;
-    }
-
-    private List<String> mockStringCodes(int size) {
-        List<String> codes = new ArrayList<String>();
-        for (int i = 0; i < size; i++) {
-            codes.add("no_emun_code_" + i);
-        }
-        return codes;
-    }
-
-    private List<String> getCodesFromConceptRepresentation(ItemResourceInternal conceptResource) throws MetamacException {
-        List<String> codes = new ArrayList<String>();
-
-        Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptResource.getUrn());
-        if (concept.getCoreRepresentation() != null) {
-            codes = getCodesFromCodelist(concept.getCoreRepresentation().getEnumerationCodelist().getUrn());
-        } else {
-            throw new IllegalStateException("Found a concept with no core representation");
-        }
-        return codes;
-    }
-
-    private List<String> getCodesFromCodelist(String codelistUrn) throws MetamacException {
-        Codes codelistCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistUrn);
-
-        List<String> codes = new ArrayList<String>();
-        for (CodeResourceInternal code : codelistCodes.getCodes()) {
-            codes.add(code.getId());
-        }
-        return codes;
     }
 }

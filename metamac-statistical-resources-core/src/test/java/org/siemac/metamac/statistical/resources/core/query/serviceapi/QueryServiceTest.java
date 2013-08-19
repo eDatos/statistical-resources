@@ -614,8 +614,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testDeleteQueryVersion() throws Exception {
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME);
         String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
-        String queryUrn = queryVersion.getQuery().getIdentifiableStatisticalResource().getUrn();
-
+        
         expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);

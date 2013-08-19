@@ -277,6 +277,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         if (PUBLICATION_VERSION_16_PUBLISHED == null) {
             PUBLICATION_VERSION_16_PUBLISHED = createPublicationVersion();
             PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+            PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
         }
         return PUBLICATION_VERSION_16_PUBLISHED;
     }
@@ -468,6 +469,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         if (PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED == null) {
             PublicationVersion publicationVersion = createComplexStructure();
             publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
             PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED = publicationVersion;
         }
         return PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED;

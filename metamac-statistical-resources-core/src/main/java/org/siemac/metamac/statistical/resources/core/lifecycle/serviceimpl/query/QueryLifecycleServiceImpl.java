@@ -5,11 +5,13 @@ import java.util.List;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.utils.QueryVersioningCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,14 +93,33 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void checkVersioningResource(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented in this version");
     }
 
+
     @Override
-    protected void applyVersioningResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected QueryVersion copyResourceForVersioning(QueryVersion previousResource) throws MetamacException {
+        return QueryVersioningCopyUtils.copyQueryVersion(previousResource);
+    }
+    
+    @Override
+    protected void applyVersioningNewResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+        throw new UnsupportedOperationException("Not implemented in this version");
+    }
+    
+
+    @Override
+    protected void applyVersioningPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+        throw new UnsupportedOperationException("Not implemented in this version");
+    }
+    
+    @Override
+    protected QueryVersion updateResourceUrnAfterVersioning(QueryVersion resource) throws MetamacException {
+        String[] creator = new String[]{resource.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        resource.getLifeCycleStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(creator, resource.getLifeCycleStatisticalResource().getCode(), resource
+                        .getLifeCycleStatisticalResource().getVersionLogic()));
+        return resource;
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -115,15 +136,24 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         return queryVersionRepository.retrieveByUrn(urn);
     }
 
+
     @Override
-    protected QueryVersion retrievePreviousResourceByResource(QueryVersion resource) throws MetamacException {
-        // FIXME
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected QueryVersion retrieveResourceByResource(QueryVersion resource) throws MetamacException {
+        return queryVersionRepository.retrieveByUrn(resource.getLifeCycleStatisticalResource().getUrn());
+    }
+    
+    @Override
+    protected QueryVersion retrievePreviousPublishedResourceByResource(QueryVersion resource) throws MetamacException {
+        return queryVersionRepository.retrieveLastPublishedVersion(resource.getQuery().getIdentifiableStatisticalResource().getUrn());
     }
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         lifecycleCommonMetadataChecker.checkQueryVersionCommonMetadata(resource, ServiceExceptionParameters.QUERY_VERSION, exceptions);
+    }
+
+    @Override
+    protected String getResourceUrn(QueryVersion resource) {
+        return resource.getLifeCycleStatisticalResource().getUrn();
     }
 }

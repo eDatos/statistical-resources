@@ -102,7 +102,15 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Ignore
     @Override
     @Test
-    public void testApplyVersioningResource() throws Exception {
+    public void testApplyVersioningNewResource() throws Exception {
+        // TODO Auto-generated method stub
+        fail("not implemented");
+    }
+    
+    @Ignore
+    @Override
+    @Test
+    public void testApplyVersioningPreviousResource() throws Exception {
         // TODO Auto-generated method stub
         fail("not implemented");
     }

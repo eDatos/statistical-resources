@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetI
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceDatasourceManagementTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceImportationTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetVersioningServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedResourceEnumUtilsTest;
@@ -45,12 +46,14 @@ import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.PublicationVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationServiceTest;
+import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationVersioningServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryVersionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersioningServiceTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,
@@ -101,6 +104,9 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
                      QueryIntegrationServiceTest.class,
                      RestCriteriaUtilsTest.class,
                      StatisticalResourcesUrnParserUtilsTest.class,
-                     DataManipulateTest.class})
+                     DataManipulateTest.class,
+                     DatasetVersioningServiceTest.class,
+                     PublicationVersioningServiceTest.class,
+                     QueryVersioningServiceTest.class})
 public class StatisticalResourcesSuite {
 }

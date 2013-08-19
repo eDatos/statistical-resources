@@ -52,7 +52,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -64,7 +63,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
@@ -502,28 +500,6 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
 
         publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
-    }
-
-    @Override
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_16_PUBLISHED_NAME)
-    public void testVersioningPublicationVersion() throws Exception {
-        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLISHED_NAME);
-
-        PublicationVersion publicationNewVersion = publicationService.versioningPublicationVersion(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
-                .getUrn(), VersionTypeEnum.MINOR);
-        assertNotNull(publicationNewVersion);
-        assertFalse(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
-        checkNewPublicationVersionCreated(publicationVersion, publicationNewVersion);
-    }
-
-    private static void checkNewPublicationVersionCreated(PublicationVersion previous, PublicationVersion next) throws MetamacException {
-        BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
-
-        // Non inherited fields
-
-        // Inherited
-        assertEquals(previous.getFormatExtentResources(), next.getFormatExtentResources());
     }
 
     private Object buildPublicationVersionUrn(String maintainerCode, String operationCode, int datasetSequentialId, String versionNumber) {

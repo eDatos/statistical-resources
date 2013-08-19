@@ -47,8 +47,6 @@ Application DatasetsStatisticalResources {
     		PagedResult<@DatasetVersion> findDatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 			"Deletes dataset version. This must be last version and no published"
     		deleteDatasetVersion(String datasetVersionUrn) throws MetamacException;
-    		"Creates a new version of a dataset, copying metadata from version with provided urn"
-    		@DatasetVersion versioningDatasetVersion(String datasetVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls) throws MetamacException; 

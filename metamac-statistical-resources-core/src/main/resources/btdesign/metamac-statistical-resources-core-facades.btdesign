@@ -58,6 +58,8 @@ Application FacadeStatisticalResources {
     		@QueryVersionDto sendQueryVersionToDiffusionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
     		"Send to validation rejected"
     		@QueryVersionDto sendQueryVersionToValidationRejected(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		"Creates a new version of a query version, copying metadata from version with provided urn"
+    		@QueryVersionDto versioningQueryVersion(@QueryVersionDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		
     		// QUERIES
 	   		"Find all queries"
@@ -93,7 +95,7 @@ Application FacadeStatisticalResources {
             "Retrieves all dataset versions"
             List<@DatasetVersionDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
-    		@DatasetVersionDto versioningDatasetVersion(String urnDatasetVersionToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieve latest datasetVersion providing datasetUrn"
     		@DatasetVersionDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
     		"Retrieve latest published datasetVersion providing datasetUrn"
@@ -138,7 +140,7 @@ Application FacadeStatisticalResources {
             "Retrieves all publication versions"
             List<@PublicationVersionDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
-    		@PublicationVersionDto versioningPublicationVersion(String publicationVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
+    		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieves publication version structure: chapter and cubes by levels."
 	    	@PublicationStructureDto retrievePublicationVersionStructure(String publicationVersionUrn) throws MetamacException;
 	    	"Retrieve latest publicationVersion providing publicationUrn"

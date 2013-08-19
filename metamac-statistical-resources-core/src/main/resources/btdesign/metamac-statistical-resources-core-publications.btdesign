@@ -42,8 +42,6 @@ Application PublicationsStatisticalResources {
     		PagedResult<@PublicationVersion> findPublicationVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 			"Deletes publication version. This must be last version and no published"
     		deletePublicationVersion(String publicationVersionUrn) throws MetamacException;
-    		"Creates a new version of a publication, copying metadata from version with provided urn"
-    		@PublicationVersion versioningPublicationVersion(String publicationVersionUrnToCopy, @VersionTypeEnum versionType) throws MetamacException;
     		
     		// Chapters
 	    	@Chapter createChapter(String publicationVersionUrn, @Chapter chapter) throws MetamacException;

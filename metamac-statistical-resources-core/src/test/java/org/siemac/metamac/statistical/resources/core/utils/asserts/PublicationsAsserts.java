@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -163,7 +164,7 @@ public class PublicationsAsserts extends BaseAsserts {
         // It's not necessary check cube or chapter because this method is always called from an assert of one of these two elements
     }
 
-    private static void assertEqualsRelaxedElementLevelCollection(List<ElementLevel> expected, List<ElementLevel> actual) {
+    public static void assertEqualsRelaxedElementLevelCollection(List<ElementLevel> expected, List<ElementLevel> actual) {
         if (expected != null) {
             assertNotNull(actual);
             assertEquals(expected.size(), actual.size());
@@ -174,6 +175,58 @@ public class PublicationsAsserts extends BaseAsserts {
             }
         } else {
             assertNull(actual);
+        }
+    }
+
+    public static void assertEqualsVersionedElementLevelCollection(List<ElementLevel> expected, List<ElementLevel> actual) {
+        if (expected != null) {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            for (ElementLevel expectedItem : expected) {
+                boolean match = false;
+                for (ElementLevel actualItem : actual) {
+                    try {
+                        assertEqualsVersionedElementLevel(expectedItem, actualItem);
+                        match = true;
+                    } catch (AssertionError e) {
+                        continue;
+                    }
+
+                }
+
+                if (!match) {
+                    fail("Found elements in expected collection, which are not contained in actual collection. Element: " + expectedItem.getId());
+                }
+            }
+        } else {
+            assertNull(actual);
+        }
+    }
+
+    private static void assertEqualsVersionedElementLevel(ElementLevel expected, ElementLevel actual) {
+        assertEqualsVersionedChapter(expected.getChapter(), actual.getChapter());
+        assertEqualsVersionedCube(expected.getCube(), actual.getCube());
+        assertEqualsVersionedElementLevelCollection(expected.getChildren(), actual.getChildren());
+        assertEquals(expected.getOrderInLevel(), actual.getOrderInLevel());
+        assertEqualsNullability(expected.getParent(), actual.getParent());
+        assertEqualsNullability(expected.getPublicationVersion(), actual.getPublicationVersion());
+        assertEqualsNullability(expected.getPublicationVersionFirstLevel(), actual.getPublicationVersionFirstLevel());
+    }
+
+    private static void assertEqualsVersionedCube(Cube expected, Cube actual) {
+        if (expected != null && actual != null) {
+            assertEqualsVersionedNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+            assertEquals(expected.getDatasetUrn(), actual.getDatasetUrn());
+            assertEquals(expected.getQueryUrn(), actual.getQueryUrn());
+        }
+    }
+
+    private static void assertEqualsVersionedChapter(Chapter expected, Chapter actual) {
+        if (expected != null && actual != null) {
+            assertEqualsVersionedNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+            assertNotSame(expected.getCreatedDate(), actual.getCreatedDate());
+            assertNotSame(expected.getLastUpdated(), actual.getLastUpdated());
+            assertNotSame(expected.getUuid(), actual.getUuid());
         }
     }
 
@@ -218,7 +271,7 @@ public class PublicationsAsserts extends BaseAsserts {
         assertEquals(entity.getSiemacMetadataStatisticalResource().getUrn(), dto.getUrn());
         assertEqualsInternationalString(entity.getSiemacMetadataStatisticalResource().getTitle(), dto.getTitle());
     }
-    
+
     public static void assertEqualsPublicationVersion(PublicationVersion entity, PublicationVersionDto dto) throws MetamacException {
         assertEqualsPublicationVersion(dto, entity, MapperEnum.DO2DTO);
     }

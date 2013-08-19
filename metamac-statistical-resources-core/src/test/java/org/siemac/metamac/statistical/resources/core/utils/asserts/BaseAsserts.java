@@ -83,7 +83,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
     }
 
-    private static void assertEqualsVersioningLifecycle(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
+    public static void assertEqualsVersioningLifecycle(LifeCycleStatisticalResource previous, LifeCycleStatisticalResource next) {
         assertEqualsVersioningVersionable(previous, next);
         assertEquals(ProcStatusEnum.DRAFT, next.getProcStatus());
 
@@ -100,8 +100,10 @@ public class BaseAsserts extends CommonAsserts {
         assertNull(next.getRejectValidationUser());
         assertNull(next.getPublicationDate());
         assertNull(next.getPublicationUser());
-        assertNull(next.getReplacesVersion());
         assertNull(next.getIsReplacedByVersion());
+        
+        assertNotNull(next.getReplacesVersion());
+        assertNotNull(previous.getIsReplacedByVersion());
         
         assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
     }
@@ -133,7 +135,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEquals(previous.getCode(), next.getCode());
         assertNotNull(next.getUrn());
         assertFalse(next.getUrn().equals(previous.getUrn()));
-        assertNull(next.getUri());
+        assertEquals(previous.getUri(), next.getUri());
     }
     
     private static void assertEqualsVersioningStatisticalResource(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
@@ -221,17 +223,32 @@ public class BaseAsserts extends CommonAsserts {
 
         assertEqualsNameableStatisticalResource(expected, actual);
     }
+    
     protected static void assertEqualsNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
 
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
+    
+    protected static void assertEqualsVersionedNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
+
+        assertEqualsVersionedIdentifiableStatisticalResource(expected, actual);
+    }
 
     public static void assertEqualsIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());
+
+        assertEqualsStatisticalResource(expected, actual);
+    }
+    
+    public static void assertEqualsVersionedIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getUri(), actual.getUri());
 
         assertEqualsStatisticalResource(expected, actual);
     }

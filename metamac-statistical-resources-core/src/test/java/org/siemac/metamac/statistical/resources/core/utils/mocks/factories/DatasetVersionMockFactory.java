@@ -1125,6 +1125,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static void fillDatasetVersionInPublished(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
     }
 
     private static DatasetVersion createDatasetVersion(Integer sequentialId) {

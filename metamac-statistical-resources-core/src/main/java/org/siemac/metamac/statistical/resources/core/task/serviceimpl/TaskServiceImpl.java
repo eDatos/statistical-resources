@@ -130,7 +130,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         taskServiceInvocationValidator.checkPlanifyImportationDataset(ctx, taskInfoDataset);
 
         // job keys
-        JobKey jobKey = createJobKeyForImportationDataset(taskInfoDataset.getDatasetVersionId());
+        JobKey jobKey = createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId());
         TriggerKey triggerKey = createTriggerKeyForImportationDataset(taskInfoDataset.getDatasetVersionId());
 
         Task task = null;
@@ -149,7 +149,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
             // Validation: There shouldn't be a recovery job in process, please wait
-            if (sched.checkExists(createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId()))) {
+            if (sched.checkExists(createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId()))) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
@@ -213,10 +213,25 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public boolean existImportationTaskInDataset(ServiceContext ctx, String datasetId) throws MetamacException {
+    public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
+        return existImportationTaskInResource(ctx, resourceId) && existRecoveryImportationTaskInResource(ctx, resourceId);
+    }
+
+    @Override
+    public boolean existImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
         try {
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-            return sched.checkExists(createJobKeyForImportationDataset(datasetId));
+            return sched.checkExists(createJobKeyForImportationResource(resourceId));
+        } catch (SchedulerException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
+        }
+    }
+
+    @Override
+    public boolean existRecoveryImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
+        try {
+            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+            return sched.checkExists(createJobKeyForRecoveryImportationResource(resourceId));
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
@@ -287,7 +302,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset);
 
         // Job keys
-        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId());
+        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId());
         TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId());
 
         // Scheduler an importation job
@@ -313,7 +328,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
 
         try {
-            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationDataset(taskInfoDataset.getDatasetVersionId()).getName());
+            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()).getName());
 
             String fileNames = task.getExtensionPoint();
             String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
@@ -344,7 +359,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
         try {
-            JobKey importationJobKey = createJobKeyForImportationDataset(datasetId);
+            JobKey importationJobKey = createJobKeyForImportationResource(datasetId);
             if (sched.checkExists(importationJobKey)) {
                 TriggerKey triggerImportationKey = createTriggerKeyForImportationDataset(datasetId);
                 SimpleTrigger trigger = newTrigger().withIdentity(triggerImportationKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
@@ -359,12 +374,12 @@ public class TaskServiceImpl extends TaskServiceImplBase {
      * PRIVATES
      ****************************************************************/
 
-    private JobKey createJobKeyForImportationDataset(String datasetId) {
-        return new JobKey(PREFIX_JOB_IMPORT_DATA + datasetId, GROUP_IMPORTATION);
+    private JobKey createJobKeyForImportationResource(String resourceId) {
+        return new JobKey(PREFIX_JOB_IMPORT_DATA + resourceId, GROUP_IMPORTATION);
     }
 
-    private JobKey createJobKeyForRecoveryImportationDataset(String datasetId) {
-        return new JobKey(PREFIX_JOB_RECOVERY_IMPORT_DATA + datasetId, GROUP_IMPORTATION);
+    private JobKey createJobKeyForRecoveryImportationResource(String resourceId) {
+        return new JobKey(PREFIX_JOB_RECOVERY_IMPORT_DATA + resourceId, GROUP_IMPORTATION);
     }
 
     private TriggerKey createTriggerKeyForImportationDataset(String datasetId) {

@@ -93,17 +93,29 @@ public class LifecycleChecker {
         }
 
         // Statistical Operation
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getStatisticalOperation(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION),
-                exceptionItems);
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getStatisticalOperation(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION), exceptionItems);
 
         // Maintainer
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER),
                 exceptionItems);
 
         // Replaces Version
-        relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getLifeCycleStatisticalResource().getReplacesVersion(), resource.getLifeCycleStatisticalResource().getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
-        
+        relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getLifeCycleStatisticalResource().getReplacesVersion(), resource.getLifeCycleStatisticalResource().getValidFrom(),
+                addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
+
         // Is replaced by version: It can be private. API checks that can be returned.
+    }
+
+    // ------------------------------------------------------------------------------------------------------
+    // VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+
+    public void checkVersioning(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PUBLISHED);
+        if (ProcStatusEnum.PUBLISHED.equals(resource.getLifeCycleStatisticalResource().getProcStatus()) && resource.getLifeCycleStatisticalResource().getValidFrom().isAfterNow()) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, resource.getLifeCycleStatisticalResource().getUrn()));
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------

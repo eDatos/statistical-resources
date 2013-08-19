@@ -300,6 +300,48 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     }
 
     // ------------------------------------------------------------------------------------------------------
+    // >> VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void testLifeCycleResourceCheckVersioning() throws Exception {
+        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
+
+        for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
+            HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePublished();
+            mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
+
+            if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+                lifecycleChecker.checkVersioning(mockedResource, baseMetadata, exceptionItems);
+                assertEquals(0, exceptionItems.size());
+            } else {
+                try {
+                    List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+                    lifecycleChecker.checkVersioning(mockedResource, baseMetadata, exceptionItems);
+                } catch (MetamacException e) {
+                    assertEquals(1, e.getExceptionItems().size());
+                    assertEquals("Error with procstatus " + procStatus, ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testLifeCycleResourceCheckVersioningErrorPublishedResourceNotVisible() throws Exception {
+        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
+
+        HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
+        mockedPreviousVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusMinutes(10));
+
+        ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        lifecycleChecker.checkVersioning(mockedPreviousVersion, baseMetadata, exceptionItems);
+        assertEquals(1, exceptionItems.size());
+        MetamacAsserts.assertEqualsMetamacExceptionItem(new MetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, mockedPreviousVersion.getLifeCycleStatisticalResource()
+                .getUrn()), exceptionItems.get(0));
+    }
+
+    // ------------------------------------------------------------------------------------------------------
     // UTILS
     // ------------------------------------------------------------------------------------------------------
 

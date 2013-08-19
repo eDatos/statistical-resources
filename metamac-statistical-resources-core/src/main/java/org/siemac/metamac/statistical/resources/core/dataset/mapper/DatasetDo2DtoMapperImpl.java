@@ -155,7 +155,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
         target.setBibliographicCitation(internationalStringDoToDto(source.getBibliographicCitation()));
         
-        target.setIsTaskInBackground(taskService.existImportationTaskInDataset(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
+        target.setIsTaskInBackground(taskService.existImportationTaskInResource(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
 
         return target;
     }

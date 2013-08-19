@@ -125,11 +125,11 @@ public class SiemacLifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
-    public void checkVersioning(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
+    public void checkVersioning(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        lifecycleChecker.checkVersioning(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
 
-        // TODO: Metadatos de relaciones entre recursos
+        // TODO: falta algo?
     }
 
     // ------------------------------------------------------------------------------------------------------

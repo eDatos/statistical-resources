@@ -15,7 +15,11 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
     // SIEMAC METADATA STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
-    public static void copySiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResource target) {
+    public static SiemacMetadataStatisticalResource copySiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResource target) {
+        if (target == null && source != null) {
+            target = new SiemacMetadataStatisticalResource();
+        }
+        
         copyLifeCycleStatisticalResource(source, target);
 
         // Languages
@@ -65,56 +69,88 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
 
         // Intellectual ownership descriptors
         target.setAccessRights(copyInternationalString(source.getAccessRights()));
+        
+        return target;
     }
 
     // --------------------------------------------------------------------------
     // LIFE CYCLE STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
-    private static void copyLifeCycleStatisticalResource(LifeCycleStatisticalResource source, LifeCycleStatisticalResource target) {
+    public static LifeCycleStatisticalResource copyLifeCycleStatisticalResource(LifeCycleStatisticalResource source, LifeCycleStatisticalResource target) {
+        if (target == null && source != null) {
+            target = new LifeCycleStatisticalResource();
+        }
+        
         copyVersionableStatisticalResource(source, target);
         target.setMaintainer(copyExternalItem(source.getMaintainer()));
         // Other lifecycle metadata are filled automatically
+        
+        return target;
     }
 
     // --------------------------------------------------------------------------
     // VERSIONABLE STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
-    private static void copyVersionableStatisticalResource(VersionableStatisticalResource source, VersionableStatisticalResource target) {
+    public static VersionableStatisticalResource copyVersionableStatisticalResource(VersionableStatisticalResource source, VersionableStatisticalResource target) {
+        if (target == null && source != null) {
+            target = new VersionableStatisticalResource();
+        }
+        
         copyNameableStatisticalResource(source, target);
-
         target.setNextVersion(source.getNextVersion());
+        
+        return target;
     }
 
     // --------------------------------------------------------------------------
     // NAMEABLE STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
-    private static void copyNameableStatisticalResource(NameableStatisticalResource source, NameableStatisticalResource target) {
+    public static NameableStatisticalResource copyNameableStatisticalResource(NameableStatisticalResource source, NameableStatisticalResource target) {
+        if (target == null && source != null) {
+            target = new NameableStatisticalResource();
+        }
+        
         // TODO: ¿Se hereda el titulo?
         target.setTitle(copyInternationalString(source.getTitle()));
         target.setDescription(copyInternationalString(source.getDescription()));
 
         copyIdentifiableStatisticalResource(source, target);
+        
+        return target;
     }
 
     // --------------------------------------------------------------------------
     // IDENTIFIABLE METADATA STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
-    public static void copyIdentifiableStatisticalResource(IdentifiableStatisticalResource source, IdentifiableStatisticalResource target) {
-        // TODO: Is the code always the same?
+    public static IdentifiableStatisticalResource copyIdentifiableStatisticalResource(IdentifiableStatisticalResource source, IdentifiableStatisticalResource target) {
+        if (target == null && source != null) {
+            target = new IdentifiableStatisticalResource();
+        }
+        
         target.setCode(source.getCode());
+        target.setUri(source.getUri());
 
         copyStatisticalResource(source, target);
+        
+        return target;
     }
 
     // --------------------------------------------------------------------------
     // STATISTICAL RESOURCE
     // --------------------------------------------------------------------------
 
-    private static void copyStatisticalResource(StatisticalResource source, StatisticalResource target) {
+    public static StatisticalResource copyStatisticalResource(StatisticalResource source, StatisticalResource target) {
+        if (target == null && source != null) {
+            target = new IdentifiableStatisticalResource();
+        }
+        
         target.setStatisticalOperation(copyExternalItem(source.getStatisticalOperation()));
+        
+        return target;
+        
     }
 }

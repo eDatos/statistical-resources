@@ -10,15 +10,16 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
-import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private DatasetVersionRepository       datasetVersionRepository;
-
-    @Autowired
-    private TaskService                    taskService;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -167,14 +165,33 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkVersioningResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // nothing specific to check
     }
 
     @Override
-    protected void applyVersioningResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected DatasetVersion copyResourceForVersioning(DatasetVersion previousResource) throws MetamacException {
+        return DatasetVersioningCopyUtils.copyDatasetVersion(previousResource);
+    }
+
+    @Override
+    protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+        // FIXME: Pendiente añadir método de duplicado en DatasetRepositoriesServiceFacade
+        // It's necessary to duplicate datasetRepository and set the new id to datasetVersion
+        throw new UnsupportedOperationException("Not implemented: needed a DatasetRepositoriesServiceFacade method");
+    }
+
+    @Override
+    protected void applyVersioningPreviousResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+        // nothing specific to apply
+    }
+
+    @Override
+    protected DatasetVersion updateResourceUrnAfterVersioning(DatasetVersion resource) throws MetamacException {
+        String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
+        resource.getSiemacMetadataStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
+                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
+        return resource;
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -192,24 +209,23 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected DatasetVersion retrievePreviousResourceByResource(DatasetVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected DatasetVersion retrieveResourceByResource(DatasetVersion resource) throws MetamacException {
+        return datasetVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Override
+    protected DatasetVersion retrievePreviousPublishedResourceByResource(DatasetVersion resource) throws MetamacException {
+        return datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
     }
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkNotImportationTaskInProgress(ctx, resource.getSiemacMetadataStatisticalResource().getUrn());
         lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
-    private void checkNotImportationTaskInProgress(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        if (taskService.existImportationTaskInDataset(ctx, datasetVersionUrn)) {
-            throw new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn);
-        }
+    @Override
+    protected String getResourceUrn(DatasetVersion resource) {
+        return resource.getSiemacMetadataStatisticalResource().getUrn();
     }
-    // ------------------------------------------------------------------------------------------------------
-    // SRM related Utils
-    // ------------------------------------------------------------------------------------------------------
 
 }

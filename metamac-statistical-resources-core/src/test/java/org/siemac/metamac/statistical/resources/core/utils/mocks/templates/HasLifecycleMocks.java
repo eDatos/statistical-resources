@@ -48,6 +48,12 @@ public class HasLifecycleMocks {
         createPublished(mockedResource);
         return mockedResource;
     }
+
+    // VERSIONED
+    public static HasLifecycle mockHasLifecycleStatisticalResourceVersioned() {
+        HasLifecycle mockedResource = mockHasLifecycleStatisticalResource();
+        return mockedResource;
+    }
     
     private static HasLifecycle mockHasLifecycleStatisticalResource() {
         HasLifecycle mockedResource = mock(HasLifecycle.class);

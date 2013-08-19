@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 public interface LifecycleService<E extends Object> {
@@ -13,6 +14,6 @@ public interface LifecycleService<E extends Object> {
 
     public E sendToPublished(ServiceContext ctx, String urn) throws MetamacException;
 
-    public E versioning(ServiceContext ctx, String urn) throws MetamacException;
+    public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException;
 
 }

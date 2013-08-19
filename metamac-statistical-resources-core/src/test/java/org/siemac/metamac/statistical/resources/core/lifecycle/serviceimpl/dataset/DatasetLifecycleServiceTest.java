@@ -135,9 +135,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         mockDsdAndDataRepositorySimpleDimensions();
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
 
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponents());
@@ -224,9 +224,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
 
         datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersionUrn);
     }
@@ -289,9 +289,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME);
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
 
         datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
@@ -324,6 +324,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     // ------------------------------------------------------------------------------------------------------
 
     @Test
+    @Ignore
     public void testSendToPublished() throws Exception {
         // FIXME: Do test in testCheckSendToPublishedResource and testApplySendToPublishedResource
         thrown.expect(UnsupportedOperationException.class);
@@ -370,7 +371,15 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Ignore
     @Override
     @Test
-    public void testApplyVersioningResource() throws Exception {
+    public void testApplyVersioningNewResource() throws Exception {
+        fail("not implemented");
+        // TODO: Implementar
+    }
+    
+    @Ignore
+    @Override
+    @Test
+    public void testApplyVersioningPreviousResource() throws Exception {
         fail("not implemented");
         // TODO: Implementar
     }
@@ -420,7 +429,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
-    private void mockTaskInProgressForDatasetVersion(String datasetVersionUrn, boolean status) throws MetamacException {
+    private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
         TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetVersionUrn, status);
     }
 

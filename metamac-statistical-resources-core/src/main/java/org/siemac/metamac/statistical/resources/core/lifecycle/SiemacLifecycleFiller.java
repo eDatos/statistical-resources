@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,23 @@ public class SiemacLifecycleFiller {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToPublished(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
+    public void applySendToPublishedActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
         lifecycleFiller.applySendToPublishedActions(ctx, resource, previousResource);
         resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom());
 
         // TODO: Metadatos de relaciones entre recursos
+    }
+    
+    // ------------------------------------------------------------------------------------------------------
+    // >> VERSIONING
+    // ------------------------------------------------------------------------------------------------------
+
+    public void applyVersioningNewResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, VersionTypeEnum versionType) throws MetamacException {
+        lifecycleFiller.applyVersioningNewResourceActions(ctx, resource, previousResource, versionType);
+        resource.getSiemacMetadataStatisticalResource().setLastUpdate(resource.getSiemacMetadataStatisticalResource().getCreationDate());
+    }
+    
+    public void applyVersioningPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, VersionTypeEnum versionType) throws MetamacException {
+        lifecycleFiller.applyVersioningPreviousResourceActions(ctx, resource, previousResource, versionType);
     }
 }

@@ -91,7 +91,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Before
     public void setUp() throws MetamacException {
         Mockito.reset(datasetRepositoriesServiceFacade);
-        mockAllTaskInProgressForDatasetVersion(false);
+        mockAllTaskInProgressForResource(false);
     }
 
     @After
@@ -363,9 +363,9 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
 
         expected.getIdentifiableStatisticalResource().setLastUpdatedBy("user");
         datasetService.updateDatasource(getServiceContextWithoutPrincipal(), expected);
@@ -497,13 +497,13 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockTaskInProgressForDatasetVersion(datasetVersionUrn, true);
+        mockTaskInProgressForResource(datasetVersionUrn, true);
 
         mockDsdAndDataRepositorySimpleDimensions();
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
 
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
     }
@@ -606,11 +606,11 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
-    private void mockTaskInProgressForDatasetVersion(String datasetVersionUrn, boolean status) throws MetamacException {
+    private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
         TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetVersionUrn, status);
     }
 
-    private void mockAllTaskInProgressForDatasetVersion(boolean status) throws MetamacException {
+    private void mockAllTaskInProgressForResource(boolean status) throws MetamacException {
         TaskMockUtils.mockAllTaskInProgressForDatasetVersion(taskService, status);
     }
 }

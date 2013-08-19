@@ -76,4 +76,9 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
+
+    public static boolean canVersionQueryVersion(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
 }

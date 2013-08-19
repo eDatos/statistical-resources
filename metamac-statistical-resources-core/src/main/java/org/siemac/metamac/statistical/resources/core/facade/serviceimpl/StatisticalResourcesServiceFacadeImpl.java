@@ -353,6 +353,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return queryVersionDto;
     }
+    
+    @Override
+    public QueryVersionDto versioningQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto, VersionTypeEnum versionType) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canVersionQueryVersion(ctx);
+        
+        // Transform
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+
+        // Versioning
+        queryVersion = queryLifecycleService.versioning(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
+
+        // Transform
+        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+
+        return queryVersionDto;
+    }
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -577,12 +594,15 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, String urnToCopy, VersionTypeEnum versionType) throws MetamacException {
+    public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canVersionDataset(ctx);
 
+        // Transform
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+
         // Versioning
-        DatasetVersion datasetVersion = getDatasetService().versioningDatasetVersion(ctx, urnToCopy, versionType);
+        datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
 
         // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -859,18 +879,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canVersionPublication(ctx);
-
-        // Versioning
-        PublicationVersion publicationVersion = getPublicationService().versioningPublicationVersion(ctx, publicationVersionUrnToCopy, versionType);
-
-        // Transform
-        return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
-    }
-
-    @Override
     public PublicationStructureDto retrievePublicationVersionStructure(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canRetrievePublicationVersionStructure(ctx);
@@ -935,6 +943,24 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionDto;
     }
 
+    @Override
+    public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canVersionPublication(ctx);
+        
+        // Transform
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+
+        // Versioning
+        publicationVersion = publicationLifecycleService.versioning(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
+
+        // Transform
+        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+
+        return publicationVersionDto;
+    }
+
+    
     // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------

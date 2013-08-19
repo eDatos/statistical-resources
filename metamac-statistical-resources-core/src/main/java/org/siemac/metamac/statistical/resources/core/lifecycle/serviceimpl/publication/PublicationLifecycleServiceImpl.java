@@ -5,11 +5,13 @@ import java.util.List;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.publication.utils.PublicationVersioningCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,14 +97,31 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
 
     @Override
     protected void checkVersioningResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // nothing specific to check
     }
 
     @Override
-    protected void applyVersioningResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected PublicationVersion copyResourceForVersioning(PublicationVersion previousResource) throws MetamacException {
+        return PublicationVersioningCopyUtils.copyPublicationVersion(previousResource);
+    }
+
+    @Override
+    protected void applyVersioningNewResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // nothing specific to apply
+    }
+
+    @Override
+    protected void applyVersioningPreviousResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // nothing specific to apply
+    }
+
+    @Override
+    protected PublicationVersion updateResourceUrnAfterVersioning(PublicationVersion resource) throws MetamacException {
+        String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
+        resource.getSiemacMetadataStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
+                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
+        return resource;
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -120,14 +139,23 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     @Override
-    protected PublicationVersion retrievePreviousResourceByResource(PublicationVersion resource) throws MetamacException {
-        // FIXME
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected PublicationVersion retrieveResourceByResource(PublicationVersion resource) throws MetamacException {
+        return publicationVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Override
+    protected PublicationVersion retrievePreviousPublishedResourceByResource(PublicationVersion resource) throws MetamacException {
+        return publicationVersionRepository.retrieveLastPublishedVersion(resource.getPublication().getIdentifiableStatisticalResource().getUrn());
     }
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, PublicationVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
     }
+
+    @Override
+    protected String getResourceUrn(PublicationVersion resource) {
+        return resource.getSiemacMetadataStatisticalResource().getUrn();
+    }
+
 }

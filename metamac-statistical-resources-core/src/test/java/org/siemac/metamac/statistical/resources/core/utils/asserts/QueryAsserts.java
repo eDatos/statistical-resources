@@ -62,7 +62,7 @@ public class QueryAsserts extends BaseAsserts {
         }
     }
 
-    private static void assertEqualsSelection(List<QuerySelectionItem> expected, List<QuerySelectionItem> actual) {
+    public static void assertEqualsSelection(List<QuerySelectionItem> expected, List<QuerySelectionItem> actual) {
         assertEqualsNullability(expected, actual);
 
         if (expected != null) {

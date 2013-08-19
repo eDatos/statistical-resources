@@ -1,9 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.error;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
 public class ServiceExceptionType extends CommonServiceExceptionType {
 
@@ -48,6 +45,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Life Cycle Statistical Resource
     public static final CommonServiceExceptionType LIFE_CYCLE_WRONG_PROC_STATUS                            = create("exception.resources.life_cycle.wrong_proc_status");
+    public static final CommonServiceExceptionType LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE                = create("exception.resources.life_cycle.wrong_proc_status_not_visible");
 
     // Related resources
     public static final CommonServiceExceptionType RELATED_RESOURCE_NOT_PUBLISHED                          = create("exception.resources.related_resource.not_published");
@@ -66,11 +64,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_ERROR                                             = create("exception.resources.task.error");
     public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                   = create("exception.resources.task.scheduler.error");
     public static final CommonServiceExceptionType TASKS_JOB_RECOVERY_IN_PROCESS                           = create("exception.resources.task.error.recovery_in_process");
+    public static final CommonServiceExceptionType TASKS_IN_PROGRESS                                       = create("exception.resources.task.in_progress");
 
     // Dataset Importation
     public static final CommonServiceExceptionType FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION = create("exception.resources.dataset.importation.file_not_linked_to_any_dataset_in_statistical_operation");
     public static final CommonServiceExceptionType INVALID_FILE_FOR_DATASET_VERSION                        = create("exception.resources.dataset.importation.invalid_file_for_dataset");
-    public static final CommonServiceExceptionType IMPORTATION_DATASET_VERSION_TASK_IN_PROGRESS            = create("exception.resources.dataset.importation.dataset_version_in_progress");
     public static final CommonServiceExceptionType IMPORTATION_DATASET_VERSION_ERROR                       = create("exception.resources.dataset.importation.dataset_version_error");
     public static final CommonServiceExceptionType IMPORTATION_ATTR_CODE_ENUM_NOT_VALID                    = create("exception.resources.dataset.importation.attribute_code_enumeration_not_valid");
     public static final CommonServiceExceptionType IMPORTATION_ATTR_NOT_MATCH                              = create("exception.resources.dataset.importation.attribute_not_match");

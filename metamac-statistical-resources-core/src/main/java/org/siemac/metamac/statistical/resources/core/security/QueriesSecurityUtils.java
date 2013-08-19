@@ -93,4 +93,11 @@ public class QueriesSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+
+    public static void canVersionQueryVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canVersionQueryVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+        
+    }
 }

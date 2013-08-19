@@ -48,7 +48,6 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
         return (T) CollectionUtils.find(collection, predicate) != null;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T, R> void mapCollection(Collection<T> collection, final Collection<R> outputCollection, MetamacTransformer<T, R> transformer) {
         CollectionUtils.collect(collection, transformer, outputCollection);
     }

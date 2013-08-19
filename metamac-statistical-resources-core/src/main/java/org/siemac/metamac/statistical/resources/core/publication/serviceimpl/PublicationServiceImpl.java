@@ -12,7 +12,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
@@ -20,7 +19,6 @@ import org.siemac.metamac.statistical.resources.core.base.components.SiemacStati
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
-import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForVersioningResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -31,7 +29,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
-import org.siemac.metamac.statistical.resources.core.publication.utils.PublicationVersioningCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -171,31 +168,6 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             publication.getVersions().remove(publicationVersion);
             getPublicationVersionRepository().delete(publicationVersion);
         }
-    }
-
-    @Override
-    public PublicationVersion versioningPublicationVersion(ServiceContext ctx, String publicationVersionUrnToCopy, VersionTypeEnum versionType) throws MetamacException {
-        publicationServiceInvocationValidator.checkVersioningPublicationVersion(ctx, publicationVersionUrnToCopy, versionType);
-
-        // TODO RI: check only published publications can be versioned
-
-        PublicationVersion publicationVersionToCopy = retrievePublicationVersionByUrn(ctx, publicationVersionUrnToCopy);
-        PublicationVersion publicationNewVersion = PublicationVersioningCopyUtils.copyPublicationVersion(publicationVersionToCopy);
-
-        FillMetadataForVersioningResourceUtils.fillMetadataForVersioningSiemacResource(ctx, publicationVersionToCopy.getSiemacMetadataStatisticalResource(),
-                publicationNewVersion.getSiemacMetadataStatisticalResource(), versionType);
-
-        // PUBLICATION URN
-        String[] creator = new String[]{publicationNewVersion.getSiemacMetadataStatisticalResource().getCreator().getCode()};
-        publicationNewVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, publicationNewVersion.getSiemacMetadataStatisticalResource().getCode(), publicationNewVersion
-                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
-
-        // TODO RI: DATE_NEXT_UPDATE
-
-        publicationNewVersion = getPublicationVersionRepository().save(publicationNewVersion);
-
-        return publicationNewVersion;
     }
 
     // ------------------------------------------------------------------------
