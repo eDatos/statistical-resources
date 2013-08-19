@@ -168,16 +168,19 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
-public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
+public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest {
 
     private static final String               SIEMAC_METADATA_URN_FIELD = "siemacMetadataStatisticalResource.urn";
     private static final String               URN_FIELD                 = "urn";
@@ -224,6 +227,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
 
+    @Autowired
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+
     @Before
     public void onBeforeTest() throws Exception {
         DataStructure emptyDsd = new DataStructure();
@@ -236,7 +242,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // QUERIES
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
     public void testFindQueriesByCondition() throws Exception {
@@ -276,7 +281,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // QUERIES VERSIONS
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME})
     public void testRetrieveQueryVersionByUrn() throws Exception {
@@ -285,7 +289,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQueryVersion(queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME), actual);
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
     public void testRetrieveLatestQueryVersion() throws Exception {
@@ -295,7 +298,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQueryVersion(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
     public void testRetrieveLatestPublishedQueryVersion() throws Exception {
@@ -305,7 +307,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQueryVersion(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME, QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME,
             QUERY_VERSION_01_WITH_SELECTION_NAME})
@@ -326,7 +327,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQueryVersionDoAndDtoCollection(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQuery() throws Exception {
@@ -338,7 +338,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedQuery.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME})
     public void testUpdateQueryVersion() throws Exception {
@@ -442,7 +441,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(queryVersionDto.getCode(), updatedQueryVersion.getCode());
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_VERSION_06_BASIC_ACTIVE_NAME, QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
     public void testMarkQueryVersionAsDiscontinued() throws Exception {
@@ -456,7 +454,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME).getLifeCycleStatisticalResource().getUrn(), queryDto.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_01_WITH_SELECTION_NAME})
     public void testDeleteQueryVersion() throws Exception {
@@ -468,7 +465,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
     }
 
-    @Override
     @Test
     @MetamacMock({QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME})
     public void testFindQueriesVersionsByCondition() throws Exception {
@@ -667,7 +663,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
-    @Override
     @Test
     @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
     public void testSendQueryVersionToProductionValidation() throws Exception {
@@ -681,7 +676,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getProductionValidationDate()));
     }
 
-    @Override
     @Test
     @MetamacMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME)
     public void testSendQueryVersionToDiffusionValidation() throws Exception {
@@ -695,7 +689,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getDiffusionValidationDate()));
     }
 
-    @Override
     @Test
     @MetamacMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME)
     public void testSendQueryVersionToValidationRejected() throws Exception {
@@ -711,12 +704,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(updatedQueryVersion.getProductionValidationUser());
         assertNotNull(updatedQueryVersion.getProductionValidationDate());
     }
-
     // ------------------------------------------------------------------------
     // DATASOURCES
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @Ignore
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
@@ -728,7 +719,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedDatasource.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testUpdateDatasource() throws Exception {
@@ -742,7 +732,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(oldCode, actualDatasource.getCode());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testRetrieveDatasourceByUrn() throws Exception {
@@ -751,11 +740,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDatasource(datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME), actual);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testDeleteDatasource() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensions();
 
         String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
 
@@ -766,7 +754,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.retrieveDatasourceByUrn(getServiceContextAdministrador(), datasourceUrn);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
@@ -804,7 +791,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // DATASETS
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME})
     public void testFindDatasetsByCondition() throws Exception {
@@ -844,7 +830,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // DATASETS VERSIONS
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testRetrieveDatasetVersionByUrn() throws Exception {
@@ -853,7 +838,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDatasetVersion(datasetVersion, dataset);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLatestDatasetVersion() throws Exception {
@@ -863,7 +847,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDatasetVersion(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLatestPublishedDatasetVersion() throws Exception {
@@ -873,7 +856,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDatasetVersion(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasetVersions() throws Exception {
@@ -898,7 +880,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
-    @Override
     @Test
     @MetamacMock(STATISTIC_OFFICIALITY_01_BASIC_NAME)
     public void testCreateDataset() throws Exception {
@@ -911,7 +892,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newDatasetVersionDto.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetVersion() throws Exception {
@@ -1039,7 +1019,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(oldCreator, updatedDataset.getCreatedBy());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testDeleteDatasetVersion() throws Exception {
@@ -1051,7 +1030,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_09_OPER_0001_CODE_000003_NAME, DATASET_VERSION_10_OPER_0002_CODE_000001_NAME, DATASET_VERSION_11_OPER_0002_CODE_000002_NAME})
     public void testFindDatasetsVersionsByCondition() throws Exception {
@@ -1407,7 +1385,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(datasetOper2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
     public void testRetrieveDatasetVersionMainCoverages() throws Exception {
@@ -1419,7 +1396,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         DatasetsAsserts.assertEqualsDatasetVersionMainCoverages(mainCoveragesDto, datasetVersion.getGeographicCoverage(), datasetVersion.getTemporalCoverage(), datasetVersion.getMeasureCoverage());
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersion() throws Exception {
@@ -1429,11 +1405,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newVersion);
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendDatasetVersionToProductionValidation() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
 
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
@@ -1445,7 +1420,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getProductionValidationDate()));
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendDatasetVersionToDiffusionValidation() throws Exception {
@@ -1459,7 +1433,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getDiffusionValidationDate()));
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendDatasetVersionToValidationRejected() throws Exception {
@@ -1476,7 +1449,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(updatedDatasetVersion.getProductionValidationDate());
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
     public void testRetrieveCoverageForDatasetVersionDimension() throws Exception {
@@ -1500,7 +1472,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
@@ -1511,7 +1482,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(dimensionIds, Arrays.asList("dim1", "dim2", "dim3"));
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
     public void testFilterCoverageForDatasetVersionDimension() throws Exception {
@@ -1523,7 +1493,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
-    @Override
     @Test
     @MetamacMock({STATISTIC_OFFICIALITY_01_BASIC_NAME, STATISTIC_OFFICIALITY_02_BASIC_NAME})
     public void testFindStatisticOfficialities() throws Exception {
@@ -1531,7 +1500,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(2, officiality.size());
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME)
     public void testImportDatasourcesInDatasetVersion() throws Exception {
@@ -1543,7 +1511,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url));
     }
 
-    @Override
     public void testImportDatasourcesInStatisticalOperation() throws Exception {
         // See testImportDatasourcesInStatisticalOperation in DatasetServiceTest
     }
@@ -1552,7 +1519,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // PUBLICATIONS
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME, PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testFindPublicationsByCondition() throws Exception {
@@ -1592,7 +1558,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // PUBLICATIONS VERSIONS
     // ------------------------------------------------------------------------
 
-    @Override
     @Test
     public void testCreatePublication() throws Exception {
         PublicationVersionDto publicationVersionDto = StatisticalResourcesDtoMocks.mockPublicationVersionDto();
@@ -1603,7 +1568,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newPublicationVersionDto.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testUpdatePublicationVersion() throws Exception {
@@ -1718,7 +1682,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(originalCreator, updatedDataset.getCreatedBy());
     }
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testDeletePublicationVersion() throws Exception {
@@ -1729,7 +1692,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionUrn);
     }
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME, PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME, PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME,
             PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME, PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME, PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME})
@@ -1976,7 +1938,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(publicationOperation2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testRetrievePublicationVersionByUrn() throws Exception {
@@ -1986,7 +1947,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsPublicationVersion(publicationVersion, publicationVersionDto);
     }
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveLatestPublicationVersion() throws Exception {
@@ -1996,7 +1956,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsPublicationVersion(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testRetrieveLatestPublishedPublicationVersion() throws Exception {
@@ -2006,7 +1965,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsPublicationVersion(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME)
     public void testRetrievePublicationVersions() throws Exception {
@@ -2031,7 +1989,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendPublicationVersionToProductionValidation() throws Exception {
@@ -2049,7 +2006,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublicationVersion.getProductionValidationDate()));
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
     public void testSendPublicationVersionToDiffusionValidation() throws Exception {
@@ -2064,7 +2020,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublicationVersion.getDiffusionValidationDate()));
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
     public void testSendPublicationVersionToValidationRejected() throws Exception {
@@ -2082,7 +2037,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(updatedPublicationVersion.getProductionValidationDate());
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_16_PUBLISHED_NAME)
     public void testVersioningPublicationVersion() throws Exception {
@@ -2092,7 +2046,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newVersion);
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testRetrievePublicationVersionStructure() throws Exception {
@@ -2106,7 +2059,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // CHAPTER
     // ------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testCreateChapter() throws Exception {
@@ -2117,7 +2069,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(actual.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testUpdateChapter() throws Exception {
@@ -2129,7 +2080,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testUpdateChapterLocation() throws Exception {
@@ -2141,7 +2091,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(parentChapterUrn, chapterDto.getParentChapterUrn());
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testRetrieveChapter() throws Exception {
@@ -2151,7 +2100,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsChapter(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock(CHAPTER_01_BASIC_NAME)
     public void testDeleteChapter() throws Exception {
@@ -2166,7 +2114,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     // CUBES
     // ------------------------------------------------------------
 
-    @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_01_BASIC_NAME})
     public void testCreateCube() throws Exception {
@@ -2178,7 +2125,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(actual.getUrn());
     }
 
-    @Override
     @Test
     @MetamacMock(CUBE_01_BASIC_NAME)
     public void testUpdateCube() throws Exception {
@@ -2189,7 +2135,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
     }
 
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testUpdateCubeLocation() throws Exception {
@@ -2223,7 +2168,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
     }
 
-    @Override
     @Test
     @MetamacMock({CUBE_01_BASIC_NAME, CUBE_02_BASIC_NAME})
     public void testRetrieveCube() throws Exception {
@@ -2232,7 +2176,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsCube(expected, actual);
     }
 
-    @Override
     @Test
     @MetamacMock(CUBE_01_BASIC_NAME)
     public void testDeleteCube() throws Exception {
@@ -2297,5 +2240,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         propertyRestriction.setOperationType(operationType);
         propertyRestriction.setDateValue(date);
         metamacCriteria.setRestriction(propertyRestriction);
+    }
+
+    private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 }

@@ -61,6 +61,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
@@ -90,6 +92,9 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
+
+    @Autowired
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -667,7 +672,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendDatasetVersionToProductionValidation() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensions();
 
         // Retrieve dataset - session 1
         DatasetVersionDto datasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
@@ -701,7 +706,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendDatasetVersionToProductionValidationAndThenUpdate() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensions();
 
         // Retrieve dataset
         DatasetVersionDto datasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
@@ -957,7 +962,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testRetrieveDatasetVersions() throws Exception {
         // no optimistic locking in this operation
     }
-    
+
     @Override
     public void testRetrieveDatasetVersionMainCoverages() throws Exception {
         // no optimistic locking in this operation
@@ -1118,4 +1123,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // no optimistic locking in this operation
     }
 
+    private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
+    }
 }
