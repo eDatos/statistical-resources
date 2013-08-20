@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInitialValuesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourcesActionHandler;
@@ -11,7 +12,6 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetStatisticOfficialitiesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetVersionsOfDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
@@ -22,8 +22,6 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.external.Get
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetCommonMetadataConfigurationsListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetConceptSchemesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetConceptsPaginatedListActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetDefaultAgencyActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetDefaultLanguageInfoActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetDsdsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetGeographicalGranularitiesListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetLanguagesCodesActionHandler;
@@ -51,6 +49,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQue
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionsProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
@@ -61,7 +60,6 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
@@ -72,8 +70,6 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySch
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesAction;
@@ -140,8 +136,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDsdsPaginatedListAction.class, GetDsdsPaginatedListActionHandler.class);
         bindHandler(GetGeographicalGranularitiesListAction.class, GetGeographicalGranularitiesListActionHandler.class);
         bindHandler(GetTemporalGranularitiesListAction.class, GetTemporalGranularitiesListActionHandler.class);
-        bindHandler(GetDefaultLanguageInfoAction.class, GetDefaultLanguageInfoActionHandler.class);
-        bindHandler(GetDefaultAgencyAction.class, GetDefaultAgencyActionHandler.class);
         bindHandler(GetLanguagesCodesAction.class, GetLanguagesCodesActionHandler.class);
         bindHandler(GetConceptSchemesPaginatedListAction.class, GetConceptSchemesPaginatedListActionHandler.class);
         bindHandler(GetConceptsPaginatedListAction.class, GetConceptsPaginatedListActionHandler.class);
@@ -163,7 +157,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteDatasourcesAction.class, DeleteDatasourcesActionHandler.class);
         bindHandler(GetDatasetDimensionsAction.class, GetDatasetDimensionsActionHandler.class);
         bindHandler(GetDatasetDimensionCoverageAction.class, GetDatasetDimensionCoverageActionHandler.class);
-        bindHandler(GetStatisticOfficialitiesAction.class, GetStatisticOfficialitiesActionHandler.class);
         bindHandler(GetDatasetVersionMainCoveragesAction.class, GetDatasetVersionMainCoveragesActionHandler.class);
         bindHandler(GetVersionsOfDatasetAction.class, GetVersionsOfDatasetActionHandler.class);
 
@@ -191,6 +184,7 @@ public class ServerModule extends HandlerModule {
 
         // COMMON
         bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);
+        bindHandler(GetInitialValuesAction.class, GetInitialValuesActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

@@ -1,15 +1,22 @@
-package org.siemac.metamac.statistical.resources.web.shared.dataset;
+package org.siemac.metamac.statistical.resources.web.shared.base;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetStatisticOfficialities {
+public class GetInitialValues {
 
     @Out(1)
     List<StatisticOfficialityDto> statisticOfficialities;
+
+    @Out(2)
+    ExternalItemDto               agency;
+
+    @Out(3)
+    ExternalItemDto               defaultLanguage;
 }
