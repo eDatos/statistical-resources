@@ -24,6 +24,7 @@ import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -184,10 +185,11 @@ public class DatasetContentDescriptorsEditionForm extends SiemacMetadataContentD
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                SearchPaginatedAction<MetamacWebCriteria> filterAction = new SearchPaginatedAction<MetamacWebCriteria>() {
+                SearchPaginatedAction<MetamacVersionableWebCriteria> filterAction = new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
 
                     @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                    public void retrieveResultSet(int firstResult, int maxResults, MetamacVersionableWebCriteria webCriteria) {
+                        webCriteria.setOnlyLastVersion(statisticalUnitWindow.getFilter().getSearchCriteria().isOnlyLastVersion());
                         retrieveConceptSchemesForStatisticalUnit(firstResult, maxResults, webCriteria);
                     }
                 };
