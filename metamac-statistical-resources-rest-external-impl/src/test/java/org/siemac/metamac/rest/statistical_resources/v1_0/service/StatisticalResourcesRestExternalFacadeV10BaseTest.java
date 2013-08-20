@@ -51,6 +51,7 @@ import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.CommonMetadataRestMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -417,8 +418,20 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             @Override
             public DataStructure answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
-                String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
+                String[] urnSplited = UrnUtils.splitUrnStructure(urn);
                 return SrmRestMocks.mockDataStructure(urnSplited[0], urnSplited[1], urnSplited[2]);
+            };
+        });
+    }
+
+    private void mockRetrieveCodelistByUrn() throws MetamacException {
+        when(srmRestExternalFacade.retrieveCodelistByUrn(any(String.class))).thenAnswer(new Answer<Codelist>() {
+
+            @Override
+            public Codelist answer(InvocationOnMock invocation) throws Throwable {
+                String urn = (String) invocation.getArguments()[0];
+                String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
+                return SrmRestMocks.mockCodelist(urnSplited[0], urnSplited[1], urnSplited[2]);
             };
         });
     }
@@ -520,6 +533,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockFindObservationsExtendedByDimensions();
 
         mockRetrieveDataStructureByUrn();
+        mockRetrieveCodelistByUrn();
         mockRetrieveCodesByCodelistUrn();
         mockRetrieveConceptsByConceptSchemeUrn();
         mockRetrieveConceptByUrn();

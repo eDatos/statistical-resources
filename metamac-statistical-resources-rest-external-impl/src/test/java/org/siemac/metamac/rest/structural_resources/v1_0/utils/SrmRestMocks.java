@@ -4,6 +4,7 @@ import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.
 
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -55,6 +56,19 @@ public class SrmRestMocks {
         return dataStructure;
     }
 
+    public static Codelist mockCodelist(String agencyID, String resourceID, String version) {
+        Codelist codelist = new Codelist();
+        codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=" + agencyID + ":" + resourceID + "(" + version + ")");
+        codelist.setUrnProvider(codelist.getUrn());
+        codelist.setAgencyID(agencyID);
+        codelist.setId(resourceID);
+        codelist.setVersion(version);
+        if (resourceID.contains("GEO_DIM")) {
+            codelist.setVariable(mockVariableResource("variable-" + resourceID));
+        }
+        return codelist;
+    }
+
     private static ShowDecimalPrecision mockShowDecimalPrecision(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, int value) {
         ShowDecimalPrecision showDecimalPrecision = new ShowDecimalPrecision();
         showDecimalPrecision.setConcept(mockConceptResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, null));
@@ -74,54 +88,54 @@ public class SrmRestMocks {
 
         Codes codes = new Codes();
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
+            CodeResourceInternal parent = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
             codes.getCodes().add(parent);
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
                 codes.getCodes().add(child);
                 {
-                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
+                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
                     codes.getCodes().add(child2);
                 }
                 {
-                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
+                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
                     codes.getCodes().add(child2);
                 }
             }
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
                 codes.getCodes().add(child);
                 {
-                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
+                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
                     codes.getCodes().add(child2);
                 }
                 {
-                    CodeResourceInternal child2 = mockCodeResource(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
+                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
                     codes.getCodes().add(child2);
                 }
             }
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
                 codes.getCodes().add(child);
             }
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
+            CodeResourceInternal parent = mockCodeResourceGeographical(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
             codes.getCodes().add(parent);
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
+                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
                 codes.getCodes().add(child);
             }
         }
@@ -161,6 +175,13 @@ public class SrmRestMocks {
         concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept04", null));
         concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept05", null));
         return concepts;
+    }
+
+    public static CodeResourceInternal mockCodeResourceGeographical(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order,
+            Boolean open) {
+        CodeResourceInternal code = mockCodeResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, parentUrn, order, open);
+        code.setVariableElement(mockVariableElementResource("variableElement-" + resourceID));
+        return code;
     }
 
     public static CodeResourceInternal mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
@@ -248,6 +269,27 @@ public class SrmRestMocks {
         conceptScheme.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/" + agencyID + "/" + resourceID + "/" + version));
         return conceptScheme;
     }
+
+    private static ResourceInternal mockVariableResource(String resourceID) {
+        ResourceInternal variable = new ResourceInternal();
+        variable.setUrn("urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=" + resourceID);
+        variable.setId(resourceID);
+        variable.setName(mockInternationalString(resourceID));
+        variable.setKind("structuralResources#variable");
+        variable.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/" + resourceID));
+        return variable;
+    }
+
+    private static ResourceInternal mockVariableElementResource(String resourceID) {
+        ResourceInternal variableElement = new ResourceInternal();
+        variableElement.setUrn("urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01." + resourceID);
+        variableElement.setId(resourceID);
+        variableElement.setName(mockInternationalString(resourceID));
+        variableElement.setKind("structuralResources#variableElement");
+        variableElement.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/" + resourceID));
+        return variableElement;
+    }
+
     private static TextFormat mockTimeTextFormatType() {
         TextFormat timeTextFormatType = new TextFormat();
         timeTextFormatType.setTextType(DataType.BASIC_TIME_PERIOD);

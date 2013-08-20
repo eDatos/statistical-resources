@@ -266,6 +266,7 @@
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="type" type="tns:DimensionType" />
+            <xs:element name="variable" type="common:Resource" minOccurs="0"/>
             <xs:element name="dimensionValues" type="tns:DimensionValues" />
         </xs:sequence>
     </xs:complexType>
@@ -300,6 +301,7 @@
             <xs:extension base="common:Resource">
                 <xs:sequence>
                     <xs:element name="visualisationParent" type="xs:string" minOccurs="0" />
+                    <xs:element name="variableElement" type="common:Resource" minOccurs="0"/>
                     <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0" />
                     <xs:element name="open" type="xs:boolean" minOccurs="0" />
                 </xs:sequence>

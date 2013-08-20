@@ -2,13 +2,13 @@
 <stat:dataset xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" kind="statisticalResources#dataset">
     <stat:id>dataset1</stat:id>
     <stat:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)</stat:urn>
-    <stat:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000"/>
-    <stat:parentLink kind="statisticalResources#datasets" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets"/>
+    <stat:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000" />
+    <stat:parentLink kind="statisticalResources#datasets" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets" />
     <stat:name>
         <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-7AkVx8l8uC en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-CMs2A8ylWY en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -17,7 +17,7 @@
         <stat:language kind="structuralResources#code">
             <cdomain:id>language01</cdomain:id>
             <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language01</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/language01"/>
+            <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/language01" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-language01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -26,7 +26,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>language01</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language01</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/language01"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/language01" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-language01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -34,7 +34,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>language02</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language02</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/language02"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/language02" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-language02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -43,7 +43,7 @@
         <stat:statisticalOperation kind="statisticalOperations#operation">
             <cdomain:id>statisticalOperation01</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=statisticalOperation01</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/statisticalOperation01"/>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/statisticalOperation01" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-statisticalOperation01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -52,7 +52,7 @@
             <cdomain:resource kind="statisticalOperations#instance">
                 <cdomain:id>instance01</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance01</cdomain:urn>
-                <cdomain:selfLink kind="statisticalOperations#instance" href="http://data.istac.es/apis/operations/latest/instance01"/>
+                <cdomain:selfLink kind="statisticalOperations#instance" href="http://data.istac.es/apis/operations/latest/instance01" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-instance01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -60,29 +60,29 @@
             <cdomain:resource kind="statisticalOperations#instance">
                 <cdomain:id>instance02</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance02</cdomain:urn>
-                <cdomain:selfLink kind="statisticalOperations#instance" href="http://data.istac.es/apis/operations/latest/instance02"/>
+                <cdomain:selfLink kind="statisticalOperations#instance" href="http://data.istac.es/apis/operations/latest/instance02" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-instance02 en Espanol</cdomain:text>
                 </cdomain:name>
             </cdomain:resource>
         </stat:statisticalOperationInstances>
         <stat:subtitle>
-            <cdomain:text xml:lang="es">subtitle-resource-7AkVx8l8uC en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">subtitle-resource-CMs2A8ylWY en Espanol</cdomain:text>
         </stat:subtitle>
         <stat:titleAlternative>
-            <cdomain:text xml:lang="es">titleAlternative-resource-7AkVx8l8uC en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">titleAlternative-resource-CMs2A8ylWY en Espanol</cdomain:text>
         </stat:titleAlternative>
         <stat:abstract>
-            <cdomain:text xml:lang="es">abstract-resource-7AkVx8l8uC en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">abstract-resource-CMs2A8ylWY en Espanol</cdomain:text>
         </stat:abstract>
         <stat:keywords>
-            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-resource-7AkVx8l8uC en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-resource-CMs2A8ylWY en Espanol</cdomain:text>
         </stat:keywords>
         <stat:type>DATASET</stat:type>
         <stat:creator kind="structuralResources#organisationUnit">
             <cdomain:id>creator</cdomain:id>
             <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).creator</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/creator"/>
+            <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/creator" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-creator en Espanol</cdomain:text>
             </cdomain:name>
@@ -91,7 +91,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>contributor01</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).contributor01</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/contributor01"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/contributor01" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-contributor01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -99,7 +99,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>contributor02</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).contributor02</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/contributor02"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/contributor02" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-contributor02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -108,13 +108,13 @@
         <stat:createdDate>2012-01-02T03:04:05Z</stat:createdDate>
         <stat:lastUpdate>2013-01-02T03:04:05Z</stat:lastUpdate>
         <stat:conformsTo>
-            <cdomain:text xml:lang="es">conformsTo-resource-7AkVx8l8uC en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">conformsTo-resource-CMs2A8ylWY en Espanol</cdomain:text>
         </stat:conformsTo>
         <stat:publishers total="2">
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>publisher01</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisher01</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisher01"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisher01" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-publisher01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -122,7 +122,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>publisher02</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisher02</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisher02"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisher02" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-publisher02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -132,7 +132,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>publisherContributor01</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisherContributor01</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisherContributor01"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisherContributor01" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-publisherContributor01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -140,7 +140,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>publisherContributor02</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisherContributor02</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisherContributor02"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/publisherContributor02" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-publisherContributor02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -150,7 +150,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>mediator01</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).mediator01</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/mediator01"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/mediator01" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-mediator01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -158,7 +158,7 @@
             <cdomain:resource kind="structuralResources#organisationUnit">
                 <cdomain:id>mediator02</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).mediator02</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/mediator02"/>
+                <cdomain:selfLink kind="structuralResources#organisationUnit" href="http://data.istac.es/apis/srm/latest/mediator02" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-mediator02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -168,7 +168,7 @@
         <stat:replaces kind="statisticalResources#dataset">
             <cdomain:id>replace01</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:replace01(01.000)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/replace01/01.000"/>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/replace01/01.000" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-replace01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -176,7 +176,7 @@
         <stat:isReplacedBy kind="statisticalResources#dataset">
             <cdomain:id>replacedBy01</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:replacedBy01(02.000)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/replacedBy01/02.000"/>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/replacedBy01/02.000" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-replacedBy01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -185,7 +185,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>require01</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:require01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/require01/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/require01/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-require01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -193,7 +193,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>require02</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:require02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/require02/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/require02/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-require02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -203,7 +203,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>isRequiredBy01</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:isRequiredBy01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isRequiredBy01/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isRequiredBy01/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-isRequiredBy01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -211,7 +211,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>isRequiredBy02</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:isRequiredBy02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isRequiredBy02/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isRequiredBy02/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-isRequiredBy02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -221,7 +221,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>hasPart01</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:hasPart01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart01/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart01/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-hasPart01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -229,7 +229,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>hasPart02</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:hasPart02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart02/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart02/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-hasPart02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -239,7 +239,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>isPartOf01</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:isPartOf01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isPartOf01/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isPartOf01/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-isPartOf01 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -247,7 +247,7 @@
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>isPartOf02</cdomain:id>
                 <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:isPartOf02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isPartOf02/01.000"/>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isPartOf02/01.000" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-isPartOf02 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -264,13 +264,13 @@
             <cdomain:text xml:lang="es">license en Español</cdomain:text>
         </stat:license>
         <stat:accessRights>
-            <cdomain:text xml:lang="es">accessRights-resource-7AkVx8l8uC en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">accessRights-resource-CMs2A8ylWY en Espanol</cdomain:text>
         </stat:accessRights>
         <stat:publicationDate>2013-01-01T03:04:13Z</stat:publicationDate>
         <stat:replacesVersion kind="statisticalResources#dataset">
             <cdomain:id>01.000</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:01.000(00.001)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/01.000/00.001"/>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/01.000/00.001" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-01.000 en Espanol</cdomain:text>
             </cdomain:name>
@@ -278,7 +278,7 @@
         <stat:isReplacedByVersion kind="statisticalResources#dataset">
             <cdomain:id>01.000</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:01.000(02.000)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/01.000/02.000"/>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/01.000/02.000" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-01.000 en Espanol</cdomain:text>
             </cdomain:name>
@@ -287,7 +287,7 @@
             <cdomain:id>agency01</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
             <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).agency01</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/agency01"/>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/agency01" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-agency01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -306,7 +306,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>santa-cruz-tenerife</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).santa-cruz-tenerife</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/santa-cruz-tenerife"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/santa-cruz-tenerife" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-santa-cruz-tenerife en Espanol</cdomain:text>
                 </cdomain:name>
@@ -314,7 +314,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>tenerife</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).tenerife</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/tenerife"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/tenerife" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-tenerife en Espanol</cdomain:text>
                 </cdomain:name>
@@ -322,7 +322,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>la-laguna</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).la-laguna</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/la-laguna"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/la-laguna" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-la-laguna en Espanol</cdomain:text>
                 </cdomain:name>
@@ -330,7 +330,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>santa-cruz</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).santa-cruz</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/santa-cruz"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/santa-cruz" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-santa-cruz en Espanol</cdomain:text>
                 </cdomain:name>
@@ -338,7 +338,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>la-palma</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).la-palma</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/la-palma"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/la-palma" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-la-palma en Espanol</cdomain:text>
                 </cdomain:name>
@@ -346,7 +346,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>santa-cruz-la-palma</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).santa-cruz-la-palma</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/santa-cruz-la-palma"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/santa-cruz-la-palma" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-santa-cruz-la-palma en Espanol</cdomain:text>
                 </cdomain:name>
@@ -354,7 +354,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>los-llanos-de-aridane</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).los-llanos-de-aridane</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/los-llanos-de-aridane"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/los-llanos-de-aridane" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-los-llanos-de-aridane en Espanol</cdomain:text>
                 </cdomain:name>
@@ -362,7 +362,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>la-gomera</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).la-gomera</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/la-gomera"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/la-gomera" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-la-gomera en Espanol</cdomain:text>
                 </cdomain:name>
@@ -370,7 +370,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>el-hierro</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).el-hierro</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/el-hierro"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/el-hierro" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-el-hierro en Espanol</cdomain:text>
                 </cdomain:name>
@@ -378,7 +378,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>las-palmas-gran-canaria</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).las-palmas-gran-canaria</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/las-palmas-gran-canaria"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/las-palmas-gran-canaria" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-las-palmas-gran-canaria en Espanol</cdomain:text>
                 </cdomain:name>
@@ -386,7 +386,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>gran-canaria</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).gran-canaria</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/gran-canaria"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/gran-canaria" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-gran-canaria en Espanol</cdomain:text>
                 </cdomain:name>
@@ -394,7 +394,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>fuerteventura</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).fuerteventura</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/fuerteventura"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/fuerteventura" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-fuerteventura en Espanol</cdomain:text>
                 </cdomain:name>
@@ -402,7 +402,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>lanzarote</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).lanzarote</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/lanzarote"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/lanzarote" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-lanzarote en Espanol</cdomain:text>
                 </cdomain:name>
@@ -410,15 +410,9 @@
         </stat:geographicCoverages>
         <stat:temporalCoverages total="4">
             <cdomain:item>
-                <cdomain:id>2011</cdomain:id>
+                <cdomain:id>2014</cdomain:id>
                 <cdomain:name>
-                    <cdomain:text xml:lang="es">2011</cdomain:text>
-                </cdomain:name>
-            </cdomain:item>
-            <cdomain:item>
-                <cdomain:id>2012</cdomain:id>
-                <cdomain:name>
-                    <cdomain:text xml:lang="es">2012</cdomain:text>
+                    <cdomain:text xml:lang="es">2014</cdomain:text>
                 </cdomain:name>
             </cdomain:item>
             <cdomain:item>
@@ -428,9 +422,15 @@
                 </cdomain:name>
             </cdomain:item>
             <cdomain:item>
-                <cdomain:id>2014</cdomain:id>
+                <cdomain:id>2012</cdomain:id>
                 <cdomain:name>
-                    <cdomain:text xml:lang="es">2014</cdomain:text>
+                    <cdomain:text xml:lang="es">2012</cdomain:text>
+                </cdomain:name>
+            </cdomain:item>
+            <cdomain:item>
+                <cdomain:id>2011</cdomain:id>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">2011</cdomain:text>
                 </cdomain:name>
             </cdomain:item>
         </stat:temporalCoverages>
@@ -438,7 +438,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>code-d2-1</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).code-d2-1</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/code-d2-1"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/code-d2-1" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-code-d2-1 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -446,7 +446,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>code-d2-2</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).code-d2-2</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/code-d2-2"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/code-d2-2" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-code-d2-2 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -456,7 +456,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>municipalities</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/municipalities"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/municipalities" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-municipalities en Espanol</cdomain:text>
                 </cdomain:name>
@@ -464,7 +464,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>countries</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/countries"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/countries" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-countries en Espanol</cdomain:text>
                 </cdomain:name>
@@ -474,7 +474,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>yearly</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).yearly</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/yearly"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/yearly" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-yearly en Espanol</cdomain:text>
                 </cdomain:name>
@@ -482,7 +482,7 @@
             <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>monthly</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).monthly</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/monthly"/>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/monthly" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-monthly en Espanol</cdomain:text>
                 </cdomain:name>
@@ -494,7 +494,7 @@
             <cdomain:resource kind="structuralResources#concept">
                 <cdomain:id>statisticalUnit1</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=MaintainerMock:ConceptSchemeMock(1.0).statisticalUnit1</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#concept" href="http://data.istac.es/apis/srm/latest/statisticalUnit1"/>
+                <cdomain:selfLink kind="structuralResources#concept" href="http://data.istac.es/apis/srm/latest/statisticalUnit1" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-statisticalUnit1 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -502,7 +502,7 @@
             <cdomain:resource kind="structuralResources#concept">
                 <cdomain:id>statisticalUnit2</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=MaintainerMock:ConceptSchemeMock(1.0).statisticalUnit2</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#concept" href="http://data.istac.es/apis/srm/latest/statisticalUnit2"/>
+                <cdomain:selfLink kind="structuralResources#concept" href="http://data.istac.es/apis/srm/latest/statisticalUnit2" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-statisticalUnit2 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -510,7 +510,7 @@
             <cdomain:resource kind="structuralResources#concept">
                 <cdomain:id>statisticalUnit3</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=MaintainerMock:ConceptSchemeMock(1.0).statisticalUnit3</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#concept" href="http://data.istac.es/apis/srm/latest/statisticalUnit3"/>
+                <cdomain:selfLink kind="structuralResources#concept" href="http://data.istac.es/apis/srm/latest/statisticalUnit3" />
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-statisticalUnit3 en Espanol</cdomain:text>
                 </cdomain:name>
@@ -519,7 +519,7 @@
         <stat:relatedDsd kind="structuralResources#dataStructure">
             <cdomain:id>DSD01</cdomain:id>
             <cdomain:urn>urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=MaintainerMock:DSD01(1.0)</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#dataStructure" href="http://data.istac.es/apis/srm/latest/DSD01"/>
+            <cdomain:selfLink kind="structuralResources#dataStructure" href="http://data.istac.es/apis/srm/latest/DSD01" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-DSD01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -541,133 +541,245 @@
                     <cdomain:text xml:lang="es">GEO_DIM-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:type>GEOGRAPHIC_DIMENSION</stat:type>
+                <stat:variable kind="structuralResources#variable">
+                    <cdomain:id>variable-GEO_DIM-codelist01</cdomain:id>
+                    <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable-GEO_DIM-codelist01</cdomain:urn>
+                    <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable-GEO_DIM-codelist01" />
+                    <cdomain:name>
+                        <cdomain:text xml:lang="es">variable-GEO_DIM-codelist01 en Español</cdomain:text>
+                    </cdomain:name>
+                </stat:variable>
                 <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedDimensionValues" total="13">
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>santa-cruz-tenerife</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/santa-cruz-tenerife"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/santa-cruz-tenerife" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz-tenerife en Español</cdomain:text>
                         </cdomain:name>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-santa-cruz-tenerife</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-santa-cruz-tenerife</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-santa-cruz-tenerife" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-santa-cruz-tenerife en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>tenerife</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/tenerife"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/tenerife" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">tenerife en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-tenerife</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-tenerife</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-tenerife" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-tenerife en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>false</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>la-laguna</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-laguna</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/la-laguna"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/la-laguna" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">la-laguna en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-la-laguna</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-la-laguna</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-la-laguna" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-la-laguna en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>santa-cruz</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/santa-cruz"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/santa-cruz" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-santa-cruz</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-santa-cruz</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-santa-cruz" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-santa-cruz en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>la-palma</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-palma</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/la-palma"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/la-palma" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">la-palma en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-la-palma</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-la-palma</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-la-palma" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-la-palma en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>los-llanos-de-aridane</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).los-llanos-de-aridane</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/los-llanos-de-aridane"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/los-llanos-de-aridane" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">los-llanos-de-aridane en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-palma</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-los-llanos-de-aridane</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-los-llanos-de-aridane</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-los-llanos-de-aridane" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-los-llanos-de-aridane en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>santa-cruz-la-palma</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-la-palma</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/santa-cruz-la-palma"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/santa-cruz-la-palma" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz-la-palma en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-palma</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-santa-cruz-la-palma</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-santa-cruz-la-palma</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-santa-cruz-la-palma" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-santa-cruz-la-palma en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>la-gomera</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-gomera</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/la-gomera"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/la-gomera" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">la-gomera en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-la-gomera</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-la-gomera</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-la-gomera" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-la-gomera en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>el-hierro</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).el-hierro</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/el-hierro"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/el-hierro" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">el-hierro en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-el-hierro</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-el-hierro</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-el-hierro" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-el-hierro en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>las-palmas-gran-canaria</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/las-palmas-gran-canaria"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/las-palmas-gran-canaria" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">las-palmas-gran-canaria en Español</cdomain:text>
                         </cdomain:name>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-las-palmas-gran-canaria</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-las-palmas-gran-canaria</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-las-palmas-gran-canaria" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-las-palmas-gran-canaria en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>false</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>gran-canaria</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).gran-canaria</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/gran-canaria"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/gran-canaria" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">gran-canaria en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-gran-canaria</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-gran-canaria</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-gran-canaria" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-gran-canaria en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>fuerteventura</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).fuerteventura</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/fuerteventura"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/fuerteventura" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">fuerteventura en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-fuerteventura</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-fuerteventura</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-fuerteventura" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-fuerteventura en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>lanzarote</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).lanzarote</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/lanzarote"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/GEO_DIM-codelist01/01.000/codes/lanzarote" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">lanzarote en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-lanzarote</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-lanzarote</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-lanzarote" />
+                            <cdomain:name>
+                                <cdomain:text xml:lang="es">variableElement-lanzarote en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                 </stat:dimensionValues>
@@ -715,7 +827,8 @@
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept01</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept01"/>
+                        <cdomain:selfLink
+                            href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept01" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept01 en Español</cdomain:text>
                         </cdomain:name>
@@ -724,7 +837,8 @@
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept02</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept02</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept02"/>
+                        <cdomain:selfLink
+                            href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept02" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept02 en Español</cdomain:text>
                         </cdomain:name>
@@ -733,7 +847,8 @@
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept05</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept05</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept05"/>
+                        <cdomain:selfLink
+                            href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept05" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept05 en Español</cdomain:text>
                         </cdomain:name>
@@ -751,7 +866,7 @@
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>dim01-codelist01-code01</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:dim01-codelist01(01.000).dim01-codelist01-code01</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code01"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code01" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">dim01-codelist01-code01 en Español</cdomain:text>
                         </cdomain:name>
@@ -760,7 +875,7 @@
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>dim01-codelist01-code03</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:dim01-codelist01(01.000).dim01-codelist01-code03</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code03"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code03" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">dim01-codelist01-code03 en Español</cdomain:text>
                         </cdomain:name>
@@ -769,7 +884,7 @@
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>dim01-codelist01-code04</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:dim01-codelist01(01.000).dim01-codelist01-code04</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code04"/>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/dim01-codelist01/01.000/codes/dim01-codelist01-code04" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">dim01-codelist01-code04 en Español</cdomain:text>
                         </cdomain:name>
@@ -784,7 +899,7 @@
         <stat:updateFrequency kind="structuralResources#code">
             <cdomain:id>updateFrequency01</cdomain:id>
             <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).updateFrequency01</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/updateFrequency01"/>
+            <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/updateFrequency01" />
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-updateFrequency01 en Espanol</cdomain:text>
             </cdomain:name>
@@ -804,47 +919,60 @@
             <stat:dimension>
                 <stat:dimensionId>GEO_DIM</stat:dimensionId>
                 <stat:representations total="13">
-                    <stat:representation code="santa-cruz-tenerife" index="0"/>
-                    <stat:representation code="tenerife" index="1"/>
-                    <stat:representation code="la-laguna" index="2"/>
-                    <stat:representation code="santa-cruz" index="3"/>
-                    <stat:representation code="la-palma" index="4"/>
-                    <stat:representation code="santa-cruz-la-palma" index="5"/>
-                    <stat:representation code="los-llanos-de-aridane" index="6"/>
-                    <stat:representation code="la-gomera" index="7"/>
-                    <stat:representation code="el-hierro" index="8"/>
-                    <stat:representation code="las-palmas-gran-canaria" index="9"/>
-                    <stat:representation code="gran-canaria" index="10"/>
-                    <stat:representation code="fuerteventura" index="11"/>
-                    <stat:representation code="lanzarote" index="12"/>
+                    <stat:representation code="santa-cruz-tenerife" index="0" />
+                    <stat:representation code="tenerife" index="1" />
+                    <stat:representation code="la-laguna" index="2" />
+                    <stat:representation code="santa-cruz" index="3" />
+                    <stat:representation code="la-palma" index="4" />
+                    <stat:representation code="santa-cruz-la-palma" index="5" />
+                    <stat:representation code="los-llanos-de-aridane" index="6" />
+                    <stat:representation code="la-gomera" index="7" />
+                    <stat:representation code="el-hierro" index="8" />
+                    <stat:representation code="las-palmas-gran-canaria" index="9" />
+                    <stat:representation code="gran-canaria" index="10" />
+                    <stat:representation code="fuerteventura" index="11" />
+                    <stat:representation code="lanzarote" index="12" />
                 </stat:representations>
             </stat:dimension>
             <stat:dimension>
                 <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
                 <stat:representations total="4">
-                    <stat:representation code="2011" index="0"/>
-                    <stat:representation code="2012" index="1"/>
-                    <stat:representation code="2013" index="2"/>
-                    <stat:representation code="2014" index="3"/>
+                    <stat:representation code="2011" index="0" />
+                    <stat:representation code="2012" index="1" />
+                    <stat:representation code="2013" index="2" />
+                    <stat:representation code="2014" index="3" />
                 </stat:representations>
             </stat:dimension>
             <stat:dimension>
                 <stat:dimensionId>measure01</stat:dimensionId>
                 <stat:representations total="3">
-                    <stat:representation code="measure01-conceptScheme01-concept01" index="0"/>
-                    <stat:representation code="measure01-conceptScheme01-concept02" index="1"/>
-                    <stat:representation code="measure01-conceptScheme01-concept05" index="2"/>
+                    <stat:representation code="measure01-conceptScheme01-concept01" index="0" />
+                    <stat:representation code="measure01-conceptScheme01-concept02" index="1" />
+                    <stat:representation code="measure01-conceptScheme01-concept05" index="2" />
                 </stat:representations>
             </stat:dimension>
             <stat:dimension>
                 <stat:dimensionId>dim01</stat:dimensionId>
                 <stat:representations total="3">
-                    <stat:representation code="dim01-codelist01-code01" index="0"/>
-                    <stat:representation code="dim01-codelist01-code03" index="1"/>
-                    <stat:representation code="dim01-codelist01-code04" index="2"/>
+                    <stat:representation code="dim01-codelist01-code01" index="0" />
+                    <stat:representation code="dim01-codelist01-code03" index="1" />
+                    <stat:representation code="dim01-codelist01-code04" index="2" />
                 </stat:representations>
             </stat:dimension>
         </stat:dimensions>
-        <stat:observations>1 | 2 |  | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127 | 128 | 129 | 130 | 131 | 132 | 133 | 134 | 135 | 136 | 137 | 138 | 139 | 140 | 141 | 142 | 143 | 144 | 145 | 146 | 147 | 148 | 149 | 150 | 151 | 152 | 153 | 154 | 155 | 156 | 157 | 158 | 159 | 160 | 161 | 162 | 163 | 164 | 165 | 166 | 167 | 168 | 169 | 170 | 171 | 172 | 173 | 174 | 175 | 176 | 177 | 178 | 179 | 180 | 181 | 182 | 183 | 184 | 185 | 186 | 187 | 188 | 189 | 190 | 191 | 192 | 193 | 194 | 195 | 196 | 197 | 198 | 199 | 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 209 | 210 | 211 | 212 | 213 | 214 | 215 | 216 | 217 | 218 | 219 | 220 | 221 | 222 | 223 | 224 | 225 | 226 | 227 | 228 | 229 | 230 | 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 | 239 | 240 | 241 | 242 | 243 | 244 | 245 | 246 | 247 | 248 | 249 | 250 | 251 | 252 | 253 | 254 | 255 | 256 | 257 | 258 | 259 | 260 | 261 | 262 | 263 | 264 | 265 | 266 | 267 | 268 | 269 | 270 | 271 | 272 | 273 | 274 | 275 | 276 | 277 | 278 | 279 | 280 | 281 | 282 | 283 | 284 | 285 | 286 | 287 | 288 | 289 | 290 | 291 | 292 | 293 | 294 | 295 | 296 | 297 | 298 | 299 | 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 | 308 | 309 | 310 | 311 | 312 | 313 | 314 | 315 | 316 | 317 | 318 | 319 | 320 | 321 | 322 | 323 | 324 | 325 | 326 | 327 | 328 | 329 | 330 | 331 | 332 | 333 | 334 | 335 | 336 | 337 | 338 | 339 | 340 | 341 | 342 | 343 | 344 | 345 | 346 | 347 | 348 | 349 | 350 | 351 | 352 | 353 | 354 | 355 | 356 | 357 | 358 | 359 | 360 | 361 | 362 | 363 | 364 | 365 | 366 | 367 | 368 | 369 | 370 | 371 | 372 | 373 | 374 | 375 | 376 | 377 | 378 | 379 | 380 | 381 | 382 | 383 | 384 | 385 | 386 | 387 | 388 | 389 | 390 | 391 | 392 | 393 | 394 | 395 | 396 | 397 | 398 | 399 | 400 | 401 | 402 | 403 | 404 | 405 | 406 | 407 | 408 | 409 | 410 | 411 | 412 | 413 | 414 | 415 | 416 | 417 | 418 | 419 | 420 | 421 | 422 | 423 | 424 | 425 | 426 | 427 | 428 | 429 | 430 | 431 | 432 | 433 | 434 | 435 | 436 | 437 | 438 | 439 | 440 | 441 | 442 | 443 | 444 | 445 | 446 | 447 | 448 | 449 | 450 | 451 | 452 | 453 | 454 | 455 | 456 | 457 | 458 | 459 | 460 | 461 | 462 | 463 | 464 | 465 | 466 | 467 | 468</stat:observations>
+        <stat:observations>1 | 2 | | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 |
+            40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79
+            | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 |
+            116 | 117 | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127 | 128 | 129 | 130 | 131 | 132 | 133 | 134 | 135 | 136 | 137 | 138 | 139 | 140 | 141 | 142 | 143 | 144 | 145 | 146 | 147 | 148 |
+            149 | 150 | 151 | 152 | 153 | 154 | 155 | 156 | 157 | 158 | 159 | 160 | 161 | 162 | 163 | 164 | 165 | 166 | 167 | 168 | 169 | 170 | 171 | 172 | 173 | 174 | 175 | 176 | 177 | 178 | 179 | 180 | 181 |
+            182 | 183 | 184 | 185 | 186 | 187 | 188 | 189 | 190 | 191 | 192 | 193 | 194 | 195 | 196 | 197 | 198 | 199 | 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 209 | 210 | 211 | 212 | 213 | 214 |
+            215 | 216 | 217 | 218 | 219 | 220 | 221 | 222 | 223 | 224 | 225 | 226 | 227 | 228 | 229 | 230 | 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 | 239 | 240 | 241 | 242 | 243 | 244 | 245 | 246 | 247 |
+            248 | 249 | 250 | 251 | 252 | 253 | 254 | 255 | 256 | 257 | 258 | 259 | 260 | 261 | 262 | 263 | 264 | 265 | 266 | 267 | 268 | 269 | 270 | 271 | 272 | 273 | 274 | 275 | 276 | 277 | 278 | 279 | 280 |
+            281 | 282 | 283 | 284 | 285 | 286 | 287 | 288 | 289 | 290 | 291 | 292 | 293 | 294 | 295 | 296 | 297 | 298 | 299 | 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 | 308 | 309 | 310 | 311 | 312 | 313 |
+            314 | 315 | 316 | 317 | 318 | 319 | 320 | 321 | 322 | 323 | 324 | 325 | 326 | 327 | 328 | 329 | 330 | 331 | 332 | 333 | 334 | 335 | 336 | 337 | 338 | 339 | 340 | 341 | 342 | 343 | 344 | 345 | 346 |
+            347 | 348 | 349 | 350 | 351 | 352 | 353 | 354 | 355 | 356 | 357 | 358 | 359 | 360 | 361 | 362 | 363 | 364 | 365 | 366 | 367 | 368 | 369 | 370 | 371 | 372 | 373 | 374 | 375 | 376 | 377 | 378 | 379 |
+            380 | 381 | 382 | 383 | 384 | 385 | 386 | 387 | 388 | 389 | 390 | 391 | 392 | 393 | 394 | 395 | 396 | 397 | 398 | 399 | 400 | 401 | 402 | 403 | 404 | 405 | 406 | 407 | 408 | 409 | 410 | 411 | 412 |
+            413 | 414 | 415 | 416 | 417 | 418 | 419 | 420 | 421 | 422 | 423 | 424 | 425 | 426 | 427 | 428 | 429 | 430 | 431 | 432 | 433 | 434 | 435 | 436 | 437 | 438 | 439 | 440 | 441 | 442 | 443 | 444 | 445 |
+            446 | 447 | 448 | 449 | 450 | 451 | 452 | 453 | 454 | 455 | 456 | 457 | 458 | 459 | 460 | 461 | 462 | 463 | 464 | 465 | 466 | 467 | 468</stat:observations>
     </stat:data>
 </stat:dataset>

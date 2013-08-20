@@ -49,6 +49,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalReso
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
@@ -586,6 +587,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setId(source.getComponentId());
         target.setType(toDimensionType(source.getType()));
         target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
+        if (source.getCodelistRepresentationUrn() != null) {
+            Codelist codelistRepresentation = srmRestExternalFacade.retrieveCodelistByUrn(source.getCodelistRepresentationUrn());
+            target.setVariable(toResource(codelistRepresentation.getVariable(), selectedLanguages));
+        }
 
         // Dimension values
         target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages));
@@ -780,6 +785,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 target.setVisualisationParent(parentsReplacedToVisualisation.get(source.getParent()));
             }
         }
+        target.setVariableElement(toResource(source.getVariableElement(), selectedLanguages));
         target.setKind(source.getKind());
         target.setSelfLink(source.getSelfLink());
 

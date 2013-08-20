@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-M0CkuxYyvJ en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-6ZASGLnG9G en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -47,6 +47,14 @@
                     <cdomain:text xml:lang="es">GEO_DIM-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:type>GEOGRAPHIC_DIMENSION</stat:type>
+                <stat:variable kind="structuralResources#variable">
+                    <cdomain:id>variable-GEO_DIM-codelist01</cdomain:id>
+                    <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable-GEO_DIM-codelist01</cdomain:urn>
+                    <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable-GEO_DIM-codelist01"/>
+                    <cdomain:name>
+                        <cdomain:text xml:lang="es">variable-GEO_DIM-codelist01 en Español</cdomain:text>
+                    </cdomain:name>
+                </stat:variable>
                 <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedDimensionValues" total="8">
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>santa-cruz-tenerife</cdomain:id>
@@ -55,6 +63,14 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz-tenerife en Español</cdomain:text>
                         </cdomain:name>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-santa-cruz-tenerife</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-santa-cruz-tenerife</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-santa-cruz-tenerife"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-santa-cruz-tenerife en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -65,6 +81,14 @@
                             <cdomain:text xml:lang="es">tenerife en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-tenerife</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-tenerife</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-tenerife"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-tenerife en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>false</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -75,6 +99,14 @@
                             <cdomain:text xml:lang="es">la-laguna en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-la-laguna</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-la-laguna</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-la-laguna"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-la-laguna en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -85,6 +117,14 @@
                             <cdomain:text xml:lang="es">santa-cruz en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-santa-cruz</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-santa-cruz</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-santa-cruz"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-santa-cruz en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -95,6 +135,14 @@
                             <cdomain:text xml:lang="es">la-palma en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-la-palma</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-la-palma</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-la-palma"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-la-palma en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -105,6 +153,14 @@
                             <cdomain:text xml:lang="es">los-llanos-de-aridane en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-palma</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-los-llanos-de-aridane</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-los-llanos-de-aridane</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-los-llanos-de-aridane"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-los-llanos-de-aridane en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -114,6 +170,14 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">las-palmas-gran-canaria en Español</cdomain:text>
                         </cdomain:name>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-las-palmas-gran-canaria</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-las-palmas-gran-canaria</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-las-palmas-gran-canaria"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-las-palmas-gran-canaria en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>false</stat:open>
                     </stat:value>
                     <stat:value kind="structuralResources#code">
@@ -124,6 +188,14 @@
                             <cdomain:text xml:lang="es">fuerteventura en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</stat:visualisationParent>
+                        <stat:variableElement kind="structuralResources#variableElement">
+                            <cdomain:id>variableElement-fuerteventura</cdomain:id>
+                            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-fuerteventura</cdomain:urn>
+                            <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable01/variableelements/variableElement-fuerteventura"/>
+                            <cdomain:name>
+<cdomain:text xml:lang="es">variableElement-fuerteventura en Español</cdomain:text>
+                            </cdomain:name>
+                        </stat:variableElement>
                         <stat:open>true</stat:open>
                     </stat:value>
                 </stat:dimensionValues>
