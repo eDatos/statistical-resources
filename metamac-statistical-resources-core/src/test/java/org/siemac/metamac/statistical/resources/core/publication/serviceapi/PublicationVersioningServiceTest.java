@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsVersionedElementLevelCollection;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME;
@@ -17,11 +16,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
-import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
@@ -33,8 +29,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml",
-        "classpath:spring/statistical-resources/include/task-mockito.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
 public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTest {
@@ -48,9 +43,6 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     @Autowired
     @Qualifier("publicationLifecycleService")
     private LifecycleService<PublicationVersion> publicationVersionLifecycleService;
-
-    @Autowired
-    private TaskService                          taskService;
 
     @Test
     @MetamacMock(PUBLICATION_VERSION_16_PUBLISHED_NAME)
@@ -150,18 +142,6 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         assertEquals(expectedUrn, newPublicationVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME)
-    public void testVersioningPublicationVersionImportationTaskInProgress() throws Exception {
-        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
-        String urn = publicationVersion.getSiemacMetadataStatisticalResource().getUrn();
-        mockTaskInProgressForResource(urn, true);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, urn));
-
-        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), urn, VersionTypeEnum.MINOR);
-    }
-
     // -------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // -------------------------------------------------------------------------------------------
@@ -169,15 +149,10 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     private static void checkNewPublicationVersionCreated(PublicationVersion previous, PublicationVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
 
-        // Non inherited fields
-
-        // Inherited
+        // Inherited fields
         assertEqualsVersionedElementLevelCollection(previous.getChildrenAllLevels(), next.getChildrenAllLevels());
         assertEqualsVersionedElementLevelCollection(previous.getChildrenFirstLevel(), next.getChildrenFirstLevel());
         assertEquals(previous.getFormatExtentResources(), next.getFormatExtentResources());
     }
 
-    private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
-        TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetVersionUrn, status);
-    }
 }

@@ -684,10 +684,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // Versioning - session 1 --> OK
         PublicationVersionDto publicationVersionDtoSession1NewVersion = statisticalResourcesServiceFacade.versioningPublicationVersion(getServiceContextAdministrador(),
                 publicationVersionDtoSession01, VersionTypeEnum.MAJOR);
-        
-        PublicationVersionDto publicationVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionMockFactory
-                .retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
-        
+
+        PublicationVersionDto publicationVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+
         assertEquals(Long.valueOf(0), publicationVersionDtoSession1NewVersion.getOptimisticLockingVersion());
         assertTrue(publicationVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > publicationVersionDtoSession01.getOptimisticLockingVersion());
 
@@ -868,25 +868,29 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     @Test
-    @MetamacMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME)
-    @Ignore
+    @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersion() throws Exception {
         // Retrieve dataset - session 1
         DatasetVersionDto datasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
-                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetVersionDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve dataset - session 2
         DatasetVersionDto datasetVersionDtoSession02 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
-                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetVersionDtoSession02.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 1 --> OK
-        DatasetVersionDto datasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.versioningDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession01,
+        // Versioning - session 1 --> OK
+        DatasetVersionDto datasetVersionDtoSession1NewResource = statisticalResourcesServiceFacade.versioningDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession01,
                 VersionTypeEnum.MAJOR);
+        assertEquals(Long.valueOf(0), datasetVersionDtoSession1NewResource.getOptimisticLockingVersion());
+
+        DatasetVersionDto datasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionMockFactory
+                .retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn());
+
         assertTrue(datasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > datasetVersionDtoSession01.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 2 --> FAIL
+        // Versioning - session 2 --> FAIL
         try {
             statisticalResourcesServiceFacade.versioningDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession02, VersionTypeEnum.MAJOR);
             fail("optimistic locking");
@@ -896,8 +900,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         // Update dataset - session 1 --> OK
         datasetVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession1AfterUpdate01);
-        assertTrue(datasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+        DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession1NewResource);
+        assertTrue(datasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetVersionDtoSession1NewResource.getOptimisticLockingVersion());
     }
 
     @Override
@@ -1222,6 +1226,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testRetrieveDatasetVersionDimensionsIds() throws Exception {
         // no optimistic locking in this operation
     }
+
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
     }

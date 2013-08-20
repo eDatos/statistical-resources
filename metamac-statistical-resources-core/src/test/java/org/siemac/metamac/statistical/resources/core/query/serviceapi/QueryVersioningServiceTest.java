@@ -11,8 +11,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -39,18 +42,96 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
     @Qualifier("queryLifecycleService")
     private LifecycleService<QueryVersion> queryVersionLifecycleService;
 
+    @Autowired
+    private QueryService                   queryService;
+
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     @Ignore
     public void testVersioningQueryVersion() throws Exception {
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
-        QueryVersion queryNewVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource()
-                .getUrn(), VersionTypeEnum.MINOR);
+        QueryVersion queryNewVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
         assertNotNull(queryNewVersion);
         assertFalse(queryVersion.getLifeCycleStatisticalResource().getVersionLogic().equals(queryNewVersion.getLifeCycleStatisticalResource().getVersionLogic()));
         checkNewQueryVersionCreated(queryVersion, queryNewVersion);
     }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
+    @Ignore
+    public void testVersioningQueryVersionCheckUrnIsCorrectForMinorChange() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+
+        // Necessary data for construct URN
+        VersionTypeEnum versionType = VersionTypeEnum.MINOR;
+        String queryVersionCode = queryVersion.getLifeCycleStatisticalResource().getCode();
+        String[] maintainer = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
+        String versionBefore = queryVersion.getLifeCycleStatisticalResource().getVersionLogic();
+
+        // New query version
+        QueryVersion newQueryVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
+        queryVersion = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+
+        // Expected URN
+        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+
+        // Compare URNS
+        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, queryVersionCode, versionAfter);
+        assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
+    @Ignore
+    public void testVersioningQueryVersionCheckUrnIsCorrectForMayorChange() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+
+        // Necessary data for construct URN
+        VersionTypeEnum versionType = VersionTypeEnum.MAJOR;
+        String queryVersionCode = queryVersion.getLifeCycleStatisticalResource().getCode();
+        String[] maintainer = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
+        String versionBefore = queryVersion.getLifeCycleStatisticalResource().getVersionLogic();
+
+        // New query version
+        QueryVersion newQueryVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
+        queryVersion = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+
+        // Expected URN
+        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+
+        // Compare URNS
+        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, queryVersionCode, versionAfter);
+        assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
+    @Ignore
+    public void testVersioningQueryVersionCheckUrnIsCorrectForANonRootAgency() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+
+        // Necessary data for construct URN
+        VersionTypeEnum versionType = VersionTypeEnum.MINOR;
+        String queryVersionCode = queryVersion.getLifeCycleStatisticalResource().getCode();
+        String[] maintainer = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
+        String versionBefore = queryVersion.getLifeCycleStatisticalResource().getVersionLogic();
+
+        // New query version
+        QueryVersion newQueryVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
+        queryVersion = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn());
+
+        // Expected URN
+        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+
+        // Compare URNS
+        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, queryVersionCode, versionAfter);
+        assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // PRIVATE UTILS
+    // -------------------------------------------------------------------------------------------
 
     private static void checkNewQueryVersionCreated(QueryVersion previous, QueryVersion next) throws MetamacException {
         BaseAsserts.assertEqualsVersioningLifecycle(previous.getLifeCycleStatisticalResource(), next.getLifeCycleStatisticalResource());

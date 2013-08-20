@@ -1409,7 +1409,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
-    @Ignore
     public void testVersioningDatasetVersion() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn();
         DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);

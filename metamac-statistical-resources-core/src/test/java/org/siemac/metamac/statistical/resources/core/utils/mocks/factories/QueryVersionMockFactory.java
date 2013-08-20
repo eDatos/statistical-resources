@@ -225,7 +225,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         if (QUERY_VERSION_15_PUBLISHED == null) {
             QUERY_VERSION_15_PUBLISHED = createQueryWithGeneratedDatasetVersion();
             QUERY_VERSION_15_PUBLISHED.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
+            QUERY_VERSION_15_PUBLISHED.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
         }
         return QUERY_VERSION_15_PUBLISHED;
     }
