@@ -70,7 +70,8 @@ public class RestServiceExceptionType {
         String bundleName = "i18n/messages-rest-" + keys[1]; // The second part of the key is the message file name suffix.
 
         if (locale == null) {
-            return ResourceBundle.getBundle(bundleName).getString(this.getCode());
+            return ResourceBundle.getBundle(bundleName, Locale.ENGLISH).getString(this.getCode());
+            // return ResourceBundle.getBundle(bundleName).getString(this.getCode());
         } else {
             return ResourceBundle.getBundle(bundleName, locale).getString(this.getCode());
         }
