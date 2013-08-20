@@ -834,9 +834,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         if (DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH == null) {
             DatasetVersion datasetVersion = createDatasetVersion(1);
 
-            datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
-            datasetVersion.setUserModifiedDateNextUpdate(false);
-
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
@@ -851,6 +848,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH = datasetVersion;
             setDatasetVersion49Datasources(datasetVersion);
+            datasetVersion.setDateNextUpdate(datasetVersion.getDatasources().get(0).getDateNextUpdate());
+            datasetVersion.setUserModifiedDateNextUpdate(false);
         }
         return DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH;
     }
