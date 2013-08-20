@@ -1047,6 +1047,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime().minusDays(1));
 
+            datasetVersion.setDatasetRepositoryId(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
             DATASET_VERSION_67_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED = datasetVersion;
 
             setDatasetVersion67Datasources(datasetVersion);
@@ -1115,8 +1117,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         return datasetVersion;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion69PublishedNoRootMaintainer() {
         if (DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER == null) {
             DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER = createDatasetVersion(1);
@@ -1125,7 +1126,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER;
     }
-    
+
     // -----------------------------------------------------------------
     // PRIVATE UTILS
     // -----------------------------------------------------------------
