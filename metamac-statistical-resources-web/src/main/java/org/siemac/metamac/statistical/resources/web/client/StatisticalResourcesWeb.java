@@ -9,12 +9,8 @@ import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetStatisticOfficialitiesResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultAgencyResult;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetDefaultLanguageInfoResult;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesResult;
 import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
 import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
 
@@ -45,53 +41,22 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
     @Override
     protected void onBeforeLoadApplication() {
-        super.onBeforeLoadApplication();
 
-        retrieveStatisticOfficialities();
-
-        retrieveDefaults();
-    }
-
-    private void retrieveStatisticOfficialities() {
-        ginjector.getDispatcher().execute(new GetStatisticOfficialitiesAction(), new AsyncCallback<GetStatisticOfficialitiesResult>() {
+        ginjector.getDispatcher().execute(new GetInitialValuesAction(), new AsyncCallback<GetInitialValuesResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving statistic officialities");
-            }
-            @Override
-            public void onSuccess(GetStatisticOfficialitiesResult result) {
-                CommonUtils.setStatisticOfficialities(result.getStatisticOfficialities());
-            }
-        });
-    }
-
-    private void retrieveDefaults() {
-        ginjector.getDispatcher().execute(new GetDefaultAgencyAction(), new AsyncCallback<GetDefaultAgencyResult>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving default agency");
+                logger.log(Level.SEVERE, "Error retrieving initial values: " + caught.getMessage());
                 StatisticalResourcesDefaults.defaultAgency = null;
-            }
-
-            @Override
-            public void onSuccess(GetDefaultAgencyResult result) {
-                StatisticalResourcesDefaults.defaultAgency = result.getAgency();
-            }
-        });
-
-        ginjector.getDispatcher().execute(new GetDefaultLanguageInfoAction(), new AsyncCallback<GetDefaultLanguageInfoResult>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving default language");
                 StatisticalResourcesDefaults.defaultLanguage = null;
+                loadApplication();
             }
-
             @Override
-            public void onSuccess(GetDefaultLanguageInfoResult result) {
+            public void onSuccess(GetInitialValuesResult result) {
+                CommonUtils.setStatisticOfficialities(result.getStatisticOfficialities());
+                StatisticalResourcesDefaults.defaultAgency = result.getAgency();
                 StatisticalResourcesDefaults.defaultLanguage = result.getDefaultLanguage();
+                loadApplication();
             }
         });
     }
