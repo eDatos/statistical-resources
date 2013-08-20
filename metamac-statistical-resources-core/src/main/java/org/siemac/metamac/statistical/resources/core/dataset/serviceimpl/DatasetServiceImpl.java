@@ -129,7 +129,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasource = getDatasourceRepository().save(datasource);
 
         // Update dataset version (add datasource)
-        addDatasourceForDatasetVersion(datasource, datasetVersion);
+        datasetVersion = addDatasourceForDatasetVersion(datasource, datasetVersion);
 
         computeDataRelatedMetadata(datasetVersion);
 
@@ -190,7 +190,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkDatasetVersionForDatasourceHasNoQueries(datasource);
 
-        deleteDatasourceToDataset(datasource);
+        datasetVersion = deleteDatasourceToDataset(datasource);
 
         deleteDatasourceData(datasource);
 
@@ -936,17 +936,17 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(datasource.getIdentifiableStatisticalResource().getCode()));
     }
 
-    private void addDatasourceForDatasetVersion(Datasource datasource, DatasetVersion datasetVersion) {
+    private DatasetVersion addDatasourceForDatasetVersion(Datasource datasource, DatasetVersion datasetVersion) {
         datasetVersion.addDatasource(datasource);
         datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
-        getDatasetVersionRepository().save(datasetVersion);
+        return getDatasetVersionRepository().save(datasetVersion);
     }
 
-    private void deleteDatasourceToDataset(Datasource datasource) {
+    private DatasetVersion deleteDatasourceToDataset(Datasource datasource) {
         DatasetVersion parent = datasource.getDatasetVersion();
         parent.removeDatasource(datasource);
         parent.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
-        getDatasetVersionRepository().save(parent);
+        return getDatasetVersionRepository().save(parent);
     }
 
     private void fillMetadataForCreateDataset(ServiceContext ctx, Dataset dataset, ExternalItem statisticalOperation) {

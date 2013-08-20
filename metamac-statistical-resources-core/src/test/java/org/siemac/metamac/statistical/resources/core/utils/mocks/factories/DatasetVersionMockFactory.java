@@ -855,7 +855,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void setDatasetVersion49Datasources(DatasetVersion datasetVersion) {
-        datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+        datasetVersion.addDatasource(DatasourceMockFactory.generatePxDatasource(new DateTime().plusMonths(1)));
     }
 
     protected static DatasetVersion getDatasetVersion50WithDatasourceFromPxWithUserNextUpdateInOneMonth() {
@@ -884,7 +884,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void setDatasetVersion50Datasources(DatasetVersion datasetVersion) {
-        datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+        datasetVersion.addDatasource(DatasourceMockFactory.generatePxDatasource(new DateTime().plusMonths(1)));
     }
 
     protected static DatasetVersion getDatasetVersion51InDraftWithDatasource() {
@@ -1054,7 +1054,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void setDatasetVersion67Datasources(DatasetVersion datasetVersion) {
-        datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+        datasetVersion.addDatasource(DatasourceMockFactory.generatePxDatasource(new DateTime().plusMonths(1)));
     }
 
     protected static DatasetVersion getDatasetVersion68WithDatasourcesAndComputedFieldsFilledAndUserModifiedDateNextUpdate() {
@@ -1104,7 +1104,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void setDatasetVersion68Datasources(DatasetVersion datasetVersion) {
-        datasetVersion.addDatasource(getDatasorce08FromPxWithNextUpdateInOneMonth());
+        datasetVersion.addDatasource(DatasourceMockFactory.generatePxDatasource(new DateTime().plusMonths(1)));
     }
 
     private static DatasetVersion generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum procStatus) {

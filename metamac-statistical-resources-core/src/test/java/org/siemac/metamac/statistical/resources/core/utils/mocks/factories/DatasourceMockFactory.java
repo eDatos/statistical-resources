@@ -103,6 +103,13 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
     public static Datasource generateSimpleDatasource() {
         return createDatasource();
     }
+    
+    public static Datasource generatePxDatasource(DateTime dateNextUpdate) {
+        Datasource datasource = createDatasource();
+        datasource.getIdentifiableStatisticalResource().setCode("pxFile.px_" + new DateTime().toString());
+        datasource.setDateNextUpdate(dateNextUpdate);
+        return datasource;
+    }
 
     private static Datasource createDatasource() {
         return getStatisticalResourcesPersistedDoMocks().mockDatasourceWithGeneratedDatasetVersion();
