@@ -26,12 +26,12 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.server.utils.ZipUtils;
 
 import com.google.inject.Singleton;
@@ -124,14 +124,17 @@ public class DatasourceImportationServlet extends HttpServlet {
             sendSuccessImportationResponse(response, fileName);
 
         } catch (Exception e) {
+
             String errorMessage = null;
             if (e instanceof MetamacException) {
-                errorMessage = getMessageFromMetamacException((MetamacException) e);
+                errorMessage = WebExceptionUtils.serializeToJson((MetamacException) e);
             } else {
                 errorMessage = e.getMessage();
             }
+
             logger.log(Level.SEVERE, "Error importing file = " + fileName + ". " + e.getMessage());
             logger.log(Level.SEVERE, e.getMessage());
+
             sendFailedImportationResponse(response, errorMessage);
         }
     }
@@ -214,20 +217,9 @@ public class DatasourceImportationServlet extends HttpServlet {
         out.flush();
     }
 
-    private String getMessageFromMetamacException(MetamacException e) {
-        if (e.getPrincipalException() != null) {
-            return e.getPrincipalException().getMessage();
-        }
-        List<MetamacExceptionItem> items = e.getExceptionItems();
-        if (items != null && !items.isEmpty()) {
-            return items.get(0).getMessage(); // only return the first message error
-        }
-        return null;
-    }
-
     private String escapeUnsupportedCharacters(String message) {
         if (!StringUtils.isBlank(message)) {
-            return message.replace("'", "");
+            return message.replace("'", "\\'");
         }
         return message;
     }
