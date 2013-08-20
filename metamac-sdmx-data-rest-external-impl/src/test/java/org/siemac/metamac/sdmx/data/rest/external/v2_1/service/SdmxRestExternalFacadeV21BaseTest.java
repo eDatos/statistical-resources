@@ -13,11 +13,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.springframework.context.ApplicationContext;
+
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseTest {
 
@@ -25,6 +26,8 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
     protected String                             baseApi            = jaxrsServerAddress + "/v2.1";
     protected static ApplicationContext          applicationContext = null;
     private static SdmxDataRestExternalFacadeV21 sdmxDataRestExternalFacadeClientXml;
+
+    protected DatasetRepositoriesServiceFacade   datasetRepositoriesServiceFacade;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -46,7 +49,7 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
     }
 
     @Before
-    public void setUp() throws MetamacException {
+    public void setUp() throws Exception {
         ConfigurationService configurationService = applicationContext.getBean(ConfigurationService.class);
         resetMocks();
     }
@@ -63,24 +66,5 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         return sdmxDataRestExternalFacadeClientXml;
     }
 
-    protected String getUriMaintainableArtefacts(String agencyID, String resourceID, String version) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(baseApi + "/" + getSupathMaintainableArtefacts());
-        if (agencyID != null) {
-            uri.append("/" + agencyID);
-            if (resourceID != null) {
-                uri.append("/" + resourceID);
-                if (version != null) {
-                    uri.append("/" + version);
-                }
-            }
-        }
-        return uri.toString();
-    }
-    protected String getUriItemSchemes(String agencyID, String resourceID, String version) {
-        return getUriMaintainableArtefacts(agencyID, resourceID, version);
-    }
-
-    protected abstract void resetMocks() throws MetamacException;
-    protected abstract String getSupathMaintainableArtefacts();
+    protected abstract void resetMocks() throws Exception;
 }
