@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.windows.searc
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -16,15 +17,15 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
-public abstract class SearchSrmItemListWithSchemeFilterItem extends ExternalItemListItem {
+public abstract class SearchSrmListItemWithSchemeFilterItem extends ExternalItemListItem {
 
     private SearchMultipleSrmItemWithSchemeFilterPaginatedWindow window;
 
-    public SearchSrmItemListWithSchemeFilterItem(String name, String title) {
+    public SearchSrmListItemWithSchemeFilterItem(String name, String title) {
         super(name, title, false);
     }
 
-    public SearchSrmItemListWithSchemeFilterItem(String name, String title, int maxResults) {
+    public SearchSrmListItemWithSchemeFilterItem(String name, String title, int maxResults) {
         super(name, title, true);
         appendWindow(maxResults);
     }
@@ -35,10 +36,11 @@ public abstract class SearchSrmItemListWithSchemeFilterItem extends ExternalItem
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                SearchPaginatedAction<MetamacWebCriteria> filterSearchAction = new SearchPaginatedAction<MetamacWebCriteria>() {
+                SearchPaginatedAction<MetamacVersionableWebCriteria> filterSearchAction = new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
 
                     @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                    public void retrieveResultSet(int firstResult, int maxResults, MetamacVersionableWebCriteria webCriteria) {
+                        webCriteria.setOnlyLastVersion(window.getFilter().getSearchCriteria().isOnlyLastVersion());
                         retrieveItemSchemes(firstResult, maxResults, webCriteria);
                     }
                 };

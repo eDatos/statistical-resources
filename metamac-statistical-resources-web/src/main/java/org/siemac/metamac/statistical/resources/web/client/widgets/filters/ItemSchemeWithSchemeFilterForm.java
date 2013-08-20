@@ -7,15 +7,15 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.widgets.filters.facets.ItemSchemeCriteriaFacetFilter;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.filters.SimpleFilterForm;
+import org.siemac.metamac.web.common.client.widgets.filters.SimpleVersionableFilterForm;
 import org.siemac.metamac.web.common.client.widgets.filters.facets.FacetFilter;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 
-public class ItemSchemeWithSchemeFilterForm extends SimpleFilterForm<ItemSchemeWebCriteria> {
+public class ItemSchemeWithSchemeFilterForm extends SimpleVersionableFilterForm<ItemSchemeWebCriteria> {
 
     protected ItemSchemeCriteriaFacetFilter itemSchemeFilterFacet;
 
-    public ItemSchemeWithSchemeFilterForm(final int maxResults, final SearchPaginatedAction<MetamacWebCriteria> action) {
+    public ItemSchemeWithSchemeFilterForm(final int maxResults, final SearchPaginatedAction<MetamacVersionableWebCriteria> action) {
         super();
         itemSchemeFilterFacet = new ItemSchemeCriteriaFacetFilter(maxResults, action);
         criteriaFacet.setColSpan(2);
@@ -35,14 +35,14 @@ public class ItemSchemeWithSchemeFilterForm extends SimpleFilterForm<ItemSchemeW
 
     @Override
     public List<FacetFilter> getFacets() {
-        return Arrays.asList(itemSchemeFilterFacet, criteriaFacet);
+        return Arrays.asList(onlyLastVersionFacet, itemSchemeFilterFacet, criteriaFacet);
     }
 
     @Override
     public ItemSchemeWebCriteria getSearchCriteria() {
         ItemSchemeWebCriteria criteria = new ItemSchemeWebCriteria();
         itemSchemeFilterFacet.populateCriteria(criteria);
-        populateMetamacWebCriteria(criteria);
+        populateVersionableSearchCriteria(criteria);
         return criteria;
     }
 }

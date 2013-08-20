@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.windows.searc
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -31,10 +32,11 @@ public abstract class SearchSrmLinkItemWithSchemeFilterItem extends SearchExtern
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                SearchPaginatedAction<MetamacWebCriteria> filterSearchAction = new SearchPaginatedAction<MetamacWebCriteria>() {
+                SearchPaginatedAction<MetamacVersionableWebCriteria> filterSearchAction = new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
 
                     @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                    public void retrieveResultSet(int firstResult, int maxResults, MetamacVersionableWebCriteria webCriteria) {
+                        webCriteria.setOnlyLastVersion(window.getFilter().getSearchCriteria().isOnlyLastVersion());
                         retrieveItemSchemes(firstResult, maxResults, webCriteria);
                     }
                 };
@@ -60,7 +62,6 @@ public abstract class SearchSrmLinkItemWithSchemeFilterItem extends SearchExtern
             }
         });
     }
-
     protected abstract void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria);
 
     protected abstract void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria);
@@ -78,5 +79,4 @@ public abstract class SearchSrmLinkItemWithSchemeFilterItem extends SearchExtern
             window.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
         }
     }
-
 }

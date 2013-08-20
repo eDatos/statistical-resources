@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.St
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmItemListWithSchemeFilterItem;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmListItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -27,9 +27,9 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
 
     private StatisticalResourceUiHandlers         uiHandlers;
 
-    private SearchSrmItemListWithSchemeFilterItem publisherItem;
-    private SearchSrmItemListWithSchemeFilterItem publisherContributorItem;
-    private SearchSrmItemListWithSchemeFilterItem mediatorItem;
+    private SearchSrmListItemWithSchemeFilterItem publisherItem;
+    private SearchSrmListItemWithSchemeFilterItem publisherContributorItem;
+    private SearchSrmListItemWithSchemeFilterItem mediatorItem;
 
     public SiemacMetadataPublicationDescriptorsEditionForm() {
         super(getConstants().formPublicationDescriptors());
@@ -86,8 +86,8 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
         publisherItem.setResources(externalItemsDtos, firstResult, totalResults);
     }
 
-    private SearchSrmItemListWithSchemeFilterItem createPublisherItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+    private SearchSrmListItemWithSchemeFilterItem createPublisherItem() {
+        return new SearchSrmListItemWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
@@ -113,8 +113,8 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
         publisherContributorItem.setResources(externalItemsDtos, firstResult, totalResults);
     }
 
-    private SearchSrmItemListWithSchemeFilterItem createPublisherContributorItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER_CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourcePublisherContributor(),
+    private SearchSrmListItemWithSchemeFilterItem createPublisherContributorItem() {
+        return new SearchSrmListItemWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER_CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourcePublisherContributor(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
@@ -141,8 +141,8 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
         mediatorItem.setResources(externalItemsDtos, firstResult, totalResults);
     }
 
-    private SearchSrmItemListWithSchemeFilterItem createMediatorItem() {
-        return new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+    private SearchSrmListItemWithSchemeFilterItem createMediatorItem() {
+        return new SearchSrmListItemWithSchemeFilterItem(SiemacMetadataDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {

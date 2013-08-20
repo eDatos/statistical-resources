@@ -9,11 +9,11 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasSche
 import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.filters.FilterAction;
-import org.siemac.metamac.web.common.client.widgets.filters.SimpleFilterForm;
+import org.siemac.metamac.web.common.client.widgets.filters.SimpleHiddenVersionableFilterForm;
 import org.siemac.metamac.web.common.client.widgets.filters.facets.FacetFilter;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchRelatedResourceBasePaginatedWindow;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -27,7 +27,7 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
     protected SearchSrmSchemePaginatedWindow schemeWindow;
     protected FilterAction                   filterAction;
 
-    public ItemSchemeCriteriaFacetFilter(final int maxResults, final SearchPaginatedAction<MetamacWebCriteria> action) {
+    public ItemSchemeCriteriaFacetFilter(final int maxResults, final SearchPaginatedAction<MetamacVersionableWebCriteria> action) {
         super();
         schemeFilter = createSchemeFilterItem(action);
         schemeFilter.setShowTitle(true);
@@ -69,7 +69,7 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
         schemeFilter.setValue(ExternalItemUtils.getExternalItemName(schemeWindow.getSelectedResource()));
         filterAction.applyFilter();
     }
-    private SearchExternalItemLinkItem createSchemeFilterItem(final SearchPaginatedAction<MetamacWebCriteria> action) {
+    private SearchExternalItemLinkItem createSchemeFilterItem(final SearchPaginatedAction<MetamacVersionableWebCriteria> action) {
         SearchExternalItemLinkItem item = new SearchExternalItemLinkItem("SCHEME", StatisticalResourcesWeb.getConstants().itemScheme());
 
         item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
@@ -78,7 +78,7 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
             public void onFormItemClick(FormItemIconClickEvent event) {
 
                 schemeWindow = new SearchSrmSchemePaginatedWindow(StatisticalResourcesWeb.getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, action);
-                action.retrieveResultSet(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new MetamacWebCriteria());
+                action.retrieveResultSet(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new MetamacVersionableWebCriteria());
                 schemeWindow.setSaveAction(new ClickHandler() {
 
                     @Override
@@ -93,10 +93,10 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
         return item;
     }
 
-    private class SearchSrmSchemePaginatedWindow extends SearchRelatedResourceBasePaginatedWindow<ExternalItemDto, MetamacWebCriteria> {
+    private class SearchSrmSchemePaginatedWindow extends SearchRelatedResourceBasePaginatedWindow<ExternalItemDto, MetamacVersionableWebCriteria> {
 
-        public SearchSrmSchemePaginatedWindow(String title, int maxResults, SearchPaginatedAction<MetamacWebCriteria> action) {
-            super(title, maxResults, new SimpleFilterForm(), action);
+        public SearchSrmSchemePaginatedWindow(String title, int maxResults, SearchPaginatedAction<MetamacVersionableWebCriteria> action) {
+            super(title, maxResults, new SimpleHiddenVersionableFilterForm<MetamacVersionableWebCriteria>(), action);
         }
     }
 }

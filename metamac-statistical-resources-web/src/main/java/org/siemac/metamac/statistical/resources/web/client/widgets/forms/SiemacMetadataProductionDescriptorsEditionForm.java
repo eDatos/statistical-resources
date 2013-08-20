@@ -17,7 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.St
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmItemListWithSchemeFilterItem;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmListItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
@@ -34,7 +34,7 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
 
     private StatisticalResourceUiHandlers         uiHandlers;
 
-    private SearchSrmItemListWithSchemeFilterItem contributorItem;
+    private SearchSrmListItemWithSchemeFilterItem contributorItem;
 
     private SearchSrmLinkItemWithSchemeFilterItem creatorItem;
 
@@ -125,8 +125,8 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
         contributorItem.setFilterResources(items, firstResult, totalResults);
     }
 
-    private SearchSrmItemListWithSchemeFilterItem createContributorItem() {
-        final SearchSrmItemListWithSchemeFilterItem item = new SearchSrmItemListWithSchemeFilterItem(SiemacMetadataDS.CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourceContributor(),
+    private SearchSrmListItemWithSchemeFilterItem createContributorItem() {
+        final SearchSrmListItemWithSchemeFilterItem item = new SearchSrmListItemWithSchemeFilterItem(SiemacMetadataDS.CONTRIBUTOR, getConstants().siemacMetadataStatisticalResourceContributor(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override

@@ -7,11 +7,11 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.filters.ItemS
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchMultipleRelatedResourceBasePaginatedWindow;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 
 public class SearchMultipleSrmItemWithSchemeFilterPaginatedWindow extends SearchMultipleRelatedResourceBasePaginatedWindow<ExternalItemDto, ItemSchemeWebCriteria> {
 
-    public SearchMultipleSrmItemWithSchemeFilterPaginatedWindow(String title, int maxResults, SearchPaginatedAction<MetamacWebCriteria> filterSearchAction,
+    public SearchMultipleSrmItemWithSchemeFilterPaginatedWindow(String title, int maxResults, SearchPaginatedAction<MetamacVersionableWebCriteria> filterSearchAction,
             SearchPaginatedAction<ItemSchemeWebCriteria> action) {
         super(title, maxResults, new ItemSchemeWithSchemeFilterForm(maxResults, filterSearchAction), action);
     }
@@ -24,7 +24,7 @@ public class SearchMultipleSrmItemWithSchemeFilterPaginatedWindow extends Search
         getFilter().refreshFilterSourcePaginationInfo(firstResult, elementsInPage, totalResults);
     }
 
-    private ItemSchemeWithSchemeFilterForm getFilter() {
+    public ItemSchemeWithSchemeFilterForm getFilter() {
         return (ItemSchemeWithSchemeFilterForm) getFilterForm();
     }
 }
