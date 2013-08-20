@@ -153,23 +153,37 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         // Calculate conditions
         DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersionId);
 
+        // The key are formed by dimension codes splitted by dots
+        // Wildcarding is supported by omitting the dimension code for the dimension.
+        // The OR operator is supported using the '+' character.
+        // Examples: Normal key -> D.USD.EUR.SP00.A
+        // Examples: Wildcard key -> D..EUR.SP00.A
+        // Examples: Wildcard key -> D.USD+CHF.EUR.SP00.A
         List<DimensionCodeInfo> conditions = new LinkedList<DimensionCodeInfo>();
         if (StringUtils.isEmpty(this.queryKey)) {
+            // If is a empty query, then all observations are needed
             for (int i = 0; i < datasetRepository.getDimensions().size(); i++) {
                 addAllCodesConditionForDimension(datasetRepository, i, conditions);
             }
         } else {
+            // Split the key by dots
             String str = this.queryKey.replaceAll("\\.", ". ");
             String[] split = str.split("\\.");
             for (int i = 0; i < split.length; i++) {
-                split[i] = (StringUtils.isEmpty(split[i]) ? null : split[i].trim());
+                split[i] = (StringUtils.isBlank(split[i]) ? null : split[i].trim());
 
-                if (split[i] == null) {
+                if (StringUtils.isEmpty(split[i])) {
+                    // If is a wildcard dimension, all dimension codes are needed
                     addAllCodesConditionForDimension(datasetRepository, i, conditions);
                 } else {
                     DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i), ComponentInfoTypeEnum.DIMENSION); // TODO detectar measure dimension y time
                                                                                                                                                             // dimension, añadir columna de tipo
-                    dimensionCodeInfo.addCode(split[i]);
+                    // Split the code by '+' to find OR operators for codes
+                    String[] codes = split[i].split("\\+");
+                    for (int j = 0; j < codes.length; j++) {
+                        dimensionCodeInfo.addCode(codes[j]);
+                    }
+
                     conditions.add(dimensionCodeInfo);
                 }
             }
