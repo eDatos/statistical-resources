@@ -91,16 +91,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         // The last element in list is the key of dimension at observation level, the other elements have only one key
         int i = 0;
         Iterator<DimensionCodeInfo> itSerieCondition = serieConditions.iterator();
-        while (i < serieConditions.size()) {
+        while (i < serieConditions.size() - 1) {
             DimensionCodeInfo keyCondition = itSerieCondition.next();
             serie.getSeriesKey().add(new IdValuePair(keyCondition.getCode(), keyCondition.getCodes().iterator().next()));
+            i++;
         }
+        DimensionCodeInfo currentDimensionCodeAtObservation = itSerieCondition.next();
 
-        Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtended(datasetVersionId,
+        Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(datasetVersionId,
                 metamac2StatRepoMapper.conditionsToRepository(serieConditions));
 
         for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
-            serie.getObs().add(observationRepositoryToWriter(entry.getValue()));
+            serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), currentDimensionCodeAtObservation));
         }
 
         return serie;
@@ -116,22 +118,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
         // Find the dimension with the max number of different dimensionCodeId
         if (dimensionAtObservation == null) {
-            List<ConditionObservationDto> coverage = retrieveCoverage();
+
+            List<DimensionCodeInfo> queryCconditions = getQueryConditions();
             int maxValue = -1;
-            ConditionObservationDto currentDimensionAtObservation = null;
-            for (ConditionObservationDto conditionDimensionDto : coverage) {
-                if (conditionDimensionDto.getCodesDimension().size() > 0 && conditionDimensionDto.getCodesDimension().size() > maxValue) {
-                    maxValue = conditionDimensionDto.getCodesDimension().size();
-                    currentDimensionAtObservation = conditionDimensionDto;
+            DimensionCodeInfo currentDimensionAtObservation = null;
+            for (DimensionCodeInfo dimensionCodeInfo : queryCconditions) {
+                if (dimensionCodeInfo.getCodes().size() > 0 && dimensionCodeInfo.getCodes().size() > maxValue) {
+                    maxValue = dimensionCodeInfo.getCodes().size();
+                    currentDimensionAtObservation = dimensionCodeInfo;
                 }
             }
-            DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(currentDimensionAtObservation.getCodesDimension().get(0).getDimensionId(), ComponentInfoTypeEnum.DIMENSION); // TODO completar
-                                                                                                                                                                                     // con el
-            for (CodeDimensionDto codeDimensionDto : currentDimensionAtObservation.getCodesDimension()) {
-                dimensionCodeInfo.addCode(codeDimensionDto.getCodeDimensionId());
-            }
 
-            dimensionAtObservation = dimensionCodeInfo;
+            dimensionAtObservation = currentDimensionAtObservation;
         }
 
         return dimensionAtObservation;
@@ -169,7 +167,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                 if (split[i] == null) {
                     addAllCodesConditionForDimension(datasetRepository, i, conditions);
                 } else {
-                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo("FREQ", ComponentInfoTypeEnum.DIMENSION);
+                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i), ComponentInfoTypeEnum.DIMENSION); // TODO detectar measure dimension y time
+                                                                                                                                                            // dimension, añadir columna de tipo
                     dimensionCodeInfo.addCode(split[i]);
                     conditions.add(dimensionCodeInfo);
                 }
@@ -200,18 +199,20 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         return coverage;
     }
 
-    private Observation observationRepositoryToWriter(ObservationExtendedDto observation) throws Exception {
+    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation, DimensionCodeInfo currentDimensionCodeAtObservation) throws Exception {
         Observation result = new Observation();
 
+        // Key
         for (CodeDimensionDto codeDimensionDto : observation.getCodesDimension()) {
-            if (getDimensionAtObservation().getCode().equals(codeDimensionDto.getCodeDimensionId())) {
+            if (getDimensionAtObservation().getCode().equals(codeDimensionDto.getDimensionId())) {
                 result.getObservationKey().add(new IdValuePair(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId()));
                 break;
             }
         }
-
+        // Observation Value
         result.setObservationValue(new IdValuePair(MappingConstants.OBS_VALUE, observation.getPrimaryMeasure()));
 
+        // Attribute
         // TODO attr a nivel de observation List<AttributeBasicDto> attributes = observation.getAttributes();
         return result;
     }

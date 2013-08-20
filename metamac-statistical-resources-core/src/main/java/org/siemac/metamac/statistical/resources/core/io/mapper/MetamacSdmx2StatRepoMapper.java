@@ -9,7 +9,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribu
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
+import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
@@ -69,5 +69,5 @@ public interface MetamacSdmx2StatRepoMapper {
      * @return
      * @throws MetamacException
      */
-    public List<ConditionObservationDto> conditionsToRepository(List<DimensionCodeInfo> serieConditions) throws MetamacException;
+    public List<ConditionDimensionDto> conditionsToRepository(List<DimensionCodeInfo> serieConditions) throws MetamacException;
 }
