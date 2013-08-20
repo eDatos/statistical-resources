@@ -34,6 +34,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String       QUERY_VERSION__SELECTION__TIME_PERIOD = "queryVersion.selection.time_period";
 
     // Tasks
+    public static final String       TASK_INFO_RESOURCE_ID                 = "parameter.resources.resourceId";
     public static final String       TASK_INFO_DATASET                     = "parameter.resources.taskInfoDataset";
     public static final String       TASK_INFO_DATASET_DSD_URN             = "parameter.resources.dataStructureUrn";
     public static final String       TASK_INFO_DATASET_DATASET_VERSION_ID  = "parameter.resources.datasetVersionId";

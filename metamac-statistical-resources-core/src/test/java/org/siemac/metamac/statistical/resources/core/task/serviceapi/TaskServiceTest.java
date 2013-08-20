@@ -19,11 +19,6 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     }
 
     @Override
-    public void testExistImportationTaskInDataset() throws Exception {
-        // See integration test in DataManipulateTest
-    }
-
-    @Override
     public void testMarkTaskAsFinished() throws Exception {
         // See integration test in DataManipulateTest
     }
@@ -61,5 +56,23 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     @Override
     public void testProcessRollbackImportationTask() throws Exception {
         // Already checked without test
+    }
+
+    @Override
+    public void testExistsTaskForResource() throws Exception {
+        // See integration test in DataManipulateTest
+
+    }
+
+    @Override
+    public void testExistImportationTaskInResource() throws Exception {
+        // See integration test in DataManipulateTest
+
+    }
+
+    @Override
+    public void testExistRecoveryImportationTaskInResource() throws Exception {
+        // See integration test in DataManipulateTest
+
     }
 }

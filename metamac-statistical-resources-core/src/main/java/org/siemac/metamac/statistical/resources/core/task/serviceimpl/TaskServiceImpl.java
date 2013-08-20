@@ -214,11 +214,13 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Override
     public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
-        return existImportationTaskInResource(ctx, resourceId) && existRecoveryImportationTaskInResource(ctx, resourceId);
+        taskServiceInvocationValidator.checkExistsTaskForResource(ctx, resourceId);
+        return existImportationTaskInResource(ctx, resourceId) || existRecoveryImportationTaskInResource(ctx, resourceId);
     }
 
     @Override
     public boolean existImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
+        taskServiceInvocationValidator.checkExistImportationTaskInResource(ctx, resourceId);
         try {
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
             return sched.checkExists(createJobKeyForImportationResource(resourceId));
@@ -229,6 +231,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Override
     public boolean existRecoveryImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
+        taskServiceInvocationValidator.checkExistRecoveryImportationTaskInResource(ctx, resourceId);
         try {
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
             return sched.checkExists(createJobKeyForRecoveryImportationResource(resourceId));

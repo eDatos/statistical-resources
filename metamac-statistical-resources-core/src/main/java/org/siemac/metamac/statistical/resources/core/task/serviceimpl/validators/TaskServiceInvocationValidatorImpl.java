@@ -44,8 +44,16 @@ public class TaskServiceInvocationValidatorImpl {
         checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
     }
 
-    public static void checkExistImportationTaskInDataset(String datasetVersionId, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionId, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
+    public static void checkExistsTaskForResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
+    }
+    
+    public static void checkExistImportationTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
+    }
+    
+    public static void checkExistRecoveryImportationTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
     }
 
     public static void checkMarkTaskAsFinished(String job, List<MetamacExceptionItem> exceptions) {
