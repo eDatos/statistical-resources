@@ -96,7 +96,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
         "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
-public class DatasetServiceTest extends StatisticalResourcesBaseTest {
+public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
     @Autowired
     private DatasetService                          datasetService;

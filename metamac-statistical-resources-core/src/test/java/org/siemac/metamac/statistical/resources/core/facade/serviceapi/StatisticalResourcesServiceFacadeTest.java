@@ -179,7 +179,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
-public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest {
+public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
     private static final String               SIEMAC_METADATA_URN_FIELD = "siemacMetadataStatisticalResource.urn";
     private static final String               URN_FIELD                 = "urn";
