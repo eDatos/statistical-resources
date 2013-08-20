@@ -54,8 +54,8 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     break;
 
                 case VERSION:
-                    datasetVersionDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus()
-                            .getUrn(), action.getVersionType());
+                    datasetVersionDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus(),
+                            action.getVersionType());
                     break;
 
                 default:
