@@ -5,10 +5,12 @@ import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesPlaceManager;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetAttributesTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetDatasourcesTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetMetadataTabViewImpl;
@@ -76,6 +78,8 @@ public class ClientModule extends AbstractPresenterModule {
                 DatasetMetadataTabPresenter.DatasetMetadataTabProxy.class);
         bindPresenter(DatasetDatasourcesTabPresenter.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView.class, DatasetDatasourcesTabViewImpl.class,
                 DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy.class);
+        bindPresenter(DatasetAttributesTabPresenter.class, DatasetAttributesTabPresenter.DatasetAttributesTabView.class, DatasetAttributesTabViewImpl.class,
+                DatasetAttributesTabPresenter.DatasetAttributesTabProxy.class);
 
         bindPresenter(PublicationListPresenter.class, PublicationListPresenter.PublicationListView.class, PublicationListViewImpl.class, PublicationListPresenter.PublicationListProxy.class);
         bindPresenter(PublicationPresenter.class, PublicationPresenter.PublicationView.class, PublicationViewImpl.class, PublicationPresenter.PublicationProxy.class);

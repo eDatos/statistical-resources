@@ -6,5 +6,6 @@ public interface DatasetUiHandlers extends UiHandlers {
 
     public void goToDatasetMetadata();
     public void goToDatasetDatasources();
+    public void goToDatasetAttributes();
     public void goToDatasetVersion(String urn);
 }

@@ -40,6 +40,7 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     private CustomTabSet                tabSet;
     private Tab                         datasetMetadataTab;
     private Tab                         datasetDatasourcesTab;
+    private Tab                         datasetAttributesTab;
 
     private DatasetVersionDto           datasetVersionDto;
 
@@ -71,7 +72,8 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         tabSet = new CustomTabSet();
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());
-        tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab);
+        datasetAttributesTab = new Tab(getConstants().datasetAttributes());
+        tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab, datasetAttributesTab);
 
         //
         // PANEL LAYOUT
@@ -108,6 +110,14 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 getUiHandlers().goToDatasetDatasources();
+            }
+        });
+
+        datasetAttributesTab.addTabSelectedHandler(new TabSelectedHandler() {
+
+            @Override
+            public void onTabSelected(TabSelectedEvent event) {
+                getUiHandlers().goToDatasetAttributes();
             }
         });
     }
@@ -153,6 +163,8 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
             datasetMetadataTab.setPane((Canvas) content);
         } else if (slot == DatasetPresenter.TYPE_SetContextAreaDatasources) {
             datasetDatasourcesTab.setPane((Canvas) content);
+        } else if (slot == DatasetPresenter.TYPE_SetContextAreaAttributes) {
+            datasetAttributesTab.setPane((Canvas) content);
         } else {
             super.setInSlot(slot, content);
         }

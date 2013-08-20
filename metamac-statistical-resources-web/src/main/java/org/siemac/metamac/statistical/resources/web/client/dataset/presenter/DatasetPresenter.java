@@ -54,6 +54,9 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaDatasources = new Type<RevealContentHandler<?>>();
 
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaAttributes  = new Type<RevealContentHandler<?>>();
+
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
 
         void setDataset(DatasetVersionDto datasetDto);
@@ -174,6 +177,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public void goToDatasetDatasources() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
         hierarchy.add(new PlaceRequest(NameTokens.datasetDatasourcesPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goToDatasetAttributes() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
+        hierarchy.add(new PlaceRequest(NameTokens.datasetAttributesPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 
