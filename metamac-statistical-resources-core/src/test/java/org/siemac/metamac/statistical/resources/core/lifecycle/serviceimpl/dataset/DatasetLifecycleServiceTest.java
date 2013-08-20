@@ -6,7 +6,10 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createVersioned;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
@@ -360,28 +363,28 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 
-    @Ignore
     @Override
     @Test
     public void testCheckVersioningResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        assertEmptyMethod(TESTING_CLASS, "checkVersioningResource");
     }
 
-    @Ignore
     @Override
     @Test
     public void testApplyVersioningNewResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        createVersioned(datasetVersion);
+
+        datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
     }
     
-    @Ignore
     @Override
     @Test
     public void testApplyVersioningPreviousResource() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        createPublished(datasetVersion);
+
+        datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
     }
 
     // ------------------------------------------------------------------------------------------------------
