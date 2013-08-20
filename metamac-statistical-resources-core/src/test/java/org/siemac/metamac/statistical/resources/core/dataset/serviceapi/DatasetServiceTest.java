@@ -175,7 +175,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest {
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 1, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         assertNotNull(actual.getSiemacMetadataStatisticalResource().getCreatedDate());
         assertNotNull(actual.getSiemacMetadataStatisticalResource().getCreatedBy());
@@ -195,7 +195,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest {
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, "001.000"), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsDatasetVersionNotChecksDataset(expected, actual);
     }
@@ -211,7 +211,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest {
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, "001.000"), actual.getSiemacMetadataStatisticalResource()
+            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, "001.000"), actual.getSiemacMetadataStatisticalResource()
                     .getUrn());
             assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         }
@@ -221,7 +221,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest {
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, "001.000"), actual.getSiemacMetadataStatisticalResource()
+            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 5, "001.000"), actual.getSiemacMetadataStatisticalResource()
                     .getUrn());
             assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         }

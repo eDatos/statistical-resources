@@ -125,7 +125,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(
-                buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 1, expected.getSiemacMetadataStatisticalResource()
+                buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 1, expected.getSiemacMetadataStatisticalResource()
                         .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersionNotChecksPublication(expected, actual);
@@ -144,7 +144,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(
-                buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource()
+                buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, expected.getSiemacMetadataStatisticalResource()
                         .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsPublicationVersionNotChecksPublication(expected, actual);
@@ -163,7 +163,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
             assertEquals(
-                    buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 4, expected.getSiemacMetadataStatisticalResource()
+                    buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, expected.getSiemacMetadataStatisticalResource()
                             .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }
@@ -175,7 +175,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
             assertEquals(
-                    buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCode(), operationCode, 5, expected.getSiemacMetadataStatisticalResource()
+                    buildPublicationVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 5, expected.getSiemacMetadataStatisticalResource()
                             .getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsPublicationVersionNotChecksPublication(expected, actual);
         }

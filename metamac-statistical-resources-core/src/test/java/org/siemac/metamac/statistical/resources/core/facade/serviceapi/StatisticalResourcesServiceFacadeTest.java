@@ -392,7 +392,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME})
     public void testUpdateQueryVersionIgnoreChangeMaintainer() throws Exception {
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME);
-        String originalMaintainerCode = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode();
+        String originalMaintainerCode = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
 
         QueryVersionDto queryDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersion.getLifeCycleStatisticalResource().getUrn());
         ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto();
@@ -400,7 +400,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         QueryVersionDto updatedQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryDto);
         assertNotNull(updatedQuery);
-        assertEquals(originalMaintainerCode, updatedQuery.getMaintainer().getCode());
+        assertEquals(originalMaintainerCode, updatedQuery.getMaintainer().getCodeNested());
     }
 
     @Test
@@ -968,7 +968,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetVersionChangeMaintainerNotAllowed() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
-        String originalMaintainerCode = datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode();
+        String originalMaintainerCode = datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
 
         DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource()
                 .getUrn());
@@ -977,7 +977,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         DatasetVersionDto updatedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDto);
         assertNotNull(updatedDataset);
-        assertEquals(originalMaintainerCode, updatedDataset.getMaintainer().getCode());
+        assertEquals(originalMaintainerCode, updatedDataset.getMaintainer().getCodeNested());
     }
 
     @Test
@@ -1628,7 +1628,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
     public void testUpdatePublicationVersionIgnoreChangeMaintainer() throws Exception {
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
-        String originalMaintainerCode = publicationVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCode();
+        String originalMaintainerCode = publicationVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
 
         PublicationVersionDto publicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersion
                 .getSiemacMetadataStatisticalResource().getUrn());
@@ -1637,7 +1637,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         PublicationVersionDto updatedPublicationVersion = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(), publicationVersionDto);
         assertNotNull(updatedPublicationVersion);
-        assertEquals(originalMaintainerCode, updatedPublicationVersion.getMaintainer().getCode());
+        assertEquals(originalMaintainerCode, updatedPublicationVersion.getMaintainer().getCodeNested());
     }
 
     @Test

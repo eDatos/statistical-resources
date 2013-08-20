@@ -117,7 +117,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
 
     @Override
     protected PublicationVersion updateResourceUrnAfterVersioning(PublicationVersion resource) throws MetamacException {
-        String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
+        String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested()};
         resource.getSiemacMetadataStatisticalResource().setUrn(
                 GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
                         .getSiemacMetadataStatisticalResource().getVersionLogic()));

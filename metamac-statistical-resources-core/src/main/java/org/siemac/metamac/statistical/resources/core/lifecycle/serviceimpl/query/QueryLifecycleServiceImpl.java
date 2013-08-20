@@ -115,7 +115,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     
     @Override
     protected QueryVersion updateResourceUrnAfterVersioning(QueryVersion resource) throws MetamacException {
-        String[] creator = new String[]{resource.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String[] creator = new String[]{resource.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
         resource.getLifeCycleStatisticalResource().setUrn(
                 GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(creator, resource.getLifeCycleStatisticalResource().getCode(), resource
                         .getLifeCycleStatisticalResource().getVersionLogic()));

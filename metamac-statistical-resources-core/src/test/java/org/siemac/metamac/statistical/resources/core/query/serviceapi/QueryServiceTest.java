@@ -435,7 +435,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         assertEquals(newCode, updatedQueryVersion.getLifeCycleStatisticalResource().getCode());
 
-        String[] maintainerCodes = new String[]{updatedQueryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String[] maintainerCodes = new String[]{updatedQueryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
         assertEquals(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, newCode, "001.000"), updatedQueryVersion.getLifeCycleStatisticalResource().getUrn());
     }
 

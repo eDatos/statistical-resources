@@ -170,7 +170,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         query.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
         query.getIdentifiableStatisticalResource().setCode(queryVersion.getLifeCycleStatisticalResource().getCode());
 
-        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode());
         query.getIdentifiableStatisticalResource().setUrn(urn);
 
@@ -181,7 +181,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateLifeCycleResource(queryVersion.getLifeCycleStatisticalResource(), statisticalOperation, ctx);
         queryVersion.setStatus(determineQueryStatus(queryVersion));
         queryVersion.setLatestTemporalCodeInCreation(determineLatestTemporalCodeInCreation(queryVersion));
-        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
                 .getLifeCycleStatisticalResource().getVersionLogic());
         queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
@@ -192,7 +192,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryVersion.setLatestTemporalCodeInCreation(determineLatestTemporalCodeInCreation(queryVersion));
 
         // Update URN
-        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode()};
+        String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
         String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
                 .getLifeCycleStatisticalResource().getVersionLogic());
         queryVersion.getLifeCycleStatisticalResource().setUrn(urn);

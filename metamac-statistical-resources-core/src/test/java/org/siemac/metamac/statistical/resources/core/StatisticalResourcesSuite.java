@@ -104,9 +104,9 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      QueryIntegrationServiceTest.class,
                      RestCriteriaUtilsTest.class,
                      StatisticalResourcesUrnParserUtilsTest.class,
-                     DataManipulateTest.class,
                      DatasetVersioningServiceTest.class,
                      PublicationVersioningServiceTest.class,
-                     QueryVersioningServiceTest.class})
+                     QueryVersioningServiceTest.class,
+                     DataManipulateTest.class})
 public class StatisticalResourcesSuite {
 }

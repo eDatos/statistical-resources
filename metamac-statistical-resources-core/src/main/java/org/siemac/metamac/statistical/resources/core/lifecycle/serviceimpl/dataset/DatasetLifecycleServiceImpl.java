@@ -187,7 +187,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected DatasetVersion updateResourceUrnAfterVersioning(DatasetVersion resource) throws MetamacException {
-        String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCode()};
+        String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested()};
         resource.getSiemacMetadataStatisticalResource().setUrn(
                 GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
                         .getSiemacMetadataStatisticalResource().getVersionLogic()));

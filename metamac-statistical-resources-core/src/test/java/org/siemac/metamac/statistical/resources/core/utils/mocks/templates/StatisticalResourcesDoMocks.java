@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
@@ -523,6 +524,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return mockExternalItem(code, mockAgencyUrn(code), TypeExternalArtefactsEnum.AGENCY);
     }
 
+    public static ExternalItem mockAgencyExternalItem(String code, String codeNested) {
+        return mockExternalItem(code, codeNested, mockAgencyUrn(code), TypeExternalArtefactsEnum.AGENCY);
+    }
+
     public static ExternalItem mockOrganizationUnitExternalItem() {
         String code = mockCode();
         return mockOrganizationUnitExternalItem(code);
@@ -604,7 +609,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     private static ExternalItem mockExternalItem(String code, String urn, TypeExternalArtefactsEnum type) {
-        String codeNested = null;
+        return mockExternalItem(code, null, urn, type);
+    }
+
+    private static ExternalItem mockExternalItem(String code, String codeNested, String urn, TypeExternalArtefactsEnum type) {
         String uri = CoreCommonConstants.API_LATEST_WITH_SLASHES + code;
         String urnProvider = urn + ":provider";
         InternationalString title = mockInternationalStringMetadata(code, "title");
@@ -616,8 +624,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             urnProvider = null;
         } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(type)) {
             // nothing to do with urnInternal because it's ok for SrmExternalItems
-            if (TypeExternalArtefactsEnum.AGENCY.equals(type) || TypeExternalArtefactsEnum.CATEGORY.equals(type)) {
-                codeNested = code;
+            if (StringUtils.isBlank(codeNested)) {
+                if (TypeExternalArtefactsEnum.AGENCY.equals(type) || TypeExternalArtefactsEnum.CATEGORY.equals(type)) {
+                    codeNested = code;
+                }
             }
         } else {
             fail("Unexpected type of ExternalItem:" + type);
