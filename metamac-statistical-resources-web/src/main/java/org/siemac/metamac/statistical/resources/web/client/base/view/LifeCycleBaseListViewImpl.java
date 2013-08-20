@@ -349,7 +349,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         return button;
     }
 
-    private void showVersionButton(ListGridRecord[] records) {
+    protected void showVersionButton(ListGridRecord[] records) {
         boolean canVersion = true;
         for (ListGridRecord record : records) {
             ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();

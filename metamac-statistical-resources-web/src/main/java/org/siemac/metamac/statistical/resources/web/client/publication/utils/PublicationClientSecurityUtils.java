@@ -4,7 +4,6 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.BaseClientSecurityUtils;
 
-// TODO: Add real rules not only "true"
 public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
 
     // ------------------------------------------------------------------------
@@ -21,5 +20,61 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canDeletePublicationVersion(PublicationVersionDto publicationVersionDto) {
         return SharedPublicationsSecurityUtils.canDeletePublicationVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canVersionPublication() {
+        return SharedPublicationsSecurityUtils.canVersionPublication(getMetamacPrincipal());
+    }
+
+    public static boolean canSendPublicationVersionToProductionValidation() {
+        return SharedPublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(getMetamacPrincipal());
+    }
+
+    public static boolean canSendPublicationVersionToDiffusionValidation() {
+        return SharedPublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(getMetamacPrincipal());
+    }
+
+    public static boolean canSendPublicationVersionToValidationRejected() {
+        return SharedPublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(getMetamacPrincipal());
+    }
+
+    // ------------------------------------------------------------------------
+    // CHAPTERS
+    // ------------------------------------------------------------------------
+
+    public static boolean canCreateChapter() {
+        return SharedPublicationsSecurityUtils.canCreateChapter(getMetamacPrincipal());
+    }
+
+    public static boolean canUpdateChapter() {
+        return SharedPublicationsSecurityUtils.canUpdateChapter(getMetamacPrincipal());
+    }
+
+    public static boolean canUpdateChapterLocation() {
+        return SharedPublicationsSecurityUtils.canUpdateChapterLocation(getMetamacPrincipal());
+    }
+
+    public static boolean canDeleteChapter() {
+        return SharedPublicationsSecurityUtils.canDeleteChapter(getMetamacPrincipal());
+    }
+
+    // ------------------------------------------------------------------------
+    // CUBES
+    // ------------------------------------------------------------------------
+
+    public static boolean canCreateCube() {
+        return SharedPublicationsSecurityUtils.canCreateCube(getMetamacPrincipal());
+    }
+
+    public static boolean canUpdateCube() {
+        return SharedPublicationsSecurityUtils.canUpdateCube(getMetamacPrincipal());
+    }
+
+    public static boolean canUpdateCubeLocation() {
+        return SharedPublicationsSecurityUtils.canUpdateCubeLocation(getMetamacPrincipal());
+    }
+
+    public static boolean canDeleteCube() {
+        return SharedPublicationsSecurityUtils.canDeleteCube(getMetamacPrincipal());
     }
 }

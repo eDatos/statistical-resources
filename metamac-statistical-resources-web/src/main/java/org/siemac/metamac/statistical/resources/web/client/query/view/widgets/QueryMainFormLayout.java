@@ -65,8 +65,8 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canVersioning() {
-        // TODO Auto-generated method stub
-        return true;
+        // Queries can not be version
+        return false;
     }
 
     @Override

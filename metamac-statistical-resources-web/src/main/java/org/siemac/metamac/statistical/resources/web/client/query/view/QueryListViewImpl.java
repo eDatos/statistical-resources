@@ -128,6 +128,11 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         getUiHandlers().retrieveQueries(firstResult, maxResults, null);
     }
 
+    @Override
+    protected void showVersionButton(ListGridRecord[] records) {
+        // Queries cannot be version
+    }
+
     //
     // LISTGRID BUTTONS
     //
