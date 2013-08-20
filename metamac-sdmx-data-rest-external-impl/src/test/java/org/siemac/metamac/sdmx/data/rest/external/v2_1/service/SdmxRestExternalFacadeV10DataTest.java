@@ -46,9 +46,19 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     }
 
     @Test
-    public void testDatakey() throws Exception {
+    public void testDataKey() throws Exception {
 
         String key = "M.CHF.EUR.SP00.E.2010-08";
+        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null);
+
+        System.out.println("_____________");
+        System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+    }
+
+    @Test
+    public void testDataKeyWildcards() throws Exception {
+
+        String key = "M..EUR.SP00.E.2010-08";
         Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null);
 
         System.out.println("_____________");

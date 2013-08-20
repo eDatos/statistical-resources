@@ -57,11 +57,10 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     // private CodesDo2JaxbCallback codesDo2JaxbCallback;
 
     @Autowired
-    private DataConfiguration                srmConfiguration;
+    private DataConfiguration                dataConfiguration;
 
-    private final ServiceContext             ctx             = new ServiceContext("restExternal", "restExternal", "restExternal");
-    private final Logger                     logger          = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
-    private static boolean                   IS_INTERNAL_API = false;
+    private final ServiceContext             ctx    = new ServiceContext("restExternal", "restExternal", "restExternal");
+    private final Logger                     logger = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
 
     @Override
     public Response findData(String flowRef, String detail) {
@@ -109,32 +108,42 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     // </response>
 
     /***************************************************************
-     * DATA
-     * 
-     * @throws Exception
+     * DATA PRIVATE
      ***************************************************************/
     private InputStream processrequest(String flowRef, String key, String providerRef) throws Exception {
         // flowRef: Always required
         // key: nullable, then is the same that SAME wildcard
         // key: providerRef, then is the same that SAME wildcard
 
-        if (key != null && RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(key))) {
-            // TODO ERROR
+        if (key != null) {
+            if (RestExternalConstants.WildcardIdentifyingEnum.ALL.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(key))) {
+                key = null;
+            }
         }
 
-        if (providerRef != null && RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(providerRef))) {
-            // TODO ERROR:
+        if (providerRef != null) {
+            if (RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(providerRef))) {
+                providerRef = null;
+            }
         }
 
-        WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, flowRef, key); // TODO manejar dataflow
+        WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, findDataSetFromDataFlow(flowRef, providerRef), key); // TODO
+                                                                                                                                                                                          // manejar
+                                                                                                                                                                                          // dataflow
         File writerData = Sdmx21Writer.writerData(writerDataCallback, true);
 
         return new FileInputStream(writerData);
     }
 
-    /***************************************************************
-     * 
-     ***************************************************************/
+    private String findDataSetFromDataFlow(String flowRef, String providerRef) {
+        if (providerRef == null) {
+            // Any maintainer
+        }
+
+        // TODO ver como vamos a hacer la correspondencia entre Dataflow y Dataset
+
+        return flowRef;
+    }
 
     /**
      * Throws response error, logging exception
