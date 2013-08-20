@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -130,6 +131,7 @@ public class DatasourceImportationServlet extends HttpServlet {
                 errorMessage = WebExceptionUtils.serializeToJson((MetamacException) e);
             } else {
                 errorMessage = e.getMessage();
+                errorMessage = StringEscapeUtils.escapeJavaScript(errorMessage);
             }
 
             logger.log(Level.SEVERE, "Error importing file = " + fileName + ". " + e.getMessage());
@@ -194,10 +196,7 @@ public class DatasourceImportationServlet extends HttpServlet {
     }
 
     private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage) throws IOException {
-
-        String processedErrorMessage = escapeUnsupportedCharacters(errorMessage);
-
-        String action = "if (parent.uploadFailed) parent.uploadFailed('" + processedErrorMessage + "');";
+        String action = "if (parent.uploadFailed) parent.uploadFailed('" + errorMessage + "');";
         sendResponse(response, action);
     }
 
@@ -215,13 +214,6 @@ public class DatasourceImportationServlet extends HttpServlet {
         out.println("</body>");
         out.println("</html>");
         out.flush();
-    }
-
-    private String escapeUnsupportedCharacters(String message) {
-        if (!StringUtils.isBlank(message)) {
-            return message.replace("'", "\\'");
-        }
-        return message;
     }
 
     private List<URL> getURLsFromFiles(List<File> files) throws MalformedURLException {
