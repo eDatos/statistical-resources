@@ -296,9 +296,6 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         applyVersioningPreviousResource(ctx, resource, previousResource, versionType);
         previousResource = saveResource(previousResource);
 
-        resource = updateResourceUrnAfterVersioning(resource);
-        resource = saveResource(resource);
-
         return retrieveResourceByResource(resource);
     }
 
@@ -316,6 +313,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected final void applyVersioningNewResource(ServiceContext ctx, E resource, E previousResource, VersionTypeEnum versionType) throws MetamacException {
         applyVersioningLinkedStatisticalNewResource(ctx, resource, previousResource, versionType);
+        
+        resource = updateResourceUrn(resource);
 
         applyVersioningNewResource(ctx, resource);
     }
@@ -364,7 +363,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract void applyVersioningPreviousResource(ServiceContext ctx, E resource) throws MetamacException;
 
-    protected abstract E updateResourceUrnAfterVersioning(E resource) throws MetamacException;
+    protected abstract E updateResourceUrn(E resource) throws MetamacException;
 
     // ------------------------------------------------------------------------------------------------------
     // GLOBAL METHODS

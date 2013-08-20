@@ -175,9 +175,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+        resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
+        resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
+
         // FIXME: Pendiente añadir método de duplicado en DatasetRepositoriesServiceFacade
         // It's necessary to duplicate datasetRepository and set the new id to datasetVersion
-        throw new UnsupportedOperationException("Not implemented: needed a DatasetRepositoriesServiceFacade method");
+        // throw new UnsupportedOperationException("Not implemented: needed a DatasetRepositoriesServiceFacade method");
     }
 
     @Override
@@ -186,11 +189,13 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected DatasetVersion updateResourceUrnAfterVersioning(DatasetVersion resource) throws MetamacException {
+    protected DatasetVersion updateResourceUrn(DatasetVersion resource) throws MetamacException {
         String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested()};
-        resource.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
-                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
+
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
+                .getSiemacMetadataStatisticalResource().getVersionLogic());
+
+        resource.getSiemacMetadataStatisticalResource().setUrn(urn);
         return resource;
     }
 

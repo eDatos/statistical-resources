@@ -118,7 +118,7 @@ public class BaseAsserts extends CommonAsserts {
         assertNull(next.getVersionRationale());
         assertNull(next.getValidFrom());
         assertNull(next.getValidTo());
-        assertNull(next.getNextVersion());
+        assertEquals(previous.getNextVersion(), next.getNextVersion());        
         assertNull(next.getNextVersionDate());
     }
 

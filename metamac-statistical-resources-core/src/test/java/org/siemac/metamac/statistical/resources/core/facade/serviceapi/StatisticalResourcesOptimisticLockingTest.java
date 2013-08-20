@@ -681,12 +681,17 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
                 .retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), publicationVersionDtoSession02.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 1 --> OK
-        PublicationVersionDto publicationVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.versioningPublicationVersion(getServiceContextAdministrador(),
+        // Versioning - session 1 --> OK
+        PublicationVersionDto publicationVersionDtoSession1NewVersion = statisticalResourcesServiceFacade.versioningPublicationVersion(getServiceContextAdministrador(),
                 publicationVersionDtoSession01, VersionTypeEnum.MAJOR);
+        
+        PublicationVersionDto publicationVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionMockFactory
+                .retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        
+        assertEquals(Long.valueOf(0), publicationVersionDtoSession1NewVersion.getOptimisticLockingVersion());
         assertTrue(publicationVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > publicationVersionDtoSession01.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 2 --> FAIL
+        // Versioning - session 2 --> FAIL
         try {
             statisticalResourcesServiceFacade.versioningPublicationVersion(getServiceContextAdministrador(), publicationVersionDtoSession02, VersionTypeEnum.MAJOR);
             fail("optimistic locking");
@@ -697,8 +702,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // Update publication - session 1 --> OK
         publicationVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
         PublicationVersionDto publicationVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updatePublicationVersion(getServiceContextAdministrador(),
-                publicationVersionDtoSession1AfterUpdate01);
-        assertTrue(publicationVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > publicationVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+                publicationVersionDtoSession1NewVersion);
+        assertTrue(publicationVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > publicationVersionDtoSession1NewVersion.getOptimisticLockingVersion());
     }
 
     // ------------------------------------------------------------

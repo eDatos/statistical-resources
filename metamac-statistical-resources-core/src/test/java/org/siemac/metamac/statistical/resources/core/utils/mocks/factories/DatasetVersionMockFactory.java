@@ -233,6 +233,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_68_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED_AND_USER_MODIFIED_DATE_NEXT_UPDATE_NAME = "DATASET_VERSION_68_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED_AND_USER_MODIFIED_DATE_NEXT_UPDATE";
     private static DatasetVersion DATASET_VERSION_68_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED_AND_USER_MODIFIED_DATE_NEXT_UPDATE;
 
+    public static final String    DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER_NAME                                                   = "DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER";
+    private static DatasetVersion DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER;
+
     private static final String   INIT_VERSION                                                                                           = "001.000";
     private static final String   SECOND_VERSION                                                                                         = "002.000";
     private static final String   THIRD_VERSION                                                                                          = "003.000";
@@ -406,7 +409,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     protected static DatasetVersion getDatasetVersion14Oper03Code01Published() {
         if (DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED == null) {
             DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
-            fillDatasetVersionInPublished(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED);
+            prepareToVersioning(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED);
         }
         return DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED;
     }
@@ -1112,18 +1115,23 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         return datasetVersion;
     }
-
+    
+    
+    protected static DatasetVersion getDatasetVersion69PublishedNoRootMaintainer() {
+        if (DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER == null) {
+            DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER = createDatasetVersion(1);
+            prepareToVersioning(DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER);
+            DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesDoMocks.mockAgencyExternalItem("agency01", "SIEMAC.agency01"));
+        }
+        return DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER;
+    }
+    
     // -----------------------------------------------------------------
     // PRIVATE UTILS
     // -----------------------------------------------------------------
 
     private static void fillDatasetVersionInProductionValidation(DatasetVersion datasetVersion) {
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-    }
-
-    private static void fillDatasetVersionInPublished(DatasetVersion datasetVersion) {
-        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
     }
 
     private static DatasetVersion createDatasetVersion(Integer sequentialId) {
@@ -1165,6 +1173,16 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
         prepareToProductionValidation(datasetVersion);
         LifecycleTestUtils.prepareToDiffusionValidation(datasetVersion);
+    }
+
+    private static void prepareToPublished(DatasetVersion datasetVersion) {
+        prepareToDiffusionValidation(datasetVersion);
+        LifecycleTestUtils.prepareToPublished(datasetVersion);
+    }
+
+    private static void prepareToVersioning(DatasetVersion datasetVersion) {
+        prepareToPublished(datasetVersion);
+        LifecycleTestUtils.createPublished(datasetVersion);
     }
 
     private static void prepareToValidationRejected(DatasetVersion datasetVersion) {
