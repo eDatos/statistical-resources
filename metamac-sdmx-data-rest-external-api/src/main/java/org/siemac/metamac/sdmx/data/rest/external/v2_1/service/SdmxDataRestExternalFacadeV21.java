@@ -19,7 +19,7 @@ public interface SdmxDataRestExternalFacadeV21 {
     @GET
     @Produces("application/xml")
     @Path("data/{flowRef}")
-    Response findData(@PathParam("flowRef") String flowRef, @DefaultValue("full") @QueryParam("detail") String detail);
+    Response findData(@PathParam("flowRef") String flowRef, @DefaultValue("full") @QueryParam("detail") String detail, @QueryParam("dimensionAtObservation") String dimensionAtObservation);
 
     /**
      * Find data
@@ -29,7 +29,8 @@ public interface SdmxDataRestExternalFacadeV21 {
     @GET
     @Produces("application/xml")
     @Path("data/{flowRef}/{key}")
-    Response findData(@PathParam("flowRef") String flowRef, @PathParam("key") String key, @DefaultValue("full") @QueryParam("detail") String detail);
+    Response findData(@PathParam("flowRef") String flowRef, @PathParam("key") String key, @DefaultValue("full") @QueryParam("detail") String detail,
+            @QueryParam("dimensionAtObservation") String dimensionAtObservation);
 
     /**
      * Find data
@@ -39,5 +40,6 @@ public interface SdmxDataRestExternalFacadeV21 {
     @GET
     @Produces("application/xml")
     @Path("data/{flowRef}/{key}/{providerRef}")
-    Response findData(@PathParam("flowRef") String flowRef, @PathParam("key") String key, @PathParam("providerRef") String providerRef, @DefaultValue("full") @QueryParam("detail") String detail);
+    Response findData(@PathParam("flowRef") String flowRef, @PathParam("key") String key, @PathParam("providerRef") String providerRef, @DefaultValue("full") @QueryParam("detail") String detail,
+            @QueryParam("dimensionAtObservation") String dimensionAtObservation);
 }
