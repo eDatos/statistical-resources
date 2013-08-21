@@ -15,6 +15,8 @@
         <context:exclude-filter type="regex" expression=".*web.*" />
         <context:exclude-filter type="regex" expression=".*core.invocation.service.*" />
     </context:component-scan>
+    
+    <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 
     <bean id="springPropertyConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true" />
