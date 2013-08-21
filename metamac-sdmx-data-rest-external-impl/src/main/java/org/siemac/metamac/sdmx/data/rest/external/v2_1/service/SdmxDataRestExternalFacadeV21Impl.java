@@ -1,18 +1,19 @@
 package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.RestExternalConstants;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestException;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestServiceExceptionType;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.WriterDataCallbackImpl;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Writer;
 import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
+import com.arte.statistic.parser.sdmx.v2_1.domain.TypeSDMXDataMessageEnum;
+import com.arte.statistic.parser.sdmx.v2_1.domain.WriterResult;
 
 @Service("sdmxDataRestExternalFacadeV21")
 public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFacadeV21 {
@@ -63,33 +66,36 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     private final Logger                     logger = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
 
     @Override
-    public Response findData(String flowRef, String detail) {
+    public Response findData(String flowRef, String detail, String dimensionAtObservation) {
         try {
-            InputStream is = processrequest(flowRef, null, null);
+            boolean isGeneric = true;
+            WriterResult writerResult = processrequest(flowRef, null, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), isGeneric);
 
-            return Response.ok(is).build();
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(determineMediaType(writerResult.getTypeSDMXDataMessageEnum())).build();
         } catch (Exception e) {
             throw manageException(e);
         }
     }
 
     @Override
-    public Response findData(String flowRef, String key, String detail) {
+    public Response findData(String flowRef, String key, String detail, String dimensionAtObservation) {
         try {
-            InputStream is = processrequest(flowRef, key, null);
+            boolean isGeneric = true;
+            WriterResult writerResult = processrequest(flowRef, key, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), isGeneric);
 
-            return Response.ok(is).build();
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(determineMediaType(writerResult.getTypeSDMXDataMessageEnum())).build();
         } catch (Exception e) {
             throw manageException(e);
         }
     }
 
     @Override
-    public Response findData(String flowRef, String key, String providerRef, String detail) {
+    public Response findData(String flowRef, String key, String providerRef, String detail, String dimensionAtObservation) {
         try {
-            InputStream is = processrequest(flowRef, key, providerRef);
+            boolean isGeneric = true;
+            WriterResult writerResult = processrequest(flowRef, key, providerRef, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), isGeneric);
 
-            return Response.ok(is).build();
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(determineMediaType(writerResult.getTypeSDMXDataMessageEnum())).build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -110,7 +116,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     /***************************************************************
      * DATA PRIVATE
      ***************************************************************/
-    private InputStream processrequest(String flowRef, String key, String providerRef) throws Exception {
+    private WriterResult processrequest(String flowRef, String key, String providerRef, RequestParameter requestParameter, boolean isGeneric) throws Exception {
         // flowRef: Always required
         // key: nullable, then is the same that SAME wildcard
         // key: providerRef, then is the same that SAME wildcard
@@ -127,12 +133,11 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             }
         }
 
-        WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, findDataSetFromDataFlow(flowRef, providerRef), key); // TODO
-                                                                                                                                                                                          // manejar
-                                                                                                                                                                                          // dataflow
-        File writerData = Sdmx21Writer.writerData(writerDataCallback, true);
-
-        return new FileInputStream(writerData);
+        WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, findDataSetFromDataFlow(flowRef, providerRef), key,
+                requestParameter); // TODO
+        // manejar
+        // dataflow
+        return Sdmx21Writer.writerData(writerDataCallback, isGeneric);
     }
 
     private String findDataSetFromDataFlow(String flowRef, String providerRef) {
@@ -157,5 +162,61 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             org.sdmx.resources.sdmxml.schemas.v2_1.message.Error error = RestExceptionUtils.getError(RestServiceExceptionType.UNKNOWN);
             return new RestException(error, Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private RequestParameter createRequestParameters(String startPeriod, String endPeriod, String updatedAfter, String firstNObservations, String lastNObservations, String dimensionAtObservation,
+            String detail) {
+        RequestParameter requestParameter = new RequestParameter();
+
+        // START_PERIOD
+        if (StringUtils.isNotEmpty(startPeriod)) {
+            requestParameter.setStartPeriod(startPeriod);
+        }
+
+        // END_PERIOD
+        if (StringUtils.isNotEmpty(endPeriod)) {
+            requestParameter.setEndPeriod(endPeriod);
+        }
+
+        // UPDATED_AFTER
+        if (StringUtils.isNotEmpty(updatedAfter)) {
+            requestParameter.setUpdatedAfter(updatedAfter);
+        }
+
+        // FIRST_N_OBSERVATIONS
+        if (StringUtils.isNotEmpty(firstNObservations)) {
+            requestParameter.setFirstNObservations(firstNObservations);
+        }
+
+        // LAST_N_OBSERVATIONS
+        if (StringUtils.isNotEmpty(lastNObservations)) {
+            requestParameter.setLastNObservations(lastNObservations);
+        }
+
+        // DIMENSION_AT_OBSERVATION
+        if (StringUtils.isNotEmpty(dimensionAtObservation)) {
+            requestParameter.setDimensionAtObservation(dimensionAtObservation);
+        }
+
+        // DETAIL
+        if (StringUtils.isNotEmpty(detail) && RestExternalConstants.DETAIL.equals(detail)) {
+            requestParameter.setDetail(detail);
+        }
+
+        return requestParameter;
+    }
+
+    private String determineMediaType(TypeSDMXDataMessageEnum typeSDMXDataMessageEnum) {
+        switch (typeSDMXDataMessageEnum) {
+            case GENERIC_2_1:
+                return RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1;
+            case GENERIC_TIME_SERIES_2_1:
+                return RestExternalConstants.MEDIATYPE_MESSAGE_GENERICTIMESERIESDATA_2_1;
+            case SPECIFIC_2_1:
+                return RestExternalConstants.MEDIATYPE_MESSAGE_STRUCTURESPECIFICDATA_2_1;
+            case SPECIFIC_TIME_SERIES_2_1:
+                return RestExternalConstants.MEDIATYPE_MESSAGE_STRUCTURESPECIFICTIMESERIESDATA_2_1;
+        }
+        return MediaType.APPLICATION_XML;
     }
 }

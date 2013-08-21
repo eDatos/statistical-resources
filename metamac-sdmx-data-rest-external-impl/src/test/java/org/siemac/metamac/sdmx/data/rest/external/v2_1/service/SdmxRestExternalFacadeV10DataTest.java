@@ -37,19 +37,29 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     @Test
     public void testData() throws Exception {
 
-        // All data
-        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null);
+        // {
+        // // All data
+        // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, null);
+        //
+        // System.out.println("_____________");
+        // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        //
+        // }
 
-        System.out.println("_____________");
-        System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        {
+            // All data, with FREQ as dimensionAtObservation
+            Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, "FREQ");
 
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
     }
 
     @Test
     public void testDataKey() throws Exception {
 
         String key = "M.CHF.EUR.SP00.E.2010-08";
-        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null);
+        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null, null);
 
         System.out.println("_____________");
         System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
@@ -59,7 +69,7 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     public void testDataKeyWildcards() throws Exception {
 
         String key = "M..EUR.SP00.E.2010-08";
-        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null);
+        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null, null);
 
         System.out.println("_____________");
         System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
