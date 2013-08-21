@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
-
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -14,10 +12,8 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,31 +39,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToProductionValidationResource(DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        // CHECK all dsd related info
-        checkMetadataRequired(resource.getRelatedDsd(), ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD, exceptions);
-
-        checkMetadataRequired(resource.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES, exceptions);
-        checkMetadataRequired(resource.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES, exceptions);
-
-        checkMetadataRequired(resource.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY, exceptions);
-        checkMetadataRequired(resource.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY, exceptions);
-
-        if (resource.getDatasources() == null || resource.getDatasources().isEmpty()) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_EMPTY_DATASOURCES, resource.getSiemacMetadataStatisticalResource().getUrn()));
-        } else {
-            if (!hasAnyDatasourceDateNextUpdate(resource)) {
-                checkMetadataRequired(resource.getDateNextUpdate(), ServiceExceptionParameters.DATASET_VERSION__DATE_NEXT_UPDATE, exceptions);
-            }
-        }
-    }
-
-    private boolean hasAnyDatasourceDateNextUpdate(DatasetVersion resource) {
-        for (Datasource datasource : resource.getDatasources()) {
-            if (datasource.getDateNextUpdate() != null) {
-                return true;
-            }
-        }
-        return false;
+        // NOTHING
     }
 
     @Override
@@ -145,17 +117,8 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToPublishedResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+        resource.setBibliographicCitation(buildBibliographicCitation(resource));
 
-        // FIXME
-        /*
-         * FILL:
-         * DATE_START
-         * DATE_END
-         */
-
-        buildBibliographicCitation(resource);
-
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
 
