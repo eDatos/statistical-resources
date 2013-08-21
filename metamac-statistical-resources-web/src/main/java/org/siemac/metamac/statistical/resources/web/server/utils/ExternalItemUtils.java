@@ -3,7 +3,12 @@ package org.siemac.metamac.statistical.resources.web.server.utils;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.common.v1_0.domain.ListBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 public class ExternalItemUtils extends org.siemac.metamac.web.common.client.utils.ExternalItemUtils {
@@ -16,5 +21,43 @@ public class ExternalItemUtils extends org.siemac.metamac.web.common.client.util
             result.setExternalItemDtos(dtos);
         }
         return result;
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(resource.getId());
+        externalItemDto.setCodeNested(resource.getNestedId());
+        externalItemDto.setUri(resource.getSelfLink().getHref());
+        externalItemDto.setUrn(resource.getUrn());
+        externalItemDto.setUrnProvider(resource.getUrnProvider());
+        externalItemDto.setType(type);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
+        externalItemDto.setManagementAppUrl(resource.getManagementAppLink());
+        return externalItemDto;
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromAgency(Agency agency) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(agency.getId());
+        externalItemDto.setCodeNested(agency.getNestedId());
+        externalItemDto.setUri(agency.getSelfLink().getHref());
+        externalItemDto.setUrn(agency.getUrn());
+        externalItemDto.setUrnProvider(agency.getUrnProvider());
+        externalItemDto.setType(TypeExternalArtefactsEnum.AGENCY);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(agency.getName()));
+        externalItemDto.setManagementAppUrl(agency.getManagementAppLink());
+        return externalItemDto;
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromCode(Code code) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(code.getId());
+        externalItemDto.setUri(code.getSelfLink().getHref());
+        externalItemDto.setUrn(code.getUrn());
+        externalItemDto.setUrnProvider(code.getUrnProvider());
+        externalItemDto.setType(TypeExternalArtefactsEnum.CODE);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(code.getName()));
+        externalItemDto.setManagementAppUrl(code.getManagementAppLink());
+        return externalItemDto;
     }
 }

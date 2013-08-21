@@ -4,11 +4,22 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -35,6 +46,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
     public interface DatasetAttributesTabView extends View, HasUiHandlers<DatasetAttributesTabUiHandlers> {
 
+        void setAttributes(List<ExternalItemDto> attributes);
     }
 
     @ProxyCodeSplit
@@ -71,6 +83,47 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
+        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
+            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+
+            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                retrieveOperation(operationUrn);
+            } else {
+                loadInitialData();
+            }
+
+        } else {
+            StatisticalResourcesWeb.showErrorPage();
+        }
+    }
+
+    private void retrieveOperation(String urn) {
+        dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationResult result) {
+                StatisticalResourcesDefaults.setSelectedStatisticalOperation(result.getOperation());
+                loadInitialData();
+            }
+        });
+    }
+
+    private void loadInitialData() {
+        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
+        retrieveAttributes(datasetUrn);
+    }
+
+    private void retrieveAttributes(String datasetUrn) {
+        dispatcher.execute(new GetDatasetAttributesAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetAttributesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetAttributesResult result) {
+                getView().setAttributes(result.getDatasetVersionAttributes());
+            }
+        });
     }
 
     //

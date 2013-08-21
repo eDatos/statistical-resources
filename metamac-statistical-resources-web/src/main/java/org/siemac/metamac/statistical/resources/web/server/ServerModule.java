@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInit
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourcesActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetAttributesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionCoverageActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionActionHandler;
@@ -53,6 +54,7 @@ import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValues
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
@@ -159,6 +161,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDatasetDimensionCoverageAction.class, GetDatasetDimensionCoverageActionHandler.class);
         bindHandler(GetDatasetVersionMainCoveragesAction.class, GetDatasetVersionMainCoveragesActionHandler.class);
         bindHandler(GetVersionsOfDatasetAction.class, GetVersionsOfDatasetActionHandler.class);
+        bindHandler(GetDatasetAttributesAction.class, GetDatasetAttributesActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);
