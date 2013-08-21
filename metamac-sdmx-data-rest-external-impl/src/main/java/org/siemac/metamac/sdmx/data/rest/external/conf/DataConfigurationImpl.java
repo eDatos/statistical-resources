@@ -21,8 +21,6 @@ public class DataConfigurationImpl implements DataConfiguration {
 
     private String               organisationIdDefault;
 
-    private String               sdmxSrmExternalApiUrlBase;
-
     @Override
     public String retrieveMaintainerUrnDefault() throws MetamacException {
         if (maintainerUrnDefault == null) {
@@ -37,14 +35,6 @@ public class DataConfigurationImpl implements DataConfiguration {
             organisationIdDefault = retrieveProperty(DataConfigurationConstants.METAMAC_ORGANISATION, Boolean.TRUE);
         }
         return organisationIdDefault;
-    }
-
-    @Override
-    public String retrieveSdmxSrmExternalApiUrlBase() throws MetamacException {
-        if (sdmxSrmExternalApiUrlBase == null) {
-            sdmxSrmExternalApiUrlBase = retrieveProperty(DataConfigurationConstants.ENDPOINT_SDMX_SRM_EXTERNAL_API, Boolean.TRUE);
-        }
-        return sdmxSrmExternalApiUrlBase;
     }
 
     private String retrieveProperty(String propertyName, Boolean required) throws MetamacException {

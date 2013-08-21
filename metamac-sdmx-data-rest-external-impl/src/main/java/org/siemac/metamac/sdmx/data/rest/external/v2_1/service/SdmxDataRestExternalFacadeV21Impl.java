@@ -8,6 +8,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.RestExternalConstants;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestException;
@@ -133,8 +135,14 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             }
         }
 
+        // TODO ver como vamos a hacer la correspondencia entre Dataflow y Dataset
+        ExternalItem externalItem = new ExternalItem();
+        externalItem.setType(TypeExternalArtefactsEnum.AGENCY);
+        externalItem.setCode("SDMX01");
+        externalItem.setUrn("urn:sdmx:org.sdmx.infomodel.base.Agency=SDMX:AGENCIES(1.0).SDMX01");
+
         WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, findDataSetFromDataFlow(flowRef, providerRef), key,
-                requestParameter); // TODO
+                requestParameter, externalItem, dataConfiguration.retrieveOrganisationIDDefault()); // TODO
         // manejar
         // dataflow
         return Sdmx21Writer.writerData(writerDataCallback, isGeneric);
@@ -144,8 +152,6 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         if (providerRef == null) {
             // Any maintainer
         }
-
-        // TODO ver como vamos a hacer la correspondencia entre Dataflow y Dataset
 
         return flowRef;
     }

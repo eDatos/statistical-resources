@@ -37,14 +37,14 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     @Test
     public void testData() throws Exception {
 
-        // {
-        // // All data
-        // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, null);
-        //
-        // System.out.println("_____________");
-        // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-        //
-        // }
+        {
+            // All data
+            Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, null);
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
 
         {
             // All data, with FREQ as dimensionAtObservation

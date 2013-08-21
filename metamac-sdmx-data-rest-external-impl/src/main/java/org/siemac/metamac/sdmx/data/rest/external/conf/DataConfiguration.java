@@ -14,9 +14,4 @@ public interface DataConfiguration {
      */
     public String retrieveOrganisationIDDefault() throws MetamacException;
 
-    /**
-     * Retrieves the base Url api
-     */
-    public String retrieveSdmxSrmExternalApiUrlBase() throws MetamacException;
-
 }
