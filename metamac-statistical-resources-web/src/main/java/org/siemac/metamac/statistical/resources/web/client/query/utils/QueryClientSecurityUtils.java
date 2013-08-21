@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.utils;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.BaseClientSecurityUtils;
 
@@ -26,7 +27,10 @@ public class QueryClientSecurityUtils extends BaseClientSecurityUtils {
         return SharedQueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(getMetamacPrincipal());
     }
 
-    public static boolean canDeleteQueryVersion() {
+    public static boolean canDeleteQueryVersion(QueryVersionDto queryVersionDto) {
+        if (ProcStatusEnum.PUBLISHED.equals(queryVersionDto.getProcStatus())) {
+            return false;
+        }
         return SharedQueriesSecurityUtils.canDeleteQueryVersion(getMetamacPrincipal());
     }
 

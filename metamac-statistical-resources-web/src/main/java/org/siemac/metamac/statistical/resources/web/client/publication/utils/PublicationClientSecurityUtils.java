@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.utils;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.BaseClientSecurityUtils;
 
@@ -19,6 +20,9 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
     }
 
     public static boolean canDeletePublicationVersion(PublicationVersionDto publicationVersionDto) {
+        if (ProcStatusEnum.PUBLISHED.equals(publicationVersionDto.getProcStatus())) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canDeletePublicationVersion(getMetamacPrincipal());
     }
 

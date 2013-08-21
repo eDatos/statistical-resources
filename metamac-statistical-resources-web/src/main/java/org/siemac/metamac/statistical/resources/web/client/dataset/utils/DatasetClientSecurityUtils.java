@@ -25,11 +25,14 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
     }
 
     public static boolean canDeleteDatasetVersion(DatasetVersionDto datasetVersionDto) {
-        return canDeleteDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+        return canDeleteDatasetVersion(datasetVersionDto.getIsTaskInBackground(), datasetVersionDto.getProcStatus());
     }
 
-    public static boolean canDeleteDatasetVersion(boolean isTaskInBackground) {
+    public static boolean canDeleteDatasetVersion(boolean isTaskInBackground, ProcStatusEnum procStatus) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
             return false;
         }
         return SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal());
