@@ -87,7 +87,7 @@ public class PublicationMetadataTabPresenter
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaMetadata, this);
+        RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaPublication, this);
     }
 
     @Override

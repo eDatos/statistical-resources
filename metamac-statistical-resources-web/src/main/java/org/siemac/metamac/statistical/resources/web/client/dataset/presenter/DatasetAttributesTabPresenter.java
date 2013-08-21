@@ -58,7 +58,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaAttributes, this);
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDataset, this);
     }
 
     @Override

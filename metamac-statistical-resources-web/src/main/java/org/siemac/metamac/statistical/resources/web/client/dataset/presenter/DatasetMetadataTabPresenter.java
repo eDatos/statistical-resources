@@ -114,7 +114,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaMetadata, this);
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDataset, this);
     }
 
     @Override

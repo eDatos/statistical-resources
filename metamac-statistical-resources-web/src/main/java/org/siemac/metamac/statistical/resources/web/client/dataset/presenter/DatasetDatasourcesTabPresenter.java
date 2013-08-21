@@ -89,7 +89,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);
+        RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDataset, this);
     }
 
     @Override

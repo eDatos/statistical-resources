@@ -98,7 +98,7 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaStructure, this);
+        RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaPublication, this);
     }
 
     @Override
