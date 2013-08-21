@@ -24,6 +24,7 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Autofit;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -109,9 +110,15 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         // Panel
 
         panel = new VLayout();
-        panel.addMember(toolStrip);
-        panel.addMember(createAdvacedSearchSectionStack());
-        panel.addMember(listGrid);
+        panel.setHeight100();
+
+        VLayout subpanel = new VLayout();
+        subpanel.setOverflow(Overflow.SCROLL);
+        subpanel.addMember(toolStrip);
+        subpanel.addMember(createAdvacedSearchSectionStack());
+        subpanel.addMember(listGrid);
+
+        panel.addMember(subpanel);
 
         // Delete confirmation window
 
