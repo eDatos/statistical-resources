@@ -1,16 +1,21 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query;
 
 import static org.junit.Assert.fail;
+import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
 
 public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
 
     private static final String TESTING_CLASS = "org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceImpl";
+    
+    @InjectMocks
+    protected QueryLifecycleServiceImpl    queryLifecycleService = new QueryLifecycleServiceImpl();
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -78,36 +83,40 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     public void testApplySendToPublishedResource() throws Exception {
         // TODO:
         // - cumplimentar format_extent_resources
-        
+
         fail("not implemented");
     }
-
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 
-    @Ignore
     @Override
     @Test
     public void testCheckVersioningResource() throws Exception {
-        // TODO Auto-generated method stub
-        fail("not implemented");
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
+        queryLifecycleService.checkVersioningResource(null, null);
+        
+        
     }
 
-    @Ignore
     @Override
     @Test
     public void testApplyVersioningNewResource() throws Exception {
-        // TODO Auto-generated method stub
-        fail("not implemented");
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
+        queryLifecycleService.applyVersioningNewResource(null, null);
     }
-    
-    @Ignore
+
     @Override
     @Test
     public void testApplyVersioningPreviousResource() throws Exception {
-        // TODO Auto-generated method stub
-        fail("not implemented");
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
+        queryLifecycleService.applyVersioningPreviousResource(null, null);
     }
 }

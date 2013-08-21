@@ -1,11 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query;
 
+import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
+
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
@@ -93,7 +96,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void checkVersioningResource(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        throw new UnsupportedOperationException("Not implemented in this version");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
 
 
@@ -104,13 +107,13 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     
     @Override
     protected void applyVersioningNewResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        throw new UnsupportedOperationException("Not implemented in this version");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
     
 
     @Override
     protected void applyVersioningPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        throw new UnsupportedOperationException("Not implemented in this version");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
     
     @Override

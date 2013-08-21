@@ -56,7 +56,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-service-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
 

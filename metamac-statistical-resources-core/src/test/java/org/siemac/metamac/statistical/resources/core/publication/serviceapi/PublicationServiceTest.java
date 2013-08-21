@@ -83,7 +83,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class PublicationServiceTest extends StatisticalResourcesBaseTest implements PublicationServiceTestBase {
 

@@ -3,12 +3,12 @@ package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
@@ -47,8 +47,10 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
-    @Ignore
     public void testVersioningQueryVersion() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         QueryVersion queryNewVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
@@ -59,8 +61,10 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
-    @Ignore
     public void testVersioningQueryVersionCheckUrnIsCorrectForMinorChange() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         // Necessary data for construct URN
@@ -83,8 +87,10 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
-    @Ignore
     public void testVersioningQueryVersionCheckUrnIsCorrectForMayorChange() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         // Necessary data for construct URN
@@ -107,8 +113,10 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
-    @Ignore
     public void testVersioningQueryVersionCheckUrnIsCorrectForANonRootAgency() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         // Necessary data for construct URN

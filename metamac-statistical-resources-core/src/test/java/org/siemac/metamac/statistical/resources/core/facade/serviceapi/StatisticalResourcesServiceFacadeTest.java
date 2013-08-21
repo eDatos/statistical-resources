@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDay;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
+import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsCollectionByField;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
@@ -177,7 +178,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
@@ -703,12 +704,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(updatedQueryVersion.getProductionValidationUser());
         assertNotNull(updatedQueryVersion.getProductionValidationDate());
     }
-    
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
-    @Ignore
     public void testVersioningQueryVersion() throws Exception {
+        // It's MetamacException because facade interceptor transform all Exceptions in MetamacException
+        thrown.expect(MetamacException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
         String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn();
         QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
 
