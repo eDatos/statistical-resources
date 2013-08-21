@@ -84,6 +84,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
     protected ElementLevelDto                   selectedContextClickElement;
 
+    protected int                               numberOfElementsInTheTree;
+
     public PublicationStructureTreeGrid(TreeNodeClickAction treeNodeClickAction) {
         this.treeNodeClickAction = treeNodeClickAction;
 
@@ -298,6 +300,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     public void setPublicationStructure(PublicationStructureDto publicationStructureDto) {
+        this.numberOfElementsInTheTree = 1;
         this.publicationVersion = publicationStructureDto.getPublicationVersion();
 
         // Clear filter editor
@@ -307,11 +310,13 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         publicationVersionRootNode.setChildren(createElementLevelsTreeNodes(publicationStructureDto.getElements()));
 
         addTreeNodesToTreeGrid(new ElementLevelTreeNode[]{publicationVersionRootNode});
+        setAutoFitMaxRecords(numberOfElementsInTheTree);
     }
 
     public ElementLevelTreeNode[] createElementLevelsTreeNodes(List<ElementLevelDto> elementLevelDtos) {
         ElementLevelTreeNode[] treeNodes = new ElementLevelTreeNode[elementLevelDtos.size()];
         for (int i = 0; i < elementLevelDtos.size(); i++) {
+            numberOfElementsInTheTree++;
             treeNodes[i] = StatisticalResourcesRecordUtils.getElementLevelNode(elementLevelDtos.get(i));
             treeNodes[i].setChildren(createElementLevelsTreeNodes(elementLevelDtos.get(i).getSubelements()));
         }
