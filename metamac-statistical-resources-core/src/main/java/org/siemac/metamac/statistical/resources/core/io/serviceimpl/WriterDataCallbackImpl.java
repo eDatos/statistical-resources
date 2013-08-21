@@ -9,6 +9,10 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 
@@ -41,14 +45,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     private String                           datasetVersionId                 = null;
     private List<DimensionCodeInfo>          conditions                       = null;
     private RequestParameter                 requestParameter                 = null;
+    private ExternalItem                     maintainer                       = null;
+    private String                           sender                           = null;
 
     public WriterDataCallbackImpl(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper, String datasetID, String querykey,
-            RequestParameter requestParameter) throws Exception {
+            RequestParameter requestParameter, ExternalItem maintainer, String sender) throws Exception {
         this.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
         this.queryKey = querykey;
         this.datasetVersionId = datasetID;
         this.requestParameter = requestParameter;
+        this.maintainer = maintainer;
+        this.sender = sender;
         calculateCacheInfo();
     }
 
@@ -56,19 +64,22 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public Header retrieveHeader() throws Exception {
         // TODO HEADER
         Header header = new Header();
-        header.setId("Generic");
+        header.setId(generateMessageId());
         header.setTest(false);
-        header.setPrepared("2010-01-04T16:21:49+01:00");
-        header.setSenderID("ECB");
+        header.setPrepared(CoreCommonUtil.jodaDateTime2xsDateTime(new DateTime()));
+        header.setSenderID(this.sender);
 
+        // Structure: Note, in this implementation, we use only one structure in header.
         PayloadStructure payloadStructure = new PayloadStructure();
-        payloadStructure.setDimensionAtObservation(null); // All dimensions
-        payloadStructure.setStructureID("STR1");
+        payloadStructure.setDimensionAtObservation(getDimensionAtObservation().getCode());
+        payloadStructure.setStructureID(datasetVersionId);
+
+        String[] splitItemScheme = UrnUtils.splitUrnWithoutPrefixItemScheme(maintainer.getUrn());
 
         StructureReferenceBase structureReferenceBase = new StructureReferenceBase();
-        structureReferenceBase.setAgency("ECB");
-        structureReferenceBase.setCode("ECB_EXR_NG");
-        structureReferenceBase.setVersionLogic("1.0");
+        structureReferenceBase.setAgency(splitItemScheme[0]);
+        structureReferenceBase.setCode(splitItemScheme[1]);
+        structureReferenceBase.setVersionLogic(splitItemScheme[2]);
 
         payloadStructure.setStructure(structureReferenceBase);
 
@@ -244,5 +255,11 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         // Attribute
         // TODO attr a nivel de observation List<AttributeBasicDto> attributes = observation.getAttributes();
         return result;
+    }
+
+    private String generateMessageId() {
+        StringBuilder stringBuilder = new StringBuilder("DATA_");
+        stringBuilder.append(this.sender).append("_").append(this.datasetVersionId);
+        return stringBuilder.toString();
     }
 }
