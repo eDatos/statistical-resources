@@ -38,29 +38,6 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    // @Autowired
-    // private CodesService codesService;
-    //
-    // @Autowired
-    // private ConceptsService conceptsService;
-    //
-    // @Autowired
-    // private OrganisationsService organisationsService;
-    //
-    // @Autowired
-    // private CategoriesService categoriesService;
-    //
-    // @Autowired
-    // private DataStructureDefinitionService dataStructureDefinitionService;
-    //
-    // @Autowired
-    // @Qualifier("messageDo2JaxbMapperSdmxSrm")
-    // private MessageDo2JaxbMapper messageDo2JaxbMapper;
-    //
-    // @Autowired
-    // @Qualifier("codesDo2JaxbRestExternalCallback")
-    // private CodesDo2JaxbCallback codesDo2JaxbCallback;
-
     @Autowired
     private DataConfiguration                dataConfiguration;
 

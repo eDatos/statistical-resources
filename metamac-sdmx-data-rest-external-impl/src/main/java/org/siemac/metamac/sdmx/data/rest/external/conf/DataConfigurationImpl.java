@@ -11,7 +11,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("srmConfiguration")
+@Component("dataConfiguration")
 public class DataConfigurationImpl implements DataConfiguration {
 
     @Autowired
