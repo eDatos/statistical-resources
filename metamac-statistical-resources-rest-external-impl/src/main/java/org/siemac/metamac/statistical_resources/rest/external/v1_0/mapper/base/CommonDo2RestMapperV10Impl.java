@@ -20,7 +20,6 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.Pair;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -196,22 +195,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setValidTo(toDate(source.getValidTo()));
     }
 
-    /**
-     * @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
-     */
-    @Override
-    public Pair<DataStructureDefinition, Dimensions> toDataStructureDefinitionAndDimensions(DatasetVersion datasetVersion, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
-            List<String> selectedLanguages) throws MetamacException {
-
-        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(datasetVersion.getRelatedDsd().getUrn());
-
-        DataStructureDefinition relatedDsd = toDataStructureDefinition(datasetVersion.getRelatedDsd(), dataStructure, selectedLanguages);
-        Dimensions dimensions = toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions().getDimensions(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(),
-                effectiveDimensionValuesToDataByDimension, selectedLanguages);
-
-        return new Pair<DataStructureDefinition, Dimensions>(relatedDsd, dimensions);
-    }
-
     @Override
     public Data toData(DatasetVersion source, List<String> selectedLanguages, Map<String, List<String>> dimensionValuesSelected) throws Exception {
         if (source == null) {
@@ -249,6 +232,55 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.getDimensions().setTotal(BigInteger.valueOf(target.getDimensions().getDimensions().size()));
 
         return target;
+    }
+
+    @Override
+    public DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        DataStructureDefinition target = new DataStructureDefinition();
+        toResourceExternalItemSrm(source, target, selectedLanguages);
+        target.setHeading(toDimensionsId(dataStructure.getHeading()));
+        target.setStub(toDimensionsId(dataStructure.getStub()));
+        target.setAutoOpen(dataStructure.isAutoOpen());
+        target.setShowDecimals(dataStructure.getShowDecimals());
+        return target;
+    }
+
+    /**
+     * @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
+     */
+    @Override
+    public Dimensions toDimensions(DataStructure dataStructure, List<DimensionBase> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
+            List<String> selectedLanguages) throws MetamacException {
+
+        List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
+        if (CollectionUtils.isEmpty(dimensionsId)) {
+            return null;
+        }
+
+        Map<String, DimensionVisualisation> dimensionVisualisationByDimensionId = null;
+        if (dataStructure.getDimensionVisualisations() != null && !CollectionUtils.isEmpty(dataStructure.getDimensionVisualisations().getDimensionVisualisations())) {
+            dimensionVisualisationByDimensionId = new HashMap<String, DimensionVisualisation>(dataStructure.getDimensionVisualisations().getDimensionVisualisations().size());
+            for (DimensionVisualisation dimensionVisualisation : dataStructure.getDimensionVisualisations().getDimensionVisualisations()) {
+                dimensionVisualisationByDimensionId.put(dimensionVisualisation.getDimension(), dimensionVisualisation);
+            }
+        }
+
+        Dimensions targets = new Dimensions();
+        for (DimensionBase source : sources) {
+            String dimensionId = source.getId();
+            DimensionVisualisation dimensionVisualisation = dimensionVisualisationByDimensionId != null ? dimensionVisualisationByDimensionId.get(dimensionId) : null;
+            List<String> effectiveDimensionValuesToData = null;
+            if (effectiveDimensionValuesToDataByDimension != null) {
+                effectiveDimensionValuesToData = effectiveDimensionValuesToDataByDimension.get(dimensionId);
+            }
+            Dimension target = toDimension(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages);
+            targets.getDimensions().add(target);
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
+        return targets;
     }
 
     @Override
@@ -530,50 +562,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages) {
-        if (source == null) {
-            return null;
-        }
-        DataStructureDefinition target = new DataStructureDefinition();
-        toResourceExternalItemSrm(source, target, selectedLanguages);
-        target.setHeading(toDimensionsId(dataStructure.getHeading()));
-        target.setStub(toDimensionsId(dataStructure.getStub()));
-        target.setAutoOpen(dataStructure.isAutoOpen());
-        target.setShowDecimals(dataStructure.getShowDecimals());
-        return target;
-    }
-
-    private Dimensions toDimensions(DataStructure dataStructure, List<DimensionBase> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
-            List<String> selectedLanguages) throws MetamacException {
-
-        List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
-        if (CollectionUtils.isEmpty(dimensionsId)) {
-            return null;
-        }
-
-        Map<String, DimensionVisualisation> dimensionVisualisationByDimensionId = null;
-        if (dataStructure.getDimensionVisualisations() != null && !CollectionUtils.isEmpty(dataStructure.getDimensionVisualisations().getDimensionVisualisations())) {
-            dimensionVisualisationByDimensionId = new HashMap<String, DimensionVisualisation>(dataStructure.getDimensionVisualisations().getDimensionVisualisations().size());
-            for (DimensionVisualisation dimensionVisualisation : dataStructure.getDimensionVisualisations().getDimensionVisualisations()) {
-                dimensionVisualisationByDimensionId.put(dimensionVisualisation.getDimension(), dimensionVisualisation);
-            }
-        }
-
-        Dimensions targets = new Dimensions();
-        for (DimensionBase source : sources) {
-            String dimensionId = source.getId();
-            DimensionVisualisation dimensionVisualisation = dimensionVisualisationByDimensionId != null ? dimensionVisualisationByDimensionId.get(dimensionId) : null;
-            List<String> effectiveDimensionValuesToData = null;
-            if (effectiveDimensionValuesToDataByDimension != null) {
-                effectiveDimensionValuesToData = effectiveDimensionValuesToDataByDimension.get(dimensionId);
-            }
-            Dimension target = toDimension(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages);
-            targets.getDimensions().add(target);
-        }
-        targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
-        return targets;
     }
 
     private Dimension toDimension(String datasetVersionUrn, DataStructure dataStructure, DimensionBase source, DimensionVisualisation dimensionVisualisation,

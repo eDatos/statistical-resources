@@ -7,7 +7,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.Pair;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -15,16 +14,16 @@ import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
+import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.slf4j.Logger;
@@ -40,6 +39,9 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
     @Autowired
     private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
+
+    @Autowired
+    private SrmRestExternalFacade    srmRestExternalFacade;
 
     private static final Logger      logger = LoggerFactory.getLogger(QueriesDo2RestMapperV10Impl.class);
 
@@ -106,11 +108,11 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         QueryMetadata target = new QueryMetadata();
 
         Map<String, List<String>> effectiveDimensionValuesToDataByDimension = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
-        Pair<DataStructureDefinition, Dimensions> dataStructureAndDimensions = commonDo2RestMapper.toDataStructureDefinitionAndDimensions(source.getDatasetVersion(),
-                effectiveDimensionValuesToDataByDimension, selectedLanguages);
-        target.setRelatedDsd(dataStructureAndDimensions.getFirst());
-        target.setDimensions(dataStructureAndDimensions.getSecond());
 
+        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getDatasetVersion().getRelatedDsd().getUrn());
+        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getDatasetVersion().getRelatedDsd(), dataStructure, selectedLanguages));
+        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions().getDimensions(), source.getDatasetVersion()
+                .getSiemacMetadataStatisticalResource().getUrn(), effectiveDimensionValuesToDataByDimension, selectedLanguages));
         target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));
