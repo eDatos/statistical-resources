@@ -13,7 +13,9 @@ import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.dataset.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
@@ -88,6 +90,12 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaDatasources, this);
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
+        SelectDatasetTabEvent.fire(this, DatasetTabTypeEnum.DATASOURCES);
     }
 
     @Override

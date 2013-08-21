@@ -9,7 +9,10 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.dataset.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent.SelectDatasetTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent.UpdateResourceHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -43,7 +46,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers, UpdateResourceHandler {
+public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers, UpdateResourceHandler, SelectDatasetTabHandler {
 
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
@@ -61,7 +64,9 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
         void setDataset(DatasetVersionDto datasetDto);
         void setDatasetVersions(List<DatasetVersionDto> datasetVersionDtos);
-        void showMetadata();
+        void selectMetadataTab();
+        void selectDatasourcesTab();
+        void selectAttributesTab();
     }
 
     @ProxyCodeSplit
@@ -90,7 +95,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     @Override
     public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
 
+        // Redirect to metadata tab
+        getView().selectMetadataTab();
+        if (NameTokens.datasetPage.equals(placeManager.getCurrentPlaceRequest().getNameToken())) {
+            goToDatasetMetadata();
+        }
     }
 
     @Override
@@ -113,6 +124,19 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         }
     }
 
+    @ProxyEvent
+    @Override
+    public void onSelectDatasetTab(SelectDatasetTabEvent event) {
+        DatasetTabTypeEnum type = event.getDatasetTabTypeEnum();
+        if (DatasetTabTypeEnum.DATASOURCES.equals(type)) {
+            getView().selectDatasourcesTab();
+        } else if (DatasetTabTypeEnum.ATTRIBUTES.equals(type)) {
+            getView().selectAttributesTab();
+        } else {
+            getView().selectMetadataTab();
+        }
+    }
+
     private void retrieveOperation(String urn) {
         dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
@@ -128,7 +152,6 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         String datasetIdentifier = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         String datasetUrn = CommonUtils.generateDatasetUrn(datasetIdentifier);
         retrieveDatasetByUrn(datasetUrn);
-        getView().showMetadata();
     }
 
     private void retrieveDatasetByUrn(String urn) {

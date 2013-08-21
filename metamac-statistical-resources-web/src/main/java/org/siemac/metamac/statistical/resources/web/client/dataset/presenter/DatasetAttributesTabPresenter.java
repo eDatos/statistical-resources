@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.dataset.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -57,6 +59,12 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, DatasetPresenter.TYPE_SetContextAreaAttributes, this);
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
+        SelectDatasetTabEvent.fire(this, DatasetTabTypeEnum.ATTRIBUTES);
     }
 
     @Override

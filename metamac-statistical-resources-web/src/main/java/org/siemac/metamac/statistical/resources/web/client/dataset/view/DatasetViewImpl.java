@@ -20,7 +20,6 @@ import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -152,22 +151,18 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     }
 
     @Override
-    public void showMetadata() {
+    public void selectMetadataTab() {
         tabSet.selectTab(datasetMetadataTab);
-        getUiHandlers().goToDatasetMetadata();
     }
 
     @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == DatasetPresenter.TYPE_SetContextAreaMetadata) {
-            datasetMetadataTab.setPane((Canvas) content);
-        } else if (slot == DatasetPresenter.TYPE_SetContextAreaDatasources) {
-            datasetDatasourcesTab.setPane((Canvas) content);
-        } else if (slot == DatasetPresenter.TYPE_SetContextAreaAttributes) {
-            datasetAttributesTab.setPane((Canvas) content);
-        } else {
-            super.setInSlot(slot, content);
-        }
+    public void selectDatasourcesTab() {
+        tabSet.selectTab(datasetDatasourcesTab);
+    }
+
+    @Override
+    public void selectAttributesTab() {
+        tabSet.selectTab(datasetAttributesTab);
     }
 
     @Override
