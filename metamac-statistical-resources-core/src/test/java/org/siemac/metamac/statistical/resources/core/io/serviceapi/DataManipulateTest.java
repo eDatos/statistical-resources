@@ -326,6 +326,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
         // Wait until the job is finished
         waitUntilJobFinished();
+        Thread.sleep(15 * 1000);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
         assertNotNull(datasetRepositoryDto);
