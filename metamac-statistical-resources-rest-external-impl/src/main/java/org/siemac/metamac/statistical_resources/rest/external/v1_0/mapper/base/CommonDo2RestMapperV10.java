@@ -11,13 +11,13 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.common.v1_0.domain.Resources;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -29,7 +29,9 @@ public interface CommonDo2RestMapperV10 {
     public void toMetadataStatisticalResource(SiemacMetadataStatisticalResource source, StatisticalResource target, List<String> selectedLanguages) throws MetamacException;
     public Data toData(DatasetVersion source, List<String> selectedLanguages, Map<String, List<String>> dimensionValuesSelected) throws Exception;
     public DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages);
-    public Dimensions toDimensions(DataStructure dataStructure, List<DimensionBase> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
+    public Dimensions toDimensions(DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions sources, String datasetVersionUrn,
+            Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages) throws MetamacException;
+    public Attributes toAttributes(DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes sources, String datasetVersionUrn,
             List<String> selectedLanguages) throws MetamacException;
 
     public Resource toResource(Resource source, List<String> selectedLanguages);

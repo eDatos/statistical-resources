@@ -2,7 +2,13 @@ package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
 import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.mockInternationalString;
 
+import java.util.List;
+
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -42,12 +48,18 @@ public class SrmRestMocks {
         dataStructure.getHeading().getDimensions().add("measure01");
         dataStructure.getHeading().getDimensions().add("dim01");
 
-        dataStructure.setDataStructureComponents(new DataStructureComponents());
-        dataStructure.getDataStructureComponents().setDimensions(new Dimensions());
-        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockDimension("GEO_DIM", Boolean.TRUE));
-        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockTimeDimension("TIME_PERIOD"));
-        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockMeasureDimension("measure01"));
-        dataStructure.getDataStructureComponents().getDimensions().getDimensions().add(mockDimension("dim01", Boolean.FALSE));
+        DataStructureComponents components = new DataStructureComponents();
+        dataStructure.setDataStructureComponents(components);
+        components.setDimensions(new Dimensions());
+        components.getDimensions().getDimensions().add(mockDimension("GEO_DIM", Boolean.TRUE));
+        components.getDimensions().getDimensions().add(mockTimeDimension("TIME_PERIOD"));
+        components.getDimensions().getDimensions().add(mockMeasureDimension("measure01"));
+        components.getDimensions().getDimensions().add(mockDimension("dim01", Boolean.FALSE));
+
+        components.setAttributes(new Attributes());
+        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1"));
+        // components.getAttributes().getAttributes().add(mockAttributeDimension("attribute2", Arrays.asList("GEO_DIM", "dim01"))); // TODO resto de atributos de diferente nivel
+        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3"));
 
         dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
@@ -248,6 +260,24 @@ public class SrmRestMocks {
         dimension.getLocalRepresentation().setTextFormat(mockTimeTextFormatType());
         dimension.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-conceptTimeDimension01", null));
         return dimension;
+    }
+
+    private static AttributeBase mockAttributePrimaryMeasure(String id) {
+        Attribute attribute = new Attribute();
+        attribute.setId(id);
+        attribute.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
+        attribute.setAttributeRelationship(new AttributeRelationship());
+        attribute.getAttributeRelationship().setPrimaryMeasure("OBS_VALUE");
+        return attribute;
+    }
+
+    private static AttributeBase mockAttributeDimension(String id, List<String> dimensions) {
+        Attribute attribute = new Attribute();
+        attribute.setId(id);
+        attribute.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
+        attribute.setAttributeRelationship(new AttributeRelationship());
+        attribute.getAttributeRelationship().getDimensions().addAll(dimensions);
+        return attribute;
     }
 
     private static ResourceInternal mockCodelistResource(String agencyID, String resourceID, String version) {

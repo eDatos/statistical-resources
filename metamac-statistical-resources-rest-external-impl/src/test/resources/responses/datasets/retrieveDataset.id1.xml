@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-CMs2A8ylWY en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-1nCTRhjgnf en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -67,16 +67,16 @@
             </cdomain:resource>
         </stat:statisticalOperationInstances>
         <stat:subtitle>
-            <cdomain:text xml:lang="es">subtitle-resource-CMs2A8ylWY en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">subtitle-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:subtitle>
         <stat:titleAlternative>
-            <cdomain:text xml:lang="es">titleAlternative-resource-CMs2A8ylWY en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">titleAlternative-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:titleAlternative>
         <stat:abstract>
-            <cdomain:text xml:lang="es">abstract-resource-CMs2A8ylWY en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">abstract-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:abstract>
         <stat:keywords>
-            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-resource-CMs2A8ylWY en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:keywords>
         <stat:type>DATASET</stat:type>
         <stat:creator kind="structuralResources#organisationUnit">
@@ -108,7 +108,7 @@
         <stat:createdDate>2012-01-02T03:04:05Z</stat:createdDate>
         <stat:lastUpdate>2013-01-02T03:04:05Z</stat:lastUpdate>
         <stat:conformsTo>
-            <cdomain:text xml:lang="es">conformsTo-resource-CMs2A8ylWY en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">conformsTo-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:conformsTo>
         <stat:publishers total="2">
             <cdomain:resource kind="structuralResources#organisationUnit">
@@ -264,7 +264,7 @@
             <cdomain:text xml:lang="es">license en Español</cdomain:text>
         </stat:license>
         <stat:accessRights>
-            <cdomain:text xml:lang="es">accessRights-resource-CMs2A8ylWY en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">accessRights-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:accessRights>
         <stat:publicationDate>2013-01-01T03:04:13Z</stat:publicationDate>
         <stat:replacesVersion kind="statisticalResources#dataset">
@@ -893,6 +893,22 @@
                 </stat:dimensionValues>
             </stat:dimension>
         </stat:dimensions>
+        <stat:attributes total="2">
+            <stat:attribute>
+                <stat:id>attribute1</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">attribute1-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>PRIMARY_MEASURE</stat:type>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>attribute3</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">attribute3-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>PRIMARY_MEASURE</stat:type>
+            </stat:attribute>
+        </stat:attributes>
         <stat:formatExtentObservations>3</stat:formatExtentObservations>
         <stat:formatExtentDimensions>5</stat:formatExtentDimensions>
         <stat:dateNextUpdate>2013-12-02T03:04:05Z</stat:dateNextUpdate>

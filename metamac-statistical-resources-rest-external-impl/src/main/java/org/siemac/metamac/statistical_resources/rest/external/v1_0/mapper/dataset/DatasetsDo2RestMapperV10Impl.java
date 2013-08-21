@@ -103,8 +103,10 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrn());
         target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
-        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions().getDimensions(), source.getSiemacMetadataStatisticalResource()
-                .getUrn(), null, selectedLanguages));
+        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions(), source.getSiemacMetadataStatisticalResource().getUrn(), null,
+                selectedLanguages));
+        target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getSiemacMetadataStatisticalResource().getUrn(),
+                selectedLanguages));
         target.setGeographicCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
         target.setTemporalCoverages(toTemporalCoverages(source.getTemporalCoverage(), selectedLanguages));
         target.setMeasureCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));

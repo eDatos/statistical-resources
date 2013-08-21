@@ -276,6 +276,22 @@
                 </stat:dimensionValues>
             </stat:dimension>
         </stat:dimensions>
+        <stat:attributes total="2">
+            <stat:attribute>
+                <stat:id>attribute1</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">attribute1-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>PRIMARY_MEASURE</stat:type>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>attribute3</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">attribute3-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:type>PRIMARY_MEASURE</stat:type>
+            </stat:attribute>
+        </stat:attributes>
         <stat:status>ACTIVE</stat:status>
         <stat:type>FIXED</stat:type>
         <stat:statisticalOperation kind="statisticalOperations#operation">

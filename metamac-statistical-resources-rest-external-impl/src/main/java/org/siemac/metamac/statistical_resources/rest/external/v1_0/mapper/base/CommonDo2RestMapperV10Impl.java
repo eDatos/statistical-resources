@@ -28,6 +28,9 @@ import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeLevelType;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
@@ -47,6 +50,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguag
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -252,8 +256,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
      * @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
      */
     @Override
-    public Dimensions toDimensions(DataStructure dataStructure, List<DimensionBase> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
-            List<String> selectedLanguages) throws MetamacException {
+    public Dimensions toDimensions(DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions sources, String datasetVersionUrn,
+            Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages) throws MetamacException {
+
+        if (sources == null || CollectionUtils.isEmpty(sources.getDimensions())) {
+            return null;
+        }
 
         List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
         if (CollectionUtils.isEmpty(dimensionsId)) {
@@ -269,7 +277,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
 
         Dimensions targets = new Dimensions();
-        for (DimensionBase source : sources) {
+        for (DimensionBase source : sources.getDimensions()) {
             String dimensionId = source.getId();
             DimensionVisualisation dimensionVisualisation = dimensionVisualisationByDimensionId != null ? dimensionVisualisationByDimensionId.get(dimensionId) : null;
             List<String> effectiveDimensionValuesToData = null;
@@ -280,6 +288,23 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets.getDimensions().add(target);
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
+        return targets;
+    }
+
+    @Override
+    public Attributes toAttributes(DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes sources, String datasetVersionUrn,
+            List<String> selectedLanguages) throws MetamacException {
+
+        if (sources == null || CollectionUtils.isEmpty(sources.getAttributes())) {
+            return null;
+        }
+
+        Attributes targets = new Attributes();
+        for (AttributeBase source : sources.getAttributes()) {
+            Attribute target = toAttribute(datasetVersionUrn, dataStructure, source, selectedLanguages);
+            targets.getAttributes().add(target);
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getAttributes().size()));
         return targets;
     }
 
@@ -654,6 +679,35 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
+    private Attribute toAttribute(String datasetVersionUrn, DataStructure dataStructure, AttributeBase source, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        if (source instanceof org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) {
+            return toAttribute(datasetVersionUrn, dataStructure, (org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) source, selectedLanguages);
+        } else {
+            logger.error("Attribute type unsupported: " + source.getId());
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Attribute toAttribute(String datasetVersionUrn, DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute source,
+            List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        Attribute target = new Attribute();
+        target.setId(source.getId());
+        target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
+        if (source.getAttributeRelationship() != null && source.getAttributeRelationship().getPrimaryMeasure() != null) {
+            target.setType(AttributeLevelType.PRIMARY_MEASURE);
+        } else {
+            // TODO resto de atributos de diferente nivel
+        }
+        return target;
+    }
+
     /**
      * Update map with parent visualisation.
      * This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
@@ -810,7 +864,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             case MEASURE_DIMENSION:
                 return DimensionType.MEASURE_DIMENSION;
             default:
-                logger.error("DsdComponentType unsupported: " + dimension.getType());
+                logger.error("DimensionType unsupported: " + dimension.getType());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
