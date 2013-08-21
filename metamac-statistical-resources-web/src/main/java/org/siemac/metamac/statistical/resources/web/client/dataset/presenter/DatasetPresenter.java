@@ -52,13 +52,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     private DispatchAsync                             dispatcher;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata    = new Type<RevealContentHandler<?>>();
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaDatasources = new Type<RevealContentHandler<?>>();
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaAttributes  = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaDataset = new Type<RevealContentHandler<?>>();
 
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
 

@@ -60,10 +60,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     private final PlaceManager                        placeManager;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMetadata  = new Type<RevealContentHandler<?>>();
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaStructure = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaPublication = new Type<RevealContentHandler<?>>();
 
     @ProxyCodeSplit
     @NameToken(NameTokens.publicationPage)
