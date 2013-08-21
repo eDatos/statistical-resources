@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.dataset.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 
 import com.google.inject.Inject;

@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.events;
 
-import org.siemac.metamac.statistical.resources.web.client.dataset.enums.DatasetTabTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

@@ -11,6 +11,9 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent.SelectPublicationTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent.UpdateResourceHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -47,7 +50,11 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy> implements PublicationUiHandlers, UpdateResourceHandler {
+public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy>
+        implements
+            PublicationUiHandlers,
+            UpdateResourceHandler,
+            SelectPublicationTabHandler {
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
@@ -73,7 +80,8 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
         void setPublication(PublicationVersionDto publicationDto);
         void setPublicationVersions(List<PublicationVersionDto> publicationVersionDtos);
-        void showMetadata();
+        void selectMetadataTab();
+        void selectStructureTab();
     }
 
     @Inject
@@ -87,6 +95,17 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, OperationPresenter.TYPE_SetContextAreaContent, this);
+    }
+
+    @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+
+        // Redirect to metadata tab
+        getView().selectMetadataTab();
+        if (NameTokens.publicationPage.equals(placeManager.getCurrentPlaceRequest().getNameToken())) {
+            goToPublicationMetadata();
+        }
     }
 
     @Override
@@ -109,6 +128,17 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         }
     }
 
+    @ProxyEvent
+    @Override
+    public void onSelectPublicationTab(SelectPublicationTabEvent event) {
+        PublicationTabTypeEnum type = event.getPublicationTabTypeEnum();
+        if (PublicationTabTypeEnum.STRUCTURE.equals(type)) {
+            getView().selectStructureTab();
+        } else {
+            getView().selectMetadataTab();
+        }
+    }
+
     private void retrieveOperation(String urn) {
         dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
@@ -124,7 +154,6 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         String publicationIdentifier = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         String publicationUrn = CommonUtils.generatePublicationUrn(publicationIdentifier);
         retrievePublicationByUrn(publicationUrn);
-        getView().showMetadata();
     }
 
     private void retrievePublicationByUrn(String urn) {

@@ -14,6 +14,8 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -97,6 +99,12 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, PublicationPresenter.TYPE_SetContextAreaStructure, this);
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
+        SelectPublicationTabEvent.fire(this, PublicationTabTypeEnum.STRUCTURE);
     }
 
     @Override

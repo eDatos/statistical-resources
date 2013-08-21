@@ -121,9 +121,13 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     }
 
     @Override
-    public void showMetadata() {
+    public void selectMetadataTab() {
         tabSet.selectTab(publicationMetadataTab);
-        getUiHandlers().goToPublicationMetadata();
+    }
+
+    @Override
+    public void selectStructureTab() {
+        tabSet.selectTab(publicationStructureTab);
     }
 
     @Override
