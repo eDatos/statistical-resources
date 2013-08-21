@@ -15,10 +15,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -28,7 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -42,7 +37,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetada
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
@@ -163,20 +157,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         datasetVersionChanged.setStatisticOfficiality(null);
 
         datasetLifecycleService.sendToProductionValidation(getServiceContextAdministrador(), datasetVersionChanged.getSiemacMetadataStatisticalResource().getUrn());
-    }
-
-    @Test
-    public void testCheckSendToProductionValidationRequiredMetadata() throws Exception {
-        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
-        datasetVersion.getDatasources().clear();
-        datasetVersion.setRelatedDsd(null);
-
-        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        datasetLifecycleService.checkSendToProductionValidationResource(datasetVersion, exceptionItems);
-
-        MetamacException expected = new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__RELATED_DSD),
-                new MetamacExceptionItem(ServiceExceptionType.DATASET_EMPTY_DATASOURCES, datasetVersion.getSiemacMetadataStatisticalResource().getUrn())));
-        MetamacAsserts.assertEqualsMetamacException(expected, new MetamacException(exceptionItems));
     }
 
     @Test
@@ -377,7 +357,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
     }
-    
+
     @Override
     @Test
     public void testApplyVersioningPreviousResource() throws Exception {
