@@ -21,6 +21,7 @@ import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
@@ -47,6 +48,7 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
 
     private DatasetVersionDto           datasetVersionDto;
 
+    @Inject
     public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetDatasourcesTabView datasetDatasourcesTabView, DatasetAttributesTabView datasetAttributesTabView) {
         panel = new VLayout();
 
