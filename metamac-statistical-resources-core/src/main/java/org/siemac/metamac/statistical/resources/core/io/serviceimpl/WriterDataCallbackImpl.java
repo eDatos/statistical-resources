@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
@@ -32,23 +33,22 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade = null;
     private MetamacSdmx2StatRepoMapper       metamac2StatRepoMapper           = null;
 
+    // Calculated an cache data
     protected DimensionCodeInfo              dimensionAtObservation           = null;
     protected DimensionCodeInfo              timeDimension                    = null;
-
-    protected int                            numSerie                         = 0;
-
-    // Calculated an cache data
     private List<ConditionObservationDto>    coverage                         = null;
     private String                           queryKey                         = null;
     private String                           datasetVersionId                 = null;
     private List<DimensionCodeInfo>          conditions                       = null;
+    private RequestParameter                 requestParameter                 = null;
 
-    public WriterDataCallbackImpl(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper, String datasetID, String querykey)
-            throws Exception {
+    public WriterDataCallbackImpl(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper, String datasetID, String querykey,
+            RequestParameter requestParameter) throws Exception {
         this.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
         this.queryKey = querykey;
         this.datasetVersionId = datasetID;
+        this.requestParameter = requestParameter;
         calculateCacheInfo();
     }
 
@@ -115,23 +115,6 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     @Override
     public DimensionCodeInfo getDimensionAtObservation() throws Exception {
-
-        // Find the dimension with the max number of different dimensionCodeId
-        if (dimensionAtObservation == null) {
-
-            List<DimensionCodeInfo> queryCconditions = getQueryConditions();
-            int maxValue = -1;
-            DimensionCodeInfo currentDimensionAtObservation = null;
-            for (DimensionCodeInfo dimensionCodeInfo : queryCconditions) {
-                if (dimensionCodeInfo.getCodes().size() > 0 && dimensionCodeInfo.getCodes().size() > maxValue) {
-                    maxValue = dimensionCodeInfo.getCodes().size();
-                    currentDimensionAtObservation = dimensionCodeInfo;
-                }
-            }
-
-            dimensionAtObservation = currentDimensionAtObservation;
-        }
-
         return dimensionAtObservation;
     }
 
@@ -190,6 +173,38 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
 
         this.conditions = conditions;
+
+        // Calculate DimenstionAtObservation
+        this.dimensionAtObservation = calculateDimenstionAtObservation();
+    }
+
+    private DimensionCodeInfo calculateDimenstionAtObservation() throws Exception {
+        if (StringUtils.isNotBlank(requestParameter.getDimensionAtObservation())) {
+            for (DimensionCodeInfo dimensionCodeInfo : conditions) {
+                if (dimensionCodeInfo.getCode().equals(requestParameter.getDimensionAtObservation())) {
+                    return dimensionCodeInfo;
+                }
+            }
+        } else {
+            DimensionCodeInfo timeDimension = getTimeDimension();
+            if (timeDimension != null) {
+                return timeDimension;
+            } else {
+                List<DimensionCodeInfo> queryCconditions = getQueryConditions();
+                int maxValue = -1;
+                DimensionCodeInfo currentDimensionAtObservation = null;
+                for (DimensionCodeInfo dimensionCodeInfo : queryCconditions) {
+                    if (dimensionCodeInfo.getCodes().size() > 0 && dimensionCodeInfo.getCodes().size() > maxValue) {
+                        maxValue = dimensionCodeInfo.getCodes().size();
+                        currentDimensionAtObservation = dimensionCodeInfo;
+                    }
+                }
+
+                return currentDimensionAtObservation;
+            }
+        }
+
+        throw new Exception("Impossible to determinate the dimension at observation level");
     }
 
     private void addAllCodesConditionForDimension(DatasetRepositoryDto datasetRepository, int dimensionOrder, List<DimensionCodeInfo> conditions) throws ApplicationException {
