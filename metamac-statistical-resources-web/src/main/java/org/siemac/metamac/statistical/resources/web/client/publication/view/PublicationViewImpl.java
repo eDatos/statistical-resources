@@ -65,8 +65,13 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
         // TABS
 
         tabSet = new CustomTabSet();
+
         publicationMetadataTab = new Tab(getConstants().publicationMetadata());
+        publicationMetadataTab.setPane((Canvas) metadataView.asWidget());
+
         publicationStructureTab = new Tab(getConstants().publicationStructure());
+        publicationStructureTab.setPane((Canvas) structureView.asWidget());
+
         tabSet.setTabs(publicationMetadataTab, publicationStructureTab);
 
         //
@@ -128,17 +133,6 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     @Override
     public void selectStructureTab() {
         tabSet.selectTab(publicationStructureTab);
-    }
-
-    @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == PublicationPresenter.TYPE_SetContextAreaMetadata) {
-            publicationMetadataTab.setPane((Canvas) content);
-        } else if (slot == PublicationPresenter.TYPE_SetContextAreaStructure) {
-            publicationStructureTab.setPane((Canvas) content);
-        } else {
-            super.setInSlot(slot, content);
-        }
     }
 
     @Override

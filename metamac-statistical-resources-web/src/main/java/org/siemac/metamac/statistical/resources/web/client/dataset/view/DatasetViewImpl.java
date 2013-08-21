@@ -10,6 +10,9 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetVersionsSectionStack;
@@ -44,7 +47,7 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
 
     private DatasetVersionDto           datasetVersionDto;
 
-    public DatasetViewImpl() {
+    public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetDatasourcesTabView datasetDatasourcesTabView, DatasetAttributesTabView datasetAttributesTabView) {
         panel = new VLayout();
 
         titleLabel = new TitleLabel(new String());
@@ -70,9 +73,16 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         // TABS
 
         tabSet = new CustomTabSet();
+
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
+        datasetMetadataTab.setPane((Canvas) datasetMetadataTabView.asWidget());
+
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());
+        datasetDatasourcesTab.setPane((Canvas) datasetDatasourcesTabView.asWidget());
+
         datasetAttributesTab = new Tab(getConstants().datasetAttributes());
+        datasetAttributesTab.setPane((Canvas) datasetAttributesTabView.asWidget());
+
         tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab, datasetAttributesTab);
 
         //
@@ -164,19 +174,6 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     @Override
     public void selectAttributesTab() {
         tabSet.selectTab(datasetAttributesTab);
-    }
-
-    @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == DatasetPresenter.TYPE_SetContextAreaMetadata) {
-            datasetMetadataTab.setPane((Canvas) content);
-        } else if (slot == DatasetPresenter.TYPE_SetContextAreaDatasources) {
-            datasetDatasourcesTab.setPane((Canvas) content);
-        } else if (slot == DatasetPresenter.TYPE_SetContextAreaAttributes) {
-            datasetAttributesTab.setPane((Canvas) content);
-        } else {
-            super.setInSlot(slot, content);
-        }
     }
 
     @Override
