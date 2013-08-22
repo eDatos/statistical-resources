@@ -268,7 +268,7 @@
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="type" type="tns:DimensionType" />
-            <xs:element name="variable" type="common:Resource" minOccurs="0"/>
+            <xs:element name="variable" type="common:Resource" minOccurs="0" />
             <xs:element name="dimensionValues" type="tns:DimensionValues" />
         </xs:sequence>
     </xs:complexType>
@@ -303,7 +303,7 @@
             <xs:extension base="common:Resource">
                 <xs:sequence>
                     <xs:element name="visualisationParent" type="xs:string" minOccurs="0" />
-                    <xs:element name="variableElement" type="common:Resource" minOccurs="0"/>
+                    <xs:element name="variableElement" type="common:Resource" minOccurs="0" />
                     <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0" />
                     <xs:element name="open" type="xs:boolean" minOccurs="0" />
                 </xs:sequence>
@@ -317,21 +317,45 @@
             <xs:element name="name" type="common:InternationalString" />
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Attributes">
         <xs:sequence>
             <xs:element name="attribute" type="tns:Attribute" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="total" type="xs:unsignedLong" use="required" />
-    </xs:complexType>    
-    
+    </xs:complexType>
+
     <xs:complexType name="Attribute">
         <xs:sequence>
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="type" type="tns:AttributeLevelType" />
+            <xs:element name="values" type="tns:AttributeValues" minOccurs="0" />
         </xs:sequence>
-    </xs:complexType>    
+    </xs:complexType>
+
+    <xs:complexType name="AttributeValues" abstract="true">
+    </xs:complexType>
+
+    <xs:complexType name="EnumeratedAttributeValues">
+        <xs:complexContent>
+            <xs:extension base="tns:AttributeValues">
+                <xs:sequence>
+                    <xs:element name="value" type="tns:EnumeratedAttributeValue" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="EnumeratedAttributeValue">
+        <xs:complexContent>
+            <xs:extension base="common:Resource">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <!-- Lists -->
     <xs:complexType name="Datasets">
@@ -373,12 +397,12 @@
             <xs:enumeration value="DIMENSION" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="AttributeLevelType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="PRIMARY_MEASURE" />
         </xs:restriction>
-    </xs:simpleType>    
+    </xs:simpleType>
 
     <xs:simpleType name="StatisticalResourceType">
         <xs:restriction base="xs:token">

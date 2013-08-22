@@ -907,6 +907,48 @@
                     <cdomain:text xml:lang="es">attribute3-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:type>PRIMARY_MEASURE</stat:type>
+                <stat:values xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedAttributeValues" total="5">
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>attribute3-codelist01-code01</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:attribute3-codelist01(01.000).attribute3-codelist01-code01</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/attribute3-codelist01/01.000/codes/attribute3-codelist01-code01"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">attribute3-codelist01-code01 en Español</cdomain:text>
+                        </cdomain:name>
+                    </stat:value>
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>attribute3-codelist01-code02</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:attribute3-codelist01(01.000).attribute3-codelist01-code02</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/attribute3-codelist01/01.000/codes/attribute3-codelist01-code02"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">attribute3-codelist01-code02 en Español</cdomain:text>
+                        </cdomain:name>
+                    </stat:value>
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>attribute3-codelist01-code03</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:attribute3-codelist01(01.000).attribute3-codelist01-code03</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/attribute3-codelist01/01.000/codes/attribute3-codelist01-code03"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">attribute3-codelist01-code03 en Español</cdomain:text>
+                        </cdomain:name>
+                    </stat:value>
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>attribute3-codelist01-code04</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:attribute3-codelist01(01.000).attribute3-codelist01-code04</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/attribute3-codelist01/01.000/codes/attribute3-codelist01-code04"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">attribute3-codelist01-code04 en Español</cdomain:text>
+                        </cdomain:name>
+                    </stat:value>
+                    <stat:value kind="structuralResources#code">
+                        <cdomain:id>attribute3-codelist01-code05</cdomain:id>
+                        <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:attribute3-codelist01(01.000).attribute3-codelist01-code05</cdomain:urn>
+                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/attribute3-codelist01/01.000/codes/attribute3-codelist01-code05"/>
+                        <cdomain:name>
+                            <cdomain:text xml:lang="es">attribute3-codelist01-code05 en Español</cdomain:text>
+                        </cdomain:name>
+                    </stat:value>
+                </stat:values>
             </stat:attribute>
         </stat:attributes>
         <stat:formatExtentObservations>3</stat:formatExtentObservations>

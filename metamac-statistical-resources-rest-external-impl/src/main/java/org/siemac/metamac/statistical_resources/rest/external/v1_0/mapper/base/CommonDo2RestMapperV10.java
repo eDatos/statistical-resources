@@ -35,6 +35,7 @@ public interface CommonDo2RestMapperV10 {
             List<String> selectedLanguages) throws MetamacException;
 
     public Resource toResource(Resource source, List<String> selectedLanguages);
+    public void toResource(Resource source, Resource target, List<String> selectedLanguages);
 
     public ResourceLink toResourceLink(String kind, String href);
     public String toResourceLink(String resourceSubpath, String agencyID, String resourceID, String version);

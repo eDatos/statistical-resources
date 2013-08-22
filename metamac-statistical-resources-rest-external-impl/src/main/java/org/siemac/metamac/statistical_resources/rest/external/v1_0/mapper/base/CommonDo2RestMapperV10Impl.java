@@ -30,6 +30,7 @@ import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeLevelType;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
@@ -42,6 +43,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionsId;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedAttributeValue;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
@@ -54,6 +57,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribu
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
@@ -291,6 +295,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
+    /**
+     * TODO effectiveAttributesValues to queries It is necessary when query is retrieved, to filter attributes. It can be null; in this case, returns all
+     */
     @Override
     public Attributes toAttributes(DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes sources, String datasetVersionUrn,
             List<String> selectedLanguages) throws MetamacException {
@@ -506,17 +513,25 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     @Override
-    public Resource toResource(Resource source, List<String> selectedLanguages) {
+    public void toResource(Resource source, Resource target, List<String> selectedLanguages) {
         if (source == null) {
-            return null;
+            return;
         }
-        Resource target = source;
         target.setId(source.getId());
         target.setUrn(source.getUrn());
         target.setKind(source.getKind());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
         target.setNestedId(source.getNestedId());
         target.setSelfLink(source.getSelfLink());
+    }
+
+    @Override
+    public Resource toResource(Resource source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Resource target = source;
+        toResource(source, target, selectedLanguages);
         return target;
     }
 
@@ -623,7 +638,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
 
         DimensionValues targets = null;
-        Representation representation = dimension.getLocalRepresentation();
+        Representation representation = getRepresentation(dimension);
         if (representation.getEnumerationCodelist() != null) {
             targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, representation.getEnumerationCodelist().getUrn(), dimensionVisualisation, effectiveDimensionValuesToData,
                     selectedLanguages);
@@ -639,6 +654,22 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
 
         return targets;
+    }
+
+    private Representation getRepresentation(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Component component) {
+        Representation representation = null;
+        if (component.getLocalRepresentation() != null) {
+            representation = component.getLocalRepresentation();
+        } else if (component.getConceptIdentity() != null) {
+            Concept concept = srmRestExternalFacade.retrieveConceptByUrn(component.getConceptIdentity().getUrn());
+            representation = concept.getCoreRepresentation();
+        }
+        if (representation == null) {
+            logger.error("Representation can not be empty for component: " + component.getId());
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+        return representation;
     }
 
     private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionVisualisation dimensionVisualisation,
@@ -683,13 +714,23 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
+
+        Attribute target = null;
         if (source instanceof org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) {
-            return toAttribute(datasetVersionUrn, dataStructure, (org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) source, selectedLanguages);
+            target = toAttribute(datasetVersionUrn, dataStructure, (org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) source, selectedLanguages);
         } else {
             logger.error("Attribute type unsupported: " + source.getId());
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
             throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+        target.setId(source.getId());
+        target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
+
+        // Attribute values
+        target.setValues(toAttributeValues(datasetVersionUrn, dataStructure, source, selectedLanguages));
+
+        return target;
+
     }
 
     private Attribute toAttribute(String datasetVersionUrn, DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute source,
@@ -698,13 +739,55 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         Attribute target = new Attribute();
-        target.setId(source.getId());
-        target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
         if (source.getAttributeRelationship() != null && source.getAttributeRelationship().getPrimaryMeasure() != null) {
             target.setType(AttributeLevelType.PRIMARY_MEASURE);
         } else {
-            // TODO resto de atributos de diferente nivel
+            // TODO PTE CORE: resto de atributos de diferente nivel
         }
+        return target;
+    }
+
+    private AttributeValues toAttributeValues(String datasetVersionUrn, DataStructure dataStructure, AttributeBase attribute, List<String> selectedLanguages) throws MetamacException {
+        if (attribute == null) {
+            return null;
+        }
+        // TODO PTE CORE: filtrar coverage de atributos
+
+        AttributeValues targets = null;
+        Representation representation = getRepresentation(attribute);
+        if (representation.getEnumerationCodelist() != null) {
+            targets = toEnumeratedAttributeValuesFromCodelist(representation.getEnumerationCodelist().getUrn(), selectedLanguages);
+        } else if (representation.getTextFormat() != null) {
+            // nothing. values in observations or dimensions attributes are the real value, not a code
+        } else {
+            logger.error("Attribute definition unsupported for attribute: " + attribute.getId());
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return targets;
+    }
+
+    private EnumeratedAttributeValues toEnumeratedAttributeValuesFromCodelist(String codelistUrn, List<String> selectedLanguages) throws MetamacException {
+        if (codelistUrn == null) {
+            return null;
+        }
+        EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
+
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null);
+        for (CodeResourceInternal code : codes.getCodes()) {
+            targets.getValues().add(toEnumeratedAttributeValue(code, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
+        return targets;
+    }
+
+    private EnumeratedAttributeValue toEnumeratedAttributeValue(CodeResourceInternal source, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        EnumeratedAttributeValue target = new EnumeratedAttributeValue();
+        toResource(source, target, selectedLanguages);
         return target;
     }
 
@@ -798,9 +881,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedDimensionValue target = new EnumeratedDimensionValue();
-        target.setId(source.getId());
-        target.setUrn(source.getUrn());
-        target.setName(toInternationalString(source.getName(), selectedLanguages));
+        toResource(source, target, selectedLanguages);
         if (source.getParent() != null) {
             if (!parentsReplacedToVisualisation.containsKey(source.getParent())) {
                 target.setVisualisationParent(source.getParent());
@@ -809,9 +890,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             }
         }
         target.setVariableElement(toResource(source.getVariableElement(), selectedLanguages));
-        target.setKind(source.getKind());
-        target.setSelfLink(source.getSelfLink());
-
         target.setOpen(source.isOpen());
         return target;
     }
@@ -822,9 +900,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedDimensionValue target = new EnumeratedDimensionValue();
-        target.setId(source.getId());
-        target.setUrn(source.getUrn());
-        target.setName(toInternationalString(source.getName(), selectedLanguages));
+        toResource(source, target, selectedLanguages);
         if (source.getParent() != null) {
             if (!effectiveParentVisualisation.containsKey(source.getParent())) {
                 target.setVisualisationParent(source.getParent());
@@ -835,8 +911,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (showDecimalPrecisionsByUrn != null) {
             target.setShowDecimalsPrecision(showDecimalPrecisionsByUrn.get(source.getUrn()));
         }
-        target.setKind(source.getKind());
-        target.setSelfLink(source.getSelfLink());
         return target;
     }
 

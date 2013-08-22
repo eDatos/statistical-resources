@@ -2,8 +2,6 @@ package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
 import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.mockInternationalString;
 
-import java.util.List;
-
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
@@ -57,9 +55,9 @@ public class SrmRestMocks {
         components.getDimensions().getDimensions().add(mockDimension("dim01", Boolean.FALSE));
 
         components.setAttributes(new Attributes());
-        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1"));
+        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1", false));
         // components.getAttributes().getAttributes().add(mockAttributeDimension("attribute2", Arrays.asList("GEO_DIM", "dim01"))); // TODO resto de atributos de diferente nivel
-        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3"));
+        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3", true));
 
         dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
@@ -262,23 +260,34 @@ public class SrmRestMocks {
         return dimension;
     }
 
-    private static AttributeBase mockAttributePrimaryMeasure(String id) {
+    private static AttributeBase mockAttributePrimaryMeasure(String id, boolean enumerated) {
         Attribute attribute = new Attribute();
-        attribute.setId(id);
-        attribute.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
+        mockAttributeBase(id, attribute, enumerated);
         attribute.setAttributeRelationship(new AttributeRelationship());
         attribute.getAttributeRelationship().setPrimaryMeasure("OBS_VALUE");
         return attribute;
     }
 
-    private static AttributeBase mockAttributeDimension(String id, List<String> dimensions) {
-        Attribute attribute = new Attribute();
+    private static void mockAttributeBase(String id, AttributeBase attribute, boolean enumerated) {
         attribute.setId(id);
         attribute.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
-        attribute.setAttributeRelationship(new AttributeRelationship());
-        attribute.getAttributeRelationship().getDimensions().addAll(dimensions);
-        return attribute;
+        attribute.setLocalRepresentation(new Representation());
+        if (enumerated) {
+            attribute.getLocalRepresentation().setEnumerationCodelist(mockCodelistResource("agency01", id + "-codelist01", "01.000"));
+        } else {
+            attribute.getLocalRepresentation().setTextFormat(mockTimeTextFormatType());
+        }
     }
+
+    // TODO resto de atributos de diferente nivel
+    // private static AttributeBase mockAttributeDimension(String id, List<String> dimensions) {
+    // Attribute attribute = new Attribute();
+    // attribute.setId(id);
+    // attribute.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
+    // attribute.setAttributeRelationship(new AttributeRelationship());
+    // attribute.getAttributeRelationship().getDimensions().addAll(dimensions);
+    // return attribute;
+    // }
 
     private static ResourceInternal mockCodelistResource(String agencyID, String resourceID, String version) {
         ResourceInternal codelist = new ResourceInternal();
