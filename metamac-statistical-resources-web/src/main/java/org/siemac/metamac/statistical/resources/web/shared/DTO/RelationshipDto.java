@@ -8,25 +8,25 @@ import org.siemac.metamac.core.common.dto.IdentityDto;
 
 public class RelationshipDto extends IdentityDto {
 
-    private static final long    serialVersionUID                  = 1L;
-    private AttributeRelathionshipTypeEnum    typeRelathionship;
-    private ExternalItemDto      groupKeyForGroupRelationship;
-    private Set<ExternalItemDto> groupKeyForDimensionRelationship  = new HashSet<ExternalItemDto>();
-    private Set<ExternalItemDto> dimensionForDimensionRelationship = new HashSet<ExternalItemDto>();
+    private static final long             serialVersionUID                  = 1L;
+    private AttributeRelationshipTypeEnum typeRelathionship;
+    private ExternalItemDto               groupKeyForGroupRelationship;
+    private Set<ExternalItemDto>          groupKeyForDimensionRelationship  = new HashSet<ExternalItemDto>();
+    private Set<ExternalItemDto>          dimensionForDimensionRelationship = new HashSet<ExternalItemDto>();
 
     public RelationshipDto() {
     }
 
-    public RelationshipDto(AttributeRelathionshipTypeEnum typeRelathionship) {
+    public RelationshipDto(AttributeRelationshipTypeEnum typeRelathionship) {
         super();
         this.typeRelathionship = typeRelathionship;
     }
 
-    public AttributeRelathionshipTypeEnum getTypeRelathionship() {
+    public AttributeRelationshipTypeEnum getTypeRelathionship() {
         return typeRelathionship;
     }
 
-    public void setTypeRelathionship(AttributeRelathionshipTypeEnum typeRelathionship) {
+    public void setTypeRelathionship(AttributeRelationshipTypeEnum typeRelathionship) {
         this.typeRelathionship = typeRelathionship;
     }
 

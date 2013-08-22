@@ -6,7 +6,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribu
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.AttributeRelathionshipTypeEnum;
+import org.siemac.metamac.statistical.resources.web.shared.DTO.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.DTO.RelationshipDto;
 import org.siemac.metamac.statistical.resources.web.shared.DTO.RepresentationDto;
@@ -34,18 +34,18 @@ public class RestMapper {
         return representationDto;
     }
 
-    public static AttributeRelathionshipTypeEnum getTypeRelathionship(AttributeRelationship attributeRelationship) {
+    public static AttributeRelationshipTypeEnum getTypeRelathionship(AttributeRelationship attributeRelationship) {
         if (StringUtils.isNotBlank(attributeRelationship.getPrimaryMeasure())) {
-            return AttributeRelathionshipTypeEnum.PRIMARY_MEASURE_RELATIONSHIP;
+            return AttributeRelationshipTypeEnum.PRIMARY_MEASURE_RELATIONSHIP;
         }
         if (StringUtils.isNotBlank(attributeRelationship.getGroup())) {
-            return AttributeRelathionshipTypeEnum.GROUP_RELATIONSHIP;
+            return AttributeRelationshipTypeEnum.GROUP_RELATIONSHIP;
         }
         if (attributeRelationship.getDimensions() != null && !attributeRelationship.getDimensions().isEmpty()) {
-            return AttributeRelathionshipTypeEnum.DIMENSION_RELATIONSHIP;
+            return AttributeRelationshipTypeEnum.DIMENSION_RELATIONSHIP;
         }
         if (attributeRelationship.getNone() != null) {
-            return AttributeRelathionshipTypeEnum.NO_SPECIFIED_RELATIONSHIP;
+            return AttributeRelationshipTypeEnum.NO_SPECIFIED_RELATIONSHIP;
         }
         return null;
     }

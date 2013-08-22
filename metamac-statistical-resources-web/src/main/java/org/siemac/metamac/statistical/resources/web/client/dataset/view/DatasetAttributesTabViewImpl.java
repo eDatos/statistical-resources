@@ -39,12 +39,14 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
         listGrid.setAutoFitData(Autofit.VERTICAL);
         listGrid.setMargin(15);
         CustomListGridField codeField = new CustomListGridField(DsdAttributeDS.CODE, getConstants().datasetAttributeCode());
-        listGrid.setFields(codeField);
+        CustomListGridField relationshipField = new CustomListGridField(DsdAttributeDS.RELATIONSHIP_TYPE, getConstants().datasetAttributeRelationship());
+        listGrid.setFields(codeField, relationshipField);
         listGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
                 if (event.getSelectedRecord() instanceof DsdAttributeRecord) {
+                    DsdAttributeDto dsdAttributeDto = ((DsdAttributeRecord) event.getSelectedRecord()).getDsdAttributeDto();
 
                 }
             }

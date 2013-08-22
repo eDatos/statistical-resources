@@ -250,6 +250,8 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     public static DsdAttributeRecord getDsdAttributeRecord(DsdAttributeDto dsdAttributeDto) {
         DsdAttributeRecord record = new DsdAttributeRecord();
         record.setCode(dsdAttributeDto.getCode());
+        record.setRelationshipType(CommonUtils.getAttributeRelationshipTypeName(dsdAttributeDto.getRelateTo().getTypeRelathionship()));
+        record.setDsdAttributeDto(dsdAttributeDto);
         return record;
     }
 

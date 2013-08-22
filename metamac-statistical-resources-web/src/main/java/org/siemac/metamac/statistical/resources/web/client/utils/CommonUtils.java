@@ -26,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
+import org.siemac.metamac.statistical.resources.web.shared.DTO.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -283,6 +284,14 @@ public class CommonUtils {
             return CommonWebUtils.getStringListToString(names);
         }
         return StringUtils.EMPTY;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // DSD ATTRIBUTES
+    // -----------------------------------------------------------------------------------------
+
+    public static String getAttributeRelationshipTypeName(AttributeRelationshipTypeEnum attributeRelationshipTypeEnum) {
+        return attributeRelationshipTypeEnum != null ? getCoreMessages().getString(getCoreMessages().attributeRelationshipTypeEnum() + attributeRelationshipTypeEnum.name()) : null;
     }
 
     // -----------------------------------------------------------------------------------------
