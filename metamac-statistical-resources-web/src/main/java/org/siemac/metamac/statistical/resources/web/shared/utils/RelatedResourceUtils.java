@@ -24,7 +24,9 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
         RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
         relatedResourceDto.setCode(identifiableStatisticalResourceDto.getCode());
         relatedResourceDto.setUrn(identifiableStatisticalResourceDto.getUrn());
-        relatedResourceDto.setStatisticalOperationUrn(identifiableStatisticalResourceDto.getStatisticalOperation() != null ? identifiableStatisticalResourceDto.getStatisticalOperation().getUrn() : null);
+        relatedResourceDto.setStatisticalOperationUrn(identifiableStatisticalResourceDto.getStatisticalOperation() != null
+                ? identifiableStatisticalResourceDto.getStatisticalOperation().getUrn()
+                : null);
         return relatedResourceDto;
     }
 

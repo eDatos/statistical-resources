@@ -67,7 +67,7 @@ public class MetamacWebRestCriteriaUtils {
                 String dsdCodeCondition = fieldComparison(DataStructureCriteriaPropertyRestriction.ID, ComparisonOperator.EQ, dsdCode);
                 appendConditionToQuery(queryBuilder, dsdCodeCondition);
             }
-            
+
             addStatisticalOperationRestCriteria(queryBuilder, webCriteria, DataStructureCriteriaPropertyRestriction.STATISTICAL_OPERATION_URN);
 
             addOnlyLastVersionRestCriteria(queryBuilder, webCriteria, DataStructureCriteriaPropertyRestriction.LATEST);
@@ -124,9 +124,9 @@ public class MetamacWebRestCriteriaUtils {
                     OrganisationSchemeCriteriaPropertyRestriction.URN);
 
         }
-        
+
         addTypeRestCriteria(queryBuilder, type, OrganisationSchemeCriteriaPropertyRestriction.TYPE);
-        
+
         return queryBuilder.toString();
     }
 
@@ -141,7 +141,7 @@ public class MetamacWebRestCriteriaUtils {
 
             addSchemeRestCriteria(queryBuilder, webCriteria, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_URN);
         }
-        
+
         addTypeRestCriteria(queryBuilder, type, OrganisationCriteriaPropertyRestriction.TYPE);
 
         return queryBuilder.toString();
@@ -169,8 +169,7 @@ public class MetamacWebRestCriteriaUtils {
             appendConditionToQuery(queryBuilder, conditionBuilder.toString());
         }
     }
-    
-    
+
     @SuppressWarnings("rawtypes")
     private static void addSchemeRestCriteria(StringBuilder queryBuilder, HasSchemeCriteria criteria, Enum schemeField) {
         String schemeUrn = criteria.getSchemeUrn();
@@ -179,7 +178,7 @@ public class MetamacWebRestCriteriaUtils {
             appendConditionToQuery(queryBuilder, schemeCondition);
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     private static void addTypeRestCriteria(StringBuilder queryBuilder, TypeExternalArtefactsEnum type, Enum typeField) {
         if (type != null) {
@@ -187,7 +186,7 @@ public class MetamacWebRestCriteriaUtils {
             appendConditionToQuery(queryBuilder, typeCondition);
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     private static void addStatisticalOperationRestCriteria(StringBuilder queryBuilder, HasStatisticalOperationCriteria criteria, Enum statisticalOperationField) {
         if (StringUtils.isNotBlank(criteria.getStatisticalOperationUrn())) {
@@ -195,15 +194,14 @@ public class MetamacWebRestCriteriaUtils {
             appendConditionToQuery(queryBuilder, statOperCondition);
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     private static void addOnlyLastVersionRestCriteria(StringBuilder queryBuilder, HasOnlyLastVersionCriteria criteria, Enum lastVersionField) {
-        
+
         if (criteria.isOnlyLastVersion()) {
             String lastVersionCondition = fieldComparison(lastVersionField, ComparisonOperator.EQ, criteria.isOnlyLastVersion());
             appendConditionToQuery(queryBuilder, lastVersionCondition);
         }
     }
-    
-    
+
 }

@@ -18,15 +18,16 @@ public class GetDatasetVersionMainCoveragesActionHandler extends SecurityActionH
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-    
+
     public GetDatasetVersionMainCoveragesActionHandler() {
         super(GetDatasetVersionMainCoveragesAction.class);
     }
-    
+
     @Override
     public GetDatasetVersionMainCoveragesResult executeSecurityAction(GetDatasetVersionMainCoveragesAction action) throws ActionException {
         try {
-            DatasetVersionMainCoveragesDto mainCoverages = statisticalResourcesServiceFacade.retrieveDatasetVersionMainCoverages(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn());
+            DatasetVersionMainCoveragesDto mainCoverages = statisticalResourcesServiceFacade.retrieveDatasetVersionMainCoverages(ServiceContextHolder.getCurrentServiceContext(),
+                    action.getDatasetVersionUrn());
             return new GetDatasetVersionMainCoveragesResult(mainCoverages.getGeographicCoverage(), mainCoverages.getTemporalCoverage(), mainCoverages.getMeasureCoverage());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

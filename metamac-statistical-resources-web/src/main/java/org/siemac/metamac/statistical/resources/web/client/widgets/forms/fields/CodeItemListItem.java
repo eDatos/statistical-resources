@@ -57,7 +57,7 @@ public class CodeItemListItem extends BaseListItem {
     public void clearRelatedResourceList() {
         listGrid.removeAllData();
     }
-    
+
     public void setRequired(boolean required) {
         if (required) {
             setTitleStyle("requiredFormLabel");

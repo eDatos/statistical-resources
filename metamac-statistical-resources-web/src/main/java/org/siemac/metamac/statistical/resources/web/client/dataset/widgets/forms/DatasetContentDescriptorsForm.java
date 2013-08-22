@@ -25,10 +25,10 @@ public class DatasetContentDescriptorsForm extends SiemacMetadataContentDescript
 
         ExternalItemListItem geographicCoverage = new ExternalItemListItem(DatasetDS.GEOGRAPHIC_COVERAGE, getConstants().datasetGeographicCoverage(), false);
         geographicCoverage.setShowIfCondition(getCanShowCoveragesFunction());
-        
+
         TemporalCodeListItem temporalCoverage = new TemporalCodeListItem(DatasetDS.TEMPORAL_COVERAGE, getConstants().datasetTemporalCoverage(), false);
         temporalCoverage.setShowIfCondition(getCanShowCoveragesFunction());
-        
+
         ExternalItemListItem measures = new ExternalItemListItem(DatasetDS.MEASURES, getConstants().datasetMeasures(), false);
         measures.setShowIfCondition(getCanShowCoveragesFunction());
 
