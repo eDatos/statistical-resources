@@ -2,11 +2,11 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
+import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -32,7 +32,7 @@ public class GetDatasetAttributesActionHandler extends SecurityActionHandler<Get
     public GetDatasetAttributesResult executeSecurityAction(GetDatasetAttributesAction action) throws com.gwtplatform.dispatch.shared.ActionException {
         try {
             DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getUrn());
-            List<ExternalItemDto> attributes = srmRestInternalFacade.retrieveDsdAttributesAsExternalItemDtos(datasetVersionDto.getRelatedDsd().getUrn());
+            List<DsdAttributeDto> attributes = srmRestInternalFacade.retrieveDsdAttributes(datasetVersionDto.getRelatedDsd().getUrn());
             return new GetDatasetAttributesResult(attributes);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

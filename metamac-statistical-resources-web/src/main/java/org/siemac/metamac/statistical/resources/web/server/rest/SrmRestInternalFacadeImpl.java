@@ -33,6 +33,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Resourc
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
+import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -93,10 +94,10 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public List<ExternalItemDto> retrieveDsdAttributesAsExternalItemDtos(String dsdUrn) throws MetamacWebException {
+    public List<DsdAttributeDto> retrieveDsdAttributes(String dsdUrn) throws MetamacWebException {
         try {
 
-            List<ExternalItemDto> dsdAttributeDtos = new ArrayList<ExternalItemDto>();
+            List<DsdAttributeDto> dsdAttributeDtos = new ArrayList<DsdAttributeDto>();
 
             DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
             Attributes attributes = dataStructure.getDataStructureComponents().getAttributes();
@@ -105,7 +106,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
                 for (AttributeBase attributeBase : attributes.getAttributes()) {
                     if (attributeBase instanceof Attribute) {
-                        ExternalItemDto dsdAttributeDto = buildExternalItemDtoFromAttribute((Attribute) attributeBase);
+                        DsdAttributeDto dsdAttributeDto = RestMapper.buildDsdAttributeDtoFromAttribute((Attribute) attributeBase);
                         dsdAttributeDtos.add(dsdAttributeDto);
                     }
                 }
@@ -115,13 +116,6 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
-    }
-
-    private ExternalItemDto buildExternalItemDtoFromAttribute(Attribute attribute) {
-        ExternalItemDto externalItemDto = new ExternalItemDto();
-        externalItemDto.setCode(attribute.getId());
-        externalItemDto.setUrn(attribute.getUrn());
-        return externalItemDto;
     }
 
     // CODES

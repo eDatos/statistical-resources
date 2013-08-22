@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.IdentifiableResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.NameableResourceRecord;
@@ -35,6 +36,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
+import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -237,6 +239,24 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         VersionRationaleTypeRecord[] records = new VersionRationaleTypeRecord[versionRationaleTypeDtos.size()];
         for (int i = 0; i < versionRationaleTypeDtos.size(); i++) {
             records[i] = getVersionRationaleTypeRecord(versionRationaleTypeDtos.get(i));
+        }
+        return records;
+    }
+
+    //
+    // DSD ATTRIBUTES
+    //
+
+    public static DsdAttributeRecord getDsdAttributeRecord(DsdAttributeDto dsdAttributeDto) {
+        DsdAttributeRecord record = new DsdAttributeRecord();
+        record.setCode(dsdAttributeDto.getCode());
+        return record;
+    }
+
+    public static DsdAttributeRecord[] getDsdAttributeRecords(List<DsdAttributeDto> dsdAttributeDtos) {
+        DsdAttributeRecord[] records = new DsdAttributeRecord[dsdAttributeDtos.size()];
+        for (int i = 0; i < dsdAttributeDtos.size(); i++) {
+            records[i] = getDsdAttributeRecord(dsdAttributeDtos.get(i));
         }
         return records;
     }
