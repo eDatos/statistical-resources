@@ -101,6 +101,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         }
         DatasetMetadata target = new DatasetMetadata();
 
+        // TODO volver a poner DsdProcessor?
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrn());
         target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
         target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions(), source.getSiemacMetadataStatisticalResource().getUrn(), null,
