@@ -565,9 +565,22 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     protected static DatasetVersion getDatasetVersion27WithCoverageFilled() {
         if (DATASET_VERSION_27_WITH_COVERAGE_FILLED == null) {
             DatasetVersion datasetVersion = createDatasetVersion(2);
+
             prepareToProductionValidation(datasetVersion);
 
+            datasetVersion.getCoverages().clear();
+            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-1"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-2"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-1"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-2"));
+            datasetVersion.getCoverages().add(new CodeDimension("dim3", "code-d3-1"));
+
             DATASET_VERSION_27_WITH_COVERAGE_FILLED = datasetVersion;
+            
+            // Relations
+            for (CodeDimension code : datasetVersion.getCoverages()) {
+                code.setDatasetVersion(DATASET_VERSION_27_WITH_COVERAGE_FILLED);
+            }
         }
         return DATASET_VERSION_27_WITH_COVERAGE_FILLED;
     }
@@ -784,6 +797,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             prepareToProductionValidation(datasetVersion);
 
+            datasetVersion.getCoverages().clear();
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
             datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
@@ -792,7 +806,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
             datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
             datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-
+            
             DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES = datasetVersion;
         }
         return DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES;
@@ -803,19 +817,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             DatasetVersion datasetVersion = createDatasetVersion(1);
 
             prepareToProductionValidation(datasetVersion);
-
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-
-            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010-M12", "Dic 2010"));
-            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2009-M12", "Dic 2009"));
-            datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2008-M12", "Dic 2008"));
 
             DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED = datasetVersion;
         }

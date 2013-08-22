@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsVersionedElementLevelCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_12_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME;
@@ -17,6 +21,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -150,6 +155,42 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, publicationVersionUrn));
+        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_12_DRAFT_NAME)
+    public void testVersioningPublicationVersionErrorDraftProcStatus() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME)
+    public void testVersioningPublicationVersionErrorProductionValidationProcStatus() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME)
+    public void testVersioningPublicationVersionErrorDiffusionValidationProcStatus() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME)
+    public void testVersioningPublicationVersionErrorValidationRejectedProcStatus() throws Exception {
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
     }
     

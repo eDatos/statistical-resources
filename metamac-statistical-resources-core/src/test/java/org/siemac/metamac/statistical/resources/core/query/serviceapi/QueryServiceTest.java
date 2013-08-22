@@ -232,7 +232,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME), true);
         expected.setType(QueryTypeEnum.AUTOINCREMENTAL);
-        expected.setLatestTemporalCodeInCreation("2010-M12");
+        expected.setLatestTemporalCodeInCreation("2012");
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEqualsQueryVersion(expected, actual);
     }

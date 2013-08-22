@@ -7,6 +7,10 @@ import static org.siemac.metamac.statistical.resources.core.constants.Statistica
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_11_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_14_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
@@ -18,6 +22,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
@@ -148,6 +154,42 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME).getLifeCycleStatisticalResource().getUrn();
 
         // expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, queryVersionUrn));
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
+    public void testVersioningQueryVersionErrorDraftProcStatus() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME).getLifeCycleStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, queryVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME)
+    public void testVersioningQueryVersionErrorProductionValidationProcStatus() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, queryVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME)
+    public void testVersioningQueryVersionErrorDiffusionValidationProcStatus() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, queryVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(QUERY_VERSION_14_VALIDATION_REJECTED_NAME)
+    public void testVersioningQueryVersionErrorValidationRejectedProcStatus() throws Exception {
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_14_VALIDATION_REJECTED_NAME).getLifeCycleStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, queryVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
     }
     

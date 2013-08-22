@@ -13,11 +13,12 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Common
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItemCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePublished;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -25,16 +26,13 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
@@ -172,7 +170,33 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
     }
+    
+    @Test
+    @MetamacMock(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
+    public void testVersioningDatasetVersionErrorProductionValidationProcStatus() throws Exception {
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME)
+    public void testVersioningDatasetVersionErrorDiffusionValidationProcStatus() throws Exception {
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
+    @Test
+    @MetamacMock(DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME)
+    public void testVersioningDatasetVersionErrorValidationRejectedProcStatus() throws Exception {
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
+        datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
+    }
 
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
