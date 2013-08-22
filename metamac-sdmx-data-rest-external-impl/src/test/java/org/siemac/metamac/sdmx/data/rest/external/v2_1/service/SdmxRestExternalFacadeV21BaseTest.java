@@ -1,11 +1,14 @@
 package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.provider.JAXBElementProvider;
@@ -22,12 +25,12 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseTest {
 
-    private static String                        jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/sdmx/data-resources";
-    protected String                             baseApi            = jaxrsServerAddress + "/v2.1";
-    protected static ApplicationContext          applicationContext = null;
-    private static SdmxDataRestExternalFacadeV21 sdmxDataRestExternalFacadeClientXml;
+    private static String                          jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/sdmx/data-resources";
+    protected String                               baseApi            = jaxrsServerAddress + "/v2.1";
+    protected static ApplicationContext            applicationContext = null;
+    protected static SdmxDataRestExternalFacadeV21 sdmxDataRestExternalFacadeClientXml;
 
-    protected DatasetRepositoriesServiceFacade   datasetRepositoriesServiceFacade;
+    protected DatasetRepositoriesServiceFacade     datasetRepositoriesServiceFacade;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -57,7 +60,13 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
     @Test
     public void testErrorWithoutMatchError404() throws Exception {
         String requestUri = baseApi + "/nomatch";
-        testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.NOT_FOUND, new ByteArrayInputStream(new byte[0]));
+
+        WebClient webClient = WebClient.create(requestUri).accept(APPLICATION_XML);
+        Response response = webClient.get();
+
+        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        InputStream responseActual = (InputStream) response.getEntity();
+        assertTrue(StringUtils.isBlank(IOUtils.toString(responseActual)));
     }
 
     protected SdmxDataRestExternalFacadeV21 getSdmxDataRestExternalFacadeClientXml() {
