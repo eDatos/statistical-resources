@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -27,7 +28,11 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
      * Copy values from a {@link DatasetVersion}
      */
     public static void copyDatasetVersion(DatasetVersion source, DatasetVersion target) {
+        // Metadata
         copyMetadata(source, target);
+        copyCoverages(source, target);
+        
+        // Relations
         target.setDataset(source.getDataset());
         copyDatasources(source, target);
     }
@@ -38,6 +43,15 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
             Datasource newDatasource = new Datasource();
             copyDatasource(datasource, newDatasource);
             target.addDatasource(newDatasource);
+        }
+    }
+    
+    private static void copyCoverages(DatasetVersion source, DatasetVersion target) {
+        target.getCoverages().clear();
+        for (CodeDimension codeDimension : source.getCoverages()) {
+            CodeDimension newCodeDimension = new CodeDimension();
+            copyCodeDimension(codeDimension, newCodeDimension);
+            target.addCoverage(newCodeDimension);
         }
     }
 
@@ -103,6 +117,13 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setIdentifiableStatisticalResource(copyIdentifiableStatisticalResource(source.getIdentifiableStatisticalResource(), target.getIdentifiableStatisticalResource()));
         target.setFilename(source.getFilename());
         target.setDateNextUpdate(source.getDateNextUpdate());
+    }
+    
+    public static CodeDimension copyCodeDimension(CodeDimension source, CodeDimension target) {
+        target.setIdentifier(source.getIdentifier());
+        target.setTitle(source.getTitle());
+        target.setDsdComponentId(source.getDsdComponentId());
+        return target;
     }
 
 }

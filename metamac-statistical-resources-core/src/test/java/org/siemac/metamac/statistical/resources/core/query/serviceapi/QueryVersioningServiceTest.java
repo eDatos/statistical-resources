@@ -8,6 +8,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -137,6 +138,19 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
     }
 
+    
+    @Test
+    @MetamacMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)
+    public void testVersioningQueryVersionErrorQueryVersionNotVisible() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME).getLifeCycleStatisticalResource().getUrn();
+
+        // expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, queryVersionUrn));
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
+    }
+    
     // -------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // -------------------------------------------------------------------------------------------

@@ -546,6 +546,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     protected static DatasetVersion getDatasetVersion26V2PublishedNoVisibleForDataset06() {
         if (DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06 == null) {
             DatasetVersion datasetVersion = createDatasetVersion(2);
+            prepareToVersioning(datasetVersion);
             datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
             datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
@@ -564,20 +565,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     protected static DatasetVersion getDatasetVersion27WithCoverageFilled() {
         if (DATASET_VERSION_27_WITH_COVERAGE_FILLED == null) {
             DatasetVersion datasetVersion = createDatasetVersion(2);
-
             prepareToProductionValidation(datasetVersion);
 
-            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-1"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-2"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-1"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-2"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim3", "code-d3-1"));
-
             DATASET_VERSION_27_WITH_COVERAGE_FILLED = datasetVersion;
-            // Relations
-            for (CodeDimension code : datasetVersion.getCoverages()) {
-                code.setDatasetVersion(DATASET_VERSION_27_WITH_COVERAGE_FILLED);
-            }
         }
         return DATASET_VERSION_27_WITH_COVERAGE_FILLED;
     }
@@ -1220,5 +1210,40 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasource.setDatasetVersion(datasetVersion);
             datasetVersion.addDatasource(datasource);
         }
+        
+        // Coverages
+        fillDimensionCoverages(datasetVersion);
     }
+    
+    private static void fillDimensionCoverages(DatasetVersion datasetVersion) {
+        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+        datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
+        datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
+        datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
+
+        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
+        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
+        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010", "2010"));
+
+        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES"));
+        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES61"));
+        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES70"));
+        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES45"));
+
+        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C01"));
+        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C02"));
+        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C03"));
+        
+        // Relations
+        for (CodeDimension code : datasetVersion.getCoverages()) {
+            code.setDatasetVersion(datasetVersion);
+        }
+    }
+
 }
