@@ -95,7 +95,12 @@ Application DatasetsStatisticalResourcesDto {
         
         DataTransferObject DsdAttributeInstanceDto extends @IdentityDto {
 			CodeDimensionMap codeDimensions;
-			String value;
+			-@AttributeValueDto value;
+        }
+        
+        DataTransferObject AttributeValueDto extends @IdentityDto {
+        	- @ExternalItemDto externalItemValue;
+        	String stringValue;
         }
 	}
 }
