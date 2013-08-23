@@ -16,7 +16,7 @@ Application QueriesStatisticalResourcesDto {
 			- @QueryStatusEnum status;
 			- @QueryTypeEnum type;
 			Integer latestDataNumber;
-			QuerySelection selection;
+			CodeDimensionMap selection;
 		}
 		
 		DataTransferObject SelectionItemDto {
