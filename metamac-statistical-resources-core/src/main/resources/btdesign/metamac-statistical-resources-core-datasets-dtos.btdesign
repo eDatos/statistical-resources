@@ -1,5 +1,6 @@
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets-enums.btdesign"
 
 Application DatasetsStatisticalResourcesDto {
 	basePackage=unused
@@ -8,31 +9,32 @@ Application DatasetsStatisticalResourcesDto {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.datasets 
 		
 		// DATASET VERSION
+
 		DataTransferObject DatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
-			//geographic granularities
+			// geographic granularities
 			- Bag<@ExternalItemDto> geographicGranularities;
-			//temporal granularities
+			// temporal granularities
 			- Bag<@ExternalItemDto> temporalGranularities;
-			//First date which data refers to
+			// First date which data refers to
 			JAVADATE dateStart;
-			//Last date which data refers to
+			// Last date which data refers to
 			JAVADATE dateEnd;
 			- Bag<@ExternalItemDto> statisticalUnit;
-			
-			
+
+
 			//Production descriptor
-			
+
 			- @ExternalItemDto relatedDsd;
-			
+
 			//Class descriptors
-			
+
 			//Number of observations contained in the dataset
 			Long formatExtentObservations;
 			//Number of diemnsions defined in the DSD
 			Integer formatExtentDimensions;
-			
+
 			//Publishing descriptors
-			
+
 			//public date of next update
 			JAVADATE dateNextUpdate;
 			//Frecuency which the data is updated
@@ -44,32 +46,54 @@ Application DatasetsStatisticalResourcesDto {
 			// If a task related with the dataset is being executed in background
 			Boolean isTaskInBackground;
 		}
-		
+
 		// DATASOURCE
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {
 			"Parent"
 			String datasetVersionUrn;
 		}	
-		
+
 		"Dto for Statistic officiality"
         DataTransferObject StatisticOfficialityDto extends @IdentityDto {
             String identifier;
             - @InternationalStringDto description nullable;
         }
-        
+
 		"Dto for temporal code"
         DataTransferObject TemporalCodeDto {
             String identifier;
             String title;
         }
-        
+
         DataTransferObject DatasetVersionMainCoveragesDto {
             - Bag<@ExternalItemDto> geographicCoverage;
             - Bag<@TemporalCodeDto> temporalCoverage;
             - Bag<@ExternalItemDto> measureCoverage;
         }
         
+        // DSD ATTRIBUTE
         
-	}
+        DataTransferObject DsdAttributeDto extends @IdentityDto {
+        	String identifier;
+        	- @RelationshipDto attributeRelationship;
+        	- @RepresentationDto attributeRepresentation;
+        }
 
+        DataTransferObject RelationshipDto extends @IdentityDto {
+        	- @AttributeRelationshipTypeEnum relationshipType;
+        	String group;
+			List<String> dimensions;
+        }
+        
+        DataTransferObject RepresentationDto extends @IdentityDto {
+        	String codelistRepresentationUrn;
+        	String conceptSchemeRepresentationUrn;
+        }
+
+        // DSD ATTRIBUTE INSTANCE
+        
+        DataTransferObject DsdAttributeInstanceDto extends @IdentityDto {
+			// TODO
+        }
+	}
 }

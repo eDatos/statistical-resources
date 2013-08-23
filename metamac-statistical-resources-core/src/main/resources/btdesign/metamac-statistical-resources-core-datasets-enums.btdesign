@@ -1,0 +1,14 @@
+Application DatasetsStatisticalResourcesEnums {
+	basePackage=org.siemac.metamac.statistical.resources
+
+	Module datasets_enums {
+		basePackage=org.siemac.metamac.statistical.resources.core.enume.dataset
+
+		enum AttributeRelationshipTypeEnum {
+			NO_SPECIFIED_RELATIONSHIP, 
+			PRIMARY_MEASURE_RELATIONSHIP, 
+			GROUP_RELATIONSHIP, 
+			DIMENSION_RELATIONSHIP
+		}
+	}
+}
