@@ -146,6 +146,8 @@ public class DsdProcessor {
 
             if (representation.getEnumerationCodelist() != null) {
                 codelistRepresentationUrn = representation.getEnumerationCodelist().getUrn();
+            } else if (representation.getEnumerationConceptScheme() != null) {
+                conceptSchemeRepresentationUrn = representation.getEnumerationConceptScheme().getUrn();
             } else if (representation.getTextFormat() != null) {
                 textFormat = representation.getTextFormat();
             } else {
