@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -39,7 +40,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
         {
             // All data
-            Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, null);
+            // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, null);
+            WebClient create = WebClient.create("http://localhost:9001/apis/sdmx/data-resources/v2.1/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            create.accept("application/vnd.sdmx.genericdata+xml;version=2.1");
+            Response findData = create.get();
 
             System.out.println("_____________");
             System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
@@ -48,10 +52,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
         {
             // All data, with FREQ as dimensionAtObservation
-            Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, "FREQ");
-
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+            // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1, DATASET_ID, null, "FREQ");
+            //
+            // System.out.println("_____________");
+            // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
         }
     }
 
@@ -59,20 +63,20 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     public void testDataKey() throws Exception {
 
         String key = "M.CHF.EUR.SP00.E.2010-08";
-        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null, null);
-
-        System.out.println("_____________");
-        System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1, DATASET_ID, key, null, null);
+        //
+        // System.out.println("_____________");
+        // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
     }
 
     @Test
     public void testDataKeyWildcards() throws Exception {
 
         String key = "M..EUR.SP00.E.2010-08";
-        Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, key, null, null);
-
-        System.out.println("_____________");
-        System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1, DATASET_ID, key, null, null);
+        //
+        // System.out.println("_____________");
+        // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
     }
 
     @Override

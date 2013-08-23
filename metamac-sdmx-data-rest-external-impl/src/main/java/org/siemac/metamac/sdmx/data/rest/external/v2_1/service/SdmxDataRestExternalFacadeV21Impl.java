@@ -2,7 +2,7 @@ package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 
 import java.io.FileInputStream;
 
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Writer;
 import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
-import com.arte.statistic.parser.sdmx.v2_1.domain.TypeSDMXDataMessageEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.WriterResult;
 
 @Service("sdmxDataRestExternalFacadeV21")
@@ -41,61 +40,55 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     @Autowired
     private DataConfiguration                dataConfiguration;
 
-    private final ServiceContext             ctx    = new ServiceContext("restExternal", "restExternal", "restExternal");
-    private final Logger                     logger = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
+    private final ServiceContext             ctx                 = new ServiceContext("restExternal", "restExternal", "restExternal");
+    private final Logger                     logger              = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
+    private final String                     HEADER_PARAM_ACCEPT = "accept";
 
     @Override
-    public Response findData(String flowRef, String detail, String dimensionAtObservation) {
+    public Response findData(HttpHeaders headers, String flowRef, String detail, String dimensionAtObservation) {
         try {
-            boolean isGeneric = true;
-            WriterResult writerResult = processrequest(flowRef, null, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), isGeneric);
+            WriterResult writerResult = processrequest(flowRef, null, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), getAcceptHeaderParameter(headers));
 
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(determineMediaType(writerResult.getTypeSDMXDataMessageEnum())).build();
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    private String getAcceptHeaderParameter(HttpHeaders headers) {
+        if (headers.getRequestHeader(HEADER_PARAM_ACCEPT) != null && !headers.getRequestHeader(HEADER_PARAM_ACCEPT).isEmpty()) {
+            return headers.getRequestHeader(HEADER_PARAM_ACCEPT).get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Response findData(HttpHeaders headers, String flowRef, String key, String detail, String dimensionAtObservation) {
+        try {
+            WriterResult writerResult = processrequest(flowRef, key, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), getAcceptHeaderParameter(headers));
+
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
     }
 
     @Override
-    public Response findData(String flowRef, String key, String detail, String dimensionAtObservation) {
+    public Response findData(HttpHeaders headers, String flowRef, String key, String providerRef, String detail, String dimensionAtObservation) {
         try {
-            boolean isGeneric = true;
-            WriterResult writerResult = processrequest(flowRef, key, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), isGeneric);
+            WriterResult writerResult = processrequest(flowRef, key, providerRef, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail),
+                    getAcceptHeaderParameter(headers));
 
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(determineMediaType(writerResult.getTypeSDMXDataMessageEnum())).build();
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
     }
-
-    @Override
-    public Response findData(String flowRef, String key, String providerRef, String detail, String dimensionAtObservation) {
-        try {
-            boolean isGeneric = true;
-            WriterResult writerResult = processrequest(flowRef, key, providerRef, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), isGeneric);
-
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(determineMediaType(writerResult.getTypeSDMXDataMessageEnum())).build();
-        } catch (Exception e) {
-            throw manageException(e);
-        }
-    }
-
-    // TODO Añdir el media Type en las respuestas, ver tb el otro API de SDMX para ponerlo
-
-    // <response status="200">
-    // <representation mediaType="application/vnd.sdmx.genericdata+xml;version=2.1" element="message:GenericData"/>
-    // <representation mediaType="application/vnd.sdmx.structurespecificdata+xml;version=2.1" element="message:StructureSpecificData"/>
-    // <representation mediaType="application/vnd.sdmx.generictimeseriesdata+xml;version=2.1" element="message:GenericTimeSeriesData"/>
-    // <representation mediaType="application/vnd.sdmx.structurespecifictimeseriesdata+xml;version=2.1" element="message:StructureSpecificTimeSeriesData"/>
-    // </response>
-    // <response status="400 401 404 413 500 501 503">
-    // <representation mediaType="application/vnd.sdmx.error+xml;version=2.1" element="message:Error"/>
-    // </response>
 
     /***************************************************************
      * DATA PRIVATE
      ***************************************************************/
-    private WriterResult processrequest(String flowRef, String key, String providerRef, RequestParameter requestParameter, boolean isGeneric) throws Exception {
+    private WriterResult processrequest(String flowRef, String key, String providerRef, RequestParameter requestParameter, String proposeContentType) throws Exception {
         // flowRef: Always required
         // key: nullable, then is the same that SAME wildcard
         // key: providerRef, then is the same that SAME wildcard
@@ -122,7 +115,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                 requestParameter, externalItem, dataConfiguration.retrieveOrganisationIDDefault()); // TODO
         // manejar
         // dataflow
-        return Sdmx21Writer.writerData(writerDataCallback, isGeneric);
+        return Sdmx21Writer.writerData(writerDataCallback, proposeContentType);
     }
 
     private String findDataSetFromDataFlow(String flowRef, String providerRef) {
@@ -189,17 +182,4 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         return requestParameter;
     }
 
-    private String determineMediaType(TypeSDMXDataMessageEnum typeSDMXDataMessageEnum) {
-        switch (typeSDMXDataMessageEnum) {
-            case GENERIC_2_1:
-                return RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1;
-            case GENERIC_TIME_SERIES_2_1:
-                return RestExternalConstants.MEDIATYPE_MESSAGE_GENERICTIMESERIESDATA_2_1;
-            case SPECIFIC_2_1:
-                return RestExternalConstants.MEDIATYPE_MESSAGE_STRUCTURESPECIFICDATA_2_1;
-            case SPECIFIC_TIME_SERIES_2_1:
-                return RestExternalConstants.MEDIATYPE_MESSAGE_STRUCTURESPECIFICTIMESERIESDATA_2_1;
-        }
-        return MediaType.APPLICATION_XML;
-    }
 }
