@@ -4,9 +4,11 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -17,12 +19,18 @@ import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetT
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -53,6 +61,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
         void setAttributes(List<DsdAttributeDto> attributes);
         void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
+        void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
     }
 
     @ProxyCodeSplit
@@ -139,6 +148,45 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
             @Override
             public void onWaitSuccess(GetDatasetAttributeInstancesResult result) {
                 getView().setAttributeInstances(dsdAttributeDto, result.getDsdAttributeInstanceDtos());
+            }
+        });
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    @Override
+    public void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria) {
+
+        ItemSchemeWebCriteria itemSchemeWebCriteria = new ItemSchemeWebCriteria(criteria);
+
+        if (!StringUtils.isBlank(representationDto.getCodelistRepresentationUrn())) {
+            itemSchemeWebCriteria.setSchemeUrn(representationDto.getCodelistRepresentationUrn());
+            retrieveCodesFromItemSchemeForDatasetLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+
+        } else if (!StringUtils.isBlank(representationDto.getConceptSchemeRepresentationUrn())) {
+            itemSchemeWebCriteria.setSchemeUrn(representationDto.getConceptSchemeRepresentationUrn());
+            retrieveConceptsFromItemSchemeForDatasetLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+        }
+    }
+
+    private void retrieveCodesFromItemSchemeForDatasetLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+        dispatcher.execute(new GetCodesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCodesPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetCodesPaginatedListResult result) {
+                getView().setItemsForDatasetLevelAttributeValueSelection(result.getCodes(), result.getFirstResultOut(), result.getTotalResults());
+            }
+        });
+    }
+
+    private void retrieveConceptsFromItemSchemeForDatasetLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+        dispatcher.execute(new GetConceptsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetConceptsPaginatedListResult result) {
+                getView().setItemsForDatasetLevelAttributeValueSelection(result.getConcepts(), result.getFirstResultOut(), result.getTotalResults());
             }
         });
     }

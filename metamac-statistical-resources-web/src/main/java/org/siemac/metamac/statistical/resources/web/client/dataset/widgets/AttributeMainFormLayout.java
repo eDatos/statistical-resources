@@ -2,18 +2,20 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDatasetLevelEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDatasetLevelForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
-public class DsdAttributeMainFormLayout extends MainFormLayout {
+public class AttributeMainFormLayout extends MainFormLayout {
 
     private AttributeDatasetLevelForm        attributeDatasetLevelForm;
     private AttributeDatasetLevelEditionForm attributeDatasetLevelEditionForm;
 
-    public DsdAttributeMainFormLayout() {
+    public AttributeMainFormLayout() {
 
         // DATASET LEVEL FORMS
 
@@ -55,5 +57,17 @@ public class DsdAttributeMainFormLayout extends MainFormLayout {
         attributeDatasetLevelForm.hide();
         attributeDatasetLevelEditionForm.hide();
         hide();
+    }
+
+    public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
+        attributeDatasetLevelEditionForm.setUiHandlers(uiHandlers);
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    public void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        attributeDatasetLevelEditionForm.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 }

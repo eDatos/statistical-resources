@@ -25,5 +25,4 @@ public class GetConceptsPaginatedListActionHandler extends SecurityActionHandler
         ExternalItemsResult result = srmRestInternalFacade.findConcepts(action.getFirstResult(), action.getMaxResults(), action.getCriteria());
         return new GetConceptsPaginatedListResult(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
     }
-
 }

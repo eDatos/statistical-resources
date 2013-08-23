@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Upda
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgenciesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgencySchemesPaginatedListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetCodesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetCommonMetadataConfigurationsListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetConceptSchemesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetConceptsPaginatedListActionHandler;
@@ -71,6 +72,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptSchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
@@ -143,6 +145,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetLanguagesCodesAction.class, GetLanguagesCodesActionHandler.class);
         bindHandler(GetConceptSchemesPaginatedListAction.class, GetConceptSchemesPaginatedListActionHandler.class);
         bindHandler(GetConceptsPaginatedListAction.class, GetConceptsPaginatedListActionHandler.class);
+        bindHandler(GetCodesPaginatedListAction.class, GetCodesPaginatedListActionHandler.class);
         bindHandler(GetOrganisationUnitSchemesPaginatedListAction.class, GetOrganisationUnitSchemesPaginatedListActionHandler.class);
         bindHandler(GetOrganisationUnitsPaginatedListAction.class, GetOrganisationUnitsPaginatedListActionHandler.class);
         bindHandler(GetAgencySchemesPaginatedListAction.class, GetAgencySchemesPaginatedListActionHandler.class);

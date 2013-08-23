@@ -103,7 +103,9 @@ public class MetamacWebCriteriaUtils {
         return null;
     }
 
+    //
     // Private methods
+    //
 
     private static void addRestrictionIfExists(MetamacCriteriaConjunctionRestriction criteria, MetamacCriteriaRestriction restriction) {
         if (restriction != null) {

@@ -4,12 +4,13 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DsdAttributeMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.AttributeMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -26,9 +27,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttributesTabUiHandlers> implements DatasetAttributesTabView {
 
-    private VLayout                    panel;
-    private BaseCustomListGrid         listGrid;
-    private DsdAttributeMainFormLayout mainFormLayout;
+    private VLayout                 panel;
+    private BaseCustomListGrid      listGrid;
+    private AttributeMainFormLayout mainFormLayout;
 
     public DatasetAttributesTabViewImpl() {
 
@@ -54,7 +55,7 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
 
         // MAIN FORM LAYOUT
 
-        mainFormLayout = new DsdAttributeMainFormLayout();
+        mainFormLayout = new AttributeMainFormLayout();
         mainFormLayout.setVisible(false);
 
         // PANEL LAYOUT
@@ -84,5 +85,15 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     @Override
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
+        mainFormLayout.setUiHandlers(uiHandlers);
+    }
+
+    //
+    // RELATED RESOURCES
+    //
+
+    @Override
+    public void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        mainFormLayout.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 }

@@ -23,6 +23,7 @@ public abstract class SearchExternalItemSimpleItem extends SearchExternalItemLin
     public SearchExternalItemSimpleItem(String name, String title, int maxResults) {
         super(name, title);
         appendWindow(maxResults);
+        setExternalItem(null);
     }
 
     private void appendWindow(final int maxResults) {

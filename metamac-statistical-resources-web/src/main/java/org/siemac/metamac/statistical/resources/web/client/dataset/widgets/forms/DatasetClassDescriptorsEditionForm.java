@@ -28,5 +28,4 @@ public class DatasetClassDescriptorsEditionForm extends SiemacMetadataClassDescr
         datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
         return datasetDto;
     }
-
 }

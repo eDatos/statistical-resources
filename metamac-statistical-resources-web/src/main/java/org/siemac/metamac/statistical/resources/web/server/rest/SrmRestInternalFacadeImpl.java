@@ -107,11 +107,11 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     // CODES
 
     @Override
-    public ExternalItemsResult findCodesInCodelist(String codeListUrn, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
+    public ExternalItemsResult findCodesInCodelist(String codelistUrn, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
         try {
             String query = buildQueryCode(criteria);
 
-            Codes codes = srmRestInternalService.findCodes(codeListUrn, firstResult, maxResult, query);
+            Codes codes = srmRestInternalService.findCodes(codelistUrn, firstResult, maxResult, query);
 
             List<ExternalItemDto> codesExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : codes.getCodes()) {
@@ -128,6 +128,27 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         try {
             Code code = srmRestInternalService.retrieveCodeByUrn(urn);
             return ExternalItemUtils.buildExternalItemDtoFromCode(code);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    @Override
+    public ExternalItemsResult findCodes(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException {
+        try {
+            String query = null;
+            String codelistUrn = null;
+            if (condition != null) {
+                query = buildQueryCode(condition);
+                codelistUrn = condition.getSchemeUrn();
+            }
+            Codes codes = srmRestInternalService.findCodes(codelistUrn, firstResult, maxResult, query);
+
+            List<ExternalItemDto> codesExternalItems = new ArrayList<ExternalItemDto>();
+            for (ResourceInternal resource : codes.getCodes()) {
+                codesExternalItems.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
+            }
+            return ExternalItemUtils.createExternalItemsResultFromListBase(codes, codesExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
