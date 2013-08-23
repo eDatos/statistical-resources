@@ -10,6 +10,7 @@
     <source path='core/dataset/checks' />
     <source path='core/enume/domain' />
     <source path='core/enume/query/domain' />
+    <source path='core/enume/dataset/domain' />
     <source path='core/utils/shared' />
     <source path='core/dto' />
     <source path='core/invocation/shared' />
