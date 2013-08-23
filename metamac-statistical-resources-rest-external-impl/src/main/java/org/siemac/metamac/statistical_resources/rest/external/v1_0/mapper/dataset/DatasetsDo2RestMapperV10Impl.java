@@ -19,6 +19,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -101,13 +103,15 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         }
         DatasetMetadata target = new DatasetMetadata();
 
-        // TODO volver a poner DsdProcessor?
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrn());
         target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
-        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions(), source.getSiemacMetadataStatisticalResource().getUrn(), null,
-                selectedLanguages));
-        target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getSiemacMetadataStatisticalResource().getUrn(),
-                selectedLanguages));
+
+        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
+        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dimensions, source.getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
+
+        // TODO attributes
+        // target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getSiemacMetadataStatisticalResource().getUrn(),
+        // selectedLanguages));
         target.setGeographicCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
         target.setTemporalCoverages(toTemporalCoverages(source.getTemporalCoverage(), selectedLanguages));
         target.setMeasureCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));

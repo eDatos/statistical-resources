@@ -18,6 +18,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -111,10 +113,13 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getDatasetVersion().getRelatedDsd().getUrn());
         target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getDatasetVersion().getRelatedDsd(), dataStructure, selectedLanguages));
-        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dataStructure.getDataStructureComponents().getDimensions(), source.getDatasetVersion()
-                .getSiemacMetadataStatisticalResource().getUrn(), effectiveDimensionValuesToDataByDimension, selectedLanguages));
-        target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getDatasetVersion()
-                .getSiemacMetadataStatisticalResource().getUrn(), selectedLanguages));
+
+        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
+        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dimensions, source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(),
+                effectiveDimensionValuesToDataByDimension, selectedLanguages));
+        // TODO attributes
+        // target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getDatasetVersion()
+        // .getSiemacMetadataStatisticalResource().getUrn(), selectedLanguages));
         target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));
