@@ -304,8 +304,20 @@ public class CommonUtils {
         return AttributeRepresentationTypeEnum.TEXT_FORMAT.equals(dsdAttributeDto.getAttributeRepresentation().getRepresentationType());
     }
 
-    public static boolean hasPrimaryMeasureRelationshipType(DsdAttributeDto dsdAttributeDto) {
+    public static boolean hasObservationRelationshipType(DsdAttributeDto dsdAttributeDto) {
         return AttributeRelationshipTypeEnum.PRIMARY_MEASURE_RELATIONSHIP.equals(dsdAttributeDto.getAttributeRelationship().getRelationshipType());
+    }
+
+    public static boolean hasDatasetRelationshipType(DsdAttributeDto dsdAttributeDto) {
+        return AttributeRelationshipTypeEnum.NO_SPECIFIED_RELATIONSHIP.equals(dsdAttributeDto.getAttributeRelationship().getRelationshipType());
+    }
+
+    public static boolean hasDimensionRelationshipType(DsdAttributeDto dsdAttributeDto) {
+        return AttributeRelationshipTypeEnum.DIMENSION_RELATIONSHIP.equals(dsdAttributeDto.getAttributeRelationship().getRelationshipType());
+    }
+
+    public static boolean hasGroupRelationshipType(DsdAttributeDto dsdAttributeDto) {
+        return AttributeRelationshipTypeEnum.GROUP_RELATIONSHIP.equals(dsdAttributeDto.getAttributeRelationship().getRelationshipType());
     }
 
     // -----------------------------------------------------------------------------------------

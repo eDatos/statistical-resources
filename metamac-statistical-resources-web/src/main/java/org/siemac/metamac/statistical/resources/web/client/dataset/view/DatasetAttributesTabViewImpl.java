@@ -50,7 +50,7 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
             public void onSelectionChanged(SelectionEvent event) {
                 if (event.getSelectedRecord() instanceof DsdAttributeRecord) {
                     DsdAttributeDto dsdAttributeDto = ((DsdAttributeRecord) event.getSelectedRecord()).getDsdAttributeDto();
-                    if (!CommonUtils.hasPrimaryMeasureRelationshipType(dsdAttributeDto)) {
+                    if (!CommonUtils.hasObservationRelationshipType(dsdAttributeDto)) {
                         getUiHandlers().retrieveAttributeInstances(dsdAttributeDto);
                     } else {
                         attributePanel.hide();
@@ -85,7 +85,7 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
 
     @Override
     public void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
-        attributePanel.showAttribute(dsdAttributeDto, dsdAttributeInstanceDtos);
+        attributePanel.showAttributeInstances(dsdAttributeDto, dsdAttributeInstanceDtos);
     }
 
     @Override

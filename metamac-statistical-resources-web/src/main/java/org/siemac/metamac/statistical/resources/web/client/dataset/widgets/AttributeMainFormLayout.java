@@ -30,11 +30,11 @@ public class AttributeMainFormLayout extends MainFormLayout {
         // TODO
     }
 
-    public void showAttribute(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
+    public void showInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         hideAllForms();
         switch (dsdAttributeDto.getAttributeRelationship().getRelationshipType()) {
             case NO_SPECIFIED_RELATIONSHIP:
-                showDataLevelForm(dsdAttributeDto, dsdAttributeInstanceDtos);
+                showDataLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
                 break;
             case DIMENSION_RELATIONSHIP:
                 // TODO
@@ -44,9 +44,9 @@ public class AttributeMainFormLayout extends MainFormLayout {
         }
     }
 
-    private void showDataLevelForm(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
-        attributeDatasetLevelForm.setDsdAttributeDto(dsdAttributeDto, dsdAttributeInstanceDtos);
-        attributeDatasetLevelEditionForm.setDsdAttributeDto(dsdAttributeDto, dsdAttributeInstanceDtos);
+    private void showDataLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        attributeDatasetLevelForm.setDsdAttributeDto(dsdAttributeDto, dsdAttributeInstanceDto);
+        attributeDatasetLevelEditionForm.setDsdAttributeDto(dsdAttributeDto, dsdAttributeInstanceDto);
 
         attributeDatasetLevelForm.show();
         attributeDatasetLevelEditionForm.show();

@@ -89,7 +89,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     @Override
     protected void onReset() {
         super.onReset();
-        SetTitleEvent.fire(this, getConstants().statisticalResources());
+        SetTitleEvent.fire(this, getConstants().breadcrumbOperationResources());
     }
 
     @Override

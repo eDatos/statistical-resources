@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
@@ -17,16 +15,16 @@ public abstract class AttributeBaseForm extends GroupDynamicForm {
 
     protected DsdAttributeDto                dsdAttributeDto;
 
-    public void setDsdAttributeDto(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
+    public void setDsdAttributeDto(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         clearForm();
 
         this.dsdAttributeDto = dsdAttributeDto;
         setGroupTitle(dsdAttributeDto.getIdentifier());
 
         if (CommonUtils.hasEnumeratedRepresentation(dsdAttributeDto)) {
-            buildEnumeratedRepresentationForm(dsdAttributeDto, dsdAttributeInstanceDtos);
+            buildEnumeratedRepresentationForm(dsdAttributeDto, dsdAttributeInstanceDto);
         } else if (CommonUtils.hasNonEnumeratedRepresentation(dsdAttributeDto)) {
-            buildNonEnumeratedRepresentationForm(dsdAttributeInstanceDtos);
+            buildNonEnumeratedRepresentationForm(dsdAttributeInstanceDto);
         }
     }
 
@@ -48,6 +46,6 @@ public abstract class AttributeBaseForm extends GroupDynamicForm {
         this.uiHandlers = uiHandlers;
     }
 
-    protected abstract void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
-    protected abstract void buildNonEnumeratedRepresentationForm(List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
+    protected abstract void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto);
+    protected abstract void buildNonEnumeratedRepresentationForm(DsdAttributeInstanceDto dsdAttributeInstanceDto);
 }

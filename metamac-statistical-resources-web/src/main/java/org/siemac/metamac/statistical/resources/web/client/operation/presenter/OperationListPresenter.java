@@ -68,8 +68,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     @Override
     protected void onReset() {
         super.onReset();
-        SetTitleEvent.fire(this, getConstants().operations());
-
+        SetTitleEvent.fire(this, getConstants().statisticalResourcesDashboard());
     }
 
     @Override
