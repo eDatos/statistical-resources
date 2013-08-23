@@ -23,7 +23,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemRes
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.PrimaryMeasure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
@@ -81,9 +80,8 @@ public class DsdProcessor {
         protected DsdComponentType     type                           = null;
         protected String               codelistRepresentationUrn      = null;
         protected String               conceptSchemeRepresentationUrn = null;
-        protected ItemResourceInternal conceptIdentity                = null;
         protected TextFormat           textFormat                     = null;
-        protected TextFormat           textFormatConceptId            = null;
+        protected ItemResourceInternal conceptIdentity                = null;
 
         protected void setConceptIdentity(ItemResourceInternal conceptIdentity) {
             if (conceptIdentity != null) {
@@ -93,47 +91,17 @@ public class DsdProcessor {
             }
         }
 
-        protected void setRepresentationFromLocalRepresentation(Representation localRepresentation) {
-            if (localRepresentation.getEnumerationCodelist() != null) {
-                extractCodelistUrn(localRepresentation.getEnumerationCodelist());
-            } else {
-                textFormat = localRepresentation.getTextFormat();
-            }
+        protected void setRepresentationFromLocalRepresentation(String urn, Representation localRepresentation) {
+            extractRepresentation(urn, localRepresentation);
         }
 
         protected void setRepresentationFromConceptIdentity(ItemResourceInternal conceptIdentity) throws MetamacException {
-            Concept concept = null;
-            if (conceptIdentity != null) {
-                concept = getSrmRestInternalService().retrieveConceptByUrn(conceptIdentity.getUrn());
-            } else {
+            if (conceptIdentity == null) {
                 throw new RuntimeException("Concept identity can not be null");
             }
 
-            if (concept.getCoreRepresentation() != null) {
-                if (concept.getCoreRepresentation().getEnumerationCodelist() != null) {
-                    extractCodelistUrn(concept.getCoreRepresentation().getEnumerationCodelist());
-                } else {
-                    textFormatConceptId = concept.getCoreRepresentation().getTextFormat();
-                }
-            } else {
-                throw new IllegalArgumentException("Found a dimension with concept identity with core representation null");
-            }
-        }
-
-        protected void extractCodelistUrn(ResourceInternal codelist) {
-            if (codelist != null) {
-                codelistRepresentationUrn = codelist.getUrn();
-            } else {
-                throw new RuntimeException("Codelist can not be null");
-            }
-        }
-
-        protected void extractConceptSchemeUrn(ResourceInternal conceptScheme) {
-            if (conceptScheme != null) {
-                conceptSchemeRepresentationUrn = conceptScheme.getUrn();
-            } else {
-                throw new RuntimeException("ConceptScheme can not be null");
-            }
+            Concept concept = getSrmRestInternalService().retrieveConceptByUrn(conceptIdentity.getUrn());
+            extractRepresentation(conceptIdentity.getUrn(), concept.getCoreRepresentation());
         }
 
         public abstract String getComponentId();
@@ -154,10 +122,6 @@ public class DsdProcessor {
             return textFormat;
         }
 
-        public TextFormat getTextFormatConceptId() {
-            return textFormatConceptId;
-        }
-
         public String getEnumeratedRepresentationUrn() {
             if (StringUtils.isNotEmpty(this.codelistRepresentationUrn) && StringUtils.isNotEmpty(this.conceptSchemeRepresentationUrn)) {
                 throw new RuntimeException("Two enumerated representation aren't allowed.");
@@ -174,12 +138,25 @@ public class DsdProcessor {
         public ItemResourceInternal getConceptIdentity() {
             return conceptIdentity;
         }
+
+        private void extractRepresentation(String componentUrn, Representation representation) {
+            if (representation == null) {
+                throw new IllegalArgumentException("Found a component " + componentUrn + " with representation null");
+            }
+
+            if (representation.getEnumerationCodelist() != null) {
+                codelistRepresentationUrn = representation.getEnumerationCodelist().getUrn();
+            } else if (representation.getTextFormat() != null) {
+                textFormat = representation.getTextFormat();
+            } else {
+                throw new IllegalArgumentException("Found a component " + componentUrn + " with representation null");
+            }
+        }
     }
 
     public static class DsdDimension extends DsdComponent {
 
         private final String dimensionId;
-        private TextFormat   timeTextFormatType;
 
         public DsdDimension(Dimension dim) throws MetamacException {
             dimensionId = dim.getId();
@@ -190,28 +167,24 @@ public class DsdProcessor {
             }
 
             if (dim.getLocalRepresentation() != null) {
-                setRepresentationFromLocalRepresentation(dim.getLocalRepresentation());
+                setRepresentationFromLocalRepresentation(dim.getUrn(), dim.getLocalRepresentation());
             } else if (dim.getConceptIdentity() != null) {
                 setRepresentationFromConceptIdentity(dim.getConceptIdentity());
             } else {
-                throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
+                throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getUrn());
             }
 
             setConceptIdentity(dim.getConceptIdentity());
-
         }
 
         public DsdDimension(MeasureDimension dim) {
             dimensionId = dim.getId();
             type = DsdComponentType.MEASURE;
-            if (dim.getLocalRepresentation() != null) {
-                if (dim.getLocalRepresentation().getEnumerationConceptScheme() != null) {
-                    extractConceptSchemeUrn(dim.getLocalRepresentation().getEnumerationConceptScheme());
-                } else {
-                    throw new IllegalArgumentException("Found a dimension with local representation but no Concept Scheme");
-                }
+            // note: measure dimension always must have a concept scheme enumerated representation
+            if (dim.getLocalRepresentation() != null && dim.getLocalRepresentation().getEnumerationConceptScheme() != null) {
+                conceptSchemeRepresentationUrn = dim.getLocalRepresentation().getEnumerationConceptScheme().getUrn();
             } else {
-                throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
+                throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getUrn());
             }
 
             setConceptIdentity(dim.getConceptIdentity());
@@ -220,17 +193,14 @@ public class DsdProcessor {
         public DsdDimension(TimeDimension dim) {
             dimensionId = dim.getId();
             type = DsdComponentType.TEMPORAL;
-            if (dim.getLocalRepresentation() != null) {
-                timeTextFormatType = dim.getLocalRepresentation().getTextFormat();
+            // note: time dimension always must have a non enumerated representation
+            if (dim.getLocalRepresentation() != null && dim.getLocalRepresentation().getTextFormat() != null) {
+                textFormat = dim.getLocalRepresentation().getTextFormat();
             } else {
-                throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getId());
+                throw new IllegalArgumentException("Found a dimension with no representation info " + dim.getUrn());
             }
 
             setConceptIdentity(dim.getConceptIdentity());
-        }
-
-        public TextFormat getTimeTextFormatRepresentation() {
-            return timeTextFormatType;
         }
 
         @Override
@@ -257,9 +227,11 @@ public class DsdProcessor {
             }
 
             if (attr.getLocalRepresentation() != null) {
-                setRepresentationFromLocalRepresentation(attr.getLocalRepresentation());
-            } else {
+                setRepresentationFromLocalRepresentation(attr.getUrn(), attr.getLocalRepresentation());
+            } else if (attr.getConceptIdentity() != null) {
                 setRepresentationFromConceptIdentity(attr.getConceptIdentity());
+            } else {
+                throw new IllegalArgumentException("Found an attribute with no representation info " + attr.getUrn());
             }
 
             setConceptIdentity(attr.getConceptIdentity());
@@ -289,23 +261,23 @@ public class DsdProcessor {
 
     public static class DsdPrimaryMeasure extends DsdComponent {
 
-        private final String primaryMeasueId;
+        private final String primaryMeasureId;
 
         public DsdPrimaryMeasure(PrimaryMeasure primaryMeasure) throws MetamacException {
-            primaryMeasueId = primaryMeasure.getId();
+            primaryMeasureId = primaryMeasure.getId();
             if (primaryMeasure.getLocalRepresentation() != null) {
-                setRepresentationFromLocalRepresentation(primaryMeasure.getLocalRepresentation());
+                setRepresentationFromLocalRepresentation(primaryMeasure.getUrn(), primaryMeasure.getLocalRepresentation());
             } else if (primaryMeasure.getConceptIdentity() != null) {
                 setRepresentationFromConceptIdentity(primaryMeasure.getConceptIdentity());
             } else {
-                throw new IllegalArgumentException("Found a primary measure with no representation info ");
+                throw new IllegalArgumentException("Found a primary measure with no representation info " + primaryMeasure.getUrn());
             }
             setConceptIdentity(primaryMeasure.getConceptIdentity());
         }
 
         @Override
         public String getComponentId() {
-            return primaryMeasueId;
+            return primaryMeasureId;
         }
     }
 

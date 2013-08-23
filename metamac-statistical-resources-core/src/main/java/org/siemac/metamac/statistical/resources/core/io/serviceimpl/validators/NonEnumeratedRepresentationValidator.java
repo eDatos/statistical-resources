@@ -22,20 +22,8 @@ public class NonEnumeratedRepresentationValidator {
 
     protected static final Pattern PATTERN_VALIDATE_OBS = Pattern.compile(START + "\\d*\\.?\\d*" + END);
 
-    public static void checkSimpleComponentTextFormatType(TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkSimpleDataType(textFormat.getTextType(), textFormat, key, value, exceptions);
-    }
-
-    public static void checkReportingYearStartDayTextFormatType(TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkSimpleDataType(textFormat.getTextType(), textFormat, key, value, exceptions);
-    }
-
-    public static void checkTimeTextFormatType(TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkTimeDataType(textFormat.getTextType(), textFormat, key, value, exceptions);
-    }
-
-    public static void checkBasicComponentTextFormatType(TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkBasicComponentDataType(textFormat.getTextType(), textFormat, key, value, exceptions);
+    public static void checkTextFormatType(TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkFacets(textFormat.getTextType(), textFormat, key, value, exceptions);
     }
 
     public static void checkExtraValidationForPrimaryMeasure(String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -49,18 +37,6 @@ public class NonEnumeratedRepresentationValidator {
     /**************************************************************************
      * PRIVATES
      **************************************************************************/
-
-    private static void checkSimpleDataType(DataType type, TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkBasicComponentDataType(type, textFormat, key, value, exceptions);
-    }
-
-    private static void checkBasicComponentDataType(DataType type, TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkFacets(type, textFormat, key, value, exceptions);
-    }
-
-    private static void checkTimeDataType(DataType type, TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkSimpleDataType(type, textFormat, key, value, exceptions);
-    }
 
     private static void checkFacets(DataType dataType, TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
 

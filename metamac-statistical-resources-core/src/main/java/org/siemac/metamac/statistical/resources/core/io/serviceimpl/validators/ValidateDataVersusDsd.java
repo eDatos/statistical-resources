@@ -50,7 +50,6 @@ public class ValidateDataVersusDsd {
 
     // DSD: Calculated and cache data
     private Map<String, ComponentInfo>             dimensionsInfoMap                          = null;
-    private Map<String, ComponentInfo>             attributesInfoMap                          = null;
     private List<ComponentInfo>                    dimensionsInfoList                         = null;
     private List<ComponentInfo>                    attributesInfoList                         = null;
     private MultiMap                               enumerationRepresentationsMultimap         = null; // Key: URN, Value: Set<String>
@@ -263,11 +262,7 @@ public class ValidateDataVersusDsd {
         DsdProcessor.DsdDimension dsdDimension = dimensionsProcessorMap.get(dimensionId);
 
         if (dsdDimension.getTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdDimension.getTextFormatRepresentation(), key, value, exceptions);
-        } else if (dsdDimension.getTimeTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkTimeTextFormatType(dsdDimension.getTimeTextFormatRepresentation(), key, value, exceptions);
-        } else if (dsdDimension.getTextFormatConceptId() != null) {
-            NonEnumeratedRepresentationValidator.checkBasicComponentTextFormatType(dsdDimension.getTextFormatConceptId(), key, value, exceptions);
+            NonEnumeratedRepresentationValidator.checkTextFormatType(dsdDimension.getTextFormatRepresentation(), key, value, exceptions);
         }
     }
 
@@ -285,7 +280,7 @@ public class ValidateDataVersusDsd {
     private void checkAttributeNonEnumeratedRepresentation(String attributeId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
         DsdProcessor.DsdAttribute dsdAttribute = attributesProcessorMap.get(attributeId);
         if (dsdAttribute.getTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
+            NonEnumeratedRepresentationValidator.checkTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
         }
     }
 
@@ -304,9 +299,7 @@ public class ValidateDataVersusDsd {
 
     private void checkPrimaryMeasureNonEnumeratedRepresentation(String dimensionId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (this.dsdPrimaryMeasure.getTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkSimpleComponentTextFormatType(this.dsdPrimaryMeasure.getTextFormatRepresentation(), key, value, exceptions);
-        } else if (this.dsdPrimaryMeasure.getTextFormatConceptId() != null) {
-            NonEnumeratedRepresentationValidator.checkBasicComponentTextFormatType(this.dsdPrimaryMeasure.getTextFormatConceptId(), key, value, exceptions);
+            NonEnumeratedRepresentationValidator.checkTextFormatType(this.dsdPrimaryMeasure.getTextFormatRepresentation(), key, value, exceptions);
         }
     }
 
@@ -373,7 +366,6 @@ public class ValidateDataVersusDsd {
         }
 
         this.attributesProcessorMap = attributesProcessorMap;
-        this.attributesInfoMap = attributesInfoMap;
         this.attributesInfoList = attributesInfoList;
         this.attributeIdsAtObservationLevelSet = attributeIdsAtObservationLevelSet;
         this.mandatoryAttributeIdsAtObservationLevel = mandatoryAttributeIdsAtObservationLevel;
