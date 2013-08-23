@@ -86,6 +86,7 @@ Application DatasetsStatisticalResourcesDto {
         }
         
         DataTransferObject RepresentationDto extends @IdentityDto {
+        	- @AttributeRepresentationTypeEnum representationType;
         	String codelistRepresentationUrn;
         	String conceptSchemeRepresentationUrn;
         }

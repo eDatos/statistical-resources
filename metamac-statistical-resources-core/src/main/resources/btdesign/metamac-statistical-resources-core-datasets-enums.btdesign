@@ -10,5 +10,9 @@ Application DatasetsStatisticalResourcesEnums {
 			GROUP_RELATIONSHIP, 
 			DIMENSION_RELATIONSHIP
 		}
+		
+		enum AttributeRepresentationTypeEnum {
+			ENUMERATION, TEXT_FORMAT;
+		}
 	}
 }
