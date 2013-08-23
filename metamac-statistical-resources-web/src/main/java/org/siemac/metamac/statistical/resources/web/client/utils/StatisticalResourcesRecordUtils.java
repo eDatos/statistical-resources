@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -36,7 +37,6 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -249,8 +249,8 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
 
     public static DsdAttributeRecord getDsdAttributeRecord(DsdAttributeDto dsdAttributeDto) {
         DsdAttributeRecord record = new DsdAttributeRecord();
-        record.setCode(dsdAttributeDto.getCode());
-        record.setRelationshipType(CommonUtils.getAttributeRelationshipTypeName(dsdAttributeDto.getRelateTo().getTypeRelathionship()));
+        record.setIdentifier(dsdAttributeDto.getIdentifier());
+        record.setRelationshipType(CommonUtils.getAttributeRelationshipTypeName(dsdAttributeDto.getAttributeRelationship().getRelationshipType()));
         record.setDsdAttributeDto(dsdAttributeDto);
         return record;
     }

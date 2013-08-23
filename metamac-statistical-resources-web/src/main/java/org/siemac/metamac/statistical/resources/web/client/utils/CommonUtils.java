@@ -16,9 +16,12 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -26,7 +29,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -292,6 +294,14 @@ public class CommonUtils {
 
     public static String getAttributeRelationshipTypeName(AttributeRelationshipTypeEnum attributeRelationshipTypeEnum) {
         return attributeRelationshipTypeEnum != null ? getCoreMessages().getString(getCoreMessages().attributeRelationshipTypeEnum() + attributeRelationshipTypeEnum.name()) : null;
+    }
+
+    public static boolean hasEnumeratedRepresentation(DsdAttributeDto dsdAttributeDto) {
+        return AttributeRepresentationTypeEnum.ENUMERATION.equals(dsdAttributeDto.getAttributeRepresentation().getRepresentationType());
+    }
+
+    public static boolean hasNonEnumeratedRepresentation(DsdAttributeDto dsdAttributeDto) {
+        return AttributeRepresentationTypeEnum.TEXT_FORMAT.equals(dsdAttributeDto.getAttributeRepresentation().getRepresentationType());
     }
 
     // -----------------------------------------------------------------------------------------

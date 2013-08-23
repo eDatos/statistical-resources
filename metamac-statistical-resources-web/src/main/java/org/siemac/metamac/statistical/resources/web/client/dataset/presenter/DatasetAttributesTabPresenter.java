@@ -5,6 +5,8 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -15,7 +17,8 @@ import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetT
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -44,9 +47,12 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     private final DispatchAsync dispatcher;
     private final PlaceManager  placeManager;
 
+    private String              datasetUrn;
+
     public interface DatasetAttributesTabView extends View, HasUiHandlers<DatasetAttributesTabUiHandlers> {
 
         void setAttributes(List<DsdAttributeDto> attributes);
+        void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
     }
 
     @ProxyCodeSplit
@@ -112,7 +118,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
     private void loadInitialData() {
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
-        String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
+        datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
         retrieveAttributes(datasetUrn);
     }
 
@@ -122,6 +128,17 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
             @Override
             public void onWaitSuccess(GetDatasetAttributesResult result) {
                 getView().setAttributes(result.getDatasetVersionAttributes());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveAttributeInstances(final DsdAttributeDto dsdAttributeDto) {
+        dispatcher.execute(new GetDatasetAttributeInstancesAction(datasetUrn, dsdAttributeDto.getIdentifier()), new WaitingAsyncCallbackHandlingError<GetDatasetAttributeInstancesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetAttributeInstancesResult result) {
+                getView().setAttributeInstances(dsdAttributeDto, result.getDsdAttributeInstanceDtos());
             }
         });
     }

@@ -4,16 +4,17 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DsdAttributeMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
-import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -25,9 +26,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttributesTabUiHandlers> implements DatasetAttributesTabView {
 
-    private VLayout            panel;
-    private BaseCustomListGrid listGrid;
-    private MainFormLayout     mainFormLayout;
+    private VLayout                    panel;
+    private BaseCustomListGrid         listGrid;
+    private DsdAttributeMainFormLayout mainFormLayout;
 
     public DatasetAttributesTabViewImpl() {
 
@@ -38,7 +39,7 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
         listGrid.setAutoFitMaxRecords(StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS);
         listGrid.setAutoFitData(Autofit.VERTICAL);
         listGrid.setMargin(15);
-        CustomListGridField codeField = new CustomListGridField(DsdAttributeDS.CODE, getConstants().datasetAttributeCode());
+        CustomListGridField codeField = new CustomListGridField(DsdAttributeDS.IDENTIFIER, getConstants().datasetAttributeCode());
         CustomListGridField relationshipField = new CustomListGridField(DsdAttributeDS.RELATIONSHIP_TYPE, getConstants().datasetAttributeRelationship());
         listGrid.setFields(codeField, relationshipField);
         listGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
@@ -46,15 +47,14 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
             @Override
             public void onSelectionChanged(SelectionEvent event) {
                 if (event.getSelectedRecord() instanceof DsdAttributeRecord) {
-                    DsdAttributeDto dsdAttributeDto = ((DsdAttributeRecord) event.getSelectedRecord()).getDsdAttributeDto();
-
+                    getUiHandlers().retrieveAttributeInstances(((DsdAttributeRecord) event.getSelectedRecord()).getDsdAttributeDto());
                 }
             }
         });
 
         // MAIN FORM LAYOUT
 
-        mainFormLayout = new MainFormLayout();
+        mainFormLayout = new DsdAttributeMainFormLayout();
         mainFormLayout.setVisible(false);
 
         // PANEL LAYOUT
@@ -73,6 +73,12 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     @Override
     public void setAttributes(List<DsdAttributeDto> attributes) {
         listGrid.setData(StatisticalResourcesRecordUtils.getDsdAttributeRecords(attributes));
+        mainFormLayout.hide();
+    }
+
+    @Override
+    public void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
+        mainFormLayout.showAttribute(dsdAttributeDto, dsdAttributeInstanceDtos);
     }
 
     @Override

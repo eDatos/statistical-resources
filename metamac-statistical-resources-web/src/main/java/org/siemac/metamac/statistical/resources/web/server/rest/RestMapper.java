@@ -1,36 +1,50 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
-import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.AttributeRelationshipTypeEnum;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.RelationshipDto;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.RepresentationDto;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.RelationshipDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
 
 public class RestMapper {
 
-    public static DsdAttributeDto buildDsdAttributeDtoFromAttribute(Attribute attribute) {
+    public static List<DsdAttributeDto> buildDsdAttributeDtosFromDsdAttributes(List<DsdAttribute> dsdAttributes) {
+        List<DsdAttributeDto> dsdAttributeDtos = new ArrayList<DsdAttributeDto>();
+        for (DsdAttribute dsdAttribute : dsdAttributes) {
+            dsdAttributeDtos.add(buildDsdAttributeDtoFromDsdAttribute(dsdAttribute));
+        }
+        return dsdAttributeDtos;
+    }
+
+    public static DsdAttributeDto buildDsdAttributeDtoFromDsdAttribute(DsdAttribute dsdAttribute) {
         DsdAttributeDto dsdAttributeDto = new DsdAttributeDto();
-        dsdAttributeDto.setCode(attribute.getId());
-        dsdAttributeDto.setUrn(attribute.getUrn());
-        dsdAttributeDto.setConceptIdentitity(ExternalItemUtils.buildExternalItemDtoFromResource(attribute.getConceptIdentity(), TypeExternalArtefactsEnum.CONCEPT));
-        dsdAttributeDto.setRelateTo(buildRelationShipDtoFromAttributeRelationship(attribute.getAttributeRelationship()));
-        dsdAttributeDto.setLocalRepresentation(buildRepresentationDtoFromRepresentation(attribute.getLocalRepresentation()));
+        dsdAttributeDto.setIdentifier(dsdAttribute.getComponentId());
+        dsdAttributeDto.setAttributeRelationship(buildRelationShipDtoFromAttributeRelationship(dsdAttribute.getAttributeRelationship()));
+        dsdAttributeDto.setAttributeRepresentation(buildRepresentationDtoFromDsdAttribute(dsdAttribute));
         return dsdAttributeDto;
     }
 
     public static RelationshipDto buildRelationShipDtoFromAttributeRelationship(AttributeRelationship attributeRelationship) {
         RelationshipDto relationshipDto = new RelationshipDto();
-        relationshipDto.setTypeRelathionship(getTypeRelathionship(attributeRelationship));
+        relationshipDto.setRelationshipType(getTypeRelathionship(attributeRelationship));
         return relationshipDto;
     }
 
-    public static RepresentationDto buildRepresentationDtoFromRepresentation(Representation representation) {
+    public static RepresentationDto buildRepresentationDtoFromDsdAttribute(DsdAttribute dsdAttribute) {
         RepresentationDto representationDto = new RepresentationDto();
+        if (StringUtils.isNotBlank(dsdAttribute.getCodelistRepresentationUrn()) || StringUtils.isNotBlank(dsdAttribute.getConceptSchemeRepresentationUrn())) {
+            representationDto.setRepresentationType(AttributeRepresentationTypeEnum.ENUMERATION);
+        } else if (dsdAttribute.getTextFormatRepresentation() != null) {
+            representationDto.setRepresentationType(AttributeRepresentationTypeEnum.TEXT_FORMAT);
+        }
+        representationDto.setCodelistRepresentationUrn(dsdAttribute.getCodelistRepresentationUrn());
+        representationDto.setConceptSchemeRepresentationUrn(dsdAttribute.getConceptSchemeRepresentationUrn());
         return representationDto;
     }
 

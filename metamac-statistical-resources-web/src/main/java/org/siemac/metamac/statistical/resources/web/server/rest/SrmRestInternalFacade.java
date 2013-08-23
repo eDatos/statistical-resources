@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;

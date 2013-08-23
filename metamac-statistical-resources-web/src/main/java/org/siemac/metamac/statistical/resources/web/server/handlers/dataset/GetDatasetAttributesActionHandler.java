@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;

@@ -14,9 +14,6 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemes;
@@ -31,9 +28,11 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organis
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
-import org.siemac.metamac.statistical.resources.web.shared.DTO.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -96,22 +95,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     @Override
     public List<DsdAttributeDto> retrieveDsdAttributes(String dsdUrn) throws MetamacWebException {
         try {
-
-            List<DsdAttributeDto> dsdAttributeDtos = new ArrayList<DsdAttributeDto>();
-
             DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
-            Attributes attributes = dataStructure.getDataStructureComponents().getAttributes();
-
-            if (attributes != null && attributes.getAttributes() != null) {
-
-                for (AttributeBase attributeBase : attributes.getAttributes()) {
-                    if (attributeBase instanceof Attribute) {
-                        DsdAttributeDto dsdAttributeDto = RestMapper.buildDsdAttributeDtoFromAttribute((Attribute) attributeBase);
-                        dsdAttributeDtos.add(dsdAttributeDto);
-                    }
-                }
-            }
-
+            List<DsdAttribute> dsdAttributes = DsdProcessor.getAttributes(dataStructure);
+            List<DsdAttributeDto> dsdAttributeDtos = RestMapper.buildDsdAttributeDtosFromDsdAttributes(dsdAttributes);
             return dsdAttributeDtos;
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
