@@ -28,6 +28,7 @@ import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
+import com.arte.statistic.parser.sdmx.v2_1.domain.TypeSDMXDataMessageEnum;
 
 public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21BaseTest {
 
@@ -39,10 +40,20 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     public void testData() throws Exception {
 
         {
-            // All data
-            // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(DATASET_ID, null, null);
-            WebClient create = WebClient.create("http://localhost:9001/apis/sdmx/data-resources/v2.1/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
-            create.accept("application/vnd.sdmx.genericdata+xml;version=2.1");
+            // All data: generic time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
+
+        {
+            // All data: generic time series with time series format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
             Response findData = create.get();
 
             System.out.println("_____________");
@@ -63,20 +74,35 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     public void testDataKey() throws Exception {
 
         String key = "M.CHF.EUR.SP00.E.2010-08";
-        // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1, DATASET_ID, key, null, null);
-        //
-        // System.out.println("_____________");
-        // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        {
+            // All data: generic time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG/" + key + "?dimensionAtObservation=TIME_PERIOD");
+            create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
+
     }
 
     @Test
     public void testDataKeyWildcards() throws Exception {
 
         String key = "M..EUR.SP00.E.2010-08";
-        // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1, DATASET_ID, key, null, null);
-        //
-        // System.out.println("_____________");
-        // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        {
+            // All data: generic time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG/" + key + "?dimensionAtObservation=TIME_PERIOD");
+            create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
     }
 
     @Override
