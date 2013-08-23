@@ -10,9 +10,10 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeIn
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.AttributeMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.AttributePanel;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeRecord;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
@@ -27,9 +28,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttributesTabUiHandlers> implements DatasetAttributesTabView {
 
-    private VLayout                 panel;
-    private BaseCustomListGrid      listGrid;
-    private AttributeMainFormLayout mainFormLayout;
+    private VLayout            panel;
+    private BaseCustomListGrid listGrid;
+    private AttributePanel     attributePanel;
 
     public DatasetAttributesTabViewImpl() {
 
@@ -48,22 +49,27 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
             @Override
             public void onSelectionChanged(SelectionEvent event) {
                 if (event.getSelectedRecord() instanceof DsdAttributeRecord) {
-                    getUiHandlers().retrieveAttributeInstances(((DsdAttributeRecord) event.getSelectedRecord()).getDsdAttributeDto());
+                    DsdAttributeDto dsdAttributeDto = ((DsdAttributeRecord) event.getSelectedRecord()).getDsdAttributeDto();
+                    if (!CommonUtils.hasPrimaryMeasureRelationshipType(dsdAttributeDto)) {
+                        getUiHandlers().retrieveAttributeInstances(dsdAttributeDto);
+                    } else {
+                        attributePanel.hide();
+                    }
                 }
             }
         });
 
         // MAIN FORM LAYOUT
 
-        mainFormLayout = new AttributeMainFormLayout();
-        mainFormLayout.setVisible(false);
+        attributePanel = new AttributePanel();
+        attributePanel.setVisible(false);
 
         // PANEL LAYOUT
 
         panel = new VLayout();
         panel.setAutoHeight();
         panel.addMember(listGrid);
-        panel.addMember(mainFormLayout);
+        panel.addMember(attributePanel);
     }
 
     @Override
@@ -74,18 +80,18 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     @Override
     public void setAttributes(List<DsdAttributeDto> attributes) {
         listGrid.setData(StatisticalResourcesRecordUtils.getDsdAttributeRecords(attributes));
-        mainFormLayout.hide();
+        attributePanel.hide();
     }
 
     @Override
     public void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
-        mainFormLayout.showAttribute(dsdAttributeDto, dsdAttributeInstanceDtos);
+        attributePanel.showAttribute(dsdAttributeDto, dsdAttributeInstanceDtos);
     }
 
     @Override
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
-        mainFormLayout.setUiHandlers(uiHandlers);
+        attributePanel.setUiHandlers(uiHandlers);
     }
 
     //
@@ -94,6 +100,6 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
 
     @Override
     public void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
-        mainFormLayout.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+        attributePanel.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 }

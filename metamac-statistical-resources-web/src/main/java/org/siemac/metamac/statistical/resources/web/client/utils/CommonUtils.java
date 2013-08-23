@@ -304,6 +304,10 @@ public class CommonUtils {
         return AttributeRepresentationTypeEnum.TEXT_FORMAT.equals(dsdAttributeDto.getAttributeRepresentation().getRepresentationType());
     }
 
+    public static boolean hasPrimaryMeasureRelationshipType(DsdAttributeDto dsdAttributeDto) {
+        return AttributeRelationshipTypeEnum.PRIMARY_MEASURE_RELATIONSHIP.equals(dsdAttributeDto.getAttributeRelationship().getRelationshipType());
+    }
+
     // -----------------------------------------------------------------------------------------
     // METAMAC PORTAL BASE URL
     // -----------------------------------------------------------------------------------------
