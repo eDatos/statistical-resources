@@ -42,6 +42,11 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void executeDuplicationTask(ServiceContext ctx, String duplicationJobKey, TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException {
+        taskservice.processDuplicationTask(ctx, duplicationJobKey, taskInfoDataset, newDatasetId);
+    }
+
+    @Override
     public void markTaskAsFailed(ServiceContext ctx, String job, Exception exception) throws MetamacException {
         taskservice.markTaskAsFailed(ctx, job, exception);
     }

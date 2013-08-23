@@ -81,6 +81,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     public static final String               SCHEDULER_INSTANCE_NAME             = "StatisticalResourcesScheduler";
     public static final String               PREFIX_JOB_IMPORT_DATA              = "job_importdata_";
     public static final String               PREFIX_JOB_RECOVERY_IMPORT_DATA     = "job_recoveryimportdata_";
+    public static final String               PREFIX_JOB_DUPLICATION_DATA         = "job_duplicationdata_";
     public static final String               PREFIX_TRIGGER_IMPORT_DATA          = "trigger_importdata_";
     public static final String               PREFIX_TRIGGER_RECOVERY_IMPORT_DATA = "trigger_recoveryimportdata_";
     public static final String               GROUP_IMPORTATION                   = "importation";
@@ -189,6 +190,82 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
+    public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        // Validation
+        taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset);
+
+        // Job keys
+        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId());
+        TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId());
+
+        // Scheduler an importation job
+        Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+
+        // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
+        JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
+                .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery()
+                .build();
+
+        SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+
+        try {
+            sched.scheduleJob(recoveryImportJob, recoveryImportTrigger);
+        } catch (SchedulerException e) {
+            logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + recoveryImportJobKey.getName() + " has failed", e);
+        }
+
+        return recoveryImportJobKey.getName();
+    }
+
+    // @Override
+    @Override
+    public synchronized String planifyDuplicationDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException {
+        // Validation
+        taskServiceInvocationValidator.checkPlanifyDuplicationDataset(ctx, taskInfoDataset, newDatasetId);
+
+        // Job keys
+        JobKey duplicationJobKey = createJobKeyForDuplicationResource(taskInfoDataset.getDatasetVersionId());
+        TriggerKey duplicationTriggerKey = createTriggerKeyForDuplicationDataset(taskInfoDataset.getDatasetVersionId());
+
+        try {
+            // Scheduler an importation job
+            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+
+            // Validation: There shouldn't be an duplication processing on this dataset
+            if (sched.checkExists(duplicationJobKey)) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
+            }
+
+            // Validation: There shouldn't be a importation job in process, please wait
+            if (sched.checkExists(createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()))) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_IMPORTATION_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
+            }
+
+            // Validation: There shouldn't be a recovery job in process, please wait
+            if (sched.checkExists(createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId()))) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
+            }
+
+            // // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
+            // JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
+            // .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery()
+            // .build();
+            //
+            // SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+            //
+            // try {
+            // sched.scheduleJob(recoveryImportJob, recoveryImportTrigger);
+            // } catch (SchedulerException e) {
+            // logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + recoveryImportJobKey.getName() + " has failed", e);
+            // }
+        } catch (Exception e) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
+                    .build(); // Error
+        }
+
+        return duplicationJobKey.getName();
+    }
+    @Override
     public void processImportationTask(ServiceContext ctx, String importationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
         // Validation
         taskServiceInvocationValidator.checkProcessImportationTask(ctx, importationJobKey, taskInfoDataset);
@@ -212,6 +289,60 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         markTaskAsFinished(ctx, importationJobKey); // Finish the importation
     }
 
+    @Override
+    public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
+
+        try {
+            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()).getName());
+
+            String fileNames = task.getExtensionPoint();
+            String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
+            for (int i = 1; i < names.length; i++) {
+                String dataSourceId = generateDataSourceId(names[i], task.getCreatedDate());
+
+                InternationalStringDto internationalStringDto = new InternationalStringDto();
+                LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+                localisedStringDto.setLabel(dataSourceId);
+                localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+                internationalStringDto.addText(localisedStringDto);
+
+                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+
+                datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeBasicDto);
+            }
+
+            // Delete failed entry
+            getTaskRepository().delete(task);
+        } catch (Exception e) {
+            logger.error("Error while perform a recovery in dataset", e);
+        }
+
+    }
+
+    @Override
+    public void processDuplicationTask(ServiceContext ctx, String duplicationJobKey, TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException {
+        // Validation
+        taskServiceInvocationValidator.checkProcessDuplicationTask(ctx, duplicationJobKey, taskInfoDataset, newDatasetId);
+
+        Task task = retrieveTaskByJob(ctx, duplicationJobKey);
+
+        try {
+            // TODO duplicar el dataset
+            datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
+        } catch (Exception e) {
+            // Convert parser exception to metamac exception
+            MetamacException throwableMetamacException = null;
+            if (e instanceof MetamacException) {
+                throwableMetamacException = (MetamacException) e;
+            } else {
+                throwableMetamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
+                        .build();
+            }
+            throw throwableMetamacException;
+        }
+
+        markTaskAsFinished(ctx, duplicationJobKey); // Finish the importation
+    }
     @Override
     public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
         taskServiceInvocationValidator.checkExistsTaskForResource(ctx, resourceId);
@@ -299,64 +430,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return pagedResult;
     }
 
-    @Override
-    public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
-        // Validation
-        taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset);
-
-        // Job keys
-        JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId());
-        TriggerKey recoveryImportTriggerKey = createTriggerKeyForRecoveryImportationDataset(taskInfoDataset.getDatasetVersionId());
-
-        // Scheduler an importation job
-        Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-        // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-        JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
-                .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery()
-                .build();
-
-        SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
-
-        try {
-            sched.scheduleJob(recoveryImportJob, recoveryImportTrigger);
-        } catch (SchedulerException e) {
-            logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + recoveryImportJobKey.getName() + " has failed", e);
-        }
-
-        return recoveryImportJobKey.getName();
-    }
-
-    @Override
-    public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
-
-        try {
-            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()).getName());
-
-            String fileNames = task.getExtensionPoint();
-            String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
-            for (int i = 1; i < names.length; i++) {
-                String dataSourceId = generateDataSourceId(names[i], task.getCreatedDate());
-
-                InternationalStringDto internationalStringDto = new InternationalStringDto();
-                LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-                localisedStringDto.setLabel(dataSourceId);
-                localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
-                internationalStringDto.addText(localisedStringDto);
-
-                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
-
-                datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeBasicDto);
-            }
-
-            // Delete failed entry
-            getTaskRepository().delete(task);
-        } catch (Exception e) {
-            logger.error("Error while perform a recovery in dataset", e);
-        }
-
-    }
-
     private void executeDormantJobsInThisDataset(String datasetId) {
         // Scheduler an importation job
         Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
@@ -385,12 +458,20 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return new JobKey(PREFIX_JOB_RECOVERY_IMPORT_DATA + resourceId, GROUP_IMPORTATION);
     }
 
+    private JobKey createJobKeyForDuplicationResource(String resourceId) {
+        return new JobKey(PREFIX_JOB_DUPLICATION_DATA + resourceId, GROUP_IMPORTATION);
+    }
+
     private TriggerKey createTriggerKeyForImportationDataset(String datasetId) {
         return new TriggerKey(PREFIX_JOB_IMPORT_DATA + datasetId, GROUP_IMPORTATION);
     }
 
     private TriggerKey createTriggerKeyForRecoveryImportationDataset(String datasetId) {
         return new TriggerKey(PREFIX_JOB_RECOVERY_IMPORT_DATA + datasetId, GROUP_IMPORTATION);
+    }
+
+    private TriggerKey createTriggerKeyForDuplicationDataset(String datasetId) {
+        return new TriggerKey(PREFIX_JOB_DUPLICATION_DATA + datasetId, GROUP_IMPORTATION);
     }
 
     private String extractDatasetIdFormJobKeyImportationDataset(String jobImportKeyName) {

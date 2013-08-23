@@ -1,14 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.Job;
@@ -19,32 +12,26 @@ import org.quartz.JobKey;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskServiceFacade;
-import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ImportDatasetJob implements Job {
+public class DuplicationDatasetJob implements Job {
 
-    private static Logger      logger             = LoggerFactory.getLogger(ImportDatasetJob.class);
+    private static Logger      logger                 = LoggerFactory.getLogger(DuplicationDatasetJob.class);
 
-    public static final String USER               = "user";
-    public static final String FILE_PATHS         = "filePaths";
-    public static final String FILE_NAMES         = "fileNames";
-    public static final String FILE_FORMATS       = "fileFormats";
-    public static final String DATA_STRUCTURE_URN = "dataStructureUrn";
-    public static final String DATASET_VERSION_ID = "datasetVersionId";
+    public static final String USER                   = "user";
+    public static final String DATASET_VERSION_ID     = "datasetVersionId";
+    public static final String NEW_DATASET_VERSION_ID = "newDatasetVersionId";
 
-    private TaskServiceFacade  taskServiceFacade  = null;
+    private TaskServiceFacade  taskServiceFacade      = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
      */
-    public ImportDatasetJob() {
+    public DuplicationDatasetJob() {
     }
 
     public TaskServiceFacade getTaskServiceFacade() {
@@ -67,17 +54,15 @@ public class ImportDatasetJob implements Job {
         ServiceContext serviceContext = new ServiceContext(data.getString(USER), context.getFireInstanceId(), "statistical-resources-core");
 
         try {
-            logger.info("ImportationJob: " + jobKey + " starting at " + new Date());
+            logger.info("DuplicationDatasetJob: " + jobKey + " starting at " + new Date());
 
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
-            taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
-            taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES), data.getString(FILE_FORMATS)));
             taskInfoDataset.setDatasetVersionId(data.getString(DATASET_VERSION_ID));
 
-            getTaskServiceFacade().executeImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
-            logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
+            getTaskServiceFacade().executeDuplicationTask(serviceContext, jobKey.getName(), taskInfoDataset, data.getString(NEW_DATASET_VERSION_ID));
+            logger.info("DuplicationDatasetJob: " + jobKey + " finished at " + new Date());
         } catch (Exception e) {
-            logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed", e);
+            logger.error("DuplicationDatasetJob: the duplication with key " + jobKey.getName() + " has failed", e);
 
             // Concert parser exception to metamac exception
             MetamacException throwableMetamacException = null;
@@ -95,23 +80,5 @@ public class ImportDatasetJob implements Job {
                 logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed and it can't marked as error", e1);
             }
         }
-    }
-
-    private List<FileDescriptor> inflateFileDescriptors(String filePaths, String fileNames, String fileFormats) throws FileNotFoundException, UnsupportedEncodingException {
-        List<FileDescriptor> fileDescriptorDtos = new LinkedList<FileDescriptor>();
-        String[] files = filePaths.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
-        String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
-        String[] formats = fileFormats.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
-
-        for (int i = 0; i < files.length; i++) {
-            FileDescriptor fileDescriptorDto = new FileDescriptor();
-            fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.valueOf(formats[i]));
-            String encoding = StringUtils.isEmpty(System.getProperty("file.encoding")) ? "UTF-8" : System.getProperty("file.encoding");
-            fileDescriptorDto.setFileName(URLDecoder.decode(names[i], encoding));
-            fileDescriptorDto.setFile(new File(URLDecoder.decode(files[i], encoding)));
-            fileDescriptorDtos.add(fileDescriptorDto);
-        }
-
-        return fileDescriptorDtos;
     }
 }

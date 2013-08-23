@@ -27,4 +27,10 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     public void testExecuteRecoveryImportationTask() throws Exception {
         // See integration test in DataManipulateTest
     }
+
+    @Override
+    public void testExecuteDuplicationTask() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
 }

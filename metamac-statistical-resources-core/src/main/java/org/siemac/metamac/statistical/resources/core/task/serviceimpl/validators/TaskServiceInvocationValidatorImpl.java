@@ -29,14 +29,20 @@ public class TaskServiceInvocationValidatorImpl {
         }
     }
 
-    public static void checkProcessImportationTask(String importationJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(importationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
-        checkPlanifyImportationDataset(taskInfoDataset, exceptions);
-    }
-
     public static void checkPlanifyRecoveryImportDataset(TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
+    }
+
+    public static void checkPlanifyDuplicationDataset(TaskInfoDataset taskInfoDataset, String newDatasetId, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(newDatasetId, ServiceExceptionParameters.TASK_INFO_DATASET_NEW_DATASET_VERSION_ID, exceptions);
+    }
+
+    public static void checkProcessImportationTask(String importationJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(importationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
+        checkPlanifyImportationDataset(taskInfoDataset, exceptions);
     }
 
     public static void checkProcessRollbackImportationTask(String recoveryJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
@@ -44,14 +50,20 @@ public class TaskServiceInvocationValidatorImpl {
         checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
     }
 
+    public static void checkProcessDuplicationTask(String duplicationJobKey, TaskInfoDataset taskInfoDataset, String newDatasetId, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(duplicationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(newDatasetId, ServiceExceptionParameters.TASK_INFO_DATASET_NEW_DATASET_VERSION_ID, exceptions);
+        checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
+    }
+
     public static void checkExistsTaskForResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
     }
-    
+
     public static void checkExistImportationTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
     }
-    
+
     public static void checkExistRecoveryImportationTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
     }

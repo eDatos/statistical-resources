@@ -46,7 +46,7 @@ public class RecoveryImportDatasetJob implements Job {
         JobDataMap data = context.getJobDetail().getJobDataMap();
 
         // Execution
-        ServiceContext serviceContext = new ServiceContext(data.getString(USER), context.getFireInstanceId(), "sdmx-srm-core");
+        ServiceContext serviceContext = new ServiceContext(data.getString(USER), context.getFireInstanceId(), "statistical-resources-core");
 
         try {
             logger.info("RecoveryImportationJob: " + jobKey + " starting at " + new Date());
