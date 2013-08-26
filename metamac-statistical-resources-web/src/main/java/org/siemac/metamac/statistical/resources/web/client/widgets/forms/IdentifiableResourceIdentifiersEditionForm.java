@@ -13,15 +13,13 @@ public class IdentifiableResourceIdentifiersEditionForm extends GroupDynamicForm
         super(getConstants().formIdentifiers());
 
         ViewTextItem identifier = new ViewTextItem(IdentifiableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        ViewTextItem uri = new ViewTextItem(IdentifiableResourceDS.URI, getConstants().identifiableStatisticalResourceURI());
         ViewTextItem urn = new ViewTextItem(IdentifiableResourceDS.URN, getConstants().identifiableStatisticalResourceURN());
 
-        setFields(identifier, uri, urn);
+        setFields(identifier, urn);
     }
 
     public void setIdentifiableStatisticalResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
         setValue(IdentifiableResourceDS.CODE, identifiableStatisticalResourceDto.getCode());
-        setValue(IdentifiableResourceDS.URI, identifiableStatisticalResourceDto.getUri());
         setValue(IdentifiableResourceDS.URN, identifiableStatisticalResourceDto.getUrn());
     }
 
