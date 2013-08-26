@@ -47,7 +47,6 @@ public class FillMetadataForCreateResourceUtils {
     
     public static void fillMetadataForCreateIdentifiableResource(IdentifiableStatisticalResource resource, ExternalItem statisticalOperation) {
         fillMetadataForCreateStatistiscalResource(resource, statisticalOperation);
-        resource.setUri(null);
         
         // CODE and URN are setting in specific methods for each entity.
         // - Query Versions: fillMetadataForCreateQuery

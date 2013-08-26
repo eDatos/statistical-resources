@@ -327,8 +327,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, duplicationJobKey);
 
         try {
-            // TODO duplicar el dataset
-            datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
+            // FIXME duplicar el dataset
+            // PENDIENTE DE QUE LA LLAMADA AL STATISTIC_DATASET_REPOSITORY no falle
+            // datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
         } catch (Exception e) {
             // Convert parser exception to metamac exception
             MetamacException throwableMetamacException = null;

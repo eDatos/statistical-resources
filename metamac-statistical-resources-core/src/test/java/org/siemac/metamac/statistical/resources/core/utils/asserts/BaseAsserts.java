@@ -135,7 +135,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEquals(previous.getCode(), next.getCode());
         assertNotNull(next.getUrn());
         assertFalse(next.getUrn().equals(previous.getUrn()));
-        assertEquals(previous.getUri(), next.getUri());
     }
     
     private static void assertEqualsVersioningStatisticalResource(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
@@ -240,7 +239,6 @@ public class BaseAsserts extends CommonAsserts {
 
     public static void assertEqualsIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
         assertEquals(expected.getCode(), actual.getCode());
-        assertEquals(expected.getUri(), actual.getUri());
         assertEquals(expected.getUrn(), actual.getUrn());
 
         assertEqualsStatisticalResource(expected, actual);
@@ -248,7 +246,6 @@ public class BaseAsserts extends CommonAsserts {
     
     public static void assertEqualsVersionedIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
         assertEquals(expected.getCode(), actual.getCode());
-        assertEquals(expected.getUri(), actual.getUri());
 
         assertEqualsStatisticalResource(expected, actual);
     }
@@ -379,7 +376,6 @@ public class BaseAsserts extends CommonAsserts {
 
     protected static void assertEqualsIdentifiableStatisticalResource(IdentifiableStatisticalResource entity, IdentifiableStatisticalResourceDto dto, MapperEnum mapperEnum) {
         assertEquals(entity.getCode(), dto.getCode());
-        assertEquals(entity.getUri(), dto.getUri());
         assertEquals(entity.getUrn(), dto.getUrn());
 
         assertEqualsStatisticalResouce(entity, dto, mapperEnum);

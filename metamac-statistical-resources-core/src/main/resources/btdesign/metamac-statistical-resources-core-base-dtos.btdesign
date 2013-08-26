@@ -22,7 +22,6 @@ Application StatisticalResourcesDto {
 
 		DataTransferObject IdentifiableStatisticalResourceDto extends @StatisticalResourceDto {
 			String code;
-			String uri;
 			String urn;
 		}
 		

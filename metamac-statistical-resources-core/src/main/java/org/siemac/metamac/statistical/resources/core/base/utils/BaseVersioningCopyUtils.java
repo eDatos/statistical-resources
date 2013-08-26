@@ -132,7 +132,6 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         }
         
         target.setCode(source.getCode());
-        target.setUri(source.getUri());
 
         copyStatisticalResource(source, target);
         

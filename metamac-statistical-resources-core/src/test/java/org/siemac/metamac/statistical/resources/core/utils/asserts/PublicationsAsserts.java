@@ -102,7 +102,6 @@ public class PublicationsAsserts extends BaseAsserts {
         assertFilledMetadataForAllElementLevels(chapter.getElementLevel());
         assertNotNull(chapter.getNameableStatisticalResource().getUrn());
         assertNotNull(chapter.getNameableStatisticalResource().getCode());
-        assertNull(chapter.getNameableStatisticalResource().getUri());
     }
 
     public static void assertFilledMetadataForChaptersInFirstLevel(Chapter chapter) {
@@ -117,7 +116,6 @@ public class PublicationsAsserts extends BaseAsserts {
         assertFilledMetadataForAllElementLevels(cube.getElementLevel());
         assertNotNull(cube.getNameableStatisticalResource().getUrn());
         assertNotNull(cube.getNameableStatisticalResource().getCode());
-        assertNull(cube.getNameableStatisticalResource().getUri());
     }
 
     public static void assertFilledMetadataForCubesInFirstLevel(Cube cube) {

@@ -77,7 +77,6 @@ public abstract class BaseInvocationValidator {
 
         // Metadata that must be empty for new entities
         StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getUrn(), addParameter(metadataName, ServiceExceptionSingleParameters.URN), exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getUrn(), addParameter(metadataName, ServiceExceptionSingleParameters.URI), exceptions);
     }
 
     protected static void checkExistingIdentifiableStatisticalResource(IdentifiableStatisticalResource resource, TypeRelatedResourceEnum resourceType, String metadataName,

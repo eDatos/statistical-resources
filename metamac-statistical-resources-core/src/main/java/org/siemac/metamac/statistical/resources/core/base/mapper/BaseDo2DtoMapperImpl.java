@@ -146,7 +146,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         statisticalResourceDoToDto(source, target);
 
         target.setCode(source.getCode());
-        target.setUri(source.getUri());
         target.setUrn(source.getUrn());
     }
 
