@@ -336,7 +336,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor02"));
         resource.addMediator(mockOrganizationUnitExternalItem("mediator01"));
         resource.addMediator(mockOrganizationUnitExternalItem("mediator02"));
-        resource.setCopyrightedDate(new DateTime());
+        resource.setCopyrightedDate(new DateTime().getYear());
         resource.setAccessRights(mockInternationalStringMetadata(resourceCode, "accessRights"));
 
         setSpecialCasesSiemacMetadataStatisticalResourceMock(resource);

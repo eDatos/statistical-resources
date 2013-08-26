@@ -82,7 +82,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.getIsPartOf().addAll(relatedResourceDoCollectionToDtoCollection(source.getIsPartOf()));
 
         target.setCommonMetadata(externalItemDoToDto(source.getCommonMetadata()));
-        target.setCopyrightedDate(dateDoToDto(source.getCopyrightedDate()));
+        target.setCopyrightedDate(source.getCopyrightedDate());
         target.setAccessRights(internationalStringDoToDto(source.getAccessRights()));
     }
     @Override

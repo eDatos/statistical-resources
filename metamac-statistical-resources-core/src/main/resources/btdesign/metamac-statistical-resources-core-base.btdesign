@@ -156,7 +156,7 @@ Application BaseStatisticalResources {
 			- Bag<@RelatedResource> isPartOf cascade="all-delete-orphan" databaseJoinTable="TB_RR_IS_PART_OF" databaseColumn="IS_PART_OF_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//INTELLECTUAL PROPERTY DESCRIPTORS
-			DateTimeTZ copyrightedDate	nullable;
+			Integer copyrightedDate	nullable;
 			- @InternationalString accessRights cascade="all" databaseColumn="ACCESS_RIGHTS_FK" nullable;
 			
 			Repository SiemacMetadataStatisticalResourceRepository {

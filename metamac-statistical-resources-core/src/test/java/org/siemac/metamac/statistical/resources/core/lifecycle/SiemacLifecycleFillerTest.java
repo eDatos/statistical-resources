@@ -122,7 +122,7 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
         verify(lifecycleFiller, times(1)).applySendToPublishedActions(any(ServiceContext.class), any(HasLifecycle.class), any(HasLifecycle.class));
         assertNotNull(mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
-        assertEquals(mockedResource.getLifeCycleStatisticalResource().getValidFrom(), mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
+        assertEquals(Integer.valueOf(mockedResource.getLifeCycleStatisticalResource().getValidFrom().getYear()), mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
     }
 
     // ------------------------------------------------------------------------------------------------------

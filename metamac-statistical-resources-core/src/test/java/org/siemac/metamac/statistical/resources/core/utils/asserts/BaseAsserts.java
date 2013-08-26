@@ -183,7 +183,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
         assertEqualsRelatedResourceCollection(expected.getIsPartOf(), actual.getIsPartOf());
 
-        assertEqualsDate(expected.getCopyrightedDate(), actual.getCopyrightedDate());
+        assertEquals(expected.getCopyrightedDate(), actual.getCopyrightedDate());
         assertEqualsInternationalString(expected.getAccessRights(), actual.getAccessRights());
 
         assertEqualsLifeCycleStatisticalResource(expected, actual);
@@ -293,7 +293,7 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());
 
                 assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata(), mapperEnum);
-                assertEqualsDate(entity.getCopyrightedDate(), dto.getCopyrightedDate());
+                assertEquals(entity.getCopyrightedDate(), dto.getCopyrightedDate());
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
                 break;
                 

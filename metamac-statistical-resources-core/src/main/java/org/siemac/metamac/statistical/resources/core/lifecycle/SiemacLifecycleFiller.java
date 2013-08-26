@@ -45,7 +45,7 @@ public class SiemacLifecycleFiller {
 
     public void applySendToPublishedActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
         lifecycleFiller.applySendToPublishedActions(ctx, resource, previousResource);
-        resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom());
+        resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom().getYear());
 
         // TODO: Metadatos de relaciones entre recursos
     }

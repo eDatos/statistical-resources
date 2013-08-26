@@ -93,7 +93,6 @@ public class LifecycleAsserts extends CommonAsserts {
         assertNotNull(resource.getLifeCycleStatisticalResource().getPublicationUser());
         assertNotNull(resource.getLifeCycleStatisticalResource().getValidFrom());
         assertEquals(ProcStatusEnum.PUBLISHED, resource.getLifeCycleStatisticalResource().getProcStatus());
-
     }
 
 

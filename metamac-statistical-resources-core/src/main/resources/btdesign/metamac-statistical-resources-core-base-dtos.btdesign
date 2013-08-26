@@ -105,7 +105,7 @@ Application StatisticalResourcesDto {
 			- Bag<@RelatedResourceDto> isPartOf;
 			
 			//INTELLECTUAL PROPERTY DESCRIPTORS
-			JAVADATE copyrightedDate;
+			Integer copyrightedDate;
 			- @InternationalStringDto accessRights;
 		}
 	}

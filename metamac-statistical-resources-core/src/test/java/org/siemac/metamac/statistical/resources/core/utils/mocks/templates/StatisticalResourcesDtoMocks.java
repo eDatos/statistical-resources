@@ -241,7 +241,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.addIsPartOf(null);
 
         siemacMetadataStatisticalResourceDto.setCommonMetadata(mockCommonMetadataExternalItemDto());
-        siemacMetadataStatisticalResourceDto.setCopyrightedDate(mockDate());
+        siemacMetadataStatisticalResourceDto.setCopyrightedDate(mockDate().getYear());
         siemacMetadataStatisticalResourceDto.setAccessRights(mockInternationalStringDto());
 
         mockLifeCycleStatisticalResourceDto(siemacMetadataStatisticalResourceDto);
