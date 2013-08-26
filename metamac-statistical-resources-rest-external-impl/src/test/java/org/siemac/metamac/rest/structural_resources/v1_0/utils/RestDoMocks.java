@@ -222,7 +222,7 @@ public class RestDoMocks {
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
         target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
         target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf02", "01.000"));
-        target.setCopyrightedDate(new DateTime(2014, 2, 15, 3, 4, 12, 0));
+        target.setCopyrightedDate(2014);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target);
     }
 

@@ -152,7 +152,7 @@
             <xs:element name="hasPart" type="common:Resources" />
             <xs:element name="isPartOf" type="common:Resources" />
             <xs:element name="rightsHolder" type="common:Resource" />
-            <xs:element name="copyrightDate" type="xs:dateTime" />
+            <xs:element name="copyrightDate" type="xs:int" minOccurs="0"/>
             <xs:element name="license" type="common:InternationalString" />
             <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
             <xs:element name="publicationDate" type="xs:dateTime" />

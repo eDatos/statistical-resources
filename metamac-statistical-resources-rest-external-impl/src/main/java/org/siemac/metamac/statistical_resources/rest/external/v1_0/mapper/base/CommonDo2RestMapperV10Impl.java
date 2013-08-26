@@ -178,7 +178,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         toCommonMetadata(source, target, selectedLanguages);
 
-        target.setCopyrightDate(toDate(source.getCopyrightedDate()));
+        target.setCopyrightDate(source.getCopyrightedDate());
         target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
 
         // Lifecycle
@@ -194,7 +194,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setValidFrom(toDate(source.getValidFrom()));
         target.setValidTo(toDate(source.getValidTo()));
     }
-
     @Override
     public Data toData(DatasetVersion source, List<String> selectedLanguages, Map<String, List<String>> dimensionValuesSelected) throws Exception {
         if (source == null) {
