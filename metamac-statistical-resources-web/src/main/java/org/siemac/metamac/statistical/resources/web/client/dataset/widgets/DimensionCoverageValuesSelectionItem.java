@@ -21,8 +21,8 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.ListGrid;
-import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
-import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -50,7 +50,7 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
         selectedDimensionValuesListGrid = new BaseCustomListGrid();
         selectedDimensionValuesListGrid.setAutoFitData(Autofit.VERTICAL);
-        selectedDimensionValuesListGrid.setAutoFitMaxRecords(5);
+        selectedDimensionValuesListGrid.setAutoFitMaxRecords(8);
         CustomListGridField dimensionField = new CustomListGridField(CodeItemDS.DIMENSION_ID, getConstants().codeItemDimension());
         CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, getConstants().codeItemCode());
         CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, getConstants().codeItemTitle());
@@ -68,18 +68,19 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
         CustomListGrid customListGrid = new CustomListGrid();
         customListGrid.setAutoFitMaxRecords(6);
         customListGrid.setAutoFitData(Autofit.VERTICAL);
+        customListGrid.setCanSelectAll(true);
         customListGrid.setHeaderHeight(40);
         CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, getConstants().codeItemCode());
         CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, getConstants().codeItemTitle());
         customListGrid.setFields(codeField, titleField);
         customListGrid.setHeaderSpans(new HeaderSpan(dimensionId, new String[]{CodeItemDS.CODE, CodeItemDS.TITLE}));
-        customListGrid.addRecordClickHandler(new RecordClickHandler() {
+        customListGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
-            public void onRecordClick(RecordClickEvent event) {
+            public void onSelectionChanged(SelectionEvent event) {
                 if (event.getRecord() instanceof CodeItemRecord) {
                     CodeItemRecord selectedCodeItemRecord = (CodeItemRecord) event.getRecord();
-                    if (event.getViewer().isSelected(selectedCodeItemRecord)) {
+                    if (event.getState()) {
                         // The record is being selected, so it is added to the selected values list
                         CodeItemRecord record = StatisticalResourcesRecordUtils.getCodeItemRecord(dimensionId, selectedCodeItemRecord.getCodeItemDto());
                         selectedDimensionValuesListGrid.addData(record);
@@ -92,7 +93,7 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
                                 criteriaMap.put(CodeItemDS.CODE, selectedCodeItemRecord.getCode());
                                 Record[] records = selectedDimensionValuesListGrid.getRecordList().findAll(criteriaMap);
                                 if (records != null && records.length > 0) {
-                                    // TODO
+                                    selectedDimensionValuesListGrid.removeData(records[0]); // the result should be only one
                                 }
                             }
                         }
