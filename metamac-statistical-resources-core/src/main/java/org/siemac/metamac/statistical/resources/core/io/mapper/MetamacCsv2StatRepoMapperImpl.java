@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -42,8 +42,8 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
 
         for (CsvObservationAttribute csvObservationAttribute : observation.getAttributes()) {
             // All attributes of CSV are in observation level
-            AttributeDto attributeDto = processAttribute(observationExtendedDto.getCodesDimension(), csvObservationAttribute);
-            observationExtendedDto.addAttribute(attributeDto);
+            AttributeObservationDto attributeObservationDto = processAttribute(observationExtendedDto.getCodesDimension(), csvObservationAttribute);
+            observationExtendedDto.addAttribute(attributeObservationDto);
         }
 
         return observationExtendedDto;
@@ -65,14 +65,13 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
      * @param idValuePair
      * @return AttributeDto
      */
-    private AttributeDto processAttribute(List<CodeDimensionDto> keys, CsvObservationAttribute csvObservationAttribute) {
-        AttributeDto attributeDto = new AttributeDto();
+    private AttributeObservationDto processAttribute(List<CodeDimensionDto> keys, CsvObservationAttribute csvObservationAttribute) {
         if (StringUtils.isEmpty(csvObservationAttribute.getAttributeValue())) {
             return null;
         }
 
         // Keys
-        attributeDto.getCodesDimension().addAll(keys);
+        // attributeDto.getCodesDimension().addAll(keys);
 
         // Data
         InternationalStringDto internationalStringDto = new InternationalStringDto();
@@ -83,10 +82,8 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        attributeDto.setValue(internationalStringDto);
+        AttributeObservationDto attributeObservationDto = new AttributeObservationDto(csvObservationAttribute.getAttributeId(), internationalStringDto);
 
-        // Attribute Id
-        attributeDto.setAttributeId(csvObservationAttribute.getAttributeId());
-        return attributeDto;
+        return attributeObservationDto;
     }
 }

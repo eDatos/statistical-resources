@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -15,7 +14,6 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestI
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -91,68 +89,14 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     @Override
     public void insertDataAndAttributes(DataContainer dataContainer) throws Exception {
         List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
-        List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
 
         // Transform Data y Attributes (series or observation level) into repository model
-        metamac2StatRepoMapper.populateDatas(dataContainer, this.validateDataVersusDsd.getAttributesProcessorMap(), dataDtos, attributeDtos, this.dataSourceID);
+        metamac2StatRepoMapper.populateDatas(dataContainer, this.validateDataVersusDsd.getAttributesProcessorMap(), dataDtos, this.dataSourceID);
 
         // Persist Observations and observation level attributes
         if (!dataDtos.isEmpty()) {
             this.validateDataVersusDsd.checkObservation(dataDtos);
             datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos);
-        }
-    }
-
-    /**
-     * THIS CODE IS UNUSED because in Metamac the attributes that not are in observation level are not imported.
-     * The code is here for demo purposes.
-     * 
-     * @param dataContainer
-     * @throws Exception
-     */
-    @SuppressWarnings("unused")
-    private void _UNUSED_insertDataAndAttributes(DataContainer dataContainer) throws Exception {
-
-        List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();
-        List<AttributeDto> attributeDtos = new LinkedList<AttributeDto>();
-
-        // Transform Data y Attributes (series or observation level) into repository model
-        metamac2StatRepoMapper.populateDatas(dataContainer, this.validateDataVersusDsd.getAttributesProcessorMap(), dataDtos, attributeDtos, this.dataSourceID);
-
-        // Transform Attributes (group level) into repository model
-        metamac2StatRepoMapper.processGroupAttribute(dataContainer.getGroups(), attributeDtos, this.validateDataVersusDsd.getMandatoryAttributeIdsAtObservationLevel());
-
-        // Transform Attributes (dataset level) into repository model
-        metamac2StatRepoMapper.processDatasetAttribute(dataContainer.getAttributes(), attributeDtos);
-
-        // Process attributes: The attributes can appears flat on the XML. So you have to group them. According to the DSD definition.
-        // Note: The observation level attributes need not be flattened.
-        List<AttributeDto> compactedAttributes = new ArrayList<AttributeDto>();
-        for (AttributeDto attributeDto : attributeDtos) {
-
-            if (this.validateDataVersusDsd.getAttributesProcessorMap().containsKey(attributeDto.getAttributeId())) {
-                String attributeCustomKey = metamac2StatRepoMapper.generateAttributeKeyInAttachmentLevel(attributeDto,
-                        this.validateDataVersusDsd.getAttributesProcessorMap().get(attributeDto.getAttributeId()).getAttributeRelationship(), this.validateDataVersusDsd.getGroupDimensionMapInfo());
-
-                // If attribute is not processed
-                if (!this.keyAttributesAdded.contains(attributeCustomKey)) {
-                    this.keyAttributesAdded.add(attributeCustomKey);
-                    compactedAttributes.add(attributeDto);
-                }
-            } else {
-                // This is a validation error but for performance improvements the validation runs later
-            }
-        }
-
-        // Persist Observations and attributes
-        if (!dataDtos.isEmpty()) {
-            this.validateDataVersusDsd.checkObservation(dataDtos);
-            datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepositoryDto.getDatasetId(), dataDtos);
-        }
-
-        if (!compactedAttributes.isEmpty()) {
-            this.validateDataVersusDsd.checkAttributes(compactedAttributes);
-            datasetRepositoriesServiceFacade.createAttributes(datasetRepositoryDto.getDatasetId(), compactedAttributes);
         }
     }
 

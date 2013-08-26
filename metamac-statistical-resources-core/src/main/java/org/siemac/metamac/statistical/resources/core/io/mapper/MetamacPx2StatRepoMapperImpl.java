@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -49,7 +49,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
     private StatisticalResourcesConfiguration statisticalResourcesConfiguration;
 
     @Override
-    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, List<AttributeBasicDto>> attributesObservations) throws MetamacException {
+    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, AttributeObservationDto> attributesObservations) throws MetamacException {
 
         ObservationExtendedDto observationExtendedDto = null;
 
@@ -79,15 +79,13 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         return observationExtendedDto;
     }
 
-    private AttributeBasicDto transformDotCode2Attribute(String observationValue) throws MetamacException {
+    private AttributeObservationDto transformDotCode2Attribute(String observationValue) throws MetamacException {
 
-        AttributeBasicDto obsConfAttr = null;
+        AttributeObservationDto obsConfAttr = null;
 
         Matcher matching = PATTERN_DOT.matcher(observationValue);
 
         if (matching.matches()) {
-            obsConfAttr = new AttributeBasicDto();
-            obsConfAttr.setAttributeId(ATTR_OBS_CONF);
 
             String group = matching.group(1);
             String value = StringUtils.EMPTY;
@@ -114,7 +112,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            obsConfAttr.setValue(internationalStringDto);
+            obsConfAttr = new AttributeObservationDto(ATTR_OBS_CONF, internationalStringDto);
         }
 
         return obsConfAttr;
@@ -131,53 +129,49 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
 
     /**
      * Transform observations attributes (only attributes for one observation)
-     * Only are valids CELLNOTE y CELNOTEX attributes.
+     * Only are valid CELLNOTE y CELNOTEX attributes.
      * 
      * @return Map with key = unique key of observations; value = list of attributes of observation
      */
     @Override
-    public Map<String, List<AttributeBasicDto>> toAttributesObservations(PxModel pxModel, String preferredLanguage, List<ComponentInfo> dimensionsInfos, Map<String, Integer> dimensionsOrderPxMap)
+    public Map<String, AttributeObservationDto> toAttributesObservations(PxModel pxModel, String preferredLanguage, List<ComponentInfo> dimensionsInfos, Map<String, Integer> dimensionsOrderPxMap)
             throws MetamacException {
 
-        Map<String, List<AttributeBasicDto>> attributes = new HashMap<String, List<AttributeBasicDto>>();
+        Map<String, AttributeObservationDto> attributes = new HashMap<String, AttributeObservationDto>();
 
         for (PxAttribute pxAttributeDto : pxModel.getAttributesObservations()) {
             if (PxAttributeCodes.CELLNOTE.equals(pxAttributeDto.getIdentifier()) || PxAttributeCodes.CELLNOTEX.equals(pxAttributeDto.getIdentifier())) {
-
-                AttributeDto attributeDto = new AttributeDto();
-                attributeDto.setAttributeId(ATTR_OBS_NOTE);
 
                 InternationalStringDto internationalString = toInternationalStringStatisticRepository(pxAttributeDto.getValue(), preferredLanguage, pxModel.getLanguage());
                 if (internationalString == null) {
                     continue;
                 }
-                attributeDto.setValue(internationalString);
+
+                AttributeObservationDto attributeObservationDto = new AttributeObservationDto(ATTR_OBS_NOTE, internationalString);
 
                 // key
+                List<String> codesPxAttribute = new ArrayList<String>(dimensionsInfos.size());
                 for (ComponentInfo componentInfo : dimensionsInfos) {
                     Integer order = dimensionsOrderPxMap.get(componentInfo.getCode());
                     if (order != null) {
                         PxAttributeDimension pxAttributeDimension = pxAttributeDto.getDimensions().get(order);
-                        CodeDimensionDto codeDimensionDto = new CodeDimensionDto();
-                        codeDimensionDto.setDimensionId(pxAttributeDimension.getDimension());
-                        codeDimensionDto.setCodeDimensionId(pxAttributeDimension.getDimensionCode());
-                        attributeDto.addCodesDimension(codeDimensionDto);
+                        codesPxAttribute.add(pxAttributeDimension.getDimensionCode());
                     }
                 }
-                String uniqueKey = DtoUtils.generateUniqueKey(attributeDto.getCodesDimension());
+                String uniqueKey = DtoUtils.generateUniqueKeyWithCodes(codesPxAttribute);
                 if (!attributes.containsKey(uniqueKey)) {
-                    attributes.put(uniqueKey, new ArrayList<AttributeBasicDto>());
-                    attributes.get(uniqueKey).add(attributeDto);
+                    attributes.put(uniqueKey, attributeObservationDto);
                 } else {
-                    List<AttributeBasicDto> previousObsNotes = attributes.get(uniqueKey);
-                    previousObsNotes.get(0).setValue(concatInternationalStrings(previousObsNotes.get(0).getValue(), attributeDto.getValue()));
+                    AttributeObservationDto previousObsNotes = attributes.get(uniqueKey);
+                    previousObsNotes.setValue(concatInternationalStrings(previousObsNotes.getValue(), attributeObservationDto.getValue()));
                 }
             }
         }
 
         return attributes;
     }
-    public void addValidAttributesForCurrentObservation(List<CodeDimensionDto> keys, Map<String, List<AttributeBasicDto>> attributesObservations, ObservationExtendedDto observationExtendedDto,
+
+    public void addValidAttributesForCurrentObservation(List<CodeDimensionDto> keys, Map<String, AttributeObservationDto> attributesObservations, ObservationExtendedDto observationExtendedDto,
             final List<String> codesDimension, int index) {
 
         if (attributesObservations == null || attributesObservations.isEmpty()) {
@@ -187,21 +181,19 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         if (index == keys.size()) {
             String generateUniqueKeyWithCodes = DtoUtils.generateUniqueKeyWithCodes(codesDimension);
             if (attributesObservations.get(generateUniqueKeyWithCodes) != null) {
-                observationExtendedDto.getAttributes().addAll(attributesObservations.get(generateUniqueKeyWithCodes));
+                observationExtendedDto.getAttributes().add(attributesObservations.get(generateUniqueKeyWithCodes));
             }
-
             return;
         }
 
-        // Generate Keys
+        // Generate Keys, only two codes by dimension, the '*' and the specific value
 
-        // One key with '*'
+        // One code with '*'
         List<String> candidateCodesDimension = new LinkedList<String>(codesDimension);
         candidateCodesDimension.add("*");
-
         addValidAttributesForCurrentObservation(keys, attributesObservations, observationExtendedDto, candidateCodesDimension, index + 1);
 
-        // One key with the specific value
+        // One code with the specific value
         candidateCodesDimension = new LinkedList<String>(codesDimension);
         candidateCodesDimension.add(keys.get(index).getCodeDimensionId());
         addValidAttributesForCurrentObservation(keys, attributesObservations, observationExtendedDto, candidateCodesDimension, index + 1);

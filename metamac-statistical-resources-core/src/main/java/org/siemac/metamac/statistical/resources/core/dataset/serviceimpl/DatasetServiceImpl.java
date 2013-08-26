@@ -70,8 +70,8 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesC
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
@@ -213,9 +213,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            AttributeBasicDto attributeBasicDto = new AttributeBasicDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+            AttributeObservationDto attributeObservationDto = new AttributeObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
 
-            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(ManipulateDataUtils.DATA_SOURCE_ID, 0, attributeBasicDto);
+            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(ManipulateDataUtils.DATA_SOURCE_ID, 0, attributeObservationDto);
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getCode());
         }

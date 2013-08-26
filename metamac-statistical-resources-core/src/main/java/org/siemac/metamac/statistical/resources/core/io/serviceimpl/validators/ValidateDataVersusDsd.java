@@ -235,7 +235,7 @@ public class ValidateDataVersusDsd {
             checkAttributeEnumeratedRepresentation(attributeDto.getAttributeId(), value, exceptions);
 
             // Non Enumerated representation
-            checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), value, attributeDto.getUniqueKey(), exceptions);
+            checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), value, generateKey(attributeDto.getCodesByDimension()), exceptions);
 
             if (exceptions.size() != previousExceptionSize) {
                 continue;
@@ -244,6 +244,12 @@ public class ValidateDataVersusDsd {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
+    private String generateKey(Map<String, List<String>> codesByDimension) {
+        // TODO generar key a partir del nuevo objeto del repository, revisar las keys en los mensajes de error.
+        return "";
+    }
+
     @SuppressWarnings("unchecked")
     private void checkDimensionEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // Enumerated representation

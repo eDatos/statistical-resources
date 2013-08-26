@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -306,9 +306,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
                 internationalStringDto.addText(localisedStringDto);
 
-                AttributeBasicDto attributeBasicDto = new AttributeBasicDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+                AttributeObservationDto attributeObservationDto = new AttributeObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
 
-                datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeBasicDto);
+                datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeObservationDto);
             }
 
             // Delete failed entry
@@ -327,9 +327,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, duplicationJobKey);
 
         try {
-            // FIXME duplicar el dataset
-            // PENDIENTE DE QUE LA LLAMADA AL STATISTIC_DATASET_REPOSITORY no falle
-            // datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
+            // TODO duplicar el dataset
+            datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
         } catch (Exception e) {
             // Convert parser exception to metamac exception
             MetamacException throwableMetamacException = null;

@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -25,15 +25,23 @@ public class ManipulateDataUtils {
      * @param dataSourceId
      * @return AttributeDto
      */
-    public static AttributeDto createDataSourceIdentificationAttribute(List<CodeDimensionDto> keys, String dataSourceId) throws MetamacException {
-        AttributeDto attributeDto = new AttributeDto();
+    public static AttributeObservationDto createDataSourceIdentificationAttribute(List<CodeDimensionDto> keys, String dataSourceId) throws MetamacException {
 
         if (StringUtils.isEmpty(dataSourceId)) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.TASK_DATASOURCE_ID).build();
         }
 
         // Keys
-        attributeDto.getCodesDimension().addAll(keys);
+        // Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
+        // for (CodeDimensionDto codeDimensionDto : keys) {
+        // if (codesByDimension.containsKey(codeDimensionDto.getDimensionId())) {
+        // codesByDimension.get(codeDimensionDto.getDimensionId()).add(codeDimensionDto.getCodeDimensionId());
+        // } else {
+        // List<String> codes = new LinkedList<String>();
+        // codes.add(codeDimensionDto.getCodeDimensionId());
+        // }
+        // }
+        // attributeDto..setCodesByDimension(codesByDimension);
 
         // Data
         InternationalStringDto internationalStringDto = new InternationalStringDto();
@@ -44,10 +52,8 @@ public class ManipulateDataUtils {
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        attributeDto.setValue(internationalStringDto);
+        AttributeObservationDto attributeDto = new AttributeObservationDto(DATA_SOURCE_ID, internationalStringDto);
 
-        // Attribute Id
-        attributeDto.setAttributeId(DATA_SOURCE_ID);
         return attributeDto;
     }
 }

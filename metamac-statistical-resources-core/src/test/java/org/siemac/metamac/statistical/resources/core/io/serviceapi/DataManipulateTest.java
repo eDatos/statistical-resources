@@ -334,6 +334,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey).build();
         PagedResult<Task> pagedResult = taskService.findTasksByCondition(serviceContext, conditionList, PagingParameter.noLimits());
         assertTrue(pagedResult.getValues().isEmpty());
+        waitUntilJobFinished();
     }
 
     @Test

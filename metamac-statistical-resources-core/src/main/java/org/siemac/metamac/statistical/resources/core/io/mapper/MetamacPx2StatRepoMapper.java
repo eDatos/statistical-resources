@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.px.domain.PxObservation;
@@ -18,7 +18,7 @@ public interface MetamacPx2StatRepoMapper {
     /**
      * Transform to observation
      */
-    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, List<AttributeBasicDto>> attributesObservations) throws MetamacException;
+    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, AttributeObservationDto> attributesObservations) throws MetamacException;
 
     /**
      * Calculate map of attributes
@@ -28,7 +28,7 @@ public interface MetamacPx2StatRepoMapper {
      * @return
      * @throws MetamacException
      */
-    public Map<String, List<AttributeBasicDto>> toAttributesObservations(PxModel pxModel, String preferredLanguage, List<ComponentInfo> dimensionsInfos, Map<String, Integer> dimensionsOrderPxMap)
+    public Map<String, AttributeObservationDto> toAttributesObservations(PxModel pxModel, String preferredLanguage, List<ComponentInfo> dimensionsInfos, Map<String, Integer> dimensionsOrderPxMap)
             throws MetamacException;
 
     /**
