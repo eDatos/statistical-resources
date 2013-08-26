@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
@@ -19,6 +20,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
@@ -26,6 +28,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstantsPrivate;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,9 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
     @Autowired
     private SrmRestExternalFacade  srmRestExternalFacade;
+
+    @Autowired
+    private ConfigurationService   configurationService;
 
     @Override
     public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -125,7 +131,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setDateNextUpdate(commonDo2RestMapper.toDate(source.getDateNextUpdate()));
         target.setUpdateFrequency(commonDo2RestMapper.toResourceExternalItemSrm(source.getUpdateFrequency(), selectedLanguages));
         target.setStatisticOfficiality(toStatisticOfficiality(source.getStatisticOfficiality(), selectedLanguages));
-        target.setBibliographicCitation(toBibliographicCitation(source.getBibliographicCitation(), toDatasetLink(source), selectedLanguages));
+        target.setBibliographicCitation(toBibliographicCitation(source, source.getBibliographicCitation(), selectedLanguages));
 
         // StatisticalResource and other
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
@@ -194,7 +200,8 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
-    private InternationalString toBibliographicCitation(org.siemac.metamac.core.common.ent.domain.InternationalString sources, String selfLink, List<String> selectedLanguages) {
+    private InternationalString toBibliographicCitation(DatasetVersion datasetVersion, org.siemac.metamac.core.common.ent.domain.InternationalString sources, List<String> selectedLanguages)
+            throws MetamacException {
         if (sources == null) {
             return null;
         }
@@ -203,10 +210,24 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
             if (selectedLanguages.contains(source.getLocale())) {
                 LocalisedString target = new LocalisedString();
                 target.setLang(source.getLocale());
-                target.setValue(source.getLabel().replace(StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN, selfLink));
+                String datasetPortalLink = toDatasetPortalLink(datasetVersion);
+                target.setValue(source.getLabel().replace(StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN, datasetPortalLink));
                 targets.getTexts().add(target);
             }
         }
         return targets;
+    }
+
+    private String toDatasetPortalLink(DatasetVersion source) throws MetamacException {
+        String portalWeb = configurationService.retrievePortalWebApplicationUrlBase();
+        String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
+        String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
+        String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
+
+        String link = RestUtils.createLink(portalWeb, RestExternalConstantsPrivate.PORTAL_PATH_DATASETS);
+        link = RestUtils.createLink(link, agencyID);
+        link = RestUtils.createLink(link, resourceID);
+        link = RestUtils.createLink(link, version);
+        return link;
     }
 }

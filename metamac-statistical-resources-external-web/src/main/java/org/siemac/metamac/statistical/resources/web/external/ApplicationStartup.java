@@ -48,6 +48,8 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_SRM_EXTERNAL_API);
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
+        // Web application
+        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
         // Misc
         configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.METAMAC_EDITION_LANGUAGES);
 

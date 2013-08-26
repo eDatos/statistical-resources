@@ -30,6 +30,12 @@
     <entry key="metamac.common_metadata.rest.external">http://FILL_ME_WITH_HOST_AND_PORT/FILL_ME_WITH_COMMON_METADATA_EXTERNAL_APP/apis/cmetadata</entry>
     
     <!--  ********************************************************************************************** -->
+    <!--  **************************** WEB APPLICATIONS  *********************************************** -->
+    <!--  ********************************************************************************************** -->
+    
+    <entry key="metamac.portal.web.external">http://FILL_ME_WITH_HOST_AND_PORT/FILL_ME_WITH_STATISTICAL_RESOURCES_EXTERNAL_APP/apis/statistical-resources</entry>
+    
+    <!--  ********************************************************************************************** -->
     <!--  **************************** MISC ************************************************************ -->
     <!--  ********************************************************************************************** -->
     <entry key="metamac.edition.languages">FILL_ME_WITH_LANGUAGES</entry>

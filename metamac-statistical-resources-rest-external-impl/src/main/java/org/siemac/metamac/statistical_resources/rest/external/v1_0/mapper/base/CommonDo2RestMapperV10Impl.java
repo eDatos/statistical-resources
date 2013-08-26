@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
-import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
+import static org.siemac.metamac.statistical_resources.rest.external.RestExternalConstantsPrivate.SERVICE_CONTEXT;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
