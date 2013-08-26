@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -242,7 +242,7 @@ public class SdmxDataCoreMocks {
         return set;
     }
 
-    public static AttributeBasicDto createAttributeDto(String attributeId, String value) {
+    public static AttributeObservationDto createAttributeDto(String attributeId, String value) {
         InternationalStringDto internationalStringDto = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
         localisedStringDto.setLabel(value);
@@ -251,6 +251,6 @@ public class SdmxDataCoreMocks {
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        return new AttributeBasicDto(attributeId, internationalStringDto);
+        return new AttributeObservationDto(attributeId, internationalStringDto);
     }
 }
