@@ -20,19 +20,19 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 public interface StatisticalResourcesV1_0 {
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("datasets")
     Datasets findDatasets(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
             @QueryParam("lang") List<String> lang);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("datasets/{agencyID}")
     Datasets findDatasets(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
             @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("datasets/{agencyID}/{resourceID}")
     Datasets findDatasets(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy,
             @QueryParam("limit") String limit, @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
@@ -44,19 +44,19 @@ public interface StatisticalResourcesV1_0 {
             @QueryParam("fields") String fields, @QueryParam("dim") String dim);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("collections")
     Collections findCollections(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
             @QueryParam("lang") List<String> lang);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("collections/{agencyID}")
     Collections findCollections(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
             @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("collections/{agencyID}/{resourceID}")
     Collections findCollections(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy,
             @QueryParam("limit") String limit, @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
@@ -68,13 +68,13 @@ public interface StatisticalResourcesV1_0 {
             @QueryParam("fields") String fields);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("queries")
     Queries findQueries(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
             @QueryParam("lang") List<String> lang);
 
     @GET
-    @Produces("application/xml")
+    @Produces({"application/xml", "application/json"})
     @Path("queries/{agencyID}")
     Queries findQueries(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
             @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
