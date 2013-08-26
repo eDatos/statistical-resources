@@ -522,7 +522,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
-        Resource target = source;
+        Resource target = new Resource();
         toResource(source, target, selectedLanguages);
         return target;
     }
