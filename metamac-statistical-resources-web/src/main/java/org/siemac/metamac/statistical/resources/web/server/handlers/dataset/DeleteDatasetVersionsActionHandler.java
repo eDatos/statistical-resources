@@ -28,9 +28,9 @@ public class DeleteDatasetVersionsActionHandler extends SecurityActionHandler<De
             for (String urn : action.getUrns()) {
                 statisticalResourcesServiceFacade.deleteDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), urn);
             }
+            return new DeleteDatasetVersionsResult();
         } catch (MetamacException e) {
-            WebExceptionUtils.createMetamacWebException(e);
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
-        return new DeleteDatasetVersionsResult();
     }
 }
