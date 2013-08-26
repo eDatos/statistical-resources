@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalR
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -25,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeInstanceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.IdentifiableResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
@@ -201,11 +203,24 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     // Codes
 
     public static CodeItemRecord getCodeItemRecord(CodeItemDto codeItemDto) {
+        return getCodeItemRecord(null, codeItemDto);
+    }
+
+    public static CodeItemRecord getCodeItemRecord(String dimensionId, CodeItemDto codeItemDto) {
         CodeItemRecord record = new CodeItemRecord();
         record.setCode(codeItemDto.getCode());
         record.setTitle(codeItemDto.getTitle());
+        record.setDimensionId(dimensionId);
         record.setCodeItemDto(codeItemDto);
         return record;
+    }
+
+    public static CodeItemRecord[] getCodeItemRecords(List<CodeItemDto> codeItemDtos) {
+        CodeItemRecord[] records = new CodeItemRecord[codeItemDtos.size()];
+        for (int i = 0; i < codeItemDtos.size(); i++) {
+            records[i] = getCodeItemRecord(codeItemDtos.get(i));
+        }
+        return records;
     }
 
     public static TemporalCodeRecord getTemporalCodeRecord(TemporalCodeDto temporalCodeDto) {
@@ -259,6 +274,31 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         DsdAttributeRecord[] records = new DsdAttributeRecord[dsdAttributeDtos.size()];
         for (int i = 0; i < dsdAttributeDtos.size(); i++) {
             records[i] = getDsdAttributeRecord(dsdAttributeDtos.get(i));
+        }
+        return records;
+    }
+
+    //
+    // DSD ATTRIBUTE INSTANCES
+    //
+
+    public static DsdAttributeInstanceRecord getDsdAttributeInstanceRecord(DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        DsdAttributeInstanceRecord record = new DsdAttributeInstanceRecord();
+        if (dsdAttributeInstanceDto.getValue() != null) {
+            if (dsdAttributeInstanceDto.getValue().getExternalItemValue() != null) {
+                record.setExternalItemValue(dsdAttributeInstanceDto.getValue().getExternalItemValue());
+            } else {
+                record.setStringValue(dsdAttributeInstanceDto.getValue().getStringValue());
+            }
+        }
+        record.setDsdAttributeInstaceDto(dsdAttributeInstanceDto);
+        return record;
+    }
+
+    public static DsdAttributeInstanceRecord[] getDsdAttributeInstanceRecords(List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
+        DsdAttributeInstanceRecord[] records = new DsdAttributeInstanceRecord[dsdAttributeInstanceDtos.size()];
+        for (int i = 0; i < dsdAttributeInstanceDtos.size(); i++) {
+            records[i] = getDsdAttributeInstanceRecord(dsdAttributeInstanceDtos.get(i));
         }
         return records;
     }

@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
-import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
@@ -15,7 +14,7 @@ public abstract class AttributeBaseForm extends GroupDynamicForm {
 
     protected DsdAttributeDto                dsdAttributeDto;
 
-    public void setDsdAttributeDto(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+    public void setAttribute(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         clearForm();
 
         this.dsdAttributeDto = dsdAttributeDto;
@@ -29,7 +28,7 @@ public abstract class AttributeBaseForm extends GroupDynamicForm {
     }
 
     public AttributeBaseForm() {
-        super(StringUtils.EMPTY);
+        super("Attribute");
     }
 
     protected void clearForm() {

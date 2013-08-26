@@ -7,6 +7,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
@@ -92,6 +93,11 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
         attributePanel.setUiHandlers(uiHandlers);
+    }
+
+    @Override
+    public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
+        attributePanel.setDimensionCoverageValues(dimensionId, codeItemDtos);
     }
 
     //

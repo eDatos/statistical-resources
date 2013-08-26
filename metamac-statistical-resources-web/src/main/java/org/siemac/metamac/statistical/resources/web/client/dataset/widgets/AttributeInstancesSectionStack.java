@@ -8,6 +8,7 @@ import java.util.List;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeInstanceDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
@@ -15,9 +16,13 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 
+import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
+
+    private CustomToolStripButton newInstanceButton;
+    private CustomToolStripButton deleteInstanceButton;
 
     public AttributeInstancesSectionStack() {
         super(new BaseCustomListGrid(), getConstants().datasetAttributeInstances(), "versionSectionStackStyle");
@@ -25,10 +30,10 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
         // ToolStrip
 
         ToolStrip toolStrip = new ToolStrip();
-        CustomToolStripButton newInstance = new CustomToolStripButton(MetamacWebCommon.getConstants().actionNew(), GlobalResources.RESOURCE.newListGrid().getURL());
-        CustomToolStripButton deleteInstance = new CustomToolStripButton(MetamacWebCommon.getConstants().actionDelete(), GlobalResources.RESOURCE.deleteListGrid().getURL());
-        toolStrip.addButton(newInstance);
-        toolStrip.addButton(deleteInstance);
+        newInstanceButton = new CustomToolStripButton(MetamacWebCommon.getConstants().actionNew(), GlobalResources.RESOURCE.newListGrid().getURL());
+        deleteInstanceButton = new CustomToolStripButton(MetamacWebCommon.getConstants().actionDelete(), GlobalResources.RESOURCE.deleteListGrid().getURL());
+        toolStrip.addButton(newInstanceButton);
+        toolStrip.addButton(deleteInstanceButton);
 
         // ListGrid
 
@@ -41,10 +46,16 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
 
     public void showInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
         setSectionTitle(getMessages().datasetAttributeIntances(dsdAttributeDto.getIdentifier()));
+        listGrid.setData(StatisticalResourcesRecordUtils.getDsdAttributeInstanceRecords(dsdAttributeInstanceDtos));
         show();
     }
 
-    public void setSectionTitle(String title) {
+    public HasClickHandlers getNewInstanceButton() {
+        return newInstanceButton;
+    }
+
+    private void setSectionTitle(String title) {
         defaultSection.setTitle(title);
+        markForRedraw();
     }
 }

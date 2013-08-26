@@ -33,6 +33,8 @@ public class RestMapper {
     public static RelationshipDto buildRelationShipDtoFromAttributeRelationship(AttributeRelationship attributeRelationship) {
         RelationshipDto relationshipDto = new RelationshipDto();
         relationshipDto.setRelationshipType(getTypeRelathionship(attributeRelationship));
+        relationshipDto.setDimensions(attributeRelationship.getDimensions());
+        relationshipDto.setGroup(attributeRelationship.getGroup());
         return relationshipDto;
     }
 

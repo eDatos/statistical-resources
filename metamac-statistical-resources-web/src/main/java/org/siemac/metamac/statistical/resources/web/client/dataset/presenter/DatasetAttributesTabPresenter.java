@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -24,6 +25,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAtt
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
@@ -55,13 +58,14 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     private final DispatchAsync dispatcher;
     private final PlaceManager  placeManager;
 
-    private String              datasetUrn;
+    private String              datasetVersionUrn;
 
     public interface DatasetAttributesTabView extends View, HasUiHandlers<DatasetAttributesTabUiHandlers> {
 
         void setAttributes(List<DsdAttributeDto> attributes);
         void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
         void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
+        void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos);
     }
 
     @ProxyCodeSplit
@@ -127,8 +131,8 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
     private void loadInitialData() {
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
-        datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
-        retrieveAttributes(datasetUrn);
+        datasetVersionUrn = CommonUtils.generateDatasetUrn(datasetCode);
+        retrieveAttributes(datasetVersionUrn);
     }
 
     private void retrieveAttributes(String datasetUrn) {
@@ -143,11 +147,22 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
     @Override
     public void retrieveAttributeInstances(final DsdAttributeDto dsdAttributeDto) {
-        dispatcher.execute(new GetDatasetAttributeInstancesAction(datasetUrn, dsdAttributeDto.getIdentifier()), new WaitingAsyncCallbackHandlingError<GetDatasetAttributeInstancesResult>(this) {
+        dispatcher.execute(new GetDatasetAttributeInstancesAction(datasetVersionUrn, dsdAttributeDto.getIdentifier()), new WaitingAsyncCallbackHandlingError<GetDatasetAttributeInstancesResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDatasetAttributeInstancesResult result) {
                 getView().setAttributeInstances(dsdAttributeDto, result.getDsdAttributeInstanceDtos());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDimensionCoverage(final String dimensionId, MetamacWebCriteria metamacWebCriteria) {
+        dispatcher.execute(new GetDatasetDimensionCoverageAction(datasetVersionUrn, dimensionId, metamacWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetDimensionCoverageResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetDimensionCoverageResult result) {
+                getView().setDimensionCoverageValues(dimensionId, result.getCodesDimension());
             }
         });
     }

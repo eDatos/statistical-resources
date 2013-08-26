@@ -8,7 +8,6 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class CodeItemRecord extends ListGridRecord {
 
     public CodeItemRecord() {
-        super();
     }
 
     public void setCode(String value) {
@@ -25,6 +24,10 @@ public class CodeItemRecord extends ListGridRecord {
 
     public String getTitle() {
         return getAttributeAsString(CodeItemDS.TITLE);
+    }
+
+    public void setDimensionId(String value) {
+        setAttribute(CodeItemDS.DIMENSION_ID, value);
     }
 
     public void setCodeItemDto(CodeItemDto codeItemDto) {

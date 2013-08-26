@@ -9,4 +9,5 @@ public interface DatasetAttributesTabUiHandlers extends BaseUiHandlers {
 
     void retrieveAttributeInstances(DsdAttributeDto dsdAttributeDto);
     void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResult, MetamacWebCriteria condition);
+    void retrieveDimensionCoverage(String dimensionId, MetamacWebCriteria metamacWebCriteria);
 }
