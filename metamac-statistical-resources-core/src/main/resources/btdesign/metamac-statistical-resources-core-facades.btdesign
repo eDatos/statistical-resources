@@ -54,12 +54,17 @@ Application FacadeStatisticalResources {
     		@QueryVersionDto retrieveLatestPublishedQueryVersion(String queryUrn) throws MetamacException
     		"Send to production validation"
     		@QueryVersionDto sendQueryVersionToProductionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		@QueryVersionBaseDto sendQueryVersionToProductionValidation(String queryVersionUrn) throws MetamacException;
     		"Send to diffusion validation"
     		@QueryVersionDto sendQueryVersionToDiffusionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		@QueryVersionBaseDto sendQueryVersionToDiffusionValidation(String queryVersionUrn) throws MetamacException;
     		"Send to validation rejected"
     		@QueryVersionDto sendQueryVersionToValidationRejected(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		@QueryVersionBaseDto sendQueryVersionToValidationRejected(String queryVersionUrn) throws MetamacException;
     		"Creates a new version of a query version, copying metadata from version with provided urn"
     		@QueryVersionDto versioningQueryVersion(@QueryVersionDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
+    		@QueryVersionBaseDto versioningQueryVersion(String queryVersionUrn, @VersionTypeEnum versionType) throws MetamacException;
+    		
     		
     		// QUERIES
 	   		"Find all queries"
@@ -94,8 +99,6 @@ Application FacadeStatisticalResources {
             @DatasetVersionDto retrieveDatasetVersionByUrn(String urn) throws MetamacException;
             "Retrieves all dataset versions"
             List<@DatasetVersionBaseDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
-    		"Creates a new version of a dataset, copying metadata from version with provided urn"
-    		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieve latest datasetVersion providing datasetUrn"
     		@DatasetVersionDto retrieveLatestDatasetVersion(String datasetUrn) throws MetamacException;
     		"Retrieve latest published datasetVersion providing datasetUrn"
@@ -104,10 +107,16 @@ Application FacadeStatisticalResources {
     		@DatasetVersionMainCoveragesDto retrieveDatasetVersionMainCoverages(String datasetVersionUrn) throws MetamacException;
     		"Send to production validation"
     		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
+    		@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(String datasetVersionUrn) throws MetamacException;
     		"Send to diffusion validation"
     		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
+    		@DatasetVersionBaseDto sendDatasetVersionToDiffusionValidation(String datasetVersionUrn) throws MetamacException;
     		"Send to validation rejected"
     		@DatasetVersionDto sendDatasetVersionToValidationRejected(@DatasetVersionDto datasetVersionDto) throws MetamacException;
+    		@DatasetVersionBaseDto sendDatasetVersionToValidationRejected(String datasetVersionUrn) throws MetamacException;
+    		"Creates a new version of a dataset, copying metadata from version with provided urn"
+    		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
+    		@DatasetVersionBaseDto versioningDatasetVersion(String datasetVersionUrn, @VersionTypeEnum versionType) throws MetamacException;
     		
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
@@ -139,8 +148,6 @@ Application FacadeStatisticalResources {
             @PublicationVersionDto retrievePublicationVersionByUrn(String urn) throws MetamacException;
             "Retrieves all publication versions"
             List<@PublicationVersionBaseDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
-    		"Creates a new version of a publication, copying metadata from version with provided urn"
-    		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieves publication version structure: chapter and cubes by levels."
 	    	@PublicationStructureDto retrievePublicationVersionStructure(String publicationVersionUrn) throws MetamacException;
 	    	"Retrieve latest publicationVersion providing publicationUrn"
@@ -149,10 +156,16 @@ Application FacadeStatisticalResources {
     		@PublicationVersionDto retrieveLatestPublishedPublicationVersion(String publicationUrn) throws MetamacException;
     		"Send to production validation"
     		@PublicationVersionDto sendPublicationVersionToProductionValidation(@PublicationVersionDto publicationVersionDto) throws MetamacException;
+    		@PublicationVersionBaseDto sendPublicationVersionToProductionValidation(String publicationVersionUrn) throws MetamacException;
     		"Send to diffusion validation"
     		@PublicationVersionDto sendPublicationVersionToDiffusionValidation(@PublicationVersionDto publicationVersionDto) throws MetamacException;
+    		@PublicationVersionBaseDto sendPublicationVersionToDiffusionValidation(String publicationVersionUrn) throws MetamacException;
     		"Send to validation rejected"
     		@PublicationVersionDto sendPublicationVersionToValidationRejected(@PublicationVersionDto publicationVersionDto) throws MetamacException;
+    		@PublicationVersionBaseDto sendPublicationVersionToValidationRejected(String publicationVersionUrn) throws MetamacException;
+    		"Creates a new version of a publication, copying metadata from version with provided urn"
+    		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
+    		@PublicationVersionBaseDto versioningPublicationVersion(String publicationVersionUrn, @VersionTypeEnum versionType) throws MetamacException;
 	    	
 	    	// CHAPTERS
 	    	"Creates a chapter"
