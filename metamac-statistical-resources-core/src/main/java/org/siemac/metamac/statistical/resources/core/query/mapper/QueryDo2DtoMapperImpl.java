@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -56,10 +57,6 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         return target;
     }
     
-    // ---------------------------------------------------------------------------------------------------------
-    // QUERIES
-    // ---------------------------------------------------------------------------------------------------------
-
     @Override
     public QueryVersionDto queryVersionDoToDto(QueryVersion source) throws MetamacException {
         if (source == null) {
@@ -69,16 +66,55 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         queryVersionDoToDto(source, target);
         return target;
     }
-
+    
     @Override
-    public List<QueryVersionDto> queryVersionDoListToDtoList(List<QueryVersion> sources) throws MetamacException {
-        List<QueryVersionDto> targets = new ArrayList<QueryVersionDto>();
+    public List<QueryVersionBaseDto> queryVersionDoListToDtoList(List<QueryVersion> sources) throws MetamacException {
+        List<QueryVersionBaseDto> targets = new ArrayList<QueryVersionBaseDto>();
         for (QueryVersion source : sources) {
-            targets.add(queryVersionDoToDto(source));
+            targets.add(queryVersionDoToBaseDto(source));
         }
         return targets;
     }
+    
+    @Override
+    public QueryVersionBaseDto queryVersionDoToBaseDto(QueryVersion source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        QueryVersionBaseDto target = new QueryVersionBaseDto();
+        queryVersionDoToBaseDto(source, target);
+        return target;
+    }
 
+    private QueryVersionBaseDto queryVersionDoToBaseDto(QueryVersion source, QueryVersionBaseDto target) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // Hierarchy
+        lifeCycleStatisticalResourceDoToBaseDto(source.getLifeCycleStatisticalResource(), target);
+
+        // DatasetVersion
+        if (source.getDatasetVersion() != null) {
+            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(source.getDatasetVersion().getSiemacMetadataStatisticalResource(),
+                    TypeRelatedResourceEnum.DATASET_VERSION));
+        }
+
+        // Status
+        target.setStatus(source.getStatus());
+
+        // Type
+        target.setType(source.getType());
+
+        // Identity
+        target.setId(source.getId());
+        target.setUuid(source.getUuid());
+        target.setVersion(source.getVersion());
+
+        return target;
+    }
+    
+    
     private QueryVersionDto queryVersionDoToDto(QueryVersion source, QueryVersionDto target) throws MetamacException {
         if (source == null) {
             return null;
@@ -113,6 +149,10 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         return target;
     }
 
+    // ---------------------------------------------------------------------------------------------------------
+    // SELECTION
+    // ---------------------------------------------------------------------------------------------------------
+    
     private Map<String, List<CodeItemDto>> selectionDo2Dto(List<QuerySelectionItem> source, QueryVersionDto target) {
         Map<String, List<CodeItemDto>> result = new HashMap<String, List<CodeItemDto>>();
         for (QuerySelectionItem querySelectionItem : source) {

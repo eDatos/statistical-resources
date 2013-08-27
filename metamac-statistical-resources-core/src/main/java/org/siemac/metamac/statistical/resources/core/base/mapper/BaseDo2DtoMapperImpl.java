@@ -13,12 +13,16 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
@@ -85,6 +89,17 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setCopyrightedDate(source.getCopyrightedDate());
         target.setAccessRights(internationalStringDoToDto(source.getAccessRights()));
     }
+    
+    
+    @Override
+    public void siemacMetadataStatisticalResourceDoToBaseDto(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResourceBaseDto target) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        lifeCycleStatisticalResourceDoToBaseDto(source, target);
+    }
+    
+    
     @Override
     public void lifeCycleStatisticalResourceDoToDto(LifeCycleStatisticalResource source, LifeCycleStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
@@ -111,6 +126,18 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
     }
 
     @Override
+    public void lifeCycleStatisticalResourceDoToBaseDto(LifeCycleStatisticalResource source, LifeCycleStatisticalResourceBaseDto target) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        versionableStatisticalResourceDoToBaseDto(source, target);
+
+        target.setProcStatus(source.getProcStatus());
+        target.setCreationDate(dateDoToDto(source.getCreationDate()));
+        target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
+    }
+    
+    @Override
     public void versionableStatisticalResourceDoToDto(VersionableStatisticalResource source, VersionableStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
             return;
@@ -126,6 +153,17 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setValidFrom(dateDoToDto(source.getValidFrom()));
         target.setValidTo(dateDoToDto(source.getValidTo()));
     }
+    
+
+    @Override
+    public void versionableStatisticalResourceDoToBaseDto(VersionableStatisticalResource source, VersionableStatisticalResourceBaseDto target) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        nameableStatisticalResourceDoToBaseDto(source, target);
+
+        target.setVersionLogic(source.getVersionLogic());
+    }
 
     @Override
     public void nameableStatisticalResourceDoToDto(NameableStatisticalResource source, NameableStatisticalResourceDto target) throws MetamacException {
@@ -136,6 +174,16 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
 
         target.setTitle(internationalStringDoToDto(source.getTitle()));
         target.setDescription(internationalStringDoToDto(source.getDescription()));
+    }
+    
+    @Override
+    public void nameableStatisticalResourceDoToBaseDto(NameableStatisticalResource source, NameableStatisticalResourceBaseDto target) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        identifiableStatisticalResourceDoToDto(source, target);
+
+        target.setTitle(internationalStringDoToDto(source.getTitle()));
     }
 
     @Override

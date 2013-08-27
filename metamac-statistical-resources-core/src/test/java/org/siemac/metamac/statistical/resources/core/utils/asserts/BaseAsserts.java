@@ -20,11 +20,15 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
@@ -386,6 +390,35 @@ public class BaseAsserts extends CommonAsserts {
             assertEquals(entity.getVersion(), dto.getOptimisticLockingVersion());
             assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation(), mapperEnum);
         }
+    }
+    
+    protected static void assertEqualsSiemacMetadataStatisticalResourceBase(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceBaseDto dto, MapperEnum mapperEnum) throws MetamacException {
+        assertEqualsLifeCycleStatisticalResourceBase(entity, dto, mapperEnum);
+    }
+    protected static void assertEqualsLifeCycleStatisticalResourceBase(LifeCycleStatisticalResource entity, LifeCycleStatisticalResourceBaseDto dto, MapperEnum mapperEnum) throws MetamacException {
+        switch (mapperEnum) {
+            case DO2DTO:
+                assertEquals(entity.getProcStatus(), dto.getProcStatus());
+
+                assertEqualsDate(entity.getCreationDate(), dto.getCreationDate());
+                assertEqualsDate(entity.getPublicationDate(), dto.getPublicationDate());
+                break;
+        }
+        assertEqualsVersionableStatisticalResourceBase(entity, dto, mapperEnum);
+    }
+    protected static void assertEqualsVersionableStatisticalResourceBase(VersionableStatisticalResource entity, VersionableStatisticalResourceBaseDto dto, MapperEnum mapperEnum) {
+        switch (mapperEnum) {
+            case DO2DTO:
+                assertEquals(entity.getVersionLogic(), dto.getVersionLogic());
+                break;
+        }
+        assertEqualsNameableStatisticalResourceBase(entity, dto, mapperEnum);
+    }
+
+    protected static void assertEqualsNameableStatisticalResourceBase(NameableStatisticalResource entity, NameableStatisticalResourceBaseDto dto, MapperEnum mapperEnum) {
+        assertEqualsInternationalString(entity.getTitle(), dto.getTitle());
+
+        assertEqualsIdentifiableStatisticalResource(entity, dto, mapperEnum);
     }
 
     // -----------------------------------------------------------------

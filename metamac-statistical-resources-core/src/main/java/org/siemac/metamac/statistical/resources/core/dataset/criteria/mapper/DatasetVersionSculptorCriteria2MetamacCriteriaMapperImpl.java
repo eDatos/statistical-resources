@@ -9,7 +9,7 @@ import org.siemac.metamac.core.common.criteria.mapper.SculptorCriteria2MetamacCr
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +21,13 @@ public class DatasetVersionSculptorCriteria2MetamacCriteriaMapperImpl implements
 
 
     @Override
-    public MetamacCriteriaResult<DatasetVersionDto> pageResultToMetamacCriteriaResultDatasetVersion(ServiceContext ctx, PagedResult<DatasetVersion> source, Integer pageSize) throws MetamacException {
-        MetamacCriteriaResult<DatasetVersionDto> target = new MetamacCriteriaResult<DatasetVersionDto>();
+    public MetamacCriteriaResult<DatasetVersionBaseDto> pageResultToMetamacCriteriaResultDatasetVersion(ServiceContext ctx, PagedResult<DatasetVersion> source, Integer pageSize) throws MetamacException {
+        MetamacCriteriaResult<DatasetVersionBaseDto> target = new MetamacCriteriaResult<DatasetVersionBaseDto>();
         target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
         if (source.getValues() != null) {
-            target.setResults(new ArrayList<DatasetVersionDto>());
+            target.setResults(new ArrayList<DatasetVersionBaseDto>());
             for (DatasetVersion item : source.getValues()) {
-                target.getResults().add(do2DtoMapper.datasetVersionDoToDto(ctx, item));
+                target.getResults().add(do2DtoMapper.datasetVersionDoToBaseDto(ctx, item));
             }
         }
         return target;

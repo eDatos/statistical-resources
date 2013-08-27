@@ -10,7 +10,12 @@ Application QueriesStatisticalResourcesDto {
 	Module dtos_queries {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.query 
 
-		// QUERY
+		DataTransferObject QueryVersionBaseDto extends @LifeCycleStatisticalResourceBaseDto {
+			- @RelatedResourceDto relatedDatasetVersion;
+			- @QueryStatusEnum status;
+			- @QueryTypeEnum type;
+		}
+
 		DataTransferObject QueryVersionDto extends @LifeCycleStatisticalResourceDto {
 			- @RelatedResourceDto relatedDatasetVersion;
 			- @QueryStatusEnum status;
@@ -24,7 +29,6 @@ Application QueriesStatisticalResourcesDto {
 			- List<CodeItemDto> codes;
 		}
 		
-		//CODES
 		DataTransferObject CodeItemDto {
 			String code required;
 			String title required;

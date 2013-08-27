@@ -8,8 +8,11 @@ Application DatasetsStatisticalResourcesDto {
 	Module dtos_datasets {
 		basePackage=org.siemac.metamac.statistical.resources.core.dto.datasets 
 		
-		// DATASET VERSION
-
+		DataTransferObject DatasetVersionBaseDto extends @SiemacMetadataStatisticalResourceBaseDto {
+			- @ExternalItemDto relatedDsd;
+			- @StatisticOfficialityDto statisticOfficiality;
+		}
+		
 		DataTransferObject DatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
 			// geographic granularities
 			- Bag<@ExternalItemDto> geographicGranularities;
@@ -47,7 +50,6 @@ Application DatasetsStatisticalResourcesDto {
 			Boolean isTaskInBackground;
 		}
 
-		// DATASOURCE
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {
 			"Parent"
 			String datasetVersionUrn;
@@ -71,8 +73,6 @@ Application DatasetsStatisticalResourcesDto {
             - Bag<@ExternalItemDto> measureCoverage;
         }
         
-        // DSD ATTRIBUTE
-        
         DataTransferObject DsdAttributeDto extends @IdentityDto {
         	String identifier;
         	- @RelationshipDto attributeRelationship;
@@ -91,8 +91,6 @@ Application DatasetsStatisticalResourcesDto {
         	String conceptSchemeRepresentationUrn;
         }
 
-        // DSD ATTRIBUTE INSTANCE
-        
         DataTransferObject DsdAttributeInstanceDto extends @IdentityDto {
 			CodeDimensionMap codeDimensions;
 			-@AttributeValueDto value;

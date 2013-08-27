@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -161,23 +162,23 @@ public class QueryAsserts extends BaseAsserts {
         assertEqualsSelection(entities, dtos, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsQueryVersionDoAndDtoCollection(Collection<QueryVersion> expected, Collection<QueryVersionDto> actual) {
+    public static void assertEqualsQueryVersionDoAndDtoCollection(Collection<QueryVersion> expected, Collection<QueryVersionBaseDto> actual) {
         assertEqualsQueryVersionCollection(expected, actual, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsQueryVersionDtoAndDoCollection(Collection<QueryVersionDto> expected, Collection<QueryVersion> actual) {
+    public static void assertEqualsQueryVersionDtoAndDoCollection(Collection<QueryVersionBaseDto> expected, Collection<QueryVersion> actual) {
         assertEqualsQueryVersionCollection(actual, expected, MapperEnum.DTO2DO);
     }
 
-    private static void assertEqualsQueryVersionCollection(Collection<QueryVersion> entities, Collection<QueryVersionDto> dtos, MapperEnum mapperEnum) {
+    private static void assertEqualsQueryVersionCollection(Collection<QueryVersion> entities, Collection<QueryVersionBaseDto> dtos, MapperEnum mapperEnum) {
         if (entities != null) {
             assertNotNull(dtos);
             assertEquals(entities.size(), dtos.size());
             for (QueryVersion expectedItem : entities) {
                 boolean match = false;
-                for (QueryVersionDto actualItem : dtos) {
+                for (QueryVersionBaseDto actualItem : dtos) {
                     try {
-                        assertEqualsQueryVersion(expectedItem, actualItem, mapperEnum);
+                        assertEqualsQueryVersionBase(expectedItem, actualItem, mapperEnum);
                         match = true;
                     } catch (AssertionError e) {
                         continue;
@@ -216,6 +217,27 @@ public class QueryAsserts extends BaseAsserts {
 
         assertEqualsSelection(entity.getSelection(), dto.getSelection(), mapperEnum);
     }
+    
+    private static void assertEqualsQueryVersionBase(QueryVersion entity, QueryVersionBaseDto dto, MapperEnum mapperEnum) {
+        if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+            assertEquals(entity.getId(), dto.getId());
+
+            assertNotNull(entity.getUuid());
+            assertEquals(entity.getUuid(), dto.getUuid());
+
+            assertNotNull(entity.getVersion());
+            assertEquals(entity.getVersion(), dto.getVersion());
+
+            assertNotNull(entity.getStatus());
+            assertEquals(entity.getStatus(), dto.getStatus());
+        }
+        assertEqualsNameableStatisticalResourceBase(entity.getLifeCycleStatisticalResource(), dto, mapperEnum);
+        assertEqualsRelatedDatasetVersionInQueryVersion(entity, dto.getRelatedDatasetVersion());
+
+        assertNotNull(entity.getType());
+        assertEquals(entity.getType(), dto.getType());
+    }
+    
 
     private static void assertEqualsSelection(List<QuerySelectionItem> entitySelection, Map<String, List<CodeItemDto>> dtoSelection, MapperEnum mapperEnum) {
         assertEqualsNullability(entitySelection, dtoSelection);

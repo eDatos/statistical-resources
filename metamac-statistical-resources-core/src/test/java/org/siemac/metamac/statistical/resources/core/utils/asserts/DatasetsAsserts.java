@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -200,7 +201,7 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEquals(entity.getDataset().getIdentifiableStatisticalResource().getUrn(), dto.getUrn());
         assertEqualsInternationalString(entity.getSiemacMetadataStatisticalResource().getTitle(), dto.getTitle());
     }
-
+    
     // -----------------------------------------------------------------
     // DATASET VERSION: DTO & DO
     // -----------------------------------------------------------------
@@ -246,6 +247,31 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd(), mapperEnum);
                 assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency(), mapperEnum);
                 assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
+                break;
+        }
+    }
+    
+    
+    public static void assertEqualsDatasetVersionBase(DatasetVersion entity, DatasetVersionBaseDto dto) throws MetamacException {
+        assertEqualsDatasetVersionBase(dto, entity, MapperEnum.DO2DTO);
+    }
+
+    public static void assertEqualsDatasetVersionBase(DatasetVersionBaseDto dto, DatasetVersion entity) throws MetamacException {
+        assertEqualsDatasetVersionBase(dto, entity, MapperEnum.DTO2DO);
+    }
+
+    private static void assertEqualsDatasetVersionBase(DatasetVersionBaseDto dto, DatasetVersion entity, MapperEnum mapperEnum) throws MetamacException {
+        assertEqualsSiemacMetadataStatisticalResourceBase(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
+
+        // Dataset attributes
+        assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
+        assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd(), mapperEnum);
+        
+        switch (mapperEnum) {
+            case DO2DTO:
+                assertEquals(entity.getId(), dto.getId());
+                assertEquals(entity.getUuid(), dto.getUuid());
+                assertEquals(entity.getVersion(), dto.getVersion());
                 break;
         }
     }

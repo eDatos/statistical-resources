@@ -37,13 +37,13 @@ Application FacadeStatisticalResources {
 			"Retrieves a query scheme by URN"
             @QueryVersionDto retrieveQueryVersionByUrn(String urn) throws MetamacException;
             "Retrieve queries"
-            List<@QueryVersionDto> retrieveQueriesVersions() throws MetamacException;
+            List<@QueryVersionBaseDto> retrieveQueriesVersions() throws MetamacException;
             "Create a query"
             @QueryVersionDto createQuery(@QueryVersionDto queryVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
             "Update a query"
             @QueryVersionDto updateQueryVersion(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Find queries by criteria"
-    		MetamacCriteriaResult<@QueryVersionDto> findQueriesVersionsByCondition(MetamacCriteria criteria)  throws MetamacException;
+    		MetamacCriteriaResult<@QueryVersionBaseDto> findQueriesVersionsByCondition(MetamacCriteria criteria)  throws MetamacException;
     		"Mark query as discontinued because the data is not going to be updated"
             @QueryVersionDto markQueryVersionAsDiscontinued(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Delete query"
@@ -89,11 +89,11 @@ Application FacadeStatisticalResources {
             "Deletes dataset"
             deleteDatasetVersion(String urn) throws MetamacException;
             "Finds datasets by criteria"
-            MetamacCriteriaResult<@DatasetVersionDto> findDatasetsVersionsByCondition(MetamacCriteria criteria) throws MetamacException;
+            MetamacCriteriaResult<@DatasetVersionBaseDto> findDatasetsVersionsByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a dataset by URN"
             @DatasetVersionDto retrieveDatasetVersionByUrn(String urn) throws MetamacException;
             "Retrieves all dataset versions"
-            List<@DatasetVersionDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
+            List<@DatasetVersionBaseDto> retrieveDatasetVersions(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieve latest datasetVersion providing datasetUrn"
@@ -134,11 +134,11 @@ Application FacadeStatisticalResources {
             "Deletes publication"
             deletePublicationVersion(String urn) throws MetamacException;
             "Finds publications by criteria"
-            MetamacCriteriaResult<@PublicationVersionDto> findPublicationVersionByCondition(MetamacCriteria criteria) throws MetamacException;
+            MetamacCriteriaResult<@PublicationVersionBaseDto> findPublicationVersionByCondition(MetamacCriteria criteria) throws MetamacException;
             "Retrieves a publication by URN"
             @PublicationVersionDto retrievePublicationVersionByUrn(String urn) throws MetamacException;
             "Retrieves all publication versions"
-            List<@PublicationVersionDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
+            List<@PublicationVersionBaseDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		"Retrieves publication version structure: chapter and cubes by levels."

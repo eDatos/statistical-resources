@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
@@ -56,7 +57,7 @@ public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         expected.add(queryVersionMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME));
         expected.add(queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME));
 
-        List<QueryVersionDto> actual = queryDo2DtoMapper.queryVersionDoListToDtoList(expected);
+        List<QueryVersionBaseDto> actual = queryDo2DtoMapper.queryVersionDoListToDtoList(expected);
 
         assertEquals(expected.size(), actual.size());
         assertEqualsQueryVersionDoAndDtoCollection(expected, actual);

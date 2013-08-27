@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -63,6 +64,34 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
     // PUBLICATION VERSION
     // --------------------------------------------------------------------------------------
 
+    
+    @Override
+    public PublicationVersionBaseDto publicationVersionDoToBaseDto(PublicationVersion source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        PublicationVersionBaseDto target = new PublicationVersionBaseDto();
+        publicationVersionDoToBaseDto(source, target);
+        return target;
+    }
+    
+    private PublicationVersionBaseDto publicationVersionDoToBaseDto(PublicationVersion source, PublicationVersionBaseDto target) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // Hierarchy
+        siemacMetadataStatisticalResourceDoToBaseDto(source.getSiemacMetadataStatisticalResource(), target);
+
+        // Identity
+        target.setId(source.getId());
+        target.setUuid(source.getUuid());
+        target.setVersion(source.getVersion());
+
+        return target;
+    }
+    
     @Override
     public PublicationVersionDto publicationVersionDoToDto(PublicationVersion source) throws MetamacException {
         if (source == null) {
@@ -75,10 +104,10 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
     }
 
     @Override
-    public List<PublicationVersionDto> publicationVersionDoListToDtoList(List<PublicationVersion> sources) throws MetamacException {
-        List<PublicationVersionDto> targets = new ArrayList<PublicationVersionDto>();
+    public List<PublicationVersionBaseDto> publicationVersionDoListToDtoList(List<PublicationVersion> sources) throws MetamacException {
+        List<PublicationVersionBaseDto> targets = new ArrayList<PublicationVersionBaseDto>();
         for (PublicationVersion source : sources) {
-            targets.add(publicationVersionDoToDto(source));
+            targets.add(publicationVersionDoToBaseDto(source));
         }
         return targets;
     }

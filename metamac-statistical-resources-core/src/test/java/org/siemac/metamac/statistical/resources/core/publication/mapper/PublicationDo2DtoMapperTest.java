@@ -32,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -82,7 +83,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         expected.add(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME));
         expected.add(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME));
 
-        List<PublicationVersionDto> actual = publicationDo2DtoMapper.publicationVersionDoListToDtoList(expected);
+        List<PublicationVersionBaseDto> actual = publicationDo2DtoMapper.publicationVersionDoListToDtoList(expected);
 
         assertEquals(expected.size(), actual.size());
         assertEqualsPublicationVersionDoAndDtoCollection(expected, actual);

@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
@@ -30,6 +31,7 @@ public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
     
     // Dataset version
     public DatasetVersionDto datasetVersionDoToDto(ServiceContext ctx, DatasetVersion source) throws MetamacException;
+    public DatasetVersionBaseDto datasetVersionDoToBaseDto(ServiceContext ctx, DatasetVersion source) throws MetamacException;
     
     //Code dimension
     public CodeItemDto codeDimensionDoToCodeItemDto(CodeDimension codeDimension) throws MetamacException;

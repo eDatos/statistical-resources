@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -278,11 +279,11 @@ public class PublicationsAsserts extends BaseAsserts {
         assertEqualsPublicationVersion(dto, entity, MapperEnum.DTO2DO);
     }
 
-    public static void assertEqualsPublicationVersionDoAndDtoCollection(Collection<PublicationVersion> expected, Collection<PublicationVersionDto> actual) throws MetamacException {
+    public static void assertEqualsPublicationVersionDoAndDtoCollection(Collection<PublicationVersion> expected, Collection<PublicationVersionBaseDto> actual) throws MetamacException {
         assertEqualsPublicationVersionCollection(expected, actual, MapperEnum.DO2DTO);
     }
 
-    public static void assertEqualsPublicationVersionDtoAndDoCollection(Collection<PublicationVersionDto> expected, Collection<PublicationVersion> actual) throws MetamacException {
+    public static void assertEqualsPublicationVersionDtoAndDoCollection(Collection<PublicationVersionBaseDto> expected, Collection<PublicationVersion> actual) throws MetamacException {
         assertEqualsPublicationVersionCollection(actual, expected, MapperEnum.DTO2DO);
     }
 
@@ -302,16 +303,39 @@ public class PublicationsAsserts extends BaseAsserts {
             assertEquals(entity.getVersion(), dto.getVersion());
         }
     }
+    
+    public static void assertEqualsPublicationVersionBase(PublicationVersion entity, PublicationVersionBaseDto dto) throws MetamacException {
+        assertEqualsPublicationVersionBase(dto, entity, MapperEnum.DO2DTO);
+    }
 
-    private static void assertEqualsPublicationVersionCollection(Collection<PublicationVersion> entities, Collection<PublicationVersionDto> dtos, MapperEnum mapperEnum) throws MetamacException {
+    public static void assertEqualsPublicationVersionBase(PublicationVersionBaseDto dto, PublicationVersion entity) throws MetamacException {
+        assertEqualsPublicationVersionBase(dto, entity, MapperEnum.DTO2DO);
+    }
+    
+    private static void assertEqualsPublicationVersionBase(PublicationVersionBaseDto dto, PublicationVersion entity, MapperEnum mapperEnum) throws MetamacException {
+        assertEqualsSiemacMetadataStatisticalResourceBase(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
+
+        // Publication attributes
+        if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+            assertEquals(entity.getId(), dto.getId());
+
+            assertNotNull(entity.getUuid());
+            assertEquals(entity.getUuid(), dto.getUuid());
+
+            assertNotNull(entity.getVersion());
+            assertEquals(entity.getVersion(), dto.getVersion());
+        }
+    }
+
+    private static void assertEqualsPublicationVersionCollection(Collection<PublicationVersion> entities, Collection<PublicationVersionBaseDto> dtos, MapperEnum mapperEnum) throws MetamacException {
         if (entities != null) {
             assertNotNull(dtos);
             assertEquals(entities.size(), dtos.size());
             for (PublicationVersion expectedItem : entities) {
                 boolean match = false;
-                for (PublicationVersionDto actualItem : dtos) {
+                for (PublicationVersionBaseDto actualItem : dtos) {
                     try {
-                        assertEqualsPublicationVersion(actualItem, expectedItem, mapperEnum);
+                        assertEqualsPublicationVersionBase(actualItem, expectedItem, mapperEnum);
                         match = true;
                     } catch (AssertionError e) {
                         continue;

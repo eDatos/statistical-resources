@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -23,7 +24,8 @@ public interface PublicationDo2DtoMapper extends BaseDo2DtoMapper {
     // Publication Version
     public RelatedResourceDto publicationVersionDoToPublicationVersionRelatedResourceDto(PublicationVersion source);
     public PublicationVersionDto publicationVersionDoToDto(PublicationVersion source) throws MetamacException;
-    public List<PublicationVersionDto> publicationVersionDoListToDtoList(List<PublicationVersion> expected) throws MetamacException;
+    public PublicationVersionBaseDto publicationVersionDoToBaseDto(PublicationVersion source) throws MetamacException;
+    public List<PublicationVersionBaseDto> publicationVersionDoListToDtoList(List<PublicationVersion> expected) throws MetamacException;
 
     // Publication structure
     public PublicationStructureDto publicationVersionStructureDoToDto(PublicationVersion publicationVersion) throws MetamacException;

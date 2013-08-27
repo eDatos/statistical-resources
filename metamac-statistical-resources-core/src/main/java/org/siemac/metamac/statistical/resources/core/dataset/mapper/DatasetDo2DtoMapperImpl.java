@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
@@ -110,6 +111,36 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
     // DATASETS VERSIONS
     // ---------------------------------------------------------------------------------------------------------
 
+    @Override
+    public DatasetVersionBaseDto datasetVersionDoToBaseDto(ServiceContext ctx, DatasetVersion source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        DatasetVersionBaseDto target = new DatasetVersionBaseDto();
+        datasetVersionDoToBaseDto(ctx, source, target);
+        return target;
+    }
+
+    private DatasetVersionBaseDto datasetVersionDoToBaseDto(ServiceContext ctx, DatasetVersion source, DatasetVersionBaseDto target) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // Hierarchy
+        siemacMetadataStatisticalResourceDoToBaseDto(source.getSiemacMetadataStatisticalResource(), target);
+
+        // Identity
+        target.setId(source.getId());
+        target.setUuid(source.getUuid());
+        target.setVersion(source.getVersion());
+
+        target.setRelatedDsd(externalItemDoToDto(source.getRelatedDsd()));
+        target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
+        
+        return target;
+    }
+    
+    
     @Override
     public DatasetVersionDto datasetVersionDoToDto(ServiceContext ctx, DatasetVersion source) throws MetamacException {
         if (source == null) {

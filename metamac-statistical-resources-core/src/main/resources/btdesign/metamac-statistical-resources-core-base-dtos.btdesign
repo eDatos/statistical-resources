@@ -25,11 +25,18 @@ Application StatisticalResourcesDto {
 			String urn;
 		}
 		
+		DataTransferObject NameableStatisticalResourceBaseDto extends @IdentifiableStatisticalResourceDto {
+			- @InternationalStringDto title;
+		}
+		
 		DataTransferObject NameableStatisticalResourceDto extends @IdentifiableStatisticalResourceDto {
 			- @InternationalStringDto title;
 			- @InternationalStringDto description;
 		}
 		
+		DataTransferObject VersionableStatisticalResourceBaseDto extends @NameableStatisticalResourceBaseDto {
+			String versionLogic;
+		}
 
 		DataTransferObject VersionableStatisticalResourceDto extends @NameableStatisticalResourceDto {
 			String versionLogic;
@@ -39,6 +46,12 @@ Application StatisticalResourcesDto {
 			- @InternationalStringDto versionRationale;
 			JAVADATE validFrom;
 			JAVADATE validTo;
+		}
+
+		DataTransferObject LifeCycleStatisticalResourceBaseDto extends @VersionableStatisticalResourceBaseDto {
+			- @ProcStatusEnum procStatus;
+			JAVADATE creationDate;
+			JAVADATE publicationDate;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
@@ -59,6 +72,10 @@ Application StatisticalResourcesDto {
 			- @RelatedResourceDto isReplacedByVersion;
 			
 			- @ExternalItemDto maintainer;
+		}
+		
+		
+		DataTransferObject SiemacMetadataStatisticalResourceBaseDto extends @LifeCycleStatisticalResourceBaseDto {
 		}
 		
 		DataTransferObject SiemacMetadataStatisticalResourceDto extends @LifeCycleStatisticalResourceDto {

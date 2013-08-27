@@ -28,6 +28,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -35,8 +36,10 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
@@ -211,7 +214,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public List<QueryVersionDto> retrieveQueriesVersions(ServiceContext ctx) throws MetamacException {
+    public List<QueryVersionBaseDto> retrieveQueriesVersions(ServiceContext ctx) throws MetamacException {
         // Security
         QueriesSecurityUtils.canRetrieveQueriesVersions(ctx);
 
@@ -219,7 +222,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         List<QueryVersion> queryVersions = getQueryService().retrieveQueryVersions(ctx);
 
         // Transform
-        List<QueryVersionDto> queriesDto = queryDo2DtoMapper.queryVersionDoListToDtoList(queryVersions);
+        List<QueryVersionBaseDto> queriesDto = queryDo2DtoMapper.queryVersionDoListToDtoList(queryVersions);
 
         return queriesDto;
     }
@@ -260,7 +263,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public MetamacCriteriaResult<QueryVersionDto> findQueriesVersionsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+    public MetamacCriteriaResult<QueryVersionBaseDto> findQueriesVersionsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
         QueriesSecurityUtils.canFindQueriesVersionsByCondition(ctx);
 
@@ -271,7 +274,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PagedResult<QueryVersion> result = getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<QueryVersionDto> metamacCriteriaResult = queryVersionSculptorCriteria2MetamacCriteriaMapper
+        MetamacCriteriaResult<QueryVersionBaseDto> metamacCriteriaResult = queryVersionSculptorCriteria2MetamacCriteriaMapper
                 .pageResultToMetamacCriteriaResultQuery(result, sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -520,7 +523,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public MetamacCriteriaResult<DatasetVersionDto> findDatasetsVersionsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+    public MetamacCriteriaResult<DatasetVersionBaseDto> findDatasetsVersionsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canFindDatasetsVersionsByCondition(ctx);
 
@@ -531,7 +534,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<DatasetVersionDto> metamacCriteriaResult = datasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(ctx, result,
+        MetamacCriteriaResult<DatasetVersionBaseDto> metamacCriteriaResult = datasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(ctx, result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -550,7 +553,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public List<DatasetVersionDto> retrieveDatasetVersions(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    public List<DatasetVersionBaseDto> retrieveDatasetVersions(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canRetrieveDatasetVersions(ctx);
 
@@ -558,9 +561,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         List<DatasetVersion> datasetVersions = getDatasetService().retrieveDatasetVersions(ctx, datasetVersionUrn);
 
         // Transform
-        List<DatasetVersionDto> datasets = new ArrayList<DatasetVersionDto>();
+        List<DatasetVersionBaseDto> datasets = new ArrayList<DatasetVersionBaseDto>();
         for (DatasetVersion version : datasetVersions) {
-            datasets.add(datasetDo2DtoMapper.datasetVersionDoToDto(ctx, version));
+            datasets.add(datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, version));
         }
         return datasets;
     }
@@ -809,7 +812,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public MetamacCriteriaResult<PublicationVersionDto> findPublicationVersionByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+    public MetamacCriteriaResult<PublicationVersionBaseDto> findPublicationVersionByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canFindPublicationsVersionsByCondition(ctx);
 
@@ -820,7 +823,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PagedResult<PublicationVersion> result = getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<PublicationVersionDto> metamacCriteriaResult = publicationVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationVersion(result,
+        MetamacCriteriaResult<PublicationVersionBaseDto> metamacCriteriaResult = publicationVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationVersion(result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -865,7 +868,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public List<PublicationVersionDto> retrievePublicationVersions(ServiceContext ctx, String urn) throws MetamacException {
+    public List<PublicationVersionBaseDto> retrievePublicationVersions(ServiceContext ctx, String urn) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canRetrievePublicationVersions(ctx);
 
@@ -873,7 +876,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         List<PublicationVersion> publicationVersions = getPublicationService().retrievePublicationVersions(ctx, urn);
 
         // Transform
-        List<PublicationVersionDto> publications = publicationDo2DtoMapper.publicationVersionDoListToDtoList(publicationVersions);
+        List<PublicationVersionBaseDto> publications = publicationDo2DtoMapper.publicationVersionDoListToDtoList(publicationVersions);
 
         return publications;
     }

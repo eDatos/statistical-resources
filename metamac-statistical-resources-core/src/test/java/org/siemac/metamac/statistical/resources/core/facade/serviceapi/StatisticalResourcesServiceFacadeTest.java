@@ -10,12 +10,14 @@ import static org.siemac.metamac.statistical.resources.core.constants.Statistica
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsCollectionByField;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionBase;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasourceDoAndDtoCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsCube;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublication;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionBase;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionStructure;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuerySelection;
@@ -130,6 +132,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -137,8 +140,10 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -313,7 +318,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testRetrieveQueriesVersions() throws Exception {
         List<QueryVersion> expected = queryVersionMockFactory.retrieveMocks(QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME,
                 QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME, QUERY_VERSION_01_WITH_SELECTION_NAME);
-        List<QueryVersionDto> actual = statisticalResourcesServiceFacade.retrieveQueriesVersions(getServiceContextAdministrador());
+        List<QueryVersionBaseDto> actual = statisticalResourcesServiceFacade.retrieveQueriesVersions(getServiceContextAdministrador());
 
         assertEqualsQueryVersionDoAndDtoCollection(expected, actual);
     }
@@ -322,7 +327,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME})
     public void testRetrieveQueriesErrorDifferentResponse() throws Exception {
         List<QueryVersion> expected = queryVersionMockFactory.retrieveMocks(QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME);
-        List<QueryVersionDto> actual = statisticalResourcesServiceFacade.retrieveQueriesVersions(getServiceContextAdministrador());
+        List<QueryVersionBaseDto> actual = statisticalResourcesServiceFacade.retrieveQueriesVersions(getServiceContextAdministrador());
 
         assertEqualsQueryVersionDoAndDtoCollection(expected, actual);
     }
@@ -474,12 +479,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             addOrderToCriteria(metamacCriteria, StatisticalResourcesCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(3, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(3, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
             int i = 0;
             assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
@@ -498,12 +503,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.CODE, OperationType.EQ, code);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(1, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
             int i = 0;
             assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
@@ -520,12 +525,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.URN, OperationType.EQ, urn);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(1, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
             int i = 0;
             assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
@@ -542,12 +547,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.TITLE, OperationType.EQ, titleQuery);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(1, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
             int i = 0;
             assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
@@ -569,12 +574,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
 
-        MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
         // Validate
         assertEquals(3, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
         assertEquals(3, queriesPagedResult.getResults().size());
-        assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+        assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
         int i = 0;
         assertEquals(urnQueryVersion02, queriesPagedResult.getResults().get(i++).getUrn());
@@ -591,7 +596,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Validate
         assertEquals(3, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
         assertEquals(3, queriesPagedResult.getResults().size());
-        assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+        assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
         i = 0;
         assertEquals(urnQueryVersion02, queriesPagedResult.getResults().get(i++).getUrn());
@@ -609,12 +614,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.QUERY_STATUS, OperationType.EQ, QueryStatusEnum.ACTIVE);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(2, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(2, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
         }
 
         // DISCONTINUED
@@ -623,12 +628,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.QUERY_STATUS, OperationType.EQ, QueryStatusEnum.DISCONTINUED);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(1, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
         }
 
         // PENDING_REVIEW
@@ -637,12 +642,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.QUERY_STATUS, OperationType.EQ, QueryStatusEnum.PENDING_REVIEW);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(1, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(1, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
         }
 
         // PENDING_REVIEW or DISCONTINUED
@@ -654,12 +659,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.QUERY_STATUS.name(), QueryStatusEnum.DISCONTINUED, OperationType.EQ));
             metamacCriteria.setRestriction(disjunction);
 
-            MetamacCriteriaResult<QueryVersionDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> queriesPagedResult = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
             // Validate
             assertEquals(2, queriesPagedResult.getPaginatorResult().getTotalResults().intValue());
             assertEquals(2, queriesPagedResult.getResults().size());
-            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionDto);
+            assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
         }
     }
 
@@ -881,20 +886,20 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         DatasetVersion datasetVersionLast = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
         // Version in urn does not care
         {
-            List<DatasetVersionDto> datasets = statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), datasetVersionLast.getSiemacMetadataStatisticalResource()
+            List<DatasetVersionBaseDto> datasets = statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), datasetVersionLast.getSiemacMetadataStatisticalResource()
                     .getUrn());
             assertNotNull(datasets);
             assertEquals(2, datasets.size());
-            assertEqualsDatasetVersion(datasetVersionFirst, datasets.get(0));
-            assertEqualsDatasetVersion(datasetVersionLast, datasets.get(1));
+            assertEqualsDatasetVersionBase(datasetVersionFirst, datasets.get(0));
+            assertEqualsDatasetVersionBase(datasetVersionLast, datasets.get(1));
         }
         {
-            List<DatasetVersionDto> datasets = statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), datasetVersionFirst.getSiemacMetadataStatisticalResource()
+            List<DatasetVersionBaseDto> datasets = statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), datasetVersionFirst.getSiemacMetadataStatisticalResource()
                     .getUrn());
             assertNotNull(datasets);
             assertEquals(2, datasets.size());
-            assertEqualsDatasetVersion(datasetVersionFirst, datasets.get(0));
-            assertEqualsDatasetVersion(datasetVersionLast, datasets.get(1));
+            assertEqualsDatasetVersionBase(datasetVersionFirst, datasets.get(0));
+            assertEqualsDatasetVersionBase(datasetVersionLast, datasets.get(1));
         }
     }
 
@@ -1061,9 +1066,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             addOrderToCriteria(metamacCriteria, StatisticalResourcesCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<DatasetVersionDto> results = pagedResults.getResults();
+            List<DatasetVersionBaseDto> results = pagedResults.getResults();
             assertEquals(3, results.size());
 
             assertEquals(dsOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1081,12 +1086,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
 
-        MetamacCriteriaResult<DatasetVersionDto> datasetsPagedResult = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        MetamacCriteriaResult<DatasetVersionBaseDto> datasetsPagedResult = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
 
         // Validate
         assertEquals(3, datasetsPagedResult.getPaginatorResult().getTotalResults().intValue());
         assertEquals(3, datasetsPagedResult.getResults().size());
-        assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionDto);
+        assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionBaseDto);
 
         int i = 0;
         assertEquals(dsOper1Code3Urn, datasetsPagedResult.getResults().get(i++).getUrn());
@@ -1103,7 +1108,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Validate
         assertEquals(3, datasetsPagedResult.getPaginatorResult().getTotalResults().intValue());
         assertEquals(3, datasetsPagedResult.getResults().size());
-        assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionDto);
+        assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionBaseDto);
 
         i = 0;
         assertEquals(dsOper1Code3Urn, datasetsPagedResult.getResults().get(i++).getUrn());
@@ -1123,9 +1128,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.CODE, OperationType.EQ, dsOper1Code3.getSiemacMetadataStatisticalResource().getCode());
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<DatasetVersionDto> results = pagedResults.getResults();
+            List<DatasetVersionBaseDto> results = pagedResults.getResults();
             assertEquals(1, results.size());
 
             assertEquals(dsOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1143,7 +1148,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.URN, OperationType.EQ, dsOper1Code3.getSiemacMetadataStatisticalResource().getUrn());
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(dsOper1Code3, dsOper1Code3), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1165,7 +1170,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(dsOper1Code3, dsOper2Code1, dsOper2Code2), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1174,7 +1179,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(dsOper2Code3ProdVal), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1195,7 +1200,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.VERSION_RATIONALE_TYPE, OperationType.EQ, VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionMajorNewResource), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1204,7 +1209,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.VERSION_RATIONALE_TYPE, OperationType.EQ, VersionRationaleTypeEnum.MINOR_ERRATA);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionMinorErratas, datasetVersionMinorErratasAndMajorEstimators), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1214,7 +1219,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.VERSION_RATIONALE_TYPE, OperationType.EQ, VersionRationaleTypeEnum.MAJOR_ESTIMATORS);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionMajorEstimators, datasetVersionMinorErratasAndMajorEstimators), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1235,7 +1240,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION, OperationType.EQ, NextVersionTypeEnum.NO_UPDATES);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionNoUpdates), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1244,7 +1249,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION, OperationType.EQ, NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionNonScheduledUpdate), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1254,7 +1259,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION, OperationType.EQ, NextVersionTypeEnum.SCHEDULED_UPDATE);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionScheduledUpdateJanuary, datasetVersionScheduledUpdateJuly), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1275,7 +1280,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION_DATE, OperationType.IS_NULL, null);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionNoUpdates, datasetVersionNonScheduledUpdate), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1286,7 +1291,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaDatePropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION_DATE, OperationType.EQ, new DateTime(2013, 1, 15, 0, 0, 0, 0).toDate());
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionScheduledUpdateJanuary), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1297,7 +1302,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaDatePropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.NEXT_VERSION_DATE, OperationType.GT, new DateTime(2012, 12, 1, 0, 0, 0, 0).toDate());
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(datasetVersionScheduledUpdateJanuary, datasetVersionScheduledUpdateJuly), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
@@ -1314,7 +1319,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.TITLE_ALTERNATIVE, OperationType.EQ, datasetVersionTitleAlternative
                 .getSiemacMetadataStatisticalResource().getTitleAlternative().getLocalisedLabel("es"));
 
-        MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
         assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
         assertEqualsCollectionByField(Arrays.asList(datasetVersionTitleAlternative), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
     }
@@ -1337,9 +1342,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<DatasetVersionDto> results = pagedResults.getResults();
+            List<DatasetVersionBaseDto> results = pagedResults.getResults();
             assertEquals(3, results.size());
 
             assertEquals(datasetOper2Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1354,9 +1359,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<DatasetVersionDto> results = pagedResults.getResults();
+            List<DatasetVersionBaseDto> results = pagedResults.getResults();
             assertEquals(1, results.size());
 
             assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1370,9 +1375,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
-            MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(0, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<DatasetVersionDto> results = pagedResults.getResults();
+            List<DatasetVersionBaseDto> results = pagedResults.getResults();
             assertEquals(0, results.size());
         }
     }
@@ -1391,9 +1396,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
         setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.CODE, OperationType.ILIKE, code);
 
-        MetamacCriteriaResult<DatasetVersionDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
         assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
-        List<DatasetVersionDto> results = pagedResults.getResults();
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
         assertEquals(1, results.size());
 
         assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1724,9 +1729,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             addOrderToCriteria(metamacCriteria, StatisticalResourcesCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(6, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(6, results.size());
 
             assertEquals(publicationVersionOperation1Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1750,12 +1755,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
 
-        MetamacCriteriaResult<PublicationVersionDto> publicationsPagedResult = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        MetamacCriteriaResult<PublicationVersionBaseDto> publicationsPagedResult = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
 
         // Validate
         assertEquals(3, publicationsPagedResult.getPaginatorResult().getTotalResults().intValue());
         assertEquals(3, publicationsPagedResult.getResults().size());
-        assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionDto);
+        assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionBaseDto);
 
         int i = 0;
         assertEquals(publicationVersionOperation1Code1Urn, publicationsPagedResult.getResults().get(i++).getUrn());
@@ -1773,7 +1778,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Validate
         assertEquals(3, publicationsPagedResult.getPaginatorResult().getTotalResults().intValue());
         assertEquals(3, publicationsPagedResult.getResults().size());
-        assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionDto);
+        assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionBaseDto);
 
         i = 0;
         assertEquals(publicationVersionOperation1Code1Urn, publicationsPagedResult.getResults().get(i++).getUrn());
@@ -1795,9 +1800,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaOrderEnum.CODE, OperationType.EQ, publicationVersionOperation1Code3
                     .getSiemacMetadataStatisticalResource().getCode());
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(1, results.size());
 
             assertEquals(publicationVersionOperation1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1818,9 +1823,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.URN, OperationType.EQ, publicationVersionOperation1Code3
                     .getSiemacMetadataStatisticalResource().getUrn());
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(1, results.size());
 
             assertEquals(publicationVersionOperation1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1844,9 +1849,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setDisjunctionCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT,
                     ProcStatusEnum.VALIDATION_REJECTED);
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(2, results.size());
 
             assertEquals(publicationVersionDraft.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1858,9 +1863,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(1, results.size());
 
             assertEquals(publicationVersionProductionValidation.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1887,9 +1892,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(3, results.size());
 
             assertEquals(publicationOperation1Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1904,9 +1909,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(3, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(3, results.size());
 
             assertEquals(publicationOperation2Code1.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1922,9 +1927,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
             setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.STATISTICAL_OPERATION_URN, OperationType.EQ, statisticalOperationUrn);
 
-            MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+            MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(0, pagedResults.getPaginatorResult().getTotalResults().intValue());
-            List<PublicationVersionDto> results = pagedResults.getResults();
+            List<PublicationVersionBaseDto> results = pagedResults.getResults();
             assertEquals(0, results.size());
         }
     }
@@ -1944,9 +1949,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
         setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.CODE, OperationType.ILIKE, code);
 
-        MetamacCriteriaResult<PublicationVersionDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
         assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
-        List<PublicationVersionDto> results = pagedResults.getResults();
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
         assertEquals(2, results.size());
 
         assertEquals(publicationOperation1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
@@ -1987,20 +1992,20 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         PublicationVersion publicationVersionLast = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME);
         // Version in urn does not care
         {
-            List<PublicationVersionDto> publicationsVersions = statisticalResourcesServiceFacade.retrievePublicationVersions(getServiceContextAdministrador(), publicationVersionLast
+            List<PublicationVersionBaseDto> publicationsVersions = statisticalResourcesServiceFacade.retrievePublicationVersions(getServiceContextAdministrador(), publicationVersionLast
                     .getSiemacMetadataStatisticalResource().getUrn());
             assertNotNull(publicationsVersions);
             assertEquals(2, publicationsVersions.size());
-            assertEqualsPublicationVersion(publicationVersionFirst, publicationsVersions.get(0));
-            assertEqualsPublicationVersion(publicationVersionLast, publicationsVersions.get(1));
+            assertEqualsPublicationVersionBase(publicationVersionFirst, publicationsVersions.get(0));
+            assertEqualsPublicationVersionBase(publicationVersionLast, publicationsVersions.get(1));
         }
         {
-            List<PublicationVersionDto> publicationsVersions = statisticalResourcesServiceFacade.retrievePublicationVersions(getServiceContextAdministrador(), publicationVersionFirst
+            List<PublicationVersionBaseDto> publicationsVersions = statisticalResourcesServiceFacade.retrievePublicationVersions(getServiceContextAdministrador(), publicationVersionFirst
                     .getSiemacMetadataStatisticalResource().getUrn());
             assertNotNull(publicationsVersions);
             assertEquals(2, publicationsVersions.size());
-            assertEqualsPublicationVersion(publicationVersionFirst, publicationsVersions.get(0));
-            assertEqualsPublicationVersion(publicationVersionLast, publicationsVersions.get(1));
+            assertEqualsPublicationVersionBase(publicationVersionFirst, publicationsVersions.get(0));
+            assertEqualsPublicationVersionBase(publicationVersionLast, publicationsVersions.get(1));
         }
     }
 
