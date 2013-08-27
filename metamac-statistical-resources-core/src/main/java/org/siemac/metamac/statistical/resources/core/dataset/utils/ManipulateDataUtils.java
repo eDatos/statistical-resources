@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.dataset.utils;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -17,6 +20,7 @@ import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 public class ManipulateDataUtils {
 
     public static String DATA_SOURCE_ID = "DATA_SOURCE_ID";
+    public static String DATASET        = "DATASET";
 
     /**
      * Create a data source extra identification attribute
@@ -31,18 +35,6 @@ public class ManipulateDataUtils {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.TASK_DATASOURCE_ID).build();
         }
 
-        // Keys
-        // Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
-        // for (CodeDimensionDto codeDimensionDto : keys) {
-        // if (codesByDimension.containsKey(codeDimensionDto.getDimensionId())) {
-        // codesByDimension.get(codeDimensionDto.getDimensionId()).add(codeDimensionDto.getCodeDimensionId());
-        // } else {
-        // List<String> codes = new LinkedList<String>();
-        // codes.add(codeDimensionDto.getCodeDimensionId());
-        // }
-        // }
-        // attributeDto..setCodesByDimension(codesByDimension);
-
         // Data
         InternationalStringDto internationalStringDto = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
@@ -56,4 +48,57 @@ public class ManipulateDataUtils {
 
         return attributeDto;
     }
+
+    /**
+     * Generate key for attribute
+     * 
+     * @param codesByDimension
+     * @return
+     */
+    public static String generateKeyForAttribute(Map<String, List<String>> codesByDimension) {
+        if (codesByDimension == null || codesByDimension.isEmpty()) {
+            return DATASET;
+        }
+
+        return addKey(codesByDimension);
+    }
+
+    /**
+     * Generate key for observation
+     * 
+     * @param codesDimension
+     * @return
+     */
+    public static String generateKeyForObservation(List<CodeDimensionDto> codesDimension) {
+        if (codesDimension == null || codesDimension.size() == 0) {
+            return null;
+        }
+        Map<String, List<String>> codesByDimensionMap = new HashMap<String, List<String>>();
+        for (CodeDimensionDto codeDimension : codesDimension) {
+            codesByDimensionMap.put(codeDimension.getDimensionId(), Arrays.asList(codeDimension.getCodeDimensionId()));
+        }
+
+        return addKey(codesByDimensionMap);
+    }
+
+    protected static String addKey(Map<String, List<String>> codesByDimension) {
+        StringBuilder key = new StringBuilder();
+
+        for (Map.Entry<String, List<String>> entry : codesByDimension.entrySet()) {
+            key.append(entry.getKey()).append(':');
+            if (entry.getValue() == null || entry.getValue().isEmpty()) {
+                key.append('*');
+            } else {
+                key.append(entry.getValue());
+            }
+            key.append(entry.getKey()).append(',');
+        }
+
+        if (key.charAt(key.length() - 1) == ',') {
+            key.deleteCharAt(key.length() - 1);
+        }
+
+        return key.toString();
+    }
+
 }
