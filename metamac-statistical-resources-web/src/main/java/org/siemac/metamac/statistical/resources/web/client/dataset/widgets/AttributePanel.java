@@ -116,4 +116,8 @@ public class AttributePanel extends VLayout {
     public void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
         mainFormLayout.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
+
+    public void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        mainFormLayout.setItemsForDimensionLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+    }
 }

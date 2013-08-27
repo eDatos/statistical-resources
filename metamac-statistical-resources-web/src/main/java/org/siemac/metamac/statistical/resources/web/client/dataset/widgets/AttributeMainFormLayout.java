@@ -98,4 +98,8 @@ public class AttributeMainFormLayout extends MainFormLayout {
     public void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
         attributeDatasetLevelEditionForm.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
+
+    public void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        attributeDimensionLevelEditionForm.setItemsForDimensionLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+    }
 }

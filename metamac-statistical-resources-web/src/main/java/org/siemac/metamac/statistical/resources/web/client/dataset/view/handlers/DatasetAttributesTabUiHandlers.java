@@ -8,6 +8,9 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 public interface DatasetAttributesTabUiHandlers extends BaseUiHandlers {
 
     void retrieveAttributeInstances(DsdAttributeDto dsdAttributeDto);
-    void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResult, MetamacWebCriteria condition);
+
     void retrieveDimensionCoverage(String dimensionId, MetamacWebCriteria metamacWebCriteria);
+
+    void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);
+    void retrieveItemsFromItemSchemeForDimensionLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);
 }

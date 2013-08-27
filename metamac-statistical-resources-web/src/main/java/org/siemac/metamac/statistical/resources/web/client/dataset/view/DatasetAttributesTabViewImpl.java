@@ -108,4 +108,9 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     public void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
         attributePanel.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
+
+    @Override
+    public void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        attributePanel.setItemsForDimensionLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+    }
 }

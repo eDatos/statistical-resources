@@ -64,8 +64,9 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
         void setAttributes(List<DsdAttributeDto> attributes);
         void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
-        void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
         void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos);
+        void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
+        void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
     }
 
     @ProxyCodeSplit
@@ -202,6 +203,41 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
             @Override
             public void onWaitSuccess(GetConceptsPaginatedListResult result) {
                 getView().setItemsForDatasetLevelAttributeValueSelection(result.getConcepts(), result.getFirstResultOut(), result.getTotalResults());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveItemsFromItemSchemeForDimensionLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria) {
+
+        ItemSchemeWebCriteria itemSchemeWebCriteria = new ItemSchemeWebCriteria(criteria);
+
+        if (!StringUtils.isBlank(representationDto.getCodelistRepresentationUrn())) {
+            itemSchemeWebCriteria.setSchemeUrn(representationDto.getCodelistRepresentationUrn());
+            retrieveCodesFromItemSchemeForDimensionLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+
+        } else if (!StringUtils.isBlank(representationDto.getConceptSchemeRepresentationUrn())) {
+            itemSchemeWebCriteria.setSchemeUrn(representationDto.getConceptSchemeRepresentationUrn());
+            retrieveConceptsFromItemSchemeForDimensionLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+        }
+    }
+
+    private void retrieveCodesFromItemSchemeForDimensionLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+        dispatcher.execute(new GetCodesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCodesPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetCodesPaginatedListResult result) {
+                getView().setItemsForDimensionLevelAttributeValueSelection(result.getCodes(), result.getFirstResultOut(), result.getTotalResults());
+            }
+        });
+    }
+
+    private void retrieveConceptsFromItemSchemeForDimensionLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+        dispatcher.execute(new GetConceptsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetConceptsPaginatedListResult result) {
+                getView().setItemsForDimensionLevelAttributeValueSelection(result.getConcepts(), result.getFirstResultOut(), result.getTotalResults());
             }
         });
     }
