@@ -266,7 +266,6 @@
         <stat:accessRights>
             <cdomain:text xml:lang="es">accessRights-resource-1nCTRhjgnf en Espanol</cdomain:text>
         </stat:accessRights>
-        <stat:publicationDate>2013-01-01T03:04:13Z</stat:publicationDate>
         <stat:replacesVersion kind="statisticalResources#dataset">
             <cdomain:id>01.000</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:01.000(00.001)</cdomain:urn>

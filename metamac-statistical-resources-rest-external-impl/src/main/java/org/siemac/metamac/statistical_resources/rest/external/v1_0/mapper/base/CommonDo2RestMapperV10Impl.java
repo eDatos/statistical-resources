@@ -182,7 +182,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
 
         // Lifecycle
-        target.setPublicationDate(toDate(source.getPublicationDate()));
         target.setReplacesVersion(toResource(source.getReplacesVersion(), selectedLanguages));
         target.setIsReplacedByVersion(toResource(source.getIsReplacedByVersion(), selectedLanguages));
         target.setMaintainer(toResourceExternalItemSrm(source.getMaintainer(), selectedLanguages));

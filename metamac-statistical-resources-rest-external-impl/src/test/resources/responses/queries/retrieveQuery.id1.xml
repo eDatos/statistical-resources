@@ -286,7 +286,6 @@
                 <cdomain:text xml:lang="es">title-statisticalOperation01 en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
-        <stat:publicationDate>2013-01-01T03:04:13Z</stat:publicationDate>
         <stat:maintainer kind="structuralResources#agency">
             <cdomain:id>agency01</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
