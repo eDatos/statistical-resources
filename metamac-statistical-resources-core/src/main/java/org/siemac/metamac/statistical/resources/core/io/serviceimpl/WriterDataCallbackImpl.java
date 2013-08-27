@@ -14,9 +14,9 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
@@ -28,6 +28,7 @@ import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
 import com.arte.statistic.parser.sdmx.v2_1.constants.MappingConstants;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
+import com.arte.statistic.parser.sdmx.v2_1.domain.Group;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Header;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Observation;
@@ -120,6 +121,11 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
 
         return serie;
+    }
+
+    public Group fetchAttributesInGroups() throws Exception {
+
+        return null;
     }
 
     @Override

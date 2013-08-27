@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.utils;
+package org.siemac.metamac.statistical.resources.core.io.utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
