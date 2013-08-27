@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
@@ -16,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -54,6 +56,21 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
     // PUBLICATION VERSION
     // --------------------------------------------------------------------------------------
 
+    @Override
+    public void checkOptimisticLocking(PublicationVersionBaseDto source) throws MetamacException {
+        if (source != null && source.getId() != null) {
+            try {
+                PublicationVersion target = publicationVersionRepository.findById(source.getId());
+                if (target.getId() != null) {
+                    OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+                }
+            } catch (PublicationVersionNotFoundException e) {
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND).withMessageParameters(source.getUrn())
+                        .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+            }
+        }
+    }
+    
     @Override
     public PublicationVersion publicationVersionDtoToDo(PublicationVersionDto source) throws MetamacException {
         if (source == null) {

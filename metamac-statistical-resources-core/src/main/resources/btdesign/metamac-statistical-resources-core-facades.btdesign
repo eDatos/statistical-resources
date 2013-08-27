@@ -54,16 +54,16 @@ Application FacadeStatisticalResources {
     		@QueryVersionDto retrieveLatestPublishedQueryVersion(String queryUrn) throws MetamacException
     		"Send to production validation"
     		@QueryVersionDto sendQueryVersionToProductionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
-    		@QueryVersionBaseDto sendQueryVersionToProductionValidation(String queryVersionUrn) throws MetamacException;
+    		@QueryVersionBaseDto sendQueryVersionToProductionValidation(@QueryVersionBaseDto queryVersionDto) throws MetamacException;
     		"Send to diffusion validation"
     		@QueryVersionDto sendQueryVersionToDiffusionValidation(@QueryVersionDto queryVersionDto) throws MetamacException;
-    		@QueryVersionBaseDto sendQueryVersionToDiffusionValidation(String queryVersionUrn) throws MetamacException;
+    		@QueryVersionBaseDto sendQueryVersionToDiffusionValidation(@QueryVersionBaseDto queryVersionDto) throws MetamacException;
     		"Send to validation rejected"
     		@QueryVersionDto sendQueryVersionToValidationRejected(@QueryVersionDto queryVersionDto) throws MetamacException;
-    		@QueryVersionBaseDto sendQueryVersionToValidationRejected(String queryVersionUrn) throws MetamacException;
+    		@QueryVersionBaseDto sendQueryVersionToValidationRejected(@QueryVersionBaseDto queryVersionDto) throws MetamacException;
     		"Creates a new version of a query version, copying metadata from version with provided urn"
     		@QueryVersionDto versioningQueryVersion(@QueryVersionDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-    		@QueryVersionBaseDto versioningQueryVersion(String queryVersionUrn, @VersionTypeEnum versionType) throws MetamacException;
+    		@QueryVersionBaseDto versioningQueryVersion(@QueryVersionBaseDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		
     		
     		// QUERIES
@@ -107,16 +107,16 @@ Application FacadeStatisticalResources {
     		@DatasetVersionMainCoveragesDto retrieveDatasetVersionMainCoverages(String datasetVersionUrn) throws MetamacException;
     		"Send to production validation"
     		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(String datasetVersionUrn) throws MetamacException;
+    		@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Send to diffusion validation"
     		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionBaseDto sendDatasetVersionToDiffusionValidation(String datasetVersionUrn) throws MetamacException;
+    		@DatasetVersionBaseDto sendDatasetVersionToDiffusionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Send to validation rejected"
     		@DatasetVersionDto sendDatasetVersionToValidationRejected(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionBaseDto sendDatasetVersionToValidationRejected(String datasetVersionUrn) throws MetamacException;
+    		@DatasetVersionBaseDto sendDatasetVersionToValidationRejected(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-    		@DatasetVersionBaseDto versioningDatasetVersion(String datasetVersionUrn, @VersionTypeEnum versionType) throws MetamacException;
+    		@DatasetVersionBaseDto versioningDatasetVersion(@DatasetVersionBaseDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
@@ -156,16 +156,16 @@ Application FacadeStatisticalResources {
     		@PublicationVersionDto retrieveLatestPublishedPublicationVersion(String publicationUrn) throws MetamacException;
     		"Send to production validation"
     		@PublicationVersionDto sendPublicationVersionToProductionValidation(@PublicationVersionDto publicationVersionDto) throws MetamacException;
-    		@PublicationVersionBaseDto sendPublicationVersionToProductionValidation(String publicationVersionUrn) throws MetamacException;
+    		@PublicationVersionBaseDto sendPublicationVersionToProductionValidation(@PublicationVersionBaseDto publicationVersionDto) throws MetamacException;
     		"Send to diffusion validation"
     		@PublicationVersionDto sendPublicationVersionToDiffusionValidation(@PublicationVersionDto publicationVersionDto) throws MetamacException;
-    		@PublicationVersionBaseDto sendPublicationVersionToDiffusionValidation(String publicationVersionUrn) throws MetamacException;
+    		@PublicationVersionBaseDto sendPublicationVersionToDiffusionValidation(@PublicationVersionBaseDto publicationVersionDto) throws MetamacException;
     		"Send to validation rejected"
     		@PublicationVersionDto sendPublicationVersionToValidationRejected(@PublicationVersionDto publicationVersionDto) throws MetamacException;
-    		@PublicationVersionBaseDto sendPublicationVersionToValidationRejected(String publicationVersionUrn) throws MetamacException;
+    		@PublicationVersionBaseDto sendPublicationVersionToValidationRejected(@PublicationVersionBaseDto publicationVersionDto) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-    		@PublicationVersionBaseDto versioningPublicationVersion(String publicationVersionUrn, @VersionTypeEnum versionType) throws MetamacException;
+    		@PublicationVersionBaseDto versioningPublicationVersion(@PublicationVersionBaseDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
 	    	
 	    	// CHAPTERS
 	    	"Creates a chapter"

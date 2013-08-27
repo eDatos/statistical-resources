@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -23,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasetVersionNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasourceNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dataset.exception.StatisticOfficialityNotFoundException;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
@@ -41,6 +43,21 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
 
     @Autowired
     private StatisticOfficialityRepository statisticOfficialityRepository;
+
+    @Override
+    public void checkOptimisticLocking(DatasetVersionBaseDto source) throws MetamacException {
+        if (source != null && source.getId() != null) {
+            try {
+                DatasetVersion target = datasetVersionRepository.findById(source.getId());
+                if (target.getId() != null) {
+                    OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+                }
+            } catch (DatasetVersionNotFoundException e) {
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASET_VERSION_NOT_FOUND).withMessageParameters(source.getUrn())
+                        .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+            }
+        }
+    }
 
     @Override
     public Datasource datasourceDtoToDo(DatasourceDto source) throws MetamacException {

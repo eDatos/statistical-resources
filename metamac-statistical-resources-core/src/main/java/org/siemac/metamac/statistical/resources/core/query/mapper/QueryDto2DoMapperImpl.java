@@ -8,11 +8,13 @@ import java.util.Map.Entry;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -35,6 +37,21 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
     @Autowired
     private QuerySelectionItemRepository querySelectionItemRepository;
+
+    @Override
+    public void checkOptimisticLocking(QueryVersionBaseDto source) throws MetamacException {
+        if (source != null && source.getId() != null) {
+            try {
+                QueryVersion target = queryVersionRepository.findById(source.getId());
+                if (target.getId() != null) {
+                    OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+                }
+            } catch (QueryVersionNotFoundException e) {
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.QUERY_NOT_FOUND).withMessageParameters(source.getUrn())
+                        .withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+            }
+        }
+    }
 
     @Override
     public QueryVersion queryVersionDtoToDo(QueryVersionDto source) throws MetamacException {
@@ -98,26 +115,23 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
             }
             return new ArrayList<QuerySelectionItem>();
         }
-        
+
         if (target.isEmpty()) {
             target = new ArrayList<QuerySelectionItem>();
         }
 
-        
         List<QuerySelectionItem> querySelectionItemEntities = querySelectionItemListDto2Do(source, target, queryTarget);
         target.clear();
         target.addAll(querySelectionItemEntities);
-        
-        return target;
-        
-        
-    }
 
+        return target;
+
+    }
 
     private List<QuerySelectionItem> querySelectionItemListDto2Do(Map<String, List<CodeItemDto>> source, List<QuerySelectionItem> targets, QueryVersion queryTarget) {
         List<QuerySelectionItem> targetsBefore = targets;
         targets = new ArrayList<QuerySelectionItem>();
-        
+
         for (Map.Entry<String, List<CodeItemDto>> sourceItem : source.entrySet()) {
             boolean existsBefore = false;
             for (QuerySelectionItem targetItem : targetsBefore) {
@@ -127,7 +141,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
                     break;
                 }
             }
-            
+
             if (!existsBefore) {
                 targets.add(querySelectionItemDto2Do(sourceItem, queryTarget));
             }
@@ -144,11 +158,11 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     private QuerySelectionItem querySelectionItemDto2Do(Entry<String, List<CodeItemDto>> sourceItem, QuerySelectionItem targetItem, QueryVersion queryTarget) {
         targetItem.setQuery(queryTarget);
         targetItem.setDimension(sourceItem.getKey());
-        
+
         // Set codes
         List<CodeItem> codeItemsBefore = targetItem.getCodes();
         targetItem.getCodes().clear();
-        
+
         for (CodeItemDto value : sourceItem.getValue()) {
             boolean existsBefore = false;
             for (CodeItem codeItem : codeItemsBefore) {
@@ -158,7 +172,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
                     break;
                 }
             }
-            
+
             if (!existsBefore) {
                 targetItem.addCode(codeItemDto2Do(value, targetItem));
             }
@@ -179,12 +193,9 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         return target;
     }
 
-
-
     private void deleteQuerySelectionItemList(List<QuerySelectionItem> target) {
         for (QuerySelectionItem querySelectionItem : target) {
             querySelectionItemRepository.delete(querySelectionItem);
         }
     }
-
 }
