@@ -44,9 +44,9 @@ public class DatasetsAsserts extends BaseAsserts {
     }
 
     public static void assertEqualsCoverageForDsdComponent(DatasetVersion datasetVersion, String dsdComponentId, List<CodeDimension> codes) {
-        assertNotNull(datasetVersion.getCoverages());
+        assertNotNull(datasetVersion.getDimensionsCoverage());
         List<CodeDimension> codesForDimensions = new ArrayList<CodeDimension>();
-        for (CodeDimension codeDim : datasetVersion.getCoverages()) {
+        for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
             if (codeDim.getDsdComponentId().equals(dsdComponentId)) {
                 codesForDimensions.add(codeDim);
             }
@@ -173,7 +173,7 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEquals(expected.getFormatExtentDimensions(), actual.getFormatExtentDimensions());
         assertEquals(expected.getFormatExtentObservations(), actual.getFormatExtentObservations());
         
-        assertEqualsCodeDimensionsCollection(expected.getCoverages(), actual.getCoverages());
+        assertEqualsCodeDimensionsCollection(expected.getDimensionsCoverage(), actual.getDimensionsCoverage());
 
         assertEqualsStatisticOfficiality(expected.getStatisticOfficiality(), actual.getStatisticOfficiality());
 

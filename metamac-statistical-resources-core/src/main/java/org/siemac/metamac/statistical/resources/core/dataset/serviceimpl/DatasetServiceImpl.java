@@ -299,7 +299,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
 
         // Clear coverages
-        resource.getCoverages().clear();
+        resource.getDimensionsCoverage().clear();
         resource.getGeographicCoverage().clear();
         resource.getTemporalCoverage().clear();
         resource.getMeasureCoverage().clear();
@@ -694,7 +694,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private void processCoverages(DatasetVersion resource, DataStructure dataStructure) throws MetamacException {
         List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
 
-        resource.getCoverages().clear();
+        resource.getDimensionsCoverage().clear();
         resource.getGeographicCoverage().clear();
         resource.getTemporalCoverage().clear();
         resource.getMeasureCoverage().clear();
@@ -710,7 +710,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 sortTemporalCodeDimensions(codes);
             }
 
-            resource.getCoverages().addAll(codes);
+            resource.getDimensionsCoverage().addAll(codes);
             switch (dimension.getType()) {
                 case SPATIAL:
                     for (ExternalItem item : items) {

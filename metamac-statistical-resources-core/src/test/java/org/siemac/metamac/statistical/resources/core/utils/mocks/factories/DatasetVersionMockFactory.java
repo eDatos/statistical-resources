@@ -568,17 +568,17 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             prepareToProductionValidation(datasetVersion);
 
-            datasetVersion.getCoverages().clear();
-            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-1"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim1", "code-d1-2"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-1"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim2", "code-d2-2"));
-            datasetVersion.getCoverages().add(new CodeDimension("dim3", "code-d3-1"));
+            datasetVersion.getDimensionsCoverage().clear();
+            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim1", "code-d1-1"));
+            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim1", "code-d1-2"));
+            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim2", "code-d2-1"));
+            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim2", "code-d2-2"));
+            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim3", "code-d3-1"));
 
             DATASET_VERSION_27_WITH_COVERAGE_FILLED = datasetVersion;
             
             // Relations
-            for (CodeDimension code : datasetVersion.getCoverages()) {
+            for (CodeDimension code : datasetVersion.getDimensionsCoverage()) {
                 code.setDatasetVersion(DATASET_VERSION_27_WITH_COVERAGE_FILLED);
             }
         }
@@ -797,15 +797,15 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
             prepareToProductionValidation(datasetVersion);
 
-            datasetVersion.getCoverages().clear();
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            datasetVersion.getDimensionsCoverage().clear();
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010-M02", "Febrero 2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010-M01", "Enero 2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
             
             DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES = datasetVersion;
         }
@@ -827,13 +827,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         if (DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH == null) {
             DatasetVersion datasetVersion = createDatasetVersion(1);
 
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
 
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
@@ -858,13 +858,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
             datasetVersion.setUserModifiedDateNextUpdate(true);
 
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
 
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
@@ -1006,16 +1006,16 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         if (DATASET_VERSION_67_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED == null) {
             DatasetVersion datasetVersion = createDatasetVersion(1);
 
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-            datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
-            datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
-            datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
 
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
@@ -1059,16 +1059,16 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             datasetVersion.setDateNextUpdate(new DateTime().plusMonths(1));
             datasetVersion.setUserModifiedDateNextUpdate(true);
 
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-            datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-            datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-            datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
-            datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
-            datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
 
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
             datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
@@ -1217,16 +1217,16 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
     
     private static void fillDimensionCoverages(DatasetVersion datasetVersion) {
-        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-        datasetVersion.addCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-        datasetVersion.addCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-        datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
-        datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
-        datasetVersion.addCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
 
         datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
         datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
@@ -1242,7 +1242,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C03"));
         
         // Relations
-        for (CodeDimension code : datasetVersion.getCoverages()) {
+        for (CodeDimension code : datasetVersion.getDimensionsCoverage()) {
             code.setDatasetVersion(datasetVersion);
         }
     }

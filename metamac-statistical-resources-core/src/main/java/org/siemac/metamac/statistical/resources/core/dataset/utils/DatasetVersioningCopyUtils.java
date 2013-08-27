@@ -47,11 +47,11 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
     }
     
     private static void copyCoverages(DatasetVersion source, DatasetVersion target) {
-        target.getCoverages().clear();
-        for (CodeDimension codeDimension : source.getCoverages()) {
+        target.getDimensionsCoverage().clear();
+        for (CodeDimension codeDimension : source.getDimensionsCoverage()) {
             CodeDimension newCodeDimension = new CodeDimension();
             copyCodeDimension(codeDimension, newCodeDimension);
-            target.addCoverage(newCodeDimension);
+            target.addDimensionsCoverage(newCodeDimension);
         }
     }
 

@@ -348,7 +348,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         assertEquals(newDsd.getUrn(), updatedDataset.getRelatedDsd().getUrn());
         assertEquals(0, updatedDataset.getDatasources().size());
-        assertEquals(0, updatedDataset.getCoverages().size());
+        assertEquals(0, updatedDataset.getDimensionsCoverage().size());
         assertEquals(0, updatedDataset.getGeographicCoverage().size());
         assertEquals(0, updatedDataset.getTemporalCoverage().size());
         assertEquals(0, updatedDataset.getMeasureCoverage().size());
@@ -377,7 +377,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         assertEquals(oldDsd.getUrn(), updatedDataset.getRelatedDsd().getUrn());
         assertEquals(1, updatedDataset.getDatasources().size());
-        assertEquals(10, updatedDataset.getCoverages().size());
+        assertEquals(10, updatedDataset.getDimensionsCoverage().size());
         assertEquals(4, updatedDataset.getGeographicCoverage().size());
         assertEquals(3, updatedDataset.getTemporalCoverage().size());
         assertEquals(3, updatedDataset.getMeasureCoverage().size());
@@ -408,7 +408,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         assertEquals(newDsd.getUrn(), updatedDataset.getRelatedDsd().getUrn());
         assertEquals(0, updatedDataset.getDatasources().size());
-        assertEquals(0, updatedDataset.getCoverages().size());
+        assertEquals(0, updatedDataset.getDimensionsCoverage().size());
         assertEquals(0, updatedDataset.getGeographicCoverage().size());
         assertEquals(0, updatedDataset.getTemporalCoverage().size());
         assertEquals(0, updatedDataset.getMeasureCoverage().size());

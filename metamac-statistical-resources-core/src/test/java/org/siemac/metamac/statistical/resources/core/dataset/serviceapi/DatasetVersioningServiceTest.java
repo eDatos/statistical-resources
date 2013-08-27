@@ -243,7 +243,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     }
 
     private static void checkInheritMetadata(DatasetVersion previous, DatasetVersion next) throws Exception {
-        checkVersionedCodeDimensionCollection(previous.getCoverages(), next.getCoverages());
+        checkVersionedCodeDimensionCollection(previous.getDimensionsCoverage(), next.getDimensionsCoverage());
 
         assertEqualsExternalItemCollection(previous.getGeographicCoverage(), next.getGeographicCoverage());
         StatisticalResourcesCollectionUtils.equalsCollectionByField(previous.getTemporalCoverage(), next.getTemporalCoverage(), TEMPORAL_CODE_COMPARE_FIELD, TEMPORAL_CODE_COMPARE_FIELD);
