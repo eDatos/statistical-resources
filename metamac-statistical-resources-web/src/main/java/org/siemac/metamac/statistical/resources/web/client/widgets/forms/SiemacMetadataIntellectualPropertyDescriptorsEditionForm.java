@@ -23,7 +23,7 @@ public class SiemacMetadataIntellectualPropertyDescriptorsEditionForm extends Gr
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         setValue(SiemacMetadataDS.ACCESS_RIGHTS, RecordUtils.getInternationalStringRecord(dto.getAccessRights()));
-        setValue(SiemacMetadataDS.COPYRIGHT_DATE, dto.getCopyrightedDate());
+        setValue(SiemacMetadataDS.COPYRIGHT_DATE, dto.getCopyrightedDate() != null ? dto.getCopyrightedDate().toString() : null);
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
