@@ -11,6 +11,9 @@ Application DatasetsStatisticalResourcesDto {
 		DataTransferObject DatasetVersionBaseDto extends @SiemacMetadataStatisticalResourceBaseDto {
 			- @ExternalItemDto relatedDsd;
 			- @StatisticOfficialityDto statisticOfficiality;
+			
+			// If a task related with the dataset is being executed in background
+			Boolean isTaskInBackground;
 		}
 		
 		DataTransferObject DatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
