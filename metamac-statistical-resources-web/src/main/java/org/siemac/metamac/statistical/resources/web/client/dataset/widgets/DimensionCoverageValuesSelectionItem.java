@@ -2,11 +2,13 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.CodeItemDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
@@ -14,13 +16,13 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
+import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.grid.HeaderSpan;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -28,23 +30,25 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
-    private Map<String, ListGrid> dimensionListGrids;
-    private BaseCustomListGrid    selectedDimensionValuesListGrid;
+    private BaseCustomListGrid selectedDimensionValuesListGrid;
+
+    private CustomDynamicForm  dimensionsForm;
 
     public DimensionCoverageValuesSelectionItem(String name, String title, Set<String> dimensionIds) {
         super(name, title);
         setCellStyle("dragAndDropCellStyle");
 
-        // Dimensions layout
+        // Dimensions layout (form)
 
-        HLayout dimensionsLayout = new HLayout(2);
-
-        dimensionListGrids = new HashMap<String, ListGrid>();
+        dimensionsForm = new CustomDynamicForm();
+        dimensionsForm.setNumCols(3);
+        dimensionsForm.setColWidths("33%", "33%", "33%");
+        List<DimensionsListGridItem> dimensionItems = new ArrayList<DimensionsListGridItem>();
         for (String dimensionId : dimensionIds) {
-            CustomListGrid dimemsionListGrid = createDimensionListGrid(dimensionId);
-            dimensionListGrids.put(dimensionId, dimemsionListGrid);
-            dimensionsLayout.addMember(dimemsionListGrid);
+            DimensionsListGridItem item = createDimensionListGridItem(dimensionId);
+            dimensionItems.add(item);
         }
+        dimensionsForm.setFields(dimensionItems.toArray(new DimensionsListGridItem[dimensionItems.size()]));
 
         // Selected dimensions list
 
@@ -59,23 +63,15 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
         VLayout mainPanel = new VLayout(10);
         mainPanel.setAutoHeight();
         mainPanel.setOverflow(Overflow.VISIBLE);
-        mainPanel.addMember(dimensionsLayout);
+        mainPanel.addMember(dimensionsForm);
         mainPanel.addMember(selectedDimensionValuesListGrid);
         mainPanel.setPadding(10);
         setCanvas(mainPanel);
     }
 
-    private CustomListGrid createDimensionListGrid(final String dimensionId) {
-        CustomListGrid customListGrid = new CustomListGrid();
-        customListGrid.setAutoFitMaxRecords(6);
-        customListGrid.setAutoFitData(Autofit.VERTICAL);
-        customListGrid.setCanSelectAll(true);
-        customListGrid.setHeaderHeight(40);
-        CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, getConstants().codeItemCode());
-        CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, getConstants().codeItemTitle());
-        customListGrid.setFields(codeField, titleField);
-        customListGrid.setHeaderSpans(new HeaderSpan(dimensionId, new String[]{CodeItemDS.CODE, CodeItemDS.TITLE}));
-        customListGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
+    private DimensionsListGridItem createDimensionListGridItem(final String dimensionId) {
+        DimensionsListGridItem dimensionsListGridItem = new DimensionsListGridItem(dimensionId);
+        dimensionsListGridItem.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
@@ -87,28 +83,57 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
                         selectedDimensionValuesListGrid.addData(record);
                     } else {
                         // The record is being unselected, so it is removed from the selected values list
-                        if (dimensionListGrids.containsKey(dimensionId)) {
-                            if (selectedDimensionValuesListGrid.getRecordList() != null) {
-                                Map<String, String> criteriaMap = new HashMap<String, String>();
-                                criteriaMap.put(CodeItemDS.DIMENSION_ID, dimensionId);
-                                criteriaMap.put(CodeItemDS.CODE, selectedCodeItemRecord.getCode());
-                                Record[] records = selectedDimensionValuesListGrid.getRecordList().findAll(criteriaMap);
-                                if (records != null && records.length > 0) {
-                                    selectedDimensionValuesListGrid.removeData(records[0]); // the result should be only one
-                                }
+                        if (selectedDimensionValuesListGrid.getRecordList() != null) {
+                            Map<String, String> criteriaMap = new HashMap<String, String>();
+                            criteriaMap.put(CodeItemDS.DIMENSION_ID, dimensionId);
+                            criteriaMap.put(CodeItemDS.CODE, selectedCodeItemRecord.getCode());
+                            Record[] records = selectedDimensionValuesListGrid.getRecordList().findAll(criteriaMap);
+                            if (records != null && records.length > 0) {
+                                selectedDimensionValuesListGrid.removeData(records[0]); // the result should be only one
                             }
                         }
                     }
                 }
             }
         });
-        return customListGrid;
+        return dimensionsListGridItem;
     }
 
     public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
-        if (dimensionListGrids.containsKey(dimensionId)) {
+        if (dimensionsForm.getItem(dimensionId) != null) {
             CodeItemRecord[] records = StatisticalResourcesRecordUtils.getCodeItemRecords(codeItemDtos);
-            dimensionListGrids.get(dimensionId).setData(records);
+            ((DimensionsListGridItem) dimensionsForm.getItem(dimensionId)).getListGrid().setData(records);
+        }
+    }
+
+    private class DimensionsListGridItem extends CustomCanvasItem {
+
+        protected CustomListGrid customListGrid;
+
+        public DimensionsListGridItem(String name) {
+            super(name, StringUtils.EMPTY);
+            setCellStyle("dragAndDropCellStyle");
+            setShowTitle(false);
+
+            customListGrid = new CustomListGrid();
+            customListGrid.setAutoFitMaxRecords(6);
+            customListGrid.setAutoFitData(Autofit.VERTICAL);
+            customListGrid.setCanSelectAll(true);
+            customListGrid.setHeaderHeight(40);
+            CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, getConstants().codeItemCode());
+            CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, getConstants().codeItemTitle());
+            customListGrid.setFields(codeField, titleField);
+            customListGrid.setHeaderSpans(new HeaderSpan(name, new String[]{CodeItemDS.CODE, CodeItemDS.TITLE}));
+
+            HLayout hLayout = new HLayout();
+            hLayout.addMember(customListGrid);
+            hLayout.setStyleName("canvasCellStyle");
+
+            setCanvas(hLayout);
+        }
+
+        public CustomListGrid getListGrid() {
+            return customListGrid;
         }
     }
 }
