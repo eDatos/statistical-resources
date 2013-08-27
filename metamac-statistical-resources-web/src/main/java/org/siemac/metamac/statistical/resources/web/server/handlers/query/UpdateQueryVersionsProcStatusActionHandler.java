@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleAction
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusResult;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,36 +35,36 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
         MetamacException metamacException = new MetamacException();
 
         for (QueryVersionBaseDto queryVersionBaseDto : queryVersionsToUpdateProcStatus) {
-            // try {
+            try {
 
-            switch (lifeCycleAction) {
-                case SEND_TO_PRODUCTION_VALIDATION:
-                    // FIXME statisticalResourcesServiceFacade.sendQueryVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
-                    break;
+                switch (lifeCycleAction) {
+                    case SEND_TO_PRODUCTION_VALIDATION:
+                        statisticalResourcesServiceFacade.sendQueryVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        break;
 
-                case SEND_TO_DIFFUSION_VALIDATION:
-                    // FIXME statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
-                    break;
+                    case SEND_TO_DIFFUSION_VALIDATION:
+                        statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        break;
 
-                case REJECT_VALIDATION:
-                    // FIXME statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
-                    break;
+                    case REJECT_VALIDATION:
+                        statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        break;
 
-                case PUBLISH:
-                    // TODO
-                    break;
+                    case PUBLISH:
+                        // TODO
+                        break;
 
-                case VERSION:
-                    // TODO
-                    break;
+                    case VERSION:
+                        // TODO
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+
+            } catch (MetamacException e) {
+                addExceptionsItemToMetamacException(lifeCycleAction, queryVersionBaseDto, metamacException, e);
             }
-
-            // } catch (MetamacException e) {
-            // addExceptionsItemToMetamacException(lifeCycleAction, queryVersionBaseDto, metamacException, e);
-            // }
         }
 
         if (metamacException.getExceptionItems() == null || metamacException.getExceptionItems().isEmpty()) {
