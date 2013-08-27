@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -13,14 +12,12 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent.SelectDatasetTabHandler;
-import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent.UpdateResourceHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent.SetDatasetHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -46,7 +43,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers, UpdateResourceHandler, SelectDatasetTabHandler {
+public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers, SelectDatasetTabHandler, SetDatasetHandler {
 
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
@@ -131,6 +128,12 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         }
     }
 
+    @ProxyEvent
+    @Override
+    public void onSetDatasetVersion(SetDatasetEvent event) {
+        getView().setDataset(event.getDatasetVersionDto());
+    }
+
     private void retrieveOperation(String urn) {
         dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
@@ -144,21 +147,8 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     private void loadInitialData() {
         String datasetIdentifier = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
-        String datasetUrn = CommonUtils.generateDatasetUrn(datasetIdentifier);
-        retrieveDatasetByUrn(datasetUrn);
-    }
-
-    private void retrieveDatasetByUrn(String urn) {
-        dispatcher.execute(new GetDatasetVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetDatasetVersionResult result) {
-                getView().setDataset(result.getDatasetVersionDto());
-
-                // Load the dataset versions
-                retrieveDatasetVersions(result.getDatasetVersionDto().getUrn());
-            }
-        });
+        String datasetVersionUrn = CommonUtils.generateDatasetUrn(datasetIdentifier);
+        retrieveDatasetVersions(datasetVersionUrn);
     }
 
     private void retrieveDatasetVersions(String urn) {
@@ -169,14 +159,6 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
                 getView().setDatasetVersions(result.getDatasetVersionDtos());
             }
         });
-    }
-
-    @ProxyEvent
-    @Override
-    public void onUpdateResource(UpdateResourceEvent event) {
-        if (TypeRelatedResourceEnum.DATASET.equals(event.getResourceType())) {
-            retrieveDatasetByUrn(event.getUrn());
-        }
     }
 
     //

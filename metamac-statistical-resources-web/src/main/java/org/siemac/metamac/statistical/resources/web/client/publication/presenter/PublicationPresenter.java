@@ -6,7 +6,6 @@ import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -14,8 +13,8 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent.SelectPublicationTabHandler;
-import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.UpdateResourceEvent.UpdateResourceHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent.SetPublicationHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -23,12 +22,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationResult;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -53,8 +48,8 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy>
         implements
             PublicationUiHandlers,
-            UpdateResourceHandler,
-            SelectPublicationTabHandler {
+            SelectPublicationTabHandler,
+            SetPublicationHandler {
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
@@ -136,6 +131,12 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         }
     }
 
+    @ProxyEvent
+    @Override
+    public void onSetPublicationVersion(SetPublicationEvent event) {
+        getView().setPublication(event.getPublicationVersionDto());
+    }
+
     private void retrieveOperation(String urn) {
         dispatcher.execute(new GetStatisticalOperationAction(urn), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationResult>(this) {
 
@@ -149,25 +150,8 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
 
     private void loadInitialData() {
         String publicationIdentifier = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
-        String publicationUrn = CommonUtils.generatePublicationUrn(publicationIdentifier);
-        retrievePublicationByUrn(publicationUrn);
-    }
-
-    private void retrievePublicationByUrn(String urn) {
-        dispatcher.execute(new GetPublicationVersionAction(urn), new WaitingAsyncCallback<GetPublicationVersionResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(GetPublicationVersionResult result) {
-                getView().setPublication(result.getPublicationVersionDto());
-
-                // Load the publication versions
-                retrievePublicationVersions(result.getPublicationVersionDto().getUrn());
-            }
-        });
+        String publicationVersionUrn = CommonUtils.generatePublicationUrn(publicationIdentifier);
+        retrievePublicationVersions(publicationVersionUrn);
     }
 
     private void retrievePublicationVersions(String urn) {
@@ -178,14 +162,6 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
                 getView().setPublicationVersions(result.getPublicationVersionDtos());
             }
         });
-    }
-
-    @ProxyEvent
-    @Override
-    public void onUpdateResource(UpdateResourceEvent event) {
-        if (TypeRelatedResourceEnum.PUBLICATION.equals(event.getResourceType())) {
-            retrievePublicationByUrn(event.getUrn());
-        }
     }
 
     //

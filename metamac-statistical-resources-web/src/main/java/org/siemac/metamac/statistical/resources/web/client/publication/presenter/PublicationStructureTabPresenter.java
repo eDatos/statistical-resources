@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesD
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -33,6 +34,8 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureResult;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
@@ -140,7 +143,18 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     private void loadInitialData() {
         String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         String publicationVersionUrn = CommonUtils.generatePublicationUrn(publicationCode);
+        retrievePublication(publicationVersionUrn);
         retrievePublicationStructure(publicationVersionUrn);
+    }
+
+    private void retrievePublication(String publicationVersionUrn) {
+        dispatcher.execute(new GetPublicationVersionAction(publicationVersionUrn), new WaitingAsyncCallbackHandlingError<GetPublicationVersionResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetPublicationVersionResult result) {
+                SetPublicationEvent.fire(PublicationStructureTabPresenter.this, result.getPublicationVersionDto());
+            }
+        });
     }
 
     private void retrievePublicationStructure(String publicationVersionUrn) {

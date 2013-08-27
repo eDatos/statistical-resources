@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
@@ -142,6 +143,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             @Override
             public void onWaitSuccess(GetDatasetVersionResult result) {
                 setDataset(result.getDatasetVersionDto());
+                SetDatasetEvent.fire(DatasetDatasourcesTabPresenter.this, result.getDatasetVersionDto());
             }
         });
     }
@@ -188,6 +190,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     @Override
     public void datasourcesImportationSucceed(String fileName) {
         ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesImportationPlanned());
+        placeManager.revealCurrentPlace();
     }
 
     @Override

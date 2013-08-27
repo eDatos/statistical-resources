@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
@@ -27,6 +28,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAtt
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
@@ -133,7 +136,18 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     private void loadInitialData() {
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         datasetVersionUrn = CommonUtils.generateDatasetUrn(datasetCode);
+        retrieveDataset(datasetVersionUrn);
         retrieveAttributes(datasetVersionUrn);
+    }
+
+    private void retrieveDataset(String datasetUrn) {
+        dispatcher.execute(new GetDatasetVersionAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetVersionResult result) {
+                SetDatasetEvent.fire(DatasetAttributesTabPresenter.this, result.getDatasetVersionDto());
+            }
+        });
     }
 
     private void retrieveAttributes(String datasetUrn) {
